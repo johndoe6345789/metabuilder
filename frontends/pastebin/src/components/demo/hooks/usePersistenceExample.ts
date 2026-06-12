@@ -21,13 +21,15 @@ export function usePersistenceExample(): PersistenceExampleState {
       toast.error('Please enter both title and code')
       return
     }
-    dispatch(createSnippet({
-      title,
-      code,
-      language: 'JavaScript',
-      category: 'Example',
-      description: 'Created via persistence example',
-    }))
+    dispatch(
+      createSnippet({
+        title,
+        code,
+        language: 'JavaScript',
+        category: 'Example',
+        description: 'Created via persistence example',
+      }),
+    )
     toast.success('Snippet created and auto-saved to database!')
     setTitle('')
     setCode('')

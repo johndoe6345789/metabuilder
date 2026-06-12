@@ -23,7 +23,8 @@ const titleStyle: React.CSSProperties = {
 const CARDS = [
   {
     title: 'Building Scalable Design Systems',
-    desc: 'Learn how to create and maintain design systems ' +
+    desc:
+      'Learn how to create and maintain design systems ' +
       'that grow with your team.',
     date: 'Mar 15, 2024',
     readTime: '5 min read',
@@ -31,7 +32,8 @@ const CARDS = [
   },
   {
     title: 'Advanced TypeScript Patterns',
-    desc: 'Explore advanced type system features and practical ' +
+    desc:
+      'Explore advanced type system features and practical ' +
       'patterns for production apps.',
     date: 'Mar 12, 2024',
     readTime: '8 min read',
@@ -48,7 +50,14 @@ export function ContentPreviewCardsSection() {
       aria-label="Content preview card examples"
     >
       <div>
-        <h2 style={{ fontSize: '1.875rem', lineHeight: '2.25rem', fontWeight: 700, marginBottom: '8px' }}>
+        <h2
+          style={{
+            fontSize: '1.875rem',
+            lineHeight: '2.25rem',
+            fontWeight: 700,
+            marginBottom: '8px',
+          }}
+        >
           Content Preview Cards
         </h2>
         <p style={{ color: 'var(--mat-sys-on-surface-variant)' }}>
@@ -59,17 +68,40 @@ export function ContentPreviewCardsSection() {
       <div className={styles.previewGrid}>
         {CARDS.map(({ title, desc, date, readTime, tags }) => (
           <Card key={title} className={`p-6 ${styles.previewCard}`}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div
+              style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  justifyContent: 'space-between',
+                  gap: '16px',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px',
+                  }}
+                >
                   <h3 style={titleStyle}>{title}</h3>
-                  <p style={{ fontSize: '0.875rem', lineHeight: '1.25rem', color: 'var(--mat-sys-on-surface-variant)' }}>
+                  <p
+                    style={{
+                      fontSize: '0.875rem',
+                      lineHeight: '1.25rem',
+                      color: 'var(--mat-sys-on-surface-variant)',
+                    }}
+                  >
                     {desc}
                   </p>
                 </div>
               </div>
               <div style={metaStyle}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <div
+                  style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+                >
                   <MaterialIcon name="calendar_today" size={16} />
                   <span>{date}</span>
                 </div>
@@ -78,7 +110,9 @@ export function ContentPreviewCardsSection() {
               </div>
               <div style={{ display: 'flex', gap: '8px' }}>
                 {tags.map(tag => (
-                  <Chip key={tag} variant="outlined">{tag}</Chip>
+                  <Chip key={tag} variant="outlined">
+                    {tag}
+                  </Chip>
                 ))}
               </div>
             </div>

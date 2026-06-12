@@ -26,10 +26,12 @@ describe('SnippetCard', () => {
         onDelete={jest.fn()}
         onCopy={jest.fn()}
         onView={jest.fn()}
-      />
+      />,
     )
 
-    expect(screen.getByTestId(`snippet-card-${mockSnippet.id}`)).toBeInTheDocument()
+    expect(
+      screen.getByTestId(`snippet-card-${mockSnippet.id}`),
+    ).toBeInTheDocument()
   })
 
   it('displays snippet title and description', () => {
@@ -40,7 +42,7 @@ describe('SnippetCard', () => {
         onDelete={jest.fn()}
         onCopy={jest.fn()}
         onView={jest.fn()}
-      />
+      />,
     )
 
     expect(screen.getByText('Test Snippet')).toBeInTheDocument()
@@ -55,7 +57,7 @@ describe('SnippetCard', () => {
         onDelete={jest.fn()}
         onCopy={jest.fn()}
         onView={jest.fn()}
-      />
+      />,
     )
 
     const card = screen.getByTestId(`snippet-card-${mockSnippet.id}`)
@@ -70,7 +72,7 @@ describe('SnippetCard', () => {
         onDelete={jest.fn()}
         onCopy={jest.fn()}
         onView={jest.fn()}
-      />
+      />,
     )
 
     expect(screen.getByTestId('snippet-card-view-btn')).toBeInTheDocument()
@@ -84,7 +86,7 @@ describe('SnippetCard', () => {
         onDelete={jest.fn()}
         onCopy={jest.fn()}
         onView={jest.fn()}
-      />
+      />,
     )
 
     expect(screen.getByTestId('snippet-card-copy-btn')).toBeInTheDocument()
@@ -98,7 +100,7 @@ describe('SnippetCard', () => {
         onDelete={jest.fn()}
         onCopy={jest.fn()}
         onView={jest.fn()}
-      />
+      />,
     )
 
     expect(screen.getByTestId('snippet-card-edit-btn')).toBeInTheDocument()
@@ -112,7 +114,7 @@ describe('SnippetCard', () => {
         onDelete={jest.fn()}
         onCopy={jest.fn()}
         onView={jest.fn()}
-      />
+      />,
     )
 
     expect(screen.getByTestId('snippet-card-actions')).toBeInTheDocument()
@@ -129,7 +131,7 @@ describe('SnippetCard', () => {
         onDelete={jest.fn()}
         onCopy={jest.fn()}
         onView={jest.fn()}
-      />
+      />,
     )
 
     await user.click(screen.getByTestId('snippet-card-edit-btn'))

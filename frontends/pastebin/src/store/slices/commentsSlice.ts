@@ -1,13 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { SnippetComment, ProfileComment } from '@/lib/types'
 import {
-  fetchSnippetComments, addSnippetComment,
-  fetchProfileComments, addProfileComment,
+  fetchSnippetComments,
+  addSnippetComment,
+  fetchProfileComments,
+  addProfileComment,
 } from './commentsThunks'
 
 export {
-  fetchSnippetComments, addSnippetComment,
-  fetchProfileComments, addProfileComment,
+  fetchSnippetComments,
+  addSnippetComment,
+  fetchProfileComments,
+  addProfileComment,
 }
 
 interface CommentsState {
@@ -24,14 +28,16 @@ const initialState: CommentsState = {
   error: null,
 }
 
-function sortByTime<T extends { createdAt: number | string }>(
-  items: T[]
-): T[] {
+function sortByTime<T extends { createdAt: number | string }>(items: T[]): T[] {
   return [...items].sort((a, b) => {
-    const ta = typeof a.createdAt === 'number'
-      ? a.createdAt : new Date(a.createdAt).getTime()
-    const tb = typeof b.createdAt === 'number'
-      ? b.createdAt : new Date(b.createdAt).getTime()
+    const ta =
+      typeof a.createdAt === 'number'
+        ? a.createdAt
+        : new Date(a.createdAt).getTime()
+    const tb =
+      typeof b.createdAt === 'number'
+        ? b.createdAt
+        : new Date(b.createdAt).getTime()
     return ta - tb
   })
 }
@@ -40,15 +46,17 @@ const commentsSlice = createSlice({
   name: 'comments',
   initialState,
   reducers: {},
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(fetchSnippetComments.pending, (state) => {
-        state.loading = true; state.error = null
+      .addCase(fetchSnippetComments.pending, state => {
+        state.loading = true
+        state.error = null
       })
       .addCase(fetchSnippetComments.fulfilled, (state, action) => {
         state.loading = false
-        state.snippetComments[action.payload.snippetId] =
-          sortByTime(action.payload.comments)
+        state.snippetComments[action.payload.snippetId] = sortByTime(
+          action.payload.comments,
+        )
       })
       .addCase(fetchSnippetComments.rejected, (state, action) => {
         state.loading = false
@@ -62,13 +70,15 @@ const commentsSlice = createSlice({
       .addCase(addSnippetComment.rejected, (state, action) => {
         state.error = action.error.message || 'Failed to post comment'
       })
-      .addCase(fetchProfileComments.pending, (state) => {
-        state.loading = true; state.error = null
+      .addCase(fetchProfileComments.pending, state => {
+        state.loading = true
+        state.error = null
       })
       .addCase(fetchProfileComments.fulfilled, (state, action) => {
         state.loading = false
-        state.profileComments[action.payload.profileUserId] =
-          sortByTime(action.payload.comments)
+        state.profileComments[action.payload.profileUserId] = sortByTime(
+          action.payload.comments,
+        )
       })
       .addCase(fetchProfileComments.rejected, (state, action) => {
         state.loading = false

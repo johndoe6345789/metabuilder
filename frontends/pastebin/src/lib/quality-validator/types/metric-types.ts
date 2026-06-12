@@ -10,7 +10,7 @@ export type {
   DuplicationBlock,
   LintingMetrics,
   LintingViolation,
-} from './code-quality-types.js';
+} from './code-quality-types.js'
 
 export type {
   TestCoverageMetrics,
@@ -29,11 +29,11 @@ export type {
   LayerViolation,
   PatternMetrics,
   PatternIssue,
-} from './coverage-arch-types.js';
+} from './coverage-arch-types.js'
 
 export type {
   SecurityMetrics,
   Vulnerability,
   SecurityAntiPattern,
   PerformanceIssue,
-} from './security-metric-types.js';
+} from './security-metric-types.js'

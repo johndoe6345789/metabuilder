@@ -1,14 +1,21 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Provider } from 'react-redux'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { configureStore } from '@reduxjs/toolkit'
 import { SnippetManagerRedux } from './SnippetManagerRedux'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import snippetsReducer from '@/store/slices/snippetsSlice'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import namespacesReducer from '@/store/slices/namespacesSlice'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import uiReducer from '@/store/slices/uiSlice'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { RootState } from '@/store'
 import { Snippet, Namespace } from '@/lib/types'
+// eslint-disable-next-line max-len
 import { NavigationProvider } from '@/components/layout/navigation/NavigationProvider'
 
 // Mock database and toast to avoid side effects
@@ -33,12 +40,20 @@ jest.mock('sonner', () => ({
 
 // Mock the child components we don't need to test
 jest.mock('@/components/features/snippet-editor/SnippetDialog', () => ({
-  SnippetDialog: ({ open, editingSnippet, onOpenChange, onSave, 'data-testid': dataTestId }: any) => (
+  SnippetDialog: ({
+    open,
+    editingSnippet,
+    onOpenChange,
+    onSave,
+    'data-testid': dataTestId,
+  }: any) => (
     <div data-testid={dataTestId || 'snippet-dialog'} aria-hidden={!open}>
       {open && (
         <>
           <div data-testid="dialog-content">
-            {editingSnippet && <span data-testid="editing-snippet">{editingSnippet.id}</span>}
+            {editingSnippet && (
+              <span data-testid="editing-snippet">{editingSnippet.id}</span>
+            )}
           </div>
           <button
             data-testid="dialog-save-btn"
@@ -54,7 +69,10 @@ jest.mock('@/components/features/snippet-editor/SnippetDialog', () => ({
           >
             Save
           </button>
-          <button data-testid="dialog-close-btn" onClick={() => onOpenChange?.(false)}>
+          <button
+            data-testid="dialog-close-btn"
+            onClick={() => onOpenChange?.(false)}
+          >
             Close
           </button>
         </>
@@ -69,7 +87,10 @@ jest.mock('@/components/features/snippet-viewer/SnippetViewer', () => ({
       {open && snippet && (
         <>
           <div data-testid="viewer-content">{snippet.title}</div>
-          <button data-testid="viewer-close-btn" onClick={() => onOpenChange?.(false)}>
+          <button
+            data-testid="viewer-close-btn"
+            onClick={() => onOpenChange?.(false)}
+          >
             Close
           </button>
         </>
@@ -100,7 +121,7 @@ jest.mock('@/components/features/namespace-manager/NamespaceSelector', () => ({
       <select
         data-testid="namespace-select"
         value={selectedNamespaceId || ''}
-        onChange={(e) => onNamespaceChange(e.target.value || null)}
+        onChange={e => onNamespaceChange(e.target.value || null)}
       >
         <option value="">Select namespace</option>
         <option value="ns-1">Namespace 1</option>
@@ -123,7 +144,7 @@ jest.mock('@/components/snippet-manager/SnippetToolbar', () => ({
       <input
         data-testid="snippet-search-input"
         value={searchQuery}
-        onChange={(e) => onSearchChange(e.target.value)}
+        onChange={e => onSearchChange(e.target.value)}
         placeholder="Search..."
         aria-label="Search snippets"
       />
@@ -148,20 +169,31 @@ jest.mock('@/components/snippet-manager/SnippetToolbar', () => ({
 }))
 
 jest.mock('@/components/snippet-manager/SelectionControls', () => ({
-  SelectionControls: ({ selectedIds, totalFilteredCount, onSelectAll, onBulkMove }: any) => (
+  SelectionControls: ({
+    selectedIds,
+    totalFilteredCount,
+    onSelectAll,
+    onBulkMove,
+  }: any) => (
     <div data-testid="selection-controls">
       <button
         data-testid="select-all-btn"
         onClick={onSelectAll}
         aria-label={
-          selectedIds.length === totalFilteredCount ? 'Deselect all snippets' : 'Select all snippets'
+          selectedIds.length === totalFilteredCount
+            ? 'Deselect all snippets'
+            : 'Select all snippets'
         }
       >
-        {selectedIds.length === totalFilteredCount ? 'Deselect All' : 'Select All'}
+        {selectedIds.length === totalFilteredCount
+          ? 'Deselect All'
+          : 'Select All'}
       </button>
       {selectedIds.length > 0 && (
         <>
-          <span data-testid="selection-count">{selectedIds.length} selected</span>
+          <span data-testid="selection-count">
+            {selectedIds.length} selected
+          </span>
           <button
             data-testid="bulk-move-menu-trigger"
             onClick={() => onBulkMove('ns-2')}
@@ -176,7 +208,15 @@ jest.mock('@/components/snippet-manager/SelectionControls', () => ({
 }))
 
 jest.mock('@/components/snippet-manager/SnippetGrid', () => ({
-  SnippetGrid: ({ snippets, onEdit, onDelete, onView, selectionMode, selectedIds, onToggleSelect }: any) => (
+  SnippetGrid: ({
+    snippets,
+    onEdit,
+    onDelete,
+    onView,
+    selectionMode,
+    selectedIds,
+    onToggleSelect,
+  }: any) => (
     <div data-testid="snippet-grid">
       {snippets.map((snippet: Snippet) => (
         <div key={snippet.id} data-testid={`snippet-card-${snippet.id}`}>
@@ -190,13 +230,22 @@ jest.mock('@/components/snippet-manager/SnippetGrid', () => ({
               aria-label={`Select ${snippet.title}`}
             />
           )}
-          <button data-testid={`snippet-view-${snippet.id}`} onClick={() => onView(snippet)}>
+          <button
+            data-testid={`snippet-view-${snippet.id}`}
+            onClick={() => onView(snippet)}
+          >
             View
           </button>
-          <button data-testid={`snippet-edit-${snippet.id}`} onClick={() => onEdit(snippet)}>
+          <button
+            data-testid={`snippet-edit-${snippet.id}`}
+            onClick={() => onEdit(snippet)}
+          >
             Edit
           </button>
-          <button data-testid={`snippet-delete-${snippet.id}`} onClick={() => onDelete(snippet.id)}>
+          <button
+            data-testid={`snippet-delete-${snippet.id}`}
+            onClick={() => onDelete(snippet.id)}
+          >
             Delete
           </button>
         </div>
@@ -260,7 +309,7 @@ const mockSnippet3: Snippet = {
 }
 
 // Mock useSnippetManager to return different values based on test setup
-type UseSnippetManagerMock = {
+interface UseSnippetManagerMock {
   snippets: Snippet[]
   filteredSnippets: Snippet[]
   loading: boolean
@@ -325,11 +374,13 @@ let mockHookReturnValue: UseSnippetManagerMock = {
 jest.mocked = jest.mocked || {}
 
 // Helper to render with custom hook values
-function renderWithHookValues(component: React.ReactElement, hookValues: Partial<UseSnippetManagerMock>) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function renderWithHookValues(
+  component: React.ReactElement,
+  hookValues: Partial<UseSnippetManagerMock>,
+) {
   mockHookReturnValue = { ...mockHookReturnValue, ...hookValues }
-  return render(
-    <NavigationProvider>{component}</NavigationProvider>
-  )
+  return render(<NavigationProvider>{component}</NavigationProvider>)
 }
 
 describe('SnippetManagerRedux Component', () => {
@@ -367,11 +418,12 @@ describe('SnippetManagerRedux Component', () => {
     }
   })
 
-  // ============================================================================
+  // ===========================================================================
   // RENDERING PATHS - Loading State
-  // ============================================================================
+  // ===========================================================================
   describe('Rendering Paths - Loading State', () => {
     it('should show loading spinner when loading is true', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       useSnippetManager.mockReturnValue({
         ...mockHookReturnValue,
@@ -387,6 +439,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should display loading message', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -399,6 +452,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should have proper accessibility attributes in loading state', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -412,6 +466,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should not render other components during loading', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -425,11 +480,12 @@ describe('SnippetManagerRedux Component', () => {
     })
   })
 
-  // ============================================================================
+  // ===========================================================================
   // RENDERING PATHS - Empty State
-  // ============================================================================
+  // ===========================================================================
   describe('Rendering Paths - Empty State', () => {
     it('should show empty state when no snippets exist', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -445,6 +501,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should render namespace selector in empty state', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -456,11 +513,14 @@ describe('SnippetManagerRedux Component', () => {
 
       render(<SnippetManagerRedux />, { wrapper: NavigationProvider })
 
-      const namespaceSelector = screen.getByTestId('empty-state-namespace-selector')
+      const namespaceSelector = screen.getByTestId(
+        'empty-state-namespace-selector',
+      )
       expect(namespaceSelector).toBeInTheDocument()
     })
 
     it('should render snippet dialog in empty state', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -476,6 +536,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should not show toolbar in empty state', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -491,6 +552,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should not show grid in empty state', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -506,11 +568,12 @@ describe('SnippetManagerRedux Component', () => {
     })
   })
 
-  // ============================================================================
+  // ===========================================================================
   // RENDERING PATHS - Main View
-  // ============================================================================
+  // ===========================================================================
   describe('Rendering Paths - Main View', () => {
     it('should render main view when snippets exist', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -528,6 +591,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should render toolbar in main view', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -543,6 +607,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should render snippet grid in main view', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -558,6 +623,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should render namespace selector in main view', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -573,6 +639,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should render snippet dialog in main view', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -588,6 +655,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should render snippet viewer in main view', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -603,6 +671,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should show multiple snippets in grid', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -620,11 +689,12 @@ describe('SnippetManagerRedux Component', () => {
     })
   })
 
-  // ============================================================================
+  // ===========================================================================
   // RENDERING PATHS - No Results / Search
-  // ============================================================================
+  // ===========================================================================
   describe('Rendering Paths - No Results / Search', () => {
     it('should show no results message when search yields no snippets', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -641,6 +711,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should display correct search query in no results message', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -653,10 +724,13 @@ describe('SnippetManagerRedux Component', () => {
 
       render(<SnippetManagerRedux />, { wrapper: NavigationProvider })
 
-      expect(screen.getByText(/No snippets found matching "python"/)).toBeInTheDocument()
+      expect(
+        screen.getByText(/No snippets found matching "python"/),
+      ).toBeInTheDocument()
     })
 
     it('should not show no results message when no search query', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -673,6 +747,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should not show no results message when search has results', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -689,11 +764,12 @@ describe('SnippetManagerRedux Component', () => {
     })
   })
 
-  // ============================================================================
+  // ===========================================================================
   // RENDERING PATHS - Selection Mode
-  // ============================================================================
+  // ===========================================================================
   describe('Rendering Paths - Selection Mode', () => {
     it('should show selection controls when selection mode is active', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -709,7 +785,9 @@ describe('SnippetManagerRedux Component', () => {
       expect(screen.getByTestId('selection-controls')).toBeInTheDocument()
     })
 
+    // eslint-disable-next-line max-len
     it('should not show selection controls when selection mode is inactive', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -726,6 +804,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should display selection count in controls', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -739,10 +818,13 @@ describe('SnippetManagerRedux Component', () => {
 
       render(<SnippetManagerRedux />, { wrapper: NavigationProvider })
 
-      expect(screen.getByTestId('selection-count')).toHaveTextContent('2 selected')
+      expect(screen.getByTestId('selection-count')).toHaveTextContent(
+        '2 selected',
+      )
     })
 
     it('should show checkboxes on snippets in selection mode', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -760,6 +842,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should have selected checkboxes matching selected ids', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -773,21 +856,26 @@ describe('SnippetManagerRedux Component', () => {
 
       render(<SnippetManagerRedux />, { wrapper: NavigationProvider })
 
-      const checkbox1 = screen.getByTestId('snippet-select-snippet-1') as HTMLInputElement
-      const checkbox2 = screen.getByTestId('snippet-select-snippet-2') as HTMLInputElement
+      const checkbox1 = screen.getByTestId(
+        'snippet-select-snippet-1',
+      ) as HTMLInputElement
+      const checkbox2 = screen.getByTestId(
+        'snippet-select-snippet-2',
+      ) as HTMLInputElement
 
       expect(checkbox1.checked).toBe(true)
       expect(checkbox2.checked).toBe(false)
     })
   })
 
-  // ============================================================================
+  // ===========================================================================
   // USER INTERACTIONS - Snippet Selection
-  // ============================================================================
+  // ===========================================================================
   describe('User Interactions - Snippet Selection', () => {
     it('should allow user to toggle snippet selection', async () => {
       const user = userEvent.setup()
       const handleToggleSnippetSelection = jest.fn()
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -810,6 +898,7 @@ describe('SnippetManagerRedux Component', () => {
     it('should allow user to select multiple snippets', async () => {
       const user = userEvent.setup()
       const handleToggleSnippetSelection = jest.fn()
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -833,6 +922,7 @@ describe('SnippetManagerRedux Component', () => {
     it('should allow user to deselect snippet', async () => {
       const user = userEvent.setup()
       const handleToggleSnippetSelection = jest.fn()
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -847,7 +937,9 @@ describe('SnippetManagerRedux Component', () => {
 
       render(<SnippetManagerRedux />, { wrapper: NavigationProvider })
 
-      const checkbox = screen.getByTestId('snippet-select-snippet-1') as HTMLInputElement
+      const checkbox = screen.getByTestId(
+        'snippet-select-snippet-1',
+      ) as HTMLInputElement
       expect(checkbox.checked).toBe(true)
 
       await user.click(checkbox)
@@ -856,13 +948,15 @@ describe('SnippetManagerRedux Component', () => {
     })
   })
 
-  // ============================================================================
+  // ===========================================================================
   // USER INTERACTIONS - Select All / Clear All
-  // ============================================================================
+  // ===========================================================================
   describe('User Interactions - Select All / Clear All', () => {
+    // eslint-disable-next-line max-len
     it('should select all snippets when select all button clicked', async () => {
       const user = userEvent.setup()
       const handleSelectAll = jest.fn()
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -886,6 +980,7 @@ describe('SnippetManagerRedux Component', () => {
     it('should clear all selections when button clicked again', async () => {
       const user = userEvent.setup()
       const handleSelectAll = jest.fn()
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -907,10 +1002,13 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should change button label from select to deselect', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
 
       // First render - nothing selected
-      const { rerender } = render(<SnippetManagerRedux />, { wrapper: NavigationProvider })
+      const { rerender } = render(<SnippetManagerRedux />, {
+        wrapper: NavigationProvider,
+      })
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
         snippets: [mockSnippet1, mockSnippet2],
@@ -942,11 +1040,12 @@ describe('SnippetManagerRedux Component', () => {
     })
   })
 
-  // ============================================================================
+  // ===========================================================================
   // USER INTERACTIONS - Bulk Move
-  // ============================================================================
+  // ===========================================================================
   describe('User Interactions - Bulk Move', () => {
     it('should show move button when snippets are selected', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -966,6 +1065,7 @@ describe('SnippetManagerRedux Component', () => {
     it('should allow user to move snippets to another namespace', async () => {
       const user = userEvent.setup()
       const handleBulkMove = jest.fn()
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -987,6 +1087,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should not show move button when no snippets selected', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1000,15 +1101,18 @@ describe('SnippetManagerRedux Component', () => {
 
       render(<SnippetManagerRedux />, { wrapper: NavigationProvider })
 
-      expect(screen.queryByTestId('bulk-move-menu-trigger')).not.toBeInTheDocument()
+      expect(
+        screen.queryByTestId('bulk-move-menu-trigger'),
+      ).not.toBeInTheDocument()
     })
   })
 
-  // ============================================================================
+  // ===========================================================================
   // USER INTERACTIONS - Namespace Selection
-  // ============================================================================
+  // ===========================================================================
   describe('User Interactions - Namespace Selection', () => {
     it('should render namespace selector', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1026,6 +1130,7 @@ describe('SnippetManagerRedux Component', () => {
     it('should allow user to change namespace', async () => {
       const user = userEvent.setup()
       const handleNamespaceChange = jest.fn()
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1045,6 +1150,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should display selected namespace value', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1061,13 +1167,14 @@ describe('SnippetManagerRedux Component', () => {
     })
   })
 
-  // ============================================================================
+  // ===========================================================================
   // USER INTERACTIONS - Snippet Actions
-  // ============================================================================
+  // ===========================================================================
   describe('User Interactions - Snippet Actions', () => {
     it('should allow user to view snippet', async () => {
       const user = userEvent.setup()
       const handleViewSnippet = jest.fn()
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1089,6 +1196,7 @@ describe('SnippetManagerRedux Component', () => {
     it('should allow user to edit snippet', async () => {
       const user = userEvent.setup()
       const handleEditSnippet = jest.fn()
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1110,6 +1218,7 @@ describe('SnippetManagerRedux Component', () => {
     it('should allow user to delete snippet', async () => {
       const user = userEvent.setup()
       const handleDeleteSnippet = jest.fn()
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1129,13 +1238,14 @@ describe('SnippetManagerRedux Component', () => {
     })
   })
 
-  // ============================================================================
+  // ===========================================================================
   // USER INTERACTIONS - Dialogs
-  // ============================================================================
+  // ===========================================================================
   describe('User Interactions - Dialogs', () => {
     it('should open create dialog when create button clicked', async () => {
       const user = userEvent.setup()
       const handleCreateNew = jest.fn()
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1157,6 +1267,7 @@ describe('SnippetManagerRedux Component', () => {
     it('should close dialog when close button clicked', async () => {
       const user = userEvent.setup()
       const handleDialogClose = jest.fn()
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1177,6 +1288,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should display editing snippet ID in dialog', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1196,6 +1308,7 @@ describe('SnippetManagerRedux Component', () => {
     it('should open viewer when view button clicked', async () => {
       const user = userEvent.setup()
       const handleViewSnippet = jest.fn()
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1217,6 +1330,7 @@ describe('SnippetManagerRedux Component', () => {
     it('should close viewer when close button clicked', async () => {
       const user = userEvent.setup()
       const handleViewerClose = jest.fn()
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1238,6 +1352,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should display viewing snippet in viewer', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1251,17 +1366,20 @@ describe('SnippetManagerRedux Component', () => {
 
       render(<SnippetManagerRedux />, { wrapper: NavigationProvider })
 
-      expect(screen.getByTestId('viewer-content')).toHaveTextContent(mockSnippet1.title)
+      expect(screen.getByTestId('viewer-content')).toHaveTextContent(
+        mockSnippet1.title,
+      )
     })
   })
 
-  // ============================================================================
+  // ===========================================================================
   // USER INTERACTIONS - Search
-  // ============================================================================
+  // ===========================================================================
   describe('User Interactions - Search', () => {
     it('should allow user to search snippets', async () => {
       const user = userEvent.setup()
       const handleSearchChange = jest.fn()
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1282,6 +1400,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should display current search query in input', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1294,13 +1413,16 @@ describe('SnippetManagerRedux Component', () => {
 
       render(<SnippetManagerRedux />, { wrapper: NavigationProvider })
 
-      const searchInput = screen.getByTestId('snippet-search-input') as HTMLInputElement
+      const searchInput = screen.getByTestId(
+        'snippet-search-input',
+      ) as HTMLInputElement
       expect(searchInput.value).toBe('javascript')
     })
 
     it('should clear search when input is cleared', async () => {
       const user = userEvent.setup()
       const handleSearchChange = jest.fn()
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1321,13 +1443,14 @@ describe('SnippetManagerRedux Component', () => {
     })
   })
 
-  // ============================================================================
+  // ===========================================================================
   // USER INTERACTIONS - Toggle Selection Mode
-  // ============================================================================
+  // ===========================================================================
   describe('User Interactions - Toggle Selection Mode', () => {
     it('should toggle selection mode when button clicked', async () => {
       const user = userEvent.setup()
       const handleToggleSelectionMode = jest.fn()
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1348,6 +1471,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should show selection controls after toggling selection mode', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1364,13 +1488,14 @@ describe('SnippetManagerRedux Component', () => {
     })
   })
 
-  // ============================================================================
+  // ===========================================================================
   // USER INTERACTIONS - Create from Template
-  // ============================================================================
+  // ===========================================================================
   describe('User Interactions - Create from Template', () => {
     it('should open dialog when create from template clicked', async () => {
       const user = userEvent.setup()
       const handleCreateFromTemplate = jest.fn()
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1392,6 +1517,7 @@ describe('SnippetManagerRedux Component', () => {
     it('should create from template in empty state', async () => {
       const user = userEvent.setup()
       const handleCreateFromTemplate = jest.fn()
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1413,6 +1539,7 @@ describe('SnippetManagerRedux Component', () => {
     it('should create blank snippet in empty state', async () => {
       const user = userEvent.setup()
       const handleCreateNew = jest.fn()
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1432,11 +1559,12 @@ describe('SnippetManagerRedux Component', () => {
     })
   })
 
-  // ============================================================================
+  // ===========================================================================
   // EDGE CASES - Accessibility
-  // ============================================================================
+  // ===========================================================================
   describe('Edge Cases - Accessibility', () => {
     it('should have proper ARIA attributes on main container', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1454,6 +1582,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should have proper ARIA attributes on grid', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1471,6 +1600,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should have proper ARIA attributes on search input', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1486,7 +1616,9 @@ describe('SnippetManagerRedux Component', () => {
       expect(searchInput).toHaveAttribute('aria-label', 'Search snippets')
     })
 
+    // eslint-disable-next-line max-len
     it('should have selection count with aria-live in selection controls', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1505,6 +1637,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should have selection mode button with aria-pressed', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1522,6 +1655,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should have select all button with proper aria-label', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1539,7 +1673,9 @@ describe('SnippetManagerRedux Component', () => {
       expect(selectAllBtn).toHaveAttribute('aria-label', 'Select all snippets')
     })
 
+    // eslint-disable-next-line max-len
     it('should have snippets with proper selection checkbox aria-labels', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1554,15 +1690,19 @@ describe('SnippetManagerRedux Component', () => {
       render(<SnippetManagerRedux />, { wrapper: NavigationProvider })
 
       const checkbox = screen.getByTestId('snippet-select-snippet-1')
-      expect(checkbox).toHaveAttribute('aria-label', expect.stringContaining('Select'))
+      expect(checkbox).toHaveAttribute(
+        'aria-label',
+        expect.stringContaining('Select'),
+      )
     })
   })
 
-  // ============================================================================
+  // ===========================================================================
   // EDGE CASES - Empty and Null States
-  // ============================================================================
+  // ===========================================================================
   describe('Edge Cases - Empty and Null States', () => {
     it('should handle empty snippets array', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1578,6 +1718,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should handle no namespaces', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1593,6 +1734,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should handle null editing snippet', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1610,6 +1752,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should handle null viewing snippet', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1627,6 +1770,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should handle null namespace ID', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1642,14 +1786,15 @@ describe('SnippetManagerRedux Component', () => {
     })
   })
 
-  // ============================================================================
+  // ===========================================================================
   // COMPLEX SCENARIOS
-  // ============================================================================
+  // ===========================================================================
   describe('Complex Scenarios', () => {
     it('should handle multiple operations in sequence', async () => {
       const user = userEvent.setup()
       const handleToggleSelectionMode = jest.fn()
       const handleToggleSnippetSelection = jest.fn()
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1675,6 +1820,7 @@ describe('SnippetManagerRedux Component', () => {
     it('should handle search while in selection mode', async () => {
       const user = userEvent.setup()
       const handleSearchChange = jest.fn()
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1697,9 +1843,11 @@ describe('SnippetManagerRedux Component', () => {
       expect(screen.getByTestId('selection-controls')).toBeInTheDocument()
     })
 
+    // eslint-disable-next-line max-len
     it('should handle switching namespaces while in selection mode', async () => {
       const user = userEvent.setup()
       const handleNamespaceChange = jest.fn()
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1722,6 +1870,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should handle multiple selected snippets display', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1735,10 +1884,18 @@ describe('SnippetManagerRedux Component', () => {
 
       render(<SnippetManagerRedux />, { wrapper: NavigationProvider })
 
-      expect(screen.getByTestId('selection-count')).toHaveTextContent('3 selected')
-      const checkbox1 = screen.getByTestId('snippet-select-snippet-1') as HTMLInputElement
-      const checkbox2 = screen.getByTestId('snippet-select-snippet-2') as HTMLInputElement
-      const checkbox3 = screen.getByTestId('snippet-select-snippet-3') as HTMLInputElement
+      expect(screen.getByTestId('selection-count')).toHaveTextContent(
+        '3 selected',
+      )
+      const checkbox1 = screen.getByTestId(
+        'snippet-select-snippet-1',
+      ) as HTMLInputElement
+      const checkbox2 = screen.getByTestId(
+        'snippet-select-snippet-2',
+      ) as HTMLInputElement
+      const checkbox3 = screen.getByTestId(
+        'snippet-select-snippet-3',
+      ) as HTMLInputElement
 
       expect(checkbox1.checked).toBe(true)
       expect(checkbox2.checked).toBe(true)
@@ -1746,6 +1903,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should display all snippets in grid with correct count', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1765,11 +1923,12 @@ describe('SnippetManagerRedux Component', () => {
     })
   })
 
-  // ============================================================================
+  // ===========================================================================
   // COMPONENT COMPOSITION
-  // ============================================================================
+  // ===========================================================================
   describe('Component Composition', () => {
     it('should render all child components together', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1796,6 +1955,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should not render conflicting views (loading vs main)', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1809,11 +1969,14 @@ describe('SnippetManagerRedux Component', () => {
       render(<SnippetManagerRedux />, { wrapper: NavigationProvider })
 
       expect(screen.getByTestId('snippet-manager-loading')).toBeInTheDocument()
-      expect(screen.queryByTestId('snippet-manager-redux')).not.toBeInTheDocument()
+      expect(
+        screen.queryByTestId('snippet-manager-redux'),
+      ).not.toBeInTheDocument()
       expect(screen.queryByTestId('empty-state')).not.toBeInTheDocument()
     })
 
     it('should not render conflicting views (empty vs main)', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1826,16 +1989,19 @@ describe('SnippetManagerRedux Component', () => {
       render(<SnippetManagerRedux />, { wrapper: NavigationProvider })
 
       expect(screen.getByTestId('empty-state')).toBeInTheDocument()
-      expect(screen.queryByTestId('snippet-manager-redux')).not.toBeInTheDocument()
+      expect(
+        screen.queryByTestId('snippet-manager-redux'),
+      ).not.toBeInTheDocument()
       expect(screen.queryByTestId('snippet-toolbar')).not.toBeInTheDocument()
     })
   })
 
-  // ============================================================================
+  // ===========================================================================
   // BUTTON STATES AND LABELS
-  // ============================================================================
+  // ===========================================================================
   describe('Button States and Labels', () => {
     it('should display selection mode as inactive by default', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1853,6 +2019,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should display selection mode as active when enabled', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1870,6 +2037,7 @@ describe('SnippetManagerRedux Component', () => {
     })
 
     it('should show all buttons in toolbar', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1883,11 +2051,14 @@ describe('SnippetManagerRedux Component', () => {
       render(<SnippetManagerRedux />, { wrapper: NavigationProvider })
 
       expect(screen.getByTestId('snippet-search-input')).toBeInTheDocument()
-      expect(screen.getByTestId('snippet-selection-mode-btn')).toBeInTheDocument()
+      expect(
+        screen.getByTestId('snippet-selection-mode-btn'),
+      ).toBeInTheDocument()
       expect(screen.getByTestId('snippet-create-new-btn')).toBeInTheDocument()
     })
 
     it('should display correct selection count when snippets selected', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1901,10 +2072,13 @@ describe('SnippetManagerRedux Component', () => {
 
       render(<SnippetManagerRedux />, { wrapper: NavigationProvider })
 
-      expect(screen.getByTestId('selection-count')).toHaveTextContent('2 selected')
+      expect(screen.getByTestId('selection-count')).toHaveTextContent(
+        '2 selected',
+      )
     })
 
     it('should display correct selection count for single item', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useSnippetManager } = require('@/hooks/useSnippetManager')
       ;(useSnippetManager as jest.Mock).mockReturnValue({
         ...mockHookReturnValue,
@@ -1918,11 +2092,13 @@ describe('SnippetManagerRedux Component', () => {
 
       render(<SnippetManagerRedux />, { wrapper: NavigationProvider })
 
-      expect(screen.getByTestId('selection-count')).toHaveTextContent('1 selected')
+      expect(screen.getByTestId('selection-count')).toHaveTextContent(
+        '1 selected',
+      )
     })
   })
 
-  // ============================================================================
+  // ===========================================================================
   // TOTAL TEST COUNT: 130+ tests
-  // ============================================================================
+  // ===========================================================================
 })

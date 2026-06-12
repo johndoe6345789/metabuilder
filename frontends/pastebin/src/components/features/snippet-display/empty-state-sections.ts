@@ -3,8 +3,7 @@ import templatesData from '@/data/templates.json'
 
 const templates = templatesData as SnippetTemplate[]
 
-const byCategory = (cat: string) =>
-  templates.filter(t => t.category === cat)
+const byCategory = (cat: string) => templates.filter(t => t.category === cat)
 const byLangs = (cat: string, langs: string[]) =>
   templates.filter(t => t.category === cat && langs.includes(t.language))
 const multiCat = (cats: string[]) =>
@@ -44,8 +43,6 @@ export const EMPTY_STATE_SECTIONS = [
   },
   {
     label: 'R / Julia / Lua / Perl / Bash / C#',
-    templates: byLangs(
-      'example', ['R', 'Julia', 'Lua', 'Perl', 'Bash', 'C#']
-    ),
+    templates: byLangs('example', ['R', 'Julia', 'Lua', 'Perl', 'Bash', 'C#']),
   },
 ]

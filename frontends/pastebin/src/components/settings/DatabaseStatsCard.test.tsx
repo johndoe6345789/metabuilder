@@ -20,10 +20,10 @@ describe('DatabaseStatsCard', () => {
             snippetCount: 5,
             templateCount: 2,
             storageType: 'indexeddb',
-            databaseSize: 1024000
+            databaseSize: 1024000,
           }}
           formatBytes={mockFormatBytes}
-        />
+        />,
       )
 
       expect(screen.getByText('Database Statistics')).toBeInTheDocument()
@@ -37,14 +37,14 @@ describe('DatabaseStatsCard', () => {
             snippetCount: 5,
             templateCount: 2,
             storageType: 'indexeddb',
-            databaseSize: 1024000
+            databaseSize: 1024000,
           }}
           formatBytes={mockFormatBytes}
-        />
+        />,
       )
 
       expect(
-        screen.getByText('Information about your local database storage')
+        screen.getByText('Information about your local database storage'),
       ).toBeInTheDocument()
     })
   })
@@ -56,7 +56,7 @@ describe('DatabaseStatsCard', () => {
           loading={true}
           stats={null}
           formatBytes={mockFormatBytes}
-        />
+        />,
       )
 
       expect(screen.getByText('Loading...')).toBeInTheDocument()
@@ -68,7 +68,7 @@ describe('DatabaseStatsCard', () => {
           loading={true}
           stats={null}
           formatBytes={mockFormatBytes}
-        />
+        />,
       )
 
       expect(screen.queryByText('Snippets')).not.toBeInTheDocument()
@@ -84,10 +84,10 @@ describe('DatabaseStatsCard', () => {
             snippetCount: 10,
             templateCount: 3,
             storageType: 'indexeddb',
-            databaseSize: 2048000
+            databaseSize: 2048000,
           }}
           formatBytes={mockFormatBytes}
-        />
+        />,
       )
 
       expect(screen.getByText('Snippets')).toBeInTheDocument()
@@ -102,10 +102,10 @@ describe('DatabaseStatsCard', () => {
             snippetCount: 10,
             templateCount: 5,
             storageType: 'indexeddb',
-            databaseSize: 2048000
+            databaseSize: 2048000,
           }}
           formatBytes={mockFormatBytes}
-        />
+        />,
       )
 
       expect(screen.getByText('Templates')).toBeInTheDocument()
@@ -120,10 +120,10 @@ describe('DatabaseStatsCard', () => {
             snippetCount: 10,
             templateCount: 3,
             storageType: 'indexeddb',
-            databaseSize: 2048000
+            databaseSize: 2048000,
           }}
           formatBytes={mockFormatBytes}
-        />
+        />,
       )
 
       expect(screen.getByText('Storage Type')).toBeInTheDocument()
@@ -138,10 +138,10 @@ describe('DatabaseStatsCard', () => {
             snippetCount: 10,
             templateCount: 3,
             storageType: 'indexeddb',
-            databaseSize: 1024000
+            databaseSize: 1024000,
           }}
           formatBytes={mockFormatBytes}
-        />
+        />,
       )
 
       expect(screen.getByText('Database Size')).toBeInTheDocument()
@@ -155,10 +155,10 @@ describe('DatabaseStatsCard', () => {
             snippetCount: 10,
             templateCount: 3,
             storageType: 'localstorage',
-            databaseSize: 512000
+            databaseSize: 512000,
           }}
           formatBytes={mockFormatBytes}
-        />
+        />,
       )
 
       expect(screen.getByText('localstorage')).toBeInTheDocument()
@@ -174,10 +174,10 @@ describe('DatabaseStatsCard', () => {
             snippetCount: 10,
             templateCount: 3,
             storageType: 'indexeddb',
-            databaseSize: 1024000
+            databaseSize: 1024000,
           }}
           formatBytes={customFormatBytes}
-        />
+        />,
       )
 
       expect(customFormatBytes).toHaveBeenCalledWith(1024000)
@@ -192,12 +192,10 @@ describe('DatabaseStatsCard', () => {
           loading={false}
           stats={null}
           formatBytes={mockFormatBytes}
-        />
+        />,
       )
 
-      expect(
-        screen.getByText('Failed to load statistics')
-      ).toBeInTheDocument()
+      expect(screen.getByText('Failed to load statistics')).toBeInTheDocument()
     })
 
     it('should display error with destructive color', () => {
@@ -206,7 +204,7 @@ describe('DatabaseStatsCard', () => {
           loading={false}
           stats={null}
           formatBytes={mockFormatBytes}
-        />
+        />,
       )
 
       const errorText = screen.getByTestId('stats-error')
@@ -223,10 +221,10 @@ describe('DatabaseStatsCard', () => {
             snippetCount: 0,
             templateCount: 0,
             storageType: 'indexeddb',
-            databaseSize: 0
+            databaseSize: 0,
           }}
           formatBytes={mockFormatBytes}
-        />
+        />,
       )
 
       expect(screen.getByText('Snippets')).toBeInTheDocument()
@@ -241,10 +239,10 @@ describe('DatabaseStatsCard', () => {
             snippetCount: 99999,
             templateCount: 50000,
             storageType: 'indexeddb',
-            databaseSize: 1099511627776
+            databaseSize: 1099511627776,
           }}
           formatBytes={mockFormatBytes}
-        />
+        />,
       )
 
       expect(screen.getByText('99999')).toBeInTheDocument()
@@ -259,10 +257,10 @@ describe('DatabaseStatsCard', () => {
             snippetCount: 5,
             templateCount: 1,
             storageType: 'indexeddb',
-            databaseSize: 1024000
+            databaseSize: 1024000,
           }}
           formatBytes={mockFormatBytes}
-        />
+        />,
       )
 
       expect(screen.getByText('indexeddb')).toBeInTheDocument()
@@ -274,10 +272,10 @@ describe('DatabaseStatsCard', () => {
             snippetCount: 5,
             templateCount: 1,
             storageType: 'localstorage',
-            databaseSize: 1024000
+            databaseSize: 1024000,
           }}
           formatBytes={mockFormatBytes}
-        />
+        />,
       )
 
       expect(screen.getByText('localstorage')).toBeInTheDocument()
@@ -291,10 +289,10 @@ describe('DatabaseStatsCard', () => {
             snippetCount: 0,
             templateCount: 0,
             storageType: 'none',
-            databaseSize: 0
+            databaseSize: 0,
           }}
           formatBytes={mockFormatBytes}
-        />
+        />,
       )
 
       expect(screen.getByText('none')).toBeInTheDocument()
@@ -310,10 +308,10 @@ describe('DatabaseStatsCard', () => {
             snippetCount: 10,
             templateCount: 3,
             storageType: 'indexeddb',
-            databaseSize: 2048000
+            databaseSize: 2048000,
           }}
           formatBytes={mockFormatBytes}
-        />
+        />,
       )
 
       expect(screen.getByTestId('stat-snippets')).toBeInTheDocument()
@@ -328,10 +326,10 @@ describe('DatabaseStatsCard', () => {
             snippetCount: 10,
             templateCount: 3,
             storageType: 'indexeddb',
-            databaseSize: 2048000
+            databaseSize: 2048000,
           }}
           formatBytes={mockFormatBytes}
-        />
+        />,
       )
 
       expect(screen.getByTestId('stat-storage-type')).toBeInTheDocument()
@@ -346,7 +344,7 @@ describe('DatabaseStatsCard', () => {
           loading={true}
           stats={null}
           formatBytes={mockFormatBytes}
-        />
+        />,
       )
 
       expect(screen.getByText('Loading...')).toBeInTheDocument()
@@ -358,10 +356,10 @@ describe('DatabaseStatsCard', () => {
             snippetCount: 10,
             templateCount: 3,
             storageType: 'indexeddb',
-            databaseSize: 2048000
+            databaseSize: 2048000,
           }}
           formatBytes={mockFormatBytes}
-        />
+        />,
       )
 
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument()
@@ -374,7 +372,7 @@ describe('DatabaseStatsCard', () => {
           loading={true}
           stats={null}
           formatBytes={mockFormatBytes}
-        />
+        />,
       )
 
       expect(screen.getByText('Loading...')).toBeInTheDocument()
@@ -384,18 +382,16 @@ describe('DatabaseStatsCard', () => {
           loading={false}
           stats={null}
           formatBytes={mockFormatBytes}
-        />
+        />,
       )
 
-      expect(
-        screen.getByText('Failed to load statistics')
-      ).toBeInTheDocument()
+      expect(screen.getByText('Failed to load statistics')).toBeInTheDocument()
     })
   })
 
   describe('formatBytes integration', () => {
     it('should format bytes correctly for KB', () => {
-      const formatBytes = jest.fn((bytes) => {
+      const formatBytes = jest.fn(bytes => {
         if (bytes === 0) return '0 Bytes'
         const k = 1024
         const sizes = ['Bytes', 'KB', 'MB', 'GB']
@@ -410,17 +406,17 @@ describe('DatabaseStatsCard', () => {
             snippetCount: 10,
             templateCount: 3,
             storageType: 'indexeddb',
-            databaseSize: 1024 * 10
+            databaseSize: 1024 * 10,
           }}
           formatBytes={formatBytes}
-        />
+        />,
       )
 
       expect(formatBytes).toHaveBeenCalledWith(1024 * 10)
     })
 
     it('should format bytes correctly for MB', () => {
-      const formatBytes = jest.fn((bytes) => {
+      const formatBytes = jest.fn(bytes => {
         if (bytes === 0) return '0 Bytes'
         const k = 1024
         const sizes = ['Bytes', 'KB', 'MB', 'GB']
@@ -435,10 +431,10 @@ describe('DatabaseStatsCard', () => {
             snippetCount: 10,
             templateCount: 3,
             storageType: 'indexeddb',
-            databaseSize: 1024 * 1024 * 5
+            databaseSize: 1024 * 1024 * 5,
           }}
           formatBytes={formatBytes}
-        />
+        />,
       )
 
       expect(formatBytes).toHaveBeenCalledWith(1024 * 1024 * 5)

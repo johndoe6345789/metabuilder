@@ -4,11 +4,12 @@
 
 export function buildWrapperCode(
   transformedCode: string,
-  componentToReturn: string | undefined
+  componentToReturn: string | undefined,
 ): string {
   const returnStmt = componentToReturn
     ? `return ${componentToReturn};`
     : `return null;`
+  /* eslint-disable max-len */
   return `
     (function() {
       const React = arguments[0];
@@ -70,4 +71,5 @@ export function buildWrapperCode(
       ${returnStmt}
     })
   `
+  /* eslint-enable max-len */
 }

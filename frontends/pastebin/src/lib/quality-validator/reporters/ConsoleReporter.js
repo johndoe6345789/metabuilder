@@ -238,6 +238,7 @@ export class ConsoleReporter {
      */
     getColorizer(useColors) {
         if (!useColors) {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             return (text, _color) => text;
         }
         return (text, color) => {

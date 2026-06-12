@@ -1,9 +1,17 @@
-import { Button, IconButton, MaterialIcon, Divider } from '@metabuilder/components/fakemui'
+import {
+  Button,
+  IconButton,
+  MaterialIcon,
+  Divider,
+} from '@metabuilder/components/fakemui'
 
 const labelStyle: React.CSSProperties = {
-  fontSize: '0.875rem', lineHeight: '1.25rem', fontWeight: 500,
+  fontSize: '0.875rem',
+  lineHeight: '1.25rem',
+  fontWeight: 500,
   color: 'var(--mat-sys-on-surface-variant)',
-  textTransform: 'uppercase', letterSpacing: '0.05em',
+  textTransform: 'uppercase',
+  letterSpacing: '0.05em',
 }
 const wrapRow = { display: 'flex', flexWrap: 'wrap' as const, gap: '16px' }
 const col = { display: 'flex', flexDirection: 'column' as const, gap: '12px' }
@@ -63,7 +71,9 @@ export function ButtonGroups() {
         <h3 style={labelStyle}>States</h3>
         <div style={wrapRow}>
           <Button disabled>Disabled</Button>
-          <Button variant="outlined" disabled>Disabled Outline</Button>
+          <Button variant="outlined" disabled>
+            Disabled Outline
+          </Button>
         </div>
       </div>
     </div>

@@ -15,28 +15,40 @@ export function useSnippetManagerActions() {
   const router = useRouter()
   const selection = useSnippetSelectionActions()
 
-  const handleEditSnippet = useCallback((snippet: Snippet) => {
-    router.push(`/snippet/${snippet.id}`)
-  }, [router])
+  const handleEditSnippet = useCallback(
+    (snippet: Snippet) => {
+      router.push(`/snippet/${snippet.id}`)
+    },
+    [router],
+  )
 
-  const handleDeleteSnippet = useCallback(async (id: string) => {
-    try {
-      await dispatch(deleteSnippet(id)).unwrap()
-      toast.success(t.toast.snippetDeleted)
-    } catch (error) {
-      console.error('Failed to delete snippet:', error)
-      toast.error(t.toast.failedToDeleteSnippet)
-    }
-  }, [dispatch, t])
+  const handleDeleteSnippet = useCallback(
+    async (id: string) => {
+      try {
+        await dispatch(deleteSnippet(id)).unwrap()
+        toast.success(t.toast.snippetDeleted)
+      } catch (error) {
+        console.error('Failed to delete snippet:', error)
+        toast.error(t.toast.failedToDeleteSnippet)
+      }
+    },
+    [dispatch, t],
+  )
 
-  const handleCopyCode = useCallback((code: string) => {
-    navigator.clipboard.writeText(code)
-    toast.success(t.toast.codeCopied)
-  }, [t])
+  const handleCopyCode = useCallback(
+    (code: string) => {
+      navigator.clipboard.writeText(code)
+      toast.success(t.toast.codeCopied)
+    },
+    [t],
+  )
 
-  const handleViewSnippet = useCallback((snippet: Snippet) => {
-    router.push(`/snippet/${snippet.id}`)
-  }, [router])
+  const handleViewSnippet = useCallback(
+    (snippet: Snippet) => {
+      router.push(`/snippet/${snippet.id}`)
+    },
+    [router],
+  )
 
   const handleMoveSnippet = useCallback(() => {}, [])
 
@@ -44,11 +56,12 @@ export function useSnippetManagerActions() {
     router.push('/snippet/new')
   }, [router])
 
-  const handleCreateFromTemplate = useCallback((templateId: string) => {
-    router.push(
-      `/snippet/new?template=${encodeURIComponent(templateId)}`
-    )
-  }, [router])
+  const handleCreateFromTemplate = useCallback(
+    (templateId: string) => {
+      router.push(`/snippet/new?template=${encodeURIComponent(templateId)}`)
+    },
+    [router],
+  )
 
   const handleNamespaceChange = useCallback(
     (namespaceId: string | null) => {
@@ -57,13 +70,19 @@ export function useSnippetManagerActions() {
     [dispatch],
   )
 
-  const handleSearchChange = useCallback((query: string) => {
-    dispatch(setSearchQuery(query))
-  }, [dispatch])
+  const handleSearchChange = useCallback(
+    (query: string) => {
+      dispatch(setSearchQuery(query))
+    },
+    [dispatch],
+  )
 
-  const handleViewerClose = useCallback((open: boolean) => {
-    if (!open) dispatch(closeViewer())
-  }, [dispatch])
+  const handleViewerClose = useCallback(
+    (open: boolean) => {
+      if (!open) dispatch(closeViewer())
+    },
+    [dispatch],
+  )
 
   return {
     handleEditSnippet,

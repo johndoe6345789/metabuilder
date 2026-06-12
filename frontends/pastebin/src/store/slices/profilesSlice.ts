@@ -1,6 +1,8 @@
 import { createSlice, type Action } from '@reduxjs/toolkit'
 import {
-  fetchUserProfile, updateMyProfile, getUsername,
+  fetchUserProfile,
+  updateMyProfile,
+  getUsername,
 } from './profilesThunks'
 import type { UserProfile } from './profilesThunks'
 
@@ -23,9 +25,9 @@ const profilesSlice = createSlice({
   name: 'profiles',
   initialState,
   reducers: {},
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(fetchUserProfile.pending, (state) => {
+      .addCase(fetchUserProfile.pending, state => {
         state.loading = true
         state.error = null
       })
@@ -39,7 +41,7 @@ const profilesSlice = createSlice({
         state.loading = false
         state.error = action.payload as string
       })
-      .addCase(updateMyProfile.pending, (state) => {
+      .addCase(updateMyProfile.pending, state => {
         state.loading = true
         state.error = null
       })
@@ -57,7 +59,7 @@ const profilesSlice = createSlice({
       })
       .addMatcher(
         (action: Action) => action.type === 'persist/REHYDRATE',
-        (state) => {
+        state => {
           state.loading = false
           state.error = null
         },

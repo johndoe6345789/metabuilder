@@ -1,19 +1,23 @@
-'use client';
+'use client'
 
 import {
-  Card, CardContent, CardHeader,
-  Button, FormLabel, MaterialIcon,
-} from '@metabuilder/components/fakemui';
-import { useTranslation } from '@/hooks/useTranslation';
-import { AI_PLATFORMS } from '@/config/aiPlatforms';
-import { useOpenAISettings } from './hooks/useOpenAISettings';
-import { ApiKeyField } from './ApiKeyField';
-import styles from './settings-card.module.scss';
+  Card,
+  CardContent,
+  CardHeader,
+  Button,
+  FormLabel,
+  MaterialIcon,
+} from '@metabuilder/components/fakemui'
+import { useTranslation } from '@/hooks/useTranslation'
+import { AI_PLATFORMS } from '@/config/aiPlatforms'
+import { useOpenAISettings } from './hooks/useOpenAISettings'
+import { ApiKeyField } from './ApiKeyField'
+import styles from './settings-card.module.scss'
 
 export function OpenAISettingsCard() {
-  const t = useTranslation();
-  const s = t.settingsCards.openAI;
-  const vm = useOpenAISettings();
+  const t = useTranslation()
+  const s = t.settingsCards.openAI
+  const vm = useOpenAISettings()
 
   return (
     <Card
@@ -33,16 +37,12 @@ export function OpenAISettingsCard() {
             <h3 className={styles.cardTitle}>{s.title}</h3>
           </div>
         }
-        subheader={
-          <p className={styles.cardDescription}>{s.description}</p>
-        }
+        subheader={<p className={styles.cardDescription}>{s.description}</p>}
       />
       <CardContent>
         <div className={styles.contentStackSm}>
           <div className={styles.keyFieldWrapper}>
-            <FormLabel htmlFor="ai-platform">
-              {s.platformLabel}
-            </FormLabel>
+            <FormLabel htmlFor="ai-platform">{s.platformLabel}</FormLabel>
             <select
               id="ai-platform"
               value={vm.platformId}
@@ -52,7 +52,9 @@ export function OpenAISettingsCard() {
               aria-label="Select AI platform"
             >
               {AI_PLATFORMS.map(p => (
-                <option key={p.id} value={p.id}>{p.name}</option>
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
               ))}
             </select>
           </div>
@@ -63,11 +65,7 @@ export function OpenAISettingsCard() {
               data-testid="server-key-status"
               role="status"
             >
-              <MaterialIcon
-                name="cloud_done"
-                size={16}
-                aria-hidden="true"
-              />
+              <MaterialIcon name="cloud_done" size={16} aria-hidden="true" />
               {' Key saved on server'}
             </div>
           )}
@@ -121,5 +119,5 @@ export function OpenAISettingsCard() {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }

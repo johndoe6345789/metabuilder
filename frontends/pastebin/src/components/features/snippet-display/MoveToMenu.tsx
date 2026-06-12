@@ -1,4 +1,9 @@
-import { Menu, MenuItem, Divider, MaterialIcon } from '@metabuilder/components/fakemui'
+import {
+  Menu,
+  MenuItem,
+  Divider,
+  MaterialIcon,
+} from '@metabuilder/components/fakemui'
 import { Namespace } from '@/lib/types'
 import { useTranslation } from '@/hooks/useTranslation'
 import styles from './snippet-card-actions.module.scss'
@@ -57,9 +62,13 @@ export function MoveToMenu({
             availableNamespaces.map(ns => (
               <MenuItem
                 key={ns.id}
-                onClick={() => { onMove(ns.id); onClose() }}
+                onClick={() => {
+                  onMove(ns.id)
+                  onClose()
+                }}
                 data-testid={`move-to-namespace-${ns.id}`}
                 disabled={isMoving}
+                // eslint-disable-next-line max-len
                 aria-label={`Move to ${ns.name}${ns.isDefault ? ' (Default)' : ''}`}
               >
                 {ns.name}
@@ -75,7 +84,11 @@ export function MoveToMenu({
       </div>
       <Divider />
       <MenuItem
-        onClick={e => { e.stopPropagation(); onDelete(e); onClose() }}
+        onClick={e => {
+          e.stopPropagation()
+          onDelete(e)
+          onClose()
+        }}
         className={`${styles.deleteItem} text-destructive`}
         data-testid="snippet-card-delete-btn"
         aria-label={t.snippetCard.ariaLabels.delete}

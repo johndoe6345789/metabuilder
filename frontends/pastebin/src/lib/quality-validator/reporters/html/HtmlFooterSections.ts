@@ -22,7 +22,7 @@ export function generateResourcesSection(): string {
     `    <p>Integrate this tool into your CI/CD pipeline to catch ` +
     `issues early and maintain code quality over time.</p>\n` +
     `  </div>\n</section>`
-  );
+  )
 }
 
 export function generateLegendSection(): string {
@@ -54,5 +54,5 @@ export function generateLegendSection(): string {
     `      <li><strong>Medium:</strong> Can be planned</li>\n` +
     `      <li><strong>Low:</strong> Nice to have</li>\n` +
     `    </ul>\n  </div>\n</section>`
-  );
+  )
 }

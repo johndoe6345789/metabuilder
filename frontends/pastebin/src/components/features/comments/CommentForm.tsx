@@ -13,14 +13,8 @@ export function CommentForm({
   onSubmit,
   placeholder = 'Leave a comment… (markdown supported)',
 }: CommentFormProps) {
-  const {
-    content,
-    preview,
-    submitting,
-    setContent,
-    setPreview,
-    handleSubmit,
-  } = useCommentForm(onSubmit)
+  const { content, preview, submitting, setContent, setPreview, handleSubmit } =
+    useCommentForm(onSubmit)
 
   return (
     <div className={styles.form}>
@@ -46,10 +40,12 @@ export function CommentForm({
           {content.trim() ? (
             <MarkdownRenderer content={content} animate={false} />
           ) : (
-            <span style={{
-              color: 'var(--mat-sys-on-surface-variant)',
-              fontSize: '0.875rem',
-            }}>
+            <span
+              style={{
+                color: 'var(--mat-sys-on-surface-variant)',
+                fontSize: '0.875rem',
+              }}
+            >
               Nothing to preview
             </span>
           )}

@@ -1,7 +1,13 @@
-import { Card, Button, Divider, MaterialIcon } from '@metabuilder/components/fakemui'
+import {
+  Card,
+  Button,
+  Divider,
+  MaterialIcon,
+} from '@metabuilder/components/fakemui'
 
 const iconStyle = (extra?: object) => ({
-  marginRight: '8px', ...extra,
+  marginRight: '8px',
+  ...extra,
 })
 
 export function SocialActionsSection() {
@@ -13,10 +19,16 @@ export function SocialActionsSection() {
       aria-label="Social action buttons"
     >
       <div>
-        <h2 style={{
-          fontSize: '1.875rem', lineHeight: '2.25rem',
-          fontWeight: 700, marginBottom: '8px',
-        }}>Social Actions</h2>
+        <h2
+          style={{
+            fontSize: '1.875rem',
+            lineHeight: '2.25rem',
+            fontWeight: 700,
+            marginBottom: '8px',
+          }}
+        >
+          Social Actions
+        </h2>
         <p style={{ color: 'var(--mat-sys-on-surface-variant)' }}>
           Grouped interactive buttons for social features
         </p>
@@ -41,13 +53,20 @@ export function SocialActionsSection() {
 
           <Divider />
 
-          <div style={{
-            display: 'flex', alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
-            <div style={{
-              display: 'flex', alignItems: 'center', gap: '16px',
-            }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '16px',
+              }}
+            >
               <Button variant="outlined" size="sm">
                 <MaterialIcon
                   name="favorite"

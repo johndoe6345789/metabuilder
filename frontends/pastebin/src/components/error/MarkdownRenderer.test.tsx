@@ -176,8 +176,11 @@ More content
     it('applies card styling to content wrapper', () => {
       const { container } = render(<MarkdownRenderer content="Test" />)
 
+      // eslint-disable-next-line no-useless-escape
       const contentDiv = container.querySelector('.bg-card\\\/50')
-      expect(contentDiv || container.querySelector('[class*="bg-"]')).toBeDefined()
+      expect(
+        contentDiv || container.querySelector('[class*="bg-"]'),
+      ).toBeDefined()
     })
 
     it('applies border styling', () => {
@@ -330,7 +333,7 @@ Content
       render(<MarkdownRenderer content={content} />)
 
       const headings = screen.getAllByText(/Section/)
-      headings.forEach((heading) => {
+      headings.forEach(heading => {
         expect(heading).toHaveClass('mt-4', 'mb-2')
       })
     })
@@ -389,7 +392,8 @@ The component failed to initialize properly
       const aiResponse = `## TypeError Analysis
 
 ### Understanding the Error
-A TypeError occurs when an operation is performed on a value of an inappropriate type.
+A TypeError occurs when an operation is performed on a value
+of an inappropriate type.
 
 ### Common Causes
 1. Calling a method on undefined or null

@@ -53,17 +53,26 @@ describe('NamespaceChip', () => {
 
   it('has aria-pressed false when not active', () => {
     render(<NamespaceChip {...defaultProps} isActive={false} />)
-    expect(screen.getByTestId('namespace-chip-ns1')).toHaveAttribute('aria-pressed', 'false')
+    expect(screen.getByTestId('namespace-chip-ns1')).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    )
   })
 
   it('has aria-pressed true when active', () => {
     render(<NamespaceChip {...defaultProps} isActive={true} />)
-    expect(screen.getByTestId('namespace-chip-ns1')).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByTestId('namespace-chip-ns1')).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
   })
 
   it('has correct aria-label', () => {
     render(<NamespaceChip {...defaultProps} />)
-    expect(screen.getByTestId('namespace-chip-ns1')).toHaveAttribute('aria-label', 'Switch to Work namespace')
+    expect(screen.getByTestId('namespace-chip-ns1')).toHaveAttribute(
+      'aria-label',
+      'Switch to Work namespace',
+    )
   })
 
   it('calls onSelect when clicked', async () => {
@@ -75,7 +84,9 @@ describe('NamespaceChip', () => {
 
   it('does not call onSelect when editing', async () => {
     const user = userEvent.setup()
-    render(<NamespaceChip {...defaultProps} isEditing={true} editingName="Work" />)
+    render(
+      <NamespaceChip {...defaultProps} isEditing={true} editingName="Work" />,
+    )
     await user.click(screen.getByTestId('namespace-chip-ns1'))
     expect(defaultProps.onSelect).not.toHaveBeenCalled()
   })
@@ -104,7 +115,9 @@ describe('NamespaceChip', () => {
 
     it('does not render edit button for default namespace', () => {
       render(<NamespaceChip {...defaultProps} namespace={defaultNamespace} />)
-      expect(screen.queryByTestId('rename-namespace-ns-default')).not.toBeInTheDocument()
+      expect(
+        screen.queryByTestId('rename-namespace-ns-default'),
+      ).not.toBeInTheDocument()
     })
 
     it('calls onStartEdit when edit button clicked', async () => {
@@ -123,12 +136,22 @@ describe('NamespaceChip', () => {
 
     it('does not render delete button when not active', () => {
       render(<NamespaceChip {...defaultProps} isActive={false} />)
-      expect(screen.queryByTestId('delete-namespace-trigger')).not.toBeInTheDocument()
+      expect(
+        screen.queryByTestId('delete-namespace-trigger'),
+      ).not.toBeInTheDocument()
     })
 
     it('does not render delete button for default namespace', () => {
-      render(<NamespaceChip {...defaultProps} namespace={defaultNamespace} isActive={true} />)
-      expect(screen.queryByTestId('delete-namespace-trigger')).not.toBeInTheDocument()
+      render(
+        <NamespaceChip
+          {...defaultProps}
+          namespace={defaultNamespace}
+          isActive={true}
+        />,
+      )
+      expect(
+        screen.queryByTestId('delete-namespace-trigger'),
+      ).not.toBeInTheDocument()
     })
 
     it('calls onDeleteOpen when delete button clicked', async () => {
@@ -140,7 +163,11 @@ describe('NamespaceChip', () => {
   })
 
   describe('editing (rename) mode', () => {
-    const editingProps = { ...defaultProps, isEditing: true, editingName: 'New Name' }
+    const editingProps = {
+      ...defaultProps,
+      isEditing: true,
+      editingName: 'New Name',
+    }
 
     it('renders rename input when isEditing is true', () => {
       render(<NamespaceChip {...editingProps} />)
@@ -150,7 +177,9 @@ describe('NamespaceChip', () => {
     it('does not render namespace name span when editing', () => {
       // We can check the input value instead
       render(<NamespaceChip {...editingProps} />)
-      const input = screen.getByLabelText('Rename namespace Work') as HTMLInputElement
+      const input = screen.getByLabelText(
+        'Rename namespace Work',
+      ) as HTMLInputElement
       expect(input.value).toBe('New Name')
     })
 

@@ -2,5 +2,7 @@
 // token without importing from the Redux store (avoids circular deps).
 let _token: string | null = null
 
-export const setAuthToken = (t: string | null) => { _token = t }
-export const getAuthToken  = () => _token
+export const setAuthToken = (t: string | null) => {
+  _token = t
+}
+export const getAuthToken = () => _token

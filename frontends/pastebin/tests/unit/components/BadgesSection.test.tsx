@@ -2,6 +2,7 @@ import React from 'react'
 import { render, screen } from '@/test-utils'
 import userEvent from '@testing-library/user-event'
 import { BadgesSection } from '@/components/atoms/BadgesSection'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Snippet } from '@/lib/types'
 
 describe('BadgesSection Component', () => {
@@ -20,12 +21,16 @@ describe('BadgesSection Component', () => {
 
     it('should display the section title', () => {
       render(<BadgesSection onSaveSnippet={mockOnSaveSnippet} />)
-      expect(screen.getByRole('heading', { name: 'Badges', level: 2 })).toBeInTheDocument()
+      expect(
+        screen.getByRole('heading', { name: 'Badges', level: 2 }),
+      ).toBeInTheDocument()
     })
 
     it('should display the section description', () => {
       render(<BadgesSection onSaveSnippet={mockOnSaveSnippet} />)
-      expect(screen.getByText('Small status indicators and labels')).toBeInTheDocument()
+      expect(
+        screen.getByText('Small status indicators and labels'),
+      ).toBeInTheDocument()
     })
 
     it('should render ComponentShowcase with correct title', () => {
@@ -94,7 +99,9 @@ describe('BadgesSection Component', () => {
     it('should render Card component with content', () => {
       render(<BadgesSection onSaveSnippet={mockOnSaveSnippet} />)
       // Check if card content is rendered by looking for badge elements
-      const badges = screen.getAllByText(/Default|Secondary|Destructive|Outline/i)
+      const badges = screen.getAllByText(
+        /Default|Secondary|Destructive|Outline/i,
+      )
       expect(badges.length).toBeGreaterThan(0)
     })
   })
@@ -129,7 +136,9 @@ describe('BadgesSection Component', () => {
     })
 
     it('should have proper spacing and structure', () => {
-      const { container } = render(<BadgesSection onSaveSnippet={mockOnSaveSnippet} />)
+      const { container } = render(
+        <BadgesSection onSaveSnippet={mockOnSaveSnippet} />,
+      )
       const section = container.querySelector('section')
       expect(section).toHaveClass('space-y-6')
     })

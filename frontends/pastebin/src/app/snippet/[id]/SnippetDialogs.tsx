@@ -12,9 +12,10 @@ import { FileMenu } from '@/components/features/file-ops/FileMenu'
 import { Snippet } from '@/lib/types'
 
 const SnippetDialog = dynamic(
-  () => import(
-    '@/components/features/snippet-editor/SnippetDialog'
-  ).then(mod => ({ default: mod.SnippetDialog })),
+  () =>
+    import('@/components/features/snippet-editor/SnippetDialog').then(mod => ({
+      default: mod.SnippetDialog,
+    })),
   { ssr: false },
 )
 
@@ -44,24 +45,31 @@ interface Props {
 }
 
 export function SnippetDialogs({
-  id, snippet, files,
-  shareOpen, forkOpen, historyOpen, editOpen,
-  menuFile, menuRect,
-  onCloseShare, onCloseFork, onCloseHistory, onChangeEdit, onSave,
-  onCloseMenu, onOpenInNewTab, onRename, onDuplicate, onDelete, onCopyPath,
+  id,
+  snippet,
+  files,
+  shareOpen,
+  forkOpen,
+  historyOpen,
+  editOpen,
+  menuFile,
+  menuRect,
+  onCloseShare,
+  onCloseFork,
+  onCloseHistory,
+  onChangeEdit,
+  onSave,
+  onCloseMenu,
+  onOpenInNewTab,
+  onRename,
+  onDuplicate,
+  onDelete,
+  onCopyPath,
 }: Props) {
   return (
     <>
-      <ShareDialog
-        open={shareOpen}
-        onClose={onCloseShare}
-        snippet={snippet}
-      />
-      <ForkDialog
-        open={forkOpen}
-        onClose={onCloseFork}
-        snippet={snippet}
-      />
+      <ShareDialog open={shareOpen} onClose={onCloseShare} snippet={snippet} />
+      <ForkDialog open={forkOpen} onClose={onCloseFork} snippet={snippet} />
       <HistoryPanel
         open={historyOpen}
         onClose={onCloseHistory}

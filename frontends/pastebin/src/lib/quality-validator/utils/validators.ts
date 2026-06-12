@@ -9,7 +9,7 @@ export {
   validateRecommendation,
   validateScoringResult,
   validateConfiguration,
-} from './validators-core.js';
+} from './validators-core.js'
 
 export {
   validateScoreRange,
@@ -28,9 +28,9 @@ export {
   validateUrl,
   validateMetrics,
   shouldExcludeFile,
-} from './validators-range.js';
+} from './validators-range.js'
 
 export {
   sanitizeFinding,
   sanitizeRecommendation,
-} from './validators-sanitize.js';
+} from './validators-sanitize.js'

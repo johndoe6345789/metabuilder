@@ -55,7 +55,7 @@ describe('BlogTemplate', () => {
       render(<BlogTemplate />)
       const buttons = screen.getAllByRole('button')
       const navButtons = buttons.filter(b =>
-        ['Articles', 'Tutorials', 'About'].includes(b.textContent || '')
+        ['Articles', 'Tutorials', 'About'].includes(b.textContent || ''),
       )
       expect(navButtons.length).toBe(3)
     })
@@ -64,7 +64,9 @@ describe('BlogTemplate', () => {
   describe('Article Content', () => {
     it('should render article title', () => {
       render(<BlogTemplate />)
-      expect(screen.getByText('Building a Comprehensive Component Library')).toBeInTheDocument()
+      expect(
+        screen.getByText('Building a Comprehensive Component Library'),
+      ).toBeInTheDocument()
     })
 
     it('should have main article title as heading', () => {
@@ -92,7 +94,9 @@ describe('BlogTemplate', () => {
 
     it('should render author avatar', () => {
       const { container } = render(<BlogTemplate />)
-      const avatars = container.querySelectorAll('[class*="h-12"][class*="w-12"]')
+      const avatars = container.querySelectorAll(
+        '[class*="h-12"][class*="w-12"]',
+      )
       expect(avatars.length).toBeGreaterThan(0)
     })
   })
@@ -112,22 +116,32 @@ describe('BlogTemplate', () => {
 
     it('should render introductory paragraph', () => {
       render(<BlogTemplate />)
-      expect(screen.getByText(/Design systems have become an essential/)).toBeInTheDocument()
+      expect(
+        screen.getByText(/Design systems have become an essential/),
+      ).toBeInTheDocument()
     })
 
     it('should render section heading about Atomic Design', () => {
       render(<BlogTemplate />)
-      expect(screen.getByText('Understanding Atomic Design')).toBeInTheDocument()
+      expect(
+        screen.getByText('Understanding Atomic Design'),
+      ).toBeInTheDocument()
     })
 
     it('should render Atomic Design description', () => {
       render(<BlogTemplate />)
-      expect(screen.getByText(/The atomic design methodology consists of five distinct stages/)).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          /The atomic design methodology consists of five distinct stages/,
+        ),
+      ).toBeInTheDocument()
     })
 
     it('should render quote section', () => {
       render(<BlogTemplate />)
-      expect(screen.getByText(/A design system is never complete/)).toBeInTheDocument()
+      expect(
+        screen.getByText(/A design system is never complete/),
+      ).toBeInTheDocument()
     })
 
     it('should have quote styling', () => {
@@ -143,7 +157,9 @@ describe('BlogTemplate', () => {
 
     it('should render Getting Started description', () => {
       render(<BlogTemplate />)
-      expect(screen.getByText(/Begin by identifying the core components/)).toBeInTheDocument()
+      expect(
+        screen.getByText(/Begin by identifying the core components/),
+      ).toBeInTheDocument()
     })
   })
 
@@ -162,13 +178,14 @@ describe('BlogTemplate', () => {
       render(<BlogTemplate />)
       const buttons = screen.getAllByRole('button')
       const navButtons = buttons.filter(b =>
-        ['Previous Article', 'Next Article'].includes(b.textContent || '')
+        ['Previous Article', 'Next Article'].includes(b.textContent || ''),
       )
       expect(navButtons.length).toBeGreaterThanOrEqual(2)
     })
 
     it('should have both Previous and Next buttons in correct order', () => {
       render(<BlogTemplate />)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const allButtons = screen.getAllByRole('button')
       const prevBtn = screen.getByText('Previous Article')
       const nextBtn = screen.getByText('Next Article')
@@ -208,7 +225,9 @@ describe('BlogTemplate', () => {
   describe('Separators', () => {
     it('should render separator after article header', () => {
       const { container } = render(<BlogTemplate />)
-      const separators = container.querySelectorAll('[class*="border-t"], [class*="border-b"]')
+      const separators = container.querySelectorAll(
+        '[class*="border-t"], [class*="border-b"]',
+      )
       expect(separators.length).toBeGreaterThan(0)
     })
 
@@ -234,7 +253,9 @@ describe('BlogTemplate', () => {
 
     it('should display text with proper sizing', () => {
       render(<BlogTemplate />)
-      expect(screen.getByText('Building a Comprehensive Component Library')).toBeInTheDocument()
+      expect(
+        screen.getByText('Building a Comprehensive Component Library'),
+      ).toBeInTheDocument()
     })
 
     it('should have muted text for timestamps', () => {
@@ -349,14 +370,18 @@ describe('BlogTemplate', () => {
     it('should have all required sections', () => {
       render(<BlogTemplate />)
       expect(screen.getByText('Blog')).toBeInTheDocument()
-      expect(screen.getByText('Building a Comprehensive Component Library')).toBeInTheDocument()
+      expect(
+        screen.getByText('Building a Comprehensive Component Library'),
+      ).toBeInTheDocument()
       expect(screen.getByText('Alex Writer')).toBeInTheDocument()
     })
 
     it('should have navigation and content', () => {
       render(<BlogTemplate />)
       expect(screen.getByText('Articles')).toBeInTheDocument()
-      expect(screen.getByText('Understanding Atomic Design')).toBeInTheDocument()
+      expect(
+        screen.getByText('Understanding Atomic Design'),
+      ).toBeInTheDocument()
     })
   })
 

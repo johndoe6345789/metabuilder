@@ -1,6 +1,8 @@
 'use client'
 
+// eslint-disable-next-line max-len
 import { TerminalOutput } from '@/components/features/python-runner/TerminalOutput'
+// eslint-disable-next-line max-len
 import { TerminalInput } from '@/components/features/python-runner/TerminalInput'
 import { type SnippetFile } from '@/lib/types'
 import { type UseCodeTerminalReturn } from '@/hooks/useCodeTerminal'
@@ -9,14 +11,14 @@ import { useTerminalScroll } from './hooks/useTerminalScroll'
 import styles from './CodeTerminal.module.scss'
 
 const INTERACTIVE_RUNNER_KEYS = new Set(['python'])
-const languageRunnerMap: Record<string, string> = (
-  appConfig as unknown as {
-    languageRunnerMap: Record<string, string>
-  }
-).languageRunnerMap ?? {}
+const languageRunnerMap: Record<string, string> =
+  (
+    appConfig as unknown as {
+      languageRunnerMap: Record<string, string>
+    }
+  ).languageRunnerMap ?? {}
 const getRunnerKey = (lang: string) =>
-  languageRunnerMap[lang] ??
-  lang.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+  languageRunnerMap[lang] ?? lang.toLowerCase().replace(/[^a-z0-9]+/g, '-')
 
 interface CodeTerminalProps {
   language: string
@@ -26,7 +28,12 @@ interface CodeTerminalProps {
 }
 
 export function CodeTerminal({
-  language, files, entryPoint, controller,
+  language,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  files,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  entryPoint,
+  controller,
 }: CodeTerminalProps) {
   const {
     lines,
@@ -39,8 +46,10 @@ export function CodeTerminal({
 
   const terminalEndRef = useTerminalScroll(lines)
 
-  const hasErrors = lines.some((line) => line.type === 'error')
-  const supportsInteractive = INTERACTIVE_RUNNER_KEYS.has(getRunnerKey(language))
+  const hasErrors = lines.some(line => line.type === 'error')
+  const supportsInteractive = INTERACTIVE_RUNNER_KEYS.has(
+    getRunnerKey(language),
+  )
 
   return (
     <div className={styles.terminal} data-testid="code-terminal">

@@ -16,15 +16,24 @@ interface SnippetViewerContentProps {
 }
 
 export function SnippetViewerContent({
-  snippet, canPreview, showPreview, isPython,
-  wordWrap = 'on', onChange = () => {},
-  breakpoints, onToggleBreakpoint, currentDebugLine,
+  snippet,
+  canPreview,
+  showPreview,
+  isPython,
+  wordWrap = 'on',
+  onChange = () => {},
+  breakpoints,
+  onToggleBreakpoint,
+  currentDebugLine,
 }: SnippetViewerContentProps) {
   if (canPreview && showPreview) {
     return (
       <SnippetPreviewContent
-        snippet={snippet} isPython={isPython} wordWrap={wordWrap}
-        onChange={onChange} breakpoints={breakpoints}
+        snippet={snippet}
+        isPython={isPython}
+        wordWrap={wordWrap}
+        onChange={onChange}
+        breakpoints={breakpoints}
         onToggleBreakpoint={onToggleBreakpoint}
         currentDebugLine={currentDebugLine}
       />
@@ -32,12 +41,19 @@ export function SnippetViewerContent({
   }
 
   return (
-    <div className={styles.fullPane} data-testid="viewer-code-full"
-      role="region" aria-label="Code editor">
+    <div
+      className={styles.fullPane}
+      data-testid="viewer-code-full"
+      role="region"
+      aria-label="Code editor"
+    >
       <MonacoEditor
-        value={snippet.code} onChange={onChange}
-        language={snippet.language} height="100%"
-        wordWrap={wordWrap} breakpoints={breakpoints}
+        value={snippet.code}
+        onChange={onChange}
+        language={snippet.language}
+        height="100%"
+        wordWrap={wordWrap}
+        breakpoints={breakpoints}
         onToggleBreakpoint={onToggleBreakpoint}
         currentDebugLine={currentDebugLine}
       />

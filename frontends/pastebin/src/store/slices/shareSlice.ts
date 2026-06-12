@@ -25,12 +25,15 @@ const shareSlice = createSlice({
   name: 'share',
   initialState,
   reducers: {
-    clearShareError(state) { state.error = null },
+    clearShareError(state) {
+      state.error = null
+    },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(generateShareToken.pending, state => {
-        state.loading = true; state.error = null
+        state.loading = true
+        state.error = null
       })
       .addCase(generateShareToken.fulfilled, state => {
         state.loading = false
@@ -40,7 +43,8 @@ const shareSlice = createSlice({
         state.error = action.payload as string
       })
       .addCase(revokeShareToken.pending, state => {
-        state.loading = true; state.error = null
+        state.loading = true
+        state.error = null
       })
       .addCase(revokeShareToken.fulfilled, state => {
         state.loading = false
@@ -50,7 +54,8 @@ const shareSlice = createSlice({
         state.error = action.payload as string
       })
       .addCase(fetchSharedSnippet.pending, state => {
-        state.loading = true; state.error = null
+        state.loading = true
+        state.error = null
       })
       .addCase(fetchSharedSnippet.fulfilled, (state, action) => {
         state.loading = false
@@ -64,7 +69,10 @@ const shareSlice = createSlice({
       })
       .addMatcher(
         (action: Action) => action.type === 'persist/REHYDRATE',
-        state => { state.loading = false; state.error = null },
+        state => {
+          state.loading = false
+          state.error = null
+        },
       )
   },
 })

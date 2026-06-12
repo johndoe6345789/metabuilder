@@ -16,7 +16,9 @@ jest.mock('@metabuilder/components/fakemui', () => ({
 // Mock useTranslation
 jest.mock('@/hooks/useTranslation', () => ({
   useTranslation: () => ({
-    settings: { storage: { backendUpdated: 'Storage backend updated successfully' } },
+    settings: {
+      storage: { backendUpdated: 'Storage backend updated successfully' },
+    },
   }),
 }))
 
@@ -139,7 +141,9 @@ describe('useStorageConfig Hook', () => {
       expect(mockStorage.saveStorageConfig).toHaveBeenCalledWith({
         backend: 'indexeddb',
       })
-      expect(mockToast.success).toHaveBeenCalledWith('Storage backend updated successfully')
+      expect(mockToast.success).toHaveBeenCalledWith(
+        'Storage backend updated successfully',
+      )
     })
 
     it('should call onSuccess callback after saving', async () => {

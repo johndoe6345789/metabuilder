@@ -9,19 +9,19 @@ import {
   getTypographyStyles,
   getHeaderStyles,
   getFooterStyles,
-} from './styles-base.js';
+} from './styles-base.js'
 import {
   getCardStyles,
   getScoreStyles,
   getMetricsStyles,
   getFindingsStyles,
-} from './styles-components.js';
+} from './styles-components.js'
 import {
   getRecommendationStyles,
   getTrendStyles,
   getResponsiveStyles,
   getAnimationStyles,
-} from './styles-extras.js';
+} from './styles-extras.js'
 
 /**
  * Generate all embedded CSS styles for HTML reports
@@ -43,5 +43,5 @@ export function getStyles(): string {
     getFooterStyles(),
     getResponsiveStyles(),
     getAnimationStyles(),
-  ].join('\n');
+  ].join('\n')
 }

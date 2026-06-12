@@ -15,7 +15,12 @@ describe('useSnippetForm', () => {
     hasPreview: true,
     functionName: 'TestFunc',
     inputParameters: [
-      { name: 'param1', type: 'string', defaultValue: '"default"', description: 'A parameter' },
+      {
+        name: 'param1',
+        type: 'string',
+        defaultValue: '"default"',
+        description: 'A parameter',
+      },
     ],
   }
 
@@ -148,7 +153,9 @@ describe('useSnippetForm', () => {
       result.current.handleUpdateParameter(0, 'description', 'New description')
     })
 
-    expect(result.current.inputParameters[0].description).toBe('New description')
+    expect(result.current.inputParameters[0].description).toBe(
+      'New description',
+    )
   })
 
   test('validates empty title', () => {
@@ -303,8 +310,14 @@ describe('useSnippetForm', () => {
 
   test('clears editing snippet when editingSnippet changes to null', () => {
     const { result, rerender } = renderHook(
-      ({ snippet, open }: { snippet: Snippet | undefined, open: boolean }) => useSnippetForm(snippet, open),
-      { initialProps: { snippet: mockSnippet as Snippet | undefined, open: true } }
+      ({ snippet, open }: { snippet: Snippet | undefined; open: boolean }) =>
+        useSnippetForm(snippet, open),
+      {
+        initialProps: {
+          snippet: mockSnippet as Snippet | undefined,
+          open: true,
+        },
+      },
     )
 
     expect(result.current.title).toBe('Test Snippet')
@@ -340,7 +353,9 @@ describe('useSnippetForm', () => {
       category: 'special',
     }
 
-    const { result } = renderHook(() => useSnippetForm(snippetWithCategory, true))
+    const { result } = renderHook(() =>
+      useSnippetForm(snippetWithCategory, true),
+    )
 
     const formData = result.current.getFormData()
 

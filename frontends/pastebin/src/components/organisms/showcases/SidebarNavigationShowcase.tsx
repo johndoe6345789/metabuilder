@@ -9,11 +9,14 @@ const sidebarStyle: React.CSSProperties = {
   padding: '16px',
 }
 const logoBoxStyle: React.CSSProperties = {
-  height: '32px', width: '32px', borderRadius: '8px',
+  height: '32px',
+  width: '32px',
+  borderRadius: '8px',
   backgroundColor: 'var(--mat-sys-secondary-container)',
 }
 const subtextStyle = {
-  fontSize: '0.875rem', lineHeight: '1.25rem',
+  fontSize: '0.875rem',
+  lineHeight: '1.25rem',
   color: 'var(--mat-sys-on-surface-variant)',
 }
 
@@ -26,10 +29,16 @@ export function SidebarNavigationShowcase() {
       aria-label="Sidebar navigation showcase"
     >
       <div>
-        <h2 style={{
-          fontSize: '1.875rem', lineHeight: '2.25rem',
-          fontWeight: 700, marginBottom: '8px',
-        }}>Sidebar Navigation</h2>
+        <h2
+          style={{
+            fontSize: '1.875rem',
+            lineHeight: '2.25rem',
+            fontWeight: 700,
+            marginBottom: '8px',
+          }}
+        >
+          Sidebar Navigation
+        </h2>
         <p style={{ color: 'var(--mat-sys-on-surface-variant)' }}>
           Complete sidebar with nested navigation
         </p>
@@ -38,10 +47,15 @@ export function SidebarNavigationShowcase() {
       <Card style={{ overflow: 'hidden' }}>
         <div style={{ display: 'flex' }}>
           <aside style={sidebarStyle}>
-            <div style={{
-              display: 'flex', alignItems: 'center',
-              gap: '8px', paddingInline: '8px', marginBottom: '24px',
-            }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                paddingInline: '8px',
+                marginBottom: '24px',
+              }}
+            >
               <div style={logoBoxStyle} />
               <span style={{ fontWeight: 700 }}>Dashboard</span>
             </div>

@@ -1,6 +1,7 @@
 import { FloppyDisk } from '@phosphor-icons/react'
 import { Card, Button } from '@metabuilder/components/fakemui'
 import { Snippet } from '@/lib/types'
+// eslint-disable-next-line max-len
 import { SnippetDialog } from '@/components/features/snippet-editor/SnippetDialog'
 import { useComponentShowcase } from './hooks/useComponentShowcase'
 
@@ -12,7 +13,7 @@ interface ComponentShowcaseProps {
   language?: string
   category: string
   onSaveSnippet: (
-    snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>
+    snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>,
   ) => void
 }
 
@@ -25,18 +26,19 @@ export function ComponentShowcase({
   category,
   onSaveSnippet,
 }: ComponentShowcaseProps) {
-  const {
-    dialogOpen,
-    prefilledData,
-    handleSaveClick,
-    handleSave,
-  } = useComponentShowcase(
-    title, description, code, language, category, onSaveSnippet
-  )
+  const { dialogOpen, prefilledData, handleSaveClick, handleSave } =
+    useComponentShowcase(
+      title,
+      description,
+      code,
+      language,
+      category,
+      onSaveSnippet,
+    )
 
-  const testId = `showcase-${category}-${
-    title.toLowerCase().replace(/\s+/g, '-')
-  }`
+  const testId = `showcase-${category}-${title
+    .toLowerCase()
+    .replace(/\s+/g, '-')}`
 
   return (
     <>
@@ -72,11 +74,12 @@ export function ComponentShowcase({
       {prefilledData && (
         <SnippetDialog
           open={dialogOpen}
-          onOpenChange={(v) => {
-            if (!v) handleSave({ ...prefilledData } as Omit<
-              Snippet,
-              'id' | 'createdAt' | 'updatedAt'
-            >)
+          onOpenChange={v => {
+            if (!v)
+              handleSave({ ...prefilledData } as Omit<
+                Snippet,
+                'id' | 'createdAt' | 'updatedAt'
+              >)
           }}
           onSave={handleSave}
           editingSnippet={{

@@ -2,7 +2,7 @@
  * Card, score, metrics, and findings CSS styles for HTML reports
  */
 
-import { COLOR_SCHEME } from '../../utils/constants.js';
+import { COLOR_SCHEME } from '../../utils/constants.js'
 
 export function getCardStyles(): string {
   return `
@@ -17,7 +17,7 @@ export function getCardStyles(): string {
 .score-card.score-pass { border-left-color: ${COLOR_SCHEME.SUCCESS}; }
 .score-card.score-warning { border-left-color: ${COLOR_SCHEME.WARNING}; }
 .score-card.score-fail { border-left-color: ${COLOR_SCHEME.DANGER}; }
-.score-card h3 { margin-bottom: 15px; color: #333; }`;
+.score-card h3 { margin-bottom: 15px; color: #333; }`
 }
 
 export function getScoreStyles(): string {
@@ -50,7 +50,7 @@ export function getScoreStyles(): string {
 }
 .status.pass { background: #d4edda; color: #155724; }
 .status.fail { background: #f8d7da; color: #721c24; }
-.status.warning { background: #fff3cd; color: #856404; }`;
+.status.warning { background: #fff3cd; color: #856404; }`
 }
 
 export function getMetricsStyles(): string {
@@ -84,7 +84,7 @@ export function getMetricsStyles(): string {
   border-left: 3px solid ${COLOR_SCHEME.PRIMARY};
 }
 .metric-label { font-size: 0.9em; color: #666; margin-bottom: 5px; }
-.metric-value { font-size: 1.3em; font-weight: bold; color: #333; }`;
+.metric-value { font-size: 1.3em; font-weight: bold; color: #333; }`
 }
 
 export function getFindingsStyles(): string {
@@ -118,5 +118,5 @@ export function getFindingsStyles(): string {
 .no-findings {
   padding: 20px; text-align: center; color: #155724;
   font-size: 1.1em; background: #d4edda; border-radius: 4px;
-}`;
+}`
 }

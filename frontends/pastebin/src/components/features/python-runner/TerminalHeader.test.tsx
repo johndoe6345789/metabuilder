@@ -85,7 +85,7 @@ describe('TerminalHeader', () => {
           isRunning={true}
           isInitializing={true}
           waitingForInput={true}
-        />
+        />,
       )
       const button = screen.getByTestId('run-python-btn')
       expect(button).toBeDisabled()
@@ -116,9 +116,12 @@ describe('TerminalHeader', () => {
 
     it('should not call onRun when button is disabled', async () => {
       const onRun = jest.fn()
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const user = userEvent.setup()
 
-      render(<TerminalHeader {...defaultProps} onRun={onRun} isRunning={true} />)
+      render(
+        <TerminalHeader {...defaultProps} onRun={onRun} isRunning={true} />,
+      )
 
       const button = screen.getByTestId('run-python-btn')
       expect(button).toBeDisabled()
@@ -181,7 +184,13 @@ describe('TerminalHeader', () => {
     it('should have correct header styling classes', () => {
       render(<TerminalHeader {...defaultProps} />)
       const header = screen.getByTestId('terminal-header')
-      expect(header).toHaveClass('flex', 'items-center', 'justify-between', 'p-4', 'border-b')
+      expect(header).toHaveClass(
+        'flex',
+        'items-center',
+        'justify-between',
+        'p-4',
+        'border-b',
+      )
     })
 
     it('should have correct button styling', () => {
@@ -217,7 +226,9 @@ describe('TerminalHeader', () => {
 
   describe('State Transitions', () => {
     it('should handle transition from idle to running', () => {
-      const { rerender } = render(<TerminalHeader {...defaultProps} isRunning={false} />)
+      const { rerender } = render(
+        <TerminalHeader {...defaultProps} isRunning={false} />,
+      )
       expect(screen.getByText('Run')).toBeInTheDocument()
 
       rerender(<TerminalHeader {...defaultProps} isRunning={true} />)
@@ -225,7 +236,9 @@ describe('TerminalHeader', () => {
     })
 
     it('should handle transition from running to idle', () => {
-      const { rerender } = render(<TerminalHeader {...defaultProps} isRunning={true} />)
+      const { rerender } = render(
+        <TerminalHeader {...defaultProps} isRunning={true} />,
+      )
       expect(screen.getByText('Running...')).toBeInTheDocument()
 
       rerender(<TerminalHeader {...defaultProps} isRunning={false} />)
@@ -233,7 +246,9 @@ describe('TerminalHeader', () => {
     })
 
     it('should handle transition from initializing to idle', () => {
-      const { rerender } = render(<TerminalHeader {...defaultProps} isInitializing={true} />)
+      const { rerender } = render(
+        <TerminalHeader {...defaultProps} isInitializing={true} />,
+      )
       expect(screen.getByText('Loading...')).toBeInTheDocument()
 
       rerender(<TerminalHeader {...defaultProps} isInitializing={false} />)
@@ -241,7 +256,9 @@ describe('TerminalHeader', () => {
     })
 
     it('should handle transition to waiting for input', () => {
-      const { rerender } = render(<TerminalHeader {...defaultProps} waitingForInput={false} />)
+      const { rerender } = render(
+        <TerminalHeader {...defaultProps} waitingForInput={false} />,
+      )
       const button = screen.getByTestId('run-python-btn')
       expect(button).not.toBeDisabled()
 
@@ -254,12 +271,18 @@ describe('TerminalHeader', () => {
     it('should handle rapid prop updates', async () => {
       const onRun = jest.fn()
       const { rerender } = render(
-        <TerminalHeader {...defaultProps} onRun={onRun} isRunning={false} />
+        <TerminalHeader {...defaultProps} onRun={onRun} isRunning={false} />,
       )
 
-      rerender(<TerminalHeader {...defaultProps} onRun={onRun} isRunning={true} />)
-      rerender(<TerminalHeader {...defaultProps} onRun={onRun} isRunning={false} />)
-      rerender(<TerminalHeader {...defaultProps} onRun={onRun} isRunning={true} />)
+      rerender(
+        <TerminalHeader {...defaultProps} onRun={onRun} isRunning={true} />,
+      )
+      rerender(
+        <TerminalHeader {...defaultProps} onRun={onRun} isRunning={false} />,
+      )
+      rerender(
+        <TerminalHeader {...defaultProps} onRun={onRun} isRunning={true} />,
+      )
 
       expect(screen.getByTestId('terminal-header')).toBeInTheDocument()
     })
@@ -269,10 +292,12 @@ describe('TerminalHeader', () => {
       const user = userEvent.setup()
 
       const { rerender } = render(
-        <TerminalHeader {...defaultProps} onRun={onRun} isRunning={true} />
+        <TerminalHeader {...defaultProps} onRun={onRun} isRunning={true} />,
       )
 
-      rerender(<TerminalHeader {...defaultProps} onRun={onRun} isRunning={false} />)
+      rerender(
+        <TerminalHeader {...defaultProps} onRun={onRun} isRunning={false} />,
+      )
 
       await user.click(screen.getByTestId('run-python-btn'))
       expect(onRun).toHaveBeenCalled()
@@ -283,7 +308,9 @@ describe('TerminalHeader', () => {
       const onRun2 = jest.fn()
       const user = userEvent.setup()
 
-      const { rerender } = render(<TerminalHeader {...defaultProps} onRun={onRun1} />)
+      const { rerender } = render(
+        <TerminalHeader {...defaultProps} onRun={onRun1} />,
+      )
 
       await user.click(screen.getByTestId('run-python-btn'))
       expect(onRun1).toHaveBeenCalledTimes(1)

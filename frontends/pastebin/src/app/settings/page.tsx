@@ -1,28 +1,29 @@
-'use client';
+'use client'
 
-import { motion } from 'framer-motion';
-import { PersistenceSettings } from '@/components/demo/PersistenceSettings';
-import { SchemaHealthCard } from '@/components/settings/SchemaHealthCard';
-import { BackendAutoConfigCard } from '@/components/settings/BackendAutoConfigCard';
-import { StorageBackendCard } from '@/components/settings/StorageBackendCard';
-import { DatabaseStatsCard } from '@/components/settings/DatabaseStatsCard';
-import { StorageInfoCard } from '@/components/settings/StorageInfoCard';
-import { DatabaseActionsCard } from '@/components/settings/DatabaseActionsCard';
-import { OpenAISettingsCard } from '@/components/settings/OpenAISettingsCard';
-import { ProfileSettingsCard } from '@/components/settings/ProfileSettingsCard';
-import { useTranslation } from '@/hooks/useTranslation';
-import { PageLayout } from '../PageLayout';
-import { useSettingsPage, type Tab } from './hooks/useSettingsPage';
-import styles from './settings-page.module.scss';
+import { motion } from 'framer-motion'
+import { PersistenceSettings } from '@/components/demo/PersistenceSettings'
+import { SchemaHealthCard } from '@/components/settings/SchemaHealthCard'
+// eslint-disable-next-line max-len
+import { BackendAutoConfigCard } from '@/components/settings/BackendAutoConfigCard'
+import { StorageBackendCard } from '@/components/settings/StorageBackendCard'
+import { DatabaseStatsCard } from '@/components/settings/DatabaseStatsCard'
+import { StorageInfoCard } from '@/components/settings/StorageInfoCard'
+import { DatabaseActionsCard } from '@/components/settings/DatabaseActionsCard'
+import { OpenAISettingsCard } from '@/components/settings/OpenAISettingsCard'
+import { ProfileSettingsCard } from '@/components/settings/ProfileSettingsCard'
+import { useTranslation } from '@/hooks/useTranslation'
+import { PageLayout } from '../PageLayout'
+import { useSettingsPage, type Tab } from './hooks/useSettingsPage'
+import styles from './settings-page.module.scss'
 
 export const dynamic = 'force-dynamic'
 
 const ALL_TABS: Tab[] = ['profile', 'ai', 'storage', 'database']
 
 export default function SettingsPage() {
-  const t = useTranslation();
-  const { activeTab, handleTabChange, settings } = useSettingsPage();
-  const tabs = t.settingsPage.tabs;
+  const t = useTranslation()
+  const { activeTab, handleTabChange, settings } = useSettingsPage()
+  const tabs = t.settingsPage.tabs
 
   return (
     <PageLayout>
@@ -33,12 +34,8 @@ export default function SettingsPage() {
         transition={{ duration: 0.4 }}
       >
         <div className={styles.pageHeader}>
-          <h2 className={styles.pageHeading}>
-            {t.settingsPage.heading}
-          </h2>
-          <p className={styles.pageSubtitle}>
-            {t.settingsPage.subtitle}
-          </p>
+          <h2 className={styles.pageHeading}>{t.settingsPage.heading}</h2>
+          <p className={styles.pageSubtitle}>{t.settingsPage.subtitle}</p>
         </div>
 
         <div
@@ -75,18 +72,14 @@ export default function SettingsPage() {
 
           {activeTab === 'storage' && (
             <>
-              <BackendAutoConfigCard
-                envVarSet={settings.envVarSet}
-              />
+              <BackendAutoConfigCard envVarSet={settings.envVarSet} />
               <StorageBackendCard
                 storageBackend={settings.storageBackend}
                 envVarSet={settings.envVarSet}
                 onStorageBackendChange={settings.setStorageBackend}
                 onSaveConfig={settings.handleSaveStorageConfig}
               />
-              <StorageInfoCard
-                storageType={settings.stats?.storageType}
-              />
+              <StorageInfoCard storageType={settings.stats?.storageType} />
               <PersistenceSettings />
             </>
           )}
@@ -115,5 +108,5 @@ export default function SettingsPage() {
         </div>
       </motion.div>
     </PageLayout>
-  );
+  )
 }

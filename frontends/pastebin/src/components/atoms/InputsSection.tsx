@@ -1,4 +1,9 @@
-import { Input, MaterialIcon, Card, Divider } from '@metabuilder/components/fakemui'
+import {
+  Input,
+  MaterialIcon,
+  Card,
+  Divider,
+} from '@metabuilder/components/fakemui'
 import { ComponentShowcase } from '@/components/demo/ComponentShowcase'
 import { atomsCodeSnippets } from '@/lib/component-code-snippets'
 import { Snippet } from '@/lib/types'
@@ -21,7 +26,7 @@ const labelStyle = {
 
 interface InputsSectionProps {
   onSaveSnippet: (
-    snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>
+    snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>,
   ) => void
 }
 
@@ -34,10 +39,16 @@ export function InputsSection({ onSaveSnippet }: InputsSectionProps) {
       aria-label="Input form fields"
     >
       <div>
-        <h2 style={{
-          fontSize: '1.875rem', lineHeight: '2.25rem',
-          fontWeight: 700, marginBottom: '8px',
-        }}>Inputs</h2>
+        <h2
+          style={{
+            fontSize: '1.875rem',
+            lineHeight: '2.25rem',
+            fontWeight: 700,
+            marginBottom: '8px',
+          }}
+        >
+          Inputs
+        </h2>
         <p style={{ color: 'var(--mat-sys-on-surface-variant)' }}>
           Form input fields for user data entry
         </p>
@@ -51,17 +62,29 @@ export function InputsSection({ onSaveSnippet }: InputsSectionProps) {
         onSaveSnippet={onSaveSnippet}
       >
         <Card className="p-6">
-          <div style={{
-            display: 'flex', flexDirection: 'column', gap: '32px',
-          }}>
-            <div style={{
-              display: 'flex', flexDirection: 'column', gap: '12px',
-            }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '32px',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px',
+              }}
+            >
               <h3 style={labelStyle}>States</h3>
-              <div style={{
-                display: 'flex', flexDirection: 'column',
-                gap: '16px', maxWidth: '448px',
-              }}>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '16px',
+                  maxWidth: '448px',
+                }}
+              >
                 <Input placeholder="Default input" />
                 <Input placeholder="Disabled input" disabled />
                 <div style={{ position: 'relative' }}>
@@ -78,14 +101,22 @@ export function InputsSection({ onSaveSnippet }: InputsSectionProps) {
 
             <Divider />
 
-            <div style={{
-              display: 'flex', flexDirection: 'column', gap: '12px',
-            }}>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px',
+              }}
+            >
               <h3 style={labelStyle}>Types</h3>
-              <div style={{
-                display: 'flex', flexDirection: 'column',
-                gap: '16px', maxWidth: '448px',
-              }}>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '16px',
+                  maxWidth: '448px',
+                }}
+              >
                 <Input type="text" placeholder="Text input" />
                 <Input type="email" placeholder="email@example.com" />
                 <Input type="password" placeholder="Password" />

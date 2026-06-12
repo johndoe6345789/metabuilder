@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useAppSelector, useAppDispatch } from '@/store/hooks'
 import { selectCurrentUser, selectUserProfile } from '@/store/selectors'
-import {
-  updateMyProfile,
-  fetchUserProfile,
-} from '@/store/slices/profilesSlice'
+import { updateMyProfile, fetchUserProfile } from '@/store/slices/profilesSlice'
 
 export function useProfileSettings() {
   const user = useAppSelector(selectCurrentUser)
@@ -24,6 +21,7 @@ export function useProfileSettings() {
 
   useEffect(() => {
     if (profile?.bio !== undefined && !bioLoaded) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setBio(profile.bio)
       setBioLoaded(true)
     }
@@ -35,7 +33,9 @@ export function useProfileSettings() {
       await dispatch(updateMyProfile(bio)).unwrap()
       setSaved(true)
       setTimeout(() => setSaved(false), 2000)
-    } catch { /* error handled by slice */ }
+    } catch {
+      /* error handled by slice */
+    }
     setSaving(false)
   }
 

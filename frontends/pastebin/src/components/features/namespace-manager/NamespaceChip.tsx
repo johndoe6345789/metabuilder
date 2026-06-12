@@ -10,16 +10,27 @@ interface NamespaceChipProps {
   renameInputRef: React.RefObject<HTMLInputElement>
   onSelect: () => void
   onEditingChange: (v: string) => void
-  onRenameKeyDown: (e: React.KeyboardEvent<HTMLInputElement>, id: string) => void
+  onRenameKeyDown: (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    id: string,
+  ) => void
   onRenameBlur: (id: string) => void
   onStartEdit: (ns: Namespace) => void
   onDeleteOpen: (ns: Namespace) => void
 }
 
 export function NamespaceChip({
-  namespace, isActive, isEditing, editingName, renameInputRef,
-  onSelect, onEditingChange, onRenameKeyDown, onRenameBlur,
-  onStartEdit, onDeleteOpen,
+  namespace,
+  isActive,
+  isEditing,
+  editingName,
+  renameInputRef,
+  onSelect,
+  onEditingChange,
+  onRenameKeyDown,
+  onRenameBlur,
+  onStartEdit,
+  onDeleteOpen,
 }: NamespaceChipProps) {
   return (
     <div
@@ -42,10 +53,7 @@ export function NamespaceChip({
       )}
 
       {isEditing ? (
-        <span
-          className={styles.renameRow}
-          onClick={e => e.stopPropagation()}
-        >
+        <span className={styles.renameRow} onClick={e => e.stopPropagation()}>
           <input
             ref={renameInputRef}
             className={styles.renameInput}
@@ -75,7 +83,10 @@ export function NamespaceChip({
       {!isEditing && !namespace.isDefault && (
         <button
           className={styles.chipEditBtn}
-          onClick={e => { e.stopPropagation(); onStartEdit(namespace) }}
+          onClick={e => {
+            e.stopPropagation()
+            onStartEdit(namespace)
+          }}
           data-testid={`rename-namespace-${namespace.id}`}
           aria-label={`Rename ${namespace.name} namespace`}
           type="button"
@@ -87,7 +98,10 @@ export function NamespaceChip({
       {isActive && !namespace.isDefault && !isEditing && (
         <button
           className={styles.chipDeleteBtn}
-          onClick={e => { e.stopPropagation(); onDeleteOpen(namespace) }}
+          onClick={e => {
+            e.stopPropagation()
+            onDeleteOpen(namespace)
+          }}
           data-testid="delete-namespace-trigger"
           aria-label={`Delete ${namespace.name} namespace`}
           type="button"

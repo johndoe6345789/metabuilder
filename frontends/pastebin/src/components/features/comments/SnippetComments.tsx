@@ -10,22 +10,20 @@ interface SnippetCommentsProps {
 }
 
 export function SnippetComments({ snippetId }: SnippetCommentsProps) {
-  const {
-    comments, loading, isAuthenticated, handleSubmit,
-  } = useSnippetComments(snippetId)
+  const { comments, loading, isAuthenticated, handleSubmit } =
+    useSnippetComments(snippetId)
 
   return (
     <section className={styles.section}>
       <h2 className={styles.sectionTitle}>Comments</h2>
       <div className={styles.list}>
-        {loading && comments.length === 0
-          ? <p className={styles.empty}>Loading comments…</p>
-          : comments.length === 0
-            ? <p className={styles.empty}>No comments yet.</p>
-            : comments.map(c => (
-                <CommentItem key={c.id} comment={c} />
-              ))
-        }
+        {loading && comments.length === 0 ? (
+          <p className={styles.empty}>Loading comments…</p>
+        ) : comments.length === 0 ? (
+          <p className={styles.empty}>No comments yet.</p>
+        ) : (
+          comments.map(c => <CommentItem key={c.id} comment={c} />)
+        )}
       </div>
       {isAuthenticated && (
         <CommentForm

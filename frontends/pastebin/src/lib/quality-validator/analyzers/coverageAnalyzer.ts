@@ -3,16 +3,16 @@
  * Analyzes test coverage metrics and effectiveness
  */
 
-import { AnalysisResult, TestCoverageMetrics } from '../types/index.js';
-import { logger } from '../utils/logger.js';
-import { BaseAnalyzer, AnalyzerConfig } from './BaseAnalyzer.js';
+import { AnalysisResult, TestCoverageMetrics } from '../types/index.js'
+import { logger } from '../utils/logger.js'
+import { BaseAnalyzer, AnalyzerConfig } from './BaseAnalyzer.js'
 import {
   findCoveragePath,
   analyzeCoverageData,
   getDefaultMetrics,
   getDefaultEffectiveness,
   identifyCoverageGaps,
-} from './coverage-analysis.js';
+} from './coverage-analysis.js'
 
 export class CoverageAnalyzer extends BaseAnalyzer {
   constructor(config?: AnalyzerConfig) {
@@ -22,39 +22,39 @@ export class CoverageAnalyzer extends BaseAnalyzer {
         enabled: true,
         timeout: 30000,
         retryAttempts: 1,
-      }
-    );
+      },
+    )
   }
 
   async analyze(): Promise<AnalysisResult> {
     return this.executeWithTiming(async () => {
       if (!this.validate()) {
-        throw new Error('CoverageAnalyzer validation failed');
+        throw new Error('CoverageAnalyzer validation failed')
       }
 
-      this.startTiming();
+      this.startTiming()
 
-      const coveragePath = findCoveragePath();
-      let metrics: TestCoverageMetrics;
+      const coveragePath = findCoveragePath()
+      let metrics: TestCoverageMetrics
 
       if (coveragePath) {
-        metrics = analyzeCoverageData(coveragePath);
+        metrics = analyzeCoverageData(coveragePath)
       } else {
-        this.logProgress('No coverage data found, using defaults');
-        metrics = getDefaultMetrics();
+        this.logProgress('No coverage data found, using defaults')
+        metrics = getDefaultMetrics()
       }
 
-      metrics.effectiveness = getDefaultEffectiveness();
-      metrics.gaps = identifyCoverageGaps(metrics);
+      metrics.effectiveness = getDefaultEffectiveness()
+      metrics.gaps = identifyCoverageGaps(metrics)
 
-      this.generateFindings(metrics);
-      const score = this.calculateScore(metrics);
-      const executionTime = this.getExecutionTime();
+      this.generateFindings(metrics)
+      const score = this.calculateScore(metrics)
+      const executionTime = this.getExecutionTime()
 
       this.logProgress('Coverage analysis complete', {
         score: score.toFixed(2),
         findingsCount: this.findings.length,
-      });
+      })
 
       return {
         category: 'testCoverage' as const,
@@ -63,17 +63,17 @@ export class CoverageAnalyzer extends BaseAnalyzer {
         findings: this.getFindings(),
         metrics: metrics as unknown as Record<string, unknown>,
         executionTime,
-      };
-    }, 'test coverage analysis');
+      }
+    }, 'test coverage analysis')
   }
 
   validate(): boolean {
-    if (!this.validateConfig()) return false;
+    if (!this.validateConfig()) return false
     if (!this.config.enabled) {
-      logger.debug(`${this.config.name} is disabled`);
-      return false;
+      logger.debug(`${this.config.name} is disabled`)
+      return false
     }
-    return true;
+    return true
   }
 
   private generateFindings(metrics: TestCoverageMetrics): void {
@@ -86,12 +86,11 @@ export class CoverageAnalyzer extends BaseAnalyzer {
         description:
           `Overall line coverage is ` +
           `${metrics.overall.lines.percentage.toFixed(1)}%, target is 80%`,
-        remediation:
-          'Add tests for uncovered code paths to increase coverage',
+        remediation: 'Add tests for uncovered code paths to increase coverage',
         evidence:
           `Lines: ${metrics.overall.lines.percentage.toFixed(1)}%, ` +
           `Branches: ${metrics.overall.branches.percentage.toFixed(1)}%`,
-      });
+      })
     }
 
     if (metrics.overall.branches.percentage < 75) {
@@ -103,11 +102,10 @@ export class CoverageAnalyzer extends BaseAnalyzer {
         description:
           `Branch coverage is ` +
           `${metrics.overall.branches.percentage.toFixed(1)}%, target is 75%`,
-        remediation:
-          'Add tests for conditional branches and edge cases',
-        evidence:
-          `Branches: ${metrics.overall.branches.percentage.toFixed(1)}%`,
-      });
+        remediation: 'Add tests for conditional branches and edge cases',
+        // eslint-disable-next-line max-len
+        evidence: `Branches: ${metrics.overall.branches.percentage.toFixed(1)}%`,
+      })
     }
 
     for (const gap of metrics.gaps.slice(0, 3)) {
@@ -124,20 +122,20 @@ export class CoverageAnalyzer extends BaseAnalyzer {
         evidence:
           `Coverage: ${gap.coverage.toFixed(1)}%, ` +
           `Uncovered: ${gap.uncoveredLines}`,
-      });
+      })
     }
   }
 
   private calculateScore(metrics: TestCoverageMetrics): number {
-    const { overall, effectiveness } = metrics;
+    const { overall, effectiveness } = metrics
     const avgCoverage =
       (overall.lines.percentage +
         overall.branches.percentage +
         overall.functions.percentage +
         overall.statements.percentage) /
-      4;
-    return avgCoverage * 0.6 + effectiveness.effectivenessScore * 0.4;
+      4
+    return avgCoverage * 0.6 + effectiveness.effectivenessScore * 0.4
   }
 }
 
-export const coverageAnalyzer = new CoverageAnalyzer();
+export const coverageAnalyzer = new CoverageAnalyzer()

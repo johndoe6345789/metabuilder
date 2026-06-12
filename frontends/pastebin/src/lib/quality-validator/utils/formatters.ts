@@ -11,7 +11,7 @@ export {
   formatNumber,
   formatLargeNumber,
   formatMetric,
-} from './format-score.js';
+} from './format-score.js'
 
 export {
   formatSeverity,
@@ -21,7 +21,7 @@ export {
   formatMetricDisplayName,
   formatBar,
   formatSparkline,
-} from './format-status.js';
+} from './format-status.js'
 
 export {
   truncateText,
@@ -32,7 +32,7 @@ export {
   formatDuration,
   formatTime,
   formatFileSize,
-} from './format-text.js';
+} from './format-text.js'
 
 export {
   formatFileLocation,
@@ -40,4 +40,4 @@ export {
   formatRecommendation,
   sortFindingsBySeverity,
   groupFindingsBySeverity,
-} from './format-findings.js';
+} from './format-findings.js'

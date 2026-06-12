@@ -35,7 +35,9 @@ function dapFrame(msg: object): Buffer {
 }
 
 function collectDapMessages(
-  sock: net.Socket, count: number, timeoutMs: number,
+  sock: net.Socket,
+  count: number,
+  timeoutMs: number,
 ): Promise<object[]> {
   return new Promise((resolve, reject) => {
     const msgs: object[] = []
@@ -66,7 +68,10 @@ function collectDapMessages(
       }
     }
     sock.on('data', onData)
-    sock.on('error', err => { clearTimeout(timer); reject(err) })
+    sock.on('error', err => {
+      clearTimeout(timer)
+      reject(err)
+    })
   })
 }
 
@@ -83,14 +88,15 @@ describe('cpp-debug container', () => {
     if (SKIP) return
     const src = CPP_HELLO.replace(/'/g, "'\\''")
     const cmd = [
-      'sh', '-c',
-      `mkdir -p /workspace && printf '%s' '${src}' > /workspace/main.cpp`
-      + ` && g++ -g -O0 -o /workspace/__prog__ /workspace/main.cpp`
-      + ` && ( /opt/codelldb/extension/adapter/codelldb`
-      + ` --port 15678 --multi-session &`
-      + ` sleep 1`
-      + ` && socat TCP-LISTEN:${DAP_PORT},bind=0.0.0.0,reuseaddr,fork`
-      + ` TCP:127.0.0.1:15678 )`,
+      'sh',
+      '-c',
+      `mkdir -p /workspace && printf '%s' '${src}' > /workspace/main.cpp` +
+        ` && g++ -g -O0 -o /workspace/__prog__ /workspace/main.cpp` +
+        ` && ( /opt/codelldb/extension/adapter/codelldb` +
+        ` --port 15678 --multi-session &` +
+        ` sleep 1` +
+        ` && socat TCP-LISTEN:${DAP_PORT},bind=0.0.0.0,reuseaddr,fork` +
+        ` TCP:127.0.0.1:15678 )`,
     ]
     container = await new GenericContainer('cpp-debug:latest')
       .withCommand(cmd)
@@ -101,28 +107,42 @@ describe('cpp-debug container', () => {
     const port = container.getMappedPort(DAP_PORT)
     const sock = net.createConnection(port, '127.0.0.1')
     await new Promise<void>((res, rej) => {
-      sock.once('connect', res); sock.once('error', rej)
+      sock.once('connect', res)
+      sock.once('error', rej)
     })
 
     // initialize
-    sock.write(dapFrame({
-      seq: 1, type: 'request', command: 'initialize',
-      arguments: {
-        clientID: 'test', adapterID: 'lldb',
-        linesStartAt1: true, columnsStartAt1: true, pathFormat: 'path',
-      },
-    }))
+    sock.write(
+      dapFrame({
+        seq: 1,
+        type: 'request',
+        command: 'initialize',
+        arguments: {
+          clientID: 'test',
+          adapterID: 'lldb',
+          linesStartAt1: true,
+          columnsStartAt1: true,
+          pathFormat: 'path',
+        },
+      }),
+    )
     const [initResp] = await collectDapMessages(sock, 1, 10_000)
 
     // launch — codelldb sends 'initialized' event AFTER this
-    sock.write(dapFrame({
-      seq: 2, type: 'request', command: 'launch',
-      arguments: {
-        request: 'launch',
-        program: '/workspace/__prog__',
-        args: [], cwd: '/workspace', stopAtEntry: false,
-      },
-    }))
+    sock.write(
+      dapFrame({
+        seq: 2,
+        type: 'request',
+        command: 'launch',
+        arguments: {
+          request: 'launch',
+          program: '/workspace/__prog__',
+          args: [],
+          cwd: '/workspace',
+          stopAtEntry: false,
+        },
+      }),
+    )
 
     // Collect up to 6 messages (output + initialized + launch-resp + …)
     const post = await collectDapMessages(sock, 6, 15_000)
@@ -163,10 +183,12 @@ describe('g++ compilation in cpp-debug image', () => {
     if (SKIP) return
     const { execSync } = await import('child_process')
     const out = execSync(
-      'docker run --rm cpp-debug:latest sh -c '
-      + '"printf \'#include<iostream>\\nint main(){std::cout<<42<<std::endl;}\''
-      + ' > /tmp/t.cpp && g++ -o /tmp/t /tmp/t.cpp && /tmp/t"',
-    ).toString().trim()
+      'docker run --rm cpp-debug:latest sh -c ' +
+        "\"printf '#include<iostream>\\nint main(){std::cout<<42<<std::endl;}'" +
+        ' > /tmp/t.cpp && g++ -o /tmp/t /tmp/t.cpp && /tmp/t"',
+    )
+      .toString()
+      .trim()
     expect(out).toBe('42')
   }, 30_000)
 
@@ -174,8 +196,8 @@ describe('g++ compilation in cpp-debug image', () => {
     if (SKIP) return
     const { execSync } = await import('child_process')
     const out = execSync(
-      'docker run --rm cpp-debug:latest '
-      + '/opt/codelldb/extension/adapter/codelldb --help 2>&1 || true',
+      'docker run --rm cpp-debug:latest ' +
+        '/opt/codelldb/extension/adapter/codelldb --help 2>&1 || true',
     ).toString()
     expect(out).toMatch(/--port/)
   }, 15_000)

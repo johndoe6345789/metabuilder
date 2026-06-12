@@ -7,12 +7,19 @@ import { IconsSection } from './IconsSection'
 import { ColorsSection } from './ColorsSection'
 
 interface AtomsSectionProps {
-  onSaveSnippet: (snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>) => void
+  onSaveSnippet: (
+    snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>,
+  ) => void
 }
 
 export function AtomsSection({ onSaveSnippet }: AtomsSectionProps) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '64px' }} data-testid="atoms-section" role="region" aria-label="Atomic design system components">
+    <div
+      style={{ display: 'flex', flexDirection: 'column', gap: '64px' }}
+      data-testid="atoms-section"
+      role="region"
+      aria-label="Atomic design system components"
+    >
       <ButtonsSection onSaveSnippet={onSaveSnippet} />
       <BadgesSection onSaveSnippet={onSaveSnippet} />
       <InputsSection onSaveSnippet={onSaveSnippet} />

@@ -3,12 +3,9 @@
  * Re-exports all types from focused sub-modules
  */
 
-export type {
-  CommandLineOptions,
-  ParsedCliArgs,
-} from './cli-types.js';
+export type { CommandLineOptions, ParsedCliArgs } from './cli-types.js'
 
-export { ExitCode } from './cli-types.js';
+export { ExitCode } from './cli-types.js'
 
 export type {
   Severity,
@@ -20,7 +17,7 @@ export type {
   AnalysisError,
   Recommendation,
   AggregatedMetrics,
-} from './core-types.js';
+} from './core-types.js'
 
 export type {
   Configuration,
@@ -41,7 +38,7 @@ export type {
   ScoringWeights,
   ReportingConfig,
   HistoryConfig,
-} from './config-types.js';
+} from './config-types.js'
 
 export type {
   CodeQualityMetrics,
@@ -71,7 +68,7 @@ export type {
   Vulnerability,
   SecurityAntiPattern,
   PerformanceIssue,
-} from './metric-types.js';
+} from './metric-types.js'
 
 export type {
   ScoringResult,
@@ -81,12 +78,9 @@ export type {
   TrendDirection,
   ResultMetadata,
   HistoricalRun,
-} from './scoring-types.js';
+} from './scoring-types.js'
 
-export type {
-  JsonReport,
-  CsvRow,
-} from './report-types.js';
+export type { JsonReport, CsvRow } from './report-types.js'
 
 export {
   QualityValidationError,
@@ -94,4 +88,4 @@ export {
   AnalysisErrorClass,
   IntegrationError,
   ReportingError,
-} from './report-types.js';
+} from './report-types.js'

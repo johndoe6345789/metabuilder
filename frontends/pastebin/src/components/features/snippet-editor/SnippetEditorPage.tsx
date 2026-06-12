@@ -51,9 +51,7 @@ export function SnippetEditorPage({ initialSnippet }: SnippetEditorPageProps) {
               variant="filled"
               onClick={vm.handleSave}
               data-testid="editor-save-btn"
-              aria-label={
-                vm.isEditing ? 'Update snippet' : 'Create snippet'
-              }
+              aria-label={vm.isEditing ? 'Update snippet' : 'Create snippet'}
             >
               {vm.isEditing
                 ? t.snippetDialog.buttons.update

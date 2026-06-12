@@ -27,15 +27,17 @@ export function useSnippetAutoSave(
       setSaving(true)
       try {
         const updatedFiles = curFiles.map(f =>
-          f.name === fileBeingEdited ? { ...f, content: value } : f
+          f.name === fileBeingEdited ? { ...f, content: value } : f,
         )
         const isEntry =
           fileBeingEdited === (cur.entryPoint ?? curFiles[0]?.name)
-        await dispatch(updateSnippet({
-          ...cur,
-          code: isEntry ? value : cur.code,
-          files: updatedFiles,
-        })).unwrap()
+        await dispatch(
+          updateSnippet({
+            ...cur,
+            code: isEntry ? value : cur.code,
+            files: updatedFiles,
+          }),
+        ).unwrap()
       } catch {
         toast.error(t.toast.failedToSaveSnippet)
       } finally {

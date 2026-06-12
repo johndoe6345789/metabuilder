@@ -6,7 +6,7 @@ import { ButtonGroups } from './ButtonGroups'
 
 interface ButtonsSectionProps {
   onSaveSnippet: (
-    snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>
+    snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>,
   ) => void
 }
 
@@ -19,10 +19,16 @@ export function ButtonsSection({ onSaveSnippet }: ButtonsSectionProps) {
       aria-label="Button components"
     >
       <div>
-        <h2 style={{
-          fontSize: '1.875rem', lineHeight: '2.25rem',
-          fontWeight: 700, marginBottom: '8px',
-        }}>Buttons</h2>
+        <h2
+          style={{
+            fontSize: '1.875rem',
+            lineHeight: '2.25rem',
+            fontWeight: 700,
+            marginBottom: '8px',
+          }}
+        >
+          Buttons
+        </h2>
         <p style={{ color: 'var(--mat-sys-on-surface-variant)' }}>
           Interactive controls with multiple variants and states
         </p>

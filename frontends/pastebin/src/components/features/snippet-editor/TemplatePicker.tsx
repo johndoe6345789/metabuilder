@@ -1,6 +1,11 @@
 'use client'
 
-import { Menu, MenuItem, Divider, MaterialIcon } from '@metabuilder/components/fakemui'
+import {
+  Menu,
+  MenuItem,
+  Divider,
+  MaterialIcon,
+} from '@metabuilder/components/fakemui'
 import { SnippetTemplate } from '@/lib/types'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useTemplatePickerClose } from './hooks/useTemplatePickerClose'
@@ -39,30 +44,45 @@ export function TemplatePicker({
       className={styles.menu}
       data-testid={testId}
     >
-      <div
-        className={`overflow-y-auto max-h-[500px]`}
-        data-testid={testId}
-      >
-        <MenuItem onClick={() => { onCreateNew(); onClose() }} data-testid="create-blank-snippet-item">
-          <MaterialIcon name="add" size={16} style={{ marginRight: 8 }} aria-hidden="true" />
+      <div className={`overflow-y-auto max-h-[500px]`} data-testid={testId}>
+        <MenuItem
+          onClick={() => {
+            onCreateNew()
+            onClose()
+          }}
+          data-testid="create-blank-snippet-item"
+        >
+          <MaterialIcon
+            name="add"
+            size={16}
+            style={{ marginRight: 8 }}
+            aria-hidden="true"
+          />
           {t.templatePicker.blank}
         </MenuItem>
-        {sections.map((section) => (
+        {sections.map(section => (
           <div key={section.label}>
             <Divider />
-            <div className={styles.sectionHeader} aria-hidden="true">{section.label}</div>
-            <div className={styles.grid} role="group" aria-label={section.label}>
+            <div className={styles.sectionHeader} aria-hidden="true">
+              {section.label}
+            </div>
+            <div
+              className={styles.grid}
+              role="group"
+              aria-label={section.label}
+            >
               {section.templates.map(template => (
                 <button
                   key={template.id}
                   role="menuitem"
-                  onClick={() => { onCreateFromTemplate(template.id); onClose() }}
+                  onClick={() => {
+                    onCreateFromTemplate(template.id)
+                    onClose()
+                  }}
                   className={styles.card}
                   data-testid={`template-${template.category}-${template.id}`}
                 >
-                  <span className={styles.cardTitle}>
-                    {template.title}
-                  </span>
+                  <span className={styles.cardTitle}>{template.title}</span>
                   <span className={styles.cardDescription}>
                     {template.description}
                   </span>

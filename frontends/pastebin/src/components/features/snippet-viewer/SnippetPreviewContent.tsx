@@ -15,32 +15,46 @@ interface Props {
 }
 
 export function SnippetPreviewContent({
-  snippet, isPython, wordWrap = 'on', onChange = () => {},
-  breakpoints, onToggleBreakpoint, currentDebugLine,
+  snippet,
+  isPython,
+  wordWrap = 'on',
+  onChange = () => {},
+  breakpoints,
+  onToggleBreakpoint,
+  currentDebugLine,
 }: Props) {
   return (
     <>
-      <div className={styles.codePane} data-testid="viewer-code-pane"
-        role="region" aria-label="Code editor">
+      <div
+        className={styles.codePane}
+        data-testid="viewer-code-pane"
+        role="region"
+        aria-label="Code editor"
+      >
         <MonacoEditor
-          value={snippet.code} onChange={onChange}
-          language={snippet.language} height="100%"
-          wordWrap={wordWrap} breakpoints={breakpoints}
+          value={snippet.code}
+          onChange={onChange}
+          language={snippet.language}
+          height="100%"
+          wordWrap={wordWrap}
+          breakpoints={breakpoints}
           onToggleBreakpoint={onToggleBreakpoint}
           currentDebugLine={currentDebugLine}
         />
       </div>
-      <div className={styles.previewPane}
-        data-testid="viewer-preview-pane" role="region"
-        aria-label={
-          `Preview pane - ${isPython ? 'Python output' : 'React preview'}`
-        }
+      <div
+        className={styles.previewPane}
+        data-testid="viewer-preview-pane"
+        role="region"
+        // eslint-disable-next-line max-len
+        aria-label={`Preview pane - ${isPython ? 'Python output' : 'React preview'}`}
       >
         {isPython ? (
           <PythonOutput code={snippet.code} />
         ) : (
           <ReactPreview
-            code={snippet.code} language={snippet.language}
+            code={snippet.code}
+            language={snippet.language}
             functionName={snippet.functionName}
             inputParameters={snippet.inputParameters}
           />

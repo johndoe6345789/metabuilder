@@ -13,7 +13,11 @@ interface ToolbarExecGroupProps {
 }
 
 export function ToolbarExecGroup({
-  isRunning, isDebugging, onRun, onStop, onDebug,
+  isRunning,
+  isDebugging,
+  onRun,
+  onStop,
+  onDebug,
 }: ToolbarExecGroupProps) {
   return (
     <div className={styles.toolGroup}>

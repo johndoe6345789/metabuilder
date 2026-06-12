@@ -27,7 +27,7 @@ describe('SnippetToolbar', () => {
         onCreateNew={jest.fn()}
         onCreateFromTemplate={jest.fn()}
         templates={mockTemplates}
-      />
+      />,
     )
 
     expect(screen.getByTestId('snippet-search-input')).toBeInTheDocument()
@@ -43,7 +43,7 @@ describe('SnippetToolbar', () => {
         onCreateNew={jest.fn()}
         onCreateFromTemplate={jest.fn()}
         templates={mockTemplates}
-      />
+      />,
     )
 
     expect(screen.getByTestId('snippet-selection-mode-btn')).toBeInTheDocument()
@@ -59,10 +59,12 @@ describe('SnippetToolbar', () => {
         onCreateNew={jest.fn()}
         onCreateFromTemplate={jest.fn()}
         templates={mockTemplates}
-      />
+      />,
     )
 
-    expect(screen.getByTestId('snippet-create-menu-trigger')).toBeInTheDocument()
+    expect(
+      screen.getByTestId('snippet-create-menu-trigger'),
+    ).toBeInTheDocument()
   })
 
   it('has proper aria-label on search input', () => {
@@ -75,7 +77,7 @@ describe('SnippetToolbar', () => {
         onCreateNew={jest.fn()}
         onCreateFromTemplate={jest.fn()}
         templates={mockTemplates}
-      />
+      />,
     )
 
     const searchInput = screen.getByTestId('snippet-search-input')
@@ -95,10 +97,12 @@ describe('SnippetToolbar', () => {
         onCreateNew={jest.fn()}
         onCreateFromTemplate={jest.fn()}
         templates={mockTemplates}
-      />
+      />,
     )
 
-    const searchInput = screen.getByTestId('snippet-search-input') as HTMLInputElement
+    const searchInput = screen.getByTestId(
+      'snippet-search-input',
+    ) as HTMLInputElement
     await user.type(searchInput, 'test')
 
     expect(onSearchChange).toHaveBeenCalled()
@@ -114,7 +118,7 @@ describe('SnippetToolbar', () => {
         onCreateNew={jest.fn()}
         onCreateFromTemplate={jest.fn()}
         templates={mockTemplates}
-      />
+      />,
     )
 
     const selectionBtn = screen.getByTestId('snippet-selection-mode-btn')
@@ -132,7 +136,7 @@ describe('SnippetToolbar', () => {
         onCreateNew={jest.fn()}
         onCreateFromTemplate={jest.fn()}
         templates={mockTemplates}
-      />
+      />,
     )
 
     const trigger = screen.getByTestId('snippet-create-menu-trigger')

@@ -8,9 +8,10 @@ describe('NavigationSidebar', () => {
     render(
       <NavigationProvider>
         <NavigationSidebar />
-      </NavigationProvider>
+      </NavigationProvider>,
     )
 
+    // eslint-disable-next-line max-len
     // The sidebar is hidden by default (menuOpen is false), so we check for overlay
     expect(screen.queryByTestId('navigation-sidebar')).not.toBeInTheDocument()
   })
@@ -20,7 +21,7 @@ describe('NavigationSidebar', () => {
       <NavigationProvider>
         <NavigationSidebar />
         <button data-testid="open-menu">Open</button>
-      </NavigationProvider>
+      </NavigationProvider>,
     )
 
     // We'd need to open the menu first, which requires the Navigation toggle
@@ -32,7 +33,7 @@ describe('NavigationSidebar', () => {
     const { container } = render(
       <NavigationProvider>
         <NavigationSidebar />
-      </NavigationProvider>
+      </NavigationProvider>,
     )
 
     // The navigation might not be visible initially
@@ -47,10 +48,12 @@ describe('NavigationSidebar', () => {
     const { container } = render(
       <NavigationProvider>
         <NavigationSidebar />
-      </NavigationProvider>
+      </NavigationProvider>,
     )
 
-    const navRegion = container.querySelector('[data-testid="navigation-items"]')
+    const navRegion = container.querySelector(
+      '[data-testid="navigation-items"]',
+    )
     if (navRegion) {
       expect(navRegion).toHaveAttribute('role', 'navigation')
     }
@@ -60,7 +63,7 @@ describe('NavigationSidebar', () => {
     const { container } = render(
       <NavigationProvider>
         <NavigationSidebar />
-      </NavigationProvider>
+      </NavigationProvider>,
     )
 
     // Check for navigation link structure
@@ -72,10 +75,12 @@ describe('NavigationSidebar', () => {
     const { container } = render(
       <NavigationProvider>
         <NavigationSidebar />
-      </NavigationProvider>
+      </NavigationProvider>,
     )
 
-    const overlay = container.querySelector('[data-testid="navigation-sidebar-overlay"]')
+    const overlay = container.querySelector(
+      '[data-testid="navigation-sidebar-overlay"]',
+    )
     if (overlay) {
       expect(overlay).toHaveAttribute('aria-hidden', 'true')
     }

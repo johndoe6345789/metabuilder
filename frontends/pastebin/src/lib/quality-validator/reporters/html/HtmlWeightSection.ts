@@ -2,25 +2,23 @@
  * HTML scoring weight visualization section
  */
 
-import { ScoringResult } from '../../types/index.js';
+import { ScoringResult } from '../../types/index.js'
 
-export function generateWeightVisualization(
-  result: ScoringResult
-): string {
-  const weights = result.metadata.configUsed.scoring?.weights;
-  if (!weights) return '';
+export function generateWeightVisualization(result: ScoringResult): string {
+  const weights = result.metadata.configUsed.scoring?.weights
+  if (!weights) return ''
 
   const bar = (w: number) =>
     `<div class="score-bar">` +
     `<div class="score-fill" style="width: ${w * 100}%"></div>` +
-    `</div>`;
+    `</div>`
 
   const row = (label: string, w: number) =>
     `<div class="metric">` +
     `<div class="metric-label">${label}</div>` +
     bar(w) +
     `<div class="metric-value">${(w * 100).toFixed(1)}%</div>` +
-    `</div>`;
+    `</div>`
 
   return (
     `<section class="section">` +
@@ -33,5 +31,5 @@ export function generateWeightVisualization(
     row('Architecture', weights.architecture) +
     row('Security', weights.security) +
     `</div></div></section>`
-  );
+  )
 }

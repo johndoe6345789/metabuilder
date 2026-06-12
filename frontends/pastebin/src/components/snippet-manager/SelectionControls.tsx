@@ -1,4 +1,9 @@
-import { Button, Menu, MenuItem, MaterialIcon } from '@metabuilder/components/fakemui'
+import {
+  Button,
+  Menu,
+  MenuItem,
+  MaterialIcon,
+} from '@metabuilder/components/fakemui'
 import { Namespace } from '@/lib/types'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useMenuAnchor } from './hooks/useMenuAnchor'
@@ -26,26 +31,45 @@ export function SelectionControls({
   const isAllSelected = selectedIds.length === totalFilteredCount
 
   return (
-    <div className={styles.container} data-testid="selection-controls" role="region" aria-label="Selection controls">
+    <div
+      className={styles.container}
+      data-testid="selection-controls"
+      role="region"
+      aria-label="Selection controls"
+    >
       <Button
         variant="outlined"
         size="sm"
         onClick={onSelectAll}
         data-testid="select-all-btn"
-        aria-label={isAllSelected ? t.selectionControls.deselectAllAria : t.selectionControls.selectAllAria}
+        aria-label={
+          isAllSelected
+            ? t.selectionControls.deselectAllAria
+            : t.selectionControls.selectAllAria
+        }
       >
-        {isAllSelected ? t.selectionControls.deselectAll : t.selectionControls.selectAll}
+        {isAllSelected
+          ? t.selectionControls.deselectAll
+          : t.selectionControls.selectAll}
       </Button>
       {selectedIds.length > 0 && (
         <>
-          <span className={styles.count} data-testid="selection-count" role="status" aria-live="polite">
-            {t.selectionControls.selected.replace('{count}', String(selectedIds.length))}
+          <span
+            className={styles.count}
+            data-testid="selection-count"
+            role="status"
+            aria-live="polite"
+          >
+            {t.selectionControls.selected.replace(
+              '{count}',
+              String(selectedIds.length),
+            )}
           </span>
           <Button
             variant="outlined"
             size="sm"
             className={styles.moveBtn}
-            onClick={(e) => openMenu(e.currentTarget)}
+            onClick={e => openMenu(e.currentTarget)}
             data-testid="bulk-move-menu-trigger"
             aria-label={t.selectionControls.moveToAria}
             aria-haspopup="menu"
@@ -59,10 +83,13 @@ export function SelectionControls({
             onClose={closeMenu}
             data-testid="bulk-move-menu"
           >
-            {namespaces.map((namespace) => (
+            {namespaces.map(namespace => (
               <MenuItem
                 key={namespace.id}
-                onClick={() => { onBulkMove(namespace.id); closeMenu() }}
+                onClick={() => {
+                  onBulkMove(namespace.id)
+                  closeMenu()
+                }}
                 disabled={namespace.id === currentNamespaceId}
                 data-testid={`bulk-move-to-namespace-${namespace.id}`}
               >

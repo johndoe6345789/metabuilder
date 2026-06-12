@@ -10,24 +10,20 @@ interface ProfileCommentsProps {
 }
 
 export function ProfileComments({ profileUserId }: ProfileCommentsProps) {
-  const {
-    comments, loading, isAuthenticated, handleSubmit,
-  } = useProfileComments(profileUserId)
+  const { comments, loading, isAuthenticated, handleSubmit } =
+    useProfileComments(profileUserId)
 
   return (
     <section className={styles.section}>
       <h2 className={styles.sectionTitle}>Comments</h2>
       <div className={styles.list}>
-        {loading && comments.length === 0
-          ? <p className={styles.empty}>Loading comments…</p>
-          : comments.length === 0
-            ? <p className={styles.empty}>
-                No comments yet. Be the first!
-              </p>
-            : comments.map(c => (
-                <CommentItem key={c.id} comment={c} />
-              ))
-        }
+        {loading && comments.length === 0 ? (
+          <p className={styles.empty}>Loading comments…</p>
+        ) : comments.length === 0 ? (
+          <p className={styles.empty}>No comments yet. Be the first!</p>
+        ) : (
+          comments.map(c => <CommentItem key={c.id} comment={c} />)
+        )}
       </div>
       {isAuthenticated && <CommentForm onSubmit={handleSubmit} />}
     </section>

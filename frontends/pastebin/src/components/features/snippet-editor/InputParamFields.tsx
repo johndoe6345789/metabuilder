@@ -6,11 +6,7 @@ interface InputParamFieldsProps {
   param: InputParameter
   index: number
   placeholder: string
-  onUpdate: (
-    index: number,
-    field: keyof InputParameter,
-    value: string,
-  ) => void
+  onUpdate: (index: number, field: keyof InputParameter, value: string) => void
 }
 
 function ParamLabel({ htmlFor, text }: { htmlFor: string; text: string }) {
@@ -22,15 +18,15 @@ function ParamLabel({ htmlFor, text }: { htmlFor: string; text: string }) {
 }
 
 export function InputParamFields({
-  param, index, placeholder, onUpdate,
+  param,
+  index,
+  placeholder,
+  onUpdate,
 }: InputParamFieldsProps) {
   return (
     <>
       <div className={styles.fieldGroup}>
-        <ParamLabel
-          htmlFor={`param-default-${index}`}
-          text="Default Value *"
-        />
+        <ParamLabel htmlFor={`param-default-${index}`} text="Default Value *" />
         <Input
           id={`param-default-${index}`}
           placeholder={placeholder}

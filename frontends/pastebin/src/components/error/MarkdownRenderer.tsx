@@ -17,7 +17,11 @@ function renderInline(text: string): ReactNode {
     if (match.index > last) parts.push(text.slice(last, match.index))
     const m = match[0]
     if (m.startsWith('`')) {
-      parts.push(<code key={key++} className={styles.inlineCode}>{m.slice(1, -1)}</code>)
+      parts.push(
+        <code key={key++} className={styles.inlineCode}>
+          {m.slice(1, -1)}
+        </code>,
+      )
     } else if (m.startsWith('**')) {
       parts.push(<strong key={key++}>{m.slice(2, -2)}</strong>)
     } else if (m.startsWith('*')) {
@@ -59,30 +63,62 @@ function parseBlocks(content: string): Block[] {
 
 function renderBlock(block: Block, idx: number): ReactNode {
   if (block.kind === 'fence') {
-    return <pre key={idx} className={styles.pre}><code>{block.code}</code></pre>
+    return (
+      <pre key={idx} className={styles.pre}>
+        <code>{block.code}</code>
+      </pre>
+    )
   }
   const { text } = block
   if (text.startsWith('### ')) {
-    return <h3 key={idx} className={styles.h3}>{renderInline(text.slice(4))}</h3>
+    return (
+      <h3 key={idx} className={styles.h3}>
+        {renderInline(text.slice(4))}
+      </h3>
+    )
   }
   if (text.startsWith('## ')) {
-    return <h2 key={idx} className={styles.h2}>{renderInline(text.slice(3))}</h2>
+    return (
+      <h2 key={idx} className={styles.h2}>
+        {renderInline(text.slice(3))}
+      </h2>
+    )
   }
   if (text.match(/^\d+\./)) {
-    return <div key={idx} className={styles.orderedItem}>{renderInline(text)}</div>
+    return (
+      <div key={idx} className={styles.orderedItem}>
+        {renderInline(text)}
+      </div>
+    )
   }
   if (text.startsWith('- ')) {
-    return <div key={idx} className={styles.listItem}>{renderInline(text.slice(2))}</div>
+    return (
+      <div key={idx} className={styles.listItem}>
+        {renderInline(text.slice(2))}
+      </div>
+    )
   }
   if (text.trim()) {
-    return <p key={idx} className={styles.paragraph}>{renderInline(text)}</p>
+    return (
+      <p key={idx} className={styles.paragraph}>
+        {renderInline(text)}
+      </p>
+    )
   }
   return null
 }
 
-export function MarkdownRenderer({ content, animate = true }: MarkdownRendererProps) {
+export function MarkdownRenderer({
+  content,
+  animate = true,
+}: MarkdownRendererProps) {
   const inner = (
-    <div className={styles.card} data-testid="markdown-renderer" role="region" aria-label="Markdown content">
+    <div
+      className={styles.card}
+      data-testid="markdown-renderer"
+      role="region"
+      aria-label="Markdown content"
+    >
       {parseBlocks(content).map((b, i) => renderBlock(b, i))}
     </div>
   )

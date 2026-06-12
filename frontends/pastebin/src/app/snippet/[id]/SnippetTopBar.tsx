@@ -27,10 +27,7 @@ export function SnippetTopBar({
       <div className={styles.titleGroup}>
         <h1 className={styles.pageTitle}>{title}</h1>
         {description && (
-          <span
-            className={styles.titleDescription}
-            title={description}
-          >
+          <span className={styles.titleDescription} title={description}>
             {description}
           </span>
         )}

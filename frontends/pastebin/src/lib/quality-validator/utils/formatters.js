@@ -2,6 +2,7 @@
  * Formatting utilities for consistent output across reporters
  * Centralizes all formatting logic to reduce duplication
  */
+/* global Buffer */
 import { SEVERITY_ORDER } from './constants.js';
 /**
  * Format a numeric score as a percentage string

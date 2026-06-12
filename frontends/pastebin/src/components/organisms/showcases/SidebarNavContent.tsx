@@ -1,13 +1,17 @@
 import { Button, Divider, MaterialIcon } from '@metabuilder/components/fakemui'
 
 const fullWidthStart: React.CSSProperties = {
-  width: '100%', justifyContent: 'flex-start',
+  width: '100%',
+  justifyContent: 'flex-start',
 }
 const signOutStyle: React.CSSProperties = {
-  ...fullWidthStart, color: 'var(--mat-sys-error)',
+  ...fullWidthStart,
+  color: 'var(--mat-sys-error)',
 }
 const navStyle = {
-  display: 'flex', flexDirection: 'column' as const, gap: '4px',
+  display: 'flex',
+  flexDirection: 'column' as const,
+  gap: '4px',
 }
 
 const NAV_ITEMS = [

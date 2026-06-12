@@ -4,30 +4,37 @@ import { PasswordField } from './PasswordField'
 import styles from './login.module.scss'
 
 export function SignInForm({
-  username, password, showPass, rememberMe,
-  displayError, loading, forgot,
-  forgotUsername, forgotEmail, forgotLoading,
-  onUsernameChange, onPasswordChange,
-  onTogglePass, onRememberChange, onSubmit,
-  onForgotOpen, onForgotClose,
-  onForgotSubmit, onForgotUsernameChange,
-  onForgotEmailChange, onSwitchRegister,
+  username,
+  password,
+  showPass,
+  rememberMe,
+  displayError,
+  loading,
+  forgot,
+  forgotUsername,
+  forgotEmail,
+  forgotLoading,
+  onUsernameChange,
+  onPasswordChange,
+  onTogglePass,
+  onRememberChange,
+  onSubmit,
+  onForgotOpen,
+  onForgotClose,
+  onForgotSubmit,
+  onForgotUsernameChange,
+  onForgotEmailChange,
+  onSwitchRegister,
 }: SignInFormProps) {
   return (
     <>
       <div>
         <h1 className={styles.formTitle}>Log In</h1>
-        <p className={styles.formSub}>
-          Enter your credentials to continue.
-        </p>
+        <p className={styles.formSub}>Enter your credentials to continue.</p>
       </div>
 
       {displayError && (
-        <div
-          className={styles.error}
-          data-testid="login-error"
-          role="alert"
-        >
+        <div className={styles.error} data-testid="login-error" role="alert">
           {displayError}
         </div>
       )}

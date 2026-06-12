@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState } from 'react'
 
 export function useContentGridsView() {
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  return { viewMode, setViewMode };
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  return { viewMode, setViewMode }
 }

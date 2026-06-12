@@ -41,8 +41,8 @@ describe('profilesSlice', () => {
     it('stores profile by username on fulfilled', () => {
       const store = makeStore()
       store.dispatch(
-        // @ts-expect-error
-        fetchUserProfile.fulfilled(mockProfile, 'req', 'alice')
+        // @ts-expect-error testing with invalid payload shape
+        fetchUserProfile.fulfilled(mockProfile, 'req', 'alice'),
       )
       const state = store.getState().profiles
       expect(state.loading).toBe(false)
@@ -52,8 +52,8 @@ describe('profilesSlice', () => {
     it('does not store profile when payload is null', () => {
       const store = makeStore()
       store.dispatch(
-        // @ts-expect-error
-        fetchUserProfile.fulfilled(null, 'req', 'nobody')
+        // @ts-expect-error testing with invalid payload shape
+        fetchUserProfile.fulfilled(null, 'req', 'nobody'),
       )
       expect(store.getState().profiles.byUsername['nobody']).toBeUndefined()
     })
@@ -61,8 +61,8 @@ describe('profilesSlice', () => {
     it('sets error on rejected', () => {
       const store = makeStore()
       store.dispatch(
-        // @ts-expect-error
-        fetchUserProfile.rejected(null, 'req', 'alice', 'Profile not found')
+        // @ts-expect-error testing with invalid payload shape
+        fetchUserProfile.rejected(null, 'req', 'alice', 'Profile not found'),
       )
       const state = store.getState().profiles
       expect(state.loading).toBe(false)
@@ -72,7 +72,12 @@ describe('profilesSlice', () => {
     it('fetches profile from API on success', async () => {
       global.fetch = jest.fn().mockResolvedValue({
         ok: true,
-        json: async () => ({ id: 'u2', username: 'bob', bio: 'Hi', createdAt: 2000 }),
+        json: async () => ({
+          id: 'u2',
+          username: 'bob',
+          bio: 'Hi',
+          createdAt: 2000,
+        }),
       })
       const store = makeStore()
       await store.dispatch(fetchUserProfile('bob'))
@@ -87,7 +92,9 @@ describe('profilesSlice', () => {
       })
       const store = makeStore()
       await store.dispatch(fetchUserProfile('ghost'))
-      expect(store.getState().profiles.error).toContain('Failed to fetch profile')
+      expect(store.getState().profiles.error).toContain(
+        'Failed to fetch profile',
+      )
     })
 
     it('rejects with "Network error" when fetch throws', async () => {
@@ -118,8 +125,8 @@ describe('profilesSlice', () => {
     it('stores updated profile on fulfilled', () => {
       const store = makeStore()
       store.dispatch(
-        // @ts-expect-error
-        updateMyProfile.fulfilled(mockProfile, 'req', 'Hello world')
+        // @ts-expect-error testing with invalid payload shape
+        updateMyProfile.fulfilled(mockProfile, 'req', 'Hello world'),
       )
       const state = store.getState().profiles
       expect(state.loading).toBe(false)
@@ -129,8 +136,8 @@ describe('profilesSlice', () => {
     it('sets error on rejected', () => {
       const store = makeStore()
       store.dispatch(
-        // @ts-expect-error
-        updateMyProfile.rejected(null, 'req', 'bio', 'Update failed')
+        // @ts-expect-error testing with invalid payload shape
+        updateMyProfile.rejected(null, 'req', 'bio', 'Update failed'),
       )
       expect(store.getState().profiles.error).toBe('Update failed')
     })
@@ -138,13 +145,18 @@ describe('profilesSlice', () => {
     it('calls PUT /api/profile', async () => {
       global.fetch = jest.fn().mockResolvedValue({
         ok: true,
-        json: async () => ({ id: 'u1', username: 'alice', bio: 'Updated', createdAt: 1000 }),
+        json: async () => ({
+          id: 'u1',
+          username: 'alice',
+          bio: 'Updated',
+          createdAt: 1000,
+        }),
       })
       const store = makeStore()
       await store.dispatch(updateMyProfile('Updated'))
       expect(global.fetch).toHaveBeenCalledWith(
         expect.stringContaining('/api/profile'),
-        expect.objectContaining({ method: 'PUT' })
+        expect.objectContaining({ method: 'PUT' }),
       )
     })
 
@@ -170,12 +182,20 @@ describe('profilesSlice', () => {
     it('stores profiles by different usernames independently', () => {
       const store = makeStore()
       store.dispatch(
-        // @ts-expect-error
-        fetchUserProfile.fulfilled({ id: 'a', username: 'alice', bio: '', createdAt: 1 }, 'req', 'alice')
+        // @ts-expect-error testing with invalid payload shape
+        fetchUserProfile.fulfilled(
+          { id: 'a', username: 'alice', bio: '', createdAt: 1 },
+          'req',
+          'alice',
+        ),
       )
       store.dispatch(
-        // @ts-expect-error
-        fetchUserProfile.fulfilled({ id: 'b', username: 'bob', bio: '', createdAt: 2 }, 'req', 'bob')
+        // @ts-expect-error testing with invalid payload shape
+        fetchUserProfile.fulfilled(
+          { id: 'b', username: 'bob', bio: '', createdAt: 2 },
+          'req',
+          'bob',
+        ),
       )
       expect(store.getState().profiles.byUsername['alice'].id).toBe('a')
       expect(store.getState().profiles.byUsername['bob'].id).toBe('b')

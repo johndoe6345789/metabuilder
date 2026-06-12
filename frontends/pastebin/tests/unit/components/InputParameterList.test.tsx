@@ -43,7 +43,9 @@ describe('InputParameterList Component', () => {
   describe('Function Name Section', () => {
     it('should render function name input label', () => {
       render(<InputParameterList {...defaultProps} />)
-      expect(screen.getByText('Function/Component Name (Optional)')).toBeInTheDocument()
+      expect(
+        screen.getByText('Function/Component Name (Optional)'),
+      ).toBeInTheDocument()
     })
 
     it('should render function name input field', () => {
@@ -53,7 +55,9 @@ describe('InputParameterList Component', () => {
 
     it('should display current function name value', () => {
       render(<InputParameterList {...defaultProps} />)
-      const input = screen.getByTestId('function-name-input') as HTMLInputElement
+      const input = screen.getByTestId(
+        'function-name-input',
+      ) as HTMLInputElement
       expect(input.value).toBe('MyComponent')
     })
 
@@ -65,13 +69,19 @@ describe('InputParameterList Component', () => {
 
     it('should display help text', () => {
       render(<InputParameterList {...defaultProps} />)
-      expect(screen.getByText('The name of the function or component to render. Leave empty to use the default export.')).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          'The name of the function or component to render. Leave empty to use the default export.',
+        ),
+      ).toBeInTheDocument()
     })
 
     it('should call onFunctionNameChange when input changes', async () => {
       render(<InputParameterList {...defaultProps} />)
 
-      const input = screen.getByTestId('function-name-input') as HTMLInputElement
+      const input = screen.getByTestId(
+        'function-name-input',
+      ) as HTMLInputElement
       fireEvent.change(input, { target: { value: 'NewComponent' } })
 
       expect(mockOnFunctionNameChange).toHaveBeenCalledWith('NewComponent')
@@ -79,7 +89,9 @@ describe('InputParameterList Component', () => {
 
     it('should have aria-label', () => {
       render(<InputParameterList {...defaultProps} />)
-      expect(screen.getByLabelText('Function or component name')).toBeInTheDocument()
+      expect(
+        screen.getByLabelText('Function or component name'),
+      ).toBeInTheDocument()
     })
 
     it('should have aria-describedby', () => {
@@ -126,7 +138,9 @@ describe('InputParameterList Component', () => {
   describe('Parameters Display', () => {
     it('should not display parameters section when list is empty', () => {
       render(<InputParameterList {...defaultProps} inputParameters={[]} />)
-      expect(screen.queryByText('Input Parameters (Props)')).not.toBeInTheDocument()
+      expect(
+        screen.queryByText('Input Parameters (Props)'),
+      ).not.toBeInTheDocument()
     })
 
     it('should display parameters section when list has items', () => {
@@ -139,8 +153,18 @@ describe('InputParameterList Component', () => {
 
     it('should render parameter items', () => {
       const params: InputParameter[] = [
-        { name: 'count', type: 'number', defaultValue: '0', description: 'Counter' },
-        { name: 'name', type: 'string', defaultValue: 'John', description: 'User name' },
+        {
+          name: 'count',
+          type: 'number',
+          defaultValue: '0',
+          description: 'Counter',
+        },
+        {
+          name: 'name',
+          type: 'string',
+          defaultValue: 'John',
+          description: 'User name',
+        },
       ]
       render(<InputParameterList {...defaultProps} inputParameters={params} />)
       expect(screen.getByTestId('param-name-input-0')).toBeInTheDocument()
@@ -151,7 +175,12 @@ describe('InputParameterList Component', () => {
       const params: InputParameter[] = [
         { name: 'param1', type: 'string', defaultValue: 'a', description: '' },
         { name: 'param2', type: 'number', defaultValue: '1', description: '' },
-        { name: 'param3', type: 'boolean', defaultValue: 'true', description: '' },
+        {
+          name: 'param3',
+          type: 'boolean',
+          defaultValue: 'true',
+          description: '',
+        },
       ]
       render(<InputParameterList {...defaultProps} inputParameters={params} />)
       expect(screen.getByTestId('param-name-input-0')).toBeInTheDocument()
@@ -215,7 +244,9 @@ describe('InputParameterList Component', () => {
 
     it('should have accessible input label', () => {
       render(<InputParameterList {...defaultProps} />)
-      expect(screen.getByLabelText('Function or component name')).toBeInTheDocument()
+      expect(
+        screen.getByLabelText('Function or component name'),
+      ).toBeInTheDocument()
     })
 
     it('should have accessible button', () => {
@@ -226,25 +257,35 @@ describe('InputParameterList Component', () => {
 
     it('should have help text with proper id', () => {
       render(<InputParameterList {...defaultProps} />)
-      const helpText = screen.getByText(/The name of the function or component to render/)
+      const helpText = screen.getByText(
+        /The name of the function or component to render/,
+      )
       expect(helpText).toHaveAttribute('id', 'function-name-help')
     })
   })
 
   describe('Dynamic Content Rendering', () => {
     it('should render different number of parameters', () => {
-      const { rerender } = render(<InputParameterList {...defaultProps} inputParameters={[]} />)
-      expect(screen.queryByText('Input Parameters (Props)')).not.toBeInTheDocument()
+      const { rerender } = render(
+        <InputParameterList {...defaultProps} inputParameters={[]} />,
+      )
+      expect(
+        screen.queryByText('Input Parameters (Props)'),
+      ).not.toBeInTheDocument()
 
       const params: InputParameter[] = [
         { name: 'param1', type: 'string', defaultValue: '', description: '' },
       ]
-      rerender(<InputParameterList {...defaultProps} inputParameters={params} />)
+      rerender(
+        <InputParameterList {...defaultProps} inputParameters={params} />,
+      )
       expect(screen.getByText('Input Parameters (Props)')).toBeInTheDocument()
     })
 
     it('should update function name input value', () => {
-      const { rerender } = render(<InputParameterList {...defaultProps} functionName="OldName" />)
+      const { rerender } = render(
+        <InputParameterList {...defaultProps} functionName="OldName" />,
+      )
       let input = screen.getByTestId('function-name-input') as HTMLInputElement
       expect(input.value).toBe('OldName')
 
@@ -274,7 +315,9 @@ describe('InputParameterList Component', () => {
         { name: 'p3', type: 'boolean', defaultValue: '', description: '' },
       ]
       expect(() => {
-        render(<InputParameterList {...defaultProps} inputParameters={params} />)
+        render(
+          <InputParameterList {...defaultProps} inputParameters={params} />,
+        )
       }).not.toThrow()
     })
 
@@ -288,13 +331,17 @@ describe('InputParameterList Component', () => {
   describe('Button Positioning', () => {
     it('should position add button in header with title', () => {
       const { container } = render(<InputParameterList {...defaultProps} />)
-      const header = container.querySelector('[class*="flex"][class*="items-center"][class*="justify-between"]')
+      const header = container.querySelector(
+        '[class*="flex"][class*="items-center"][class*="justify-between"]',
+      )
       expect(header).toBeInTheDocument()
     })
 
     it('should have gap between title and button', () => {
       const { container } = render(<InputParameterList {...defaultProps} />)
-      const titleContainer = container.querySelector('[class*="flex"][class*="items-center"]')
+      const titleContainer = container.querySelector(
+        '[class*="flex"][class*="items-center"]',
+      )
       expect(titleContainer?.className).toContain('justify-between')
     })
   })
@@ -302,12 +349,18 @@ describe('InputParameterList Component', () => {
   describe('Text Labels and Help', () => {
     it('should display correct label text', () => {
       render(<InputParameterList {...defaultProps} />)
-      expect(screen.getByText('Function/Component Name (Optional)')).toBeInTheDocument()
+      expect(
+        screen.getByText('Function/Component Name (Optional)'),
+      ).toBeInTheDocument()
     })
 
     it('should display descriptive help text', () => {
       render(<InputParameterList {...defaultProps} />)
-      expect(screen.getByText('The name of the function or component to render. Leave empty to use the default export.')).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          'The name of the function or component to render. Leave empty to use the default export.',
+        ),
+      ).toBeInTheDocument()
     })
 
     it('should display parameters label when parameters exist', () => {
@@ -325,7 +378,9 @@ describe('InputParameterList Component', () => {
       render(<InputParameterList {...defaultProps} />)
 
       // Change function name
-      const funcInput = screen.getByTestId('function-name-input') as HTMLInputElement
+      const funcInput = screen.getByTestId(
+        'function-name-input',
+      ) as HTMLInputElement
       fireEvent.change(funcInput, { target: { value: 'TestFunc' } })
       expect(mockOnFunctionNameChange).toHaveBeenCalledWith('TestFunc')
 
@@ -349,7 +404,7 @@ describe('InputParameterList Component', () => {
           <InputParameterList
             {...defaultProps}
             functionName={undefined as any}
-          />
+          />,
         )
       }).not.toThrow()
     })

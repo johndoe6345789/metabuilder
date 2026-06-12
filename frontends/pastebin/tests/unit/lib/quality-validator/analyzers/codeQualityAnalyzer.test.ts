@@ -4,26 +4,26 @@
  * with realistic scenarios and edge cases
  */
 
-import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
-import { CodeQualityAnalyzer } from '../../../../../src/lib/quality-validator/analyzers/codeQualityAnalyzer';
+import { describe, it, expect, beforeEach, afterEach } from '@jest/globals'
+import { CodeQualityAnalyzer } from '../../../../../src/lib/quality-validator/analyzers/codeQualityAnalyzer'
 import {
   createTempDir,
   cleanupTempDir,
   createTestFile,
-} from '../../../../test-utils';
+} from '../../../../test-utils'
 
 describe('CodeQualityAnalyzer - Comprehensive Tests', () => {
-  let analyzer: CodeQualityAnalyzer;
-  let tempDir: string;
+  let analyzer: CodeQualityAnalyzer
+  let tempDir: string
 
   beforeEach(() => {
-    analyzer = new CodeQualityAnalyzer();
-    tempDir = createTempDir();
-  });
+    analyzer = new CodeQualityAnalyzer()
+    tempDir = createTempDir()
+  })
 
   afterEach(() => {
-    cleanupTempDir(tempDir);
-  });
+    cleanupTempDir(tempDir)
+  })
 
   // ============================================================================
   // CYCLOMATIC COMPLEXITY ANALYSIS TESTS
@@ -31,8 +31,8 @@ describe('CodeQualityAnalyzer - Comprehensive Tests', () => {
 
   describe('Cyclomatic Complexity Analysis', () => {
     it('should detect low complexity function (complexity <= 10)', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -42,23 +42,23 @@ describe('CodeQualityAnalyzer - Comprehensive Tests', () => {
 export const add = (a: number, b: number): number => {
   return a + b;
 };
-        `
-        );
+        `,
+        )
 
-        const result = await analyzer.analyze(['src/utils/simple.ts']);
+        const result = await analyzer.analyze(['src/utils/simple.ts'])
 
-        const metrics = result.metrics as any;
-        expect(metrics.complexity).toBeDefined();
-        expect(metrics.complexity.distribution).toBeDefined();
-        expect(metrics.complexity.distribution.good).toBeGreaterThanOrEqual(0);
+        const metrics = result.metrics as any
+        expect(metrics.complexity).toBeDefined()
+        expect(metrics.complexity.distribution).toBeDefined()
+        expect(metrics.complexity.distribution.good).toBeGreaterThanOrEqual(0)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should detect medium complexity function (10 < complexity <= 20)', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -80,21 +80,23 @@ export const processData = (data: any) => {
     return 'unknown';
   }
 };
-        `
-        );
+        `,
+        )
 
-        const result = await analyzer.analyze(['src/utils/medium.ts']);
+        const result = await analyzer.analyze(['src/utils/medium.ts'])
 
-        const metrics = result.metrics as any;
-        expect(metrics.complexity.distribution.warning).toBeGreaterThanOrEqual(0);
+        const metrics = result.metrics as any
+        expect(metrics.complexity.distribution.warning).toBeGreaterThanOrEqual(
+          0,
+        )
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should detect high complexity function (complexity > 20)', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -124,90 +126,100 @@ export const complexFunction = (a, b, c, d, e) => {
     return 'none';
   }
 };
-        `
-        );
+        `,
+        )
 
-        const result = await analyzer.analyze(['src/utils/complex.ts']);
+        const result = await analyzer.analyze(['src/utils/complex.ts'])
 
-        const metrics = result.metrics as any;
-        expect(metrics.complexity.distribution).toBeDefined();
-        expect(metrics.complexity.distribution.critical).toBeGreaterThanOrEqual(0);
+        const metrics = result.metrics as any
+        expect(metrics.complexity.distribution).toBeDefined()
+        expect(metrics.complexity.distribution.critical).toBeGreaterThanOrEqual(
+          0,
+        )
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should calculate average complexity per file', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
-        createTestFile(tempDir, 'src/file1.ts', 'export const f1 = () => 1;');
-        createTestFile(tempDir, 'src/file2.ts', 'export const f2 = () => 1;');
-        createTestFile(tempDir, 'src/file3.ts', 'export const f3 = () => 1;');
+        createTestFile(tempDir, 'src/file1.ts', 'export const f1 = () => 1;')
+        createTestFile(tempDir, 'src/file2.ts', 'export const f2 = () => 1;')
+        createTestFile(tempDir, 'src/file3.ts', 'export const f3 = () => 1;')
 
         const result = await analyzer.analyze([
           'src/file1.ts',
           'src/file2.ts',
           'src/file3.ts',
-        ]);
+        ])
 
-        const metrics = result.metrics as any;
-        expect(metrics.complexity.averagePerFile).toBeGreaterThanOrEqual(0);
+        const metrics = result.metrics as any
+        expect(metrics.complexity.averagePerFile).toBeGreaterThanOrEqual(0)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should track maximum complexity', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
-        createTestFile(tempDir, 'src/max.ts', `
+        createTestFile(
+          tempDir,
+          'src/max.ts',
+          `
 export const veryComplex = (x) => {
   if (x === 1) return 'a'; if (x === 2) return 'b'; if (x === 3) return 'c';
   if (x === 4) return 'd'; if (x === 5) return 'e'; if (x === 6) return 'f';
   if (x === 7) return 'g'; if (x === 8) return 'h'; if (x === 9) return 'i';
   if (x === 10) return 'j';
 };
-`);
+`,
+        )
 
-        const result = await analyzer.analyze(['src/max.ts']);
+        const result = await analyzer.analyze(['src/max.ts'])
 
-        const metrics = result.metrics as any;
-        expect(metrics.complexity.maximum).toBeGreaterThanOrEqual(0);
+        const metrics = result.metrics as any
+        expect(metrics.complexity.maximum).toBeGreaterThanOrEqual(0)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should identify top 20 most complex functions', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
-        createTestFile(tempDir, 'src/many.ts', `
+        createTestFile(
+          tempDir,
+          'src/many.ts',
+          `
 export const f1 = () => 1;
 export const f2 = () => 2;
 export const f3 = () => 3;
 export const f4 = () => 4;
 export const f5 = () => 5;
-`);
+`,
+        )
 
-        const result = await analyzer.analyze(['src/many.ts']);
+        const result = await analyzer.analyze(['src/many.ts'])
 
-        const metrics = result.metrics as any;
-        expect(Array.isArray(metrics.complexity.functions)).toBe(true);
-        expect(metrics.complexity.functions.length).toBeLessThanOrEqual(20);
+        const metrics = result.metrics as any
+        expect(Array.isArray(metrics.complexity.functions)).toBe(true)
+        expect(metrics.complexity.functions.length).toBeLessThanOrEqual(20)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should handle functions with control flow operators (&&, ||, ?:)', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -217,17 +229,17 @@ export const f5 = () => 5;
 export const check = (a, b, c, d) => {
   return (a && b) || (c && d) ? 'yes' : 'no';
 };
-        `
-        );
+        `,
+        )
 
-        const result = await analyzer.analyze(['src/operators.ts']);
+        const result = await analyzer.analyze(['src/operators.ts'])
 
-        expect(result).toBeDefined();
+        expect(result).toBeDefined()
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // CODE DUPLICATION ANALYSIS TESTS
@@ -235,26 +247,37 @@ export const check = (a, b, c, d) => {
 
   describe('Code Duplication Analysis', () => {
     it('should detect low duplication (< 3%)', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
-        createTestFile(tempDir, 'src/unique1.ts', 'export const unique1 = () => {};');
-        createTestFile(tempDir, 'src/unique2.ts', 'export const unique2 = () => {};');
+        createTestFile(
+          tempDir,
+          'src/unique1.ts',
+          'export const unique1 = () => {};',
+        )
+        createTestFile(
+          tempDir,
+          'src/unique2.ts',
+          'export const unique2 = () => {};',
+        )
 
-        const result = await analyzer.analyze(['src/unique1.ts', 'src/unique2.ts']);
+        const result = await analyzer.analyze([
+          'src/unique1.ts',
+          'src/unique2.ts',
+        ])
 
-        const metrics = result.metrics as any;
-        expect(metrics.duplication).toBeDefined();
-        expect(metrics.duplication.percent).toBeLessThanOrEqual(100);
+        const metrics = result.metrics as any
+        expect(metrics.duplication).toBeDefined()
+        expect(metrics.duplication.percent).toBeLessThanOrEqual(100)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should identify duplicate blocks', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         const duplicateCode = `
@@ -262,60 +285,70 @@ export const helper = () => {
   const config = { timeout: 5000, retry: 3 };
   return config;
 };
-`;
+`
 
-        createTestFile(tempDir, 'src/file1.ts', duplicateCode);
-        createTestFile(tempDir, 'src/file2.ts', duplicateCode);
+        createTestFile(tempDir, 'src/file1.ts', duplicateCode)
+        createTestFile(tempDir, 'src/file2.ts', duplicateCode)
 
-        const result = await analyzer.analyze(['src/file1.ts', 'src/file2.ts']);
+        const result = await analyzer.analyze(['src/file1.ts', 'src/file2.ts'])
 
-        const metrics = result.metrics as any;
-        expect(metrics.duplication.percent).toBeGreaterThanOrEqual(0);
+        const metrics = result.metrics as any
+        expect(metrics.duplication.percent).toBeGreaterThanOrEqual(0)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should calculate duplication percentage', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
-        createTestFile(tempDir, 'src/d1.ts', `
+        createTestFile(
+          tempDir,
+          'src/d1.ts',
+          `
 import { helper } from 'lodash';
 export const func1 = () => {};
-`);
-        createTestFile(tempDir, 'src/d2.ts', `
+`,
+        )
+        createTestFile(
+          tempDir,
+          'src/d2.ts',
+          `
 import { helper } from 'lodash';
 export const func2 = () => {};
-`);
+`,
+        )
 
-        const result = await analyzer.analyze(['src/d1.ts', 'src/d2.ts']);
+        const result = await analyzer.analyze(['src/d1.ts', 'src/d2.ts'])
 
-        const metrics = result.metrics as any;
-        expect(metrics.duplication.percent).toBeGreaterThanOrEqual(0);
-        expect(metrics.duplication.percent).toBeLessThanOrEqual(100);
+        const metrics = result.metrics as any
+        expect(metrics.duplication.percent).toBeGreaterThanOrEqual(0)
+        expect(metrics.duplication.percent).toBeLessThanOrEqual(100)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should report duplication status as good/warning/critical', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
-        createTestFile(tempDir, 'src/test.ts', 'export const x = 1;');
+        createTestFile(tempDir, 'src/test.ts', 'export const x = 1;')
 
-        const result = await analyzer.analyze(['src/test.ts']);
+        const result = await analyzer.analyze(['src/test.ts'])
 
-        const metrics = result.metrics as any;
-        expect(['good', 'warning', 'critical']).toContain(metrics.duplication.status);
+        const metrics = result.metrics as any
+        expect(['good', 'warning', 'critical']).toContain(
+          metrics.duplication.status,
+        )
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // LINTING VIOLATIONS ANALYSIS TESTS
@@ -323,8 +356,8 @@ export const func2 = () => {};
 
   describe('Linting Violations Analysis', () => {
     it('should detect console.log statements', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -335,25 +368,25 @@ export const func = () => {
   console.log('debug info');
   return true;
 };
-        `
-        );
+        `,
+        )
 
-        const result = await analyzer.analyze(['src/logging.ts']);
+        const result = await analyzer.analyze(['src/logging.ts'])
 
-        const metrics = result.metrics as any;
-        expect(metrics.linting.violations).toBeDefined();
+        const metrics = result.metrics as any
+        expect(metrics.linting.violations).toBeDefined()
         const consoleViolations = metrics.linting.violations.filter(
-          (v: any) => v.rule === 'no-console'
-        );
-        expect(consoleViolations.length).toBeGreaterThanOrEqual(0);
+          (v: any) => v.rule === 'no-console',
+        )
+        expect(consoleViolations.length).toBeGreaterThanOrEqual(0)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should ignore console.log in test files', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -363,24 +396,24 @@ export const func = () => {
 it('should work', () => {
   console.log('test output');
 });
-        `
-        );
+        `,
+        )
 
-        const result = await analyzer.analyze(['src/test.spec.ts']);
+        const result = await analyzer.analyze(['src/test.spec.ts'])
 
-        const metrics = result.metrics as any;
+        const metrics = result.metrics as any
         const consoleViolations = metrics.linting.violations.filter(
-          (v: any) => v.rule === 'no-console'
-        );
-        expect(consoleViolations.length).toBe(0);
+          (v: any) => v.rule === 'no-console',
+        )
+        expect(consoleViolations.length).toBe(0)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should detect var usage instead of const/let', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -392,24 +425,24 @@ export const func = () => {
   var y = 20;
   return x + y;
 };
-        `
-        );
+        `,
+        )
 
-        const result = await analyzer.analyze(['src/legacy.ts']);
+        const result = await analyzer.analyze(['src/legacy.ts'])
 
-        const metrics = result.metrics as any;
+        const metrics = result.metrics as any
         const varViolations = metrics.linting.violations.filter(
-          (v: any) => v.rule === 'no-var'
-        );
-        expect(varViolations.length).toBeGreaterThanOrEqual(0);
+          (v: any) => v.rule === 'no-var',
+        )
+        expect(varViolations.length).toBeGreaterThanOrEqual(0)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should count errors, warnings, and info violations separately', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -420,23 +453,23 @@ export const func = () => {
   console.log('test');
   var x = 10;
 };
-        `
-        );
+        `,
+        )
 
-        const result = await analyzer.analyze(['src/violations.ts']);
+        const result = await analyzer.analyze(['src/violations.ts'])
 
-        const metrics = result.metrics as any;
-        expect(metrics.linting.errors).toBeGreaterThanOrEqual(0);
-        expect(metrics.linting.warnings).toBeGreaterThanOrEqual(0);
-        expect(metrics.linting.info).toBeGreaterThanOrEqual(0);
+        const metrics = result.metrics as any
+        expect(metrics.linting.errors).toBeGreaterThanOrEqual(0)
+        expect(metrics.linting.warnings).toBeGreaterThanOrEqual(0)
+        expect(metrics.linting.info).toBeGreaterThanOrEqual(0)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should group violations by rule', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -448,38 +481,40 @@ export const func = () => {
   console.log('b');
   var x = 10;
 };
-        `
-        );
+        `,
+        )
 
-        const result = await analyzer.analyze(['src/rules.ts']);
+        const result = await analyzer.analyze(['src/rules.ts'])
 
-        const metrics = result.metrics as any;
-        expect(metrics.linting.byRule).toBeDefined();
-        expect(metrics.linting.byRule instanceof Map).toBe(true);
+        const metrics = result.metrics as any
+        expect(metrics.linting.byRule).toBeDefined()
+        expect(metrics.linting.byRule instanceof Map).toBe(true)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should report linting status as good/warning/critical', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
-        createTestFile(tempDir, 'src/clean.ts', 'export const x = 1;');
+        createTestFile(tempDir, 'src/clean.ts', 'export const x = 1;')
 
-        const result = await analyzer.analyze(['src/clean.ts']);
+        const result = await analyzer.analyze(['src/clean.ts'])
 
-        const metrics = result.metrics as any;
-        expect(['good', 'warning', 'critical']).toContain(metrics.linting.status);
+        const metrics = result.metrics as any
+        expect(['good', 'warning', 'critical']).toContain(
+          metrics.linting.status,
+        )
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should provide line and column numbers for violations', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -489,22 +524,22 @@ export const func = () => {
 export const func = () => {
   console.log('here');
 };
-        `
-        );
+        `,
+        )
 
-        const result = await analyzer.analyze(['src/location.ts']);
+        const result = await analyzer.analyze(['src/location.ts'])
 
-        const metrics = result.metrics as any;
+        const metrics = result.metrics as any
         if (metrics.linting.violations.length > 0) {
-          const violation = metrics.linting.violations[0];
-          expect(violation.line).toBeGreaterThanOrEqual(1);
-          expect(violation.column).toBeGreaterThanOrEqual(0);
+          const violation = metrics.linting.violations[0]
+          expect(violation.line).toBeGreaterThanOrEqual(1)
+          expect(violation.column).toBeGreaterThanOrEqual(0)
         }
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // FINDINGS GENERATION TESTS
@@ -512,8 +547,8 @@ export const func = () => {
 
   describe('Findings Generation', () => {
     it('should generate findings for critical complexity', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -529,56 +564,56 @@ export const veryComplex = (a) => {
     }
   }
 };
-        `
-        );
+        `,
+        )
 
-        const result = await analyzer.analyze(['src/critical.ts']);
+        const result = await analyzer.analyze(['src/critical.ts'])
 
-        const complexityFindings = result.findings.filter((f) =>
-          f.title.toLowerCase().includes('complexity')
-        );
+        const complexityFindings = result.findings.filter(f =>
+          f.title.toLowerCase().includes('complexity'),
+        )
 
         if (complexityFindings.length > 0) {
-          const finding = complexityFindings[0];
-          expect(finding.severity).toMatch(/high|medium|critical/);
-          expect(finding.category).toBe('codeQuality');
+          const finding = complexityFindings[0]
+          expect(finding.severity).toMatch(/high|medium|critical/)
+          expect(finding.category).toBe('codeQuality')
         }
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should generate findings for high duplication', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
-        const duplicateCode = 'export const x = () => {};';
-        createTestFile(tempDir, 'src/d1.ts', duplicateCode);
-        createTestFile(tempDir, 'src/d2.ts', duplicateCode);
-        createTestFile(tempDir, 'src/d3.ts', duplicateCode);
+        const duplicateCode = 'export const x = () => {};'
+        createTestFile(tempDir, 'src/d1.ts', duplicateCode)
+        createTestFile(tempDir, 'src/d2.ts', duplicateCode)
+        createTestFile(tempDir, 'src/d3.ts', duplicateCode)
 
         const result = await analyzer.analyze([
           'src/d1.ts',
           'src/d2.ts',
           'src/d3.ts',
-        ]);
+        ])
 
-        const dupFindings = result.findings.filter((f) =>
-          f.title.toLowerCase().includes('duplication')
-        );
+        const dupFindings = result.findings.filter(f =>
+          f.title.toLowerCase().includes('duplication'),
+        )
 
         if (dupFindings.length > 0) {
-          expect(dupFindings[0].category).toBe('codeQuality');
+          expect(dupFindings[0].category).toBe('codeQuality')
         }
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should generate findings for linting errors', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -588,23 +623,23 @@ export const veryComplex = (a) => {
 export const func = () => {
   console.log('error');
 };
-        `
-        );
+        `,
+        )
 
-        const result = await analyzer.analyze(['src/lint.ts']);
+        const result = await analyzer.analyze(['src/lint.ts'])
 
-        const lintFindings = result.findings.filter((f) =>
-          f.title.toLowerCase().includes('lint')
-        );
+        const lintFindings = result.findings.filter(f =>
+          f.title.toLowerCase().includes('lint'),
+        )
 
         if (lintFindings.length > 0) {
-          expect(lintFindings[0].category).toBe('codeQuality');
+          expect(lintFindings[0].category).toBe('codeQuality')
         }
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // SCORE CALCULATION TESTS
@@ -612,30 +647,30 @@ export const func = () => {
 
   describe('Score Calculation and Weighting', () => {
     it('should return score between 0 and 100', async () => {
-      const result = await analyzer.analyze([]);
+      const result = await analyzer.analyze([])
 
-      expect(result.score).toBeGreaterThanOrEqual(0);
-      expect(result.score).toBeLessThanOrEqual(100);
-    });
+      expect(result.score).toBeGreaterThanOrEqual(0)
+      expect(result.score).toBeLessThanOrEqual(100)
+    })
 
     it('should use weighted score: 40% complexity + 35% duplication + 25% linting', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
-        createTestFile(tempDir, 'src/score.ts', 'export const x = () => {};');
+        createTestFile(tempDir, 'src/score.ts', 'export const x = () => {};')
 
-        const result = await analyzer.analyze(['src/score.ts']);
+        const result = await analyzer.analyze(['src/score.ts'])
 
-        expect(typeof result.score).toBe('number');
+        expect(typeof result.score).toBe('number')
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should reduce score for high complexity violations', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -648,29 +683,29 @@ export const complex = (a, b, c, d) => {
   if (c) return 'low';
   return 'none';
 };
-        `
-        );
+        `,
+        )
 
-        const result = await analyzer.analyze(['src/high-complex.ts']);
+        const result = await analyzer.analyze(['src/high-complex.ts'])
 
-        expect(result.score).toBeLessThanOrEqual(100);
+        expect(result.score).toBeLessThanOrEqual(100)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should assign status based on score thresholds', async () => {
-      const result = await analyzer.analyze([]);
+      const result = await analyzer.analyze([])
 
       if (result.score >= 80) {
-        expect(result.status).toBe('pass');
+        expect(result.status).toBe('pass')
       } else if (result.score >= 70) {
-        expect(result.status).toBe('warning');
+        expect(result.status).toBe('warning')
       } else {
-        expect(result.status).toBe('fail');
+        expect(result.status).toBe('fail')
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // ERROR HANDLING AND EDGE CASES
@@ -678,41 +713,41 @@ export const complex = (a, b, c, d) => {
 
   describe('Error Handling and Edge Cases', () => {
     it('should handle empty file paths array', async () => {
-      const result = await analyzer.analyze([]);
+      const result = await analyzer.analyze([])
 
-      expect(result).toBeDefined();
-      expect(result.category).toBe('codeQuality');
-    });
+      expect(result).toBeDefined()
+      expect(result.category).toBe('codeQuality')
+    })
 
     it('should skip non-TypeScript files', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
-        createTestFile(tempDir, 'src/config.json', '{}');
-        createTestFile(tempDir, 'src/readme.md', '# README');
+        createTestFile(tempDir, 'src/config.json', '{}')
+        createTestFile(tempDir, 'src/readme.md', '# README')
 
         const result = await analyzer.analyze([
           'src/config.json',
           'src/readme.md',
-        ]);
+        ])
 
-        expect(result).toBeDefined();
+        expect(result).toBeDefined()
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should handle non-existent files gracefully', async () => {
-      const result = await analyzer.analyze(['non-existent.ts']);
+      const result = await analyzer.analyze(['non-existent.ts'])
 
-      expect(result).toBeDefined();
-      expect(result.category).toBe('codeQuality');
-    });
+      expect(result).toBeDefined()
+      expect(result.category).toBe('codeQuality')
+    })
 
     it('should handle malformed TypeScript gracefully', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -722,24 +757,24 @@ export const complex = (a, b, c, d) => {
 export const unclosed = () => {
   return x + y // missing semicolon and brace
 export const another = () => {}
-        `
-        );
+        `,
+        )
 
-        const result = await analyzer.analyze(['src/malformed.ts']);
+        const result = await analyzer.analyze(['src/malformed.ts'])
 
-        expect(result).toBeDefined();
+        expect(result).toBeDefined()
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should measure execution time', async () => {
-      const result = await analyzer.analyze([]);
+      const result = await analyzer.analyze([])
 
-      expect(result.executionTime).toBeGreaterThanOrEqual(0);
-      expect(typeof result.executionTime).toBe('number');
-    });
-  });
+      expect(result.executionTime).toBeGreaterThanOrEqual(0)
+      expect(typeof result.executionTime).toBe('number')
+    })
+  })
 
   // ============================================================================
   // REALISTIC CODE QUALITY SCENARIOS
@@ -747,8 +782,8 @@ export const another = () => {}
 
   describe('Realistic Code Quality Scenarios', () => {
     it('should analyze real-world component with multiple issues', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         // Real-world React component with quality issues
@@ -815,29 +850,31 @@ export const UserDashboard = ({ userId }) => {
     </Card>
   );
 };
-        `
-        );
+        `,
+        )
 
-        const result = await analyzer.analyze(['src/components/UserDashboard.tsx']);
+        const result = await analyzer.analyze([
+          'src/components/UserDashboard.tsx',
+        ])
 
-        expect(result).toBeDefined();
-        expect(result.score).toBeGreaterThanOrEqual(0);
-        expect(result.score).toBeLessThanOrEqual(100);
-        expect(result.findings.length).toBeGreaterThanOrEqual(0);
+        expect(result).toBeDefined()
+        expect(result.score).toBeGreaterThanOrEqual(0)
+        expect(result.score).toBeLessThanOrEqual(100)
+        expect(result.findings.length).toBeGreaterThanOrEqual(0)
 
         // Should find console statements
         const consoleFindings = result.findings.filter(f =>
-          f.description?.toLowerCase().includes('console')
-        );
-        expect(consoleFindings.length).toBeGreaterThanOrEqual(0);
+          f.description?.toLowerCase().includes('console'),
+        )
+        expect(consoleFindings.length).toBeGreaterThanOrEqual(0)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should detect multiple linting violations in single file', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -871,27 +908,27 @@ export function validate(data) {
   }
   return false;
 }
-        `
-        );
+        `,
+        )
 
-        const result = await analyzer.analyze(['src/legacy-utils.ts']);
+        const result = await analyzer.analyze(['src/legacy-utils.ts'])
 
-        const metrics = result.metrics as any;
-        expect(metrics.linting.violations.length).toBeGreaterThan(0);
+        const metrics = result.metrics as any
+        expect(metrics.linting.violations.length).toBeGreaterThan(0)
 
         // Count var violations
         const varViolations = metrics.linting.violations.filter(
-          (v: any) => v.rule === 'no-var'
-        );
-        expect(varViolations.length).toBeGreaterThan(0);
+          (v: any) => v.rule === 'no-var',
+        )
+        expect(varViolations.length).toBeGreaterThan(0)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should handle async/await functions complexity', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -916,19 +953,19 @@ export const fetchUserWithDetails = async (userId) => {
     throw new Error(\`Failed to fetch: \${error.message}\`);
   }
 };
-        `
-        );
+        `,
+        )
 
-        const result = await analyzer.analyze(['src/api-client.ts']);
+        const result = await analyzer.analyze(['src/api-client.ts'])
 
-        const metrics = result.metrics as any;
-        expect(metrics.complexity).toBeDefined();
-        expect(metrics.complexity.functions.length).toBeGreaterThanOrEqual(0);
+        const metrics = result.metrics as any
+        expect(metrics.complexity).toBeDefined()
+        expect(metrics.complexity.functions.length).toBeGreaterThanOrEqual(0)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // INTEGRATION TESTS
@@ -936,8 +973,8 @@ export const fetchUserWithDetails = async (userId) => {
 
   describe('Integration Scenarios', () => {
     it('should analyze multiple files with various issues', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -946,8 +983,8 @@ export const fetchUserWithDetails = async (userId) => {
           `
 export const c1 = (a) => a ? 'yes' : 'no';
 export const c2 = (b) => b ? 'yes' : 'no';
-        `
-        );
+        `,
+        )
 
         createTestFile(
           tempDir,
@@ -957,44 +994,41 @@ export const f = () => {
   console.log('test');
   var x = 1;
 };
-        `
-        );
+        `,
+        )
 
-        const result = await analyzer.analyze([
-          'src/complex.ts',
-          'src/lint.ts',
-        ]);
+        const result = await analyzer.analyze(['src/complex.ts', 'src/lint.ts'])
 
-        expect(result.findings).toBeDefined();
-        expect(Array.isArray(result.findings)).toBe(true);
+        expect(result.findings).toBeDefined()
+        expect(Array.isArray(result.findings)).toBe(true)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should handle large files with many functions', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
-        let largeFile = '';
+        let largeFile = ''
         for (let i = 0; i < 50; i++) {
-          largeFile += `export const func${i} = () => ${i};\n`;
+          largeFile += `export const func${i} = () => ${i};\n`
         }
 
-        createTestFile(tempDir, 'src/large.ts', largeFile);
+        createTestFile(tempDir, 'src/large.ts', largeFile)
 
-        const result = await analyzer.analyze(['src/large.ts']);
+        const result = await analyzer.analyze(['src/large.ts'])
 
-        expect(result).toBeDefined();
+        expect(result).toBeDefined()
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should generate actionable findings with remediation steps', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -1010,21 +1044,21 @@ export const process = (a, b, c) => {
     }
   }
 };
-        `
-        );
+        `,
+        )
 
-        const result = await analyzer.analyze(['src/problem.ts']);
+        const result = await analyzer.analyze(['src/problem.ts'])
 
-        expect(result.findings.length).toBeGreaterThanOrEqual(0);
+        expect(result.findings.length).toBeGreaterThanOrEqual(0)
 
         for (const finding of result.findings) {
-          expect(finding.remediation).toBeDefined();
-          expect(finding.remediation.length).toBeGreaterThan(0);
-          expect(finding.severity).toMatch(/critical|high|medium|low|info/);
+          expect(finding.remediation).toBeDefined()
+          expect(finding.remediation.length).toBeGreaterThan(0)
+          expect(finding.severity).toMatch(/critical|high|medium|low|info/)
         }
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
-  });
-});
+    })
+  })
+})

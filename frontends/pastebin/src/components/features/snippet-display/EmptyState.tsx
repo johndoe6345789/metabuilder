@@ -1,5 +1,6 @@
 import { Button, MaterialIcon } from '@metabuilder/components/fakemui'
 import { useTranslation } from '@/hooks/useTranslation'
+// eslint-disable-next-line max-len
 import { TemplatePicker } from '@/components/features/snippet-editor/TemplatePicker'
 import { useEmptyState } from './hooks/useEmptyState'
 import { EMPTY_STATE_SECTIONS } from './empty-state-sections'
@@ -11,7 +12,8 @@ interface EmptyStateProps {
 }
 
 export function EmptyState({
-  onCreateClick, onCreateFromTemplate,
+  onCreateClick,
+  onCreateFromTemplate,
 }: EmptyStateProps) {
   const t = useTranslation()
   const { menuAnchor, setMenuAnchor } = useEmptyState()
@@ -54,9 +56,7 @@ export function EmptyState({
         aria-label="Create new snippet from templates"
         aria-haspopup="menu"
         aria-expanded={Boolean(menuAnchor)}
-        onClick={(e) =>
-          setMenuAnchor(menuAnchor ? null : e.currentTarget)
-        }
+        onClick={e => setMenuAnchor(menuAnchor ? null : e.currentTarget)}
       >
         <span className={styles.btnInner}>
           <MaterialIcon name="code" size={20} aria-hidden="true" />
@@ -65,9 +65,7 @@ export function EmptyState({
             name="expand_more"
             aria-hidden="true"
             className={
-              menuAnchor
-                ? `${styles.caret} ${styles.caretOpen}`
-                : styles.caret
+              menuAnchor ? `${styles.caret} ${styles.caretOpen}` : styles.caret
             }
           />
         </span>
@@ -76,7 +74,9 @@ export function EmptyState({
         anchor={menuAnchor}
         onClose={() => setMenuAnchor(null)}
         onCreateNew={onCreateClick}
-        onCreateFromTemplate={(id) => { onCreateFromTemplate?.(id) }}
+        onCreateFromTemplate={id => {
+          onCreateFromTemplate?.(id)
+        }}
         data-testid="empty-state-menu-content"
         sections={EMPTY_STATE_SECTIONS}
       />

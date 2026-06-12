@@ -24,7 +24,10 @@ export function useSnippetActions(
   const terminal = useCodeTerminal()
   const dbg = useDebugger()
   const autoSave = useSnippetAutoSave(
-    snippetRef, activeFileRef, filesRef, setSaving,
+    snippetRef,
+    activeFileRef,
+    filesRef,
+    setSaving,
   )
 
   const handleCopy = (activeCode: string) => {
@@ -42,22 +45,25 @@ export function useSnippetActions(
   const handleRun = (files: FileList) => {
     if (!snippet) return
     const languageRunnerMap: Record<string, string> =
-      (appConfig as unknown as {
-        languageRunnerMap: Record<string, string>
-      }).languageRunnerMap ?? {}
-    const runnerKey = languageRunnerMap[snippet.language]
-      ?? snippet.language.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+      (
+        appConfig as unknown as {
+          languageRunnerMap: Record<string, string>
+        }
+      ).languageRunnerMap ?? {}
+    const runnerKey =
+      languageRunnerMap[snippet.language] ??
+      snippet.language.toLowerCase().replace(/[^a-z0-9]+/g, '-')
     terminal.handleRun(runnerKey, files, snippet.entryPoint ?? activeFile)
     setActiveTab('terminal')
   }
 
   const handleDebug = (files: FileList) => {
     if (!snippet) return
-    void dbg.startDebugging(
-      snippet.language, files, snippet.entryPoint ?? activeFile,
-    ).catch(err => {
-      toast.error(err instanceof Error ? err.message : String(err))
-    })
+    void dbg
+      .startDebugging(snippet.language, files, snippet.entryPoint ?? activeFile)
+      .catch(err => {
+        toast.error(err instanceof Error ? err.message : String(err))
+      })
     setActiveTab('debug')
   }
 
@@ -69,12 +75,18 @@ export function useSnippetActions(
   }
 
   return {
-    isCopied, saving,
-    snippetRef, activeFileRef, filesRef,
+    isCopied,
+    saving,
+    snippetRef,
+    activeFileRef,
+    filesRef,
     terminal,
     debugger: dbg,
     handleCodeChange: autoSave.handleCodeChange,
-    handleCopy, handleCopyPath,
-    handleRun, handleDebug, handleSave,
+    handleCopy,
+    handleCopyPath,
+    handleRun,
+    handleDebug,
+    handleSave,
   }
 }

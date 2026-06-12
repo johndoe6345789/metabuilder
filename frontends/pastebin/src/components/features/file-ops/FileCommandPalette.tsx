@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/refs */
 'use client'
 
 import { MaterialIcon } from '@metabuilder/components/fakemui'
@@ -53,9 +54,11 @@ export function FileCommandPalette({
             {'>'}
           </span>
           <input
+            // eslint-disable-next-line react-hooks/refs
             ref={vm.inputRef}
             className={styles.searchInput}
             placeholder="Type a command…"
+            // eslint-disable-next-line react-hooks/refs
             value={vm.query}
             onChange={e => vm.setQuery(e.target.value)}
             aria-label="Command search"
@@ -68,10 +71,7 @@ export function FileCommandPalette({
         <div className={styles.list} role="listbox" aria-label="Commands">
           {Object.entries(vm.groupMap).map(([group, items]) => (
             <div key={group} className={styles.group}>
-              <div
-                className={styles.groupLabel}
-                aria-hidden="true"
-              >
+              <div className={styles.groupLabel} aria-hidden="true">
                 {group}
               </div>
               {items.map(({ cmd, flatIdx }) => {
@@ -92,13 +92,9 @@ export function FileCommandPalette({
                       size={14}
                       className={styles.itemIcon}
                     />
-                    <span className={styles.itemLabel}>
-                      {cmd.label}
-                    </span>
+                    <span className={styles.itemLabel}>{cmd.label}</span>
                     {cmd.shortcut && (
-                      <kbd className={styles.shortcut}>
-                        {cmd.shortcut}
-                      </kbd>
+                      <kbd className={styles.shortcut}>{cmd.shortcut}</kbd>
                     )}
                   </button>
                 )

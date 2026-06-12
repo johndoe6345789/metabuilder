@@ -6,24 +6,45 @@ import { useSnippetFileOps } from './useSnippetFileOps'
 import { useSnippetActions } from './useSnippetActions'
 
 const LANGUAGE_EXTENSIONS: Record<string, string> = {
-  JavaScript: 'js', TypeScript: 'ts', JSX: 'jsx', TSX: 'tsx',
-  Python: 'py', Java: 'java', 'C++': 'cpp', 'C#': 'cs',
-  Go: 'go', Rust: 'rs', Ruby: 'rb', PHP: 'php',
-  Swift: 'swift', Kotlin: 'kt', Scala: 'scala', Haskell: 'hs',
-  R: 'r', Julia: 'jl', Elixir: 'ex', Dart: 'dart',
-  Lua: 'lua', Perl: 'pl', HTML: 'html', CSS: 'css',
-  SQL: 'sql', 'SQL (SQLite)': 'sql',
-  'SQL (MySQL)': 'sql', 'SQL (PostgreSQL)': 'sql',
+  JavaScript: 'js',
+  TypeScript: 'ts',
+  JSX: 'jsx',
+  TSX: 'tsx',
+  Python: 'py',
+  Java: 'java',
+  'C++': 'cpp',
+  'C#': 'cs',
+  Go: 'go',
+  Rust: 'rs',
+  Ruby: 'rb',
+  PHP: 'php',
+  Swift: 'swift',
+  Kotlin: 'kt',
+  Scala: 'scala',
+  Haskell: 'hs',
+  R: 'r',
+  Julia: 'jl',
+  Elixir: 'ex',
+  Dart: 'dart',
+  Lua: 'lua',
+  Perl: 'pl',
+  HTML: 'html',
+  CSS: 'css',
+  SQL: 'sql',
+  'SQL (SQLite)': 'sql',
+  'SQL (MySQL)': 'sql',
+  'SQL (PostgreSQL)': 'sql',
   Bash: 'sh',
 }
 
 export function getFilename(title: string, language: string): string {
   const ext = LANGUAGE_EXTENSIONS[language] ?? 'txt'
-  const base = title
-    .toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(/[^a-z0-9-_]/g, '')
-    .slice(0, 30) || 'snippet'
+  const base =
+    title
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-_]/g, '')
+      .slice(0, 30) || 'snippet'
   return `${base}.${ext}`
 }
 
@@ -60,24 +81,30 @@ export function useSnippetViewPage() {
   useEffect(() => {
     if (!snippet) return
     const defaultName = getFilename(snippet.title, snippet.language)
-    const initial = snippet.entryPoint
-      || (snippet.files?.length ? snippet.files[0].name : defaultName)
+    const initial =
+      snippet.entryPoint ||
+      (snippet.files?.length ? snippet.files[0].name : defaultName)
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setActiveFile(initial)
-    setOpenFiles(prev => prev.length > 0 ? prev : [initial])
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    setOpenFiles(prev => (prev.length > 0 ? prev : [initial]))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [snippet?.id])
 
   useEffect(() => {
     if (!snippet) return
-    const curFiles = snippet.files && snippet.files.length > 0
-      ? snippet.files
-      : [{ name: getFilename(snippet.title, snippet.language),
-          content: snippet.code }]
+    const curFiles =
+      snippet.files && snippet.files.length > 0
+        ? snippet.files
+        : [
+            {
+              name: getFilename(snippet.title, snippet.language),
+              content: snippet.code,
+            },
+          ]
     const fileObj = curFiles.find(f => f.name === activeFile) ?? curFiles[0]
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLocalCode(fileObj?.content ?? snippet.code)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeFile, snippet?.id])
 
   useEffect(() => {
@@ -93,11 +120,11 @@ export function useSnippetViewPage() {
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeFile, paletteOpen, fileOps.renaming])
 
   const openInTab = (name: string) => {
-    setOpenFiles(prev => prev.includes(name) ? prev : [...prev, name])
+    setOpenFiles(prev => (prev.includes(name) ? prev : [...prev, name]))
     setActiveFile(name)
     setActiveTab('code')
   }
@@ -122,19 +149,33 @@ export function useSnippetViewPage() {
   activeFileRef.current = activeFile
 
   return {
-    id, snippet, namespaces,
-    showPreview, setShowPreview,
-    wordWrap, setWordWrap,
-    activeFile, setActiveFile,
-    activeTab, setActiveTab,
-    editOpen, setEditOpen,
-    shareOpen, setShareOpen,
-    forkOpen, setForkOpen,
-    historyOpen, setHistoryOpen,
-    openFiles, localCode,
-    paletteOpen, setPaletteOpen,
-    menuFile, setMenuFile,
-    menuRect, setMenuRect,
+    id,
+    snippet,
+    namespaces,
+    showPreview,
+    setShowPreview,
+    wordWrap,
+    setWordWrap,
+    activeFile,
+    setActiveFile,
+    activeTab,
+    setActiveTab,
+    editOpen,
+    setEditOpen,
+    shareOpen,
+    setShareOpen,
+    forkOpen,
+    setForkOpen,
+    historyOpen,
+    setHistoryOpen,
+    openFiles,
+    localCode,
+    paletteOpen,
+    setPaletteOpen,
+    menuFile,
+    setMenuFile,
+    menuRect,
+    setMenuRect,
     snippetRef: actions.snippetRef,
     activeFileRef: actions.activeFileRef,
     filesRef: actions.filesRef,
@@ -148,7 +189,8 @@ export function useSnippetViewPage() {
     handleDebug: actions.handleDebug,
     handleSave: actions.handleSave,
     debugger: actions.debugger,
-    openInTab, closeTab,
+    openInTab,
+    closeTab,
     ...fileOps,
   }
 }

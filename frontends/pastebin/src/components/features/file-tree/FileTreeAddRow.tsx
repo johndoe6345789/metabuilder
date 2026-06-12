@@ -21,10 +21,7 @@ export function FileTreeAddRow({
   onCancel,
 }: FileTreeAddRowProps) {
   return (
-    <li
-      className={styles.addingRow}
-      data-testid="file-tree-adding-row"
-    >
+    <li className={styles.addingRow} data-testid="file-tree-adding-row">
       <Input
         value={newFileName}
         onChange={e => onChange(e.target.value)}

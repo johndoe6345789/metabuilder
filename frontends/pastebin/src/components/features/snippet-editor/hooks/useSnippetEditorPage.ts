@@ -1,10 +1,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import {
-  createSnippet,
-  updateSnippet,
-} from '@/store/slices/snippetsSlice'
+import { createSnippet, updateSnippet } from '@/store/slices/snippetsSlice'
 import { selectSelectedNamespaceId } from '@/store/selectors'
 import { useSnippetForm } from '@/hooks/useSnippetForm'
 import { useTranslation } from '@/hooks/useTranslation'
@@ -12,9 +9,7 @@ import { appConfig } from '@/lib/config'
 import { Snippet } from '@/lib/types'
 import { toast } from '@metabuilder/components/fakemui'
 
-export function useSnippetEditorPage(
-  initialSnippet?: Snippet | null,
-) {
+export function useSnippetEditorPage(initialSnippet?: Snippet | null) {
   const router = useRouter()
   const dispatch = useAppDispatch()
   const t = useTranslation()
@@ -42,9 +37,7 @@ export function useSnippetEditorPage(
     const data = form.getFormData()
     try {
       if (isEditing && initialSnippet) {
-        await dispatch(
-          updateSnippet({ ...initialSnippet, ...data }),
-        ).unwrap()
+        await dispatch(updateSnippet({ ...initialSnippet, ...data })).unwrap()
         toast.success(t.toast.snippetUpdated)
       } else {
         await dispatch(

@@ -17,7 +17,9 @@ describe('ColorsSection', () => {
 
     it('renders the section description', () => {
       render(<ColorsSection />)
-      expect(screen.getByText('Semantic color palette with accessibility in mind')).toBeInTheDocument()
+      expect(
+        screen.getByText('Semantic color palette with accessibility in mind'),
+      ).toBeInTheDocument()
     })
 
     it('renders as a section element', () => {
@@ -123,7 +125,9 @@ describe('ColorsSection', () => {
 
     it('renders destructive background color', () => {
       const { container } = render(<ColorsSection />)
-      const destructiveSwatch = container.querySelector('[class*="bg-destructive"]')
+      const destructiveSwatch = container.querySelector(
+        '[class*="bg-destructive"]',
+      )
       expect(destructiveSwatch).toBeInTheDocument()
     })
 
@@ -144,7 +148,11 @@ describe('ColorsSection', () => {
     it('has responsive grid columns', () => {
       const { container } = render(<ColorsSection />)
       const grid = container.querySelector('[class*="grid"]')
-      expect(grid).toHaveClass('grid-cols-1', 'sm:grid-cols-2', 'lg:grid-cols-3')
+      expect(grid).toHaveClass(
+        'grid-cols-1',
+        'sm:grid-cols-2',
+        'lg:grid-cols-3',
+      )
     })
 
     it('has proper gap between color items', () => {
@@ -183,8 +191,15 @@ describe('ColorsSection', () => {
 
     it('renders color names as text content', () => {
       render(<ColorsSection />)
-      const colorNames = ['Primary', 'Secondary', 'Accent', 'Destructive', 'Muted', 'Card']
-      colorNames.forEach((colorName) => {
+      const colorNames = [
+        'Primary',
+        'Secondary',
+        'Accent',
+        'Destructive',
+        'Muted',
+        'Card',
+      ]
+      colorNames.forEach(colorName => {
         expect(screen.getByText(colorName)).toBeInTheDocument()
       })
     })
@@ -197,7 +212,9 @@ describe('ColorsSection', () => {
 
     it('applies muted foreground color to descriptions', () => {
       const { container } = render(<ColorsSection />)
-      const mutedElements = container.querySelectorAll('[class*="text-muted-foreground"]')
+      const mutedElements = container.querySelectorAll(
+        '[class*="text-muted-foreground"]',
+      )
       expect(mutedElements.length).toBeGreaterThan(0)
     })
   })

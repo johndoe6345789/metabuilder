@@ -7,12 +7,19 @@ import { StatusIndicatorsSection } from './StatusIndicatorsSection'
 import { ContentPreviewCardsSection } from './ContentPreviewCardsSection'
 
 interface MoleculesSectionProps {
-  onSaveSnippet: (snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>) => void
+  onSaveSnippet: (
+    snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>,
+  ) => void
 }
 
 export function MoleculesSection({ onSaveSnippet }: MoleculesSectionProps) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '64px' }} data-testid="molecules-section" role="region" aria-label="Molecular design system components">
+    <div
+      style={{ display: 'flex', flexDirection: 'column', gap: '64px' }}
+      data-testid="molecules-section"
+      role="region"
+      aria-label="Molecular design system components"
+    >
       <FormFieldsSection onSaveSnippet={onSaveSnippet} />
       <SearchBarsSection onSaveSnippet={onSaveSnippet} />
       <UserCardsSection />

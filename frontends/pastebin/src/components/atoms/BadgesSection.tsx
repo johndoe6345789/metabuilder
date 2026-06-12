@@ -6,14 +6,17 @@ import { atomsCodeSnippets } from '@/lib/component-code-snippets'
 import { Snippet } from '@/lib/types'
 
 const labelStyle = {
-  fontSize: '0.875rem', lineHeight: '1.25rem', fontWeight: 500,
+  fontSize: '0.875rem',
+  lineHeight: '1.25rem',
+  fontWeight: 500,
   color: 'var(--mat-sys-on-surface-variant)',
-  textTransform: 'uppercase' as const, letterSpacing: '0.05em',
+  textTransform: 'uppercase' as const,
+  letterSpacing: '0.05em',
 }
 
 interface BadgesSectionProps {
   onSaveSnippet: (
-    snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>
+    snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>,
   ) => void
 }
 
@@ -26,10 +29,16 @@ export function BadgesSection({ onSaveSnippet }: BadgesSectionProps) {
       aria-label="Badge status indicators"
     >
       <div>
-        <h2 style={{
-          fontSize: '1.875rem', lineHeight: '2.25rem',
-          fontWeight: 700, marginBottom: '8px',
-        }}>Badges</h2>
+        <h2
+          style={{
+            fontSize: '1.875rem',
+            lineHeight: '2.25rem',
+            fontWeight: 700,
+            marginBottom: '8px',
+          }}
+        >
+          Badges
+        </h2>
         <p style={{ color: 'var(--mat-sys-on-surface-variant)' }}>
           Small status indicators and labels
         </p>
@@ -43,12 +52,20 @@ export function BadgesSection({ onSaveSnippet }: BadgesSectionProps) {
         onSaveSnippet={onSaveSnippet}
       >
         <Card className="p-6">
-          <div style={{
-            display: 'flex', flexDirection: 'column', gap: '32px',
-          }}>
-            <div style={{
-              display: 'flex', flexDirection: 'column', gap: '12px',
-            }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '32px',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px',
+              }}
+            >
               <h3 style={labelStyle}>Variants</h3>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
                 <Chip>Default</Chip>
@@ -60,9 +77,13 @@ export function BadgesSection({ onSaveSnippet }: BadgesSectionProps) {
 
             <Divider />
 
-            <div style={{
-              display: 'flex', flexDirection: 'column', gap: '12px',
-            }}>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px',
+              }}
+            >
               <h3 style={labelStyle}>With Icons</h3>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
                 <Chip>

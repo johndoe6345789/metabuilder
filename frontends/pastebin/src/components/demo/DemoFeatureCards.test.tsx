@@ -38,7 +38,12 @@ describe('DemoFeatureCards', () => {
 
     it('renders Real-Time Updates card description', () => {
       render(<DemoFeatureCards />)
-      expect(screen.getByText('Watch your React components render instantly as you type. No refresh needed.')).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          // eslint-disable-next-line max-len
+          'Watch your React components render instantly as you type. No refresh needed.',
+        ),
+      ).toBeInTheDocument()
     })
 
     it('has testid for real-time card', () => {
@@ -61,7 +66,12 @@ describe('DemoFeatureCards', () => {
 
     it('renders Resizable Panels card description', () => {
       render(<DemoFeatureCards />)
-      expect(screen.getByText('Drag the center divider to adjust the editor and preview panel sizes to your preference.')).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          // eslint-disable-next-line max-len
+          'Drag the center divider to adjust the editor and preview panel sizes to your preference.',
+        ),
+      ).toBeInTheDocument()
     })
 
     it('has testid for resizable card', () => {
@@ -84,7 +94,12 @@ describe('DemoFeatureCards', () => {
 
     it('renders Multiple View Modes card description', () => {
       render(<DemoFeatureCards />)
-      expect(screen.getByText('Switch between code-only, split-screen, or preview-only modes with the toggle buttons.')).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          // eslint-disable-next-line max-len
+          'Switch between code-only, split-screen, or preview-only modes with the toggle buttons.',
+        ),
+      ).toBeInTheDocument()
     })
 
     it('has testid for view modes card', () => {
@@ -128,8 +143,12 @@ describe('DemoFeatureCards', () => {
 
     it('each card has CardTitle', () => {
       render(<DemoFeatureCards />)
-      const titles = ['Real-Time Updates', 'Resizable Panels', 'Multiple View Modes']
-      titles.forEach((title) => {
+      const titles = [
+        'Real-Time Updates',
+        'Resizable Panels',
+        'Multiple View Modes',
+      ]
+      titles.forEach(title => {
         expect(screen.getByText(title)).toBeInTheDocument()
       })
     })
@@ -142,7 +161,9 @@ describe('DemoFeatureCards', () => {
 
     it('each card has muted foreground text', () => {
       const { container } = render(<DemoFeatureCards />)
-      const mutedTexts = container.querySelectorAll('[class*="text-muted-foreground"]')
+      const mutedTexts = container.querySelectorAll(
+        '[class*="text-muted-foreground"]',
+      )
       expect(mutedTexts.length).toBeGreaterThan(0)
     })
   })
@@ -176,8 +197,12 @@ describe('DemoFeatureCards', () => {
 
     it('displays 3 titles', () => {
       render(<DemoFeatureCards />)
-      const titles = ['Real-Time Updates', 'Resizable Panels', 'Multiple View Modes']
-      titles.forEach((title) => {
+      const titles = [
+        'Real-Time Updates',
+        'Resizable Panels',
+        'Multiple View Modes',
+      ]
+      titles.forEach(title => {
         expect(screen.getByText(title)).toBeInTheDocument()
       })
     })
@@ -185,11 +210,14 @@ describe('DemoFeatureCards', () => {
     it('displays 3 descriptions', () => {
       render(<DemoFeatureCards />)
       const descriptions = [
+        // eslint-disable-next-line max-len
         'Watch your React components render instantly as you type. No refresh needed.',
+        // eslint-disable-next-line max-len
         'Drag the center divider to adjust the editor and preview panel sizes to your preference.',
+        // eslint-disable-next-line max-len
         'Switch between code-only, split-screen, or preview-only modes with the toggle buttons.',
       ]
-      descriptions.forEach((description) => {
+      descriptions.forEach(description => {
         expect(screen.getByText(description)).toBeInTheDocument()
       })
     })
@@ -223,7 +251,9 @@ describe('DemoFeatureCards', () => {
   describe('Content Accuracy', () => {
     it('Real-Time Updates describes instant rendering', () => {
       render(<DemoFeatureCards />)
-      expect(screen.getByText(/render instantly as you type/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/render instantly as you type/i),
+      ).toBeInTheDocument()
     })
 
     it('Resizable Panels describes dragging functionality', () => {

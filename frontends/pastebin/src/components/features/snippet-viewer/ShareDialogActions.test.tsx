@@ -85,19 +85,30 @@ describe('ShareDialogActions', () => {
     const openSpy = jest.spyOn(window, 'open').mockImplementation(() => null)
     render(<ShareDialogActions {...defaultProps} />)
     await user.click(screen.getByLabelText('Open in new tab'))
-    expect(openSpy).toHaveBeenCalledWith('https://example.com/share/abc', '_blank')
+    expect(openSpy).toHaveBeenCalledWith(
+      'https://example.com/share/abc',
+      '_blank',
+    )
     openSpy.mockRestore()
   })
 
   describe('native share button', () => {
     it('renders native share button when navigator.share is available', () => {
-      Object.defineProperty(navigator, 'share', { value: jest.fn(), configurable: true })
+      Object.defineProperty(navigator, 'share', {
+        value: jest.fn(),
+        configurable: true,
+      })
       render(<ShareDialogActions {...defaultProps} />)
-      expect(screen.getByLabelText('Share via system share sheet')).toBeInTheDocument()
+      expect(
+        screen.getByLabelText('Share via system share sheet'),
+      ).toBeInTheDocument()
     })
 
     it('calls onNativeShare when native share button is clicked', async () => {
-      Object.defineProperty(navigator, 'share', { value: jest.fn(), configurable: true })
+      Object.defineProperty(navigator, 'share', {
+        value: jest.fn(),
+        configurable: true,
+      })
       const user = userEvent.setup()
       render(<ShareDialogActions {...defaultProps} />)
       await user.click(screen.getByLabelText('Share via system share sheet'))

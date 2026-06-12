@@ -35,7 +35,7 @@ function setFailed(msg: string) {
 }
 
 export function addSnippetExtraReducers(
-  builder: ActionReducerMapBuilder<SnippetsState>
+  builder: ActionReducerMapBuilder<SnippetsState>,
 ) {
   builder
     .addCase(fetchAllSnippets.pending, setPending)
@@ -51,7 +51,7 @@ export function addSnippetExtraReducers(
     })
     .addCase(
       fetchSnippetsByNamespace.rejected,
-      setFailed('Failed to fetch snippets')
+      setFailed('Failed to fetch snippets'),
     )
     .addCase(createSnippet.pending, setPending)
     .addCase(createSnippet.fulfilled, (state, action) => {

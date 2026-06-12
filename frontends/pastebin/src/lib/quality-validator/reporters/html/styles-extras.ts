@@ -1,4 +1,4 @@
-import { COLOR_SCHEME } from '../../utils/constants.js';
+import { COLOR_SCHEME } from '../../utils/constants.js'
 
 export function getRecommendationStyles(): string {
   return `
@@ -30,7 +30,7 @@ export function getRecommendationStyles(): string {
   background: ${COLOR_SCHEME.WARNING}; color: #333;
 }
 .priority.low { background: ${COLOR_SCHEME.INFO}; }
-.effort { margin-top: 10px; font-size: 0.9em; color: #666; }`;
+.effort { margin-top: 10px; font-size: 0.9em; color: #666; }`
 }
 
 export function getTrendStyles(): string {
@@ -39,7 +39,7 @@ export function getTrendStyles(): string {
 .trend-card p { margin: 10px 0; }
 .positive { color: ${COLOR_SCHEME.SUCCESS}; font-weight: bold; }
 .negative { color: ${COLOR_SCHEME.DANGER}; font-weight: bold; }
-.trend-chart { height: 200px; margin: 20px 0; }`;
+.trend-chart { height: 200px; margin: 20px 0; }`
 }
 
 export function getResponsiveStyles(): string {
@@ -79,7 +79,7 @@ export function getResponsiveStyles(): string {
   .metrics-grid { grid-template-columns: 1fr; }
   .grade { width: 80px; height: 80px; font-size: 2em; }
   .grade-info h2 { font-size: 1.3em; }
-}`;
+}`
 }
 
 export function getAnimationStyles(): string {
@@ -93,5 +93,5 @@ export function getAnimationStyles(): string {
   to { opacity: 1; }
 }
 .section { animation: slideIn 0.3s ease-out; }
-.card { animation: fadeIn 0.2s ease-out; }`;
+.card { animation: fadeIn 0.2s ease-out; }`
 }

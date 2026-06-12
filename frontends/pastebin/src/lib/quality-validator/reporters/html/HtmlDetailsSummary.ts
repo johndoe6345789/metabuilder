@@ -2,19 +2,23 @@
  * HTML findings summary table and styles
  */
 
-import { Finding } from '../../types/index.js';
-import { escapeHtml } from '../../utils/formatters.js';
+import { Finding } from '../../types/index.js'
+import { escapeHtml } from '../../utils/formatters.js'
 
 export function generateFindingsSummaryTable(findings: Finding[]): string {
-  const byCategory: Record<string, Record<string, number>> = {};
+  const byCategory: Record<string, Record<string, number>> = {}
 
   for (const finding of findings) {
     if (!byCategory[finding.category]) {
       byCategory[finding.category] = {
-        critical: 0, high: 0, medium: 0, low: 0, info: 0,
-      };
+        critical: 0,
+        high: 0,
+        medium: 0,
+        low: 0,
+        info: 0,
+      }
     }
-    byCategory[finding.category][finding.severity]++;
+    byCategory[finding.category][finding.severity]++
   }
 
   let html = `<section class="section">
@@ -31,11 +35,11 @@ export function generateFindingsSummaryTable(findings: Finding[]): string {
         <th>Total</th>
       </tr>
     </thead>
-    <tbody>`;
+    <tbody>`
 
   for (const [category, counts] of Object.entries(byCategory)) {
     const total =
-      counts.critical + counts.high + counts.medium + counts.low + counts.info;
+      counts.critical + counts.high + counts.medium + counts.low + counts.info
     html += `
       <tr>
         <td>${escapeHtml(category)}</td>
@@ -45,15 +49,15 @@ export function generateFindingsSummaryTable(findings: Finding[]): string {
         <td>${counts.low}</td>
         <td>${counts.info}</td>
         <td><strong>${total}</strong></td>
-      </tr>`;
+      </tr>`
   }
 
   html += `
     </tbody>
   </table>
-</section>`;
+</section>`
 
-  return html;
+  return html
 }
 
 export function getTableStyles(): string {
@@ -79,5 +83,5 @@ table td {
 table tbody tr:hover {
   background: #f9f9f9;
 }
-  `;
+  `
 }

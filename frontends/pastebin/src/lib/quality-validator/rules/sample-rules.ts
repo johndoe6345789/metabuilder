@@ -7,8 +7,8 @@ import type {
   ComplexityRule,
   NamingRule,
   StructureRule,
-} from './RulesEngine.js';
-import type { RulesConfigFile } from './RulesLoader.js';
+} from './RulesEngine.js'
+import type { RulesConfigFile } from './RulesLoader.js'
 
 export const SAMPLE_RULES_CONFIG: RulesConfigFile = {
   version: '1.0.0',
@@ -77,4 +77,4 @@ export const SAMPLE_RULES_CONFIG: RulesConfigFile = {
       description: 'Functions with more than 5 parameters are hard to use',
     } as ComplexityRule,
   ],
-};
+}

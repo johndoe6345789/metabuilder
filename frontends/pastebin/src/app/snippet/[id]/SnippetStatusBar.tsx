@@ -57,15 +57,11 @@ export function SnippetStatusBar({
       </div>
       <div className={styles.statusRight}>
         {isRunning && (
-          <span
-            className={`${styles.statusItem} ${styles.statusRunning}`}
-          >
+          <span className={`${styles.statusItem} ${styles.statusRunning}`}>
             ● Running
           </span>
         )}
-        {saving && (
-          <span className={styles.statusItem}>Saving…</span>
-        )}
+        {saving && <span className={styles.statusItem}>Saving…</span>}
         <span className={styles.statusItem}>
           Updated {relativeTime(updatedAt)}
         </span>

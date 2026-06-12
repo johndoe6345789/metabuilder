@@ -11,19 +11,39 @@ import type { SnippetDialogTabsProps } from './snippet-editor.types'
 export type { SnippetDialogTabsProps }
 
 export function SnippetDialogTabs({
-  activeTab, onTabChange, editorHeight = '360px', metadataOnly = false,
-  title, description, language, code, hasPreview, functionName,
-  inputParameters, errors,
-  onTitleChange, onDescriptionChange, onLanguageChange, onCodeChange,
-  onPreviewChange, onFunctionNameChange, onAddParameter, onRemoveParameter,
-  onUpdateParameter, files, activeFile, onActiveFileSelect,
-  onFileAdd, onFileDelete, onFileRename, onFileUpload,
+  activeTab,
+  onTabChange,
+  editorHeight = '360px',
+  metadataOnly = false,
+  title,
+  description,
+  language,
+  code,
+  hasPreview,
+  functionName,
+  inputParameters,
+  errors,
+  onTitleChange,
+  onDescriptionChange,
+  onLanguageChange,
+  onCodeChange,
+  onPreviewChange,
+  onFunctionNameChange,
+  onAddParameter,
+  onRemoveParameter,
+  onUpdateParameter,
+  files,
+  activeFile,
+  onActiveFileSelect,
+  onFileAdd,
+  onFileDelete,
+  onFileRename,
+  onFileUpload,
 }: SnippetDialogTabsProps) {
   const t = useTranslation()
   const isPreviewSupported =
     appConfig.previewEnabledLanguages.includes(language)
-  const showPreviewTab =
-    !metadataOnly && isPreviewSupported && hasPreview
+  const showPreviewTab = !metadataOnly && isPreviewSupported && hasPreview
 
   const tabs = metadataOnly
     ? [t.snippetDialog.tabs.details]

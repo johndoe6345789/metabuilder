@@ -154,6 +154,7 @@ export class SecurityScanner {
                     }
                 }
             }
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             catch (error) {
                 logger.debug(`Failed to scan security patterns in ${filePath}`);
             }
@@ -235,6 +236,7 @@ export class SecurityScanner {
                     }
                 }
             }
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             catch (error) {
                 logger.debug(`Failed to check performance issues in ${filePath}`);
             }

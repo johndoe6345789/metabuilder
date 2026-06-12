@@ -4,31 +4,42 @@
  * Refactored to use ReporterBase for shared CSV formatting utilities
  */
 
-import { ScoringResult } from '../types/index.js';
-import { ReporterBase } from './ReporterBase.js';
+import { ScoringResult } from '../types/index.js'
+import { ReporterBase } from './ReporterBase.js'
 
 /**
  * CSV Reporter
- * Extends ReporterBase to leverage shared CSV field escaping and formatting utilities
+ // eslint-disable-next-line max-len
+ * Extends ReporterBase to leverage shared CSV field escaping and formatting
+ * utilities
  */
 export class CsvReporter extends ReporterBase {
   /**
    * Generate CSV report
    */
   generate(result: ScoringResult): string {
-    const lines: string[] = [];
+    const lines: string[] = []
 
     // Summary section
-    lines.push('# Quality Validation Report Summary');
-    lines.push(this.buildCsvLine(['Timestamp', result.metadata.timestamp]));
-    lines.push(this.buildCsvLine(['Overall Score', this.formatPercentage(result.overall.score)]));
-    lines.push(this.buildCsvLine(['Grade', result.overall.grade]));
-    lines.push(this.buildCsvLine(['Status', result.overall.status.toUpperCase()]));
-    lines.push('');
+    lines.push('# Quality Validation Report Summary')
+    lines.push(this.buildCsvLine(['Timestamp', result.metadata.timestamp]))
+    lines.push(
+      this.buildCsvLine([
+        'Overall Score',
+        this.formatPercentage(result.overall.score),
+      ]),
+    )
+    lines.push(this.buildCsvLine(['Grade', result.overall.grade]))
+    lines.push(
+      this.buildCsvLine(['Status', result.overall.status.toUpperCase()]),
+    )
+    lines.push('')
 
     // Component scores
-    lines.push('# Component Scores');
-    lines.push(this.buildCsvLine(['Component', 'Score', 'Weight', 'Weighted Score']));
+    lines.push('# Component Scores')
+    lines.push(
+      this.buildCsvLine(['Component', 'Score', 'Weight', 'Weighted Score']),
+    )
 
     const scores = [
       {
@@ -55,7 +66,7 @@ export class CsvReporter extends ReporterBase {
         weight: result.componentScores.security.weight,
         weighted: result.componentScores.security.weightedScore,
       },
-    ];
+    ]
 
     for (const score of scores) {
       lines.push(
@@ -64,19 +75,31 @@ export class CsvReporter extends ReporterBase {
           `${score.score.toFixed(1)}%`,
           `${(score.weight * 100).toFixed(0)}%`,
           `${score.weighted.toFixed(1)}%`,
-        ])
-      );
+        ]),
+      )
     }
 
-    lines.push('');
+    lines.push('')
 
     // Findings
-    lines.push('# Findings');
-    lines.push(this.buildCsvLine(['Severity', 'Category', 'Title', 'File', 'Line', 'Description', 'Remediation']));
+    lines.push('# Findings')
+    lines.push(
+      this.buildCsvLine([
+        'Severity',
+        'Category',
+        'Title',
+        'File',
+        'Line',
+        'Description',
+        'Remediation',
+      ]),
+    )
 
     for (const finding of result.findings) {
-      const file = finding.location?.file || '';
-      const line = finding.location?.line ? finding.location.line.toString() : '';
+      const file = finding.location?.file || ''
+      const line = finding.location?.line
+        ? finding.location.line.toString()
+        : ''
       lines.push(
         this.buildCsvLine([
           finding.severity,
@@ -86,45 +109,76 @@ export class CsvReporter extends ReporterBase {
           line,
           finding.description,
           finding.remediation,
-        ])
-      );
+        ]),
+      )
     }
 
-    lines.push('');
+    lines.push('')
 
     // Recommendations
     if (result.recommendations.length > 0) {
-      lines.push('# Recommendations');
-      lines.push(this.buildCsvLine(['Priority', 'Category', 'Issue', 'Remediation', 'Effort', 'Impact']));
+      lines.push('# Recommendations')
+      lines.push(
+        this.buildCsvLine([
+          'Priority',
+          'Category',
+          'Issue',
+          'Remediation',
+          'Effort',
+          'Impact',
+        ]),
+      )
 
       for (const rec of result.recommendations) {
         lines.push(
-          this.buildCsvLine([rec.priority, rec.category, rec.issue, rec.remediation, rec.estimatedEffort, rec.expectedImpact])
-        );
+          this.buildCsvLine([
+            rec.priority,
+            rec.category,
+            rec.issue,
+            rec.remediation,
+            rec.estimatedEffort,
+            rec.expectedImpact,
+          ]),
+        )
       }
 
-      lines.push('');
+      lines.push('')
     }
 
     // Trend
     if (result.trend) {
-      lines.push('# Trend');
-      lines.push(this.buildCsvLine(['Metric', 'Value']));
-      lines.push(this.buildCsvLine(['Current Score', `${result.trend.currentScore.toFixed(1)}%`]));
+      lines.push('# Trend')
+      lines.push(this.buildCsvLine(['Metric', 'Value']))
+      lines.push(
+        this.buildCsvLine([
+          'Current Score',
+          `${result.trend.currentScore.toFixed(1)}%`,
+        ]),
+      )
 
       if (result.trend.previousScore !== undefined) {
-        lines.push(this.buildCsvLine(['Previous Score', `${result.trend.previousScore.toFixed(1)}%`]));
-        const change = result.trend.currentScore - result.trend.previousScore;
-        lines.push(this.buildCsvLine(['Change', `${change >= 0 ? '+' : ''}${change.toFixed(1)}%`]));
+        lines.push(
+          this.buildCsvLine([
+            'Previous Score',
+            `${result.trend.previousScore.toFixed(1)}%`,
+          ]),
+        )
+        const change = result.trend.currentScore - result.trend.previousScore
+        lines.push(
+          this.buildCsvLine([
+            'Change',
+            `${change >= 0 ? '+' : ''}${change.toFixed(1)}%`,
+          ]),
+        )
       }
 
       if (result.trend.direction) {
-        lines.push(this.buildCsvLine(['Direction', result.trend.direction]));
+        lines.push(this.buildCsvLine(['Direction', result.trend.direction]))
       }
     }
 
-    return lines.join('\n');
+    return lines.join('\n')
   }
 }
 
-export const csvReporter = new CsvReporter();
+export const csvReporter = new CsvReporter()

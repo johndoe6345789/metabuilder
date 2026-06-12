@@ -14,16 +14,18 @@ interface ForgotPasswordFormProps {
 }
 
 export function ForgotPasswordForm({
-  forgot, forgotUsername, forgotEmail, forgotLoading,
-  onForgotUsernameChange, onForgotEmailChange, onSubmit, onCancel,
+  forgot,
+  forgotUsername,
+  forgotEmail,
+  forgotLoading,
+  onForgotUsernameChange,
+  onForgotEmailChange,
+  onSubmit,
+  onCancel,
 }: ForgotPasswordFormProps) {
   if (forgot === 'sent') {
     return (
-      <p
-        className={styles.success}
-        data-testid="forgot-success"
-        role="status"
-      >
+      <p className={styles.success} data-testid="forgot-success" role="status">
         Reset link sent — check your inbox.
       </p>
     )

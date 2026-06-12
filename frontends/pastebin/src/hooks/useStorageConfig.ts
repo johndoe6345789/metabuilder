@@ -3,13 +3,14 @@ import { toast } from '@metabuilder/components/fakemui'
 import {
   saveStorageConfig,
   loadStorageConfig,
-  type StorageBackend
+  type StorageBackend,
 } from '@/lib/storage'
 import { useTranslation } from '@/hooks/useTranslation'
 
 export function useStorageConfig() {
   const t = useTranslation()
-  const [storageBackend, setStorageBackend] = useState<StorageBackend>('indexeddb')
+  const [storageBackend, setStorageBackend] =
+    useState<StorageBackend>('indexeddb')
   const [envVarSet, setEnvVarSet] = useState(false)
 
   const loadConfig = useCallback(() => {
@@ -21,21 +22,27 @@ export function useStorageConfig() {
     setStorageBackend(config.backend)
   }, [])
 
-  const handleSaveStorageConfig = useCallback(async (onSuccess?: () => Promise<void>) => {
-    const existing = loadStorageConfig()
-    saveStorageConfig({
-      backend: storageBackend,
-      dbalUrl: storageBackend === 'dbal'
-        ? (existing.dbalUrl || process.env.NEXT_PUBLIC_DBAL_API_URL || '/api/dbal')
-        : undefined,
-    })
+  const handleSaveStorageConfig = useCallback(
+    async (onSuccess?: () => Promise<void>) => {
+      const existing = loadStorageConfig()
+      saveStorageConfig({
+        backend: storageBackend,
+        dbalUrl:
+          storageBackend === 'dbal'
+            ? existing.dbalUrl ||
+              process.env.NEXT_PUBLIC_DBAL_API_URL ||
+              '/api/dbal'
+            : undefined,
+      })
 
-    toast.success(t.settings.storage.backendUpdated)
+      toast.success(t.settings.storage.backendUpdated)
 
-    if (onSuccess) {
-      await onSuccess()
-    }
-  }, [storageBackend])
+      if (onSuccess) {
+        await onSuccess()
+      }
+    },
+    [storageBackend],
+  )
 
   return {
     storageBackend,

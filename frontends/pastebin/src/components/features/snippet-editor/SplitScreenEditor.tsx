@@ -11,15 +11,14 @@ const MonacoEditor = dynamic(
   { ssr: false },
 )
 const ReactPreview = dynamic(
-  () =>
-    import('./ReactPreview').then(m => ({ default: m.ReactPreview })),
+  () => import('./ReactPreview').then(m => ({ default: m.ReactPreview })),
   { ssr: false },
 )
 const PythonOutput = dynamic(
   () =>
-    import('../python-runner/PythonOutput').then(
-      m => ({ default: m.PythonOutput }),
-    ),
+    import('../python-runner/PythonOutput').then(m => ({
+      default: m.PythonOutput,
+    })),
   { ssr: false },
 )
 
@@ -104,19 +103,39 @@ export function SplitScreenEditor({
         aria-label={
           vm.viewMode === 'split'
             ? 'Code editor and preview'
-            : vm.viewMode === 'code' ? 'Code editor' : previewLabel
+            : vm.viewMode === 'code'
+              ? 'Code editor'
+              : previewLabel
         }
       >
         {vm.viewMode === 'code' && (
-          <MonacoEditor value={value} onChange={onChange} language={language} height={height} />
+          <MonacoEditor
+            value={value}
+            onChange={onChange}
+            language={language}
+            height={height}
+          />
         )}
         {vm.viewMode === 'preview' && preview}
         {vm.viewMode === 'split' && (
           <div className={styles.splitGrid} data-testid="split-screen-grid">
-            <div className={styles.splitPane} style={{ height }} data-testid="split-screen-code-pane">
-              <MonacoEditor value={value} onChange={onChange} language={language} height={height} />
+            <div
+              className={styles.splitPane}
+              style={{ height }}
+              data-testid="split-screen-code-pane"
+            >
+              <MonacoEditor
+                value={value}
+                onChange={onChange}
+                language={language}
+                height={height}
+              />
             </div>
-            <div className={styles.splitPane} style={{ height }} data-testid="split-screen-preview-pane">
+            <div
+              className={styles.splitPane}
+              style={{ height }}
+              data-testid="split-screen-preview-pane"
+            >
               {preview}
             </div>
           </div>

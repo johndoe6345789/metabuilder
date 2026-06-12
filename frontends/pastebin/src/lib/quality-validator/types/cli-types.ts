@@ -7,30 +7,30 @@
 // ============================================================================
 
 export interface CommandLineOptions {
-  format?: 'console' | 'json' | 'html' | 'csv';
-  output?: string;
-  config?: string;
-  profile?: string;
-  verbose?: boolean;
-  incremental?: boolean;
-  skipCoverage?: boolean;
-  skipSecurity?: boolean;
-  skipArchitecture?: boolean;
-  skipComplexity?: boolean;
-  resetHistory?: boolean;
-  help?: boolean;
-  version?: boolean;
-  stdin?: boolean;
-  noColor?: boolean;
-  listProfiles?: boolean;
-  showProfile?: string;
-  createProfile?: string;
+  format?: 'console' | 'json' | 'html' | 'csv'
+  output?: string
+  config?: string
+  profile?: string
+  verbose?: boolean
+  incremental?: boolean
+  skipCoverage?: boolean
+  skipSecurity?: boolean
+  skipArchitecture?: boolean
+  skipComplexity?: boolean
+  resetHistory?: boolean
+  help?: boolean
+  version?: boolean
+  stdin?: boolean
+  noColor?: boolean
+  listProfiles?: boolean
+  showProfile?: string
+  createProfile?: string
 }
 
 export interface ParsedCliArgs {
-  command: string;
-  options: CommandLineOptions;
-  configPath: string;
+  command: string
+  options: CommandLineOptions
+  configPath: string
 }
 
 export enum ExitCode {

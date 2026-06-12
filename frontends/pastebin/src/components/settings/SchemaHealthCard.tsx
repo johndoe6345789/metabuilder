@@ -1,8 +1,13 @@
 'use client'
 
 import {
-  Card, CardHeader, CardContent, Button,
-  Alert, AlertDescription, MaterialIcon,
+  Card,
+  CardHeader,
+  CardContent,
+  Button,
+  Alert,
+  AlertDescription,
+  MaterialIcon,
 } from '@metabuilder/components/fakemui'
 import { useTranslation } from '@/hooks/useTranslation'
 import styles from './settings-card.module.scss'
@@ -15,7 +20,10 @@ interface SchemaHealthCardProps {
 }
 
 export function SchemaHealthCard({
-  schemaHealth, checkingSchema, onClear, onCheckSchema,
+  schemaHealth,
+  checkingSchema,
+  onClear,
+  onCheckSchema,
 }: SchemaHealthCardProps) {
   const t = useTranslation()
   const s = t.settingsCards.schema
@@ -42,7 +50,11 @@ export function SchemaHealthCard({
         />
         <CardContent>
           <div className={styles.contentStackSm}>
-            <Alert severity="info" role="alert" data-testid="schema-error-details">
+            <Alert
+              severity="info"
+              role="alert"
+              data-testid="schema-error-details"
+            >
               <AlertDescription>{s.corruptedAlert}</AlertDescription>
             </Alert>
             <div
@@ -89,9 +101,7 @@ export function SchemaHealthCard({
             {s.healthyTitle}
           </h3>
         }
-        subheader={
-          <p className={styles.cardDescription}>{s.healthyDesc}</p>
-        }
+        subheader={<p className={styles.cardDescription}>{s.healthyDesc}</p>}
       />
     </Card>
   )

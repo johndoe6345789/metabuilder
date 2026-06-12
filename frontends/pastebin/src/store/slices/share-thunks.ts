@@ -27,9 +27,7 @@ function authHeaders(): Record<string, string> {
   return token ? { Authorization: `Bearer ${token}` } : {}
 }
 
-export function parseSnippet(
-  raw: Record<string, unknown>
-): SharedSnippet {
+export function parseSnippet(raw: Record<string, unknown>): SharedSnippet {
   return {
     id: raw.id as string,
     title: raw.title as string,
@@ -41,12 +39,14 @@ export function parseSnippet(
     hasPreview: raw.hasPreview as boolean | undefined,
     isTemplate: raw.isTemplate as boolean | undefined,
     functionName: raw.functionName as string | undefined,
-    inputParameters: typeof raw.inputParameters === 'string'
-      ? JSON.parse(raw.inputParameters || '[]')
-      : (raw.inputParameters as SharedSnippet['inputParameters']),
-    files: typeof raw.files === 'string'
-      ? JSON.parse(raw.files || '[]')
-      : (raw.files as SharedSnippet['files']),
+    inputParameters:
+      typeof raw.inputParameters === 'string'
+        ? JSON.parse(raw.inputParameters || '[]')
+        : (raw.inputParameters as SharedSnippet['inputParameters']),
+    files:
+      typeof raw.files === 'string'
+        ? JSON.parse(raw.files || '[]')
+        : (raw.files as SharedSnippet['files']),
     entryPoint: raw.entryPoint as string | undefined,
     createdAt: Number(raw.createdAt) || 0,
     updatedAt: Number(raw.updatedAt) || Number(raw.createdAt) || 0,
@@ -68,14 +68,14 @@ export const generateShareToken = createAsyncThunk(
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
         return rejectWithValue(
-          data.error ?? `Failed to generate share token: ${res.statusText}`
+          data.error ?? `Failed to generate share token: ${res.statusText}`,
         )
       }
       return { snippetId, token }
     } catch {
       return rejectWithValue('Network error')
     }
-  }
+  },
 )
 
 export const revokeShareToken = createAsyncThunk(
@@ -90,14 +90,14 @@ export const revokeShareToken = createAsyncThunk(
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
         return rejectWithValue(
-          data.error ?? `Failed to revoke share token: ${res.statusText}`
+          data.error ?? `Failed to revoke share token: ${res.statusText}`,
         )
       }
       return snippetId
     } catch {
       return rejectWithValue('Network error')
     }
-  }
+  },
 )
 
 export const fetchSharedSnippet = createAsyncThunk(
@@ -113,7 +113,9 @@ export const fetchSharedSnippet = createAsyncThunk(
         if (headers.Authorization) res = await fetch(url, { headers })
       }
       if (!res.ok) {
-        return rejectWithValue(`Failed to fetch shared snippet: ${res.statusText}`)
+        return rejectWithValue(
+          `Failed to fetch shared snippet: ${res.statusText}`,
+        )
       }
       const json = await res.json()
       const items: Record<string, unknown>[] =
@@ -123,5 +125,5 @@ export const fetchSharedSnippet = createAsyncThunk(
     } catch {
       return rejectWithValue('Network error')
     }
-  }
+  },
 )

@@ -9,15 +9,17 @@ import type { useDebugger } from '@/hooks/useDebugger'
 import type { UseCodeTerminalReturn } from '@/hooks/useCodeTerminal'
 
 const SnippetViewerContent = dynamic(
-  () => import(
-    '@/components/features/snippet-viewer/SnippetViewerContent'
-  ).then(mod => ({ default: mod.SnippetViewerContent })),
+  () =>
+    import('@/components/features/snippet-viewer/SnippetViewerContent').then(
+      mod => ({ default: mod.SnippetViewerContent }),
+    ),
   { ssr: false },
 )
 const CodeTerminal = dynamic(
-  () => import(
-    '@/components/features/code-runner/CodeTerminal'
-  ).then(mod => ({ default: mod.CodeTerminal })),
+  () =>
+    import('@/components/features/code-runner/CodeTerminal').then(mod => ({
+      default: mod.CodeTerminal,
+    })),
   { ssr: false },
 )
 
@@ -40,41 +42,57 @@ interface Props {
 }
 
 export function SnippetEditorPanels({
-  snippet, viewSnippet, files, activeFile, activeTab,
-  canPreview, showPreview, wordWrap, debugger: dbg,
-  onDebugStart, terminal, onCodeChange,
+  snippet,
+  viewSnippet,
+  files,
+  activeFile,
+  activeTab,
+  canPreview,
+  showPreview,
+  wordWrap,
+  debugger: dbg,
+  onDebugStart,
+  terminal,
+  onCodeChange,
 }: Props) {
   const vis = (tab: ActiveTab) => activeTab === tab
   const bps = dbg.state.breakpoints[activeFile] ?? []
   const curLine =
     dbg.state.currentFile === activeFile ? dbg.state.currentLine : null
   const panelCls = (tab: ActiveTab) =>
-    `${styles.editorPanel} ${vis(tab)
-      ? styles.editorPanelVisible : styles.editorPanelHidden}`
+    `${styles.editorPanel} ${
+      vis(tab) ? styles.editorPanelVisible : styles.editorPanelHidden
+    }`
 
   return (
     <>
       <div className={panelCls('code')} role="tabpanel">
         <SnippetViewerContent
-          snippet={viewSnippet} canPreview={canPreview}
+          snippet={viewSnippet}
+          canPreview={canPreview}
           showPreview={showPreview}
           isPython={snippet.language === 'Python'}
-          wordWrap={wordWrap} onChange={onCodeChange}
-          breakpoints={bps} currentDebugLine={curLine}
-          onToggleBreakpoint={
-            line => dbg.toggleBreakpoint(activeFile, line)
-          }
+          wordWrap={wordWrap}
+          onChange={onCodeChange}
+          breakpoints={bps}
+          currentDebugLine={curLine}
+          onToggleBreakpoint={line => dbg.toggleBreakpoint(activeFile, line)}
         />
       </div>
       <div className={panelCls('terminal')} role="tabpanel">
         <CodeTerminal
-          language={snippet.language} files={files}
+          language={snippet.language}
+          files={files}
           entryPoint={snippet.entryPoint ?? activeFile}
           controller={terminal}
         />
       </div>
-      <DebugTabPanel visible={vis('debug')}
-        language={snippet.language} debugger={dbg} onStart={onDebugStart} />
+      <DebugTabPanel
+        visible={vis('debug')}
+        language={snippet.language}
+        debugger={dbg}
+        onStart={onDebugStart}
+      />
     </>
   )
 }

@@ -7,9 +7,7 @@ export function useFileTreeState() {
   const [renamingFile, setRenamingFile] = useState<string | null>(null)
   const [renameValue, setRenameValue] = useState('')
 
-  function commitAdd(
-    onFileAdd: (name: string, content?: string) => void,
-  ) {
+  function commitAdd(onFileAdd: (name: string, content?: string) => void) {
     const name = newFileName.trim()
     if (name) onFileAdd(name)
     setAddingFile(false)

@@ -17,14 +17,24 @@ interface SnippetCardActionsProps {
 }
 
 export function SnippetCardActions({
-  isCopied, isMoving, availableNamespaces,
-  onView, onCopy, onEdit, onDelete, onMoveToNamespace,
+  isCopied,
+  isMoving,
+  availableNamespaces,
+  onView,
+  onCopy,
+  onEdit,
+  onDelete,
+  onMoveToNamespace,
 }: SnippetCardActionsProps) {
-  const t = useTranslation(); const vm = useSnippetCardActions()
+  const t = useTranslation()
+  const vm = useSnippetCardActions()
 
   return (
-    <div className={`${styles.actionsRow} flex items-center justify-between gap-2`}
-      data-testid="snippet-card-actions" role="group" aria-label="Snippet actions"
+    <div
+      className={`${styles.actionsRow} flex items-center justify-between gap-2`}
+      data-testid="snippet-card-actions"
+      role="group"
+      aria-label="Snippet actions"
     >
       <div className={styles.actionsLeft}>
         <Button
@@ -53,9 +63,7 @@ export function SnippetCardActions({
         >
           <MaterialIcon name="content_copy" size={16} aria-hidden="true" />
           <span className={styles.btnLabelInline}>
-            {isCopied
-              ? t.snippetCard.copiedButton
-              : t.snippetCard.copyButton}
+            {isCopied ? t.snippetCard.copiedButton : t.snippetCard.copyButton}
           </span>
         </Button>
 

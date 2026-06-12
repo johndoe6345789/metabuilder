@@ -1,4 +1,5 @@
 import React from 'react'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { DialogTabBar, TabPanel } from './SnippetDialogTabBar'
@@ -51,16 +52,28 @@ describe('DialogTabBar', () => {
 
   it('sets correct aria-controls on each button', () => {
     render(<DialogTabBar tabs={tabs} activeTab={0} onTabChange={onTabChange} />)
-    expect(screen.getByTestId('snippet-tab-0-btn')).toHaveAttribute('aria-controls', 'snippet-tab-0-panel')
-    expect(screen.getByTestId('snippet-tab-1-btn')).toHaveAttribute('aria-controls', 'snippet-tab-1-panel')
+    expect(screen.getByTestId('snippet-tab-0-btn')).toHaveAttribute(
+      'aria-controls',
+      'snippet-tab-0-panel',
+    )
+    expect(screen.getByTestId('snippet-tab-1-btn')).toHaveAttribute(
+      'aria-controls',
+      'snippet-tab-1-panel',
+    )
   })
 
   it('handles single tab', () => {
-    render(<DialogTabBar tabs={['Only']} activeTab={0} onTabChange={onTabChange} />)
+    render(
+      <DialogTabBar tabs={['Only']} activeTab={0} onTabChange={onTabChange} />,
+    )
     expect(screen.getByText('Only')).toBeInTheDocument()
-    expect(screen.getByTestId('snippet-tab-0-btn')).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByTestId('snippet-tab-0-btn')).toHaveAttribute(
+      'aria-selected',
+      'true',
+    )
   })
 
+  // eslint-disable-next-line max-len
   it('calls onTabChange when first tab is clicked while second is active', async () => {
     const user = userEvent.setup()
     render(<DialogTabBar tabs={tabs} activeTab={1} onTabChange={onTabChange} />)
@@ -74,7 +87,7 @@ describe('TabPanel', () => {
     render(
       <TabPanel active={true} index={0}>
         <div>Panel content</div>
-      </TabPanel>
+      </TabPanel>,
     )
     expect(screen.getByText('Panel content')).toBeInTheDocument()
   })
@@ -83,7 +96,7 @@ describe('TabPanel', () => {
     render(
       <TabPanel active={false} index={0}>
         <div>Hidden content</div>
-      </TabPanel>
+      </TabPanel>,
     )
     expect(screen.queryByText('Hidden content')).not.toBeInTheDocument()
   })
@@ -92,7 +105,7 @@ describe('TabPanel', () => {
     render(
       <TabPanel active={true} index={0}>
         <span>Content</span>
-      </TabPanel>
+      </TabPanel>,
     )
     expect(screen.getByRole('tabpanel')).toBeInTheDocument()
   })
@@ -101,7 +114,7 @@ describe('TabPanel', () => {
     render(
       <TabPanel active={true} index={2}>
         <span>Content</span>
-      </TabPanel>
+      </TabPanel>,
     )
     const panel = screen.getByRole('tabpanel')
     expect(panel).toHaveAttribute('id', 'snippet-tab-2-panel')

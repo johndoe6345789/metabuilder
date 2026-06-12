@@ -28,9 +28,24 @@ export function PythonOutput({ code }: PythonOutputProps) {
           aria-busy={vm.isRunning}
         >
           {vm.isRunning ? (
-            <><MaterialIcon name="progress_activity" className={styles.spinIcon} size={16} aria-hidden="true" /> Running...</>
+            <>
+              <MaterialIcon
+                name="progress_activity"
+                className={styles.spinIcon}
+                size={16}
+                aria-hidden="true"
+              />{' '}
+              Running...
+            </>
           ) : (
-            <><MaterialIcon name="play_arrow" size={16} aria-hidden="true" /> Run</>
+            <>
+              <MaterialIcon
+                name="play_arrow"
+                size={16}
+                aria-hidden="true"
+              />{' '}
+              Run
+            </>
           )}
         </Button>
       </div>

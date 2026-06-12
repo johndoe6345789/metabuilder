@@ -24,7 +24,16 @@ const { store, persistor } = createPersistedStore({
   },
   persist: {
     key: 'pastebin',
-    whitelist: ['snippets', 'namespaces', 'ui', 'auth', 'comments', 'revisions', 'share', 'profiles'],
+    whitelist: [
+      'snippets',
+      'namespaces',
+      'ui',
+      'auth',
+      'comments',
+      'revisions',
+      'share',
+      'profiles',
+    ],
     throttle: 100,
   },
   devTools: {
@@ -35,6 +44,7 @@ const { store, persistor } = createPersistedStore({
 })
 
 // Keep the token bridge in sync with Redux auth state.
+// eslint-disable-next-line max-len
 // store.subscribe fires on REHYDRATE too, so this handles page-reload token restoration.
 store.subscribe(() => setAuthToken(store.getState().auth.token))
 
@@ -47,7 +57,9 @@ persistor.subscribe(() => {
     _validated = true
     if (store.getState().auth.token) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ;(store.dispatch as ThunkDispatch<any, any, UnknownAction>)(validateToken())
+      ;(store.dispatch as ThunkDispatch<any, any, UnknownAction>)(
+        validateToken(),
+      )
     }
   }
 })

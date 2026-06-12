@@ -22,11 +22,9 @@ export function ToolBtn({
   testId,
   onClick,
 }: ToolBtnProps) {
-  const cls = [
-    styles.toolBtn,
-    active ? styles.toolBtnActive : '',
-    extra ?? '',
-  ].filter(Boolean).join(' ')
+  const cls = [styles.toolBtn, active ? styles.toolBtnActive : '', extra ?? '']
+    .filter(Boolean)
+    .join(' ')
   return (
     <button
       className={cls}

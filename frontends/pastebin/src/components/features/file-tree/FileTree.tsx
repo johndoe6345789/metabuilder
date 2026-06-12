@@ -31,9 +31,7 @@ export function FileTree({
   const ft = t.fileTree
   const vm = useFileTreeState()
 
-  function handleUploadChange(
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) {
+  function handleUploadChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (file) onFileUpload(file)
     e.target.value = ''

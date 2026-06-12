@@ -14,7 +14,7 @@ export interface ComponentShowcaseState {
   prefilledData: PrefilledData | null
   handleSaveClick: () => void
   handleSave: (
-    snippetData: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>
+    snippetData: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>,
   ) => void
 }
 
@@ -25,12 +25,11 @@ export function useComponentShowcase(
   language: string,
   category: string,
   onSaveSnippet: (
-    snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>
-  ) => void
+    snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>,
+  ) => void,
 ): ComponentShowcaseState {
   const [dialogOpen, setDialogOpen] = useState(false)
-  const [prefilledData, setPrefilledData] =
-    useState<PrefilledData | null>(null)
+  const [prefilledData, setPrefilledData] = useState<PrefilledData | null>(null)
 
   const handleSaveClick = () => {
     setPrefilledData({ title, description, code, language, category })
@@ -38,7 +37,7 @@ export function useComponentShowcase(
   }
 
   const handleSave = (
-    snippetData: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>
+    snippetData: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>,
   ) => {
     onSaveSnippet(snippetData)
     setDialogOpen(false)

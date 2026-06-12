@@ -2,7 +2,7 @@
  * Base, layout and typography CSS styles for HTML reports
  */
 
-import { COLOR_SCHEME } from '../../utils/constants.js';
+import { COLOR_SCHEME } from '../../utils/constants.js'
 
 export function getResetStyles(): string {
   return `
@@ -12,7 +12,7 @@ body {
     Oxygen, Ubuntu, Cantarell, sans-serif;
   background: #f5f5f5; color: #333; line-height: 1.6;
 }
-html { scroll-behavior: smooth; }`;
+html { scroll-behavior: smooth; }`
 }
 
 export function getLayoutStyles(): string {
@@ -25,7 +25,7 @@ export function getLayoutStyles(): string {
   border-bottom: 2px solid ${COLOR_SCHEME.PRIMARY};
   padding-bottom: 10px;
 }
-.section h3 { margin-bottom: 15px; font-size: 1.2em; color: #555; }`;
+.section h3 { margin-bottom: 15px; font-size: 1.2em; color: #555; }`
 }
 
 export function getTypographyStyles(): string {
@@ -46,7 +46,7 @@ pre {
 }
 pre code { background: none; padding: 0; }
 a { color: ${COLOR_SCHEME.PRIMARY}; text-decoration: none; }
-a:hover { text-decoration: underline; }`;
+a:hover { text-decoration: underline; }`
 }
 
 export function getHeaderStyles(): string {
@@ -59,7 +59,7 @@ export function getHeaderStyles(): string {
 .header-content h1 { font-size: 2em; margin-bottom: 10px; }
 .project-name, .timestamp {
   opacity: 0.9; font-size: 0.95em; margin: 5px 0;
-}`;
+}`
 }
 
 export function getFooterStyles(): string {
@@ -68,5 +68,5 @@ export function getFooterStyles(): string {
   background: #f5f5f5; padding: 20px; text-align: center;
   color: #666; border-top: 1px solid #ddd; margin-top: 40px;
 }
-.footer-meta { font-size: 0.9em; color: #999; margin-top: 10px; }`;
+.footer-meta { font-size: 0.9em; color: #999; margin-top: 10px; }`
 }

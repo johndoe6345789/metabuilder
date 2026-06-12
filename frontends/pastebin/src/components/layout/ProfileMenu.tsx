@@ -61,7 +61,10 @@ export function ProfileMenu({ username }: ProfileMenuProps) {
           <button
             className={`${styles.item} ${styles.itemDanger}`}
             role="menuitem"
-            onClick={() => { setOpen(false); dispatch(logout()) }}
+            onClick={() => {
+              setOpen(false)
+              dispatch(logout())
+            }}
           >
             <MaterialIcon name="logout" size={18} aria-hidden="true" />
             Sign Out

@@ -2,36 +2,34 @@
  * Profile type definitions and built-in profiles
  */
 
-import { ConfigurationError } from '../types/index.js';
+import { ConfigurationError } from '../types/index.js'
 
-export type ProfileName = 'strict' | 'moderate' | 'lenient' | 'custom';
-export type EnvironmentType = 'dev' | 'staging' | 'production';
+export type ProfileName = 'strict' | 'moderate' | 'lenient' | 'custom'
+export type EnvironmentType = 'dev' | 'staging' | 'production'
 
 export interface ProfileDefinition {
-  name: string;
-  description: string;
+  name: string
+  description: string
   weights: {
-    codeQuality: number;
-    testCoverage: number;
-    architecture: number;
-    security: number;
-  };
+    codeQuality: number
+    testCoverage: number
+    architecture: number
+    security: number
+  }
   minimumScores: {
-    codeQuality: number;
-    testCoverage: number;
-    architecture: number;
-    security: number;
-  };
+    codeQuality: number
+    testCoverage: number
+    architecture: number
+    security: number
+  }
   thresholds?: {
-    complexity?: { max?: number; warning?: number };
-    coverage?: { minimum?: number; warning?: number };
-    duplication?: { maxPercent?: number; warningPercent?: number };
-  };
+    complexity?: { max?: number; warning?: number }
+    coverage?: { minimum?: number; warning?: number }
+    duplication?: { maxPercent?: number; warningPercent?: number }
+  }
 }
 
-export interface ProfilesConfig {
-  [key: string]: ProfileDefinition;
-}
+export type ProfilesConfig = Record<string, ProfileDefinition>;
 
 export const BUILT_IN_PROFILES: ProfilesConfig = {
   strict: {
@@ -97,36 +95,34 @@ export const BUILT_IN_PROFILES: ProfilesConfig = {
       duplication: { maxPercent: 8, warningPercent: 5 },
     },
   },
-};
+}
 
 /** Load and parse a profiles JSON file */
-export function loadProfilesFromFile(
-  filePath: string
-): ProfilesConfig {
+export function loadProfilesFromFile(filePath: string): ProfilesConfig {
   // Import is synchronous via fs — require to stay Node-compatible
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const fs = require('fs') as typeof import('fs');
+  const fs = require('fs') as typeof import('fs')
   try {
-    const content = fs.readFileSync(filePath, 'utf-8');
-    const data = JSON.parse(content);
+    const content = fs.readFileSync(filePath, 'utf-8')
+    const data = JSON.parse(content)
     if (typeof data !== 'object' || data === null) {
       throw new ConfigurationError(
         `Invalid profiles file: ${filePath}`,
-        'Profiles must be a JSON object'
-      );
+        'Profiles must be a JSON object',
+      )
     }
-    return data as ProfilesConfig;
+    return data as ProfilesConfig
   } catch (err) {
-    if (err instanceof ConfigurationError) throw err;
+    if (err instanceof ConfigurationError) throw err
     if (err instanceof SyntaxError) {
       throw new ConfigurationError(
         `Invalid JSON in profiles file: ${filePath}`,
-        (err as Error).message
-      );
+        (err as Error).message,
+      )
     }
     throw new ConfigurationError(
       `Failed to read profiles file: ${filePath}`,
-      (err as Error).message
-    );
+      (err as Error).message,
+    )
   }
 }

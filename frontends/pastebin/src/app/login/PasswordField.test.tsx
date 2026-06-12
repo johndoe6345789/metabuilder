@@ -28,7 +28,10 @@ describe('PasswordField', () => {
 
   it('input type is "password" when showPass is false', () => {
     render(<PasswordField {...defaultProps} showPass={false} />)
-    expect(screen.getByTestId('password-input')).toHaveAttribute('type', 'password')
+    expect(screen.getByTestId('password-input')).toHaveAttribute(
+      'type',
+      'password',
+    )
   })
 
   it('input type is "text" when showPass is true', () => {
@@ -43,12 +46,18 @@ describe('PasswordField', () => {
 
   it('toggle button aria-label is "Show password" when hidden', () => {
     render(<PasswordField {...defaultProps} showPass={false} />)
-    expect(screen.getByTestId('toggle-password')).toHaveAttribute('aria-label', 'Show password')
+    expect(screen.getByTestId('toggle-password')).toHaveAttribute(
+      'aria-label',
+      'Show password',
+    )
   })
 
   it('toggle button aria-label is "Hide password" when visible', () => {
     render(<PasswordField {...defaultProps} showPass={true} />)
-    expect(screen.getByTestId('toggle-password')).toHaveAttribute('aria-label', 'Hide password')
+    expect(screen.getByTestId('toggle-password')).toHaveAttribute(
+      'aria-label',
+      'Hide password',
+    )
   })
 
   it('calls onChange when input value changes', async () => {
@@ -67,12 +76,18 @@ describe('PasswordField', () => {
 
   it('input has the provided id', () => {
     render(<PasswordField {...defaultProps} />)
-    expect(screen.getByTestId('password-input')).toHaveAttribute('id', 'password')
+    expect(screen.getByTestId('password-input')).toHaveAttribute(
+      'id',
+      'password',
+    )
   })
 
   it('input has autoComplete attribute', () => {
     render(<PasswordField {...defaultProps} autoComplete="new-password" />)
-    expect(screen.getByTestId('password-input')).toHaveAttribute('autocomplete', 'new-password')
+    expect(screen.getByTestId('password-input')).toHaveAttribute(
+      'autocomplete',
+      'new-password',
+    )
   })
 
   it('input is required', () => {
@@ -89,12 +104,20 @@ describe('PasswordField', () => {
   it('shows visibility_off icon when showPass is true', () => {
     render(<PasswordField {...defaultProps} showPass={true} />)
     const icons = document.querySelectorAll('[data-icon]')
-    expect(Array.from(icons).some(el => el.getAttribute('data-icon') === 'visibility_off')).toBe(true)
+    expect(
+      Array.from(icons).some(
+        el => el.getAttribute('data-icon') === 'visibility_off',
+      ),
+    ).toBe(true)
   })
 
   it('shows visibility icon when showPass is false', () => {
     render(<PasswordField {...defaultProps} showPass={false} />)
     const icons = document.querySelectorAll('[data-icon]')
-    expect(Array.from(icons).some(el => el.getAttribute('data-icon') === 'visibility')).toBe(true)
+    expect(
+      Array.from(icons).some(
+        el => el.getAttribute('data-icon') === 'visibility',
+      ),
+    ).toBe(true)
   })
 })

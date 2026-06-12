@@ -13,8 +13,9 @@ export type ForgotState = 'closed' | 'open' | 'sent'
 
 function apiBase() {
   return (
-    process.env.NEXT_PUBLIC_FLASK_BACKEND_URL ?? ''
-  ).replace(/\/$/, '') || '/pastebin-api'
+    (process.env.NEXT_PUBLIC_FLASK_BACKEND_URL ?? '').replace(/\/$/, '') ||
+    '/pastebin-api'
+  )
 }
 
 export function useLoginPage() {

@@ -66,7 +66,10 @@ export const setupHooks: Record<string, SetupHook> = {
     if (!response.ok()) {
       throw new Error(`loginViaApi: login failed with ${response.status()}`)
     }
-    const { token, user } = (await response.json()) as { token: string; user: Record<string, unknown> }
+    const { token, user } = (await response.json()) as {
+      token: string
+      user: Record<string, unknown>
+    }
 
     // IndexedDB requires a page with the target origin to be loaded.
     // Navigate to the app root so we're in the right security context.
@@ -80,18 +83,24 @@ export const setupHooks: Record<string, SetupHook> = {
       ({ token, user }) => {
         return new Promise<void>((resolve, reject) => {
           const req = indexedDB.open('metabuilder-persist', 1)
-          req.onupgradeneeded = (e) => {
+          req.onupgradeneeded = e => {
             const db = (e.target as IDBOpenDBRequest).result
             if (!db.objectStoreNames.contains('redux-state')) {
               db.createObjectStore('redux-state')
             }
           }
-          req.onsuccess = (e) => {
+          req.onsuccess = e => {
             const db = (e.target as IDBOpenDBRequest).result
             const tx = db.transaction('redux-state', 'readwrite')
             const store = tx.objectStore('redux-state')
             const value = JSON.stringify({
-              auth: JSON.stringify({ token, user, isAuthenticated: true, loading: false, error: null }),
+              auth: JSON.stringify({
+                token,
+                user,
+                isAuthenticated: true,
+                loading: false,
+                error: null,
+              }),
               _persist: JSON.stringify({ version: 1, rehydrated: true }),
             })
             store.put(value, 'persist:pastebin')
@@ -126,65 +135,97 @@ export const setupHooks: Record<string, SetupHook> = {
     const { token } = (await loginResp.json()) as { token: string }
 
     // Get namespaces to find one to use
-    const nsResp = await page.request.get('/api/dbal/pastebin/pastebin/Namespace', {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-    const nsData = (await nsResp.json()) as { data: { data: Array<{ id: string; name: string }> } }
+    const nsResp = await page.request.get(
+      '/api/dbal/pastebin/pastebin/Namespace',
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    )
+    const nsData = (await nsResp.json()) as {
+      data: { data: { id: string; name: string }[] }
+    }
     let namespaceId = nsData.data?.data?.[0]?.id
 
     // Create a namespace only if none exist
     if (!namespaceId) {
-      const createResp = await page.request.post('/api/dbal/pastebin/pastebin/Namespace', {
-        data: { name: 'E2E Comments', isDefault: false, tenantId: 'pastebin' },
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      })
+      const createResp = await page.request.post(
+        '/api/dbal/pastebin/pastebin/Namespace',
+        {
+          data: {
+            name: 'E2E Comments',
+            isDefault: false,
+            tenantId: 'pastebin',
+          },
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
       if (createResp.ok()) {
         const created = (await createResp.json()) as { data: { id: string } }
         namespaceId = created.data?.id
       }
     }
-    if (!namespaceId) throw new Error('createAndViewSnippet: no namespace found')
+    if (!namespaceId)
+      throw new Error('createAndViewSnippet: no namespace found')
 
     // Create a snippet
-    const snippetResp = await page.request.post('/api/dbal/pastebin/pastebin/Snippet', {
-      data: {
-        title: 'E2E Comment Test Snippet',
-        language: 'python',
-        category: 'test',
-        description: 'Created by E2E test for comment testing',
-        code: 'print("hello")\n',
-        namespaceId,
-        tenantId: 'pastebin',
-        hasPreview: false,
-        isTemplate: false,
-        inputParameters: '[]',
+    const snippetResp = await page.request.post(
+      '/api/dbal/pastebin/pastebin/Snippet',
+      {
+        data: {
+          title: 'E2E Comment Test Snippet',
+          language: 'python',
+          category: 'test',
+          description: 'Created by E2E test for comment testing',
+          code: 'print("hello")\n',
+          namespaceId,
+          tenantId: 'pastebin',
+          hasPreview: false,
+          isTemplate: false,
+          inputParameters: '[]',
+        },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
       },
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-    })
+    )
     if (!snippetResp.ok()) {
       const body = await snippetResp.text()
-      throw new Error(`createAndViewSnippet: snippet creation failed (${snippetResp.status()}): ${body}`)
+      throw new Error(
+        `createAndViewSnippet: snippet creation failed (${snippetResp.status()}): ${body}`,
+      )
     }
-    const snippetData = (await snippetResp.json()) as { data: { id: string }; id?: string }
+    const snippetData = (await snippetResp.json()) as {
+      data: { id: string }
+      id?: string
+    }
     const snippetId = snippetData.data?.id ?? snippetData.id
-    if (!snippetId) throw new Error('createAndViewSnippet: no snippet ID returned')
+    if (!snippetId)
+      throw new Error('createAndViewSnippet: no snippet ID returned')
     vars.set('snippetId', snippetId)
 
     // Navigate to home page to load snippets into Redux store
     await page.goto('', { waitUntil: 'domcontentloaded' })
     // Wait for snippet cards to appear (the snippet we just created should be listed)
-    await page.waitForSelector('[data-testid="snippet-card-view-btn"]', { timeout: 15000 })
+    await page.waitForSelector('[data-testid="snippet-card-view-btn"]', {
+      timeout: 15000,
+    })
     // Click the first snippet view button
     await page.locator('[data-testid="snippet-card-view-btn"]').first().click()
     // Wait for the snippet view page to render
-    await page.waitForSelector('[data-testid="snippet-view-page"]', { timeout: 15000 })
+    await page.waitForSelector('[data-testid="snippet-view-page"]', {
+      timeout: 15000,
+    })
   },
 
   /**
    * Clear localStorage and sessionStorage.
    * Use before tests that need a clean auth/preferences state.
    */
-  clearStorage: async (page) => {
+  clearStorage: async page => {
     await page.evaluate(() => {
       localStorage.clear()
       sessionStorage.clear()
@@ -196,14 +237,14 @@ export const setupHooks: Record<string, SetupHook> = {
    * storage, then navigate to the login page. Use before login/register tests
    * that need an unauthenticated session.
    */
-  clearAuth: async (page) => {
+  clearAuth: async page => {
     await page.evaluate(() => {
       localStorage.clear()
       sessionStorage.clear()
     })
     await page.evaluate(
       () =>
-        new Promise<void>((resolve) => {
+        new Promise<void>(resolve => {
           const req = indexedDB.deleteDatabase('metabuilder-persist')
           req.onsuccess = () => resolve()
           req.onerror = () => resolve()
@@ -218,10 +259,10 @@ export const setupHooks: Record<string, SetupHook> = {
    * Delete the 'pastebin' IndexedDB database.
    * Use before tests that need a clean snippet/namespace state.
    */
-  clearIndexedDB: async (page) => {
+  clearIndexedDB: async page => {
     await page.evaluate(
       () =>
-        new Promise<void>((resolve) => {
+        new Promise<void>(resolve => {
           const req = indexedDB.deleteDatabase('pastebin')
           req.onsuccess = () => resolve()
           req.onerror = () => resolve()
@@ -236,13 +277,19 @@ export const setupHooks: Record<string, SetupHook> = {
    * Errors matching common noise patterns (IndexedDB, network, 404) are ignored.
    */
   trackConsoleErrors: async (page, _args, vars) => {
-    const IGNORE = [/indexeddb/i, /constrainterror/i, /failed to load/i, /network/i, /404/i]
+    const IGNORE = [
+      /indexeddb/i,
+      /constrainterror/i,
+      /failed to load/i,
+      /network/i,
+      /404/i,
+    ]
     const errors: string[] = []
 
     const handler = (msg: ConsoleMessage) => {
       if (msg.type() === 'error') {
         const text = msg.text()
-        if (!IGNORE.some((r) => r.test(text))) errors.push(text)
+        if (!IGNORE.some(r => r.test(text))) errors.push(text)
       }
     }
 
@@ -256,7 +303,9 @@ export const setupHooks: Record<string, SetupHook> = {
    * Also removes the console listener.
    */
   assertNoConsoleErrors: async (_page, _args, vars) => {
-    const cleanup = vars.get('__consoleErrorsCleanup') as (() => void) | undefined
+    const cleanup = vars.get('__consoleErrorsCleanup') as
+      | (() => void)
+      | undefined
     cleanup?.()
     const errors = (vars.get('__consoleErrors') as string[]) ?? []
     if (errors.length > 0) {
@@ -287,7 +336,9 @@ export const setupHooks: Record<string, SetupHook> = {
 
   /** Assert that no network errors were recorded since watchNetworkErrors. */
   assertNoNetworkErrors: async (_page, _args, vars) => {
-    const cleanup = vars.get('__networkErrorsCleanup') as (() => void) | undefined
+    const cleanup = vars.get('__networkErrorsCleanup') as
+      | (() => void)
+      | undefined
     cleanup?.()
     const errors = (vars.get('__networkErrors') as string[]) ?? []
     if (errors.length > 0) {
@@ -305,11 +356,16 @@ export const evalHooks: Record<string, EvalHook> = {
    * Returns: string | null
    */
   getComputedStyle: async (page, args) => {
-    const { selector, property } = args as { selector: string; property: string }
+    const { selector, property } = args as {
+      selector: string
+      property: string
+    }
     return page.evaluate(
       ([sel, prop]) => {
         const el = document.querySelector(sel)
-        return el ? window.getComputedStyle(el).getPropertyValue(prop).trim() : null
+        return el
+          ? window.getComputedStyle(el).getPropertyValue(prop).trim()
+          : null
       },
       [selector, property] as [string, string],
     )
@@ -322,7 +378,7 @@ export const evalHooks: Record<string, EvalHook> = {
    */
   getScrollInfo: async (page, args) => {
     const sel = (args.selector as string | undefined) ?? 'body'
-    return page.evaluate((s) => {
+    return page.evaluate(s => {
       const el = document.querySelector(s) ?? document.body
       return {
         scrollWidth: el.scrollWidth,
@@ -383,14 +439,19 @@ export const evalHooks: Record<string, EvalHook> = {
    * Returns: string[] of violation descriptions (empty = all pass)
    */
   getTouchTargetViolations: async (page, args) => {
-    const { selector, minSize = 44 } = args as { selector: string; minSize?: number }
+    const { selector, minSize = 44 } = args as {
+      selector: string
+      minSize?: number
+    }
     const items = page.locator(selector)
     const count = await items.count()
     const violations: string[] = []
     for (let i = 0; i < count; i++) {
       const box = await items.nth(i).boundingBox()
       if (box && (box.width < minSize || box.height < minSize)) {
-        violations.push(`[${i}] ${Math.round(box.width)}×${Math.round(box.height)}px (min ${minSize}px)`)
+        violations.push(
+          `[${i}] ${Math.round(box.width)}×${Math.round(box.height)}px (min ${minSize}px)`,
+        )
       }
     }
     return violations
@@ -419,7 +480,7 @@ export const evalHooks: Record<string, EvalHook> = {
    */
   hasHorizontalScroll: async (page, args) => {
     const sel = (args.selector as string | undefined) ?? null
-    return page.evaluate((s) => {
+    return page.evaluate(s => {
       const el = s ? document.querySelector(s) : document.body
       return el ? el.scrollWidth > el.clientWidth : false
     }, sel)

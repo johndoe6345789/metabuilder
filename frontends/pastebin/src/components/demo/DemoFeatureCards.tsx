@@ -16,7 +16,8 @@ export const DemoFeatureCards = () => {
           <h3 className={styles.cardTitle}>Real-Time Updates</h3>
         </CardHeader>
         <CardContent className={styles.cardBody}>
-          Watch your React components render instantly as you type. No refresh needed.
+          Watch your React components render instantly as you type. No refresh
+          needed.
         </CardContent>
       </Card>
 
@@ -25,7 +26,8 @@ export const DemoFeatureCards = () => {
           <h3 className={styles.cardTitle}>Resizable Panels</h3>
         </CardHeader>
         <CardContent className={styles.cardBody}>
-          Drag the center divider to adjust the editor and preview panel sizes to your preference.
+          Drag the center divider to adjust the editor and preview panel sizes
+          to your preference.
         </CardContent>
       </Card>
 
@@ -34,7 +36,8 @@ export const DemoFeatureCards = () => {
           <h3 className={styles.cardTitle}>Multiple View Modes</h3>
         </CardHeader>
         <CardContent className={styles.cardBody}>
-          Switch between code-only, split-screen, or preview-only modes with the toggle buttons.
+          Switch between code-only, split-screen, or preview-only modes with the
+          toggle buttons.
         </CardContent>
       </Card>
     </div>

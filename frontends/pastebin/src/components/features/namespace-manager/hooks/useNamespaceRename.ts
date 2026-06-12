@@ -26,13 +26,17 @@ export function useNamespaceRename(namespaces: Namespace[]) {
   const commitRename = useCallback(
     async (id: string) => {
       const trimmed = editingName.trim()
-      if (!trimmed) { cancelEditing(); return }
+      if (!trimmed) {
+        cancelEditing()
+        return
+      }
       const original = namespaces.find(n => n.id === id)
-      if (original && trimmed === original.name) { cancelEditing(); return }
+      if (original && trimmed === original.name) {
+        cancelEditing()
+        return
+      }
       try {
-        await dispatch(
-          updateNamespace({ id, name: trimmed }),
-        ).unwrap()
+        await dispatch(updateNamespace({ id, name: trimmed })).unwrap()
       } catch (error) {
         console.error('Failed to rename namespace:', error)
         toast.error(t.namespace.selector.failedToCreate)
@@ -45,15 +49,25 @@ export function useNamespaceRename(namespaces: Namespace[]) {
 
   const handleRenameKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>, id: string) => {
-      if (e.key === 'Enter') { e.preventDefault(); commitRename(id) }
-      else if (e.key === 'Escape') { e.preventDefault(); cancelEditing() }
+      if (e.key === 'Enter') {
+        e.preventDefault()
+        commitRename(id)
+      } else if (e.key === 'Escape') {
+        e.preventDefault()
+        cancelEditing()
+      }
     },
     [commitRename, cancelEditing],
   )
 
   return {
-    editingId, editingName, renameInputRef,
+    editingId,
+    editingName,
+    renameInputRef,
     setEditingName,
-    startEditing, cancelEditing, commitRename, handleRenameKeyDown,
+    startEditing,
+    cancelEditing,
+    commitRename,
+    handleRenameKeyDown,
   }
 }

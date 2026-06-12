@@ -17,7 +17,9 @@ describe('IconsSection', () => {
 
     it('renders the section description', () => {
       render(<IconsSection />)
-      expect(screen.getByText('Phosphor icon set with multiple weights')).toBeInTheDocument()
+      expect(
+        screen.getByText('Phosphor icon set with multiple weights'),
+      ).toBeInTheDocument()
     })
 
     it('renders as a section element', () => {
@@ -118,7 +120,12 @@ describe('IconsSection', () => {
     it('has responsive grid columns', () => {
       const { container } = render(<IconsSection />)
       const grid = container.querySelector('[class*="grid"]')
-      expect(grid).toHaveClass('grid-cols-4', 'sm:grid-cols-6', 'md:grid-cols-8', 'lg:grid-cols-10')
+      expect(grid).toHaveClass(
+        'grid-cols-4',
+        'sm:grid-cols-6',
+        'md:grid-cols-8',
+        'lg:grid-cols-10',
+      )
     })
 
     it('has proper gap between icons', () => {
@@ -137,14 +144,25 @@ describe('IconsSection', () => {
 
     it('renders icon labels with muted foreground color', () => {
       const { container } = render(<IconsSection />)
-      const labels = container.querySelectorAll('[class*="text-muted-foreground"]')
+      const labels = container.querySelectorAll(
+        '[class*="text-muted-foreground"]',
+      )
       expect(labels.length).toBeGreaterThan(0)
     })
 
     it('renders all icon labels', () => {
       render(<IconsSection />)
-      const labels = ['Heart', 'Star', 'Lightning', 'Check', 'X', 'Plus', 'Minus', 'Search']
-      labels.forEach((label) => {
+      const labels = [
+        'Heart',
+        'Star',
+        'Lightning',
+        'Check',
+        'X',
+        'Plus',
+        'Minus',
+        'Search',
+      ]
+      labels.forEach(label => {
         expect(screen.getByText(label)).toBeInTheDocument()
       })
     })
@@ -214,8 +232,17 @@ describe('IconsSection', () => {
   describe('Icon Count', () => {
     it('renders exactly 8 icon items', () => {
       render(<IconsSection />)
-      const labels = ['Heart', 'Star', 'Lightning', 'Check', 'X', 'Plus', 'Minus', 'Search']
-      labels.forEach((label) => {
+      const labels = [
+        'Heart',
+        'Star',
+        'Lightning',
+        'Check',
+        'X',
+        'Plus',
+        'Minus',
+        'Search',
+      ]
+      labels.forEach(label => {
         expect(screen.getByText(label)).toBeInTheDocument()
       })
     })

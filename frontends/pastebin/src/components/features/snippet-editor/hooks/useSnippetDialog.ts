@@ -7,9 +7,7 @@ interface UseSnippetDialogProps {
   open: boolean
   editingSnippet?: Snippet | null
   metadataOnly?: boolean
-  onSave: (
-    snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>,
-  ) => void
+  onSave: (snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>) => void
   onOpenChange: (open: boolean) => void
 }
 
@@ -24,14 +22,14 @@ export function useSnippetDialog({
   const form = useSnippetForm(editingSnippet, open)
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (open) setActiveTab(0)
   }, [open])
 
   const isPreviewSupported = appConfig.previewEnabledLanguages.includes(
     form.language,
   )
-  const showPreviewTab =
-    !metadataOnly && isPreviewSupported && form.hasPreview
+  const showPreviewTab = !metadataOnly && isPreviewSupported && form.hasPreview
   const tabCount = metadataOnly ? 1 : showPreviewTab ? 3 : 2
 
   const handleCodeChange = (value: string) => {

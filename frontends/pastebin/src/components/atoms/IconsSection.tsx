@@ -34,12 +34,14 @@ export function IconsSection() {
       aria-label="Icon gallery"
     >
       <div>
-        <h2 style={{
-          fontSize: '1.875rem',
-          lineHeight: '2.25rem',
-          fontWeight: 700,
-          marginBottom: '8px',
-        }}>
+        <h2
+          style={{
+            fontSize: '1.875rem',
+            lineHeight: '2.25rem',
+            fontWeight: 700,
+            marginBottom: '8px',
+          }}
+        >
           Icons
         </h2>
         <p style={{ color: 'var(--mat-sys-on-surface-variant)' }}>

@@ -19,7 +19,7 @@ export async function openDB(): Promise<IDBDatabase> {
 
     request.onerror = () => reject(request.error)
 
-    request.onupgradeneeded = (event) => {
+    request.onupgradeneeded = event => {
       const db = (event.target as IDBOpenDBRequest).result
 
       if (!db.objectStoreNames.contains(SNIPPETS_STORE)) {
@@ -33,19 +33,17 @@ export async function openDB(): Promise<IDBDatabase> {
       }
 
       if (!db.objectStoreNames.contains(SNIPPET_COMMENTS_STORE)) {
-        const sc = db.createObjectStore(
-          SNIPPET_COMMENTS_STORE,
-          { keyPath: 'id' }
-        )
+        const sc = db.createObjectStore(SNIPPET_COMMENTS_STORE, {
+          keyPath: 'id',
+        })
         sc.createIndex('snippetId', 'snippetId', { unique: false })
         sc.createIndex('createdAt', 'createdAt', { unique: false })
       }
 
       if (!db.objectStoreNames.contains(PROFILE_COMMENTS_STORE)) {
-        const pc = db.createObjectStore(
-          PROFILE_COMMENTS_STORE,
-          { keyPath: 'id' }
-        )
+        const pc = db.createObjectStore(PROFILE_COMMENTS_STORE, {
+          keyPath: 'id',
+        })
         pc.createIndex('profileUserId', 'profileUserId', { unique: false })
         pc.createIndex('createdAt', 'createdAt', { unique: false })
       }

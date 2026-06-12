@@ -30,7 +30,9 @@ export function useSnippetSelectionActions() {
   }, [dispatch])
 
   const handleToggleSnippetSelection = useCallback(
-    (snippetId: string) => { dispatch(toggleSnippetSelection(snippetId)) },
+    (snippetId: string) => {
+      dispatch(toggleSnippetSelection(snippetId))
+    },
     [dispatch],
   )
 
@@ -49,10 +51,12 @@ export function useSnippetSelectionActions() {
         return
       }
       try {
-        await dispatch(bulkMoveSnippets({
-          snippetIds: Array.from(selectedIds),
-          targetNamespaceId,
-        })).unwrap()
+        await dispatch(
+          bulkMoveSnippets({
+            snippetIds: Array.from(selectedIds),
+            targetNamespaceId,
+          }),
+        ).unwrap()
         const target = namespaces.find(n => n.id === targetNamespaceId)
         toast.success(
           t.toast.movedSnippets

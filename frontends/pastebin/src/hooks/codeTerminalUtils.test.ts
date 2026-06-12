@@ -25,8 +25,13 @@ describe('codeTerminalUtils', () => {
 
   describe('safeFilesAndEntry', () => {
     it('returns a safe (UUID) name for ordinary source files', () => {
-      const files: SnippetFile[] = [{ name: 'main.py', content: 'print("hello")' }]
-      const { safeFiles, resolvedEntry, fileMap } = safeFilesAndEntry(files, 'main.py')
+      const files: SnippetFile[] = [
+        { name: 'main.py', content: 'print("hello")' },
+      ]
+      const { safeFiles, resolvedEntry, fileMap } = safeFilesAndEntry(
+        files,
+        'main.py',
+      )
       expect(safeFiles).toHaveLength(1)
       // uuid name starts with "f_"
       expect(safeFiles[0].name).toMatch(/^f_/)
@@ -38,7 +43,10 @@ describe('codeTerminalUtils', () => {
 
     it('preserves the original name for build-system files', () => {
       const files: SnippetFile[] = [
-        { name: 'CMakeLists.txt', content: 'cmake_minimum_required(VERSION 3.10)' },
+        {
+          name: 'CMakeLists.txt',
+          content: 'cmake_minimum_required(VERSION 3.10)',
+        },
         { name: 'main.cpp', content: '#include <CMakeLists.txt>' },
       ]
       const { safeFiles } = safeFilesAndEntry(files, 'main.cpp')
@@ -47,7 +55,9 @@ describe('codeTerminalUtils', () => {
     })
 
     it('preserves requirements.txt name', () => {
-      const files: SnippetFile[] = [{ name: 'requirements.txt', content: 'requests' }]
+      const files: SnippetFile[] = [
+        { name: 'requirements.txt', content: 'requests' },
+      ]
       const { safeFiles } = safeFilesAndEntry(files, 'requirements.txt')
       expect(safeFiles[0].name).toBe('requirements.txt')
     })
@@ -59,7 +69,9 @@ describe('codeTerminalUtils', () => {
     })
 
     it('resolves entryPoint by stem when full path not found', () => {
-      const files: SnippetFile[] = [{ name: 'app.js', content: 'console.log("x")' }]
+      const files: SnippetFile[] = [
+        { name: 'app.js', content: 'console.log("x")' },
+      ]
       const { resolvedEntry } = safeFilesAndEntry(files, 'app')
       // 'app' stem should resolve to the uuid name of app.js
       expect(resolvedEntry).toMatch(/^f_/)
@@ -67,7 +79,10 @@ describe('codeTerminalUtils', () => {
 
     it('falls back to first file when entryPoint not resolvable', () => {
       const files: SnippetFile[] = [{ name: 'index.ts', content: '' }]
-      const { resolvedEntry, safeFiles } = safeFilesAndEntry(files, 'nonexistent')
+      const { resolvedEntry, safeFiles } = safeFilesAndEntry(
+        files,
+        'nonexistent',
+      )
       expect(resolvedEntry).toBe(safeFiles[0].name)
     })
 
@@ -77,10 +92,12 @@ describe('codeTerminalUtils', () => {
         { name: 'main.py', content: 'import helper' },
       ]
       const { safeFiles } = safeFilesAndEntry(files, 'main.py')
-      const mainFile = safeFiles.find(f => f.name !== safeFiles[0]!.name) ?? safeFiles[1]
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const mainFile =
+        safeFiles.find(f => f.name !== safeFiles[0]!.name) ?? safeFiles[1]
       // The original stem "helper" should be replaced with the uuid stem
       const helperUuid = safeFiles.find(
-        (_, i) => files[i]?.name === 'helper.py'
+        (_, i) => files[i]?.name === 'helper.py',
       )
       expect(helperUuid).toBeDefined()
     })
@@ -106,14 +123,20 @@ describe('codeTerminalUtils', () => {
     })
 
     it('handles files without extensions', () => {
-      const files: SnippetFile[] = [{ name: 'Dockerfile', content: 'FROM node' }]
+      const files: SnippetFile[] = [
+        { name: 'Dockerfile', content: 'FROM node' },
+      ]
       const { safeFiles } = safeFilesAndEntry(files, 'Dockerfile')
       // Dockerfile is not in KEEP_ORIGINAL_NAMES, so it gets a uuid name
       expect(safeFiles[0].name).toMatch(/^f_/)
     })
 
+    // eslint-disable-next-line max-len
     it('returns empty safeFiles and falls back entryPoint when files is empty', () => {
-      const { safeFiles, resolvedEntry, fileMap } = safeFilesAndEntry([], 'main.py')
+      const { safeFiles, resolvedEntry, fileMap } = safeFilesAndEntry(
+        [],
+        'main.py',
+      )
       expect(safeFiles).toHaveLength(0)
       expect(fileMap).toHaveLength(0)
       expect(resolvedEntry).toBe('main.py')

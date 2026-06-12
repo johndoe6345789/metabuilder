@@ -42,9 +42,7 @@ export function PasswordField({
         data-testid={toggleTestId}
         onClick={onToggle}
       >
-        <MaterialIcon
-          name={showPass ? 'visibility_off' : 'visibility'}
-        />
+        <MaterialIcon name={showPass ? 'visibility_off' : 'visibility'} />
       </button>
     </div>
   )

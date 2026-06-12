@@ -1,6 +1,10 @@
-'use client';
+'use client'
 
-import { Alert, AlertTitle, MaterialIcon } from '@metabuilder/components/fakemui'
+import {
+  Alert,
+  AlertTitle,
+  MaterialIcon,
+} from '@metabuilder/components/fakemui'
 import { getStorageConfig } from '@/lib/storage'
 import { useTranslation } from '@/hooks/useTranslation'
 

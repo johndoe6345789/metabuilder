@@ -20,11 +20,23 @@ interface SnippetCardProps {
 }
 
 export function SnippetCard({
-  snippet, onEdit, onDelete, onCopy, onView, onMove,
-  selectionMode = false, isSelected = false, onToggleSelect,
+  snippet,
+  onEdit,
+  onDelete,
+  onCopy,
+  onView,
+  onMove,
+  selectionMode = false,
+  isSelected = false,
+  onToggleSelect,
 }: SnippetCardProps) {
   const vm = useSnippetCard({
-    snippet, onCopy, onMove, onToggleSelect, selectionMode, onView,
+    snippet,
+    onCopy,
+    onMove,
+    onToggleSelect,
+    selectionMode,
+    onView,
   })
 
   if (!snippet) {
@@ -70,7 +82,10 @@ export function SnippetCard({
             availableNamespaces={vm.availableNamespaces}
             onView={vm.handleView}
             onCopy={vm.handleCopy}
-            onEdit={e => { e.stopPropagation(); onEdit(snippet) }}
+            onEdit={e => {
+              e.stopPropagation()
+              onEdit(snippet)
+            }}
             onDelete={e => {
               e.stopPropagation()
               vm.setDeleteConfirmOpen(true)

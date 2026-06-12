@@ -2,15 +2,26 @@ import type { SnippetFile } from '@/lib/types'
 import type { RunFileMap } from './useCodeTerminal'
 
 const KEEP_ORIGINAL_NAMES = new Set([
-  'CMakeLists.txt', 'Makefile', 'makefile', 'GNUmakefile',
-  'requirements.txt', 'requirements-dev.txt',
-  'package.json', 'package-lock.json',
-  'go.mod', 'go.sum',
-  'Cargo.toml', 'Cargo.lock',
+  'CMakeLists.txt',
+  'Makefile',
+  'makefile',
+  'GNUmakefile',
+  'requirements.txt',
+  'requirements-dev.txt',
+  'package.json',
+  'package-lock.json',
+  'go.mod',
+  'go.sum',
+  'Cargo.toml',
+  'Cargo.lock',
   'pom.xml',
-  'build.gradle', 'build.gradle.kts', 'settings.gradle',
-  'Gemfile', 'Gemfile.lock',
-  'Project.toml', 'Manifest.toml',
+  'build.gradle',
+  'build.gradle.kts',
+  'settings.gradle',
+  'Gemfile',
+  'Gemfile.lock',
+  'Project.toml',
+  'Manifest.toml',
 ])
 
 function escapeRegex(s: string): string {
@@ -27,14 +38,20 @@ export function safeFilesAndEntry(
 } {
   const nameMap = new Map<string, string>()
   const stemMap = new Map<string, string>()
-  const rawFiles: Array<{ name: string; content: string }> = []
+  const rawFiles: { name: string; content: string }[] = []
   const fileMap: RunFileMap[] = []
 
   for (const f of files) {
     const basename = f.name.split('/').pop() ?? f.name
     const dotIdx = basename.lastIndexOf('.')
     const origStem = dotIdx >= 0 ? basename.slice(0, dotIdx) : basename
-    const ext = dotIdx >= 0 ? basename.slice(dotIdx).toLowerCase().replace(/[^a-z0-9.]/g, '') : ''
+    const ext =
+      dotIdx >= 0
+        ? basename
+            .slice(dotIdx)
+            .toLowerCase()
+            .replace(/[^a-z0-9.]/g, '')
+        : ''
 
     const safeName = KEEP_ORIGINAL_NAMES.has(basename)
       ? basename
@@ -52,8 +69,10 @@ export function safeFilesAndEntry(
       if (origPath === safeName) continue
       const origBasename = origPath.split('/').pop() ?? origPath
       const dotIdx = origBasename.lastIndexOf('.')
-      const origStem = dotIdx >= 0 ? origBasename.slice(0, dotIdx) : origBasename
-      const safeStem = dotIdx >= 0 ? safeName.slice(0, safeName.lastIndexOf('.')) : safeName
+      const origStem =
+        dotIdx >= 0 ? origBasename.slice(0, dotIdx) : origBasename
+      const safeStem =
+        dotIdx >= 0 ? safeName.slice(0, safeName.lastIndexOf('.')) : safeName
 
       content = content.split(origBasename).join(safeName)
 
@@ -86,9 +105,13 @@ export function mapOutputType(
   backendType: string,
 ): 'output' | 'error' | 'input-prompt' | 'input-value' {
   switch (backendType) {
-    case 'err': return 'error'
-    case 'prompt': return 'input-prompt'
-    case 'input-echo': return 'input-value'
-    default: return 'output'
+    case 'err':
+      return 'error'
+    case 'prompt':
+      return 'input-prompt'
+    case 'input-echo':
+      return 'input-value'
+    default:
+      return 'output'
   }
 }

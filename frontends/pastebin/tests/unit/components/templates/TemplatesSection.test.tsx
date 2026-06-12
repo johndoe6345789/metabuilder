@@ -1,11 +1,20 @@
-
 import { render, screen } from '@/test-utils'
 import { TemplatesSection } from '@/components/templates/TemplatesSection'
 import { Snippet } from '@/lib/types'
 
 // Mock ComponentShowcase
 jest.mock('@/components/demo/ComponentShowcase', () => ({
-  ComponentShowcase: ({ code, title, description, category, onSaveSnippet, children }: any) => (
+  ComponentShowcase: ({
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    code,
+    title,
+    description,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    category,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onSaveSnippet,
+    children,
+  }: any) => (
     <div data-testid={`showcase-${title}`}>
       <h4>{title}</h4>
       <p>{description}</p>
@@ -16,15 +25,21 @@ jest.mock('@/components/demo/ComponentShowcase', () => ({
 
 // Mock template components
 jest.mock('@/components/templates/DashboardTemplate', () => ({
-  DashboardTemplate: () => <div data-testid="dashboard-template">Dashboard</div>,
+  DashboardTemplate: () => (
+    <div data-testid="dashboard-template">Dashboard</div>
+  ),
 }))
 
 jest.mock('@/components/templates/LandingPageTemplate', () => ({
-  LandingPageTemplate: () => <div data-testid="landing-page-template">Landing Page</div>,
+  LandingPageTemplate: () => (
+    <div data-testid="landing-page-template">Landing Page</div>
+  ),
 }))
 
 jest.mock('@/components/templates/EcommerceTemplate', () => ({
-  EcommerceTemplate: () => <div data-testid="ecommerce-template">Ecommerce</div>,
+  EcommerceTemplate: () => (
+    <div data-testid="ecommerce-template">Ecommerce</div>
+  ),
 }))
 
 jest.mock('@/components/templates/BlogTemplate', () => ({
@@ -49,8 +64,12 @@ describe('TemplatesSection', () => {
 
   describe('Rendering', () => {
     it('should render templates section', () => {
-      const { container } = render(<TemplatesSection onSaveSnippet={mockOnSaveSnippet} />)
-      expect(container.querySelector('[class*="space-y-16"]')).toBeInTheDocument()
+      const { container } = render(
+        <TemplatesSection onSaveSnippet={mockOnSaveSnippet} />,
+      )
+      expect(
+        container.querySelector('[class*="space-y-16"]'),
+      ).toBeInTheDocument()
     })
 
     it('should render dashboard layout section', () => {
@@ -75,9 +94,13 @@ describe('TemplatesSection', () => {
 
     it('should render all template descriptions', () => {
       render(<TemplatesSection onSaveSnippet={mockOnSaveSnippet} />)
-      expect(screen.getByText(/Complete dashboard with sidebar/)).toBeInTheDocument()
+      expect(
+        screen.getByText(/Complete dashboard with sidebar/),
+      ).toBeInTheDocument()
       expect(screen.getByText(/Marketing page with hero/)).toBeInTheDocument()
-      expect(screen.getByText(/Product detail page with images/)).toBeInTheDocument()
+      expect(
+        screen.getByText(/Product detail page with images/),
+      ).toBeInTheDocument()
       expect(screen.getByText(/Article layout with header/)).toBeInTheDocument()
     })
   })
@@ -111,39 +134,59 @@ describe('TemplatesSection', () => {
   describe('Section Descriptions', () => {
     it('should display dashboard description', () => {
       render(<TemplatesSection onSaveSnippet={mockOnSaveSnippet} />)
-      expect(screen.getByText(/Complete dashboard with sidebar, stats, and content areas/)).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          /Complete dashboard with sidebar, stats, and content areas/,
+        ),
+      ).toBeInTheDocument()
     })
 
     it('should display landing page description', () => {
       render(<TemplatesSection onSaveSnippet={mockOnSaveSnippet} />)
-      expect(screen.getByText(/Marketing page with hero, features, and CTA sections/)).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          /Marketing page with hero, features, and CTA sections/,
+        ),
+      ).toBeInTheDocument()
     })
 
     it('should display e-commerce description', () => {
       render(<TemplatesSection onSaveSnippet={mockOnSaveSnippet} />)
-      expect(screen.getByText(/Product detail page with images, info, and purchase options/)).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          /Product detail page with images, info, and purchase options/,
+        ),
+      ).toBeInTheDocument()
     })
 
     it('should display blog description', () => {
       render(<TemplatesSection onSaveSnippet={mockOnSaveSnippet} />)
-      expect(screen.getByText(/Article layout with header, content, and sidebar/)).toBeInTheDocument()
+      expect(
+        screen.getByText(/Article layout with header, content, and sidebar/),
+      ).toBeInTheDocument()
     })
   })
 
   describe('Component Showcases', () => {
     it('should render dashboard layout showcase', () => {
       render(<TemplatesSection onSaveSnippet={mockOnSaveSnippet} />)
-      expect(screen.getByTestId('showcase-Dashboard Layout')).toBeInTheDocument()
+      expect(
+        screen.getByTestId('showcase-Dashboard Layout'),
+      ).toBeInTheDocument()
     })
 
     it('should render landing page showcase', () => {
       render(<TemplatesSection onSaveSnippet={mockOnSaveSnippet} />)
-      expect(screen.getByTestId('showcase-Landing Page Template')).toBeInTheDocument()
+      expect(
+        screen.getByTestId('showcase-Landing Page Template'),
+      ).toBeInTheDocument()
     })
 
     it('should render e-commerce showcase', () => {
       render(<TemplatesSection onSaveSnippet={mockOnSaveSnippet} />)
-      expect(screen.getByTestId('showcase-E-commerce Product Page')).toBeInTheDocument()
+      expect(
+        screen.getByTestId('showcase-E-commerce Product Page'),
+      ).toBeInTheDocument()
     })
 
     it('should render blog showcase', () => {
@@ -153,13 +196,17 @@ describe('TemplatesSection', () => {
 
     it('should pass onSaveSnippet to showcases', () => {
       render(<TemplatesSection onSaveSnippet={mockOnSaveSnippet} />)
-      expect(screen.getByTestId('showcase-Dashboard Layout')).toBeInTheDocument()
+      expect(
+        screen.getByTestId('showcase-Dashboard Layout'),
+      ).toBeInTheDocument()
     })
 
     it('should pass correct category to showcases', () => {
       render(<TemplatesSection onSaveSnippet={mockOnSaveSnippet} />)
       // Showcases should be created with templates category
-      expect(screen.getByTestId('showcase-Dashboard Layout')).toBeInTheDocument()
+      expect(
+        screen.getByTestId('showcase-Dashboard Layout'),
+      ).toBeInTheDocument()
     })
   })
 
@@ -189,7 +236,9 @@ describe('TemplatesSection', () => {
     it('should pass onSaveSnippet callback to component', () => {
       const callback = jest.fn()
       render(<TemplatesSection onSaveSnippet={callback} />)
-      expect(screen.getByTestId('showcase-Dashboard Layout')).toBeInTheDocument()
+      expect(
+        screen.getByTestId('showcase-Dashboard Layout'),
+      ).toBeInTheDocument()
     })
 
     it('should handle different onSaveSnippet implementations', () => {
@@ -199,31 +248,42 @@ describe('TemplatesSection', () => {
     })
 
     it('should accept snippet type in callback', () => {
-      const callback = jest.fn((snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>) => {
-        // Callback should handle snippet save
-      })
+      const callback = jest.fn(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        (snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>) => {
+          // Callback should handle snippet save
+        },
+      )
       render(<TemplatesSection onSaveSnippet={callback} />)
-      expect(screen.getByTestId('showcase-Dashboard Layout')).toBeInTheDocument()
+      expect(
+        screen.getByTestId('showcase-Dashboard Layout'),
+      ).toBeInTheDocument()
     })
   })
 
   describe('Structure', () => {
     it('should have 4 template sections', () => {
-      const { container } = render(<TemplatesSection onSaveSnippet={mockOnSaveSnippet} />)
+      const { container } = render(
+        <TemplatesSection onSaveSnippet={mockOnSaveSnippet} />,
+      )
       const sections = container.querySelectorAll('section')
       expect(sections.length).toBe(4)
     })
 
     it('should have space-y-16 spacing', () => {
-      const { container } = render(<TemplatesSection onSaveSnippet={mockOnSaveSnippet} />)
+      const { container } = render(
+        <TemplatesSection onSaveSnippet={mockOnSaveSnippet} />,
+      )
       const mainDiv = container.querySelector('[class*="space-y-16"]')
       expect(mainDiv).toHaveClass('space-y-16')
     })
 
     it('should have proper section spacing', () => {
-      const { container } = render(<TemplatesSection onSaveSnippet={mockOnSaveSnippet} />)
+      const { container } = render(
+        <TemplatesSection onSaveSnippet={mockOnSaveSnippet} />,
+      )
       const sections = container.querySelectorAll('section')
-      sections.forEach((section) => {
+      sections.forEach(section => {
         expect(section).toHaveClass('space-y-6')
       })
     })
@@ -245,7 +305,9 @@ describe('TemplatesSection', () => {
 
   describe('Accessibility', () => {
     it('should have semantic section elements', () => {
-      const { container } = render(<TemplatesSection onSaveSnippet={mockOnSaveSnippet} />)
+      const { container } = render(
+        <TemplatesSection onSaveSnippet={mockOnSaveSnippet} />,
+      )
       const sections = container.querySelectorAll('section')
       expect(sections.length).toBeGreaterThan(0)
     })
@@ -263,7 +325,7 @@ describe('TemplatesSection', () => {
     it('should handle prop changes', () => {
       const callback1 = jest.fn()
       const { rerender } = render(
-        <TemplatesSection onSaveSnippet={callback1} />
+        <TemplatesSection onSaveSnippet={callback1} />,
       )
       expect(screen.getByTestId('dashboard-template')).toBeInTheDocument()
 
@@ -274,7 +336,7 @@ describe('TemplatesSection', () => {
 
     it('should maintain all templates on re-render', () => {
       const { rerender } = render(
-        <TemplatesSection onSaveSnippet={jest.fn()} />
+        <TemplatesSection onSaveSnippet={jest.fn()} />,
       )
       expect(screen.getByTestId('dashboard-template')).toBeInTheDocument()
 
@@ -295,7 +357,7 @@ describe('TemplatesSection', () => {
 
     it('should handle rapid re-renders', () => {
       const { rerender } = render(
-        <TemplatesSection onSaveSnippet={mockOnSaveSnippet} />
+        <TemplatesSection onSaveSnippet={mockOnSaveSnippet} />,
       )
 
       for (let i = 0; i < 10; i++) {
@@ -326,13 +388,15 @@ describe('TemplatesSection', () => {
         'Blog Article',
       ]
 
-      sections.forEach((section) => {
+      sections.forEach(section => {
         expect(screen.getByText(section)).toBeInTheDocument()
       })
     })
 
     it('should maintain section order', () => {
-      const { container } = render(<TemplatesSection onSaveSnippet={mockOnSaveSnippet} />)
+      const { container } = render(
+        <TemplatesSection onSaveSnippet={mockOnSaveSnippet} />,
+      )
       const sections = container.querySelectorAll('section')
       const firstHeading = sections[0]?.querySelector('h2')?.textContent
       expect(firstHeading).toBe('Dashboard Layout')
@@ -341,7 +405,9 @@ describe('TemplatesSection', () => {
 
   describe('Description Text', () => {
     it('should have muted foreground styling for descriptions', () => {
-      const { container } = render(<TemplatesSection onSaveSnippet={mockOnSaveSnippet} />)
+      const { container } = render(
+        <TemplatesSection onSaveSnippet={mockOnSaveSnippet} />,
+      )
       const descriptions = container.querySelectorAll('.text-muted-foreground')
       expect(descriptions.length).toBeGreaterThan(0)
     })
@@ -356,8 +422,10 @@ describe('TemplatesSection', () => {
         'Article layout with header, content, and sidebar',
       ]
 
-      descriptions.forEach((desc) => {
-        expect(screen.getByText(new RegExp(desc.split(',')[0]))).toBeInTheDocument()
+      descriptions.forEach(desc => {
+        expect(
+          screen.getByText(new RegExp(desc.split(',')[0])),
+        ).toBeInTheDocument()
       })
     })
   })
@@ -391,10 +459,12 @@ describe('TemplatesSection', () => {
 
   describe('Layout Consistency', () => {
     it('should maintain consistent layout for all sections', () => {
-      const { container } = render(<TemplatesSection onSaveSnippet={mockOnSaveSnippet} />)
+      const { container } = render(
+        <TemplatesSection onSaveSnippet={mockOnSaveSnippet} />,
+      )
       const sections = container.querySelectorAll('section')
 
-      sections.forEach((section) => {
+      sections.forEach(section => {
         expect(section).toHaveClass('space-y-6')
         const heading = section.querySelector('h2')
         expect(heading).toHaveClass('text-3xl', 'font-bold')
@@ -414,13 +484,13 @@ describe('TemplatesSection', () => {
     it('should accept various callback implementations', () => {
       const callbacks = [
         jest.fn(),
-        jest.fn((snippet) => snippet),
-        jest.fn(async (snippet) => Promise.resolve(snippet)),
+        jest.fn(snippet => snippet),
+        jest.fn(async snippet => Promise.resolve(snippet)),
       ]
 
-      callbacks.forEach((callback) => {
+      callbacks.forEach(callback => {
         const { unmount } = render(
-          <TemplatesSection onSaveSnippet={callback} />
+          <TemplatesSection onSaveSnippet={callback} />,
         )
         expect(screen.getByTestId('dashboard-template')).toBeInTheDocument()
         unmount()

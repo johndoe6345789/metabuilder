@@ -57,7 +57,7 @@ const nextConfig = {
   turbopack: {
     root: resolve(__dirname, '../..'),
   },
-  webpack: (config, { webpack, isServer }) => {
+  webpack: (config, { isServer }) => {
     // Resolve @metabuilder/components to source
     config.resolve.alias['@metabuilder/components'] = join(componentsPath, 'index.tsx');
 

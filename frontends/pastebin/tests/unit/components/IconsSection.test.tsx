@@ -11,12 +11,16 @@ describe('IconsSection Component', () => {
 
     it('should display the section title', () => {
       render(<IconsSection />)
-      expect(screen.getByRole('heading', { name: 'Icons', level: 2 })).toBeInTheDocument()
+      expect(
+        screen.getByRole('heading', { name: 'Icons', level: 2 }),
+      ).toBeInTheDocument()
     })
 
     it('should display the section description', () => {
       render(<IconsSection />)
-      expect(screen.getByText('Phosphor icon set with multiple weights')).toBeInTheDocument()
+      expect(
+        screen.getByText('Phosphor icon set with multiple weights'),
+      ).toBeInTheDocument()
     })
 
     it('should render the Card component', () => {
@@ -132,7 +136,9 @@ describe('IconsSection Component', () => {
 
     it('should display description for context', () => {
       render(<IconsSection />)
-      const description = screen.getByText('Phosphor icon set with multiple weights')
+      const description = screen.getByText(
+        'Phosphor icon set with multiple weights',
+      )
       expect(description).toBeInTheDocument()
     })
 
@@ -224,7 +230,9 @@ describe('IconsSection Component', () => {
 
     it('should render text with muted foreground color', () => {
       const { container } = render(<IconsSection />)
-      const labels = container.querySelectorAll('[class*="text-muted-foreground"]')
+      const labels = container.querySelectorAll(
+        '[class*="text-muted-foreground"]',
+      )
       expect(labels.length).toBeGreaterThan(0)
     })
   })

@@ -9,13 +9,14 @@ export interface SnippetToolbarState {
 
 export function useSnippetToolbar(
   searchQuery: string,
-  onSearchChange: (value: string) => void
+  onSearchChange: (value: string) => void,
 ): SnippetToolbarState {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null)
   const [inputValue, setInputValue] = useState(searchQuery)
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setInputValue(searchQuery)
   }, [searchQuery])
 

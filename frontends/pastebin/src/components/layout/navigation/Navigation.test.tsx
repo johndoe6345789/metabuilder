@@ -15,7 +15,9 @@ describe('Navigation Component', () => {
   describe('Rendering', () => {
     it('renders navigation toggle button', () => {
       render(<NavigationWithProvider />)
-      const button = screen.getByRole('button', { name: /toggle navigation menu/i })
+      const button = screen.getByRole('button', {
+        name: /toggle navigation menu/i,
+      })
       expect(button).toBeInTheDocument()
     })
 
@@ -91,7 +93,9 @@ describe('Navigation Component', () => {
   describe('Accessibility', () => {
     it('button is a button element', () => {
       render(<NavigationWithProvider />)
-      const button = screen.getByRole('button', { name: /toggle navigation menu/i })
+      const button = screen.getByRole('button', {
+        name: /toggle navigation menu/i,
+      })
       expect(button.tagName).toBe('BUTTON')
     })
 
@@ -124,7 +128,9 @@ describe('Navigation Component', () => {
 
     it('button is not disabled', () => {
       render(<NavigationWithProvider />)
-      const button = screen.getByRole('button', { name: /toggle navigation menu/i })
+      const button = screen.getByRole('button', {
+        name: /toggle navigation menu/i,
+      })
       expect(button).not.toBeDisabled()
     })
   })

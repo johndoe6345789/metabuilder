@@ -3,21 +3,14 @@
  */
 
 import type { Snippet, Namespace } from './types'
-import {
-  openDB,
-  SNIPPETS_STORE,
-  NAMESPACES_STORE,
-} from './indexeddb-core.js'
+import { openDB, SNIPPETS_STORE, NAMESPACES_STORE } from './indexeddb-core.js'
 import { getAllSnippets } from './indexeddb-snippets.js'
 import { getAllNamespaces } from './indexeddb-namespaces.js'
 
 export async function clearDatabase(): Promise<void> {
   const db = await openDB()
   return new Promise((resolve, reject) => {
-    const tx = db.transaction(
-      [SNIPPETS_STORE, NAMESPACES_STORE],
-      'readwrite'
-    )
+    const tx = db.transaction([SNIPPETS_STORE, NAMESPACES_STORE], 'readwrite')
     tx.objectStore(SNIPPETS_STORE).clear()
     tx.objectStore(NAMESPACES_STORE).clear()
     tx.onerror = () => reject(tx.error)
@@ -54,10 +47,7 @@ export async function importDatabase(data: {
   await clearDatabase()
   const db = await openDB()
   return new Promise((resolve, reject) => {
-    const tx = db.transaction(
-      [SNIPPETS_STORE, NAMESPACES_STORE],
-      'readwrite'
-    )
+    const tx = db.transaction([SNIPPETS_STORE, NAMESPACES_STORE], 'readwrite')
     const snippetsStore = tx.objectStore(SNIPPETS_STORE)
     const namespacesStore = tx.objectStore(NAMESPACES_STORE)
     for (const ns of data.namespaces) namespacesStore.add(ns)

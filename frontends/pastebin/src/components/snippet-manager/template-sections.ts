@@ -6,10 +6,9 @@ export interface TemplateSection {
 }
 
 export function buildTemplateSections(
-  templates: SnippetTemplate[]
+  templates: SnippetTemplate[],
 ): TemplateSection[] {
-  const byCategory = (cat: string) =>
-    templates.filter(t => t.category === cat)
+  const byCategory = (cat: string) => templates.filter(t => t.category === cat)
   const byLangs = (cat: string, langs: string[]) =>
     templates.filter(t => t.category === cat && langs.includes(t.language))
 
@@ -17,8 +16,8 @@ export function buildTemplateSections(
     { label: 'React Components', templates: byCategory('react') },
     {
       label: 'JavaScript / TypeScript',
-      templates: templates.filter(
-        t => ['api', 'basics', 'async', 'types'].includes(t.category)
+      templates: templates.filter(t =>
+        ['api', 'basics', 'async', 'types'].includes(t.category),
       ),
     },
     { label: 'CSS Layouts', templates: byCategory('layout') },
@@ -49,9 +48,14 @@ export function buildTemplateSections(
     },
     {
       label: 'R / Julia / Lua / Perl / Bash / C#',
-      templates: byLangs(
-        'example', ['R', 'Julia', 'Lua', 'Perl', 'Bash', 'C#']
-      ),
+      templates: byLangs('example', [
+        'R',
+        'Julia',
+        'Lua',
+        'Perl',
+        'Bash',
+        'C#',
+      ]),
     },
   ]
 }

@@ -11,12 +11,16 @@ describe('ColorsSection Component', () => {
 
     it('should display the section title', () => {
       render(<ColorsSection />)
-      expect(screen.getByRole('heading', { name: 'Colors', level: 2 })).toBeInTheDocument()
+      expect(
+        screen.getByRole('heading', { name: 'Colors', level: 2 }),
+      ).toBeInTheDocument()
     })
 
     it('should display the section description', () => {
       render(<ColorsSection />)
-      expect(screen.getByText('Semantic color palette with accessibility in mind')).toBeInTheDocument()
+      expect(
+        screen.getByText('Semantic color palette with accessibility in mind'),
+      ).toBeInTheDocument()
     })
 
     it('should render the Card component', () => {
@@ -121,7 +125,9 @@ describe('ColorsSection Component', () => {
 
     it('should display description for context', () => {
       render(<ColorsSection />)
-      const description = screen.getByText('Semantic color palette with accessibility in mind')
+      const description = screen.getByText(
+        'Semantic color palette with accessibility in mind',
+      )
       expect(description).toBeInTheDocument()
     })
 

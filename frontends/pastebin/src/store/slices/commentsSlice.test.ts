@@ -71,12 +71,12 @@ describe('commentsSlice', () => {
     it('stores sorted comments on fulfilled', () => {
       const store = makeStore()
       store.dispatch(
-        // @ts-expect-error
+        // @ts-expect-error testing with invalid payload shape
         fetchSnippetComments.fulfilled(
           { snippetId: 's1', comments: [snippetComment1, snippetComment2] },
           'req',
-          's1'
-        )
+          's1',
+        ),
       )
       const state = store.getState().comments
       expect(state.loading).toBe(false)
@@ -87,19 +87,31 @@ describe('commentsSlice', () => {
 
     it('handles date-string createdAt values', () => {
       const store = makeStore()
-      const c1 = { ...snippetComment1, createdAt: new Date(2000).toISOString() as unknown as number }
-      const c2 = { ...snippetComment2, createdAt: new Date(1000).toISOString() as unknown as number }
+      const c1 = {
+        ...snippetComment1,
+        createdAt: new Date(2000).toISOString() as unknown as number,
+      }
+      const c2 = {
+        ...snippetComment2,
+        createdAt: new Date(1000).toISOString() as unknown as number,
+      }
       store.dispatch(
-        // @ts-expect-error
-        fetchSnippetComments.fulfilled({ snippetId: 'x', comments: [c1, c2] }, 'req', 'x')
+        // @ts-expect-error testing with invalid payload shape
+        fetchSnippetComments.fulfilled(
+          { snippetId: 'x', comments: [c1, c2] },
+          'req',
+          'x',
+        ),
       )
-      expect(store.getState().comments.snippetComments['x'][0].createdAt).toBe(c2.createdAt)
+      expect(store.getState().comments.snippetComments['x'][0].createdAt).toBe(
+        c2.createdAt,
+      )
     })
 
     it('sets error on rejected', () => {
       const store = makeStore()
       store.dispatch(
-        fetchSnippetComments.rejected(new Error('fetch failed'), 'req', 's1')
+        fetchSnippetComments.rejected(new Error('fetch failed'), 'req', 's1'),
       )
       expect(store.getState().comments.loading).toBe(false)
       expect(store.getState().comments.error).toBe('fetch failed')
@@ -127,8 +139,11 @@ describe('commentsSlice', () => {
     it('appends comment on fulfilled', () => {
       const store = makeStore()
       store.dispatch(
-        // @ts-expect-error
-        addSnippetComment.fulfilled(snippetComment1, 'req', { snippetId: 's1', content: 'Great' })
+        // @ts-expect-error testing with invalid payload shape
+        addSnippetComment.fulfilled(snippetComment1, 'req', {
+          snippetId: 's1',
+          content: 'Great',
+        }),
       )
       expect(store.getState().comments.snippetComments['s1']).toHaveLength(1)
       expect(store.getState().comments.snippetComments['s1'][0].id).toBe('c1')
@@ -137,12 +152,19 @@ describe('commentsSlice', () => {
     it('appends to existing comment list', () => {
       const store = makeStore()
       store.dispatch(
-        // @ts-expect-error
-        fetchSnippetComments.fulfilled({ snippetId: 's1', comments: [snippetComment2] }, 'req', 's1')
+        // @ts-expect-error testing with invalid payload shape
+        fetchSnippetComments.fulfilled(
+          { snippetId: 's1', comments: [snippetComment2] },
+          'req',
+          's1',
+        ),
       )
       store.dispatch(
-        // @ts-expect-error
-        addSnippetComment.fulfilled(snippetComment1, 'req', { snippetId: 's1', content: 'Great' })
+        // @ts-expect-error testing with invalid payload shape
+        addSnippetComment.fulfilled(snippetComment1, 'req', {
+          snippetId: 's1',
+          content: 'Great',
+        }),
       )
       expect(store.getState().comments.snippetComments['s1']).toHaveLength(2)
     })
@@ -150,7 +172,10 @@ describe('commentsSlice', () => {
     it('sets error on rejected', () => {
       const store = makeStore()
       store.dispatch(
-        addSnippetComment.rejected(new Error('post failed'), 'req', { snippetId: 's1', content: 'x' })
+        addSnippetComment.rejected(new Error('post failed'), 'req', {
+          snippetId: 's1',
+          content: 'x',
+        }),
       )
       expect(store.getState().comments.error).toBe('post failed')
     })
@@ -166,12 +191,12 @@ describe('commentsSlice', () => {
     it('stores sorted comments on fulfilled', () => {
       const store = makeStore()
       store.dispatch(
-        // @ts-expect-error
+        // @ts-expect-error testing with invalid payload shape
         fetchProfileComments.fulfilled(
           { profileUserId: 'usr-1', comments: [profileComment] },
           'req',
-          'usr-1'
-        )
+          'usr-1',
+        ),
       )
       expect(store.getState().comments.profileComments['usr-1']).toHaveLength(1)
     })
@@ -179,7 +204,7 @@ describe('commentsSlice', () => {
     it('sets error on rejected', () => {
       const store = makeStore()
       store.dispatch(
-        fetchProfileComments.rejected(new Error('err'), 'req', 'usr-1')
+        fetchProfileComments.rejected(new Error('err'), 'req', 'usr-1'),
       )
       expect(store.getState().comments.error).toBe('err')
     })
@@ -197,8 +222,11 @@ describe('commentsSlice', () => {
     it('appends profile comment on fulfilled', () => {
       const store = makeStore()
       store.dispatch(
-        // @ts-expect-error
-        addProfileComment.fulfilled(profileComment, 'req', { profileUserId: 'usr-1', content: 'Nice' })
+        // @ts-expect-error testing with invalid payload shape
+        addProfileComment.fulfilled(profileComment, 'req', {
+          profileUserId: 'usr-1',
+          content: 'Nice',
+        }),
       )
       expect(store.getState().comments.profileComments['usr-1']).toHaveLength(1)
     })
@@ -206,7 +234,10 @@ describe('commentsSlice', () => {
     it('sets error on rejected', () => {
       const store = makeStore()
       store.dispatch(
-        addProfileComment.rejected(new Error('post failed'), 'req', { profileUserId: 'usr-1', content: 'x' })
+        addProfileComment.rejected(new Error('post failed'), 'req', {
+          profileUserId: 'usr-1',
+          content: 'x',
+        }),
       )
       expect(store.getState().comments.error).toBe('post failed')
     })
@@ -218,7 +249,9 @@ describe('commentsSlice', () => {
       db.createSnippetComment.mockClear()
       db.createSnippetComment.mockImplementation(async (c: SnippetComment) => c)
       const store = makeStore()
-      const result = await store.dispatch(addSnippetComment({ snippetId: 's1', content: 'Nice code!' }))
+      const result = await store.dispatch(
+        addSnippetComment({ snippetId: 's1', content: 'Nice code!' }),
+      )
       // Thunk was dispatched; check the fulfilled payload
       if (result.type === addSnippetComment.fulfilled.type) {
         const payload = result.payload as SnippetComment
@@ -232,7 +265,9 @@ describe('commentsSlice', () => {
       db.createSnippetComment.mockClear()
       db.createSnippetComment.mockImplementation(async (c: SnippetComment) => c)
       const store = makeStore()
-      const result = await store.dispatch(addSnippetComment({ snippetId: 's1', content: '  trimmed  ' }))
+      const result = await store.dispatch(
+        addSnippetComment({ snippetId: 's1', content: '  trimmed  ' }),
+      )
       if (result.type === addSnippetComment.fulfilled.type) {
         expect((result.payload as SnippetComment).content).toBe('trimmed')
       }
@@ -245,7 +280,9 @@ describe('commentsSlice', () => {
       db.createProfileComment.mockClear()
       db.createProfileComment.mockImplementation(async (c: ProfileComment) => c)
       const store = makeStore()
-      const result = await store.dispatch(addProfileComment({ profileUserId: 'usr-1', content: 'Cool profile' }))
+      const result = await store.dispatch(
+        addProfileComment({ profileUserId: 'usr-1', content: 'Cool profile' }),
+      )
       if (result.type === addProfileComment.fulfilled.type) {
         const payload = result.payload as ProfileComment
         expect(payload.content).toBe('Cool profile')
@@ -257,14 +294,26 @@ describe('commentsSlice', () => {
   describe('independent storage', () => {
     it('stores comments for different snippets independently', () => {
       const store = makeStore()
-      const c2: SnippetComment = { ...snippetComment1, id: 'cx', snippetId: 's2' }
+      const c2: SnippetComment = {
+        ...snippetComment1,
+        id: 'cx',
+        snippetId: 's2',
+      }
       store.dispatch(
-        // @ts-expect-error
-        fetchSnippetComments.fulfilled({ snippetId: 's1', comments: [snippetComment1] }, 'req', 's1')
+        // @ts-expect-error testing with invalid payload shape
+        fetchSnippetComments.fulfilled(
+          { snippetId: 's1', comments: [snippetComment1] },
+          'req',
+          's1',
+        ),
       )
       store.dispatch(
-        // @ts-expect-error
-        fetchSnippetComments.fulfilled({ snippetId: 's2', comments: [c2] }, 'req', 's2')
+        // @ts-expect-error testing with invalid payload shape
+        fetchSnippetComments.fulfilled(
+          { snippetId: 's2', comments: [c2] },
+          'req',
+          's2',
+        ),
       )
       expect(store.getState().comments.snippetComments['s1'][0].id).toBe('c1')
       expect(store.getState().comments.snippetComments['s2'][0].id).toBe('cx')

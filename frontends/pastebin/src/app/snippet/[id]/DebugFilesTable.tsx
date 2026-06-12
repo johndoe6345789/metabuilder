@@ -21,8 +21,7 @@ export function DebugFilesTable({
       <tbody>
         {files.map(f => {
           const isEntry = f.uuidName === entryPointSent
-          const isKept =
-            f.uuidName === f.originalName.split('/').pop()
+          const isKept = f.uuidName === f.originalName.split('/').pop()
           return (
             <tr
               key={f.uuidName}

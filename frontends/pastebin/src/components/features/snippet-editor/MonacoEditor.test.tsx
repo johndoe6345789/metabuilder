@@ -6,7 +6,18 @@ import { MonacoEditor } from './MonacoEditor'
 // Mock monaco-editor/react
 jest.mock('@monaco-editor/react', () => ({
   __esModule: true,
-  default: ({ value, onChange, language, height, options, theme, beforeMount }: any) => (
+  default: ({
+    value,
+    onChange,
+    language,
+    height,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    options,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    theme,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    beforeMount,
+  }: any) => (
     <div
       data-testid="monaco-editor-mock"
       style={{ height }}
@@ -17,7 +28,7 @@ jest.mock('@monaco-editor/react', () => ({
       <textarea
         data-testid="editor-textarea"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={e => onChange(e.target.value)}
         style={{ width: '100%', height: '100%' }}
       />
     </div>
@@ -27,7 +38,7 @@ jest.mock('@monaco-editor/react', () => ({
 // Mock config functions
 jest.mock('@/lib/monaco-config', () => ({
   configureMonacoTypeScript: jest.fn(),
-  getMonacoLanguage: jest.fn((lang) => lang.toLowerCase()),
+  getMonacoLanguage: jest.fn(lang => lang.toLowerCase()),
 }))
 
 describe('MonacoEditor Component', () => {
@@ -56,6 +67,7 @@ describe('MonacoEditor Component', () => {
       render(<MonacoEditor {...defaultProps} />)
 
       // Suspense fallback should show
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const skeleton = screen.queryByTestId('skeleton')
       // The Skeleton component is rendered in fallback
       expect(screen.getByTestId('monaco-editor-mock')).toBeInTheDocument()
@@ -87,14 +99,18 @@ describe('MonacoEditor Component', () => {
     it('displays initial code value', () => {
       render(<MonacoEditor {...defaultProps} value="console.log('test');" />)
 
-      const textarea = screen.getByTestId('editor-textarea') as HTMLTextAreaElement
+      const textarea = screen.getByTestId(
+        'editor-textarea',
+      ) as HTMLTextAreaElement
       expect(textarea.value).toBe("console.log('test');")
     })
 
     it('updates displayed code when value prop changes', () => {
       const { rerender } = render(<MonacoEditor {...defaultProps} />)
 
-      let textarea = screen.getByTestId('editor-textarea') as HTMLTextAreaElement
+      let textarea = screen.getByTestId(
+        'editor-textarea',
+      ) as HTMLTextAreaElement
       expect(textarea.value).toBe('const x = 1;')
 
       rerender(<MonacoEditor {...defaultProps} value="const y = 2;" />)
@@ -118,7 +134,9 @@ describe('MonacoEditor Component', () => {
     it('handles empty string value', () => {
       render(<MonacoEditor {...defaultProps} value="" />)
 
-      const textarea = screen.getByTestId('editor-textarea') as HTMLTextAreaElement
+      const textarea = screen.getByTestId(
+        'editor-textarea',
+      ) as HTMLTextAreaElement
       expect(textarea.value).toBe('')
     })
 
@@ -139,42 +157,60 @@ describe('MonacoEditor Component', () => {
 
       const editor = screen.getByTestId('monaco-editor-mock')
       // Language is lowercased by getMonacoLanguage mock
-      expect(editor).toHaveAttribute('aria-label', expect.stringContaining('javascript'))
+      expect(editor).toHaveAttribute(
+        'aria-label',
+        expect.stringContaining('javascript'),
+      )
     })
 
     it('renders with TypeScript language', () => {
       render(<MonacoEditor {...defaultProps} language="TypeScript" />)
 
       const editor = screen.getByTestId('monaco-editor-mock')
-      expect(editor).toHaveAttribute('aria-label', expect.stringContaining('typescript'))
+      expect(editor).toHaveAttribute(
+        'aria-label',
+        expect.stringContaining('typescript'),
+      )
     })
 
     it('renders with Python language', () => {
       render(<MonacoEditor {...defaultProps} language="Python" />)
 
       const editor = screen.getByTestId('monaco-editor-mock')
-      expect(editor).toHaveAttribute('aria-label', expect.stringContaining('python'))
+      expect(editor).toHaveAttribute(
+        'aria-label',
+        expect.stringContaining('python'),
+      )
     })
 
     it('renders with JSX language', () => {
       render(<MonacoEditor {...defaultProps} language="JSX" />)
 
       const editor = screen.getByTestId('monaco-editor-mock')
-      expect(editor).toHaveAttribute('aria-label', expect.stringContaining('jsx'))
+      expect(editor).toHaveAttribute(
+        'aria-label',
+        expect.stringContaining('jsx'),
+      )
     })
 
     it('renders with HTML language', () => {
       render(<MonacoEditor {...defaultProps} language="HTML" />)
 
       const editor = screen.getByTestId('monaco-editor-mock')
-      expect(editor).toHaveAttribute('aria-label', expect.stringContaining('html'))
+      expect(editor).toHaveAttribute(
+        'aria-label',
+        expect.stringContaining('html'),
+      )
     })
 
     it('renders with CSS language', () => {
       render(<MonacoEditor {...defaultProps} language="CSS" />)
 
       const editor = screen.getByTestId('monaco-editor-mock')
-      expect(editor).toHaveAttribute('aria-label', expect.stringContaining('css'))
+      expect(editor).toHaveAttribute(
+        'aria-label',
+        expect.stringContaining('css'),
+      )
     })
   })
 
@@ -182,7 +218,9 @@ describe('MonacoEditor Component', () => {
     it('renders as editable by default', () => {
       render(<MonacoEditor {...defaultProps} />)
 
-      const textarea = screen.getByTestId('editor-textarea') as HTMLTextAreaElement
+      const textarea = screen.getByTestId(
+        'editor-textarea',
+      ) as HTMLTextAreaElement
       expect(textarea.readOnly).toBe(false)
     })
 
@@ -199,13 +237,16 @@ describe('MonacoEditor Component', () => {
           {...defaultProps}
           value="console.log('readonly');"
           readOnly={true}
-        />
+        />,
       )
 
-      const textarea = screen.getByTestId('editor-textarea') as HTMLTextAreaElement
+      const textarea = screen.getByTestId(
+        'editor-textarea',
+      ) as HTMLTextAreaElement
       expect(textarea.value).toBe("console.log('readonly');")
     })
 
+    // eslint-disable-next-line max-len
     it('does not call onChange when readOnly and user attempts to edit', async () => {
       const user = userEvent.setup()
       render(<MonacoEditor {...defaultProps} readOnly={true} />)
@@ -240,7 +281,10 @@ describe('MonacoEditor Component', () => {
       render(<MonacoEditor {...defaultProps} language="JavaScript" />)
 
       const editor = screen.getByTestId('monaco-editor-mock')
-      expect(editor).toHaveAttribute('aria-label', expect.stringContaining('javascript'))
+      expect(editor).toHaveAttribute(
+        'aria-label',
+        expect.stringContaining('javascript'),
+      )
     })
 
     it('is keyboard accessible', async () => {
@@ -256,6 +300,7 @@ describe('MonacoEditor Component', () => {
     })
 
     it('supports tab indentation', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const user = userEvent.setup()
       render(<MonacoEditor {...defaultProps} value="function test() {" />)
 
@@ -272,7 +317,9 @@ describe('MonacoEditor Component', () => {
       const longCode = 'const x = 1;\n'.repeat(1000)
       render(<MonacoEditor {...defaultProps} value={longCode} />)
 
-      const textarea = screen.getByTestId('editor-textarea') as HTMLTextAreaElement
+      const textarea = screen.getByTestId(
+        'editor-textarea',
+      ) as HTMLTextAreaElement
       expect(textarea.value.length).toBeGreaterThan(10000)
     })
 
@@ -280,7 +327,9 @@ describe('MonacoEditor Component', () => {
       const specialCode = '`\\${variable}` <>&"\'\\n\\t'
       render(<MonacoEditor {...defaultProps} value={specialCode} />)
 
-      const textarea = screen.getByTestId('editor-textarea') as HTMLTextAreaElement
+      const textarea = screen.getByTestId(
+        'editor-textarea',
+      ) as HTMLTextAreaElement
       expect(textarea.value).toBe(specialCode)
     })
 
@@ -288,7 +337,9 @@ describe('MonacoEditor Component', () => {
       const multilineCode = 'line1\nline2\r\nline3'
       render(<MonacoEditor {...defaultProps} value={multilineCode} />)
 
-      const textarea = screen.getByTestId('editor-textarea') as HTMLTextAreaElement
+      const textarea = screen.getByTestId(
+        'editor-textarea',
+      ) as HTMLTextAreaElement
       expect(textarea.value).toContain('line1')
       expect(textarea.value).toContain('line2')
       expect(textarea.value).toContain('line3')
@@ -311,7 +362,9 @@ describe('MonacoEditor Component', () => {
       const codeWithEmoji = '// TODO: fix this 🐛'
       render(<MonacoEditor {...defaultProps} value={codeWithEmoji} />)
 
-      const textarea = screen.getByTestId('editor-textarea') as HTMLTextAreaElement
+      const textarea = screen.getByTestId(
+        'editor-textarea',
+      ) as HTMLTextAreaElement
       expect(textarea.value).toContain('🐛')
     })
 
@@ -319,7 +372,9 @@ describe('MonacoEditor Component', () => {
       const jsxCode = '<Component prop={value} />'
       render(<MonacoEditor {...defaultProps} value={jsxCode} language="JSX" />)
 
-      const textarea = screen.getByTestId('editor-textarea') as HTMLTextAreaElement
+      const textarea = screen.getByTestId(
+        'editor-textarea',
+      ) as HTMLTextAreaElement
       expect(textarea.value).toBe(jsxCode)
     })
   })
@@ -350,7 +405,9 @@ describe('MonacoEditor Component', () => {
         rerender(<MonacoEditor {...defaultProps} value={`const x = ${i};`} />)
       }
 
-      const textarea = screen.getByTestId('editor-textarea') as HTMLTextAreaElement
+      const textarea = screen.getByTestId(
+        'editor-textarea',
+      ) as HTMLTextAreaElement
       expect(textarea.value).toBe('const x = 4;')
     })
 
@@ -369,13 +426,7 @@ describe('MonacoEditor Component', () => {
   describe('Integration Tests', () => {
     it('complete workflow: create and edit code', async () => {
       const user = userEvent.setup()
-      render(
-        <MonacoEditor
-          {...defaultProps}
-          value=""
-          language="JavaScript"
-        />
-      )
+      render(<MonacoEditor {...defaultProps} value="" language="JavaScript" />)
 
       const textarea = screen.getByTestId('editor-textarea')
       // Type code - onChange will be called
@@ -386,18 +437,22 @@ describe('MonacoEditor Component', () => {
 
     it('complete workflow: language switching', () => {
       const { rerender } = render(
-        <MonacoEditor {...defaultProps} language="JavaScript" />
+        <MonacoEditor {...defaultProps} language="JavaScript" />,
       )
 
       let editor = screen.getByTestId('monaco-editor-mock')
-      expect(editor).toHaveAttribute('aria-label', expect.stringContaining('javascript'))
-
-      rerender(
-        <MonacoEditor {...defaultProps} language="Python" />
+      expect(editor).toHaveAttribute(
+        'aria-label',
+        expect.stringContaining('javascript'),
       )
 
+      rerender(<MonacoEditor {...defaultProps} language="Python" />)
+
       editor = screen.getByTestId('monaco-editor-mock')
-      expect(editor).toHaveAttribute('aria-label', expect.stringContaining('python'))
+      expect(editor).toHaveAttribute(
+        'aria-label',
+        expect.stringContaining('python'),
+      )
     })
 
     it('complete workflow: read-only view of code', () => {
@@ -406,10 +461,12 @@ describe('MonacoEditor Component', () => {
           {...defaultProps}
           value="const important = 'do not edit';"
           readOnly={true}
-        />
+        />,
       )
 
-      const textarea = screen.getByTestId('editor-textarea') as HTMLTextAreaElement
+      const textarea = screen.getByTestId(
+        'editor-textarea',
+      ) as HTMLTextAreaElement
       expect(textarea.value).toBe("const important = 'do not edit';")
       // Read-only editor should be configured
       expect(screen.getByTestId('monaco-editor-mock')).toBeInTheDocument()

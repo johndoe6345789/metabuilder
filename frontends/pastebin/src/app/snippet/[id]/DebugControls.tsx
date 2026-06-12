@@ -12,34 +12,51 @@ export function DebugControls({ dbg }: { dbg: Debugger }) {
     <div className={styles.controls}>
       {isPaused && (
         <>
-          <button className={styles.ctrlBtn}
-            onClick={() => void dbg.resume()} title="Continue (F5)">
+          <button
+            className={styles.ctrlBtn}
+            onClick={() => void dbg.resume()}
+            title="Continue (F5)"
+          >
             <MaterialIcon name="play_arrow" size={16} />
           </button>
-          <button className={styles.ctrlBtn}
-            onClick={() => void dbg.stepOver()} title="Step Over (F10)">
+          <button
+            className={styles.ctrlBtn}
+            onClick={() => void dbg.stepOver()}
+            title="Step Over (F10)"
+          >
             <MaterialIcon name="skip_next" size={16} />
           </button>
-          <button className={styles.ctrlBtn}
-            onClick={() => void dbg.stepIn()} title="Step Into (F11)">
+          <button
+            className={styles.ctrlBtn}
+            onClick={() => void dbg.stepIn()}
+            title="Step Into (F11)"
+          >
             <MaterialIcon name="arrow_downward" size={16} />
           </button>
-          <button className={styles.ctrlBtn}
-            onClick={() => void dbg.stepOut()} title="Step Out (⇧F11)">
+          <button
+            className={styles.ctrlBtn}
+            onClick={() => void dbg.stepOut()}
+            title="Step Out (⇧F11)"
+          >
             <MaterialIcon name="arrow_upward" size={16} />
           </button>
         </>
       )}
       {state.status === 'running' && (
-        <button className={styles.ctrlBtn}
-          onClick={() => void dbg.pause()} title="Pause">
+        <button
+          className={styles.ctrlBtn}
+          onClick={() => void dbg.pause()}
+          title="Pause"
+        >
           <MaterialIcon name="pause" size={16} />
         </button>
       )}
       {isActive && (
         <button
           className={`${styles.ctrlBtn} ${styles.ctrlStop}`}
-          onClick={() => void dbg.stopDebugging()} title="Stop">
+          onClick={() => void dbg.stopDebugging()}
+          title="Stop"
+        >
           <MaterialIcon name="stop" size={16} />
         </button>
       )}

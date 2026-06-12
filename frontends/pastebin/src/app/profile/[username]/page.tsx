@@ -12,9 +12,10 @@ import styles from './profile-page.module.scss'
 
 function joinedDate(ms: number): string {
   if (!ms) return 'Unknown'
-  return new Date(ms).toLocaleDateString(
-    undefined, { year: 'numeric', month: 'long' }
-  )
+  return new Date(ms).toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'long',
+  })
 }
 
 export default function ProfilePage() {
@@ -32,7 +33,9 @@ export default function ProfilePage() {
   if (!loading && !user) {
     return (
       <PageLayout>
-        <div className={styles.notFound}>User <strong>@{username}</strong> not found.</div>
+        <div className={styles.notFound}>
+          User <strong>@{username}</strong> not found.
+        </div>
       </PageLayout>
     )
   }
@@ -42,14 +45,26 @@ export default function ProfilePage() {
     <PageLayout>
       <div className={styles.page}>
         <nav className={styles.breadcrumbs} aria-label="Breadcrumb">
-          <button className={styles.backBtn} onClick={() => router.push('/')} aria-label="Back to snippets">
+          <button
+            className={styles.backBtn}
+            onClick={() => router.push('/')}
+            aria-label="Back to snippets"
+          >
             <MaterialIcon name="arrow_back" size={14} />
             <span>Back</span>
           </button>
           <ol className={styles.crumbList}>
-            <li><Link href="/" className={styles.crumbLink}>My Snippets</Link></li>
-            <li aria-hidden="true" className={styles.crumbSep}>/</li>
-            <li aria-current="page" className={styles.crumbCurrent}>@{user.username}</li>
+            <li>
+              <Link href="/" className={styles.crumbLink}>
+                My Snippets
+              </Link>
+            </li>
+            <li aria-hidden="true" className={styles.crumbSep}>
+              /
+            </li>
+            <li aria-current="page" className={styles.crumbCurrent}>
+              @{user.username}
+            </li>
           </ol>
         </nav>
 

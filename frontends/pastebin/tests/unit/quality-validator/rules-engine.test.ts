@@ -3,34 +3,46 @@
  * Comprehensive test coverage for rule loading, execution, and scoring
  */
 
-import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
-import { RulesEngine, type RulesExecutionResult, type PatternRule, type ComplexityRule } from '../../../src/lib/quality-validator/rules/RulesEngine';
-import { RulesLoader } from '../../../src/lib/quality-validator/rules/RulesLoader';
-import { RulesScoringIntegration } from '../../../src/lib/quality-validator/rules/RulesScoringIntegration';
-import type { ScoringResult, ComponentScores } from '../../../src/lib/quality-validator/types';
-import { tmpdir } from 'os';
-import { join } from 'path';
-import { writeFileSync, mkdirSync, rmSync } from 'fs';
+import { describe, it, expect, beforeEach, afterEach } from '@jest/globals'
+import {
+  RulesEngine,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  type RulesExecutionResult,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  type PatternRule,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  type ComplexityRule,
+} from '../../../src/lib/quality-validator/rules/RulesEngine'
+import { RulesLoader } from '../../../src/lib/quality-validator/rules/RulesLoader'
+import { RulesScoringIntegration } from '../../../src/lib/quality-validator/rules/RulesScoringIntegration'
+import type {
+  ScoringResult,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  ComponentScores,
+} from '../../../src/lib/quality-validator/types'
+import { tmpdir } from 'os'
+import { join } from 'path'
+import { writeFileSync, mkdirSync, rmSync } from 'fs'
 
 describe('RulesEngine', () => {
-  let rulesEngine: RulesEngine;
-  let tmpDir: string;
+  let rulesEngine: RulesEngine
+  let tmpDir: string
 
   beforeEach(() => {
-    tmpDir = join(tmpdir(), `rules-test-${Date.now()}`);
-    mkdirSync(tmpDir, { recursive: true });
+    tmpDir = join(tmpdir(), `rules-test-${Date.now()}`)
+    mkdirSync(tmpDir, { recursive: true })
 
     rulesEngine = new RulesEngine({
       enabled: true,
       rulesFilePath: join(tmpDir, 'custom-rules.json'),
-    });
-  });
+    })
+  })
 
   afterEach(() => {
     if (tmpDir) {
-      rmSync(tmpDir, { recursive: true, force: true });
+      rmSync(tmpDir, { recursive: true, force: true })
     }
-  });
+  })
 
   describe('Pattern Rules', () => {
     it('should detect console.log statements', async () => {
@@ -45,27 +57,30 @@ describe('RulesEngine', () => {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(rulesEngine['config'].rulesFilePath, JSON.stringify(rulesContent));
-      await rulesEngine.loadRules();
+      writeFileSync(
+        rulesEngine['config'].rulesFilePath,
+        JSON.stringify(rulesContent),
+      )
+      await rulesEngine.loadRules()
 
-      const testFile = join(tmpDir, 'test.ts');
+      const testFile = join(tmpDir, 'test.ts')
       writeFileSync(
         testFile,
         `
 console.log('test');
 const x = 5;
 console.warn('warning');
-`
-      );
+`,
+      )
 
-      const result = await rulesEngine.executeRules([testFile]);
+      const result = await rulesEngine.executeRules([testFile])
 
-      expect(result.violations.length).toBeGreaterThan(0);
-      expect(result.violations.some((v) => v.line === 2)).toBe(true);
-      expect(result.violations.some((v) => v.line === 4)).toBe(true);
-    });
+      expect(result.violations.length).toBeGreaterThan(0)
+      expect(result.violations.some(v => v.line === 2)).toBe(true)
+      expect(result.violations.some(v => v.line === 4)).toBe(true)
+    })
 
     it('should exclude patterns correctly', async () => {
       const rulesContent = {
@@ -80,25 +95,28 @@ console.warn('warning');
             excludePatterns: ['// console\\.log'],
           },
         ],
-      };
+      }
 
-      writeFileSync(rulesEngine['config'].rulesFilePath, JSON.stringify(rulesContent));
-      await rulesEngine.loadRules();
+      writeFileSync(
+        rulesEngine['config'].rulesFilePath,
+        JSON.stringify(rulesContent),
+      )
+      await rulesEngine.loadRules()
 
-      const testFile = join(tmpDir, 'test.ts');
+      const testFile = join(tmpDir, 'test.ts')
       writeFileSync(
         testFile,
         `
 // console.log('this should not match')
 const x = 5;
 console.log('this should match');
-`
-      );
+`,
+      )
 
-      const result = await rulesEngine.executeRules([testFile]);
+      const result = await rulesEngine.executeRules([testFile])
 
-      expect(result.violations.length).toBeGreaterThan(0);
-    });
+      expect(result.violations.length).toBeGreaterThan(0)
+    })
 
     it('should respect file extensions', async () => {
       const rulesContent = {
@@ -113,24 +131,27 @@ console.log('this should match');
             fileExtensions: ['.ts'],
           },
         ],
-      };
+      }
 
-      writeFileSync(rulesEngine['config'].rulesFilePath, JSON.stringify(rulesContent));
-      await rulesEngine.loadRules();
+      writeFileSync(
+        rulesEngine['config'].rulesFilePath,
+        JSON.stringify(rulesContent),
+      )
+      await rulesEngine.loadRules()
 
-      const testTsFile = join(tmpDir, 'test.ts');
-      const testJsFile = join(tmpDir, 'test.js');
+      const testTsFile = join(tmpDir, 'test.ts')
+      const testJsFile = join(tmpDir, 'test.js')
 
-      writeFileSync(testTsFile, 'TODO: fix this');
-      writeFileSync(testJsFile, 'TODO: fix this');
+      writeFileSync(testTsFile, 'TODO: fix this')
+      writeFileSync(testJsFile, 'TODO: fix this')
 
-      const result = await rulesEngine.executeRules([testTsFile, testJsFile]);
+      const result = await rulesEngine.executeRules([testTsFile, testJsFile])
 
       // Should only find violation in .ts file
-      expect(result.violations.some((v) => v.file === testTsFile)).toBe(true);
-      expect(result.violations.some((v) => v.file === testJsFile)).toBe(false);
-    });
-  });
+      expect(result.violations.some(v => v.file === testTsFile)).toBe(true)
+      expect(result.violations.some(v => v.file === testJsFile)).toBe(false)
+    })
+  })
 
   describe('Complexity Rules', () => {
     it('should detect functions exceeding line threshold', async () => {
@@ -146,12 +167,15 @@ console.log('this should match');
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(rulesEngine['config'].rulesFilePath, JSON.stringify(rulesContent));
-      await rulesEngine.loadRules();
+      writeFileSync(
+        rulesEngine['config'].rulesFilePath,
+        JSON.stringify(rulesContent),
+      )
+      await rulesEngine.loadRules()
 
-      const testFile = join(tmpDir, 'test.ts');
+      const testFile = join(tmpDir, 'test.ts')
       writeFileSync(
         testFile,
         `
@@ -163,13 +187,13 @@ function longFunction() {
   const e = 5;
   return a + b + c + d + e;
 }
-`
-      );
+`,
+      )
 
-      const result = await rulesEngine.executeRules([testFile]);
+      const result = await rulesEngine.executeRules([testFile])
 
-      expect(result.violations.length).toBeGreaterThan(0);
-    });
+      expect(result.violations.length).toBeGreaterThan(0)
+    })
 
     it('should detect cyclomatic complexity', async () => {
       const rulesContent = {
@@ -184,12 +208,15 @@ function longFunction() {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(rulesEngine['config'].rulesFilePath, JSON.stringify(rulesContent));
-      await rulesEngine.loadRules();
+      writeFileSync(
+        rulesEngine['config'].rulesFilePath,
+        JSON.stringify(rulesContent),
+      )
+      await rulesEngine.loadRules()
 
-      const testFile = join(tmpDir, 'test.ts');
+      const testFile = join(tmpDir, 'test.ts')
       writeFileSync(
         testFile,
         `
@@ -203,13 +230,13 @@ function complexFn(a: number) {
   }
   return 0;
 }
-`
-      );
+`,
+      )
 
-      const result = await rulesEngine.executeRules([testFile]);
+      const result = await rulesEngine.executeRules([testFile])
 
-      expect(result.violations.length).toBeGreaterThan(0);
-    });
+      expect(result.violations.length).toBeGreaterThan(0)
+    })
 
     it('should detect excessive nesting depth', async () => {
       const rulesContent = {
@@ -224,12 +251,15 @@ function complexFn(a: number) {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(rulesEngine['config'].rulesFilePath, JSON.stringify(rulesContent));
-      await rulesEngine.loadRules();
+      writeFileSync(
+        rulesEngine['config'].rulesFilePath,
+        JSON.stringify(rulesContent),
+      )
+      await rulesEngine.loadRules()
 
-      const testFile = join(tmpDir, 'test.ts');
+      const testFile = join(tmpDir, 'test.ts')
       writeFileSync(
         testFile,
         `
@@ -242,14 +272,14 @@ function nested() {
     }
   }
 }
-`
-      );
+`,
+      )
 
-      const result = await rulesEngine.executeRules([testFile]);
+      const result = await rulesEngine.executeRules([testFile])
 
-      expect(result.violations.length).toBeGreaterThan(0);
-    });
-  });
+      expect(result.violations.length).toBeGreaterThan(0)
+    })
+  })
 
   describe('Naming Rules', () => {
     it('should validate function naming conventions', async () => {
@@ -265,12 +295,15 @@ function nested() {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(rulesEngine['config'].rulesFilePath, JSON.stringify(rulesContent));
-      await rulesEngine.loadRules();
+      writeFileSync(
+        rulesEngine['config'].rulesFilePath,
+        JSON.stringify(rulesContent),
+      )
+      await rulesEngine.loadRules()
 
-      const testFile = join(tmpDir, 'test.ts');
+      const testFile = join(tmpDir, 'test.ts')
       writeFileSync(
         testFile,
         `
@@ -278,15 +311,15 @@ function myFunction() {}
 function MyFunction() {}
 const normalFunc = () => {};
 const NormalFunc = () => {};
-`
-      );
+`,
+      )
 
-      const result = await rulesEngine.executeRules([testFile]);
+      const result = await rulesEngine.executeRules([testFile])
 
-      expect(result.violations.length).toBeGreaterThan(0);
-      expect(result.violations.some((v) => v.line === 3)).toBe(true);
-    });
-  });
+      expect(result.violations.length).toBeGreaterThan(0)
+      expect(result.violations.some(v => v.line === 3)).toBe(true)
+    })
+  })
 
   describe('Structure Rules', () => {
     it('should detect oversized files', async () => {
@@ -302,19 +335,22 @@ const NormalFunc = () => {};
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(rulesEngine['config'].rulesFilePath, JSON.stringify(rulesContent));
-      await rulesEngine.loadRules();
+      writeFileSync(
+        rulesEngine['config'].rulesFilePath,
+        JSON.stringify(rulesContent),
+      )
+      await rulesEngine.loadRules()
 
-      const testFile = join(tmpDir, 'large.ts');
-      writeFileSync(testFile, 'const x = 1;');
+      const testFile = join(tmpDir, 'large.ts')
+      writeFileSync(testFile, 'const x = 1;')
 
-      const result = await rulesEngine.executeRules([testFile]);
+      const result = await rulesEngine.executeRules([testFile])
 
-      expect(result.violations.length).toBeGreaterThan(0);
-    });
-  });
+      expect(result.violations.length).toBeGreaterThan(0)
+    })
+  })
 
   describe('Score Adjustment', () => {
     it('should calculate negative adjustment for violations', async () => {
@@ -337,19 +373,22 @@ const NormalFunc = () => {};
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(rulesEngine['config'].rulesFilePath, JSON.stringify(rulesContent));
-      await rulesEngine.loadRules();
+      writeFileSync(
+        rulesEngine['config'].rulesFilePath,
+        JSON.stringify(rulesContent),
+      )
+      await rulesEngine.loadRules()
 
-      const testFile = join(tmpDir, 'test.ts');
-      writeFileSync(testFile, `TODO: fix\nFIXME: fix`);
+      const testFile = join(tmpDir, 'test.ts')
+      writeFileSync(testFile, `TODO: fix\nFIXME: fix`)
 
-      const result = await rulesEngine.executeRules([testFile]);
+      const result = await rulesEngine.executeRules([testFile])
 
-      expect(result.scoreAdjustment).toBeLessThan(0);
-      expect(result.scoreAdjustment).toBeGreaterThanOrEqual(-10); // Max penalty
-    });
+      expect(result.scoreAdjustment).toBeLessThan(0)
+      expect(result.scoreAdjustment).toBeGreaterThanOrEqual(-10) // Max penalty
+    })
 
     it('should cap adjustment at maximum penalty', async () => {
       const rulesContent = {
@@ -371,19 +410,25 @@ const NormalFunc = () => {};
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(rulesEngine['config'].rulesFilePath, JSON.stringify(rulesContent));
-      await rulesEngine.loadRules();
+      writeFileSync(
+        rulesEngine['config'].rulesFilePath,
+        JSON.stringify(rulesContent),
+      )
+      await rulesEngine.loadRules()
 
-      const testFile = join(tmpDir, 'test.ts');
-      writeFileSync(testFile, 'error bug error bug error bug error bug error bug');
+      const testFile = join(tmpDir, 'test.ts')
+      writeFileSync(
+        testFile,
+        'error bug error bug error bug error bug error bug',
+      )
 
-      const result = await rulesEngine.executeRules([testFile]);
+      const result = await rulesEngine.executeRules([testFile])
 
-      expect(result.scoreAdjustment).toBeGreaterThanOrEqual(-10);
-    });
-  });
+      expect(result.scoreAdjustment).toBeGreaterThanOrEqual(-10)
+    })
+  })
 
   describe('Rule Management', () => {
     it('should get all loaded rules', async () => {
@@ -407,14 +452,17 @@ const NormalFunc = () => {};
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(rulesEngine['config'].rulesFilePath, JSON.stringify(rulesContent));
-      await rulesEngine.loadRules();
+      writeFileSync(
+        rulesEngine['config'].rulesFilePath,
+        JSON.stringify(rulesContent),
+      )
+      await rulesEngine.loadRules()
 
-      const rules = rulesEngine.getRules();
-      expect(rules.length).toBe(2);
-    });
+      const rules = rulesEngine.getRules()
+      expect(rules.length).toBe(2)
+    })
 
     it('should filter rules by type', async () => {
       const rulesContent = {
@@ -445,17 +493,20 @@ const NormalFunc = () => {};
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(rulesEngine['config'].rulesFilePath, JSON.stringify(rulesContent));
-      await rulesEngine.loadRules();
+      writeFileSync(
+        rulesEngine['config'].rulesFilePath,
+        JSON.stringify(rulesContent),
+      )
+      await rulesEngine.loadRules()
 
-      const patternRules = rulesEngine.getRulesByType('pattern');
-      const complexityRules = rulesEngine.getRulesByType('complexity');
+      const patternRules = rulesEngine.getRulesByType('pattern')
+      const complexityRules = rulesEngine.getRulesByType('complexity')
 
-      expect(patternRules.length).toBe(2);
-      expect(complexityRules.length).toBe(1);
-    });
+      expect(patternRules.length).toBe(2)
+      expect(complexityRules.length).toBe(1)
+    })
 
     it('should validate rules configuration', async () => {
       const rulesContent = {
@@ -469,52 +520,55 @@ const NormalFunc = () => {};
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(rulesEngine['config'].rulesFilePath, JSON.stringify(rulesContent));
-      await rulesEngine.loadRules();
+      writeFileSync(
+        rulesEngine['config'].rulesFilePath,
+        JSON.stringify(rulesContent),
+      )
+      await rulesEngine.loadRules()
 
-      const validation = rulesEngine.validateRulesConfig();
-      expect(validation.valid).toBe(true);
-      expect(validation.errors.length).toBe(0);
-    });
-  });
-});
+      const validation = rulesEngine.validateRulesConfig()
+      expect(validation.valid).toBe(true)
+      expect(validation.errors.length).toBe(0)
+    })
+  })
+})
 
 describe('RulesLoader', () => {
-  let rulesLoader: RulesLoader;
-  let tmpDir: string;
+  let rulesLoader: RulesLoader
+  let tmpDir: string
 
   beforeEach(() => {
-    tmpDir = join(tmpdir(), `rules-loader-test-${Date.now()}`);
-    mkdirSync(tmpDir, { recursive: true });
+    tmpDir = join(tmpdir(), `rules-loader-test-${Date.now()}`)
+    mkdirSync(tmpDir, { recursive: true })
 
     rulesLoader = new RulesLoader({
       rulesDirectory: tmpDir,
       rulesFileName: 'custom-rules.json',
-    });
-  });
+    })
+  })
 
   afterEach(() => {
     if (tmpDir) {
-      rmSync(tmpDir, { recursive: true, force: true });
+      rmSync(tmpDir, { recursive: true, force: true })
     }
-  });
+  })
 
   describe('Loading and Saving', () => {
     it('should create sample rules file', async () => {
-      const result = await rulesLoader.createSampleRulesFile();
-      expect(result).toBe(true);
-      expect(rulesLoader.rulesFileExists()).toBe(true);
-    });
+      const result = await rulesLoader.createSampleRulesFile()
+      expect(result).toBe(true)
+      expect(rulesLoader.rulesFileExists()).toBe(true)
+    })
 
     it('should load rules from file', async () => {
-      await rulesLoader.createSampleRulesFile();
-      const rules = await rulesLoader.loadRulesFromFile();
+      await rulesLoader.createSampleRulesFile()
+      const rules = await rulesLoader.loadRulesFromFile()
 
-      expect(rules.length).toBeGreaterThan(0);
-      expect(rules[0].id).toBeDefined();
-    });
+      expect(rules.length).toBeGreaterThan(0)
+      expect(rules[0].id).toBeDefined()
+    })
 
     it('should save rules to file', async () => {
       const rules = [
@@ -526,16 +580,16 @@ describe('RulesLoader', () => {
           message: 'Test rule',
           enabled: true,
         },
-      ];
+      ]
 
-      const result = await rulesLoader.saveRulesToFile(rules);
-      expect(result).toBe(true);
+      const result = await rulesLoader.saveRulesToFile(rules)
+      expect(result).toBe(true)
 
-      const loaded = await rulesLoader.loadRulesFromFile();
-      expect(loaded.length).toBe(1);
-      expect(loaded[0].id).toBe('test-rule');
-    });
-  });
+      const loaded = await rulesLoader.loadRulesFromFile()
+      expect(loaded.length).toBe(1)
+      expect(loaded[0].id).toBe('test-rule')
+    })
+  })
 
   describe('Validation', () => {
     it('should validate correct rules', async () => {
@@ -548,12 +602,12 @@ describe('RulesLoader', () => {
           message: 'Test',
           enabled: true,
         },
-      ];
+      ]
 
-      const validation = rulesLoader.validateRulesConfig(rules);
-      expect(validation.valid).toBe(true);
-      expect(validation.errors.length).toBe(0);
-    });
+      const validation = rulesLoader.validateRulesConfig(rules)
+      expect(validation.valid).toBe(true)
+      expect(validation.errors.length).toBe(0)
+    })
 
     it('should detect duplicate rule IDs', async () => {
       const rules = [
@@ -573,12 +627,12 @@ describe('RulesLoader', () => {
           message: 'Test',
           enabled: true,
         },
-      ];
+      ]
 
-      const validation = rulesLoader.validateRulesConfig(rules);
-      expect(validation.valid).toBe(false);
-      expect(validation.errors.some((e) => e.includes('Duplicate'))).toBe(true);
-    });
+      const validation = rulesLoader.validateRulesConfig(rules)
+      expect(validation.valid).toBe(false)
+      expect(validation.errors.some(e => e.includes('Duplicate'))).toBe(true)
+    })
 
     it('should detect invalid regex patterns', async () => {
       const rules = [
@@ -590,12 +644,12 @@ describe('RulesLoader', () => {
           message: 'Test',
           enabled: true,
         },
-      ];
+      ]
 
-      const validation = rulesLoader.validateRulesConfig(rules);
-      expect(validation.valid).toBe(false);
-      expect(validation.errors.length).toBeGreaterThan(0);
-    });
+      const validation = rulesLoader.validateRulesConfig(rules)
+      expect(validation.valid).toBe(false)
+      expect(validation.errors.length).toBeGreaterThan(0)
+    })
 
     it('should validate complexity rules', async () => {
       const rules = [
@@ -607,20 +661,22 @@ describe('RulesLoader', () => {
           message: 'Test',
           enabled: true,
         },
-      ];
+      ]
 
-      const validation = rulesLoader.validateRulesConfig(rules as unknown as import('@/lib/quality-validator/rules').CustomRule[]);
-      expect(validation.valid).toBe(false);
-    });
-  });
-});
+      const validation = rulesLoader.validateRulesConfig(
+        rules as unknown as import('@/lib/quality-validator/rules').CustomRule[],
+      )
+      expect(validation.valid).toBe(false)
+    })
+  })
+})
 
 describe('RulesScoringIntegration', () => {
-  let integration: RulesScoringIntegration;
+  let integration: RulesScoringIntegration
 
   beforeEach(() => {
-    integration = new RulesScoringIntegration();
-  });
+    integration = new RulesScoringIntegration()
+  })
 
   describe('Score Adjustment', () => {
     it('should apply violations to scoring result', () => {
@@ -648,7 +704,7 @@ describe('RulesScoringIntegration', () => {
           nodeVersion: 'v18.0.0',
           configUsed: {} as any,
         },
-      };
+      }
 
       const rulesResult = {
         violations: [],
@@ -657,16 +713,14 @@ describe('RulesScoringIntegration', () => {
         scoreAdjustment: -2,
         executionTime: 50,
         rulesApplied: 1,
-      };
+      }
 
-      const { result, integration: integrationResult } = integration.applyRulesToScore(
-        scoringResult,
-        rulesResult
-      );
+      const { result, integration: integrationResult } =
+        integration.applyRulesToScore(scoringResult, rulesResult)
 
-      expect(integrationResult.adjustment).toBeLessThan(0);
-      expect(result.overall.score).toBeLessThan(100);
-    });
+      expect(integrationResult.adjustment).toBeLessThan(0)
+      expect(result.overall.score).toBeLessThan(100)
+    })
 
     it('should cap adjustment at maximum penalty', () => {
       const scoringResult: ScoringResult = {
@@ -693,7 +747,7 @@ describe('RulesScoringIntegration', () => {
           nodeVersion: 'v18.0.0',
           configUsed: {} as any,
         },
-      };
+      }
 
       const rulesResult = {
         violations: [],
@@ -702,15 +756,15 @@ describe('RulesScoringIntegration', () => {
         scoreAdjustment: -30,
         executionTime: 50,
         rulesApplied: 1,
-      };
+      }
 
       const { integration: integrationResult } = integration.applyRulesToScore(
         scoringResult,
-        rulesResult
-      );
+        rulesResult,
+      )
 
-      expect(integrationResult.adjustment).toBeGreaterThanOrEqual(-10);
-    });
+      expect(integrationResult.adjustment).toBeGreaterThanOrEqual(-10)
+    })
 
     it('should update grade based on adjusted score', () => {
       const scoringResult: ScoringResult = {
@@ -737,7 +791,7 @@ describe('RulesScoringIntegration', () => {
           nodeVersion: 'v18.0.0',
           configUsed: {} as any,
         },
-      };
+      }
 
       const rulesResult = {
         violations: [],
@@ -746,24 +800,27 @@ describe('RulesScoringIntegration', () => {
         scoreAdjustment: -5,
         executionTime: 50,
         rulesApplied: 1,
-      };
+      }
 
-      const { result } = integration.applyRulesToScore(scoringResult, rulesResult);
+      const { result } = integration.applyRulesToScore(
+        scoringResult,
+        rulesResult,
+      )
 
-      expect(result.overall.score).toBeLessThan(85);
-    });
-  });
+      expect(result.overall.score).toBeLessThan(85)
+    })
+  })
 
   describe('Configuration', () => {
     it('should update configuration', () => {
       const newConfig = {
         maxPenalty: -5,
-      };
+      }
 
-      integration.updateConfig(newConfig);
-      const config = integration.getConfig();
+      integration.updateConfig(newConfig)
+      const config = integration.getConfig()
 
-      expect(config.maxPenalty).toBe(-5);
-    });
-  });
-});
+      expect(config.maxPenalty).toBe(-5)
+    })
+  })
+})

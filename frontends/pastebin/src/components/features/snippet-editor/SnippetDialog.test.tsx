@@ -1,25 +1,30 @@
 import React from 'react'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { render, screen, waitFor } from '@/test-utils'
 import userEvent from '@testing-library/user-event'
 import { SnippetDialog } from './SnippetDialog'
 
 // Mock child components
 jest.mock('./SnippetFormFields', () => ({
-  SnippetFormFields: ({ onTitleChange, onDescriptionChange, onLanguageChange }: any) => (
+  SnippetFormFields: ({
+    onTitleChange,
+    onDescriptionChange,
+    onLanguageChange,
+  }: any) => (
     <div data-testid="snippet-form-fields">
       <input
         data-testid="title-input"
-        onChange={(e) => onTitleChange(e.target.value)}
+        onChange={e => onTitleChange(e.target.value)}
         placeholder="Title"
       />
       <textarea
         data-testid="description-input"
-        onChange={(e) => onDescriptionChange(e.target.value)}
+        onChange={e => onDescriptionChange(e.target.value)}
         placeholder="Description"
       />
       <select
         data-testid="language-select"
-        onChange={(e) => onLanguageChange(e.target.value)}
+        onChange={e => onLanguageChange(e.target.value)}
       >
         <option value="JavaScript">JavaScript</option>
         <option value="TypeScript">TypeScript</option>
@@ -34,14 +39,14 @@ jest.mock('./CodeEditorSection', () => ({
     <div data-testid="code-editor-section">
       <textarea
         data-testid="code-input"
-        onChange={(e) => onCodeChange(e.target.value)}
+        onChange={e => onCodeChange(e.target.value)}
         placeholder="Code"
       />
       <label>
         <input
           type="checkbox"
           data-testid="preview-checkbox"
-          onChange={(e) => onPreviewChange(e.target.checked)}
+          onChange={e => onPreviewChange(e.target.checked)}
         />
         Enable Preview
       </label>
@@ -50,7 +55,9 @@ jest.mock('./CodeEditorSection', () => ({
 }))
 
 jest.mock('./InputParameterList', () => ({
-  InputParameterList: () => <div data-testid="input-parameter-list">Input Parameters</div>,
+  InputParameterList: () => (
+    <div data-testid="input-parameter-list">Input Parameters</div>
+  ),
 }))
 
 // Mock useSnippetForm hook
@@ -153,6 +160,7 @@ describe('SnippetDialog Component', () => {
       expect(screen.getByTestId('code-editor-section')).toBeInTheDocument()
     })
 
+    // eslint-disable-next-line max-len
     it('renders InputParameterList when preview is enabled and language supports it', () => {
       render(<SnippetDialog {...defaultProps} />)
       // hasPreview is true and JavaScript supports preview
@@ -162,7 +170,9 @@ describe('SnippetDialog Component', () => {
     it('does not render InputParameterList when preview is disabled', () => {
       mockUseSnippetForm.hasPreview = false
       render(<SnippetDialog {...defaultProps} />)
-      expect(screen.queryByTestId('input-parameter-list')).not.toBeInTheDocument()
+      expect(
+        screen.queryByTestId('input-parameter-list'),
+      ).not.toBeInTheDocument()
     })
 
     it('does not render InputParameterList for unsupported languages', () => {
@@ -170,7 +180,9 @@ describe('SnippetDialog Component', () => {
       mockUseSnippetForm.hasPreview = true
       render(<SnippetDialog {...defaultProps} />)
       // Go is not in previewEnabledLanguages
-      expect(screen.queryByTestId('input-parameter-list')).not.toBeInTheDocument()
+      expect(
+        screen.queryByTestId('input-parameter-list'),
+      ).not.toBeInTheDocument()
     })
   })
 
@@ -241,7 +253,7 @@ describe('SnippetDialog Component', () => {
           description: 'Desc',
           language: 'JavaScript',
           code: 'code',
-        })
+        }),
       )
     })
 
@@ -303,6 +315,7 @@ describe('SnippetDialog Component', () => {
     })
 
     it('save button is keyboard accessible', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const user = userEvent.setup()
       mockUseSnippetForm.validate = jest.fn(() => true)
 
@@ -343,7 +356,9 @@ describe('SnippetDialog Component', () => {
 
   describe('Dialog State Management', () => {
     it('updates when editingSnippet prop changes', () => {
-      const { rerender } = render(<SnippetDialog {...defaultProps} editingSnippet={null} />)
+      const { rerender } = render(
+        <SnippetDialog {...defaultProps} editingSnippet={null} />,
+      )
 
       const snippet = {
         id: '1',
@@ -364,7 +379,9 @@ describe('SnippetDialog Component', () => {
 
     it('handles rapid open/close cycles', async () => {
       const user = userEvent.setup()
-      const { rerender } = render(<SnippetDialog {...defaultProps} open={true} />)
+      const { rerender } = render(
+        <SnippetDialog {...defaultProps} open={true} />,
+      )
 
       const cancelBtn = screen.getByTestId('snippet-dialog-cancel-btn')
       await user.click(cancelBtn)

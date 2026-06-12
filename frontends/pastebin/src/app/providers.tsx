@@ -1,31 +1,32 @@
-'use client';
+'use client'
 
-import { ErrorBoundary } from 'react-error-boundary';
-import { Provider } from 'react-redux';
-import { usePersistGate } from '@metabuilder/redux-persist';
-import { Toaster } from '@metabuilder/components/fakemui';
-import { store, persistor } from '@/store';
-import { ErrorFallback } from '@/components/error/ErrorFallback';
-import { NavigationProvider } from '@/components/layout/navigation/NavigationProvider';
-import { useStorageInit } from './hooks/useStorageInit';
+import { ErrorBoundary } from 'react-error-boundary'
+import { Provider } from 'react-redux'
+import { usePersistGate } from '@metabuilder/redux-persist'
+import { Toaster } from '@metabuilder/components/fakemui'
+import { store, persistor } from '@/store'
+import { ErrorFallback } from '@/components/error/ErrorFallback'
+// eslint-disable-next-line max-len
+import { NavigationProvider } from '@/components/layout/navigation/NavigationProvider'
+import { useStorageInit } from './hooks/useStorageInit'
 
 const logErrorToConsole = (error: Error, info: { componentStack?: string }) => {
-  console.error('Application Error:', error);
+  console.error('Application Error:', error)
   if (info.componentStack) {
-    console.error('Component Stack:', info.componentStack);
+    console.error('Component Stack:', info.componentStack)
   }
-};
+}
 
 function PersistGate({ children }: { children: React.ReactNode }) {
-  const isRehydrated = usePersistGate(persistor);
+  const isRehydrated = usePersistGate(persistor)
   // Render immediately — don't block on IndexedDB rehydration
-  if (!isRehydrated) return null;
-  return <>{children}</>;
+  if (!isRehydrated) return null
+  return <>{children}</>
 }
 
 function StorageInitializer() {
-  useStorageInit();
-  return null;
+  useStorageInit()
+  return null
 }
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -44,5 +45,5 @@ export function Providers({ children }: { children: React.ReactNode }) {
         </ErrorBoundary>
       </PersistGate>
     </Provider>
-  );
+  )
 }

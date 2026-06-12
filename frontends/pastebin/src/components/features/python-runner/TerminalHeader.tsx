@@ -13,13 +13,18 @@ export function TerminalHeader({
   onRun,
   isRunning,
   isInitializing,
-  waitingForInput
+  waitingForInput,
 }: TerminalHeaderProps) {
   const t = useTranslation()
   return (
     <div className={styles.header} data-testid="terminal-header">
       <div className={styles.titleGroup}>
-        <MaterialIcon name="terminal" size={18} className={styles.terminalIcon} aria-hidden="true" />
+        <MaterialIcon
+          name="terminal"
+          size={18}
+          className={styles.terminalIcon}
+          aria-hidden="true"
+        />
         <h3 className={styles.title}>{t.pythonTerminal.title}</h3>
       </div>
       <Button
@@ -27,13 +32,26 @@ export function TerminalHeader({
         disabled={isRunning || isInitializing || waitingForInput}
         size="sm"
         data-testid="run-python-btn"
-        aria-label={isRunning ? t.pythonTerminal.runningAria : isInitializing ? t.pythonTerminal.loadingAria : t.pythonTerminal.runAria}
+        aria-label={
+          isRunning
+            ? t.pythonTerminal.runningAria
+            : isInitializing
+              ? t.pythonTerminal.loadingAria
+              : t.pythonTerminal.runAria
+        }
         aria-busy={isRunning || isInitializing}
       >
         {isRunning || isInitializing ? (
           <>
-            <MaterialIcon name="progress_activity" className={styles.spinIcon} size={16} aria-hidden="true" />
-            {isInitializing ? t.pythonTerminal.loading : t.pythonTerminal.running}
+            <MaterialIcon
+              name="progress_activity"
+              className={styles.spinIcon}
+              size={16}
+              aria-hidden="true"
+            />
+            {isInitializing
+              ? t.pythonTerminal.loading
+              : t.pythonTerminal.running}
           </>
         ) : (
           <>

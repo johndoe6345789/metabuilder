@@ -18,10 +18,11 @@ export function ThemeSwitcher() {
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       data-testid="theme-switcher"
     >
-      {isDark
-        ? <MaterialIcon name="light_mode" size={18} aria-hidden="true" />
-        : <MaterialIcon name="dark_mode" size={18} aria-hidden="true" />
-      }
+      {isDark ? (
+        <MaterialIcon name="light_mode" size={18} aria-hidden="true" />
+      ) : (
+        <MaterialIcon name="dark_mode" size={18} aria-hidden="true" />
+      )}
     </button>
   )
 }

@@ -9,17 +9,17 @@ import styles from './code-editor-section.module.scss'
 
 const MonacoEditor = dynamic(
   () =>
-    import('@/components/features/snippet-editor/MonacoEditor').then(
-      (m) => ({ default: m.MonacoEditor }),
-    ),
+    import('@/components/features/snippet-editor/MonacoEditor').then(m => ({
+      default: m.MonacoEditor,
+    })),
   { ssr: false },
 )
 
 const SplitScreenEditor = dynamic(
   () =>
-    import(
-      '@/components/features/snippet-editor/SplitScreenEditor'
-    ).then((m) => ({ default: m.SplitScreenEditor })),
+    import('@/components/features/snippet-editor/SplitScreenEditor').then(
+      m => ({ default: m.SplitScreenEditor }),
+    ),
   { ssr: false },
 )
 
@@ -45,7 +45,7 @@ export function CodeEditorSection({
     appConfig.previewEnabledLanguages.includes(language) &&
     language !== 'Python'
   const activeFileContent =
-    files.find((f) => f.name === activeFile)?.content ?? code
+    files.find(f => f.name === activeFile)?.content ?? code
   const hasError = !!errors.code
 
   return (
@@ -61,7 +61,7 @@ export function CodeEditorSection({
             <Checkbox
               id="hasPreview"
               checked={hasPreview}
-              onChange={(e) => onPreviewChange(e.target.checked)}
+              onChange={e => onPreviewChange(e.target.checked)}
               data-testid="enable-preview-checkbox"
               aria-label="Enable live preview"
             />
@@ -71,6 +71,7 @@ export function CodeEditorSection({
       </div>
 
       <div
+        // eslint-disable-next-line max-len
         className={`${styles.editorWrapper}${hasError ? ` ${styles.editorWrapperError} border-destructive ring-2` : ''}`}
         data-testid="code-editor-container"
         role="region"

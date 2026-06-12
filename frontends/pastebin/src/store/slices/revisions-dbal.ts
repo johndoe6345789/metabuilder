@@ -32,7 +32,11 @@ export function getUserId(): string {
 function parseFiles(raw: unknown): SnippetFile[] | undefined {
   if (!raw) return undefined
   if (typeof raw === 'string') {
-    try { return JSON.parse(raw) } catch { return undefined }
+    try {
+      return JSON.parse(raw)
+    } catch {
+      return undefined
+    }
   }
   return raw as SnippetFile[]
 }
@@ -59,9 +63,10 @@ export function toSnippet(raw: Record<string, unknown>): Snippet {
     hasPreview: raw.hasPreview as boolean | undefined,
     isTemplate: raw.isTemplate as boolean | undefined,
     functionName: raw.functionName as string | undefined,
-    inputParameters: typeof raw.inputParameters === 'string'
-      ? JSON.parse(raw.inputParameters || '[]')
-      : (raw.inputParameters as Snippet['inputParameters']),
+    inputParameters:
+      typeof raw.inputParameters === 'string'
+        ? JSON.parse(raw.inputParameters || '[]')
+        : (raw.inputParameters as Snippet['inputParameters']),
     files: parseFiles(raw.files),
     entryPoint: raw.entryPoint as string | undefined,
     createdAt: Number(raw.createdAt) || 0,
@@ -87,7 +92,8 @@ export function buildForkBody(
     isTemplate: false,
     functionName: original.functionName ?? null,
     inputParameters: original.inputParameters
-      ? JSON.stringify(original.inputParameters) : '[]',
+      ? JSON.stringify(original.inputParameters)
+      : '[]',
     files: original.files ? JSON.stringify(original.files) : null,
     entryPoint: original.entryPoint ?? null,
     createdAt: Date.now(),

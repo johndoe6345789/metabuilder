@@ -1,16 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import type { CommandItem } from '../FileCommandPalette'
 
-export function useFileCommandPalette(
-  open: boolean,
-  commands: CommandItem[],
-) {
+export function useFileCommandPalette(open: boolean, commands: CommandItem[]) {
   const [query, setQuery] = useState('')
   const [activeIdx, setActiveIdx] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (open) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setQuery('')
       setActiveIdx(0)
       setTimeout(() => inputRef.current?.focus(), 10)
@@ -18,6 +16,7 @@ export function useFileCommandPalette(
   }, [open])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setActiveIdx(0)
   }, [query])
 
@@ -26,21 +25,19 @@ export function useFileCommandPalette(
     c.label.toLowerCase().includes(query.toLowerCase()),
   )
 
-  const groupMap: Record<
-    string,
-    { cmd: CommandItem; flatIdx: number }[]
-  > = {}
+  const groupMap: Record<string, { cmd: CommandItem; flatIdx: number }[]> = {}
   let counter = 0
   for (const cmd of filtered) {
     if (!groupMap[cmd.group]) groupMap[cmd.group] = []
     groupMap[cmd.group].push({ cmd, flatIdx: counter++ })
   }
 
-  const handleKeyDown = (
-    e: React.KeyboardEvent,
-    onClose: () => void,
-  ) => {
-    if (e.key === 'Escape') { onClose(); return }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleKeyDown = (e: React.KeyboardEvent, onClose: () => void) => {
+    if (e.key === 'Escape') {
+      onClose()
+      return
+    }
     if (e.key === 'ArrowDown') {
       e.preventDefault()
       setActiveIdx(i => Math.min(i + 1, filtered.length - 1))
@@ -52,7 +49,10 @@ export function useFileCommandPalette(
     if (e.key === 'Enter') {
       e.preventDefault()
       const cmd = filtered[activeIdx]
-      if (cmd) { cmd.action(); onClose() }
+      if (cmd) {
+        cmd.action()
+        onClose()
+      }
     }
   }
 

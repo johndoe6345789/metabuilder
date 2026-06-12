@@ -3,8 +3,8 @@ import { useRouter, useSearchParams } from 'next/navigation'
 
 function apiBase() {
   return (
-    (process.env.NEXT_PUBLIC_FLASK_BACKEND_URL ?? '')
-      .replace(/\/$/, '') || '/pastebin-api'
+    (process.env.NEXT_PUBLIC_FLASK_BACKEND_URL ?? '').replace(/\/$/, '') ||
+    '/pastebin-api'
   )
 }
 

@@ -2,6 +2,7 @@ import React from 'react'
 import { render, screen } from '@/test-utils'
 import userEvent from '@testing-library/user-event'
 import { InputsSection } from '@/components/atoms/InputsSection'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Snippet } from '@/lib/types'
 
 describe('InputsSection Component', () => {
@@ -19,12 +20,16 @@ describe('InputsSection Component', () => {
 
     it('should display the section title', () => {
       render(<InputsSection onSaveSnippet={mockOnSaveSnippet} />)
-      expect(screen.getByRole('heading', { name: 'Inputs', level: 2 })).toBeInTheDocument()
+      expect(
+        screen.getByRole('heading', { name: 'Inputs', level: 2 }),
+      ).toBeInTheDocument()
     })
 
     it('should display the section description', () => {
       render(<InputsSection onSaveSnippet={mockOnSaveSnippet} />)
-      expect(screen.getByText('Form input fields for user data entry')).toBeInTheDocument()
+      expect(
+        screen.getByText('Form input fields for user data entry'),
+      ).toBeInTheDocument()
     })
 
     it('should render ComponentShowcase with correct title', () => {
@@ -93,25 +98,35 @@ describe('InputsSection Component', () => {
 
   describe('Input Attributes', () => {
     it('should have correct input type attributes', () => {
-      const { container } = render(<InputsSection onSaveSnippet={mockOnSaveSnippet} />)
+      const { container } = render(
+        <InputsSection onSaveSnippet={mockOnSaveSnippet} />,
+      )
       const typeInputs = container.querySelectorAll('input[type="text"]')
       expect(typeInputs.length).toBeGreaterThan(0)
     })
 
     it('should have email type input', () => {
-      const { container } = render(<InputsSection onSaveSnippet={mockOnSaveSnippet} />)
+      const { container } = render(
+        <InputsSection onSaveSnippet={mockOnSaveSnippet} />,
+      )
       const emailInputs = container.querySelectorAll('input[type="email"]')
       expect(emailInputs.length).toBeGreaterThan(0)
     })
 
     it('should have password type input', () => {
-      const { container } = render(<InputsSection onSaveSnippet={mockOnSaveSnippet} />)
-      const passwordInputs = container.querySelectorAll('input[type="password"]')
+      const { container } = render(
+        <InputsSection onSaveSnippet={mockOnSaveSnippet} />,
+      )
+      const passwordInputs = container.querySelectorAll(
+        'input[type="password"]',
+      )
       expect(passwordInputs.length).toBeGreaterThan(0)
     })
 
     it('should have number type input', () => {
-      const { container } = render(<InputsSection onSaveSnippet={mockOnSaveSnippet} />)
+      const { container } = render(
+        <InputsSection onSaveSnippet={mockOnSaveSnippet} />,
+      )
       const numberInputs = container.querySelectorAll('input[type="number"]')
       expect(numberInputs.length).toBeGreaterThan(0)
     })
@@ -119,20 +134,28 @@ describe('InputsSection Component', () => {
 
   describe('Input States', () => {
     it('should have disabled input field', () => {
-      const { container } = render(<InputsSection onSaveSnippet={mockOnSaveSnippet} />)
+      const { container } = render(
+        <InputsSection onSaveSnippet={mockOnSaveSnippet} />,
+      )
       const disabledInputs = container.querySelectorAll('input[disabled]')
       expect(disabledInputs.length).toBeGreaterThan(0)
     })
 
     it('should render input with placeholder text', () => {
       render(<InputsSection onSaveSnippet={mockOnSaveSnippet} />)
-      expect(screen.getAllByPlaceholderText(/Default input|Disabled input|Search|email@example.com/).length).toBeGreaterThan(0)
+      expect(
+        screen.getAllByPlaceholderText(
+          /Default input|Disabled input|Search|email@example.com/,
+        ).length,
+      ).toBeGreaterThan(0)
     })
   })
 
   describe('Icon Integration', () => {
     it('should render search icon in search input', () => {
-      const { container } = render(<InputsSection onSaveSnippet={mockOnSaveSnippet} />)
+      const { container } = render(
+        <InputsSection onSaveSnippet={mockOnSaveSnippet} />,
+      )
       const icons = container.querySelectorAll('svg')
       expect(icons.length).toBeGreaterThan(0)
     })
@@ -166,9 +189,15 @@ describe('InputsSection Component', () => {
 
     it('should render all input demonstrations', () => {
       render(<InputsSection onSaveSnippet={mockOnSaveSnippet} />)
-      expect(screen.getAllByPlaceholderText('Default input').length).toBeGreaterThan(0)
-      expect(screen.getAllByPlaceholderText('Disabled input').length).toBeGreaterThan(0)
-      expect(screen.getAllByPlaceholderText('Text input').length).toBeGreaterThan(0)
+      expect(
+        screen.getAllByPlaceholderText('Default input').length,
+      ).toBeGreaterThan(0)
+      expect(
+        screen.getAllByPlaceholderText('Disabled input').length,
+      ).toBeGreaterThan(0)
+      expect(
+        screen.getAllByPlaceholderText('Text input').length,
+      ).toBeGreaterThan(0)
     })
   })
 
@@ -180,11 +209,15 @@ describe('InputsSection Component', () => {
 
     it('should have descriptive text', () => {
       render(<InputsSection onSaveSnippet={mockOnSaveSnippet} />)
-      expect(screen.getByText('Form input fields for user data entry')).toBeInTheDocument()
+      expect(
+        screen.getByText('Form input fields for user data entry'),
+      ).toBeInTheDocument()
     })
 
     it('should render section with proper structure', () => {
-      const { container } = render(<InputsSection onSaveSnippet={mockOnSaveSnippet} />)
+      const { container } = render(
+        <InputsSection onSaveSnippet={mockOnSaveSnippet} />,
+      )
       const section = container.querySelector('section')
       expect(section).toHaveClass('space-y-6')
     })
@@ -205,7 +238,9 @@ describe('InputsSection Component', () => {
     })
 
     it('should handle disabled input correctly', () => {
-      const { container } = render(<InputsSection onSaveSnippet={mockOnSaveSnippet} />)
+      const { container } = render(
+        <InputsSection onSaveSnippet={mockOnSaveSnippet} />,
+      )
       const disabledInputs = container.querySelectorAll('input[disabled]')
       expect(disabledInputs.length).toBeGreaterThan(0)
     })
@@ -224,8 +259,11 @@ describe('InputsSection Component', () => {
     })
 
     it('should not allow typing in disabled inputs', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const user = userEvent.setup()
-      const { container } = render(<InputsSection onSaveSnippet={mockOnSaveSnippet} />)
+      const { container } = render(
+        <InputsSection onSaveSnippet={mockOnSaveSnippet} />,
+      )
 
       const disabledInputs = container.querySelectorAll('input[disabled]')
       if (disabledInputs.length > 0) {

@@ -15,7 +15,9 @@ jest.mock('@metabuilder/components/fakemui', () => ({
     />
   ),
   FormLabel: ({ children, htmlFor, className }: any) => (
-    <label htmlFor={htmlFor} className={className}>{children}</label>
+    <label htmlFor={htmlFor} className={className}>
+      {children}
+    </label>
   ),
   FormControlLabel: ({ value, control, label }: any) => (
     <div data-value={value}>
@@ -53,25 +55,33 @@ describe('StorageOption', () => {
 
   it('radio is checked when checked prop is true', () => {
     render(<StorageOption {...defaultProps} checked={true} />)
-    const radio = screen.getByTestId('radio-storage-indexeddb') as HTMLInputElement
+    const radio = screen.getByTestId(
+      'radio-storage-indexeddb',
+    ) as HTMLInputElement
     expect(radio.checked).toBe(true)
   })
 
   it('radio is unchecked when checked prop is false', () => {
     render(<StorageOption {...defaultProps} checked={false} />)
-    const radio = screen.getByTestId('radio-storage-indexeddb') as HTMLInputElement
+    const radio = screen.getByTestId(
+      'radio-storage-indexeddb',
+    ) as HTMLInputElement
     expect(radio.checked).toBe(false)
   })
 
   it('radio is disabled when disabled prop is true', () => {
     render(<StorageOption {...defaultProps} disabled={true} />)
-    const radio = screen.getByTestId('radio-storage-indexeddb') as HTMLInputElement
+    const radio = screen.getByTestId(
+      'radio-storage-indexeddb',
+    ) as HTMLInputElement
     expect(radio.disabled).toBe(true)
   })
 
   it('radio is enabled when disabled prop is false', () => {
     render(<StorageOption {...defaultProps} disabled={false} />)
-    const radio = screen.getByTestId('radio-storage-indexeddb') as HTMLInputElement
+    const radio = screen.getByTestId(
+      'radio-storage-indexeddb',
+    ) as HTMLInputElement
     expect(radio.disabled).toBe(false)
   })
 
@@ -89,7 +99,7 @@ describe('StorageOption', () => {
         value="dbal"
         label="DBAL"
         desc="Remote server"
-      />
+      />,
     )
     expect(screen.getByText('DBAL')).toBeInTheDocument()
     expect(screen.getByText('Remote server')).toBeInTheDocument()

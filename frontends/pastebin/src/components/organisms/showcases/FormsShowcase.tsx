@@ -1,24 +1,44 @@
 import {
-  Card, Button, Input, FormLabel, Divider, MaterialIcon,
+  Card,
+  Button,
+  Input,
+  FormLabel,
+  Divider,
+  MaterialIcon,
 } from '@metabuilder/components/fakemui'
 import styles from './FormsShowcase.module.scss'
 
-const colStyle = { display: 'flex', flexDirection: 'column' as const, gap: '8px' }
-const sectionStyle = { display: 'flex', flexDirection: 'column' as const, gap: '24px' }
+const colStyle = {
+  display: 'flex',
+  flexDirection: 'column' as const,
+  gap: '8px',
+}
+const sectionStyle = {
+  display: 'flex',
+  flexDirection: 'column' as const,
+  gap: '24px',
+}
 const rowStyle = {
-  display: 'flex', alignItems: 'center',
-  justifyContent: 'space-between', gap: '16px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: '16px',
 }
 const h2Style = {
-  fontSize: '1.875rem', lineHeight: '2.25rem',
-  fontWeight: 700, marginBottom: '8px',
+  fontSize: '1.875rem',
+  lineHeight: '2.25rem',
+  fontWeight: 700,
+  marginBottom: '8px',
 }
 const h3Style = {
-  fontSize: '1.25rem', lineHeight: '1.75rem',
-  fontWeight: 600, marginBottom: '16px',
+  fontSize: '1.25rem',
+  lineHeight: '1.75rem',
+  fontWeight: 600,
+  marginBottom: '16px',
 }
 const subtextStyle = {
-  fontSize: '0.875rem', lineHeight: '1.25rem',
+  fontSize: '0.875rem',
+  lineHeight: '1.25rem',
   color: 'var(--mat-sys-on-surface-variant)',
 }
 const mutedStyle = { color: 'var(--mat-sys-on-surface-variant)' }
@@ -42,9 +62,7 @@ export function FormsShowcase() {
         <form style={sectionStyle}>
           <div>
             <h3 style={h3Style}>Create Account</h3>
-            <p style={subtextStyle}>
-              Fill in your details to get started
-            </p>
+            <p style={subtextStyle}>Fill in your details to get started</p>
           </div>
 
           <Divider />
@@ -63,16 +81,34 @@ export function FormsShowcase() {
           <div style={colStyle}>
             <FormLabel htmlFor="formEmail">Email</FormLabel>
             <div style={{ position: 'relative' }}>
-              <MaterialIcon name="mail" className={styles.inputIcon} aria-hidden="true" />
-              <Input id="formEmail" type="email" placeholder="john@example.com" className={styles.inputWithIcon} />
+              <MaterialIcon
+                name="mail"
+                className={styles.inputIcon}
+                aria-hidden="true"
+              />
+              <Input
+                id="formEmail"
+                type="email"
+                placeholder="john@example.com"
+                className={styles.inputWithIcon}
+              />
             </div>
           </div>
 
           <div style={colStyle}>
             <FormLabel htmlFor="formPassword">Password</FormLabel>
             <div style={{ position: 'relative' }}>
-              <MaterialIcon name="lock" className={styles.inputIcon} aria-hidden="true" />
-              <Input id="formPassword" type="password" placeholder="••••••••" className={styles.inputWithIcon} />
+              <MaterialIcon
+                name="lock"
+                className={styles.inputIcon}
+                aria-hidden="true"
+              />
+              <Input
+                id="formPassword"
+                type="password"
+                placeholder="••••••••"
+                className={styles.inputWithIcon}
+              />
             </div>
             <p style={subtextStyle}>Must be at least 8 characters</p>
           </div>
@@ -80,10 +116,16 @@ export function FormsShowcase() {
           <Divider />
 
           <div style={rowStyle}>
-            <Button variant="outlined" type="button">Cancel</Button>
+            <Button variant="outlined" type="button">
+              Cancel
+            </Button>
             <Button type="submit">
               Create Account
-              <MaterialIcon name="arrow_forward" style={{ marginLeft: '8px' }} aria-hidden="true" />
+              <MaterialIcon
+                name="arrow_forward"
+                style={{ marginLeft: '8px' }}
+                aria-hidden="true"
+              />
             </Button>
           </div>
         </form>

@@ -1,6 +1,11 @@
 import {
-  Button, Dialog, DialogHeader, DialogTitle,
-  DialogContent, Alert, MaterialIcon,
+  Button,
+  Dialog,
+  DialogHeader,
+  DialogTitle,
+  DialogContent,
+  Alert,
+  MaterialIcon,
 } from '@metabuilder/components/fakemui'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MarkdownRenderer } from './MarkdownRenderer'
@@ -14,7 +19,11 @@ interface AIErrorHelperProps {
   className?: string
 }
 
-export function AIErrorHelper({ error, context, className }: AIErrorHelperProps) {
+export function AIErrorHelper({
+  error,
+  context,
+  className,
+}: AIErrorHelperProps) {
   const vm = useAIErrorHelper(error, context)
   const { t } = vm
 
@@ -59,7 +68,11 @@ export function AIErrorHelper({ error, context, className }: AIErrorHelperProps)
               className={styles.dialogTitleRow}
               data-testid="ai-analysis-title"
             >
-              <MaterialIcon name="auto_awesome" className={styles.sparkleIcon} aria-hidden="true" />
+              <MaterialIcon
+                name="auto_awesome"
+                className={styles.sparkleIcon}
+                aria-hidden="true"
+              />
               {t.aiErrorHelper.dialogTitle}
             </span>
           </DialogTitle>
@@ -68,7 +81,12 @@ export function AIErrorHelper({ error, context, className }: AIErrorHelperProps)
           data-testid="ai-analysis-dialog"
           className={styles.dialogContent}
         >
-          <p style={{ color: 'var(--mat-sys-on-surface-variant)', marginBottom: '16px' }}>
+          <p
+            style={{
+              color: 'var(--mat-sys-on-surface-variant)',
+              marginBottom: '16px',
+            }}
+          >
             {t.aiErrorHelper.dialogSubtitle}
           </p>
           <div
@@ -76,14 +94,20 @@ export function AIErrorHelper({ error, context, className }: AIErrorHelperProps)
             role="region"
             aria-label="Error analysis results"
           >
-            <Alert severity="error" variant="outlined" data-testid="error-message-alert">
-              <span className={styles.errorMessageCode}>
-                {vm.errorMessage}
-              </span>
+            <Alert
+              severity="error"
+              variant="outlined"
+              data-testid="error-message-alert"
+            >
+              <span className={styles.errorMessageCode}>{vm.errorMessage}</span>
             </Alert>
             {vm.isAnalyzing && <LoadingAnalysis />}
             {vm.analysisError && (
-              <Alert severity="error" data-testid="analysis-error-alert" role="alert">
+              <Alert
+                severity="error"
+                data-testid="analysis-error-alert"
+                role="alert"
+              >
                 {vm.analysisError}
               </Alert>
             )}

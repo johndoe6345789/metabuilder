@@ -1,4 +1,10 @@
-import { getLanguageColor, LANGUAGES, LANGUAGE_COLORS, strings, appConfig } from './config'
+import {
+  getLanguageColor,
+  LANGUAGES,
+  LANGUAGE_COLORS,
+  strings,
+  appConfig,
+} from './config'
 
 describe('config', () => {
   describe('getLanguageColor', () => {
@@ -108,7 +114,7 @@ describe('config', () => {
 
     test('color format is consistent', () => {
       const colorValues = Object.values(LANGUAGE_COLORS)
-      const lengths = new Set(colorValues.map((c) => c.split(' ').length))
+      const lengths = new Set(colorValues.map(c => c.split(' ').length))
       // All colors should have similar number of parts
       expect(lengths.size).toBeGreaterThanOrEqual(1)
     })
@@ -161,12 +167,18 @@ describe('config', () => {
       for (const lang of Object.keys(appConfig.languageColors)) {
         const color = getLanguageColor(lang)
         expect(color).toBeDefined()
-        expect(color).toContain(appConfig.languageColors[lang as keyof typeof appConfig.languageColors].bg)
+        expect(color).toContain(
+          appConfig.languageColors[
+            lang as keyof typeof appConfig.languageColors
+          ].bg,
+        )
       }
     })
 
     test('LANGUAGE_COLORS matches appConfig.languageColors', () => {
-      expect(Object.keys(LANGUAGE_COLORS)).toEqual(Object.keys(appConfig.languageColors))
+      expect(Object.keys(LANGUAGE_COLORS)).toEqual(
+        Object.keys(appConfig.languageColors),
+      )
     })
 
     test('LANGUAGES array matches appConfig.languages', () => {

@@ -4,7 +4,9 @@ import { MaterialIcon } from '@metabuilder/components/fakemui'
 import type { useDebugger } from '@/hooks/useDebugger'
 import { DebugControls } from './DebugControls'
 import {
-  VariablesPanel, CallStackPanel, DebugOutput,
+  VariablesPanel,
+  CallStackPanel,
+  DebugOutput,
 } from './DebugPanelSections'
 import { DebugWatchPanel } from './DebugWatchPanel'
 import styles from './DebugPanel.module.scss'
@@ -30,8 +32,7 @@ export function DebugPanel({ language, debugger: dbg, onStart }: Props) {
         {supported ? (
           <>
             <p className={styles.idleHint}>
-              Click the gutter to set breakpoints, then start the
-              debugger.
+              Click the gutter to set breakpoints, then start the debugger.
             </p>
             <button className={styles.startBtn} onClick={onStart}>
               <MaterialIcon name="bug_report" size={16} />
@@ -40,8 +41,8 @@ export function DebugPanel({ language, debugger: dbg, onStart }: Props) {
           </>
         ) : (
           <p className={styles.idleHint}>
-            Debugger not supported for <strong>{language}</strong>.
-            Supported: Python, JavaScript, TypeScript, Go.
+            Debugger not supported for <strong>{language}</strong>. Supported:
+            Python, JavaScript, TypeScript, Go.
           </p>
         )}
         {state.status === 'error' && state.error && (

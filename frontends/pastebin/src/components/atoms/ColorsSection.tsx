@@ -67,10 +67,16 @@ export function ColorsSection() {
       aria-label="Colors palette"
     >
       <div>
-        <h2 style={{
-          fontSize: '1.875rem', lineHeight: '2.25rem',
-          fontWeight: 700, marginBottom: '8px',
-        }}>Colors</h2>
+        <h2
+          style={{
+            fontSize: '1.875rem',
+            lineHeight: '2.25rem',
+            fontWeight: 700,
+            marginBottom: '8px',
+          }}
+        >
+          Colors
+        </h2>
         <p style={{ color: 'var(--mat-sys-on-surface-variant)' }}>
           Semantic color palette with accessibility in mind
         </p>
@@ -79,7 +85,10 @@ export function ColorsSection() {
       <Card className="p-6">
         <div className={styles.colorsGrid}>
           {COLOR_SWATCHES.map(({ label, code, style }) => (
-            <div key={label} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div
+              key={label}
+              style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}
+            >
               <div style={style} />
               <div>
                 <p style={{ fontWeight: 500 }}>{label}</p>

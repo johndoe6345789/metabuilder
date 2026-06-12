@@ -8,9 +8,7 @@ import { type TerminalLine } from './useCodeTerminal'
 
 export const POLL_INTERVAL_MS = 150
 
-export function mapOutputType(
-  type: string
-): TerminalLine['type'] {
+export function mapOutputType(type: string): TerminalLine['type'] {
   const map: Record<string, TerminalLine['type']> = {
     output: 'output',
     error: 'error',
@@ -78,7 +76,12 @@ export function useCodeTerminalSession(
   }
 
   return {
-    sessionIdRef, offsetRef,
-    stopPolling, poll, startSession, submitInput, stopSession,
+    sessionIdRef,
+    offsetRef,
+    stopPolling,
+    poll,
+    startSession,
+    submitInput,
+    stopSession,
   }
 }

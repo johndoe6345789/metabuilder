@@ -18,23 +18,31 @@ export {
   MAX_FINDINGS_PER_SEVERITY,
   REPORT_FORMATS,
   TOOL_METADATA,
-} from './constants-scoring.js';
+} from './constants-scoring.js'
 
 export const COMPLEXITY_THRESHOLDS = {
-  GOOD: 10, WARNING: 20, CRITICAL: 20,
-} as const;
+  GOOD: 10,
+  WARNING: 20,
+  CRITICAL: 20,
+} as const
 
 export const DUPLICATION_THRESHOLDS = {
-  EXCELLENT: 3, GOOD: 5, WARNING: 10,
-} as const;
+  EXCELLENT: 3,
+  GOOD: 5,
+  WARNING: 10,
+} as const
 
 export const COVERAGE_THRESHOLDS = {
-  EXCELLENT: 80, ACCEPTABLE: 60, POOR: 0,
-} as const;
+  EXCELLENT: 80,
+  ACCEPTABLE: 60,
+  POOR: 0,
+} as const
 
 export const COMPONENT_SIZE_THRESHOLDS = {
-  OVERSIZED: 500, WARNING: 300, ACCEPTABLE: 200,
-} as const;
+  OVERSIZED: 500,
+  WARNING: 300,
+  ACCEPTABLE: 200,
+} as const
 
 export const COLOR_SCHEME = {
   PRIMARY: '#667eea',
@@ -45,17 +53,17 @@ export const COLOR_SCHEME = {
   INFO: '#17a2b8',
   LIGHT: '#f5f5f5',
   DARK: '#333',
-} as const;
+} as const
 
-export const MAX_COMPLEXITY_FUNCTIONS = 20;
-export const MAX_COVERAGE_GAPS = 10;
+export const MAX_COMPLEXITY_FUNCTIONS = 20
+export const MAX_COVERAGE_GAPS = 10
 
 export const COVERAGE_DATA_PATHS = [
   'coverage/coverage-final.json',
   'coverage-final.json',
   '.nyc_output/coverage-final.json',
   './coverage/coverage-final.json',
-] as const;
+] as const
 
 export const TEST_SUGGESTIONS = {
   UTILS: 'Test utility functions with various inputs',
@@ -64,13 +72,10 @@ export const TEST_SUGGESTIONS = {
     'Test component props',
     'Test component event handlers',
   ],
-  HOOKS: [
-    'Test hook initialization',
-    'Test hook state changes',
-  ],
+  HOOKS: ['Test hook initialization', 'Test hook state changes'],
   REDUX: [
     'Test reducer logic',
     'Test selector functions',
     'Test action creators',
   ],
-} as const;
+} as const

@@ -13,10 +13,7 @@ export default function LoginPage() {
   return (
     <div className={styles.page} data-testid="login-page">
       <ThemeApplier />
-      <div
-        className={styles.container}
-        data-testid="login-container"
-      >
+      <div className={styles.container} data-testid="login-container">
         <LoginBrandPanel mode={vm.mode} />
 
         <div className={styles.form}>

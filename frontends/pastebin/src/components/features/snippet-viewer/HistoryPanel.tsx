@@ -19,9 +19,7 @@ interface HistoryPanelProps {
 }
 
 export function HistoryPanel({ open, onClose, snippetId }: HistoryPanelProps) {
-  const { revisions, loading, handleRevert } = useHistoryPanel(
-    open, snippetId
-  )
+  const { revisions, loading, handleRevert } = useHistoryPanel(open, snippetId)
 
   if (!open) return null
 
@@ -30,42 +28,59 @@ export function HistoryPanel({ open, onClose, snippetId }: HistoryPanelProps) {
       <div className={styles.backdrop} onClick={onClose} aria-hidden="true" />
       <aside className={styles.panel} aria-label="Version history">
         <div className={styles.header}>
-          <MaterialIcon name="history" size={20} className={styles.headerIcon} aria-hidden="true" />
+          <MaterialIcon
+            name="history"
+            size={20}
+            className={styles.headerIcon}
+            aria-hidden="true"
+          />
           <span className={styles.headerTitle}>Version History</span>
-          <button className={styles.closeBtn} onClick={onClose} aria-label="Close history">
+          <button
+            className={styles.closeBtn}
+            onClick={onClose}
+            aria-label="Close history"
+          >
             <MaterialIcon name="close" size={20} />
           </button>
         </div>
 
         <div className={styles.list}>
-          {loading && (
-            <p className={styles.empty}>Loading…</p>
-          )}
+          {loading && <p className={styles.empty}>Loading…</p>}
           {!loading && revisions.length === 0 && (
-            <p className={styles.empty}>No history yet — edits are saved automatically.</p>
+            <p className={styles.empty}>
+              No history yet — edits are saved automatically.
+            </p>
           )}
-          {!loading && revisions.map((rev, idx) => (
-            <div key={rev.id} className={styles.row}>
-              <div className={styles.rowMeta}>
-                <span className={styles.rowTime}>{relativeTime(rev.createdAt)}</span>
-                {idx === 0 && <span className={styles.currentChip}>Current</span>}
+          {!loading &&
+            revisions.map((rev, idx) => (
+              <div key={rev.id} className={styles.row}>
+                <div className={styles.rowMeta}>
+                  <span className={styles.rowTime}>
+                    {relativeTime(rev.createdAt)}
+                  </span>
+                  {idx === 0 && (
+                    <span className={styles.currentChip}>Current</span>
+                  )}
+                </div>
+                <p className={styles.rowPreview}>
+                  {(rev.files?.[0]?.content ?? rev.code)
+                    .slice(0, 80)
+                    .replace(/\n/g, ' ') || '(empty)'}
+                </p>
+                {idx !== 0 && (
+                  <button
+                    className={styles.revertBtn}
+                    onClick={() => handleRevert(rev.id)}
+                    disabled={loading}
+                    // eslint-disable-next-line max-len
+                    aria-label={`Revert to version from ${relativeTime(rev.createdAt)}`}
+                  >
+                    <MaterialIcon name="restore" size={14} aria-hidden="true" />
+                    Revert
+                  </button>
+                )}
               </div>
-              <p className={styles.rowPreview}>
-                {(rev.files?.[0]?.content ?? rev.code).slice(0, 80).replace(/\n/g, ' ') || '(empty)'}
-              </p>
-              {idx !== 0 && (
-                <button
-                  className={styles.revertBtn}
-                  onClick={() => handleRevert(rev.id)}
-                  disabled={loading}
-                  aria-label={`Revert to version from ${relativeTime(rev.createdAt)}`}
-                >
-                  <MaterialIcon name="restore" size={14} aria-hidden="true" />
-                  Revert
-                </button>
-              )}
-            </div>
-          ))}
+            ))}
         </div>
       </aside>
     </>

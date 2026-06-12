@@ -2,7 +2,7 @@
  * Default configuration for Quality Validator
  */
 
-import { Configuration } from '../types/index.js';
+import { Configuration } from '../types/index.js'
 
 export const DEFAULT_CONFIG: Configuration = {
   projectName: 'snippet-pastebin',
@@ -132,4 +132,4 @@ export const DEFAULT_CONFIG: Configuration = {
     '.next/**',
     'build/**',
   ],
-};
+}

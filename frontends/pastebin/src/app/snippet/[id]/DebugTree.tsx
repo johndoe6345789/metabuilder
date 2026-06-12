@@ -13,8 +13,7 @@ export function DebugTree({ files, entryPointSent }: DebugTreeProps) {
       {files.map((f, i) => {
         const isLast = i === files.length - 1
         const isEntry = f.uuidName === entryPointSent
-        const isKept =
-          f.uuidName === f.originalName.split('/').pop()
+        const isKept = f.uuidName === f.originalName.split('/').pop()
         return (
           <div key={f.uuidName} className={styles.debugTreeRow}>
             <span className={styles.debugTreeBranch}>

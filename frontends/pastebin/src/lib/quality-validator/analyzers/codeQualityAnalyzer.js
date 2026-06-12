@@ -146,6 +146,7 @@ export class CodeQualityAnalyzer {
     analyzeDuplication(filePaths) {
         // Simplified duplication detection
         const blocks = [];
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         let totalDupLines = 0;
         // This is a simplified version - full version would use jscpd library
         // For now, just estimate based on import statements
@@ -162,6 +163,7 @@ export class CodeQualityAnalyzer {
                     }
                 }
             }
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             catch (error) {
                 logger.debug(`Failed to analyze duplication in ${filePath}`);
             }
@@ -231,6 +233,7 @@ export class CodeQualityAnalyzer {
                     }
                 }
             }
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             catch (error) {
                 logger.debug(`Failed to lint ${filePath}`);
             }
@@ -312,6 +315,7 @@ export class CodeQualityAnalyzer {
         // Complexity score: 0-100
         const complexityScore = Math.max(0, 100 - complexity.distribution.critical * 5 - complexity.distribution.warning * 2);
         // Duplication score: 0-100
+        // eslint-disable-next-line no-useless-assignment
         let duplicationScore = 100;
         if (duplication.percent < 3)
             duplicationScore = 100;

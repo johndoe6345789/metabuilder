@@ -2,6 +2,7 @@
  * File system utilities for Quality Validator
  * Handles file reading, writing, and path resolution
  */
+/* global process */
 import * as fs from 'fs';
 import * as path from 'path';
 import { AnalysisErrorClass } from '../types/index.js';
@@ -280,6 +281,7 @@ export function getGitRoot() {
  */
 export function getChangedFiles(since) {
     try {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports, no-undef
         const { execSync } = require('child_process');
         const cmd = since
             ? `git diff --name-only ${since}`

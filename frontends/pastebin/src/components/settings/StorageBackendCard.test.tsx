@@ -29,7 +29,7 @@ describe('StorageBackendCard', () => {
       render(<StorageBackendCard {...defaultProps} />)
 
       expect(
-        screen.getByText('Choose where your snippets are stored')
+        screen.getByText('Choose where your snippets are stored'),
       ).toBeInTheDocument()
     })
 
@@ -37,10 +37,10 @@ describe('StorageBackendCard', () => {
       render(<StorageBackendCard {...defaultProps} />)
 
       expect(
-        screen.getByText('IndexedDB (Local Browser Storage)')
+        screen.getByText('IndexedDB (Local Browser Storage)'),
       ).toBeInTheDocument()
       expect(
-        screen.getByText('DBAL Backend (Remote Server)')
+        screen.getByText('DBAL Backend (Remote Server)'),
       ).toBeInTheDocument()
     })
   })
@@ -50,7 +50,7 @@ describe('StorageBackendCard', () => {
       render(<StorageBackendCard {...defaultProps} />)
 
       expect(
-        screen.getByText('IndexedDB (Local Browser Storage)')
+        screen.getByText('IndexedDB (Local Browser Storage)'),
       ).toBeInTheDocument()
     })
 
@@ -58,28 +58,28 @@ describe('StorageBackendCard', () => {
       render(<StorageBackendCard {...defaultProps} />)
 
       expect(
-        screen.getByText(/Store snippets locally in your browser/i)
+        screen.getByText(/Store snippets locally in your browser/i),
       ).toBeInTheDocument()
     })
 
     it('should select IndexedDB when storageBackend is indexeddb', () => {
       const { container } = render(
-        <StorageBackendCard {...defaultProps} storageBackend="indexeddb" />
+        <StorageBackendCard {...defaultProps} storageBackend="indexeddb" />,
       )
 
       const indexeddbRadio = container.querySelector(
-        'input[id="storage-indexeddb"]'
+        'input[id="storage-indexeddb"]',
       ) as HTMLInputElement
       expect(indexeddbRadio?.checked).toBe(true)
     })
 
     it('should not select IndexedDB when storageBackend is dbal', () => {
       const { container } = render(
-        <StorageBackendCard {...defaultProps} storageBackend="dbal" />
+        <StorageBackendCard {...defaultProps} storageBackend="dbal" />,
       )
 
       const indexeddbRadio = container.querySelector(
-        'input[id="storage-indexeddb"]'
+        'input[id="storage-indexeddb"]',
       ) as HTMLInputElement
       expect(indexeddbRadio?.checked).toBe(false)
     })
@@ -90,7 +90,7 @@ describe('StorageBackendCard', () => {
       render(<StorageBackendCard {...defaultProps} />)
 
       expect(
-        screen.getByText('DBAL Backend (Remote Server)')
+        screen.getByText('DBAL Backend (Remote Server)'),
       ).toBeInTheDocument()
     })
 
@@ -98,42 +98,39 @@ describe('StorageBackendCard', () => {
       render(<StorageBackendCard {...defaultProps} />)
 
       expect(
-        screen.getByText(/Store snippets on a DBAL backend server/i)
+        screen.getByText(/Store snippets on a DBAL backend server/i),
       ).toBeInTheDocument()
     })
 
     it('should select DBAL when storageBackend is dbal', () => {
       const { container } = render(
-        <StorageBackendCard {...defaultProps} storageBackend="dbal" />
+        <StorageBackendCard {...defaultProps} storageBackend="dbal" />,
       )
 
       const dbalRadio = container.querySelector(
-        'input[id="storage-dbal"]'
+        'input[id="storage-dbal"]',
       ) as HTMLInputElement
       expect(dbalRadio?.checked).toBe(true)
     })
 
     it('should not select DBAL when storageBackend is indexeddb', () => {
-      const { container } = render(
-        <StorageBackendCard {...defaultProps} />
-      )
+      const { container } = render(<StorageBackendCard {...defaultProps} />)
 
       const dbalRadio = container.querySelector(
-        'input[id="storage-dbal"]'
+        'input[id="storage-dbal"]',
       ) as HTMLInputElement
       expect(dbalRadio?.checked).toBe(false)
     })
   })
 
   describe('backend selection', () => {
+    // eslint-disable-next-line max-len
     it('should call onStorageBackendChange when IndexedDB is selected', async () => {
       const user = userEvent.setup()
-      render(
-        <StorageBackendCard {...defaultProps} storageBackend="dbal" />
-      )
+      render(<StorageBackendCard {...defaultProps} storageBackend="dbal" />)
 
       const indexeddbRadio = screen.getByRole('radio', {
-        name: /IndexedDB/i
+        name: /IndexedDB/i,
       })
       await user.click(indexeddbRadio)
 
@@ -145,7 +142,7 @@ describe('StorageBackendCard', () => {
       render(<StorageBackendCard {...defaultProps} />)
 
       const dbalRadio = screen.getByRole('radio', {
-        name: /DBAL Backend/i
+        name: /DBAL Backend/i,
       })
       await user.click(dbalRadio)
 
@@ -158,28 +155,26 @@ describe('StorageBackendCard', () => {
       render(<StorageBackendCard {...defaultProps} envVarSet={true} />)
 
       expect(
-        screen.getByText(/Storage backend is configured via/i)
+        screen.getByText(/Storage backend is configured via/i),
       ).toBeInTheDocument()
     })
 
     it('should show env var name in alert', () => {
       render(<StorageBackendCard {...defaultProps} envVarSet={true} />)
 
-      expect(
-        screen.getByText('NEXT_PUBLIC_DBAL_API_URL')
-      ).toBeInTheDocument()
+      expect(screen.getByText('NEXT_PUBLIC_DBAL_API_URL')).toBeInTheDocument()
     })
 
     it('should disable backend selection when envVarSet is true', () => {
       const { container } = render(
-        <StorageBackendCard {...defaultProps} envVarSet={true} />
+        <StorageBackendCard {...defaultProps} envVarSet={true} />,
       )
 
       const indexeddbRadio = container.querySelector(
-        'input[id="storage-indexeddb"]'
+        'input[id="storage-indexeddb"]',
       ) as HTMLInputElement
       const dbalRadio = container.querySelector(
-        'input[id="storage-dbal"]'
+        'input[id="storage-dbal"]',
       ) as HTMLInputElement
 
       expect(indexeddbRadio?.disabled).toBe(true)
@@ -190,7 +185,7 @@ describe('StorageBackendCard', () => {
       render(<StorageBackendCard {...defaultProps} envVarSet={true} />)
 
       const saveButton = screen.getByRole('button', {
-        name: /Save Storage Settings/i
+        name: /Save Storage Settings/i,
       })
       expect(saveButton).toBeDisabled()
     })
@@ -202,8 +197,8 @@ describe('StorageBackendCard', () => {
 
       expect(
         screen.getByRole('button', {
-          name: /Save Storage Settings/i
-        })
+          name: /Save Storage Settings/i,
+        }),
       ).toBeInTheDocument()
     })
 
@@ -212,7 +207,7 @@ describe('StorageBackendCard', () => {
       render(<StorageBackendCard {...defaultProps} envVarSet={false} />)
 
       const saveButton = screen.getByRole('button', {
-        name: /Save Storage Settings/i
+        name: /Save Storage Settings/i,
       })
       await user.click(saveButton)
 
@@ -223,7 +218,7 @@ describe('StorageBackendCard', () => {
       render(<StorageBackendCard {...defaultProps} envVarSet={false} />)
 
       const saveButton = screen.getByRole('button', {
-        name: /Save Storage Settings/i
+        name: /Save Storage Settings/i,
       })
       expect(saveButton).not.toBeDisabled()
     })
@@ -232,20 +227,15 @@ describe('StorageBackendCard', () => {
       const user = userEvent.setup()
       const slowSave = jest.fn(
         () =>
-          new Promise<void>((resolve) => {
+          new Promise<void>(resolve => {
             setTimeout(resolve, 100)
-          })
+          }),
       )
 
-      render(
-        <StorageBackendCard
-          {...defaultProps}
-          onSaveConfig={slowSave}
-        />
-      )
+      render(<StorageBackendCard {...defaultProps} onSaveConfig={slowSave} />)
 
       const saveButton = screen.getByRole('button', {
-        name: /Save Storage Settings/i
+        name: /Save Storage Settings/i,
       })
       await user.click(saveButton)
 
@@ -256,38 +246,36 @@ describe('StorageBackendCard', () => {
   describe('state transitions', () => {
     it('should transition from IndexedDB to DBAL', () => {
       const { rerender } = render(
-        <StorageBackendCard {...defaultProps} storageBackend="indexeddb" />
+        <StorageBackendCard {...defaultProps} storageBackend="indexeddb" />,
       )
 
-      rerender(
-        <StorageBackendCard {...defaultProps} storageBackend="dbal" />
-      )
+      rerender(<StorageBackendCard {...defaultProps} storageBackend="dbal" />)
 
       const { container } = render(
-        <StorageBackendCard {...defaultProps} storageBackend="dbal" />
+        <StorageBackendCard {...defaultProps} storageBackend="dbal" />,
       )
 
       const dbalRadio = container.querySelector(
-        'input[id="storage-dbal"]'
+        'input[id="storage-dbal"]',
       ) as HTMLInputElement
       expect(dbalRadio?.checked).toBe(true)
     })
 
     it('should transition from DBAL to IndexedDB', () => {
       const { rerender } = render(
-        <StorageBackendCard {...defaultProps} storageBackend="dbal" />
+        <StorageBackendCard {...defaultProps} storageBackend="dbal" />,
       )
 
       rerender(
-        <StorageBackendCard {...defaultProps} storageBackend="indexeddb" />
+        <StorageBackendCard {...defaultProps} storageBackend="indexeddb" />,
       )
 
       const { container } = render(
-        <StorageBackendCard {...defaultProps} storageBackend="indexeddb" />
+        <StorageBackendCard {...defaultProps} storageBackend="indexeddb" />,
       )
 
       const indexeddbRadio = container.querySelector(
-        'input[id="storage-indexeddb"]'
+        'input[id="storage-indexeddb"]',
       ) as HTMLInputElement
       expect(indexeddbRadio?.checked).toBe(true)
     })
@@ -298,10 +286,10 @@ describe('StorageBackendCard', () => {
       render(<StorageBackendCard {...defaultProps} />)
 
       expect(
-        screen.getByLabelText(/IndexedDB \(Local Browser Storage\)/i)
+        screen.getByLabelText(/IndexedDB \(Local Browser Storage\)/i),
       ).toBeInTheDocument()
       expect(
-        screen.getByLabelText(/DBAL Backend \(Remote Server\)/i)
+        screen.getByLabelText(/DBAL Backend \(Remote Server\)/i),
       ).toBeInTheDocument()
     })
   })

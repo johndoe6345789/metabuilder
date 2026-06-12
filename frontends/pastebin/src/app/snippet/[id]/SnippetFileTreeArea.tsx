@@ -28,32 +28,63 @@ interface Props {
 }
 
 export function SnippetFileTreeArea({
-  files, activeFile, langBgClass, renaming, renameValue,
-  addingFile, newFileName, menuFile, snippetTitle, newFileInputRef,
-  onOpenInTab, onSetRenameValue, onCommitRename, onCancelRename,
-  onNewFile, onMenuToggle, onNewFileNameChange,
-  onCommitNewFile, onCancelNewFile,
+  files,
+  activeFile,
+  langBgClass,
+  renaming,
+  renameValue,
+  addingFile,
+  newFileName,
+  menuFile,
+  snippetTitle,
+  newFileInputRef,
+  onOpenInTab,
+  onSetRenameValue,
+  onCommitRename,
+  onCancelRename,
+  onNewFile,
+  onMenuToggle,
+  onNewFileNameChange,
+  onCommitNewFile,
+  onCancelNewFile,
 }: Props) {
   return (
     <SnippetFileTree
-      files={files} activeFile={activeFile} langBgClass={langBgClass}
-      renaming={renaming} renameValue={renameValue}
-      addingFile={addingFile} newFileName={newFileName}
-      menuFile={menuFile} snippetTitle={snippetTitle}
+      files={files}
+      activeFile={activeFile}
+      langBgClass={langBgClass}
+      renaming={renaming}
+      renameValue={renameValue}
+      addingFile={addingFile}
+      newFileName={newFileName}
+      menuFile={menuFile}
+      snippetTitle={snippetTitle}
       newFileInputRef={newFileInputRef}
       onOpenInTab={onOpenInTab}
       onSetRenameValue={onSetRenameValue}
       onRenameKeyDown={e => {
-        if (e.key === 'Enter') { e.preventDefault(); onCommitRename() }
-        if (e.key === 'Escape') { e.preventDefault(); onCancelRename() }
+        if (e.key === 'Enter') {
+          e.preventDefault()
+          onCommitRename()
+        }
+        if (e.key === 'Escape') {
+          e.preventDefault()
+          onCancelRename()
+        }
       }}
       onCommitRename={onCommitRename}
       onNewFile={onNewFile}
       onMenuToggle={onMenuToggle}
       onNewFileNameChange={onNewFileNameChange}
       onNewFileKeyDown={e => {
-        if (e.key === 'Enter') { e.preventDefault(); onCommitNewFile() }
-        if (e.key === 'Escape') { e.preventDefault(); onCancelNewFile() }
+        if (e.key === 'Enter') {
+          e.preventDefault()
+          onCommitNewFile()
+        }
+        if (e.key === 'Escape') {
+          e.preventDefault()
+          onCancelNewFile()
+        }
       }}
       onCommitNewFile={onCommitNewFile}
     />

@@ -1,7 +1,10 @@
 import { createSlice, type Action } from '@reduxjs/toolkit'
 import { setAuthToken } from '@/lib/authToken'
 import {
-  loginUser, registerUser, validateToken, onFulfilled,
+  loginUser,
+  registerUser,
+  validateToken,
+  onFulfilled,
   isTokenValid,
 } from './authThunks'
 import type { AuthUser, AuthState } from './authThunks'
@@ -37,26 +40,28 @@ const authSlice = createSlice({
       state.error = null
       setAuthToken(null)
     },
-    clearError(state) { state.error = null },
+    clearError(state) {
+      state.error = null
+    },
     seedToken(state) {
       if (state.token) setAuthToken(state.token)
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(loginUser.pending,    onPending)
-      .addCase(loginUser.fulfilled,  onFulfilled)
-      .addCase(loginUser.rejected,   onRejected)
-      .addCase(registerUser.pending,   onPending)
+      .addCase(loginUser.pending, onPending)
+      .addCase(loginUser.fulfilled, onFulfilled)
+      .addCase(loginUser.rejected, onRejected)
+      .addCase(registerUser.pending, onPending)
       .addCase(registerUser.fulfilled, onFulfilled)
-      .addCase(registerUser.rejected,  onRejected)
+      .addCase(registerUser.rejected, onRejected)
       .addCase(validateToken.fulfilled, (state, action) => {
         state.user = action.payload.user
         state.token = action.payload.token
         state.isAuthenticated = true
         setAuthToken(action.payload.token)
       })
-      .addCase(validateToken.rejected, (state) => {
+      .addCase(validateToken.rejected, state => {
         state.user = null
         state.token = null
         state.isAuthenticated = false
@@ -64,7 +69,7 @@ const authSlice = createSlice({
       })
       .addMatcher(
         (action: Action) => action.type === 'persist/REHYDRATE',
-        (state) => {
+        state => {
           state.error = null
           state.loading = false
           if (state.token && !isTokenValid(state.token)) {

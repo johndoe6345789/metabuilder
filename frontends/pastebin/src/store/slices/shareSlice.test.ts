@@ -33,7 +33,7 @@ describe('shareSlice', () => {
       const store = makeStore()
       store.dispatch(
         // @ts-expect-error – inject error via rejected action
-        generateShareToken.rejected(null, '', 'snip-1', 'Network error')
+        generateShareToken.rejected(null, '', 'snip-1', 'Network error'),
       )
       store.dispatch(clearShareError())
       expect(store.getState().share.error).toBeNull()
@@ -52,8 +52,12 @@ describe('shareSlice', () => {
       const store = makeStore()
       store.dispatch(generateShareToken.pending('req', 'snip-1'))
       store.dispatch(
-        // @ts-expect-error
-        generateShareToken.fulfilled({ snippetId: 'snip-1', token: 'tok' }, 'req', 'snip-1')
+        // @ts-expect-error testing with invalid payload shape
+        generateShareToken.fulfilled(
+          { snippetId: 'snip-1', token: 'tok' },
+          'req',
+          'snip-1',
+        ),
       )
       expect(store.getState().share.loading).toBe(false)
     })
@@ -61,8 +65,8 @@ describe('shareSlice', () => {
     it('sets error on rejected', () => {
       const store = makeStore()
       store.dispatch(
-        // @ts-expect-error
-        generateShareToken.rejected(null, '', 'snip-1', 'Failed')
+        // @ts-expect-error testing with invalid payload shape
+        generateShareToken.rejected(null, '', 'snip-1', 'Failed'),
       )
       const state = store.getState().share
       expect(state.loading).toBe(false)
@@ -78,7 +82,7 @@ describe('shareSlice', () => {
       await store.dispatch(generateShareToken('snip-1'))
       expect(global.fetch).toHaveBeenCalledWith(
         expect.stringContaining('snip-1'),
-        expect.objectContaining({ method: 'PUT' })
+        expect.objectContaining({ method: 'PUT' }),
       )
       expect(store.getState().share.loading).toBe(false)
     })
@@ -112,8 +116,8 @@ describe('shareSlice', () => {
     it('clears loading on fulfilled', () => {
       const store = makeStore()
       store.dispatch(
-        // @ts-expect-error
-        revokeShareToken.fulfilled('snip-1', 'req', 'snip-1')
+        // @ts-expect-error testing with invalid payload shape
+        revokeShareToken.fulfilled('snip-1', 'req', 'snip-1'),
       )
       expect(store.getState().share.loading).toBe(false)
     })
@@ -121,19 +125,24 @@ describe('shareSlice', () => {
     it('sets error on rejected', () => {
       const store = makeStore()
       store.dispatch(
-        // @ts-expect-error
-        revokeShareToken.rejected(null, '', 'snip-1', 'Failed to revoke')
+        // @ts-expect-error testing with invalid payload shape
+        revokeShareToken.rejected(null, '', 'snip-1', 'Failed to revoke'),
       )
       expect(store.getState().share.error).toBe('Failed to revoke')
     })
 
     it('sends PUT with null shareToken', async () => {
-      global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => ({}) })
+      global.fetch = jest
+        .fn()
+        .mockResolvedValue({ ok: true, json: async () => ({}) })
       const store = makeStore()
       await store.dispatch(revokeShareToken('snip-2'))
       expect(global.fetch).toHaveBeenCalledWith(
         expect.stringContaining('snip-2'),
-        expect.objectContaining({ method: 'PUT', body: expect.stringContaining('null') })
+        expect.objectContaining({
+          method: 'PUT',
+          body: expect.stringContaining('null'),
+        }),
       )
     })
   })
@@ -159,17 +168,19 @@ describe('shareSlice', () => {
         shareToken: 'share-tok',
       }
       store.dispatch(
-        // @ts-expect-error
-        fetchSharedSnippet.fulfilled(snippet, 'req', 'share-tok')
+        // @ts-expect-error testing with invalid payload shape
+        fetchSharedSnippet.fulfilled(snippet, 'req', 'share-tok'),
       )
-      expect(store.getState().share.sharedSnippets['share-tok']).toEqual(snippet)
+      expect(store.getState().share.sharedSnippets['share-tok']).toEqual(
+        snippet,
+      )
     })
 
     it('does not store snippet when payload is null', () => {
       const store = makeStore()
       store.dispatch(
-        // @ts-expect-error
-        fetchSharedSnippet.fulfilled(null, 'req', 'share-tok')
+        // @ts-expect-error testing with invalid payload shape
+        fetchSharedSnippet.fulfilled(null, 'req', 'share-tok'),
       )
       expect(store.getState().share.sharedSnippets['share-tok']).toBeUndefined()
     })
@@ -177,16 +188,23 @@ describe('shareSlice', () => {
     it('sets error on rejected', () => {
       const store = makeStore()
       store.dispatch(
-        // @ts-expect-error
-        fetchSharedSnippet.rejected(null, '', 'share-tok', 'Not found')
+        // @ts-expect-error testing with invalid payload shape
+        fetchSharedSnippet.rejected(null, '', 'share-tok', 'Not found'),
       )
       expect(store.getState().share.error).toBe('Not found')
     })
 
     it('fetches and parses snippet from DBAL on success', async () => {
       const raw = {
-        id: 's2', title: 'T', description: '', code: 'x=1', language: 'python',
-        category: 'g', createdAt: '1000', updatedAt: '1000', shareToken: 'abc',
+        id: 's2',
+        title: 'T',
+        description: '',
+        code: 'x=1',
+        language: 'python',
+        category: 'g',
+        createdAt: '1000',
+        updatedAt: '1000',
+        shareToken: 'abc',
       }
       global.fetch = jest.fn().mockResolvedValue({
         ok: true,

@@ -3,8 +3,8 @@
  * Integrates custom rules violations into the overall scoring system
  */
 
-import { ComponentScores, ScoringResult } from '../types/index.js';
-import type { RulesExecutionResult } from './RulesEngine.js';
+import { ComponentScores, ScoringResult } from '../types/index.js'
+import type { RulesExecutionResult } from './RulesEngine.js'
 import {
   calculateAdjustment,
   adjustComponentScores,
@@ -13,17 +13,17 @@ import {
   buildSummary,
   buildAdjustmentReason,
   violationsToFindings,
-} from './rules-scoring-calc.js';
+} from './rules-scoring-calc.js'
 
 export interface RulesScoringConfig {
-  enableIntegration: boolean;
-  maxPenalty: number;
+  enableIntegration: boolean
+  maxPenalty: number
   severityWeights: {
-    critical: number;
-    warning: number;
-    info: number;
-  };
-  adjustmentMode: 'direct' | 'percentage';
+    critical: number
+    warning: number
+    info: number
+  }
+  adjustmentMode: 'direct' | 'percentage'
 }
 
 export const DEFAULT_RULES_SCORING_CONFIG: RulesScoringConfig = {
@@ -31,26 +31,26 @@ export const DEFAULT_RULES_SCORING_CONFIG: RulesScoringConfig = {
   maxPenalty: -10,
   severityWeights: { critical: -2, warning: -1, info: -0.5 },
   adjustmentMode: 'direct',
-};
+}
 
 export interface RulesScoringResult {
-  originalScore: number;
-  adjustedScore: number;
-  adjustment: number;
-  adjustmentReason: string;
+  originalScore: number
+  adjustedScore: number
+  adjustment: number
+  adjustmentReason: string
   violationsSummary: {
-    total: number;
-    critical: number;
-    warning: number;
-    info: number;
-  };
+    total: number
+    critical: number
+    warning: number
+    info: number
+  }
 }
 
 export class RulesScoringIntegration {
-  private config: RulesScoringConfig;
+  private config: RulesScoringConfig
 
   constructor(config: Partial<RulesScoringConfig> = {}) {
-    this.config = { ...DEFAULT_RULES_SCORING_CONFIG, ...config };
+    this.config = { ...DEFAULT_RULES_SCORING_CONFIG, ...config }
   }
 
   applyRulesToScore(
@@ -69,22 +69,22 @@ export class RulesScoringIntegration {
           ...rulesResult.violationsBySeverity,
         },
       },
-    };
+    }
 
     if (!this.config.enableIntegration || rulesResult.totalViolations === 0) {
-      return noOp;
+      return noOp
     }
 
     const adjustment = calculateAdjustment(
       rulesResult.violationsBySeverity,
       this.config,
-    );
+    )
     const adjCS = adjustComponentScores(
       scoringResult.componentScores as ComponentScores,
       adjustment,
-    );
-    const newScore = calcAdjustedOverall(adjCS);
-    const grade = assignGrade(newScore);
+    )
+    const newScore = calcAdjustedOverall(adjCS)
+    const grade = assignGrade(newScore)
 
     const adjustedResult: ScoringResult = {
       ...scoringResult,
@@ -100,7 +100,7 @@ export class RulesScoringIntegration {
         ...scoringResult.findings,
         ...violationsToFindings(rulesResult.violations),
       ],
-    };
+    }
 
     return {
       result: adjustedResult,
@@ -117,16 +117,16 @@ export class RulesScoringIntegration {
           ...rulesResult.violationsBySeverity,
         },
       },
-    };
+    }
   }
 
   updateConfig(config: Partial<RulesScoringConfig>): void {
-    this.config = { ...this.config, ...config };
+    this.config = { ...this.config, ...config }
   }
 
   getConfig(): RulesScoringConfig {
-    return { ...this.config };
+    return { ...this.config }
   }
 }
 
-export default RulesScoringIntegration;
+export default RulesScoringIntegration

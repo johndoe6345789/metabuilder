@@ -4,11 +4,12 @@ import { DataTablesShowcase } from './showcases/DataTablesShowcase'
 import { FormsShowcase } from './showcases/FormsShowcase'
 import { TaskListsShowcase } from './showcases/TaskListsShowcase'
 import { ContentGridsShowcase } from './showcases/ContentGridsShowcase'
+// eslint-disable-next-line max-len
 import { SidebarNavigationShowcase } from './showcases/SidebarNavigationShowcase'
 
 interface OrganismsSectionProps {
   onSaveSnippet: (
-    snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>
+    snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>,
   ) => void
 }
 

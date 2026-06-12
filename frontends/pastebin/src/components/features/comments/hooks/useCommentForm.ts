@@ -10,7 +10,7 @@ export interface CommentFormState {
 }
 
 export function useCommentForm(
-  onSubmit: (content: string) => Promise<void>
+  onSubmit: (content: string) => Promise<void>,
 ): CommentFormState {
   const [content, setContent] = useState('')
   const [preview, setPreview] = useState(false)

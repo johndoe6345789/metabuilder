@@ -1,7 +1,8 @@
 import { lazy, Suspense, useEffect, useRef, type CSSProperties } from 'react'
 import { Skeleton } from '@metabuilder/components/fakemui'
 import {
-  configureMonacoTypeScript, getMonacoLanguage,
+  configureMonacoTypeScript,
+  getMonacoLanguage,
 } from '@/lib/monaco-config'
 import type { Monaco } from '@monaco-editor/react'
 import type { editor as MonacoEditor } from 'monaco-editor'
@@ -11,9 +12,15 @@ import { selectTheme } from '@/store/selectors'
 const Editor = lazy(() => import('@monaco-editor/react'))
 
 const srOnly: CSSProperties = {
-  position: 'absolute', width: 1, height: 1,
-  padding: 0, margin: -1, overflow: 'hidden',
-  clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap', border: 0,
+  position: 'absolute',
+  width: 1,
+  height: 1,
+  padding: 0,
+  margin: -1,
+  overflow: 'hidden',
+  clip: 'rect(0,0,0,0)',
+  whiteSpace: 'nowrap',
+  border: 0,
 }
 
 interface MonacoEditorProps {
@@ -36,7 +43,8 @@ function EditorLoadingSkeleton({ height = '400px' }: { height?: string }) {
     <div
       style={{ height, display: 'flex', flexDirection: 'column', gap: 8 }}
       data-testid="monaco-editor-skeleton"
-      role="status" aria-busy="true"
+      role="status"
+      aria-busy="true"
     >
       <Skeleton style={{ flex: 1, width: '100%', borderRadius: 6 }} />
     </div>
@@ -62,9 +70,9 @@ export function MonacoEditor({
   const theme = useAppSelector(selectTheme)
   const monacoTheme = theme === 'dark' ? 'vs-dark' : 'vs'
 
-  const editorRef  = useRef<MonacoEditor.IStandaloneCodeEditor | null>(null)
-  const monacoRef  = useRef<Monaco | null>(null)
-  const bpDeclIds  = useRef<string[]>([])
+  const editorRef = useRef<MonacoEditor.IStandaloneCodeEditor | null>(null)
+  const monacoRef = useRef<Monaco | null>(null)
+  const bpDeclIds = useRef<string[]>([])
   const currDeclId = useRef<string[]>([])
 
   // Re-render breakpoint and current-line decorations whenever they change
@@ -73,7 +81,8 @@ export function MonacoEditor({
     const monaco = monacoRef.current
     if (!editor || !monaco) return
 
-    bpDeclIds.current = editor.deltaDecorations(bpDeclIds.current,
+    bpDeclIds.current = editor.deltaDecorations(
+      bpDeclIds.current,
       (breakpoints ?? []).map(line => ({
         range: new monaco.Range(line, 1, line, 1),
         options: {
@@ -85,16 +94,21 @@ export function MonacoEditor({
       })),
     )
 
-    currDeclId.current = editor.deltaDecorations(currDeclId.current,
-      currentDebugLine ? [{
-        range: new monaco.Range(currentDebugLine, 1, currentDebugLine, 1),
-        options: {
-          isWholeLine: true,
-          className: 'dbg-current-line',
-          glyphMarginClassName: 'dbg-current-arrow',
-          overviewRuler: { color: '#ffcc00', position: 1 },
-        },
-      }] : [],
+    currDeclId.current = editor.deltaDecorations(
+      currDeclId.current,
+      currentDebugLine
+        ? [
+            {
+              range: new monaco.Range(currentDebugLine, 1, currentDebugLine, 1),
+              options: {
+                isWholeLine: true,
+                className: 'dbg-current-line',
+                glyphMarginClassName: 'dbg-current-arrow',
+                overviewRuler: { color: '#ffcc00', position: 1 },
+              },
+            },
+          ]
+        : [],
     )
   }, [breakpoints, currentDebugLine])
 
@@ -102,8 +116,8 @@ export function MonacoEditor({
     editor: MonacoEditor.IStandaloneCodeEditor,
     monaco: Monaco,
   ) => {
-    editorRef.current  = editor
-    monacoRef.current  = monaco
+    editorRef.current = editor
+    monacoRef.current = monaco
 
     editor.onMouseDown(e => {
       if (!onToggleBreakpoint) return
@@ -116,8 +130,8 @@ export function MonacoEditor({
   }
 
   const editorLabel =
-    `Code editor (${readOnly ? 'read-only' : 'editable'}`
-    + `, ${monacoLanguage} language)`
+    `Code editor (${readOnly ? 'read-only' : 'editable'}` +
+    `, ${monacoLanguage} language)`
 
   return (
     <Suspense fallback={<EditorLoadingSkeleton height={height} />}>
@@ -134,7 +148,9 @@ export function MonacoEditor({
       >
         <div
           style={srOnly}
-          role="status" aria-live="polite" aria-atomic="true"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
           data-testid="monaco-editor-status"
         >
           {`Code editor loaded with ${monacoLanguage} syntax highlighting. `}
@@ -144,7 +160,7 @@ export function MonacoEditor({
           height={height}
           language={monacoLanguage}
           value={value}
-          onChange={(newValue) => onChange(newValue || '')}
+          onChange={newValue => onChange(newValue || '')}
           theme={monacoTheme}
           beforeMount={handleEditorBeforeMount}
           onMount={handleMount}
@@ -153,8 +169,9 @@ export function MonacoEditor({
             fontSize: 14,
             lineNumbers: 'on',
             glyphMargin: !!(
-              onToggleBreakpoint
-              || breakpoints?.length || currentDebugLine
+              onToggleBreakpoint ||
+              breakpoints?.length ||
+              currentDebugLine
             ),
             scrollBeyondLastLine: false,
             automaticLayout: true,
@@ -162,7 +179,9 @@ export function MonacoEditor({
             wordWrap,
             readOnly,
             scrollbar: {
-              vertical: 'auto', horizontal: 'auto', useShadows: false,
+              vertical: 'auto',
+              horizontal: 'auto',
+              useShadows: false,
             },
             padding: { top: 12, bottom: 12 },
             fontFamily: 'JetBrains Mono, monospace',

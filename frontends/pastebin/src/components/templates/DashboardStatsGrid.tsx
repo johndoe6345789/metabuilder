@@ -78,9 +78,7 @@ interface DashboardStatsGridProps {
   className: string
 }
 
-export function DashboardStatsGrid({
-  className,
-}: DashboardStatsGridProps) {
+export function DashboardStatsGrid({ className }: DashboardStatsGridProps) {
   return (
     <div className={className}>
       {STATS.map(s => (

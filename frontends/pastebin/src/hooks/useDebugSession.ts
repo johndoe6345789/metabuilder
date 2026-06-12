@@ -15,9 +15,9 @@ export function useDebugSession(
   onDone: () => void,
 ) {
   const sessionIdRef = useRef<string | null>(null)
-  const offsetRef    = useRef(0)
-  const timerRef     = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const activeRef    = useRef(false)
+  const offsetRef = useRef(0)
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const activeRef = useRef(false)
 
   function stopPolling() {
     activeRef.current = false
@@ -54,9 +54,9 @@ export function useDebugSession(
   }): Promise<StartDebugResult> {
     const result = await startDebugSession(opts)
     sessionIdRef.current = result.session_id
-    offsetRef.current    = 0
-    activeRef.current    = true
-    timerRef.current     = setTimeout(poll, POLL_MS)
+    offsetRef.current = 0
+    activeRef.current = true
+    timerRef.current = setTimeout(poll, POLL_MS)
     return result
   }
 

@@ -5,7 +5,14 @@ import { FileTreeItem } from './FileTreeItem'
 import type { SnippetFile } from '@/lib/types'
 
 jest.mock('@metabuilder/components/fakemui', () => ({
-  Input: ({ value, onChange, onKeyDown, autoFocus, 'aria-label': ariaLabel, 'data-testid': testId }: any) => (
+  Input: ({
+    value,
+    onChange,
+    onKeyDown,
+    autoFocus,
+    'aria-label': ariaLabel,
+    'data-testid': testId,
+  }: any) => (
     <input
       value={value}
       onChange={onChange}
@@ -72,7 +79,9 @@ describe('FileTreeItem', () => {
 
     it('renders delete button', () => {
       render(<FileTreeItem {...defaultProps} />)
-      expect(screen.getByTestId('file-tree-delete-index.ts')).toBeInTheDocument()
+      expect(
+        screen.getByTestId('file-tree-delete-index.ts'),
+      ).toBeInTheDocument()
     })
 
     it('disables delete button when fileCount is 1', () => {
@@ -119,7 +128,9 @@ describe('FileTreeItem', () => {
 
     it('does not render file button in rename mode', () => {
       render(<FileTreeItem {...renamingProps} />)
-      expect(screen.queryByTestId('file-tree-btn-index.ts')).not.toBeInTheDocument()
+      expect(
+        screen.queryByTestId('file-tree-btn-index.ts'),
+      ).not.toBeInTheDocument()
     })
 
     it('renders confirm and cancel buttons in rename mode', () => {
@@ -130,12 +141,16 @@ describe('FileTreeItem', () => {
 
     it('does not render delete button in rename mode', () => {
       render(<FileTreeItem {...renamingProps} />)
-      expect(screen.queryByTestId('file-tree-delete-index.ts')).not.toBeInTheDocument()
+      expect(
+        screen.queryByTestId('file-tree-delete-index.ts'),
+      ).not.toBeInTheDocument()
     })
 
     it('rename input shows renameValue', () => {
       render(<FileTreeItem {...renamingProps} />)
-      const input = screen.getByTestId('file-tree-rename-input') as HTMLInputElement
+      const input = screen.getByTestId(
+        'file-tree-rename-input',
+      ) as HTMLInputElement
       expect(input.value).toBe('newname.ts')
     })
 

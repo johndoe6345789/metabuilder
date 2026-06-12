@@ -1,13 +1,13 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react'
 
 export function useTerminalInputFocus(waitingForInput: boolean) {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (waitingForInput && inputRef.current) {
-      inputRef.current.focus();
+      inputRef.current.focus()
     }
-  }, [waitingForInput]);
+  }, [waitingForInput])
 
-  return inputRef;
+  return inputRef
 }

@@ -29,32 +29,69 @@ interface SnippetToolbarProps {
 }
 
 export function SnippetToolbar({
-  isCopied, wordWrap, canPreview, showPreview,
-  isRunning, isDebugging, shareActive, historyOpen,
-  onEdit, onCopy, onShare, onFork, onHistory,
-  onToggleWrap, onTogglePreview, onRun, onStop, onDebug, onPalette,
+  isCopied,
+  wordWrap,
+  canPreview,
+  showPreview,
+  isRunning,
+  isDebugging,
+  shareActive,
+  historyOpen,
+  onEdit,
+  onCopy,
+  onShare,
+  onFork,
+  onHistory,
+  onToggleWrap,
+  onTogglePreview,
+  onRun,
+  onStop,
+  onDebug,
+  onPalette,
 }: SnippetToolbarProps) {
   return (
-    <div className={styles.wordToolbar} role="toolbar"
-      aria-label="Document toolbar">
+    <div
+      className={styles.wordToolbar}
+      role="toolbar"
+      aria-label="Document toolbar"
+    >
       <div className={styles.toolGroup}>
-        <ToolBtn title="Edit" label="Edit snippet" icon="edit"
-          onClick={onEdit} />
+        <ToolBtn
+          title="Edit"
+          label="Edit snippet"
+          icon="edit"
+          onClick={onEdit}
+        />
       </div>
       <div className={styles.toolSep} aria-hidden="true" />
       <ToolbarDocGroup
-        isCopied={isCopied} wordWrap={wordWrap}
-        canPreview={canPreview} showPreview={showPreview}
-        shareActive={shareActive} historyOpen={historyOpen}
-        onCopy={onCopy} onShare={onShare} onFork={onFork}
-        onHistory={onHistory} onToggleWrap={onToggleWrap}
+        isCopied={isCopied}
+        wordWrap={wordWrap}
+        canPreview={canPreview}
+        showPreview={showPreview}
+        shareActive={shareActive}
+        historyOpen={historyOpen}
+        onCopy={onCopy}
+        onShare={onShare}
+        onFork={onFork}
+        onHistory={onHistory}
+        onToggleWrap={onToggleWrap}
         onTogglePreview={onTogglePreview}
       />
       <div className={styles.toolSep} aria-hidden="true" />
-      <ToolbarExecGroup isRunning={isRunning} isDebugging={isDebugging}
-        onRun={onRun} onStop={onStop} onDebug={onDebug} />
-      <button className={styles.paletteTrigger} onClick={onPalette}
-        title="Open command palette" aria-label="Open command palette">
+      <ToolbarExecGroup
+        isRunning={isRunning}
+        isDebugging={isDebugging}
+        onRun={onRun}
+        onStop={onStop}
+        onDebug={onDebug}
+      />
+      <button
+        className={styles.paletteTrigger}
+        onClick={onPalette}
+        title="Open command palette"
+        aria-label="Open command palette"
+      >
         <MaterialIcon name="keyboard" size={13} />
         <span>Commands</span>
         <kbd>⌘K</kbd>

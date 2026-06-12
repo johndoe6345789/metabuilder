@@ -5,11 +5,28 @@ import { ApiKeyField } from './ApiKeyField'
 import type { AIPlatform } from '@/config/aiPlatforms'
 
 jest.mock('@metabuilder/components/fakemui', () => ({
-  Input: ({ id, type, value, onChange, placeholder, 'data-testid': testId, 'aria-label': ariaLabel }: any) => (
-    <input id={id} type={type} value={value} onChange={onChange} placeholder={placeholder}
-      data-testid={testId} aria-label={ariaLabel} />
+  Input: ({
+    id,
+    type,
+    value,
+    onChange,
+    placeholder,
+    'data-testid': testId,
+    'aria-label': ariaLabel,
+  }: any) => (
+    <input
+      id={id}
+      type={type}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      data-testid={testId}
+      aria-label={ariaLabel}
+    />
   ),
-  FormLabel: ({ children, htmlFor }: any) => <label htmlFor={htmlFor}>{children}</label>,
+  FormLabel: ({ children, htmlFor }: any) => (
+    <label htmlFor={htmlFor}>{children}</label>
+  ),
   MaterialIcon: ({ name }: any) => <span data-icon={name} />,
 }))
 
@@ -53,22 +70,34 @@ describe('ApiKeyField', () => {
 
   it('input is password type when showKey is false', () => {
     render(<ApiKeyField {...defaultProps} showKey={false} />)
-    expect(screen.getByTestId('openai-api-key-input')).toHaveAttribute('type', 'password')
+    expect(screen.getByTestId('openai-api-key-input')).toHaveAttribute(
+      'type',
+      'password',
+    )
   })
 
   it('input is text type when showKey is true', () => {
     render(<ApiKeyField {...defaultProps} showKey={true} />)
-    expect(screen.getByTestId('openai-api-key-input')).toHaveAttribute('type', 'text')
+    expect(screen.getByTestId('openai-api-key-input')).toHaveAttribute(
+      'type',
+      'text',
+    )
   })
 
   it('uses platform keyPlaceholder when serverKeyStatus is not stored', () => {
     render(<ApiKeyField {...defaultProps} serverKeyStatus="none" />)
-    expect(screen.getByTestId('openai-api-key-input')).toHaveAttribute('placeholder', 'sk-...')
+    expect(screen.getByTestId('openai-api-key-input')).toHaveAttribute(
+      'placeholder',
+      'sk-...',
+    )
   })
 
   it('uses server-stored placeholder when serverKeyStatus is stored', () => {
     render(<ApiKeyField {...defaultProps} serverKeyStatus="stored" />)
-    expect(screen.getByTestId('openai-api-key-input')).toHaveAttribute('placeholder', '(using server-stored key)')
+    expect(screen.getByTestId('openai-api-key-input')).toHaveAttribute(
+      'placeholder',
+      '(using server-stored key)',
+    )
   })
 
   it('renders toggle button with data-testid', () => {
@@ -78,17 +107,26 @@ describe('ApiKeyField', () => {
 
   it('toggle button aria-label is showLabel when key is hidden', () => {
     render(<ApiKeyField {...defaultProps} showKey={false} />)
-    expect(screen.getByTestId('toggle-api-key-visibility')).toHaveAttribute('aria-label', 'Show key')
+    expect(screen.getByTestId('toggle-api-key-visibility')).toHaveAttribute(
+      'aria-label',
+      'Show key',
+    )
   })
 
   it('toggle button aria-label is hideLabel when key is visible', () => {
     render(<ApiKeyField {...defaultProps} showKey={true} />)
-    expect(screen.getByTestId('toggle-api-key-visibility')).toHaveAttribute('aria-label', 'Hide key')
+    expect(screen.getByTestId('toggle-api-key-visibility')).toHaveAttribute(
+      'aria-label',
+      'Hide key',
+    )
   })
 
   it('toggle button aria-pressed reflects showKey', () => {
     render(<ApiKeyField {...defaultProps} showKey={true} />)
-    expect(screen.getByTestId('toggle-api-key-visibility')).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByTestId('toggle-api-key-visibility')).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
   })
 
   it('calls onToggleShow when toggle button clicked', async () => {

@@ -1,16 +1,57 @@
-
 import { render, screen, fireEvent } from '@/test-utils'
 import { EmptyState } from '@/components/features/snippet-display/EmptyState'
 
 // Mock dependencies
 jest.mock('@/data/templates.json', () => [
-  { id: 'react-1', category: 'react', title: 'React Button', description: 'A simple button', language: 'JSX' },
-  { id: 'react-2', category: 'react', title: 'React Form', description: 'A form component', language: 'JSX' },
-  { id: 'api-1', category: 'api', title: 'API Call', description: 'Fetch data', language: 'JavaScript' },
-  { id: 'layout-1', category: 'layout', title: 'CSS Grid', description: 'Grid layout', language: 'CSS' },
-  { id: 'euler-1', category: 'euler', title: 'Problem 1', description: 'Fibonacci', language: 'Python' },
-  { id: 'algo-1', category: 'algorithms', title: 'Sort', description: 'Sorting algorithm', language: 'Python' },
-  { id: 'interactive-1', category: 'interactive', title: 'Game', description: 'Simple game', language: 'Python' },
+  {
+    id: 'react-1',
+    category: 'react',
+    title: 'React Button',
+    description: 'A simple button',
+    language: 'JSX',
+  },
+  {
+    id: 'react-2',
+    category: 'react',
+    title: 'React Form',
+    description: 'A form component',
+    language: 'JSX',
+  },
+  {
+    id: 'api-1',
+    category: 'api',
+    title: 'API Call',
+    description: 'Fetch data',
+    language: 'JavaScript',
+  },
+  {
+    id: 'layout-1',
+    category: 'layout',
+    title: 'CSS Grid',
+    description: 'Grid layout',
+    language: 'CSS',
+  },
+  {
+    id: 'euler-1',
+    category: 'euler',
+    title: 'Problem 1',
+    description: 'Fibonacci',
+    language: 'Python',
+  },
+  {
+    id: 'algo-1',
+    category: 'algorithms',
+    title: 'Sort',
+    description: 'Sorting algorithm',
+    language: 'Python',
+  },
+  {
+    id: 'interactive-1',
+    category: 'interactive',
+    title: 'Game',
+    description: 'Simple game',
+    language: 'Python',
+  },
 ])
 
 describe('EmptyState', () => {
@@ -33,7 +74,9 @@ describe('EmptyState', () => {
       render(<EmptyState {...defaultProps} />)
       // Icon will be inside the container
       const container = screen.getByTestId('empty-state')
-      expect(container.querySelector('[class*="bg-accent"]')).toBeInTheDocument()
+      expect(
+        container.querySelector('[class*="bg-accent"]'),
+      ).toBeInTheDocument()
     })
 
     it('should display title text', () => {
@@ -71,7 +114,10 @@ describe('EmptyState', () => {
     it('should have correct aria-label', () => {
       render(<EmptyState {...defaultProps} />)
       const button = screen.getByTestId('empty-state-create-menu')
-      expect(button).toHaveAttribute('aria-label', 'Create new snippet from templates')
+      expect(button).toHaveAttribute(
+        'aria-label',
+        'Create new snippet from templates',
+      )
     })
 
     it('should have size lg', () => {
@@ -100,7 +146,9 @@ describe('EmptyState', () => {
       render(<EmptyState {...defaultProps} />)
       const button = screen.getByTestId('empty-state-create-menu')
       fireEvent.click(button)
-      expect(screen.getByTestId('create-blank-snippet-item')).toBeInTheDocument()
+      expect(
+        screen.getByTestId('create-blank-snippet-item'),
+      ).toBeInTheDocument()
       expect(screen.getByText('Blank Snippet')).toBeInTheDocument()
     })
 
@@ -143,7 +191,9 @@ describe('EmptyState', () => {
       render(<EmptyState {...defaultProps} />)
       const button = screen.getByTestId('empty-state-create-menu')
       fireEvent.click(button)
-      expect(screen.getByText('Python - Interactive Programs')).toBeInTheDocument()
+      expect(
+        screen.getByText('Python - Interactive Programs'),
+      ).toBeInTheDocument()
     })
   })
 
@@ -164,7 +214,7 @@ describe('EmptyState', () => {
         <EmptyState
           {...defaultProps}
           onCreateFromTemplate={onCreateFromTemplate}
-        />
+        />,
       )
       const button = screen.getByTestId('empty-state-create-menu')
       fireEvent.click(button)
@@ -181,7 +231,7 @@ describe('EmptyState', () => {
         <EmptyState
           {...defaultProps}
           onCreateFromTemplate={onCreateFromTemplate}
-        />
+        />,
       )
       const button = screen.getByTestId('empty-state-create-menu')
       fireEvent.click(button)
@@ -225,10 +275,12 @@ describe('EmptyState', () => {
 
       // React section should have react templates
       const reactSection = screen.getByText('React Components')
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const reactParent = reactSection.closest('div')?.parentElement
       expect(screen.getByTestId('template-react-react-1')).toBeInTheDocument()
 
       // CSS should have layout templates
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const cssSection = screen.getByText('CSS Layouts')
       expect(screen.getByText('CSS Grid')).toBeInTheDocument()
     })
@@ -265,7 +317,12 @@ describe('EmptyState', () => {
     it('should have centered flex layout', () => {
       render(<EmptyState {...defaultProps} />)
       const container = screen.getByTestId('empty-state')
-      expect(container).toHaveClass('flex', 'flex-col', 'items-center', 'justify-center')
+      expect(container).toHaveClass(
+        'flex',
+        'flex-col',
+        'items-center',
+        'justify-center',
+      )
     })
 
     it('should have text-center class', () => {
@@ -331,20 +388,22 @@ describe('EmptyState', () => {
         <EmptyState
           onCreateClick={jest.fn()}
           onCreateFromTemplate={jest.fn()}
-        />
+        />,
       )
       const button = screen.getByTestId('empty-state-create-menu')
       fireEvent.click(button)
-      expect(screen.getByTestId('create-blank-snippet-item')).toBeInTheDocument()
+      expect(
+        screen.getByTestId('create-blank-snippet-item'),
+      ).toBeInTheDocument()
     })
 
     it('should handle onCreateFromTemplate being optional', () => {
-      render(
-        <EmptyState onCreateClick={jest.fn()} />
-      )
+      render(<EmptyState onCreateClick={jest.fn()} />)
       const button = screen.getByTestId('empty-state-create-menu')
       fireEvent.click(button)
-      expect(screen.getByTestId('create-blank-snippet-item')).toBeInTheDocument()
+      expect(
+        screen.getByTestId('create-blank-snippet-item'),
+      ).toBeInTheDocument()
     })
 
     it('should handle both callbacks being provided', () => {
@@ -354,7 +413,7 @@ describe('EmptyState', () => {
         <EmptyState
           onCreateClick={onCreateClick}
           onCreateFromTemplate={onCreateFromTemplate}
-        />
+        />,
       )
 
       const button = screen.getByTestId('empty-state-create-menu')
@@ -396,7 +455,7 @@ describe('EmptyState', () => {
         <EmptyState
           {...defaultProps}
           onCreateFromTemplate={onCreateFromTemplate}
-        />
+        />,
       )
 
       const button = screen.getByTestId('empty-state-create-menu')
@@ -453,7 +512,9 @@ describe('EmptyState', () => {
 
       expect(screen.getByText('Python - Project Euler')).toBeInTheDocument()
       expect(screen.getByText('Python - Algorithms')).toBeInTheDocument()
-      expect(screen.getByText('Python - Interactive Programs')).toBeInTheDocument()
+      expect(
+        screen.getByText('Python - Interactive Programs'),
+      ).toBeInTheDocument()
     })
   })
 })

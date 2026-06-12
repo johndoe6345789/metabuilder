@@ -20,9 +20,7 @@ function getUserFromToken(): { id: string; username: string } {
   }
 }
 
-export function getUser(
-  state: RootState
-): { id: string; username: string } {
+export function getUser(state: RootState): { id: string; username: string } {
   const fromToken = getUserFromToken()
   const authUser = state.auth.user as Record<string, string> | null
   return {
@@ -36,14 +34,14 @@ export const fetchSnippetComments = createAsyncThunk(
   async (snippetId: string) => {
     const comments = await getSnippetComments(snippetId)
     return { snippetId, comments }
-  }
+  },
 )
 
 export const addSnippetComment = createAsyncThunk(
   'comments/addSnippet',
   async (
     { snippetId, content }: { snippetId: string; content: string },
-    { getState }
+    { getState },
   ) => {
     const user = getUser(getState() as RootState)
     const comment: SnippetComment = {
@@ -55,7 +53,7 @@ export const addSnippetComment = createAsyncThunk(
       createdAt: Date.now(),
     }
     return await createSnippetCommentDB(comment)
-  }
+  },
 )
 
 export const fetchProfileComments = createAsyncThunk(
@@ -63,14 +61,14 @@ export const fetchProfileComments = createAsyncThunk(
   async (profileUserId: string) => {
     const comments = await getProfileComments(profileUserId)
     return { profileUserId, comments }
-  }
+  },
 )
 
 export const addProfileComment = createAsyncThunk(
   'comments/addProfile',
   async (
     { profileUserId, content }: { profileUserId: string; content: string },
-    { getState }
+    { getState },
   ) => {
     const user = getUser(getState() as RootState)
     const comment: ProfileComment = {
@@ -82,5 +80,5 @@ export const addProfileComment = createAsyncThunk(
       createdAt: Date.now(),
     }
     return await createProfileCommentDB(comment)
-  }
+  },
 )

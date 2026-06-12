@@ -7,8 +7,14 @@ import styles from '../login/login.module.scss'
 
 function ResetPasswordForm() {
   const {
-    password, confirm, loading, error, done,
-    setPassword, setConfirm, handleSubmit,
+    password,
+    confirm,
+    loading,
+    error,
+    done,
+    setPassword,
+    setConfirm,
+    handleSubmit,
   } = useResetPasswordForm()
 
   return (
@@ -47,11 +53,7 @@ function ResetPasswordForm() {
               required
               autoComplete="new-password"
             />
-            <button
-              className={styles.submit}
-              type="submit"
-              disabled={loading}
-            >
+            <button className={styles.submit} type="submit" disabled={loading}>
               {loading ? 'Saving…' : 'Set new password'}
             </button>
           </form>
@@ -65,12 +67,14 @@ export default function ResetPasswordPage() {
   return (
     <Suspense
       fallback={
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100vh',
-        }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100vh',
+          }}
+        >
           Loading…
         </div>
       }

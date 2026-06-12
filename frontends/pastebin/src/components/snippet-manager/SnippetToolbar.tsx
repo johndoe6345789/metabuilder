@@ -1,6 +1,7 @@
 import { Button, Input, MaterialIcon } from '@metabuilder/components/fakemui'
 import { useTranslation } from '@/hooks/useTranslation'
 import { SnippetTemplate } from '@/lib/types'
+// eslint-disable-next-line max-len
 import { TemplatePicker } from '@/components/features/snippet-editor/TemplatePicker'
 import { useSnippetToolbar } from './hooks/useSnippetToolbar'
 import { buildTemplateSections } from './template-sections'
@@ -17,8 +18,13 @@ interface SnippetToolbarProps {
 }
 
 export function SnippetToolbar({
-  searchQuery, onSearchChange, selectionMode, onToggleSelectionMode,
-  onCreateNew, onCreateFromTemplate, templates,
+  searchQuery,
+  onSearchChange,
+  selectionMode,
+  onToggleSelectionMode,
+  onCreateNew,
+  onCreateFromTemplate,
+  templates,
 }: SnippetToolbarProps) {
   const t = useTranslation()
   const { menuAnchor, inputValue, setMenuAnchor, handleSearchInput } =
@@ -31,10 +37,7 @@ export function SnippetToolbar({
       role="toolbar"
       aria-label="Snippet management toolbar"
     >
-      <div
-        className={styles.searchContainer}
-        data-testid="search-container"
-      >
+      <div className={styles.searchContainer} data-testid="search-container">
         <MaterialIcon
           name="search"
           className={styles.searchIcon}
@@ -44,7 +47,7 @@ export function SnippetToolbar({
         <Input
           placeholder={t.app.search.placeholder}
           value={inputValue}
-          onChange={(e) => handleSearchInput(e.target.value)}
+          onChange={e => handleSearchInput(e.target.value)}
           className={styles.searchInput}
           data-testid="snippet-search-input"
           aria-label="Search snippets"
@@ -75,7 +78,7 @@ export function SnippetToolbar({
         </Button>
         <Button
           className={styles.createBtn}
-          onClick={(e) => setMenuAnchor(e.currentTarget)}
+          onClick={e => setMenuAnchor(e.currentTarget)}
           data-testid="snippet-create-menu-trigger"
           aria-label="Create new snippet"
           aria-haspopup="menu"

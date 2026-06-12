@@ -5,13 +5,24 @@ import { MoveToMenu } from './MoveToMenu'
 import type { Namespace } from '@/lib/types'
 
 jest.mock('@metabuilder/components/fakemui', () => ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Menu: ({ open, onClose, children, onClick, 'data-testid': testId }: any) =>
     open ? (
-      <div data-testid={testId ?? 'snippet-actions-menu-content'} onClick={onClick}>
+      <div
+        data-testid={testId ?? 'snippet-actions-menu-content'}
+        onClick={onClick}
+      >
         {children}
       </div>
     ) : null,
-  MenuItem: ({ children, onClick, disabled, className, 'data-testid': testId, 'aria-label': ariaLabel }: any) => (
+  MenuItem: ({
+    children,
+    onClick,
+    disabled,
+    className,
+    'data-testid': testId,
+    'aria-label': ariaLabel,
+  }: any) => (
     <button
       onClick={onClick}
       disabled={disabled}
@@ -46,12 +57,16 @@ describe('MoveToMenu', () => {
 
   it('renders when open is true', () => {
     render(<MoveToMenu {...defaultProps} />)
-    expect(screen.getByTestId('snippet-actions-menu-content')).toBeInTheDocument()
+    expect(
+      screen.getByTestId('snippet-actions-menu-content'),
+    ).toBeInTheDocument()
   })
 
   it('does not render when open is false', () => {
     render(<MoveToMenu {...defaultProps} open={false} />)
-    expect(screen.queryByTestId('snippet-actions-menu-content')).not.toBeInTheDocument()
+    expect(
+      screen.queryByTestId('snippet-actions-menu-content'),
+    ).not.toBeInTheDocument()
   })
 
   it('renders namespace items', () => {

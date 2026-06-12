@@ -3,8 +3,8 @@
  * Common testing utilities for all test suites
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from 'fs'
+import * as path from 'path'
 import {
   AnalysisResult,
   CodeQualityMetrics,
@@ -13,16 +13,17 @@ import {
   SecurityMetrics,
   Configuration,
   Finding,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ScoringWeights,
-} from '../src/lib/quality-validator/types/index.js';
+} from '../src/lib/quality-validator/types/index.js'
 
 /**
  * Create a mock analysis result
  */
 export function createMockAnalysisResult(
   category: 'codeQuality' | 'testCoverage' | 'architecture' | 'security',
-  score: number = 85,
-  status: 'pass' | 'fail' | 'warning' = 'pass'
+  score = 85,
+  status: 'pass' | 'fail' | 'warning' = 'pass',
 ): AnalysisResult {
   return {
     category,
@@ -32,13 +33,15 @@ export function createMockAnalysisResult(
     metrics: {},
     executionTime: 100,
     errors: [],
-  };
+  }
 }
 
 /**
  * Create mock code quality metrics
  */
-export function createMockCodeQualityMetrics(overrides?: Partial<CodeQualityMetrics>): CodeQualityMetrics {
+export function createMockCodeQualityMetrics(
+  overrides?: Partial<CodeQualityMetrics>,
+): CodeQualityMetrics {
   return {
     complexity: {
       functions: [
@@ -73,13 +76,15 @@ export function createMockCodeQualityMetrics(overrides?: Partial<CodeQualityMetr
       status: 'good',
     },
     ...overrides,
-  };
+  }
 }
 
 /**
  * Create mock test coverage metrics
  */
-export function createMockTestCoverageMetrics(overrides?: Partial<TestCoverageMetrics>): TestCoverageMetrics {
+export function createMockTestCoverageMetrics(
+  overrides?: Partial<TestCoverageMetrics>,
+): TestCoverageMetrics {
   return {
     overall: {
       lines: {
@@ -119,13 +124,15 @@ export function createMockTestCoverageMetrics(overrides?: Partial<TestCoverageMe
     },
     gaps: [],
     ...overrides,
-  };
+  }
 }
 
 /**
  * Create mock architecture metrics
  */
-export function createMockArchitectureMetrics(overrides?: Partial<ArchitectureMetrics>): ArchitectureMetrics {
+export function createMockArchitectureMetrics(
+  overrides?: Partial<ArchitectureMetrics>,
+): ArchitectureMetrics {
   return {
     components: {
       totalCount: 50,
@@ -161,19 +168,21 @@ export function createMockArchitectureMetrics(overrides?: Partial<ArchitectureMe
       },
     },
     ...overrides,
-  };
+  }
 }
 
 /**
  * Create mock security metrics
  */
-export function createMockSecurityMetrics(overrides?: Partial<SecurityMetrics>): SecurityMetrics {
+export function createMockSecurityMetrics(
+  overrides?: Partial<SecurityMetrics>,
+): SecurityMetrics {
   return {
     vulnerabilities: [],
     codePatterns: [],
     performanceIssues: [],
     ...overrides,
-  };
+  }
 }
 
 /**
@@ -291,7 +300,7 @@ export function createDefaultConfig(): Configuration {
       compareToPrevious: true,
     },
     excludePaths: [],
-  };
+  }
 }
 
 /**
@@ -306,40 +315,40 @@ export function createMockFinding(overrides?: Partial<Finding>): Finding {
     description: 'This is a test finding',
     remediation: 'Fix this issue',
     ...overrides,
-  };
+  }
 }
 
 /**
  * Mock file system operations
  */
 export class MockFileSystem {
-  private files: Map<string, string> = new Map();
+  private files = new Map<string, string>()
 
   readFile(filePath: string): string {
     if (!this.files.has(filePath)) {
-      throw new Error(`File not found: ${filePath}`);
+      throw new Error(`File not found: ${filePath}`)
     }
-    return this.files.get(filePath)!;
+    return this.files.get(filePath)!
   }
 
   writeFile(filePath: string, content: string): void {
-    this.files.set(filePath, content);
+    this.files.set(filePath, content)
   }
 
   fileExists(filePath: string): boolean {
-    return this.files.has(filePath);
+    return this.files.has(filePath)
   }
 
   clear(): void {
-    this.files.clear();
+    this.files.clear()
   }
 
   addFile(filePath: string, content: string): void {
-    this.files.set(filePath, content);
+    this.files.set(filePath, content)
   }
 
   getFiles(): Map<string, string> {
-    return new Map(this.files);
+    return new Map(this.files)
   }
 }
 
@@ -347,11 +356,14 @@ export class MockFileSystem {
  * Create temporary test directory
  */
 export function createTempDir(): string {
-  const dir = path.join(__dirname, `temp-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`);
+  const dir = path.join(
+    __dirname,
+    `temp-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+  )
   if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
+    fs.mkdirSync(dir, { recursive: true })
   }
-  return dir;
+  return dir
 }
 
 /**
@@ -359,30 +371,34 @@ export function createTempDir(): string {
  */
 export function cleanupTempDir(dir: string): void {
   if (fs.existsSync(dir)) {
-    fs.rmSync(dir, { recursive: true, force: true });
+    fs.rmSync(dir, { recursive: true, force: true })
   }
 }
 
 /**
  * Create a test file with content
  */
-export function createTestFile(dirPath: string, fileName: string, content: string): string {
-  const filePath = path.join(dirPath, fileName);
-  const dir = path.dirname(filePath);
+export function createTestFile(
+  dirPath: string,
+  fileName: string,
+  content: string,
+): string {
+  const filePath = path.join(dirPath, fileName)
+  const dir = path.dirname(filePath)
 
   if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
+    fs.mkdirSync(dir, { recursive: true })
   }
 
-  fs.writeFileSync(filePath, content, 'utf-8');
-  return filePath;
+  fs.writeFileSync(filePath, content, 'utf-8')
+  return filePath
 }
 
 /**
  * Wait for async operations
  */
 export function wait(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 /**
@@ -390,23 +406,23 @@ export function wait(ms: number): Promise<void> {
  */
 export function createCompleteAnalysisResult(
   category: 'codeQuality' | 'testCoverage' | 'architecture' | 'security',
-  score: number = 85
+  score = 85,
 ): AnalysisResult {
-  let metrics: any = {};
+  let metrics: any = {}
 
   switch (category) {
     case 'codeQuality':
-      metrics = createMockCodeQualityMetrics();
-      break;
+      metrics = createMockCodeQualityMetrics()
+      break
     case 'testCoverage':
-      metrics = createMockTestCoverageMetrics();
-      break;
+      metrics = createMockTestCoverageMetrics()
+      break
     case 'architecture':
-      metrics = createMockArchitectureMetrics();
-      break;
+      metrics = createMockArchitectureMetrics()
+      break
     case 'security':
-      metrics = createMockSecurityMetrics();
-      break;
+      metrics = createMockSecurityMetrics()
+      break
   }
 
   return {
@@ -416,5 +432,5 @@ export function createCompleteAnalysisResult(
     findings: [createMockFinding()],
     metrics,
     executionTime: 150,
-  };
+  }
 }

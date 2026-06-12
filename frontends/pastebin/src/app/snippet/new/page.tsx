@@ -3,6 +3,7 @@
 import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { PageLayout } from '@/app/PageLayout'
+// eslint-disable-next-line max-len
 import { SnippetEditorPage } from '@/components/features/snippet-editor/SnippetEditorPage'
 import { SnippetTemplate, Snippet } from '@/lib/types'
 import templatesData from '@/data/templates.json'
@@ -38,7 +39,19 @@ function NewSnippetContent() {
 export default function NewSnippetPage() {
   return (
     <PageLayout>
-      <Suspense fallback={<div style={{ textAlign: 'center', padding: '5rem 0', color: 'var(--mat-sys-on-surface-variant)' }}>Loading…</div>}>
+      <Suspense
+        fallback={
+          <div
+            style={{
+              textAlign: 'center',
+              padding: '5rem 0',
+              color: 'var(--mat-sys-on-surface-variant)',
+            }}
+          >
+            Loading…
+          </div>
+        }
+      >
         <NewSnippetContent />
       </Suspense>
     </PageLayout>

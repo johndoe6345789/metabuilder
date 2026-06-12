@@ -10,7 +10,9 @@ describe('ContentPreviewCardsSection', () => {
   describe('Rendering', () => {
     it('should render without crashing', () => {
       render(<ContentPreviewCardsSection />)
-      expect(screen.getByTestId('content-preview-cards-section')).toBeInTheDocument()
+      expect(
+        screen.getByTestId('content-preview-cards-section'),
+      ).toBeInTheDocument()
     })
 
     it('should render as section element', () => {
@@ -28,7 +30,10 @@ describe('ContentPreviewCardsSection', () => {
     it('should have aria-label', () => {
       render(<ContentPreviewCardsSection />)
       const section = screen.getByTestId('content-preview-cards-section')
-      expect(section).toHaveAttribute('aria-label', 'Content preview card examples')
+      expect(section).toHaveAttribute(
+        'aria-label',
+        'Content preview card examples',
+      )
     })
 
     it('should have space-y-6 class', () => {
@@ -52,7 +57,9 @@ describe('ContentPreviewCardsSection', () => {
 
     it('should display description', () => {
       render(<ContentPreviewCardsSection />)
-      expect(screen.getByText('Compact cards displaying content with metadata')).toBeInTheDocument()
+      expect(
+        screen.getByText('Compact cards displaying content with metadata'),
+      ).toBeInTheDocument()
     })
 
     it('should have descriptive text class', () => {
@@ -94,12 +101,16 @@ describe('ContentPreviewCardsSection', () => {
   describe('First Card - Building Scalable Design Systems', () => {
     it('should render first card title', () => {
       render(<ContentPreviewCardsSection />)
-      expect(screen.getByText('Building Scalable Design Systems')).toBeInTheDocument()
+      expect(
+        screen.getByText('Building Scalable Design Systems'),
+      ).toBeInTheDocument()
     })
 
     it('should display first card description', () => {
       render(<ContentPreviewCardsSection />)
-      expect(screen.getByText(/Learn how to create and maintain design systems/)).toBeInTheDocument()
+      expect(
+        screen.getByText(/Learn how to create and maintain design systems/),
+      ).toBeInTheDocument()
     })
 
     it('should show date for first card', () => {
@@ -128,12 +139,16 @@ describe('ContentPreviewCardsSection', () => {
   describe('Second Card - Advanced TypeScript Patterns', () => {
     it('should render second card title', () => {
       render(<ContentPreviewCardsSection />)
-      expect(screen.getByText('Advanced TypeScript Patterns')).toBeInTheDocument()
+      expect(
+        screen.getByText('Advanced TypeScript Patterns'),
+      ).toBeInTheDocument()
     })
 
     it('should display second card description', () => {
       render(<ContentPreviewCardsSection />)
-      expect(screen.getByText(/Explore advanced type system features/)).toBeInTheDocument()
+      expect(
+        screen.getByText(/Explore advanced type system features/),
+      ).toBeInTheDocument()
     })
 
     it('should show date for second card', () => {
@@ -301,7 +316,9 @@ describe('ContentPreviewCardsSection', () => {
 
     it('should have semantic structure', () => {
       render(<ContentPreviewCardsSection />)
-      expect(screen.getByTestId('content-preview-cards-section')).toBeInTheDocument()
+      expect(
+        screen.getByTestId('content-preview-cards-section'),
+      ).toBeInTheDocument()
     })
   })
 
@@ -309,8 +326,12 @@ describe('ContentPreviewCardsSection', () => {
     it('should display all required information', () => {
       render(<ContentPreviewCardsSection />)
       expect(screen.getByText('Content Preview Cards')).toBeInTheDocument()
-      expect(screen.getByText('Building Scalable Design Systems')).toBeInTheDocument()
-      expect(screen.getByText('Advanced TypeScript Patterns')).toBeInTheDocument()
+      expect(
+        screen.getByText('Building Scalable Design Systems'),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByText('Advanced TypeScript Patterns'),
+      ).toBeInTheDocument()
     })
 
     it('should have proper metadata layout', () => {
@@ -369,8 +390,12 @@ describe('ContentPreviewCardsSection', () => {
 
     it('should display exact titles', () => {
       render(<ContentPreviewCardsSection />)
-      expect(screen.getByText('Building Scalable Design Systems')).toBeInTheDocument()
-      expect(screen.getByText('Advanced TypeScript Patterns')).toBeInTheDocument()
+      expect(
+        screen.getByText('Building Scalable Design Systems'),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByText('Advanced TypeScript Patterns'),
+      ).toBeInTheDocument()
     })
   })
 

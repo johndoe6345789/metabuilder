@@ -1,4 +1,10 @@
-import { Card, Button, Input, Divider, MaterialIcon } from '@metabuilder/components/fakemui'
+import {
+  Card,
+  Button,
+  Input,
+  Divider,
+  MaterialIcon,
+} from '@metabuilder/components/fakemui'
 import { ComponentShowcase } from '@/components/demo/ComponentShowcase'
 import { moleculesCodeSnippets } from '@/lib/component-code-snippets'
 import { Snippet } from '@/lib/types'
@@ -13,7 +19,7 @@ const iconStyle = {
 
 interface SearchBarsSectionProps {
   onSaveSnippet: (
-    snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>
+    snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>,
   ) => void
 }
 
@@ -26,10 +32,16 @@ export function SearchBarsSection({ onSaveSnippet }: SearchBarsSectionProps) {
       aria-label="Search bar components"
     >
       <div>
-        <h2 style={{
-          fontSize: '1.875rem', lineHeight: '2.25rem',
-          fontWeight: 700, marginBottom: '8px',
-        }}>Search Bars</h2>
+        <h2
+          style={{
+            fontSize: '1.875rem',
+            lineHeight: '2.25rem',
+            fontWeight: 700,
+            marginBottom: '8px',
+          }}
+        >
+          Search Bars
+        </h2>
         <p style={{ color: 'var(--mat-sys-on-surface-variant)' }}>
           Combined search input with actions
         </p>
@@ -43,7 +55,9 @@ export function SearchBarsSection({ onSaveSnippet }: SearchBarsSectionProps) {
         onSaveSnippet={onSaveSnippet}
       >
         <Card className="p-6">
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div
+            style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}
+          >
             <div style={{ position: 'relative', maxWidth: '448px' }}>
               <MaterialIcon
                 name="search"

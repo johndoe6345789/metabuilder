@@ -24,9 +24,20 @@ function FileIcon() {
 }
 
 export function FileTreeItem({
-  file, isActive, isRenaming, renameValue, renameLabel, deleteLabel,
-  fileCount, onSelect, onStartRename, onDelete,
-  onRenameChange, onRenameKeyDown, onRenameConfirm, onRenameCancel,
+  file,
+  isActive,
+  isRenaming,
+  renameValue,
+  renameLabel,
+  deleteLabel,
+  fileCount,
+  onSelect,
+  onStartRename,
+  onDelete,
+  onRenameChange,
+  onRenameKeyDown,
+  onRenameConfirm,
+  onRenameCancel,
 }: FileTreeItemProps) {
   return (
     <li

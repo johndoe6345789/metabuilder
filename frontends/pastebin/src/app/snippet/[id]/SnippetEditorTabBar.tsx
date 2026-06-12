@@ -50,7 +50,10 @@ export function SnippetEditorTabBar({
                 className={styles.tabClose}
                 role="button"
                 aria-label={`Close ${f}`}
-                onClick={e => { e.stopPropagation(); onCloseTab(f) }}
+                onClick={e => {
+                  e.stopPropagation()
+                  onCloseTab(f)
+                }}
               >
                 ×
               </span>
@@ -69,9 +72,7 @@ export function SnippetEditorTabBar({
       >
         <MaterialIcon name="terminal" size={12} aria-hidden="true" />
         <span>Terminal</span>
-        {isRunning && (
-          <span className={styles.runningDot} aria-hidden="true" />
-        )}
+        {isRunning && <span className={styles.runningDot} aria-hidden="true" />}
       </button>
 
       <button

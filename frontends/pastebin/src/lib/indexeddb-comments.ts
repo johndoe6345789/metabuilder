@@ -10,7 +10,7 @@ import {
 } from './indexeddb-core.js'
 
 export async function getSnippetComments(
-  snippetId: string
+  snippetId: string,
 ): Promise<SnippetComment[]> {
   const db = await openDB()
   return new Promise((resolve, reject) => {
@@ -28,7 +28,7 @@ export async function getSnippetComments(
 }
 
 export async function createSnippetComment(
-  comment: SnippetComment
+  comment: SnippetComment,
 ): Promise<void> {
   const db = await openDB()
   return new Promise((resolve, reject) => {
@@ -41,7 +41,7 @@ export async function createSnippetComment(
 }
 
 export async function getProfileComments(
-  profileUserId: string
+  profileUserId: string,
 ): Promise<ProfileComment[]> {
   const db = await openDB()
   return new Promise((resolve, reject) => {
@@ -59,7 +59,7 @@ export async function getProfileComments(
 }
 
 export async function createProfileComment(
-  comment: ProfileComment
+  comment: ProfileComment,
 ): Promise<void> {
   const db = await openDB()
   return new Promise((resolve, reject) => {

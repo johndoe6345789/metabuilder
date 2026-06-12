@@ -24,7 +24,7 @@ export function useSnippetFileOps(snippet: Snippet | null) {
     setTimeout(() => newFileInputRef.current?.focus(), 10)
   }
 
-  const commitNewFile = async (files: FileList, filename: string) => {
+  const commitNewFile = async (files: FileList, _filename: string) => {
     const name = newFileName.trim()
     setAddingFile(false)
     if (!name || !snippet) return
@@ -33,10 +33,12 @@ export function useSnippetFileOps(snippet: Snippet | null) {
       return
     }
     try {
-      await dispatch(updateSnippet({
-        ...snippet,
-        files: [...files, { name, content: '' }],
-      })).unwrap()
+      await dispatch(
+        updateSnippet({
+          ...snippet,
+          files: [...files, { name, content: '' }],
+        }),
+      ).unwrap()
       return name
     } catch {
       toast.error('Failed to create file')
@@ -63,13 +65,13 @@ export function useSnippetFileOps(snippet: Snippet | null) {
       return
     }
     const newFiles = files.map(f =>
-      f.name === oldName ? { ...f, name: newName } : f
+      f.name === oldName ? { ...f, name: newName } : f,
     )
     const newEntry =
       snippet.entryPoint === oldName ? newName : snippet.entryPoint
     try {
       await dispatch(
-        updateSnippet({ ...snippet, files: newFiles, entryPoint: newEntry })
+        updateSnippet({ ...snippet, files: newFiles, entryPoint: newEntry }),
       ).unwrap()
       if (activeFile === oldName) onRename(oldName, newName)
     } catch {
@@ -83,13 +85,16 @@ export function useSnippetFileOps(snippet: Snippet | null) {
     onDeleted: (newActive: string) => void,
   ) => {
     if (!snippet) return
-    if (files.length <= 1) { toast.error('Cannot delete the last file'); return }
+    if (files.length <= 1) {
+      toast.error('Cannot delete the last file')
+      return
+    }
     const newFiles = files.filter(f => f.name !== name)
     const newEntry =
       snippet.entryPoint === name ? newFiles[0]?.name : snippet.entryPoint
     try {
       await dispatch(
-        updateSnippet({ ...snippet, files: newFiles, entryPoint: newEntry })
+        updateSnippet({ ...snippet, files: newFiles, entryPoint: newEntry }),
       ).unwrap()
       onDeleted(newFiles[0]?.name ?? '')
       toast.success(`Deleted ${name}`)
@@ -106,10 +111,12 @@ export function useSnippetFileOps(snippet: Snippet | null) {
     const base = name.replace(/\.[^.]+$/, '')
     const dupName = `${base}-copy${ext}`
     try {
-      await dispatch(updateSnippet({
-        ...snippet,
-        files: [...files, { name: dupName, content: file.content }],
-      })).unwrap()
+      await dispatch(
+        updateSnippet({
+          ...snippet,
+          files: [...files, { name: dupName, content: file.content }],
+        }),
+      ).unwrap()
       toast.success(`Duplicated as ${dupName}`)
       return dupName
     } catch {
@@ -118,10 +125,20 @@ export function useSnippetFileOps(snippet: Snippet | null) {
   }
 
   return {
-    renaming, setRenaming, renameValue, setRenameValue,
-    addingFile, setAddingFile, newFileName, setNewFileName,
+    renaming,
+    setRenaming,
+    renameValue,
+    setRenameValue,
+    addingFile,
+    setAddingFile,
+    newFileName,
+    setNewFileName,
     newFileInputRef,
-    handleNewFile, commitNewFile, handleStartRename,
-    commitRename, handleDeleteFile, handleDuplicateFile,
+    handleNewFile,
+    commitNewFile,
+    handleStartRename,
+    commitRename,
+    handleDeleteFile,
+    handleDuplicateFile,
   }
 }

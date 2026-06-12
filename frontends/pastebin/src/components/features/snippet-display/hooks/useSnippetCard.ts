@@ -42,9 +42,7 @@ export function useSnippetCard({
     const description = snippet?.description || ''
     const maxLength = appConfig.codePreviewMaxLength
     const isTruncated = code.length > maxLength
-    const displayCode = isTruncated
-      ? code.slice(0, maxLength) + '...'
-      : code
+    const displayCode = isTruncated ? code.slice(0, maxLength) + '...' : code
     return {
       description,
       displayCode,
@@ -71,9 +69,7 @@ export function useSnippetCard({
     else onView(snippet)
   }
 
-  const handleMoveToNamespace = async (
-    targetNamespaceId: string,
-  ) => {
+  const handleMoveToNamespace = async (targetNamespaceId: string) => {
     if (snippet.namespaceId === targetNamespaceId) {
       toast.info(t.snippetCard.alreadyInNamespace)
       return
@@ -85,10 +81,7 @@ export function useSnippetCard({
       ).unwrap()
       const target = namespaces.find(n => n.id === targetNamespaceId)
       toast.success(
-        t.snippetCard.movedTo.replace(
-          '{name}',
-          target?.name || 'namespace',
-        ),
+        t.snippetCard.movedTo.replace('{name}', target?.name || 'namespace'),
       )
       if (onMove) onMove()
     } catch (error) {

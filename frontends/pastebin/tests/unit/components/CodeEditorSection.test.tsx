@@ -10,7 +10,7 @@ jest.mock('@/components/features/snippet-editor/MonacoEditor', () => ({
     <textarea
       data-testid="monaco-editor"
       value={value}
-      onChange={(e) => onChange(e.target.value)}
+      onChange={e => onChange(e.target.value)}
       placeholder="Code editor"
     />
   ),
@@ -21,7 +21,7 @@ jest.mock('@/components/features/snippet-editor/SplitScreenEditor', () => ({
     <textarea
       data-testid="split-screen-editor"
       value={value}
-      onChange={(e) => onChange(e.target.value)}
+      onChange={e => onChange(e.target.value)}
       placeholder="Split screen editor"
     />
   ),
@@ -114,7 +114,9 @@ describe('CodeEditorSection Component', () => {
 
     it('should not render preview checkbox for HTML (unsupported)', () => {
       render(<CodeEditorSection {...defaultProps} language="HTML" />)
-      expect(screen.queryByTestId('enable-preview-checkbox')).not.toBeInTheDocument()
+      expect(
+        screen.queryByTestId('enable-preview-checkbox'),
+      ).not.toBeInTheDocument()
     })
   })
 
@@ -132,17 +134,27 @@ describe('CodeEditorSection Component', () => {
     it('should toggle preview checkbox state', async () => {
       const user = userEvent.setup()
       const { rerender } = render(
-        <CodeEditorSection {...defaultProps} language="TSX" hasPreview={false} />
+        <CodeEditorSection
+          {...defaultProps}
+          language="TSX"
+          hasPreview={false}
+        />,
       )
 
-      const checkbox = screen.getByTestId('enable-preview-checkbox') as HTMLInputElement
+      const checkbox = screen.getByTestId(
+        'enable-preview-checkbox',
+      ) as HTMLInputElement
       expect(checkbox.checked).toBe(false)
 
       await user.click(checkbox)
       expect(mockOnPreviewChange).toHaveBeenCalledWith(true)
 
       rerender(
-        <CodeEditorSection {...defaultProps} language="TSX" hasPreview={true} />
+        <CodeEditorSection
+          {...defaultProps}
+          language="TSX"
+          hasPreview={true}
+        />,
       )
 
       expect(checkbox.checked).toBe(true)
@@ -156,7 +168,7 @@ describe('CodeEditorSection Component', () => {
           {...defaultProps}
           language="TSX"
           hasPreview={false}
-        />
+        />,
       )
       expect(screen.getByTestId('code-editor-container')).toBeInTheDocument()
       expect(screen.getByTestId('monaco-editor')).toBeInTheDocument()
@@ -168,9 +180,11 @@ describe('CodeEditorSection Component', () => {
           {...defaultProps}
           language="TSX"
           hasPreview={true}
-        />
+        />,
       )
-      expect(screen.getByTestId('split-screen-editor-container')).toBeInTheDocument()
+      expect(
+        screen.getByTestId('split-screen-editor-container'),
+      ).toBeInTheDocument()
       expect(screen.getByTestId('split-screen-editor')).toBeInTheDocument()
     })
 
@@ -180,11 +194,13 @@ describe('CodeEditorSection Component', () => {
           {...defaultProps}
           language="HTML"
           hasPreview={true}
-        />
+        />,
       )
       // Should show Monaco editor for unsupported language, not split screen
       expect(screen.getByTestId('code-editor-container')).toBeInTheDocument()
-      expect(screen.queryByTestId('split-screen-editor')).not.toBeInTheDocument()
+      expect(
+        screen.queryByTestId('split-screen-editor'),
+      ).not.toBeInTheDocument()
     })
   })
 
@@ -200,12 +216,7 @@ describe('CodeEditorSection Component', () => {
 
     it('should pass code prop to editor', () => {
       const customCode = 'console.log("test")'
-      render(
-        <CodeEditorSection
-          {...defaultProps}
-          code={customCode}
-        />
-      )
+      render(<CodeEditorSection {...defaultProps} code={customCode} />)
       const editor = screen.getByTestId('monaco-editor') as HTMLTextAreaElement
       expect(editor.value).toBe(customCode)
     })
@@ -217,30 +228,24 @@ describe('CodeEditorSection Component', () => {
         <CodeEditorSection
           {...defaultProps}
           errors={{ code: 'Syntax error on line 5' }}
-        />
+        />,
       )
       expect(screen.getByTestId('code-error-message')).toBeInTheDocument()
       expect(screen.getByText('Syntax error on line 5')).toBeInTheDocument()
     })
 
     it('should not display error message when there is no error', () => {
-      render(
-        <CodeEditorSection
-          {...defaultProps}
-          errors={{}}
-        />
-      )
+      render(<CodeEditorSection {...defaultProps} errors={{}} />)
       expect(screen.queryByTestId('code-error-message')).not.toBeInTheDocument()
     })
 
     it('should apply error styling when error exists', () => {
       const { container } = render(
-        <CodeEditorSection
-          {...defaultProps}
-          errors={{ code: 'Error' }}
-        />
+        <CodeEditorSection {...defaultProps} errors={{ code: 'Error' }} />,
       )
-      const errorContainer = container.querySelector('[data-testid="code-editor-container"]')
+      const errorContainer = container.querySelector(
+        '[data-testid="code-editor-container"]',
+      )
       expect(errorContainer?.className).toContain('destructive')
     })
 
@@ -251,9 +256,11 @@ describe('CodeEditorSection Component', () => {
           language="TSX"
           hasPreview={true}
           errors={{ code: 'Error' }}
-        />
+        />,
       )
-      const splitScreenContainer = container.querySelector('[data-testid="split-screen-editor-container"]')
+      const splitScreenContainer = container.querySelector(
+        '[data-testid="split-screen-editor-container"]',
+      )
       expect(splitScreenContainer?.className).toContain('ring-destructive')
     })
   })
@@ -266,23 +273,13 @@ describe('CodeEditorSection Component', () => {
     })
 
     it('should handle empty code string', () => {
-      render(
-        <CodeEditorSection
-          {...defaultProps}
-          code=""
-        />
-      )
+      render(<CodeEditorSection {...defaultProps} code="" />)
       const editor = screen.getByTestId('monaco-editor') as HTMLTextAreaElement
       expect(editor.value).toBe('')
     })
 
     it('should handle empty input parameters', () => {
-      render(
-        <CodeEditorSection
-          {...defaultProps}
-          inputParameters={[]}
-        />
-      )
+      render(<CodeEditorSection {...defaultProps} inputParameters={[]} />)
       expect(screen.getByTestId('code-editor-container')).toBeInTheDocument()
     })
 
@@ -296,23 +293,29 @@ describe('CodeEditorSection Component', () => {
           language="TSX"
           hasPreview={true}
           inputParameters={params}
-        />
+        />,
       )
-      expect(screen.getByTestId('split-screen-editor-container')).toBeInTheDocument()
+      expect(
+        screen.getByTestId('split-screen-editor-container'),
+      ).toBeInTheDocument()
     })
   })
 
   describe('Editor Container Styling', () => {
     it('should render code editor container with proper classes', () => {
       const { container } = render(<CodeEditorSection {...defaultProps} />)
-      const editorContainer = container.querySelector('[data-testid="code-editor-container"]')
+      const editorContainer = container.querySelector(
+        '[data-testid="code-editor-container"]',
+      )
       expect(editorContainer?.className).toContain('rounded-md')
       expect(editorContainer?.className).toContain('border')
     })
 
     it('should render code editor container with border styling', () => {
       const { container } = render(<CodeEditorSection {...defaultProps} />)
-      const editorContainer = container.querySelector('[data-testid="code-editor-container"]')
+      const editorContainer = container.querySelector(
+        '[data-testid="code-editor-container"]',
+      )
       expect(editorContainer?.className).toContain('border-border')
     })
   })
@@ -329,7 +332,7 @@ describe('CodeEditorSection Component', () => {
           {...defaultProps}
           language="TSX"
           hasPreview={true}
-        />
+        />,
       )
       expect(screen.getByTestId('split-screen-editor')).toBeInTheDocument()
     })
@@ -341,7 +344,7 @@ describe('CodeEditorSection Component', () => {
           language="TSX"
           hasPreview={true}
           functionName="MyComponent"
-        />
+        />,
       )
       const splitScreenEditor = screen.getByTestId('split-screen-editor')
       expect(splitScreenEditor).toBeInTheDocument()
@@ -360,12 +363,7 @@ describe('CodeEditorSection Component', () => {
     })
 
     it('should have error message with proper id attribute', () => {
-      render(
-        <CodeEditorSection
-          {...defaultProps}
-          errors={{ code: 'Error' }}
-        />
-      )
+      render(<CodeEditorSection {...defaultProps} errors={{ code: 'Error' }} />)
       const errorMsg = screen.getByTestId('code-error-message')
       expect(errorMsg.id).toBe('code-error')
     })
@@ -376,9 +374,11 @@ describe('CodeEditorSection Component', () => {
       const supportedLanguages = ['JSX', 'TSX', 'JavaScript', 'TypeScript']
       supportedLanguages.forEach(lang => {
         const { unmount } = render(
-          <CodeEditorSection {...defaultProps} language={lang} />
+          <CodeEditorSection {...defaultProps} language={lang} />,
         )
-        expect(screen.queryByTestId('enable-preview-checkbox')).toBeInTheDocument()
+        expect(
+          screen.queryByTestId('enable-preview-checkbox'),
+        ).toBeInTheDocument()
         unmount()
       })
     })
@@ -388,9 +388,11 @@ describe('CodeEditorSection Component', () => {
       const unsupportedLanguages = ['HTML', 'CSS', 'SQL', 'Go']
       unsupportedLanguages.forEach(lang => {
         const { unmount } = render(
-          <CodeEditorSection {...defaultProps} language={lang} />
+          <CodeEditorSection {...defaultProps} language={lang} />,
         )
-        expect(screen.queryByTestId('enable-preview-checkbox')).not.toBeInTheDocument()
+        expect(
+          screen.queryByTestId('enable-preview-checkbox'),
+        ).not.toBeInTheDocument()
         unmount()
       })
     })

@@ -32,25 +32,48 @@ interface Props {
 }
 
 export function SnippetEditorArea({
-  snippet, viewSnippet, files, activeFile, activeTab, openFiles,
-  canPreview, showPreview, wordWrap, debugger: dbg, onDebugStart,
-  terminal, onFileTabClick, onCloseTab, onTerminalClick,
-  onDebugClick, onCodeChange,
+  snippet,
+  viewSnippet,
+  files,
+  activeFile,
+  activeTab,
+  openFiles,
+  canPreview,
+  showPreview,
+  wordWrap,
+  debugger: dbg,
+  onDebugStart,
+  terminal,
+  onFileTabClick,
+  onCloseTab,
+  onTerminalClick,
+  onDebugClick,
+  onCodeChange,
 }: Props) {
   return (
     <div className={styles.editorColumn}>
       <SnippetEditorTabBar
-        openFiles={openFiles} activeFile={activeFile}
-        activeTab={activeTab} isRunning={terminal.isRunning}
-        onFileTabClick={onFileTabClick} onCloseTab={onCloseTab}
-        onTerminalClick={onTerminalClick} onDebugClick={onDebugClick}
+        openFiles={openFiles}
+        activeFile={activeFile}
+        activeTab={activeTab}
+        isRunning={terminal.isRunning}
+        onFileTabClick={onFileTabClick}
+        onCloseTab={onCloseTab}
+        onTerminalClick={onTerminalClick}
+        onDebugClick={onDebugClick}
       />
       <SnippetEditorPanels
-        snippet={snippet} viewSnippet={viewSnippet}
-        files={files} activeFile={activeFile} activeTab={activeTab}
-        canPreview={canPreview} showPreview={showPreview}
-        wordWrap={wordWrap} debugger={dbg}
-        onDebugStart={onDebugStart} terminal={terminal}
+        snippet={snippet}
+        viewSnippet={viewSnippet}
+        files={files}
+        activeFile={activeFile}
+        activeTab={activeTab}
+        canPreview={canPreview}
+        showPreview={showPreview}
+        wordWrap={wordWrap}
+        debugger={dbg}
+        onDebugStart={onDebugStart}
+        terminal={terminal}
         onCodeChange={onCodeChange}
       />
     </div>

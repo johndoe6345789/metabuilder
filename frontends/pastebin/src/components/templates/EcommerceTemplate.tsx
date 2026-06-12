@@ -26,14 +26,28 @@ export function EcommerceTemplate() {
       role="main"
       aria-label="Ecommerce template"
     >
-      <div style={{
-        borderBottom: '1px solid var(--mat-sys-outline-variant)',
-        backgroundColor: 'var(--mat-sys-surface-container)',
-        padding: '16px',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div
+        style={{
+          borderBottom: '1px solid var(--mat-sys-outline-variant)',
+          backgroundColor: 'var(--mat-sys-surface-container)',
+          padding: '16px',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
           <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-            <h3 style={{ fontSize: '1.25rem', lineHeight: '1.75rem', fontWeight: 700 }}>
+            <h3
+              style={{
+                fontSize: '1.25rem',
+                lineHeight: '1.75rem',
+                fontWeight: 700,
+              }}
+            >
               Store
             </h3>
             <div className={styles.searchBar}>
@@ -57,35 +71,73 @@ export function EcommerceTemplate() {
 
       <div style={{ padding: '32px' }}>
         <div className={styles.productGrid}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div style={{
-              aspectRatio: '1 / 1',
-              borderRadius: '12px',
-              background:
-                'linear-gradient(to bottom right, ' +
-                'var(--mat-sys-primary), var(--mat-sys-secondary-container))',
-            }} />
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
-              {[1, 2, 3, 4].map((i) => (
+          <div
+            style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}
+          >
+            <div
+              style={{
+                aspectRatio: '1 / 1',
+                borderRadius: '12px',
+                background:
+                  'linear-gradient(to bottom right, ' +
+                  'var(--mat-sys-primary), var(--mat-sys-secondary-container))',
+              }}
+            />
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(4, 1fr)',
+                gap: '8px',
+              }}
+            >
+              {[1, 2, 3, 4].map(i => (
                 <div
                   key={i}
-                  style={{ aspectRatio: '1 / 1', borderRadius: '12px', ...thumbnailBg }}
+                  style={{
+                    aspectRatio: '1 / 1',
+                    borderRadius: '12px',
+                    ...thumbnailBg,
+                  }}
                 />
               ))}
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div
+            style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}
+          >
             <div>
               <Chip style={{ marginBottom: '12px' }}>New Arrival</Chip>
-              <h1 style={{ fontSize: '2.25rem', lineHeight: '2.5rem', fontWeight: 700, marginBottom: '8px' }}>
+              <h1
+                style={{
+                  fontSize: '2.25rem',
+                  lineHeight: '2.5rem',
+                  fontWeight: 700,
+                  marginBottom: '8px',
+                }}
+              >
                 Premium Product Name
               </h1>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px' }}>
-                <span style={{ fontSize: '1.875rem', lineHeight: '2.25rem', fontWeight: 700 }}>
+              <div
+                style={{ display: 'flex', alignItems: 'baseline', gap: '12px' }}
+              >
+                <span
+                  style={{
+                    fontSize: '1.875rem',
+                    lineHeight: '2.25rem',
+                    fontWeight: 700,
+                  }}
+                >
                   $299.00
                 </span>
-                <span style={{ fontSize: '1.125rem', lineHeight: '1.75rem', color: onSurfaceVariant, textDecoration: 'line-through' }}>
+                <span
+                  style={{
+                    fontSize: '1.125rem',
+                    lineHeight: '1.75rem',
+                    color: onSurfaceVariant,
+                    textDecoration: 'line-through',
+                  }}
+                >
                   $399.00
                 </span>
               </div>
@@ -94,7 +146,9 @@ export function EcommerceTemplate() {
             <Divider />
 
             <div>
-              <h3 style={{ fontWeight: 600, marginBottom: '8px' }}>Description</h3>
+              <h3 style={{ fontWeight: 600, marginBottom: '8px' }}>
+                Description
+              </h3>
               <p style={{ color: onSurfaceVariant }}>
                 Experience premium quality with this exceptional product.
                 Crafted with attention to detail and designed for those who
@@ -104,7 +158,14 @@ export function EcommerceTemplate() {
 
             <div>
               <h3 style={{ fontWeight: 600, marginBottom: '8px' }}>Features</h3>
-              <ul style={{ display: 'flex', flexDirection: 'column', gap: '8px', color: onSurfaceVariant }}>
+              <ul
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px',
+                  color: onSurfaceVariant,
+                }}
+              >
                 <li>• Premium materials and construction</li>
                 <li>• Industry-leading performance</li>
                 <li>• 2-year warranty included</li>
@@ -114,7 +175,9 @@ export function EcommerceTemplate() {
 
             <Divider />
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div
+              style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}
+            >
               <Button size="lg" style={{ width: '100%' }}>
                 <MaterialIcon
                   name="shopping_cart"

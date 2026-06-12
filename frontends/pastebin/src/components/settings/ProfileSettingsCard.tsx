@@ -1,18 +1,22 @@
-'use client';
+'use client'
 
 import {
-  Card, CardContent, CardHeader,
-  Button, FormLabel, MaterialIcon,
-} from '@metabuilder/components/fakemui';
-import { MarkdownRenderer } from '@/components/error/MarkdownRenderer';
-import { useProfileSettings } from './hooks/useProfileSettings';
-import styles from './settings-card.module.scss';
-import profileStyles from './profile-settings-card.module.scss';
+  Card,
+  CardContent,
+  CardHeader,
+  Button,
+  FormLabel,
+  MaterialIcon,
+} from '@metabuilder/components/fakemui'
+import { MarkdownRenderer } from '@/components/error/MarkdownRenderer'
+import { useProfileSettings } from './hooks/useProfileSettings'
+import styles from './settings-card.module.scss'
+import profileStyles from './profile-settings-card.module.scss'
 
 export function ProfileSettingsCard() {
-  const vm = useProfileSettings();
+  const vm = useProfileSettings()
 
-  if (!vm.user) return null;
+  if (!vm.user) return null
 
   return (
     <Card>
@@ -26,16 +30,12 @@ export function ProfileSettingsCard() {
           />
           <h3 className={styles.cardTitle}>Profile</h3>
         </div>
-        <p className={styles.cardDescription}>
-          Customize how others see you.
-        </p>
+        <p className={styles.cardDescription}>Customize how others see you.</p>
       </CardHeader>
       <CardContent>
         <div className={styles.contentStackSm}>
           <div className={profileStyles.field}>
-            <FormLabel htmlFor="profile-username">
-              Username
-            </FormLabel>
+            <FormLabel htmlFor="profile-username">Username</FormLabel>
             <input
               id="profile-username"
               type="text"
@@ -73,10 +73,7 @@ export function ProfileSettingsCard() {
             {vm.preview ? (
               <div className={profileStyles.previewBox}>
                 {vm.bio.trim() ? (
-                  <MarkdownRenderer
-                    content={vm.bio}
-                    animate={false}
-                  />
+                  <MarkdownRenderer content={vm.bio} animate={false} />
                 ) : (
                   <p className={profileStyles.previewEmpty}>
                     Nothing to preview.
@@ -106,14 +103,10 @@ export function ProfileSettingsCard() {
               size={16}
               aria-hidden="true"
             />
-            {vm.saving
-              ? 'Saving…'
-              : vm.saved
-                ? 'Saved!'
-                : 'Save Profile'}
+            {vm.saving ? 'Saving…' : vm.saved ? 'Saved!' : 'Save Profile'}
           </Button>
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }

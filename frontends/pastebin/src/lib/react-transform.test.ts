@@ -216,7 +216,8 @@ describe('transformReactCode', () => {
         const y = 10
       `
       expect(() => transformReactCode(code)).toThrow(
-        'No component found. Please specify a function/component name or ensure your code exports a component.'
+        // eslint-disable-next-line max-len
+        'No component found. Please specify a function/component name or ensure your code exports a component.',
       )
     })
 
@@ -225,7 +226,7 @@ describe('transformReactCode', () => {
         const notAComponent = 42
       `
       expect(() => transformReactCode(code, 'notAComponent')).toThrow(
-        'Code must export a React component or JSX element'
+        'Code must export a React component or JSX element',
       )
     })
 

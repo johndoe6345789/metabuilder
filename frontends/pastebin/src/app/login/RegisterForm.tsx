@@ -3,12 +3,20 @@ import { PasswordField } from './PasswordField'
 import styles from './login.module.scss'
 
 export function RegisterForm({
-  username, password, confirm,
-  showPass, showConf,
-  displayError, loading,
-  onUsernameChange, onPasswordChange, onConfirmChange,
-  onTogglePass, onToggleConf,
-  onSubmit, onSwitchSignIn,
+  username,
+  password,
+  confirm,
+  showPass,
+  showConf,
+  displayError,
+  loading,
+  onUsernameChange,
+  onPasswordChange,
+  onConfirmChange,
+  onTogglePass,
+  onToggleConf,
+  onSubmit,
+  onSwitchSignIn,
 }: RegisterFormProps) {
   return (
     <>
@@ -20,11 +28,7 @@ export function RegisterForm({
       </div>
 
       {displayError && (
-        <div
-          className={styles.error}
-          data-testid="register-error"
-          role="alert"
-        >
+        <div className={styles.error} data-testid="register-error" role="alert">
           {displayError}
         </div>
       )}
@@ -36,11 +40,20 @@ export function RegisterForm({
         aria-label="Create account"
       >
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="reg-u">Username</label>
-          <input id="reg-u" className={styles.input} type="text"
-            data-testid="register-username" aria-required="true"
-            value={username} onChange={e => onUsernameChange(e.target.value)}
-            required autoFocus autoComplete="username"
+          <label className={styles.label} htmlFor="reg-u">
+            Username
+          </label>
+          <input
+            id="reg-u"
+            className={styles.input}
+            type="text"
+            data-testid="register-username"
+            aria-required="true"
+            value={username}
+            onChange={e => onUsernameChange(e.target.value)}
+            required
+            autoFocus
+            autoComplete="username"
           />
         </div>
 
@@ -89,7 +102,11 @@ export function RegisterForm({
       <div className={styles.divider} />
       <div className={styles.switchRow}>
         Already have an account?{' '}
-        <button type="button" data-testid="register-switch-login" onClick={onSwitchSignIn}>
+        <button
+          type="button"
+          data-testid="register-switch-login"
+          onClick={onSwitchSignIn}
+        >
           Log In.
         </button>
       </div>

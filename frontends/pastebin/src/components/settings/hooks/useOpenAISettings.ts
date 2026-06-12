@@ -36,7 +36,11 @@ export function useOpenAISettings() {
   useEffect(() => {
     const flask = baseUrl()
     const token = getAuthToken()
-    if (!flask || !token) { setServerKeyStatus('none'); return }
+    if (!flask || !token) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setServerKeyStatus('none')
+      return
+    }
     setServerKeyStatus('unknown')
     fetch(`${flask}/api/ai/settings`, { headers: authHeaders() })
       .then(r => (r.ok ? r.json() : null))
@@ -80,7 +84,7 @@ export function useOpenAISettings() {
           setServerKeyStatus(apiKey.trim() ? 'stored' : 'none')
         } else {
           console.warn(
-            '[OpenAISettingsCard] server save failed, localStorage is fallback'
+            '[OpenAISettingsCard] server save failed, localStorage is fallback',
           )
         }
       } catch (e) {

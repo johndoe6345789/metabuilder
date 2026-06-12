@@ -36,7 +36,7 @@ const snippetsSlice = createSlice({
   name: 'snippets',
   initialState,
   reducers: {
-    toggleSelectionMode: (state) => {
+    toggleSelectionMode: state => {
       state.selectionMode = !state.selectionMode
       if (!state.selectionMode) state.selectedIds = []
     },
@@ -48,13 +48,15 @@ const snippetsSlice = createSlice({
         state.selectedIds.push(action.payload)
       }
     },
-    clearSelection: (state) => { state.selectedIds = [] },
-    selectAllSnippets: (state) => {
+    clearSelection: state => {
+      state.selectedIds = []
+    },
+    selectAllSnippets: state => {
       state.selectedIds = state.items.map(s => s.id)
     },
     patchSnippetLocal: (
       state,
-      action: { payload: { id: string; fields: Partial<Snippet> } }
+      action: { payload: { id: string; fields: Partial<Snippet> } },
     ) => {
       const idx = state.items.findIndex(s => s.id === action.payload.id)
       if (idx !== -1) {

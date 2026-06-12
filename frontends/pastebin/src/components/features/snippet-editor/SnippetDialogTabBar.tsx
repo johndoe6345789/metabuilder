@@ -46,11 +46,7 @@ interface TabPanelProps {
 }
 
 /** Renders only when active — avoids mat-mdc-tab-body absolute positioning. */
-export function TabPanel({
-  active,
-  index,
-  children,
-}: TabPanelProps) {
+export function TabPanel({ active, index, children }: TabPanelProps) {
   if (!active) return null
   return (
     <section

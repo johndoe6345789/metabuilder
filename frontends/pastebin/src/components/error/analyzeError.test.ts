@@ -101,7 +101,7 @@ describe('analyzeErrorWithAI Function', () => {
 
       expect(mockFetch).toHaveBeenCalledWith(
         'https://api.openai.com/v1/chat/completions',
-        expect.any(Object)
+        expect.any(Object),
       )
       expect(result).toContain('AI Analysis Result')
     })
@@ -118,7 +118,10 @@ describe('analyzeErrorWithAI Function', () => {
       await analyzeErrorWithAI('Error')
 
       const callArgs = mockFetch.mock.calls[0]
-      const headers = (callArgs[1] as RequestInit).headers as Record<string, string>
+      const headers = (callArgs[1] as RequestInit).headers as Record<
+        string,
+        string
+      >
       expect(headers['Authorization']).toBe('Bearer test-api-key-12345')
     })
 
@@ -134,7 +137,10 @@ describe('analyzeErrorWithAI Function', () => {
       await analyzeErrorWithAI('Error')
 
       const callArgs = mockFetch.mock.calls[0]
-      const headers = (callArgs[1] as RequestInit).headers as Record<string, string>
+      const headers = (callArgs[1] as RequestInit).headers as Record<
+        string,
+        string
+      >
       expect(headers['Content-Type']).toBe('application/json')
     })
 
@@ -393,6 +399,7 @@ describe('analyzeErrorWithAI Function', () => {
       await analyzeErrorWithAI('Error', 'stack', undefined)
 
       const callArgs = mockFetch.mock.calls[0]
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const body = JSON.parse((callArgs[1] as RequestInit).body as string)
       // Should not include context section
     })
@@ -481,8 +488,7 @@ describe('analyzeErrorWithAI Function', () => {
           choices: [
             {
               message: {
-                content:
-                  '## Analysis\n\nThe error occurred because...',
+                content: '## Analysis\n\nThe error occurred because...',
               },
             },
           ],
@@ -492,7 +498,7 @@ describe('analyzeErrorWithAI Function', () => {
       const result = await analyzeErrorWithAI(
         'Error message',
         'stack trace here',
-        'Context info'
+        'Context info',
       )
 
       expect(result).toBe('## Analysis\n\nThe error occurred because...')
@@ -528,7 +534,7 @@ describe('analyzeErrorWithAI Function', () => {
       await analyzeErrorWithAI(
         'TypeError: x is undefined',
         'at foo.js:10',
-        'User clicked save'
+        'User clicked save',
       )
 
       const callArgs = mockFetch.mock.calls[0]

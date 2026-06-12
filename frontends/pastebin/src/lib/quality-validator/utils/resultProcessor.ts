@@ -12,7 +12,7 @@ export {
   extractFindingsFromResults,
   extractExecutionTimes,
   calculateTotalExecutionTime,
-} from './result-aggregators.js';
+} from './result-aggregators.js'
 
 export {
   calculateWeightedScore,
@@ -24,7 +24,7 @@ export {
   calculateAverageComponentScore,
   getScoreExtremes,
   generateMetricsSummary,
-} from './result-scoring.js';
+} from './result-scoring.js'
 
 export {
   countFindingsBySeverity,
@@ -36,4 +36,4 @@ export {
   getTopRecommendations,
   getCriticalFindings,
   getLowPriorityFindings,
-} from './result-filters.js';
+} from './result-filters.js'

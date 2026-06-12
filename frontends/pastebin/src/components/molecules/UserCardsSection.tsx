@@ -2,15 +2,20 @@ import { Card, Button, Chip, Avatar } from '@metabuilder/components/fakemui'
 import styles from './UserCardsSection.module.scss'
 
 const nameStyle = {
-  fontWeight: 600, fontSize: '1.125rem', lineHeight: '1.75rem',
+  fontWeight: 600,
+  fontSize: '1.125rem',
+  lineHeight: '1.75rem',
 }
 const subtextStyle = {
-  fontSize: '0.875rem', lineHeight: '1.25rem',
+  fontSize: '0.875rem',
+  lineHeight: '1.25rem',
   color: 'var(--mat-sys-on-surface-variant)',
 }
 const h2Style = {
-  fontSize: '1.875rem', lineHeight: '2.25rem',
-  fontWeight: 700, marginBottom: '8px',
+  fontSize: '1.875rem',
+  lineHeight: '2.25rem',
+  fontWeight: 700,
+  marginBottom: '8px',
 }
 
 export function UserCardsSection() {
@@ -30,23 +35,37 @@ export function UserCardsSection() {
 
       <div className={styles.userCardsGrid}>
         <Card className="p-6">
-          <div style={{
-            display: 'flex', alignItems: 'flex-start', gap: '16px',
-          }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '16px',
+            }}
+          >
             <Avatar
               style={{ width: '48px', height: '48px' }}
               src="https://i.pravatar.cc/150?img=1"
               alt="Alex Morgan"
-            >AM</Avatar>
+            >
+              AM
+            </Avatar>
             <div style={{ flex: 1, minWidth: 0 }}>
               <h3 style={nameStyle}>Alex Morgan</h3>
               <p style={subtextStyle}>@alexmorgan</p>
-              <p style={{ fontSize: '0.875rem', lineHeight: '1.25rem', marginTop: '8px' }}>
-                Product designer passionate about creating delightful
-                user experiences.
+              <p
+                style={{
+                  fontSize: '0.875rem',
+                  lineHeight: '1.25rem',
+                  marginTop: '8px',
+                }}
+              >
+                Product designer passionate about creating delightful user
+                experiences.
               </p>
             </div>
-            <Button size="sm" variant="outlined">Follow</Button>
+            <Button size="sm" variant="outlined">
+              Follow
+            </Button>
           </div>
         </Card>
 
@@ -56,7 +75,9 @@ export function UserCardsSection() {
               style={{ width: '64px', height: '64px' }}
               src="https://i.pravatar.cc/150?img=2"
               alt="Jordan Davis"
-            >JD</Avatar>
+            >
+              JD
+            </Avatar>
             <div style={{ flex: 1, minWidth: 0 }}>
               <h3 style={nameStyle}>Jordan Davis</h3>
               <p style={{ ...subtextStyle, marginBottom: '8px' }}>

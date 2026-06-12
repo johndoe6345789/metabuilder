@@ -1,8 +1,13 @@
-"use client"
+'use client'
 
 import {
-  Dialog, DialogTitle, DialogContent,
-  DialogActions, DialogClose, Button, MaterialIcon,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  DialogClose,
+  Button,
+  MaterialIcon,
 } from '@metabuilder/components/fakemui'
 import { Snippet } from '@/lib/types'
 import { useTranslation } from '@/hooks/useTranslation'
@@ -27,7 +32,11 @@ export function SnippetDialog({
 }: SnippetDialogProps) {
   const t = useTranslation()
   const vm = useSnippetDialog({
-    open, editingSnippet, metadataOnly, onSave, onOpenChange,
+    open,
+    editingSnippet,
+    metadataOnly,
+    onSave,
+    onOpenChange,
   })
   const { form } = vm
 
@@ -120,9 +129,7 @@ export function SnippetDialog({
             onClick={vm.handleSave}
             data-testid="snippet-dialog-save-btn"
             aria-label={
-              editingSnippet
-                ? 'Update snippet'
-                : 'Create new snippet'
+              editingSnippet ? 'Update snippet' : 'Create new snippet'
             }
           >
             {editingSnippet

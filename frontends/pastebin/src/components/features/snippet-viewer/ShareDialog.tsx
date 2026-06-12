@@ -13,19 +13,13 @@ interface ShareDialogProps {
   snippet: Snippet
 }
 
-export function ShareDialog({
-  open,
-  onClose,
-  snippet,
-}: ShareDialogProps) {
+export function ShareDialog({ open, onClose, snippet }: ShareDialogProps) {
   const vm = useShareDialog(snippet)
 
   if (!open) return null
 
   const { shareUrl, generating, revoking, copied } = vm
-  const encodedTitle = encodeURIComponent(
-    `Check out: ${snippet.title}`,
-  )
+  const encodedTitle = encodeURIComponent(`Check out: ${snippet.title}`)
   const encodedUrl = shareUrl ? encodeURIComponent(shareUrl) : ''
 
   return (
@@ -65,12 +59,10 @@ export function ShareDialog({
                 className={styles.lockIcon}
                 aria-hidden="true"
               />
-              <p className={styles.privateText}>
-                This snippet is private
-              </p>
+              <p className={styles.privateText}>This snippet is private</p>
               <p className={styles.privateHint}>
-                Generate a secret link to share it with anyone —
-                without exposing your snippet ID.
+                Generate a secret link to share it with anyone — without
+                exposing your snippet ID.
               </p>
             </div>
             <button
@@ -92,9 +84,7 @@ export function ShareDialog({
                   value={shareUrl}
                   readOnly
                   className={styles.urlInput}
-                  onClick={e =>
-                    (e.target as HTMLInputElement).select()
-                  }
+                  onClick={e => (e.target as HTMLInputElement).select()}
                   aria-label="Share URL"
                 />
                 <button

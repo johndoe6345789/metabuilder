@@ -3,42 +3,64 @@
  */
 
 import type {
-  Snippet, Namespace, SnippetComment, ProfileComment,
+  Snippet,
+  Namespace,
+  SnippetComment,
+  ProfileComment,
 } from './types'
 import { getAuthToken } from './authToken'
 import {
-  dbalGetAllSnippets, dbalGetSnippet, dbalCreateSnippet,
-  dbalUpdateSnippet, dbalDeleteSnippet, dbalGetSnippetsByNamespace,
+  dbalGetAllSnippets,
+  dbalGetSnippet,
+  dbalCreateSnippet,
+  dbalUpdateSnippet,
+  dbalDeleteSnippet,
+  dbalGetSnippetsByNamespace,
   dbalBulkMoveSnippets,
 } from './storage-dbal-snippets'
 import {
-  dbalGetAllNamespaces, dbalCreateNamespace, dbalUpdateNamespace,
-  dbalDeleteNamespace, dbalGetSnippetComments, dbalCreateSnippetComment,
-  dbalGetProfileComments, dbalCreateProfileComment,
+  dbalGetAllNamespaces,
+  dbalCreateNamespace,
+  dbalUpdateNamespace,
+  dbalDeleteNamespace,
+  dbalGetSnippetComments,
+  dbalCreateSnippetComment,
+  dbalGetProfileComments,
+  dbalCreateProfileComment,
 } from './storage-dbal-namespaces'
 
-const T = 'pastebin', P = 'pastebin'
+const T = 'pastebin',
+  P = 'pastebin'
 
 export class DBALStorageAdapter {
   private base: string
-  constructor(url: string) { this.base = url.replace(/\/$/, '') }
+  constructor(url: string) {
+    this.base = url.replace(/\/$/, '')
+  }
   private h = () => {
     const t = getAuthToken()
-    return t ? { Authorization: `Bearer ${t}` } : {} as Record<string, string>
+    return t ? { Authorization: `Bearer ${t}` } : ({} as Record<string, string>)
   }
   private eu = () => `${this.base}/${T}/${P}`
   private uid = () => {
     const t = getAuthToken()
     if (!t) return ''
-    try { return (JSON.parse(atob(t.split('.')[1])).sub ?? '') as string }
-    catch { return '' }
+    try {
+      return (JSON.parse(atob(t.split('.')[1])).sub ?? '') as string
+    } catch {
+      return ''
+    }
   }
   async testConnection() {
     try {
-      return (await fetch(`${this.base}/health`, {
-        signal: AbortSignal.timeout(5000),
-      })).ok
-    } catch { return false }
+      return (
+        await fetch(`${this.base}/health`, {
+          signal: AbortSignal.timeout(5000),
+        })
+      ).ok
+    } catch {
+      return false
+    }
   }
   getAllSnippets = () => dbalGetAllSnippets(this.eu(), this.uid(), this.h())
   getSnippet = (id: string) => dbalGetSnippet(this.eu(), id, this.h())
@@ -51,8 +73,7 @@ export class DBALStorageAdapter {
     dbalGetSnippetsByNamespace(this.eu(), ns, this.uid(), this.h())
   bulkMoveSnippets = (ids: string[], ns: string) =>
     dbalBulkMoveSnippets(this.eu(), ids, ns, this.h())
-  getAllNamespaces = () =>
-    dbalGetAllNamespaces(this.eu(), this.uid(), this.h())
+  getAllNamespaces = () => dbalGetAllNamespaces(this.eu(), this.uid(), this.h())
   async getNamespace(id: string): Promise<Namespace | null> {
     return (await this.getAllNamespaces()).find(n => n.id === id) || null
   }
@@ -60,8 +81,7 @@ export class DBALStorageAdapter {
     dbalCreateNamespace(this.eu(), ns, this.uid(), this.h())
   updateNamespace = (id: string, name: string) =>
     dbalUpdateNamespace(this.eu(), id, name, this.h())
-  deleteNamespace = (id: string) =>
-    dbalDeleteNamespace(this.eu(), id, this.h())
+  deleteNamespace = (id: string) => dbalDeleteNamespace(this.eu(), id, this.h())
   getSnippetComments = (sid: string) =>
     dbalGetSnippetComments(this.eu(), sid, this.h())
   createSnippetComment = (c: SnippetComment) =>
@@ -70,10 +90,13 @@ export class DBALStorageAdapter {
     dbalGetProfileComments(this.eu(), uid, this.h())
   createProfileComment = (c: ProfileComment) =>
     dbalCreateProfileComment(this.eu(), c, this.h())
-  async clearDatabase() { /* Not supported via DBAL */ }
+  async clearDatabase() {
+    /* Not supported via DBAL */
+  }
   async getStats() {
     const [s, n] = await Promise.all([
-      this.getAllSnippets(), this.getAllNamespaces(),
+      this.getAllSnippets(),
+      this.getAllNamespaces(),
     ])
     return {
       snippetCount: s.length,
@@ -89,9 +112,7 @@ export class DBALStorageAdapter {
       namespaces: await this.getAllNamespaces(),
     }
   }
-  async importDatabase(data: {
-    snippets: Snippet[], namespaces: Namespace[],
-  }) {
+  async importDatabase(data: { snippets: Snippet[]; namespaces: Namespace[] }) {
     for (const ns of data.namespaces) await this.createNamespace(ns)
     for (const s of data.snippets) await this.createSnippet(s)
   }

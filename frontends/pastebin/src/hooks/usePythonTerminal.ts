@@ -1,5 +1,9 @@
 import { useState, useRef } from 'react'
-import { startInteractiveSession, pollSession, sendSessionInput } from '@/lib/flask-runner'
+import {
+  startInteractiveSession,
+  pollSession,
+  sendSessionInput,
+} from '@/lib/flask-runner'
 
 interface TerminalLine {
   type: 'output' | 'error' | 'input-prompt' | 'input-value'
@@ -10,10 +14,14 @@ interface TerminalLine {
 // Maps backend line types to the terminal line types the UI expects
 function mapType(backendType: string): TerminalLine['type'] {
   switch (backendType) {
-    case 'err':         return 'error'
-    case 'prompt':      return 'input-prompt'
-    case 'input-echo':  return 'input-value'
-    default:            return 'output'
+    case 'err':
+      return 'error'
+    case 'prompt':
+      return 'input-prompt'
+    case 'input-echo':
+      return 'input-value'
+    default:
+      return 'output'
   }
 }
 
@@ -29,10 +37,16 @@ export function usePythonTerminal() {
   const pollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   function addLine(type: TerminalLine['type'], content: string) {
-    setLines((prev) => [...prev, { type, content, id: `${Date.now()}-${Math.random()}` }])
+    setLines(prev => [
+      ...prev,
+      { type, content, id: `${Date.now()}-${Math.random()}` },
+    ])
   }
   function stopPolling() {
-    if (pollTimerRef.current) { clearTimeout(pollTimerRef.current); pollTimerRef.current = null }
+    if (pollTimerRef.current) {
+      clearTimeout(pollTimerRef.current)
+      pollTimerRef.current = null
+    }
   }
 
   async function poll() {
@@ -62,11 +76,19 @@ export function usePythonTerminal() {
   }
 
   const handleRun = async (code: string) => {
-    stopPolling(); setLines([]); setWaitingForInput(false); setInputValue('')
-    offsetRef.current = 0; sessionIdRef.current = null; setIsRunning(true)
+    stopPolling()
+    setLines([])
+    setWaitingForInput(false)
+    setInputValue('')
+    offsetRef.current = 0
+    sessionIdRef.current = null
+    setIsRunning(true)
 
     try {
-      const sid = await startInteractiveSession({ language: 'python', files: [{ name: 'main.py', content: code }] })
+      const sid = await startInteractiveSession({
+        language: 'python',
+        files: [{ name: 'main.py', content: code }],
+      })
       sessionIdRef.current = sid
       pollTimerRef.current = setTimeout(poll, POLL_INTERVAL_MS)
     } catch (err) {
@@ -80,7 +102,9 @@ export function usePythonTerminal() {
     const sid = sessionIdRef.current
     if (!waitingForInput || !sid) return
 
-    const value = inputValue; setInputValue(''); setWaitingForInput(false)
+    const value = inputValue
+    setInputValue('')
+    setWaitingForInput(false)
 
     try {
       await sendSessionInput(sid, value)
@@ -89,5 +113,14 @@ export function usePythonTerminal() {
     }
   }
 
-  return { lines, isRunning, isInitializing: false, inputValue, waitingForInput, setInputValue, handleInputSubmit, handleRun }
+  return {
+    lines,
+    isRunning,
+    isInitializing: false,
+    inputValue,
+    waitingForInput,
+    setInputValue,
+    handleInputSubmit,
+    handleRun,
+  }
 }

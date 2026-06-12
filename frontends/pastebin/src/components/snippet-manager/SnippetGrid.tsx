@@ -32,7 +32,7 @@ export function SnippetGrid({
       role="region"
       aria-label="Snippets list"
     >
-      {snippets.map((snippet) => (
+      {snippets.map(snippet => (
         <SnippetCard
           key={snippet.id}
           snippet={snippet}

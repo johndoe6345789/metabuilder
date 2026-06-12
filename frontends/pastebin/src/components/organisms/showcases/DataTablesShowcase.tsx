@@ -1,18 +1,35 @@
 import {
-  Card, Button, Chip,
-  Table, TableBody, TableCell,
-  TableContainer, TableHead, TableRow,
+  Card,
+  Button,
+  Chip,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from '@metabuilder/components/fakemui'
 
 const h2Style = {
-  fontSize: '1.875rem', lineHeight: '2.25rem',
-  fontWeight: 700, marginBottom: '8px',
+  fontSize: '1.875rem',
+  lineHeight: '2.25rem',
+  fontWeight: 700,
+  marginBottom: '8px',
 }
 const h3Style = {
-  fontWeight: 600, fontSize: '1.125rem', lineHeight: '1.75rem',
+  fontWeight: 600,
+  fontSize: '1.125rem',
+  lineHeight: '1.75rem',
 }
-const borderBottom = { padding: '16px', borderBottom: '1px solid var(--mat-sys-outline-variant)' }
-const rowBetween = { display: 'flex', alignItems: 'center', justifyContent: 'space-between' }
+const borderBottom = {
+  padding: '16px',
+  borderBottom: '1px solid var(--mat-sys-outline-variant)',
+}
+const rowBetween = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+}
 
 export function DataTablesShowcase() {
   return (
@@ -34,7 +51,9 @@ export function DataTablesShowcase() {
         <div className="border-b" style={borderBottom}>
           <div style={rowBetween}>
             <h3 style={h3Style}>Recent Transactions</h3>
-            <Button variant="outlined" size="sm">Export</Button>
+            <Button variant="outlined" size="sm">
+              Export
+            </Button>
           </div>
         </div>
         <TableContainer>
@@ -49,7 +68,9 @@ export function DataTablesShowcase() {
             </TableHead>
             <TableBody>
               <TableRow>
-                <TableCell><Chip>Completed</Chip></TableCell>
+                <TableCell>
+                  <Chip>Completed</Chip>
+                </TableCell>
                 <TableCell style={{ fontWeight: 500 }}>
                   Payment received
                 </TableCell>
@@ -67,15 +88,19 @@ export function DataTablesShowcase() {
                 <TableCell style={{ textAlign: 'right' }}>$150.00</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell><Chip>Completed</Chip></TableCell>
-                <TableCell style={{ fontWeight: 500 }}>
-                  Refund issued
+                <TableCell>
+                  <Chip>Completed</Chip>
                 </TableCell>
+                <TableCell style={{ fontWeight: 500 }}>Refund issued</TableCell>
                 <TableCell>Mar 13, 2024</TableCell>
-                <TableCell style={{
-                  textAlign: 'right',
-                  color: 'var(--mat-sys-error)',
-                }}>-$75.00</TableCell>
+                <TableCell
+                  style={{
+                    textAlign: 'right',
+                    color: 'var(--mat-sys-error)',
+                  }}
+                >
+                  -$75.00
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>

@@ -237,6 +237,7 @@ export class ScoringEngine {
     /**
      * Generate prioritized recommendations
      */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     generateRecommendations(codeQuality, testCoverage, architecture, security, findings) {
         const recommendations = [];
         // Code quality recommendations

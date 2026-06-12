@@ -3,10 +3,7 @@
  */
 
 import type { Namespace } from './types'
-import {
-  openDB,
-  NAMESPACES_STORE,
-} from './indexeddb-core.js'
+import { openDB, NAMESPACES_STORE } from './indexeddb-core.js'
 
 export async function getAllNamespaces(): Promise<Namespace[]> {
   const db = await openDB()

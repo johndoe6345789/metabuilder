@@ -31,7 +31,12 @@ export function NavigationSidebar() {
             initial={{ x: -260 }}
             animate={{ x: 0 }}
             exit={{ x: -260 }}
-            transition={{ type: 'spring', damping: 32, stiffness: 320, mass: 0.7 }}
+            transition={{
+              type: 'spring',
+              damping: 32,
+              stiffness: 320,
+              mass: 0.7,
+            }}
             className={styles.drawer}
             data-testid="navigation-sidebar"
             id="navigation-sidebar"
@@ -51,18 +56,23 @@ export function NavigationSidebar() {
             </div>
 
             <nav className={styles.nav} data-testid="navigation-items">
-              {navigationItems.map((item) => {
+              {navigationItems.map(item => {
                 const isActive = pathname === item.path
                 return (
                   <Link
                     key={item.path}
                     href={item.path}
                     onClick={() => setMenuOpen(false)}
+                    // eslint-disable-next-line max-len
                     className={`${styles.navItem} ${isActive ? styles.navItemActive : ''}`}
                     data-testid={`nav-link-${item.path.replace(/\//g, '-')}`}
                     aria-current={isActive ? 'page' : undefined}
                   >
-                    <MaterialIcon name={item.icon} size={16} aria-hidden="true" />
+                    <MaterialIcon
+                      name={item.icon}
+                      size={16}
+                      aria-hidden="true"
+                    />
                     <span>{item.label}</span>
                   </Link>
                 )

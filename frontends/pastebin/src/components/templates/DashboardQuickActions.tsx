@@ -33,10 +33,7 @@ export function DashboardQuickActions() {
           Invite Team Members
         </Button>
         <Button style={fullWidthStart} variant="outlined">
-          <MaterialIcon
-            name="folder"
-            style={{ marginRight: '8px' }}
-          />
+          <MaterialIcon name="folder" style={{ marginRight: '8px' }} />
           Browse Templates
         </Button>
       </div>

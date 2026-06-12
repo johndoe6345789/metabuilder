@@ -13,7 +13,10 @@ export function DebugWatchPanel({ dbg }: { dbg: Debugger }) {
   const submit = (e: React.FormEvent) => {
     e.preventDefault()
     const trimmed = expr.trim()
-    if (trimmed) { dbg.addWatch(trimmed); setExpr('') }
+    if (trimmed) {
+      dbg.addWatch(trimmed)
+      setExpr('')
+    }
   }
 
   return (
@@ -22,22 +25,34 @@ export function DebugWatchPanel({ dbg }: { dbg: Debugger }) {
       {watches.map((w: WatchEntry, i) => (
         <div key={i} className={styles.watchRow}>
           <span className={styles.watchExpr}>{w.expr}</span>
-          <span className={
-            `${styles.watchVal} ${w.error ? styles.watchErr : ''}`
-          }>
+          <span
+            className={`${styles.watchVal} ${w.error ? styles.watchErr : ''}`}
+          >
             {w.error ? `⚠ ${w.error}` : (w.value ?? '…')}
           </span>
-          <button className={styles.watchRemove}
+          <button
+            className={styles.watchRemove}
             onClick={() => dbg.removeWatch(i)}
-            aria-label="Remove watch">×</button>
+            aria-label="Remove watch"
+          >
+            ×
+          </button>
         </div>
       ))}
       <form onSubmit={submit} className={styles.watchForm}>
-        <input className={styles.watchInput} value={expr}
+        <input
+          className={styles.watchInput}
+          value={expr}
           onChange={e => setExpr(e.target.value)}
-          placeholder="Add expression…" />
-        <button type="submit" className={styles.watchAdd}
-          disabled={!expr.trim()}>+</button>
+          placeholder="Add expression…"
+        />
+        <button
+          type="submit"
+          className={styles.watchAdd}
+          disabled={!expr.trim()}
+        >
+          +
+        </button>
       </form>
     </section>
   )

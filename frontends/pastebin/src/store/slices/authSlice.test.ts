@@ -18,6 +18,7 @@ function makeStore() {
   return configureStore({ reducer: { auth: authReducer } })
 }
 
+// eslint-disable-next-line max-len
 // Build a minimal valid JWT whose payload contains exp (far future) and given fields.
 function makeJwt(payload: Record<string, unknown>): string {
   const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }))
@@ -44,7 +45,14 @@ describe('authSlice', () => {
       // Manually seed state via fulfilled action
       store.dispatch(
         // @ts-expect-error – direct payload injection for test
-        loginUser.fulfilled({ token: makeJwt({ exp: Date.now() / 1000 + 3600 }), user: { id: '1', username: 'alice' } }, '', {})
+        loginUser.fulfilled(
+          {
+            token: makeJwt({ exp: Date.now() / 1000 + 3600 }),
+            user: { id: '1', username: 'alice' },
+          },
+          '',
+          {},
+        ),
       )
       store.dispatch(logout())
       const state = store.getState().auth
@@ -58,7 +66,11 @@ describe('authSlice', () => {
       const store = makeStore()
       store.dispatch(
         // @ts-expect-error – direct payload injection
-        loginUser.fulfilled({ token: 'tok', user: { id: '1', username: 'u' } }, '', {})
+        loginUser.fulfilled(
+          { token: 'tok', user: { id: '1', username: 'u' } },
+          '',
+          {},
+        ),
       )
       store.dispatch(logout())
       expect(getAuthToken()).toBeNull()
@@ -70,7 +82,7 @@ describe('authSlice', () => {
       const store = makeStore()
       store.dispatch(
         // @ts-expect-error – inject rejected state
-        loginUser.rejected(null, '', {}, 'Bad creds')
+        loginUser.rejected(null, '', {}, 'Bad creds'),
       )
       store.dispatch(clearError())
       expect(store.getState().auth.error).toBeNull()
@@ -95,7 +107,11 @@ describe('authSlice', () => {
       const token = makeJwt({ exp: Date.now() / 1000 + 3600 })
       store.dispatch(
         // @ts-expect-error – inject fulfilled state
-        loginUser.fulfilled({ token, user: { id: '1', username: 'u' } }, '', {})
+        loginUser.fulfilled(
+          { token, user: { id: '1', username: 'u' } },
+          '',
+          {},
+        ),
       )
       // Reset bridge to simulate fresh load
       setAuthToken(null)
@@ -121,8 +137,11 @@ describe('authSlice', () => {
       const token = makeJwt({ exp: Date.now() / 1000 + 3600 })
       const user = { id: '42', username: 'bob' }
       store.dispatch(
-        // @ts-expect-error
-        loginUser.fulfilled({ token, user }, 'req', { username: 'bob', password: 'pw' })
+        // @ts-expect-error testing with invalid payload shape
+        loginUser.fulfilled({ token, user }, 'req', {
+          username: 'bob',
+          password: 'pw',
+        }),
       )
       const state = store.getState().auth
       expect(state.loading).toBe(false)
@@ -134,8 +153,13 @@ describe('authSlice', () => {
     it('sets error on rejected', () => {
       const store = makeStore()
       store.dispatch(
-        // @ts-expect-error
-        loginUser.rejected(null, 'req', { username: 'u', password: 'p' }, 'Bad creds')
+        // @ts-expect-error testing with invalid payload shape
+        loginUser.rejected(
+          null,
+          'req',
+          { username: 'u', password: 'p' },
+          'Bad creds',
+        ),
       )
       const state = store.getState().auth
       expect(state.loading).toBe(false)
@@ -146,8 +170,12 @@ describe('authSlice', () => {
       const store = makeStore()
       const token = makeJwt({ exp: Date.now() / 1000 + 3600 })
       store.dispatch(
-        // @ts-expect-error
-        loginUser.fulfilled({ token, user: { id: '1', username: 'u' } }, 'req', {})
+        // @ts-expect-error testing with invalid payload shape
+        loginUser.fulfilled(
+          { token, user: { id: '1', username: 'u' } },
+          'req',
+          {},
+        ),
       )
       expect(getAuthToken()).toBe(token)
     })
@@ -184,7 +212,9 @@ describe('authSlice', () => {
   describe('registerUser async thunk', () => {
     it('sets loading on pending', () => {
       const store = makeStore()
-      store.dispatch(registerUser.pending('req', { username: 'u', password: 'p' }))
+      store.dispatch(
+        registerUser.pending('req', { username: 'u', password: 'p' }),
+      )
       expect(store.getState().auth.loading).toBe(true)
     })
 
@@ -192,8 +222,12 @@ describe('authSlice', () => {
       const store = makeStore()
       const token = makeJwt({ exp: Date.now() / 1000 + 3600 })
       store.dispatch(
-        // @ts-expect-error
-        registerUser.fulfilled({ token, user: { id: '2', username: 'carol' } }, 'req', {})
+        // @ts-expect-error testing with invalid payload shape
+        registerUser.fulfilled(
+          { token, user: { id: '2', username: 'carol' } },
+          'req',
+          {},
+        ),
       )
       expect(store.getState().auth.isAuthenticated).toBe(true)
     })
@@ -205,7 +239,9 @@ describe('authSlice', () => {
         json: async () => ({ token, user: { id: '2', username: 'carol' } }),
       })
       const store = makeStore()
-      await store.dispatch(registerUser({ username: 'carol', password: 'pass' }))
+      await store.dispatch(
+        registerUser({ username: 'carol', password: 'pass' }),
+      )
       expect(store.getState().auth.isAuthenticated).toBe(true)
     })
 
@@ -221,8 +257,8 @@ describe('authSlice', () => {
     it('clears auth on rejected', () => {
       const store = makeStore()
       store.dispatch(
-        // @ts-expect-error
-        validateToken.rejected(null, 'req', undefined, 'Invalid token')
+        // @ts-expect-error testing with invalid payload shape
+        validateToken.rejected(null, 'req', undefined, 'Invalid token'),
       )
       const state = store.getState().auth
       expect(state.user).toBeNull()
@@ -234,8 +270,12 @@ describe('authSlice', () => {
       const store = makeStore()
       const token = makeJwt({ exp: Date.now() / 1000 + 3600 })
       store.dispatch(
-        // @ts-expect-error
-        validateToken.fulfilled({ user: { id: '3', username: 'dan' }, token }, 'req', undefined)
+        // @ts-expect-error testing with invalid payload shape
+        validateToken.fulfilled(
+          { user: { id: '3', username: 'dan' }, token },
+          'req',
+          undefined,
+        ),
       )
       const state = store.getState().auth
       expect(state.user?.username).toBe('dan')
@@ -258,8 +298,12 @@ describe('authSlice', () => {
       // Inject an expired token into state
       const expiredToken = makeJwt({ exp: 1 }) // exp in 1970
       store.dispatch(
-        // @ts-expect-error
-        loginUser.fulfilled({ token: expiredToken, user: { id: '1', username: 'u' } }, 'req', {})
+        // @ts-expect-error testing with invalid payload shape
+        loginUser.fulfilled(
+          { token: expiredToken, user: { id: '1', username: 'u' } },
+          'req',
+          {},
+        ),
       )
       store.dispatch({ type: 'persist/REHYDRATE', payload: {} })
       const state = store.getState().auth

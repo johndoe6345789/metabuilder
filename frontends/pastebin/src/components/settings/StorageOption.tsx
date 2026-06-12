@@ -1,5 +1,7 @@
 import {
-  Radio, FormLabel, FormControlLabel,
+  Radio,
+  FormLabel,
+  FormControlLabel,
 } from '@metabuilder/components/fakemui'
 import type { StorageBackend } from '@/lib/storage'
 import styles from './settings-card.module.scss'

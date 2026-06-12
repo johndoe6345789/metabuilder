@@ -8,9 +8,10 @@ import { useSharePage } from './hooks/useSharePage'
 import styles from './share-page.module.scss'
 
 const MonacoEditor = dynamic(
-  () => import(
-    '@/components/features/snippet-editor/MonacoEditor'
-  ).then(mod => ({ default: mod.MonacoEditor })),
+  () =>
+    import('@/components/features/snippet-editor/MonacoEditor').then(mod => ({
+      default: mod.MonacoEditor,
+    })),
   { ssr: false },
 )
 
@@ -44,8 +45,7 @@ export default function SharePage() {
   }
 
   const langColor = LANGUAGE_COLORS[snippet.language] ?? '#888'
-  const displayCode =
-    snippet.files?.[0]?.content ?? snippet.code
+  const displayCode = snippet.files?.[0]?.content ?? snippet.code
 
   return (
     <div className={styles.page}>
@@ -64,13 +64,8 @@ export default function SharePage() {
         )}
         {snippet.authorUsername && (
           <p className={styles.author}>
-            <MaterialIcon
-              name="person"
-              size={14}
-              aria-hidden="true"
-            />
-            Shared by{' '}
-            <strong>@{snippet.authorUsername}</strong>
+            <MaterialIcon name="person" size={14} aria-hidden="true" />
+            Shared by <strong>@{snippet.authorUsername}</strong>
           </p>
         )}
       </div>
@@ -104,11 +99,7 @@ export default function SharePage() {
             onClick={() => vm.setForkOpen(true)}
             aria-label="Fork snippet"
           >
-            <MaterialIcon
-              name="call_split"
-              size={14}
-              aria-hidden="true"
-            />
+            <MaterialIcon name="call_split" size={14} aria-hidden="true" />
             Fork
           </button>
         </div>

@@ -1,10 +1,7 @@
 import { useState } from 'react'
 import { useAppDispatch } from '@/store/hooks'
 import { patchSnippetLocal } from '@/store/slices/snippetsSlice'
-import {
-  generateShareToken,
-  revokeShareToken,
-} from '@/store/slices/shareSlice'
+import { generateShareToken, revokeShareToken } from '@/store/slices/shareSlice'
 import type { Snippet } from '@/lib/types'
 
 export function buildShareUrl(token: string): string {
@@ -18,23 +15,21 @@ export function useShareDialog(snippet: Snippet) {
   const [revoking, setRevoking] = useState(false)
   const [copied, setCopied] = useState(false)
 
-  const shareUrl = snippet.shareToken
-    ? buildShareUrl(snippet.shareToken)
-    : null
+  const shareUrl = snippet.shareToken ? buildShareUrl(snippet.shareToken) : null
 
   async function handleGenerate() {
     setGenerating(true)
     try {
-      const result = await dispatch(
-        generateShareToken(snippet.id),
-      ).unwrap()
+      const result = await dispatch(generateShareToken(snippet.id)).unwrap()
       dispatch(
         patchSnippetLocal({
           id: snippet.id,
           fields: { shareToken: result.token },
         }),
       )
-    } catch { /* error handled by slice */ }
+    } catch {
+      /* error handled by slice */
+    }
     setGenerating(false)
   }
 
@@ -48,7 +43,9 @@ export function useShareDialog(snippet: Snippet) {
           fields: { shareToken: undefined },
         }),
       )
-    } catch { /* error handled by slice */ }
+    } catch {
+      /* error handled by slice */
+    }
     setRevoking(false)
   }
 

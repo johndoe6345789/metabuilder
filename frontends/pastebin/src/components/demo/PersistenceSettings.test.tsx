@@ -106,7 +106,9 @@ describe('PersistenceSettings', () => {
 
     it('persisted slices section has aria label', () => {
       render(<PersistenceSettings />)
-      expect(screen.getByRole('region', { name: 'Persisted slices' })).toBeInTheDocument()
+      expect(
+        screen.getByRole('region', { name: 'Persisted slices' }),
+      ).toBeInTheDocument()
     })
   })
 

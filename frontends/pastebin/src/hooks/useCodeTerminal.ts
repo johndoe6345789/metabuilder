@@ -5,9 +5,9 @@ import { appConfig } from '@/lib/config'
 import { safeFilesAndEntry } from './codeTerminalUtils'
 import { useCodeTerminalSession } from './useCodeTerminalSession'
 
-const languageRunnerMap: Record<string, string> = (
-  appConfig as unknown as { languageRunnerMap: Record<string, string> }
-).languageRunnerMap ?? {}
+const languageRunnerMap: Record<string, string> =
+  (appConfig as unknown as { languageRunnerMap: Record<string, string> })
+    .languageRunnerMap ?? {}
 
 function getRunnerKey(language: string): string {
   return (
@@ -56,7 +56,9 @@ export function useCodeTerminal() {
   }
 
   const session = useCodeTerminalSession(
-    addLine, setIsRunning, setWaitingForInput
+    addLine,
+    setIsRunning,
+    setWaitingForInput,
   )
 
   const handleRun = async (
@@ -68,14 +70,17 @@ export function useCodeTerminal() {
     setLines([])
     setWaitingForInput(false)
     setInputValue('')
+    // eslint-disable-next-line react-hooks/immutability
     session.offsetRef.current = 0
     session.sessionIdRef.current = null
     setIsRunning(true)
 
     const runnerKey = getRunnerKey(language)
     const isInteractive = INTERACTIVE_RUNNER_KEYS.has(runnerKey)
-    const { safeFiles, resolvedEntry, fileMap } =
-      safeFilesAndEntry(files, entryPoint ?? '')
+    const { safeFiles, resolvedEntry, fileMap } = safeFilesAndEntry(
+      files,
+      entryPoint ?? '',
+    )
     const opts = {
       language: runnerKey,
       files: safeFiles,
@@ -83,9 +88,13 @@ export function useCodeTerminal() {
     }
 
     setLastRunInfo({
-      language, runnerKey, interactive: isInteractive,
-      files: fileMap, entryPointOriginal: entryPoint ?? '',
-      entryPointSent: resolvedEntry, startedAt: Date.now(),
+      language,
+      runnerKey,
+      interactive: isInteractive,
+      files: fileMap,
+      entryPointOriginal: entryPoint ?? '',
+      entryPointSent: resolvedEntry,
+      startedAt: Date.now(),
     })
 
     try {
@@ -124,8 +133,15 @@ export function useCodeTerminal() {
   }
 
   return {
-    lines, isRunning, isInitializing: false,
-    inputValue, waitingForInput, lastRunInfo,
-    setInputValue, handleInputSubmit, handleRun, handleStop,
+    lines,
+    isRunning,
+    isInitializing: false,
+    inputValue,
+    waitingForInput,
+    lastRunInfo,
+    setInputValue,
+    handleInputSubmit,
+    handleRun,
+    handleStop,
   }
 }

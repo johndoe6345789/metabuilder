@@ -1,4 +1,9 @@
-import { Alert, AlertTitle, Button, MaterialIcon } from '@metabuilder/components/fakemui'
+import {
+  Alert,
+  AlertTitle,
+  Button,
+  MaterialIcon,
+} from '@metabuilder/components/fakemui'
 import { AIErrorHelper } from '@/components/error/AIErrorHelper'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useErrorFallback } from './hooks/useErrorFallback'
@@ -9,18 +14,28 @@ interface ErrorFallbackProps {
   resetErrorBoundary?: (...args: unknown[]) => void
 }
 
-export function ErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
+export function ErrorFallback({
+  error,
+  resetErrorBoundary,
+}: ErrorFallbackProps) {
   const t = useTranslation()
   const err = error instanceof Error ? error : new Error(String(error))
   const { isStackOpen, setIsStackOpen, copied, handleCopy } = useErrorFallback()
   const onCopy = () =>
-    handleCopy(`Error: ${err.message}\n\nStack Trace:\n${err.stack || 'No stack trace available'}`)
+    handleCopy(
+      // eslint-disable-next-line max-len
+      `Error: ${err.message}\n\nStack Trace:\n${err.stack || 'No stack trace available'}`,
+    )
 
   return (
     <div className={styles.root} data-testid="error-fallback">
       <div className={styles.inner}>
-        <Alert severity="error" style={{ marginBottom: '1.5rem' }}
-          data-testid="error-alert" role="alert">
+        <Alert
+          severity="error"
+          style={{ marginBottom: '1.5rem' }}
+          data-testid="error-alert"
+          role="alert"
+        >
           <MaterialIcon name="warning" aria-hidden="true" />
           <AlertTitle>{t.errorFallback.title}</AlertTitle>
           <div className={styles.alertBody}>
@@ -62,19 +77,34 @@ export function ErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
                 {isStackOpen ? (
                   <>
                     {t.errorFallback.hideStack}
-                    <MaterialIcon name="expand_less" size={16} style={{ marginLeft: '0.5rem' }} aria-hidden="true" />
+                    <MaterialIcon
+                      name="expand_less"
+                      size={16}
+                      style={{ marginLeft: '0.5rem' }}
+                      aria-hidden="true"
+                    />
                   </>
                 ) : (
                   <>
                     {t.errorFallback.showStack}
-                    <MaterialIcon name="expand_more" size={16} style={{ marginLeft: '0.5rem' }} aria-hidden="true" />
+                    <MaterialIcon
+                      name="expand_more"
+                      size={16}
+                      style={{ marginLeft: '0.5rem' }}
+                      aria-hidden="true"
+                    />
                   </>
                 )}
               </Button>
               {isStackOpen && (
-                <div className={styles.stackContent} data-testid="stack-trace-content">
-                  <pre className={styles.stackPre}
-                    data-testid="error-stack-trace">
+                <div
+                  className={styles.stackContent}
+                  data-testid="stack-trace-content"
+                >
+                  <pre
+                    className={styles.stackPre}
+                    data-testid="error-stack-trace"
+                  >
                     {err.stack || t.errorFallback.noStack}
                   </pre>
                 </div>
@@ -84,14 +114,24 @@ export function ErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
         </Alert>
 
         <AIErrorHelper error={err} />
-        <Button onClick={() => resetErrorBoundary ? resetErrorBoundary() : window.location.reload()}
-          className={styles.reloadBtn} variant="outlined"
-          data-testid="reload-btn" aria-label="Try reloading the page"
+        <Button
+          onClick={() =>
+            resetErrorBoundary ? resetErrorBoundary() : window.location.reload()
+          }
+          className={styles.reloadBtn}
+          variant="outlined"
+          data-testid="reload-btn"
+          aria-label="Try reloading the page"
         >
-          <MaterialIcon name="refresh" size={16} style={{ marginRight: '0.5rem' }} aria-hidden="true" />
+          <MaterialIcon
+            name="refresh"
+            size={16}
+            style={{ marginRight: '0.5rem' }}
+            aria-hidden="true"
+          />
           {t.errorFallback.reload}
         </Button>
       </div>
     </div>
-  );
+  )
 }

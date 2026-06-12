@@ -10,8 +10,8 @@ export interface UserProfile {
 
 export function apiBase(): string {
   return (
-    (process.env.NEXT_PUBLIC_FLASK_BACKEND_URL ?? '').replace(/\/$/, '')
-    || '/pastebin-api'
+    (process.env.NEXT_PUBLIC_FLASK_BACKEND_URL ?? '').replace(/\/$/, '') ||
+    '/pastebin-api'
   )
 }
 
@@ -44,6 +44,7 @@ export const fetchUserProfile = createAsyncThunk(
   'profiles/fetchUserProfile',
   async (username: string, { rejectWithValue }) => {
     try {
+      // eslint-disable-next-line max-len
       const url = `${apiBase()}/api/profile?username=${encodeURIComponent(username)}`
       const res = await fetch(url, { headers: authHeaders() })
       if (!res.ok)
@@ -54,7 +55,7 @@ export const fetchUserProfile = createAsyncThunk(
     } catch {
       return rejectWithValue('Network error')
     }
-  }
+  },
 )
 
 export const updateMyProfile = createAsyncThunk(
@@ -73,5 +74,5 @@ export const updateMyProfile = createAsyncThunk(
     } catch {
       return rejectWithValue('Network error')
     }
-  }
+  },
 )

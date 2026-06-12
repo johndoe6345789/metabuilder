@@ -1,8 +1,11 @@
 'use client'
 
 import { usePythonTerminal } from '@/hooks/usePythonTerminal'
+// eslint-disable-next-line max-len
 import { TerminalHeader } from '@/components/features/python-runner/TerminalHeader'
+// eslint-disable-next-line max-len
 import { TerminalOutput } from '@/components/features/python-runner/TerminalOutput'
+// eslint-disable-next-line max-len
 import { TerminalInput } from '@/components/features/python-runner/TerminalInput'
 import { usePythonTerminalScroll } from './hooks/usePythonTerminalScroll'
 import styles from './PythonTerminal.module.scss'
@@ -24,7 +27,7 @@ export function PythonTerminal({ code }: PythonTerminalProps) {
   } = usePythonTerminal()
 
   const terminalEndRef = usePythonTerminalScroll(lines)
-  const hasErrors = lines.some((line) => line.type === 'error')
+  const hasErrors = lines.some(line => line.type === 'error')
 
   return (
     <div className={styles.terminal} data-testid="python-terminal">
@@ -46,7 +49,10 @@ export function PythonTerminal({ code }: PythonTerminalProps) {
         {isRunning && 'Code is running'}
         {isInitializing && 'Terminal is initializing'}
         {waitingForInput && 'Waiting for user input'}
-        {!isRunning && !isInitializing && lines.length > 0 && `${lines.length} lines of output`}
+        {!isRunning &&
+          !isInitializing &&
+          lines.length > 0 &&
+          `${lines.length} lines of output`}
         {hasErrors && 'Errors detected in output'}
       </div>
 

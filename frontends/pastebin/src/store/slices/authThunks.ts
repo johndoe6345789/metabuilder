@@ -15,7 +15,10 @@ export interface AuthState {
 }
 
 export function apiBase(): string {
-  return (process.env.NEXT_PUBLIC_FLASK_BACKEND_URL ?? '').replace(/\/$/, '') || '/pastebin-api'
+  return (
+    (process.env.NEXT_PUBLIC_FLASK_BACKEND_URL ?? '').replace(/\/$/, '') ||
+    '/pastebin-api'
+  )
 }
 
 export function isTokenValid(token: string | null): boolean {
@@ -33,7 +36,7 @@ export const loginUser = createAsyncThunk(
   'auth/login',
   async (
     { username, password }: { username: string; password: string },
-    { rejectWithValue }
+    { rejectWithValue },
   ) => {
     try {
       const res = await fetch(`${apiBase()}/api/auth/login`, {
@@ -47,14 +50,14 @@ export const loginUser = createAsyncThunk(
     } catch {
       return rejectWithValue('Network error')
     }
-  }
+  },
 )
 
 export const registerUser = createAsyncThunk(
   'auth/register',
   async (
     { username, password }: { username: string; password: string },
-    { rejectWithValue }
+    { rejectWithValue },
   ) => {
     try {
       const res = await fetch(`${apiBase()}/api/auth/register`, {
@@ -68,7 +71,7 @@ export const registerUser = createAsyncThunk(
     } catch {
       return rejectWithValue('Network error')
     }
-  }
+  },
 )
 
 export const validateToken = createAsyncThunk(
@@ -86,14 +89,17 @@ export const validateToken = createAsyncThunk(
     } catch {
       return rejectWithValue('Network error')
     }
-  }
+  },
 )
 
 export function onFulfilled(
   state: AuthState,
-  action: { payload: { token: string; user: AuthUser } }
+  action: { payload: { token: string; user: AuthUser } },
 ) {
   const { token, user } = action.payload
-  state.loading = false; state.user = user; state.token = token
-  state.isAuthenticated = true; setAuthToken(token)
+  state.loading = false
+  state.user = user
+  state.token = token
+  state.isAuthenticated = true
+  setAuthToken(token)
 }

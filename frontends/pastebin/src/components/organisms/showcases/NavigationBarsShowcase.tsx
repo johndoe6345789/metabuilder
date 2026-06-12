@@ -1,4 +1,9 @@
-import { Card, MaterialIcon, Button, Avatar } from '@metabuilder/components/fakemui'
+import {
+  Card,
+  MaterialIcon,
+  Button,
+  Avatar,
+} from '@metabuilder/components/fakemui'
 import { ComponentShowcase } from '@/components/demo/ComponentShowcase'
 import { organismsCodeSnippets } from '@/lib/component-code-snippets'
 import { Snippet } from '@/lib/types'
@@ -6,7 +11,9 @@ import { MarketingNavBar } from './MarketingNavBar'
 import styles from './NavigationBarsShowcase.module.scss'
 
 interface NavigationBarsShowcaseProps {
-  onSaveSnippet: (snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>) => void
+  onSaveSnippet: (
+    snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>,
+  ) => void
 }
 
 const surfaceContainer = {
@@ -15,12 +22,15 @@ const surfaceContainer = {
   padding: '16px',
 }
 const subtextStyle = {
-  fontSize: '0.875rem', lineHeight: '1.25rem',
+  fontSize: '0.875rem',
+  lineHeight: '1.25rem',
   color: 'var(--mat-sys-on-surface-variant)',
 }
 const avatarStyle = { width: '32px', height: '32px' }
 
-export function NavigationBarsShowcase({ onSaveSnippet }: NavigationBarsShowcaseProps) {
+export function NavigationBarsShowcase({
+  onSaveSnippet,
+}: NavigationBarsShowcaseProps) {
   return (
     <section
       style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}
@@ -29,10 +39,16 @@ export function NavigationBarsShowcase({ onSaveSnippet }: NavigationBarsShowcase
       aria-label="Navigation bars showcase"
     >
       <div>
-        <h2 style={{
-          fontSize: '1.875rem', lineHeight: '2.25rem',
-          fontWeight: 700, marginBottom: '8px',
-        }}>Navigation Bars</h2>
+        <h2
+          style={{
+            fontSize: '1.875rem',
+            lineHeight: '2.25rem',
+            fontWeight: 700,
+            marginBottom: '8px',
+          }}
+        >
+          Navigation Bars
+        </h2>
         <p style={{ color: 'var(--mat-sys-on-surface-variant)' }}>
           Complete navigation components with branding and actions
         </p>
@@ -47,16 +63,29 @@ export function NavigationBarsShowcase({ onSaveSnippet }: NavigationBarsShowcase
       >
         <Card style={{ overflow: 'hidden' }}>
           <div style={surfaceContainer}>
-            <div style={{
-              display: 'flex', alignItems: 'center',
-              justifyContent: 'space-between',
-            }}>
-              <div style={{
-                display: 'flex', alignItems: 'center', gap: '24px',
-              }}>
-                <h3 style={{
-                  fontSize: '1.25rem', lineHeight: '1.75rem', fontWeight: 700,
-                }}>BrandName</h3>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '24px',
+                }}
+              >
+                <h3
+                  style={{
+                    fontSize: '1.25rem',
+                    lineHeight: '1.75rem',
+                    fontWeight: 700,
+                  }}
+                >
+                  BrandName
+                </h3>
                 <nav className={styles.desktopNav}>
                   {[
                     { icon: 'home', label: 'Home' },
@@ -64,21 +93,33 @@ export function NavigationBarsShowcase({ onSaveSnippet }: NavigationBarsShowcase
                     { icon: 'folder', label: 'Projects' },
                   ].map(({ icon, label }) => (
                     <Button key={label} variant="ghost" size="sm">
-                      <MaterialIcon name={icon} style={{ marginRight: '8px' }} aria-hidden="true" />
+                      <MaterialIcon
+                        name={icon}
+                        style={{ marginRight: '8px' }}
+                        aria-hidden="true"
+                      />
                       {label}
                     </Button>
                   ))}
                 </nav>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Button variant="ghost"><MaterialIcon name="notifications" aria-hidden="true" /></Button>
-                <Button variant="ghost"><MaterialIcon name="settings" aria-hidden="true" /></Button>
+              <div
+                style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+              >
+                <Button variant="ghost">
+                  <MaterialIcon name="notifications" aria-hidden="true" />
+                </Button>
+                <Button variant="ghost">
+                  <MaterialIcon name="settings" aria-hidden="true" />
+                </Button>
                 <Avatar
                   className="rounded-full"
                   style={avatarStyle}
                   src="https://i.pravatar.cc/150?img=3"
                   alt="User"
-                >U</Avatar>
+                >
+                  U
+                </Avatar>
               </div>
             </div>
           </div>

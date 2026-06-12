@@ -1,6 +1,12 @@
 import {
-  Button, Card, CardContent,
-  Input, FormLabel, Select, MenuItem, MaterialIcon,
+  Button,
+  Card,
+  CardContent,
+  Input,
+  FormLabel,
+  Select,
+  MenuItem,
+  MaterialIcon,
 } from '@metabuilder/components/fakemui'
 import type { SelectChangeEvent } from '@metabuilder/components/fakemui'
 import { InputParameter } from '@/lib/types'
@@ -18,20 +24,23 @@ interface InputParameterItemProps {
 const TYPE_OPTIONS = ['string', 'number', 'boolean', 'array', 'object']
 
 function ParamLabel({ htmlFor, text }: { htmlFor: string; text: string }) {
-  return <FormLabel htmlFor={htmlFor} className={styles.labelXs}>{text}</FormLabel>
+  return (
+    <FormLabel htmlFor={htmlFor} className={styles.labelXs}>
+      {text}
+    </FormLabel>
+  )
 }
 
 export function InputParameterItem({
-  param, index, onUpdate, onRemove,
+  param,
+  index,
+  onUpdate,
+  onRemove,
 }: InputParameterItemProps) {
-  const placeholder =
-    (placeholders as Record<string, string>)[param.type] ?? ''
+  const placeholder = (placeholders as Record<string, string>)[param.type] ?? ''
 
   return (
-    <Card
-      className={styles.cardRoot}
-      data-testid={`param-item-${index}`}
-    >
+    <Card className={styles.cardRoot} data-testid={`param-item-${index}`}>
       <CardContent className={styles.cardContent}>
         <div className={styles.topRow}>
           <div className={styles.fieldsGrid}>
@@ -71,15 +80,28 @@ export function InputParameterItem({
               </Select>
             </div>
           </div>
-          <Button variant="ghost" size="sm" onClick={() => onRemove(index)}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onRemove(index)}
             className={`${styles.removeBtn} h-8 w-8 p-0 text-destructive`}
             data-testid={`remove-parameter-btn-${index}`}
-            aria-label={`Remove parameter ${index + 1}`}>
-            <MaterialIcon name="delete" className={styles.removeIcon} aria-hidden="true" />
+            aria-label={`Remove parameter ${index + 1}`}
+          >
+            <MaterialIcon
+              name="delete"
+              className={styles.removeIcon}
+              aria-hidden="true"
+            />
           </Button>
         </div>
 
-        <InputParamFields param={param} index={index} placeholder={placeholder} onUpdate={onUpdate} />
+        <InputParamFields
+          param={param}
+          index={index}
+          placeholder={placeholder}
+          onUpdate={onUpdate}
+        />
       </CardContent>
     </Card>
   )

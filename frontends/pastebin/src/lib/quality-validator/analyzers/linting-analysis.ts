@@ -2,32 +2,31 @@
  * Linting analysis helpers for CodeQualityAnalyzer
  */
 
-import { LintingMetrics, LintingViolation } from '../types/index.js';
-import { normalizeFilePath } from '../utils/fileSystem.js';
+import { LintingMetrics, LintingViolation } from '../types/index.js'
+import { normalizeFilePath } from '../utils/fileSystem.js'
 
-type SafeReader = (path: string) => string | null;
+type SafeReader = (path: string) => string | null
 
 /**
  * Analyze linting violations across file paths
  */
 export function analyzeLinting(
   filePaths: string[],
-  safeRead: SafeReader
+  safeRead: SafeReader,
 ): LintingMetrics {
-  const violations: LintingViolation[] = [];
+  const violations: LintingViolation[] = []
 
   for (const filePath of filePaths) {
-    if (!filePath.endsWith('.ts') && !filePath.endsWith('.tsx')) continue;
-    const content = safeRead(filePath);
-    if (!content) continue;
+    if (!filePath.endsWith('.ts') && !filePath.endsWith('.tsx')) continue
+    const content = safeRead(filePath)
+    if (!content) continue
 
-    const lines = content.split('\n');
-    const normalized = normalizeFilePath(filePath);
-    const isTest =
-      filePath.includes('.spec.') || filePath.includes('.test.');
+    const lines = content.split('\n')
+    const normalized = normalizeFilePath(filePath)
+    const isTest = filePath.includes('.spec.') || filePath.includes('.test.')
 
     for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
+      const line = lines[i]
 
       if (line.includes('console.log') && !isTest) {
         violations.push({
@@ -38,7 +37,7 @@ export function analyzeLinting(
           rule: 'no-console',
           message: 'Unexpected console statement',
           fixable: true,
-        });
+        })
       }
 
       if (line.includes('var ')) {
@@ -50,21 +49,21 @@ export function analyzeLinting(
           rule: 'no-var',
           message: 'Unexpected var, use let or const instead',
           fixable: true,
-        });
+        })
       }
     }
   }
 
-  const errors = violations.filter(v => v.severity === 'error').length;
-  const warnings = violations.filter(v => v.severity === 'warning').length;
-  const info = violations.filter(v => v.severity === 'info').length;
+  const errors = violations.filter(v => v.severity === 'error').length
+  const warnings = violations.filter(v => v.severity === 'warning').length
+  const info = violations.filter(v => v.severity === 'info').length
 
-  const byRule = new Map<string, LintingViolation[]>();
+  const byRule = new Map<string, LintingViolation[]>()
   for (const violation of violations) {
     if (!byRule.has(violation.rule)) {
-      byRule.set(violation.rule, []);
+      byRule.set(violation.rule, [])
     }
-    byRule.get(violation.rule)!.push(violation);
+    byRule.get(violation.rule)!.push(violation)
   }
 
   return {
@@ -73,7 +72,6 @@ export function analyzeLinting(
     info,
     violations,
     byRule,
-    status:
-      errors > 0 ? 'critical' : warnings > 5 ? 'warning' : 'good',
-  };
+    status: errors > 0 ? 'critical' : warnings > 5 ? 'warning' : 'good',
+  }
 }

@@ -16,12 +16,12 @@ import {
 
 export const fetchAllSnippets = createAsyncThunk(
   'snippets/fetchAll',
-  async () => getAllSnippets()
+  async () => getAllSnippets(),
 )
 
 export const fetchSnippetsByNamespace = createAsyncThunk(
   'snippets/fetchByNamespace',
-  async (namespaceId: string) => getSnippetsByNamespace(namespaceId)
+  async (namespaceId: string) => getSnippetsByNamespace(namespaceId),
 )
 
 export const createSnippet = createAsyncThunk(
@@ -34,7 +34,7 @@ export const createSnippet = createAsyncThunk(
       updatedAt: Date.now(),
     }
     return createSnippetDB(newSnippet)
-  }
+  },
 )
 
 export const updateSnippet = createAsyncThunk(
@@ -43,7 +43,7 @@ export const updateSnippet = createAsyncThunk(
     const updatedSnippet = { ...snippet, updatedAt: Date.now() }
     await updateSnippetDB(updatedSnippet)
     return updatedSnippet
-  }
+  },
 )
 
 export const deleteSnippet = createAsyncThunk(
@@ -51,7 +51,7 @@ export const deleteSnippet = createAsyncThunk(
   async (id: string) => {
     await deleteSnippetDB(id)
     return id
-  }
+  },
 )
 
 export const moveSnippet = createAsyncThunk(
@@ -65,7 +65,7 @@ export const moveSnippet = createAsyncThunk(
   }) => {
     await moveSnippetToNamespace(snippetId, targetNamespaceId)
     return { snippetId, targetNamespaceId }
-  }
+  },
 )
 
 export const bulkMoveSnippets = createAsyncThunk(
@@ -79,5 +79,5 @@ export const bulkMoveSnippets = createAsyncThunk(
   }) => {
     await bulkMoveSnippetsDB(snippetIds, targetNamespaceId)
     return { snippetIds, targetNamespaceId }
-  }
+  },
 )

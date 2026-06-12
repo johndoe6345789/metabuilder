@@ -1,9 +1,14 @@
 'use client'
 
 import {
-  Card, CardHeader, CardContent,
-  Button, Alert, AlertDescription,
-  RadioGroup, MaterialIcon,
+  Card,
+  CardHeader,
+  CardContent,
+  Button,
+  Alert,
+  AlertDescription,
+  RadioGroup,
+  MaterialIcon,
 } from '@metabuilder/components/fakemui'
 import { type StorageBackend } from '@/lib/storage'
 import { useTranslation } from '@/hooks/useTranslation'
@@ -34,17 +39,11 @@ export function StorageBackendCard({
       <CardHeader
         title={
           <h3 className={styles.cardTitleWithIcon}>
-            <MaterialIcon
-              name="cloud_upload"
-              size={24}
-              aria-hidden="true"
-            />
+            <MaterialIcon name="cloud_upload" size={24} aria-hidden="true" />
             {s.title}
           </h3>
         }
-        subheader={
-          <p className={styles.cardDescription}>{s.description}</p>
-        }
+        subheader={<p className={styles.cardDescription}>{s.description}</p>}
       />
       <CardContent>
         <div className={styles.contentStack}>
@@ -55,14 +54,8 @@ export function StorageBackendCard({
               data-testid="env-var-alert"
               role="status"
             >
-              <AlertDescription
-                className={styles.alertAccentDescription}
-              >
-                <MaterialIcon
-                  name="cloud_done"
-                  size={16}
-                  aria-hidden="true"
-                />
+              <AlertDescription className={styles.alertAccentDescription}>
+                <MaterialIcon name="cloud_done" size={16} aria-hidden="true" />
                 <span>
                   {s.envVarAlertBefore}{' '}
                   <code className={styles.envVarCode}>
@@ -78,9 +71,7 @@ export function StorageBackendCard({
             <div
               className={styles.radioOptionRow}
               data-testid="storage-option-indexeddb"
-              onClick={() =>
-                !envVarSet && onStorageBackendChange('indexeddb')
-              }
+              onClick={() => !envVarSet && onStorageBackendChange('indexeddb')}
             >
               <StorageOption
                 id="storage-indexeddb"
@@ -96,22 +87,15 @@ export function StorageBackendCard({
             <div
               className={styles.radioOptionRowMarginTop}
               data-testid="storage-option-dbal"
-              onClick={() =>
-                !envVarSet && onStorageBackendChange('dbal')
-              }
+              onClick={() => !envVarSet && onStorageBackendChange('dbal')}
             >
               <StorageOption
                 id="storage-dbal"
                 value="dbal"
                 checked={storageBackend === 'dbal'}
                 disabled={envVarSet}
-                label={
-                  s.dbalLabel ?? 'DBAL Backend (Remote Server)'
-                }
-                desc={
-                  s.dbalDesc ??
-                  'Store snippets on a DBAL backend server.'
-                }
+                label={s.dbalLabel ?? 'DBAL Backend (Remote Server)'}
+                desc={s.dbalDesc ?? 'Store snippets on a DBAL backend server.'}
                 labelClass={labelClass}
               />
             </div>
@@ -125,11 +109,7 @@ export function StorageBackendCard({
               data-testid="save-storage-settings-btn"
               aria-label="Save storage configuration"
             >
-              <MaterialIcon
-                name="storage"
-                size={16}
-                aria-hidden="true"
-              />
+              <MaterialIcon name="storage" size={16} aria-hidden="true" />
               {s.save}
             </Button>
           </div>

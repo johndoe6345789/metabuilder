@@ -19,7 +19,7 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       expect(container.firstChild).toBeNull()
@@ -34,7 +34,7 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       expect(screen.getByText('Schema Healthy')).toBeInTheDocument()
@@ -47,13 +47,13 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       expect(
         screen.getByText(
-          'Your database schema is up to date and functioning correctly'
-        )
+          'Your database schema is up to date and functioning correctly',
+        ),
       ).toBeInTheDocument()
     })
 
@@ -64,7 +64,7 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       const card = container.querySelector('[class*="border-green"]')
@@ -78,7 +78,7 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       const title = screen.getByText('Schema Healthy')
@@ -92,7 +92,7 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       const buttons = screen.queryAllByRole('button')
@@ -108,12 +108,10 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
-      expect(
-        screen.getByText('Schema Corruption Detected')
-      ).toBeInTheDocument()
+      expect(screen.getByText('Schema Corruption Detected')).toBeInTheDocument()
     })
 
     it('should display corruption warning description', () => {
@@ -123,13 +121,14 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       expect(
         screen.getByText(
-          'Your database schema is outdated or corrupted and needs to be repaired'
-        )
+          // eslint-disable-next-line max-len
+          'Your database schema is outdated or corrupted and needs to be repaired',
+        ),
       ).toBeInTheDocument()
     })
 
@@ -140,11 +139,11 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       expect(
-        screen.getByText(/The database schema is missing required tables/i)
+        screen.getByText(/The database schema is missing required tables/i),
       ).toBeInTheDocument()
     })
 
@@ -155,7 +154,7 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       const card = container.querySelector('[class*="border-destructive"]')
@@ -169,7 +168,7 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       const title = screen.getByText('Schema Corruption Detected')
@@ -185,13 +184,13 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       expect(
         screen.getByRole('button', {
-          name: /Repair Database/i
-        })
+          name: /Repair Database/i,
+        }),
       ).toBeInTheDocument()
     })
 
@@ -203,11 +202,11 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       const repairButton = screen.getByRole('button', {
-        name: /Repair Database/i
+        name: /Repair Database/i,
       })
       await user.click(repairButton)
 
@@ -221,11 +220,11 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       expect(
-        screen.getByText(/Repair Database \(Wipe & Recreate\)/)
+        screen.getByText(/Repair Database \(Wipe & Recreate\)/),
       ).toBeInTheDocument()
     })
 
@@ -236,11 +235,11 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       const repairButton = screen.getByRole('button', {
-        name: /Repair Database/i
+        name: /Repair Database/i,
       })
       expect(repairButton).toBeInTheDocument()
       expect(repairButton).toBeEnabled()
@@ -250,9 +249,9 @@ describe('SchemaHealthCard', () => {
       const user = userEvent.setup()
       const slowClear = jest.fn(
         () =>
-          new Promise<void>((resolve) => {
+          new Promise<void>(resolve => {
             setTimeout(resolve, 100)
-          })
+          }),
       )
 
       render(
@@ -261,11 +260,11 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={slowClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       const repairButton = screen.getByRole('button', {
-        name: /Repair Database/i
+        name: /Repair Database/i,
       })
       await user.click(repairButton)
 
@@ -281,13 +280,13 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       expect(
         screen.getByRole('button', {
-          name: /Re-check Schema/i
-        })
+          name: /Re-check Schema/i,
+        }),
       ).toBeInTheDocument()
     })
 
@@ -299,11 +298,11 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       const recheckButton = screen.getByRole('button', {
-        name: /Re-check Schema/i
+        name: /Re-check Schema/i,
       })
       await user.click(recheckButton)
 
@@ -317,11 +316,11 @@ describe('SchemaHealthCard', () => {
           checkingSchema={true}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       const recheckButton = screen.getByRole('button', {
-        name: /Checking.../i
+        name: /Checking.../i,
       })
       expect(recheckButton).toBeDisabled()
     })
@@ -333,7 +332,7 @@ describe('SchemaHealthCard', () => {
           checkingSchema={true}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       expect(screen.getByText('Checking...')).toBeInTheDocument()
@@ -346,13 +345,13 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       expect(
         screen.getByRole('button', {
-          name: /Re-check Schema/i
-        })
+          name: /Re-check Schema/i,
+        }),
       ).toBeInTheDocument()
     })
 
@@ -363,11 +362,11 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       const recheckButton = screen.getByRole('button', {
-        name: /Re-check Schema/i
+        name: /Re-check Schema/i,
       })
       expect(recheckButton).toBeInTheDocument()
       expect(recheckButton).not.toHaveClass('destructive')
@@ -377,9 +376,9 @@ describe('SchemaHealthCard', () => {
       const user = userEvent.setup()
       const slowCheck = jest.fn(
         () =>
-          new Promise<void>((resolve) => {
+          new Promise<void>(resolve => {
             setTimeout(resolve, 100)
-          })
+          }),
       )
 
       render(
@@ -388,11 +387,11 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={slowCheck}
-        />
+        />,
       )
 
       const recheckButton = screen.getByRole('button', {
-        name: /Re-check Schema/i
+        name: /Re-check Schema/i,
       })
       await user.click(recheckButton)
 
@@ -408,7 +407,7 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       const alert = container.querySelector('[data-slot="alert"]')
@@ -422,11 +421,11 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       expect(
-        screen.getByText(/namespace feature addition/i)
+        screen.getByText(/namespace feature addition/i),
       ).toBeInTheDocument()
     })
   })
@@ -439,13 +438,13 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       expect(
         screen.getByRole('button', {
-          name: /Re-check Schema/i
-        })
+          name: /Re-check Schema/i,
+        }),
       ).not.toBeDisabled()
 
       rerender(
@@ -454,11 +453,11 @@ describe('SchemaHealthCard', () => {
           checkingSchema={true}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       const recheckButton = screen.getByRole('button', {
-        name: /Checking.../i
+        name: /Checking.../i,
       })
       expect(recheckButton).toBeDisabled()
     })
@@ -470,12 +469,10 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
-      expect(
-        screen.getByText('Schema Corruption Detected')
-      ).toBeInTheDocument()
+      expect(screen.getByText('Schema Corruption Detected')).toBeInTheDocument()
 
       rerender(
         <SchemaHealthCard
@@ -483,12 +480,12 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       expect(screen.getByText('Schema Healthy')).toBeInTheDocument()
       expect(
-        screen.queryByText('Schema Corruption Detected')
+        screen.queryByText('Schema Corruption Detected'),
       ).not.toBeInTheDocument()
     })
   })
@@ -501,7 +498,7 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       const buttons = screen.getAllByRole('button')
@@ -515,18 +512,18 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       expect(
         screen.getByRole('button', {
-          name: /Repair Database/i
-        })
+          name: /Repair Database/i,
+        }),
       ).toBeInTheDocument()
       expect(
         screen.getByRole('button', {
-          name: /Re-check Schema/i
-        })
+          name: /Re-check Schema/i,
+        }),
       ).toBeInTheDocument()
     })
   })
@@ -535,9 +532,10 @@ describe('SchemaHealthCard', () => {
     it('should handle repair errors', async () => {
       const user = userEvent.setup()
       const slowClear = jest.fn(
-        () => new Promise<void>((resolve) => {
-          setTimeout(resolve, 50)
-        })
+        () =>
+          new Promise<void>(resolve => {
+            setTimeout(resolve, 50)
+          }),
       )
 
       render(
@@ -546,11 +544,11 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={slowClear}
           onCheckSchema={mockOnCheckSchema}
-        />
+        />,
       )
 
       const repairButton = screen.getByRole('button', {
-        name: /Repair Database/i
+        name: /Repair Database/i,
       })
       await user.click(repairButton)
 
@@ -560,9 +558,10 @@ describe('SchemaHealthCard', () => {
     it('should handle check errors', async () => {
       const user = userEvent.setup()
       const slowCheck = jest.fn(
-        () => new Promise<void>((resolve) => {
-          setTimeout(resolve, 50)
-        })
+        () =>
+          new Promise<void>(resolve => {
+            setTimeout(resolve, 50)
+          }),
       )
 
       render(
@@ -571,11 +570,11 @@ describe('SchemaHealthCard', () => {
           checkingSchema={false}
           onClear={mockOnClear}
           onCheckSchema={slowCheck}
-        />
+        />,
       )
 
       const recheckButton = screen.getByRole('button', {
-        name: /Re-check Schema/i
+        name: /Re-check Schema/i,
       })
       await user.click(recheckButton)
 

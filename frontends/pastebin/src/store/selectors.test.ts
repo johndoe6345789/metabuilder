@@ -97,24 +97,60 @@ describe('selectors', () => {
   describe('selectFilteredSnippets', () => {
     it('returns all snippets when query is empty', () => {
       const state = makeState({
-        snippets: { items: [snippet1, snippet2], loading: false, error: null, selectionMode: false, selectedIds: [] },
-        ui: { viewerOpen: false, viewingSnippet: null, searchQuery: '', theme: 'light', locale: 'en' },
+        snippets: {
+          items: [snippet1, snippet2],
+          loading: false,
+          error: null,
+          selectionMode: false,
+          selectedIds: [],
+        },
+        ui: {
+          viewerOpen: false,
+          viewingSnippet: null,
+          searchQuery: '',
+          theme: 'light',
+          locale: 'en',
+        },
       } as any)
       expect(selectFilteredSnippets(state)).toHaveLength(2)
     })
 
     it('returns all snippets when query is whitespace only', () => {
       const state = makeState({
-        snippets: { items: [snippet1, snippet2], loading: false, error: null, selectionMode: false, selectedIds: [] },
-        ui: { viewerOpen: false, viewingSnippet: null, searchQuery: '   ', theme: 'light', locale: 'en' },
+        snippets: {
+          items: [snippet1, snippet2],
+          loading: false,
+          error: null,
+          selectionMode: false,
+          selectedIds: [],
+        },
+        ui: {
+          viewerOpen: false,
+          viewingSnippet: null,
+          searchQuery: '   ',
+          theme: 'light',
+          locale: 'en',
+        },
       } as any)
       expect(selectFilteredSnippets(state)).toHaveLength(2)
     })
 
     it('filters by title (case-insensitive)', () => {
       const state = makeState({
-        snippets: { items: [snippet1, snippet2, snippet3], loading: false, error: null, selectionMode: false, selectedIds: [] },
-        ui: { viewerOpen: false, viewingSnippet: null, searchQuery: 'python', theme: 'light', locale: 'en' },
+        snippets: {
+          items: [snippet1, snippet2, snippet3],
+          loading: false,
+          error: null,
+          selectionMode: false,
+          selectedIds: [],
+        },
+        ui: {
+          viewerOpen: false,
+          viewingSnippet: null,
+          searchQuery: 'python',
+          theme: 'light',
+          locale: 'en',
+        },
       } as any)
       const result = selectFilteredSnippets(state)
       expect(result).toHaveLength(1)
@@ -123,8 +159,20 @@ describe('selectors', () => {
 
     it('filters by description', () => {
       const state = makeState({
-        snippets: { items: [snippet1, snippet2, snippet3], loading: false, error: null, selectionMode: false, selectedIds: [] },
-        ui: { viewerOpen: false, viewingSnippet: null, searchQuery: 'classic', theme: 'light', locale: 'en' },
+        snippets: {
+          items: [snippet1, snippet2, snippet3],
+          loading: false,
+          error: null,
+          selectionMode: false,
+          selectedIds: [],
+        },
+        ui: {
+          viewerOpen: false,
+          viewingSnippet: null,
+          searchQuery: 'classic',
+          theme: 'light',
+          locale: 'en',
+        },
       } as any)
       expect(selectFilteredSnippets(state)).toHaveLength(1)
       expect(selectFilteredSnippets(state)[0].id).toBe('1')
@@ -132,9 +180,22 @@ describe('selectors', () => {
 
     it('filters by language', () => {
       const state = makeState({
-        snippets: { items: [snippet1, snippet2, snippet3], loading: false, error: null, selectionMode: false, selectedIds: [] },
-        ui: { viewerOpen: false, viewingSnippet: null, searchQuery: 'css', theme: 'light', locale: 'en' },
+        snippets: {
+          items: [snippet1, snippet2, snippet3],
+          loading: false,
+          error: null,
+          selectionMode: false,
+          selectedIds: [],
+        },
+        ui: {
+          viewerOpen: false,
+          viewingSnippet: null,
+          searchQuery: 'css',
+          theme: 'light',
+          locale: 'en',
+        },
       } as any)
+      // eslint-disable-next-line max-len
       // snippet3 has language "css" and code contains "* { margin: 0; }" — both match
       const result = selectFilteredSnippets(state)
       expect(result.some(s => s.id === '3')).toBe(true)
@@ -142,8 +203,20 @@ describe('selectors', () => {
 
     it('filters by code content', () => {
       const state = makeState({
-        snippets: { items: [snippet1, snippet2, snippet3], loading: false, error: null, selectionMode: false, selectedIds: [] },
-        ui: { viewerOpen: false, viewingSnippet: null, searchQuery: 'margin', theme: 'light', locale: 'en' },
+        snippets: {
+          items: [snippet1, snippet2, snippet3],
+          loading: false,
+          error: null,
+          selectionMode: false,
+          selectedIds: [],
+        },
+        ui: {
+          viewerOpen: false,
+          viewingSnippet: null,
+          searchQuery: 'margin',
+          theme: 'light',
+          locale: 'en',
+        },
       } as any)
       expect(selectFilteredSnippets(state)).toHaveLength(1)
       expect(selectFilteredSnippets(state)[0].id).toBe('3')
@@ -151,16 +224,40 @@ describe('selectors', () => {
 
     it('returns empty array when no snippets match', () => {
       const state = makeState({
-        snippets: { items: [snippet1, snippet2], loading: false, error: null, selectionMode: false, selectedIds: [] },
-        ui: { viewerOpen: false, viewingSnippet: null, searchQuery: 'zzznomatch', theme: 'light', locale: 'en' },
+        snippets: {
+          items: [snippet1, snippet2],
+          loading: false,
+          error: null,
+          selectionMode: false,
+          selectedIds: [],
+        },
+        ui: {
+          viewerOpen: false,
+          viewingSnippet: null,
+          searchQuery: 'zzznomatch',
+          theme: 'light',
+          locale: 'en',
+        },
       } as any)
       expect(selectFilteredSnippets(state)).toHaveLength(0)
     })
 
     it('is memoized — returns same reference for same inputs', () => {
       const state = makeState({
-        snippets: { items: [snippet1], loading: false, error: null, selectionMode: false, selectedIds: [] },
-        ui: { viewerOpen: false, viewingSnippet: null, searchQuery: '', theme: 'light', locale: 'en' },
+        snippets: {
+          items: [snippet1],
+          loading: false,
+          error: null,
+          selectionMode: false,
+          selectedIds: [],
+        },
+        ui: {
+          viewerOpen: false,
+          viewingSnippet: null,
+          searchQuery: '',
+          theme: 'light',
+          locale: 'en',
+        },
       } as any)
       const result1 = selectFilteredSnippets(state)
       const result2 = selectFilteredSnippets(state)
@@ -173,7 +270,10 @@ describe('selectors', () => {
       const state = makeState({
         snippets: {
           items: [snippet1, snippet2, snippet3],
-          loading: false, error: null, selectionMode: false, selectedIds: ['1', '3'],
+          loading: false,
+          error: null,
+          selectionMode: false,
+          selectedIds: ['1', '3'],
         },
       } as any)
       const result = selectSelectedSnippets(state)
@@ -183,33 +283,64 @@ describe('selectors', () => {
 
     it('returns empty array when no ids selected', () => {
       const state = makeState({
-        snippets: { items: [snippet1, snippet2], loading: false, error: null, selectionMode: false, selectedIds: [] },
+        snippets: {
+          items: [snippet1, snippet2],
+          loading: false,
+          error: null,
+          selectionMode: false,
+          selectedIds: [],
+        },
       } as any)
       expect(selectSelectedSnippets(state)).toHaveLength(0)
     })
   })
 
   describe('selectSelectedNamespace', () => {
-    const ns1: Namespace = { id: 'ns1', name: 'Work', createdAt: 1000, isDefault: false }
-    const ns2: Namespace = { id: 'ns2', name: 'Personal', createdAt: 2000, isDefault: true }
+    const ns1: Namespace = {
+      id: 'ns1',
+      name: 'Work',
+      createdAt: 1000,
+      isDefault: false,
+    }
+    const ns2: Namespace = {
+      id: 'ns2',
+      name: 'Personal',
+      createdAt: 2000,
+      isDefault: true,
+    }
 
     it('returns the selected namespace', () => {
       const state = makeState({
-        namespaces: { items: [ns1, ns2], selectedId: 'ns2', loading: false, error: null },
+        namespaces: {
+          items: [ns1, ns2],
+          selectedId: 'ns2',
+          loading: false,
+          error: null,
+        },
       } as any)
       expect(selectSelectedNamespace(state)?.id).toBe('ns2')
     })
 
     it('returns undefined when selectedId is null', () => {
       const state = makeState({
-        namespaces: { items: [ns1, ns2], selectedId: null, loading: false, error: null },
+        namespaces: {
+          items: [ns1, ns2],
+          selectedId: null,
+          loading: false,
+          error: null,
+        },
       } as any)
       expect(selectSelectedNamespace(state)).toBeUndefined()
     })
 
     it('returns undefined when selectedId does not match any namespace', () => {
       const state = makeState({
-        namespaces: { items: [ns1], selectedId: 'nonexistent', loading: false, error: null },
+        namespaces: {
+          items: [ns1],
+          selectedId: 'nonexistent',
+          loading: false,
+          error: null,
+        },
       } as any)
       expect(selectSelectedNamespace(state)).toBeUndefined()
     })

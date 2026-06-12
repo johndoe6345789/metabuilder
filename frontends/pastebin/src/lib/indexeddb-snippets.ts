@@ -3,10 +3,7 @@
  */
 
 import type { Snippet } from './types'
-import {
-  openDB,
-  SNIPPETS_STORE,
-} from './indexeddb-core.js'
+import { openDB, SNIPPETS_STORE } from './indexeddb-core.js'
 
 export async function getAllSnippets(): Promise<Snippet[]> {
   const db = await openDB()
@@ -64,7 +61,7 @@ export async function deleteSnippet(id: string): Promise<void> {
 }
 
 export async function getSnippetsByNamespace(
-  namespaceId: string
+  namespaceId: string,
 ): Promise<Snippet[]> {
   const db = await openDB()
   return new Promise((resolve, reject) => {

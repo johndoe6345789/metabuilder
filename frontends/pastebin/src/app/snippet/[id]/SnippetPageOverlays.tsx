@@ -1,7 +1,6 @@
 'use client'
 
-import { SnippetComments } from
-  '@/components/features/comments/SnippetComments'
+import { SnippetComments } from '@/components/features/comments/SnippetComments'
 import { SnippetDialogs } from './SnippetDialogs'
 import {
   FileCommandPalette,
@@ -20,8 +19,15 @@ interface Props {
 
 export function SnippetPageOverlays({ vm, files, commands }: Props) {
   const {
-    id, snippet, shareOpen, forkOpen, historyOpen, editOpen,
-    menuFile, menuRect, paletteOpen,
+    id,
+    snippet,
+    shareOpen,
+    forkOpen,
+    historyOpen,
+    editOpen,
+    menuFile,
+    menuRect,
+    paletteOpen,
   } = vm
 
   if (!snippet) return null
@@ -30,10 +36,15 @@ export function SnippetPageOverlays({ vm, files, commands }: Props) {
     <>
       <SnippetComments snippetId={id} />
       <SnippetDialogs
-        id={id} snippet={snippet} files={files}
-        shareOpen={shareOpen} forkOpen={forkOpen}
-        historyOpen={historyOpen} editOpen={editOpen}
-        menuFile={menuFile} menuRect={menuRect}
+        id={id}
+        snippet={snippet}
+        files={files}
+        shareOpen={shareOpen}
+        forkOpen={forkOpen}
+        historyOpen={historyOpen}
+        editOpen={editOpen}
+        menuFile={menuFile}
+        menuRect={menuRect}
         onCloseShare={() => vm.setShareOpen(false)}
         onCloseFork={() => vm.setForkOpen(false)}
         onCloseHistory={() => vm.setHistoryOpen(false)}

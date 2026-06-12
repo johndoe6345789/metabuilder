@@ -14,7 +14,10 @@ interface Props {
 }
 
 export function DebugTabPanel({
-  visible, language, debugger: dbg, onStart,
+  visible,
+  language,
+  debugger: dbg,
+  onStart,
 }: Props) {
   const cls = visible ? styles.editorPanelVisible : styles.editorPanelHidden
   return (

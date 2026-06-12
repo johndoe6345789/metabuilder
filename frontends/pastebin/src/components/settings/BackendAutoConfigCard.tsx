@@ -1,6 +1,11 @@
 'use client'
 
-import { Card, CardContent, CardHeader, MaterialIcon } from '@metabuilder/components/fakemui'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  MaterialIcon,
+} from '@metabuilder/components/fakemui'
 import { useTranslation } from '@/hooks/useTranslation'
 import styles from './settings-card.module.scss'
 
@@ -25,17 +30,15 @@ export function BackendAutoConfigCard({
             {s.title}
           </h3>
         }
-        subheader={
-          <p className={styles.cardDescription}>
-            {s.description}
-          </p>
-        }
+        subheader={<p className={styles.cardDescription}>{s.description}</p>}
       />
       <CardContent>
         <div className={styles.infoStack}>
           <div className={styles.infoRow} data-testid="backend-url">
             <span className={styles.infoLabel}>{s.backendUrl}</span>
-            <code className={styles.infoCode}>{process.env.NEXT_PUBLIC_DBAL_API_URL ?? ''}</code>
+            <code className={styles.infoCode}>
+              {process.env.NEXT_PUBLIC_DBAL_API_URL ?? ''}
+            </code>
           </div>
           <div className={styles.infoRow} data-testid="config-source">
             <span className={styles.infoLabel}>{s.configSource}</span>

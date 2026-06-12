@@ -33,6 +33,7 @@ describe('InputParameterItem Component', () => {
     })
 
     it('should render Card component wrapper', () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { container } = render(<InputParameterItem {...defaultProps} />)
       // Check for the card wrapper by looking for the param item container
       expect(screen.getByTestId('param-item-0')).toBeInTheDocument()
@@ -127,12 +128,16 @@ describe('InputParameterItem Component', () => {
   describe('Default Value Input Field', () => {
     it('should render default value input with label', () => {
       render(<InputParameterItem {...defaultProps} />)
-      expect(screen.getByLabelText('Parameter 1 default value')).toBeInTheDocument()
+      expect(
+        screen.getByLabelText('Parameter 1 default value'),
+      ).toBeInTheDocument()
     })
 
     it('should display current default value', () => {
       render(<InputParameterItem {...defaultProps} />)
-      const input = screen.getByTestId('param-default-input-0') as HTMLInputElement
+      const input = screen.getByTestId(
+        'param-default-input-0',
+      ) as HTMLInputElement
       expect(input.value).toBe('John')
     })
 
@@ -148,7 +153,7 @@ describe('InputParameterItem Component', () => {
         <InputParameterItem
           {...defaultProps}
           param={{ ...defaultParam, type: 'number' }}
-        />
+        />,
       )
       const input = screen.getByTestId('param-default-input-0')
       expect(input).toHaveAttribute('placeholder', '42')
@@ -157,7 +162,9 @@ describe('InputParameterItem Component', () => {
     it('should call onUpdate when default value changes', async () => {
       render(<InputParameterItem {...defaultProps} />)
 
-      const input = screen.getByTestId('param-default-input-0') as HTMLInputElement
+      const input = screen.getByTestId(
+        'param-default-input-0',
+      ) as HTMLInputElement
       // Manually set value and trigger change event using fireEvent
       fireEvent.change(input, { target: { value: 'Jane' } })
 
@@ -166,12 +173,16 @@ describe('InputParameterItem Component', () => {
 
     it('should have aria-label for accessibility', () => {
       render(<InputParameterItem {...defaultProps} />)
-      expect(screen.getByLabelText('Parameter 1 default value')).toBeInTheDocument()
+      expect(
+        screen.getByLabelText('Parameter 1 default value'),
+      ).toBeInTheDocument()
     })
 
     it('should have monospace font class', () => {
       const { container } = render(<InputParameterItem {...defaultProps} />)
-      const input = container.querySelector('[data-testid="param-default-input-0"]')
+      const input = container.querySelector(
+        '[data-testid="param-default-input-0"]',
+      )
       expect(input?.className).toContain('font-mono')
     })
   })
@@ -179,45 +190,57 @@ describe('InputParameterItem Component', () => {
   describe('Description Input Field', () => {
     it('should render description input with label', () => {
       render(<InputParameterItem {...defaultProps} />)
-      expect(screen.getByLabelText('Parameter 1 description')).toBeInTheDocument()
+      expect(
+        screen.getByLabelText('Parameter 1 description'),
+      ).toBeInTheDocument()
     })
 
     it('should display current description', () => {
       render(<InputParameterItem {...defaultProps} />)
-      const input = screen.getByTestId('param-description-input-0') as HTMLInputElement
+      const input = screen.getByTestId(
+        'param-description-input-0',
+      ) as HTMLInputElement
       expect(input.value).toBe('User full name')
     })
 
     it('should have placeholder text', () => {
       render(<InputParameterItem {...defaultProps} />)
       const input = screen.getByTestId('param-description-input-0')
-      expect(input).toHaveAttribute('placeholder', 'What does this parameter do?')
+      expect(input).toHaveAttribute(
+        'placeholder',
+        'What does this parameter do?',
+      )
     })
 
     it('should call onUpdate when description changes', async () => {
       render(<InputParameterItem {...defaultProps} />)
 
-      const input = screen.getByTestId('param-description-input-0') as HTMLInputElement
+      const input = screen.getByTestId(
+        'param-description-input-0',
+      ) as HTMLInputElement
       // Manually set value and trigger change event using fireEvent
       fireEvent.change(input, { target: { value: 'New description' } })
 
-      expect(mockOnUpdate).toHaveBeenCalledWith(0, 'description', 'New description')
+      expect(mockOnUpdate).toHaveBeenCalledWith(
+        0,
+        'description',
+        'New description',
+      )
     })
 
     it('should have aria-label for accessibility', () => {
       render(<InputParameterItem {...defaultProps} />)
-      expect(screen.getByLabelText('Parameter 1 description')).toBeInTheDocument()
+      expect(
+        screen.getByLabelText('Parameter 1 description'),
+      ).toBeInTheDocument()
     })
 
     it('should handle empty description', () => {
       const paramWithoutDesc = { ...defaultParam, description: undefined }
-      render(
-        <InputParameterItem
-          {...defaultProps}
-          param={paramWithoutDesc}
-        />
-      )
-      const input = screen.getByTestId('param-description-input-0') as HTMLInputElement
+      render(<InputParameterItem {...defaultProps} param={paramWithoutDesc} />)
+      const input = screen.getByTestId(
+        'param-description-input-0',
+      ) as HTMLInputElement
       expect(input.value).toBe('')
     })
   })
@@ -252,7 +275,9 @@ describe('InputParameterItem Component', () => {
 
     it('should have destructive color styling', () => {
       const { container } = render(<InputParameterItem {...defaultProps} />)
-      const button = container.querySelector('[data-testid="remove-parameter-btn-0"]')
+      const button = container.querySelector(
+        '[data-testid="remove-parameter-btn-0"]',
+      )
       expect(button?.className).toContain('destructive')
     })
   })
@@ -269,12 +294,7 @@ describe('InputParameterItem Component', () => {
     types.forEach(({ type, expected }) => {
       it(`should show correct placeholder for ${type} type`, () => {
         const param = { ...defaultParam, type: type as any }
-        render(
-          <InputParameterItem
-            {...defaultProps}
-            param={param}
-          />
-        )
+        render(<InputParameterItem {...defaultProps} param={param} />)
         const input = screen.getByTestId('param-default-input-0')
         expect(input).toHaveAttribute('placeholder', expected)
       })
@@ -283,26 +303,18 @@ describe('InputParameterItem Component', () => {
 
   describe('Index Handling', () => {
     it('should use correct index in testids', () => {
-      render(
-        <InputParameterItem
-          {...defaultProps}
-          index={2}
-        />
-      )
+      render(<InputParameterItem {...defaultProps} index={2} />)
       expect(screen.getByTestId('param-name-input-2')).toBeInTheDocument()
       expect(screen.getByTestId('param-type-select-2')).toBeInTheDocument()
       expect(screen.getByTestId('param-default-input-2')).toBeInTheDocument()
-      expect(screen.getByTestId('param-description-input-2')).toBeInTheDocument()
+      expect(
+        screen.getByTestId('param-description-input-2'),
+      ).toBeInTheDocument()
       expect(screen.getByTestId('remove-parameter-btn-2')).toBeInTheDocument()
     })
 
     it('should pass correct index to callbacks', async () => {
-      render(
-        <InputParameterItem
-          {...defaultProps}
-          index={3}
-        />
-      )
+      render(<InputParameterItem {...defaultProps} index={3} />)
 
       const input = screen.getByTestId('param-name-input-3') as HTMLInputElement
       // Manually set value and trigger change event using fireEvent
@@ -312,12 +324,7 @@ describe('InputParameterItem Component', () => {
     })
 
     it('should update aria-label with correct index', () => {
-      render(
-        <InputParameterItem
-          {...defaultProps}
-          index={2}
-        />
-      )
+      render(<InputParameterItem {...defaultProps} index={2} />)
       const button = screen.getByTestId('remove-parameter-btn-2')
       expect(button).toHaveAttribute('aria-label', 'Remove parameter 3')
     })
@@ -342,8 +349,12 @@ describe('InputParameterItem Component', () => {
       render(<InputParameterItem {...defaultProps} />)
       expect(screen.getByLabelText('Parameter 1 name')).toBeInTheDocument()
       expect(screen.getByLabelText('Parameter 1 type')).toBeInTheDocument()
-      expect(screen.getByLabelText('Parameter 1 default value')).toBeInTheDocument()
-      expect(screen.getByLabelText('Parameter 1 description')).toBeInTheDocument()
+      expect(
+        screen.getByLabelText('Parameter 1 default value'),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByLabelText('Parameter 1 description'),
+      ).toBeInTheDocument()
     })
 
     it('should have meaningful button aria-labels', () => {
@@ -367,7 +378,7 @@ describe('InputParameterItem Component', () => {
           <InputParameterItem
             {...defaultProps}
             param={{ ...defaultParam, type: type as any }}
-          />
+          />,
         )
         expect(screen.getByTestId('param-name-input-0')).toBeInTheDocument()
         unmount()
@@ -377,12 +388,7 @@ describe('InputParameterItem Component', () => {
     it('should handle missing description gracefully', () => {
       const param = { ...defaultParam, description: undefined }
       expect(() => {
-        render(
-          <InputParameterItem
-            {...defaultProps}
-            param={param}
-          />
-        )
+        render(<InputParameterItem {...defaultProps} param={param} />)
       }).not.toThrow()
     })
   })

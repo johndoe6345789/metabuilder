@@ -28,8 +28,8 @@ export function useSnippetFormParams() {
   ) => {
     setInputParameters(prev =>
       prev.map((param, i) =>
-        i === index ? { ...param, [field]: value } : param
-      )
+        i === index ? { ...param, [field]: value } : param,
+      ),
     )
   }
 
@@ -43,15 +43,17 @@ export function useSnippetFormParams() {
 }
 
 export function validateSnippetForm(
-  title: string, code: string, fileRef: FileRef, t: ReturnType<typeof useTranslation>
+  title: string,
+  code: string,
+  fileRef: FileRef,
+  t: ReturnType<typeof useTranslation>,
 ): { errors: { title?: string; code?: string }; valid: boolean } {
   const errors: { title?: string; code?: string } = {}
   if (!title.trim()) {
     errors.title = t.snippetDialog.fields.title.errorMessage
   }
   const entryFile =
-    fileRef.files.find(f => f.name === fileRef.activeFile) ||
-    fileRef.files[0]
+    fileRef.files.find(f => f.name === fileRef.activeFile) || fileRef.files[0]
   const entryContent = entryFile?.content.trim() || code.trim()
   if (!entryContent) {
     errors.code = t.snippetDialog.fields.code.errorMessage

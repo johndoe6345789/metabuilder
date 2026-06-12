@@ -1,6 +1,6 @@
-
 import { render, screen, fireEvent, waitFor } from '@/test-utils'
 import { SnippetCard } from '@/components/features/snippet-display/SnippetCard'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Snippet, Namespace } from '@/lib/types'
 
 // Mock child components
@@ -23,12 +23,27 @@ jest.mock('@/components/features/snippet-display/SnippetCodePreview', () => ({
 }))
 
 jest.mock('@/components/features/snippet-display/SnippetCardActions', () => ({
-  SnippetCardActions: ({ onView, onCopy, onEdit, onDelete, onMoveToNamespace }: any) => (
+  SnippetCardActions: ({
+    onView,
+    onCopy,
+    onEdit,
+    onDelete,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onMoveToNamespace,
+  }: any) => (
     <div data-testid="snippet-card-actions">
-      <button onClick={onView} data-testid="action-view">View</button>
-      <button onClick={onCopy} data-testid="action-copy">Copy</button>
-      <button onClick={onEdit} data-testid="action-edit">Edit</button>
-      <button onClick={onDelete} data-testid="action-delete">Delete</button>
+      <button onClick={onView} data-testid="action-view">
+        View
+      </button>
+      <button onClick={onCopy} data-testid="action-copy">
+        Copy
+      </button>
+      <button onClick={onEdit} data-testid="action-edit">
+        Edit
+      </button>
+      <button onClick={onDelete} data-testid="action-delete">
+        Delete
+      </button>
     </div>
   ),
 }))
@@ -83,7 +98,9 @@ describe('SnippetCard', () => {
   describe('Rendering', () => {
     it('should render snippet card', () => {
       render(<SnippetCard {...defaultProps} />)
-      expect(screen.getByTestId(`snippet-card-${mockSnippet.id}`)).toBeInTheDocument()
+      expect(
+        screen.getByTestId(`snippet-card-${mockSnippet.id}`),
+      ).toBeInTheDocument()
     })
 
     it('should render card header', () => {
@@ -103,7 +120,9 @@ describe('SnippetCard', () => {
 
     it('should not render actions when in selection mode', () => {
       render(<SnippetCard {...defaultProps} selectionMode={true} />)
-      expect(screen.queryByTestId('snippet-card-actions')).not.toBeInTheDocument()
+      expect(
+        screen.queryByTestId('snippet-card-actions'),
+      ).not.toBeInTheDocument()
     })
 
     it('should display snippet title', () => {
@@ -142,7 +161,7 @@ describe('SnippetCard', () => {
           {...defaultProps}
           selectionMode={true}
           onToggleSelect={onToggleSelect}
-        />
+        />,
       )
       const card = screen.getByTestId(`snippet-card-${mockSnippet.id}`)
       fireEvent.click(card)
@@ -152,11 +171,7 @@ describe('SnippetCard', () => {
     it('should call onView when card is clicked in normal mode', () => {
       const onView = jest.fn()
       render(
-        <SnippetCard
-          {...defaultProps}
-          selectionMode={false}
-          onView={onView}
-        />
+        <SnippetCard {...defaultProps} selectionMode={false} onView={onView} />,
       )
       const card = screen.getByTestId(`snippet-card-${mockSnippet.id}`)
       fireEvent.click(card)
@@ -179,7 +194,7 @@ describe('SnippetCard', () => {
 
     it('should update aria-selected when selected', () => {
       const { rerender } = render(
-        <SnippetCard {...defaultProps} isSelected={false} />
+        <SnippetCard {...defaultProps} isSelected={false} />,
       )
       let card = screen.getByTestId(`snippet-card-${mockSnippet.id}`)
       expect(card).toHaveAttribute('aria-selected', 'false')
@@ -198,11 +213,7 @@ describe('SnippetCard', () => {
     it('should handle keyboard enter key', () => {
       const onView = jest.fn()
       render(
-        <SnippetCard
-          {...defaultProps}
-          selectionMode={false}
-          onView={onView}
-        />
+        <SnippetCard {...defaultProps} selectionMode={false} onView={onView} />,
       )
       const card = screen.getByTestId(`snippet-card-${mockSnippet.id}`)
       fireEvent.keyDown(card, { key: 'Enter' })
@@ -212,11 +223,7 @@ describe('SnippetCard', () => {
     it('should handle keyboard space key', () => {
       const onView = jest.fn()
       render(
-        <SnippetCard
-          {...defaultProps}
-          selectionMode={false}
-          onView={onView}
-        />
+        <SnippetCard {...defaultProps} selectionMode={false} onView={onView} />,
       )
       const card = screen.getByTestId(`snippet-card-${mockSnippet.id}`)
       fireEvent.keyDown(card, { key: ' ' })
@@ -246,7 +253,7 @@ describe('SnippetCard', () => {
       const snippet = { ...mockSnippet, code: longCode }
       const onCopy = jest.fn()
       render(
-        <SnippetCard {...defaultProps} snippet={snippet} onCopy={onCopy} />
+        <SnippetCard {...defaultProps} snippet={snippet} onCopy={onCopy} />,
       )
       // Copy should have access to full code
       expect(screen.getByTestId('snippet-card-actions')).toBeInTheDocument()
@@ -256,9 +263,7 @@ describe('SnippetCard', () => {
   describe('Copy Functionality', () => {
     it('should call onCopy with full code', () => {
       const onCopy = jest.fn()
-      render(
-        <SnippetCard {...defaultProps} onCopy={onCopy} />
-      )
+      render(<SnippetCard {...defaultProps} onCopy={onCopy} />)
       const copyBtn = screen.getByTestId('action-copy')
       fireEvent.click(copyBtn)
       expect(onCopy).toHaveBeenCalledWith(mockSnippet.code)
@@ -266,9 +271,7 @@ describe('SnippetCard', () => {
 
     it('should show copied state temporarily', async () => {
       const onCopy = jest.fn()
-      render(
-        <SnippetCard {...defaultProps} onCopy={onCopy} />
-      )
+      render(<SnippetCard {...defaultProps} onCopy={onCopy} />)
       const copyBtn = screen.getByTestId('action-copy')
       fireEvent.click(copyBtn)
 
@@ -282,9 +285,7 @@ describe('SnippetCard', () => {
   describe('Edit Functionality', () => {
     it('should call onEdit with snippet', () => {
       const onEdit = jest.fn()
-      render(
-        <SnippetCard {...defaultProps} onEdit={onEdit} />
-      )
+      render(<SnippetCard {...defaultProps} onEdit={onEdit} />)
       const editBtn = screen.getByTestId('action-edit')
       fireEvent.click(editBtn)
       expect(onEdit).toHaveBeenCalledWith(mockSnippet)
@@ -303,9 +304,7 @@ describe('SnippetCard', () => {
   describe('Delete Functionality', () => {
     it('should call onDelete with snippet id', () => {
       const onDelete = jest.fn()
-      render(
-        <SnippetCard {...defaultProps} onDelete={onDelete} />
-      )
+      render(<SnippetCard {...defaultProps} onDelete={onDelete} />)
       const deleteBtn = screen.getByTestId('action-delete')
       fireEvent.click(deleteBtn)
       expect(onDelete).toHaveBeenCalledWith(mockSnippet.id)
@@ -314,23 +313,13 @@ describe('SnippetCard', () => {
 
   describe('Error State', () => {
     it('should handle null snippet gracefully', () => {
-      render(
-        <SnippetCard
-          {...defaultProps}
-          snippet={null as any}
-        />
-      )
+      render(<SnippetCard {...defaultProps} snippet={null as any} />)
       // Should render error message or fallback
       expect(screen.getByRole('article')).toBeInTheDocument()
     })
 
     it('should handle undefined snippet gracefully', () => {
-      render(
-        <SnippetCard
-          {...defaultProps}
-          snippet={undefined as any}
-        />
-      )
+      render(<SnippetCard {...defaultProps} snippet={undefined as any} />)
       // Should render error message or fallback
       expect(screen.getByRole('article')).toBeInTheDocument()
     })
@@ -373,7 +362,9 @@ describe('SnippetCard', () => {
     it('should handle snippet with no tags', () => {
       const snippet = { ...mockSnippet, tags: [] }
       render(<SnippetCard {...defaultProps} snippet={snippet} />)
-      expect(screen.getByTestId(`snippet-card-${snippet.id}`)).toBeInTheDocument()
+      expect(
+        screen.getByTestId(`snippet-card-${snippet.id}`),
+      ).toBeInTheDocument()
     })
 
     it('should handle snippet with many tags', () => {
@@ -382,7 +373,9 @@ describe('SnippetCard', () => {
         tags: Array.from({ length: 20 }, (_, i) => `tag${i}`),
       }
       render(<SnippetCard {...defaultProps} snippet={snippet} />)
-      expect(screen.getByTestId(`snippet-card-${snippet.id}`)).toBeInTheDocument()
+      expect(
+        screen.getByTestId(`snippet-card-${snippet.id}`),
+      ).toBeInTheDocument()
     })
 
     it('should handle special characters in code', () => {
@@ -397,9 +390,7 @@ describe('SnippetCard', () => {
     it('should handle copy followed by edit', () => {
       const onCopy = jest.fn()
       const onEdit = jest.fn()
-      render(
-        <SnippetCard {...defaultProps} onCopy={onCopy} onEdit={onEdit} />
-      )
+      render(<SnippetCard {...defaultProps} onCopy={onCopy} onEdit={onEdit} />)
 
       const copyBtn = screen.getByTestId('action-copy')
       fireEvent.click(copyBtn)
@@ -419,7 +410,7 @@ describe('SnippetCard', () => {
           selectionMode={false}
           onView={onView}
           onCopy={onCopy}
-        />
+        />,
       )
 
       const copyBtn = screen.getByTestId('action-copy')
@@ -433,7 +424,9 @@ describe('SnippetCard', () => {
       render(<SnippetCard {...defaultProps} />)
       await waitFor(() => {
         // Should load namespaces
-        expect(screen.getByTestId(`snippet-card-${mockSnippet.id}`)).toBeInTheDocument()
+        expect(
+          screen.getByTestId(`snippet-card-${mockSnippet.id}`),
+        ).toBeInTheDocument()
       })
     })
 
@@ -441,7 +434,9 @@ describe('SnippetCard', () => {
       render(<SnippetCard {...defaultProps} />)
       await waitFor(() => {
         // Should not include current namespace in move options
-        expect(screen.getByTestId(`snippet-card-${mockSnippet.id}`)).toBeInTheDocument()
+        expect(
+          screen.getByTestId(`snippet-card-${mockSnippet.id}`),
+        ).toBeInTheDocument()
       })
     })
   })
@@ -454,7 +449,7 @@ describe('SnippetCard', () => {
           {...defaultProps}
           selectionMode={true}
           onToggleSelect={onToggleSelect}
-        />
+        />,
       )
       const card = screen.getByTestId(`snippet-card-${mockSnippet.id}`)
       fireEvent.click(card)
@@ -463,19 +458,13 @@ describe('SnippetCard', () => {
 
     it('should exit selection mode gracefully', () => {
       const { rerender } = render(
-        <SnippetCard
-          {...defaultProps}
-          selectionMode={true}
-        />
+        <SnippetCard {...defaultProps} selectionMode={true} />,
       )
-      expect(screen.queryByTestId('snippet-card-actions')).not.toBeInTheDocument()
+      expect(
+        screen.queryByTestId('snippet-card-actions'),
+      ).not.toBeInTheDocument()
 
-      rerender(
-        <SnippetCard
-          {...defaultProps}
-          selectionMode={false}
-        />
-      )
+      rerender(<SnippetCard {...defaultProps} selectionMode={false} />)
       expect(screen.getByTestId('snippet-card-actions')).toBeInTheDocument()
     })
   })

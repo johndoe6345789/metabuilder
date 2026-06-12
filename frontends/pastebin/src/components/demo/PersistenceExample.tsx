@@ -19,19 +19,13 @@ export function PersistenceExample() {
       <CardHeader
         title={
           <div className={styles.headerRow}>
-            <div
-              className={`${styles.iconWrap} h-10 w-10`}
-              aria-hidden="true"
-            >
+            <div className={`${styles.iconWrap} h-10 w-10`} aria-hidden="true">
               <FloppyDisk size={20} className={styles.headerIcon} />
             </div>
             <div>
-              <h3 style={{ fontWeight: 600 }}>
-                Auto-Persistence Example
-              </h3>
+              <h3 style={{ fontWeight: 600 }}>Auto-Persistence Example</h3>
               <p className={styles.subtitle}>
-                Create a snippet and watch it automatically save to the
-                database
+                Create a snippet and watch it automatically save to the database
               </p>
             </div>
           </div>
@@ -48,22 +42,19 @@ export function PersistenceExample() {
               id="example-title"
               placeholder="My Awesome Snippet"
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={e => setTitle(e.target.value)}
               data-testid="title-input"
               aria-label="Snippet title"
             />
           </div>
 
-          <div
-            className={`${styles.field} space-y-2`}
-            data-testid="code-field"
-          >
+          <div className={`${styles.field} space-y-2`} data-testid="code-field">
             <FormLabel htmlFor="example-code">Code</FormLabel>
             <textarea
               id="example-code"
               placeholder="console.log('Hello World')"
               value={code}
-              onChange={(e) => setCode(e.target.value)}
+              onChange={e => setCode(e.target.value)}
               className={
                 'min-h-[100px] resize-y font-mono px-3 py-2 ' +
                 'border border-input bg-background rounded-md ' +
@@ -92,6 +83,7 @@ export function PersistenceExample() {
           >
             <div className={styles.howTitle}>How It Works</div>
             <ul
+              // eslint-disable-next-line max-len
               className={`${styles.stepList} list-disc list-inside text-muted-foreground`}
               data-testid="workflow-list"
             >

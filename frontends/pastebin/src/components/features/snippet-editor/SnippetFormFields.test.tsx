@@ -40,8 +40,13 @@ describe('SnippetFormFields Component', () => {
 
     it('renders title input with placeholder', () => {
       render(<SnippetFormFields {...defaultProps} />)
-      const titleInput = screen.getByTestId('snippet-title-input') as HTMLInputElement
-      expect(titleInput).toHaveAttribute('placeholder', 'e.g., React Counter Component')
+      const titleInput = screen.getByTestId(
+        'snippet-title-input',
+      ) as HTMLInputElement
+      expect(titleInput).toHaveAttribute(
+        'placeholder',
+        'e.g., React Counter Component',
+      )
     })
 
     it('calls onTitleChange when title value changes', async () => {
@@ -59,7 +64,9 @@ describe('SnippetFormFields Component', () => {
 
     it('displays controlled value from props', () => {
       render(<SnippetFormFields {...defaultProps} title="Existing Title" />)
-      const titleInput = screen.getByTestId('snippet-title-input') as HTMLInputElement
+      const titleInput = screen.getByTestId(
+        'snippet-title-input',
+      ) as HTMLInputElement
       expect(titleInput.value).toBe('Existing Title')
     })
 
@@ -68,7 +75,7 @@ describe('SnippetFormFields Component', () => {
         <SnippetFormFields
           {...defaultProps}
           errors={{ title: 'Title is required' }}
-        />
+        />,
       )
       expect(screen.getByText('Title is required')).toBeInTheDocument()
     })
@@ -78,7 +85,7 @@ describe('SnippetFormFields Component', () => {
         <SnippetFormFields
           {...defaultProps}
           errors={{ title: 'Title is required' }}
-        />
+        />,
       )
       const titleInput = screen.getByTestId('snippet-title-input')
       expect(titleInput).toHaveAttribute('aria-invalid', 'true')
@@ -89,7 +96,7 @@ describe('SnippetFormFields Component', () => {
         <SnippetFormFields
           {...defaultProps}
           errors={{ title: 'Title is required' }}
-        />
+        />,
       )
       const titleInput = screen.getByTestId('snippet-title-input')
       const describedById = titleInput.getAttribute('aria-describedby')
@@ -103,7 +110,7 @@ describe('SnippetFormFields Component', () => {
         <SnippetFormFields
           {...defaultProps}
           errors={{ title: 'Title is required' }}
-        />
+        />,
       )
 
       rerender(<SnippetFormFields {...defaultProps} errors={{}} />)
@@ -132,20 +139,29 @@ describe('SnippetFormFields Component', () => {
       const label = screen.getByText(/description/i, { selector: 'label' })
       expect(label).toBeInTheDocument()
 
-      const descriptionTextarea = screen.getByTestId('snippet-description-textarea')
+      const descriptionTextarea = screen.getByTestId(
+        'snippet-description-textarea',
+      )
       expect(descriptionTextarea).toBeInTheDocument()
     })
 
     it('renders textarea with placeholder', () => {
       render(<SnippetFormFields {...defaultProps} />)
-      const descriptionTextarea = screen.getByTestId('snippet-description-textarea') as HTMLTextAreaElement
-      expect(descriptionTextarea).toHaveAttribute('placeholder', expect.stringContaining('description'))
+      const descriptionTextarea = screen.getByTestId(
+        'snippet-description-textarea',
+      ) as HTMLTextAreaElement
+      expect(descriptionTextarea).toHaveAttribute(
+        'placeholder',
+        expect.stringContaining('description'),
+      )
     })
 
     it('calls onDescriptionChange when description value changes', async () => {
       const user = userEvent.setup()
       render(<SnippetFormFields {...defaultProps} />)
-      const descriptionTextarea = screen.getByTestId('snippet-description-textarea')
+      const descriptionTextarea = screen.getByTestId(
+        'snippet-description-textarea',
+      )
 
       await user.type(descriptionTextarea, 'My description')
 
@@ -157,30 +173,46 @@ describe('SnippetFormFields Component', () => {
 
     it('displays controlled value from props', () => {
       render(
-        <SnippetFormFields {...defaultProps} description="Existing description" />
+        <SnippetFormFields
+          {...defaultProps}
+          description="Existing description"
+        />,
       )
-      const descriptionTextarea = screen.getByTestId('snippet-description-textarea') as HTMLTextAreaElement
+      const descriptionTextarea = screen.getByTestId(
+        'snippet-description-textarea',
+      ) as HTMLTextAreaElement
       expect(descriptionTextarea.value).toBe('Existing description')
     })
 
     it('handles multiline input', () => {
       const multilineText = 'Line 1\nLine 2'
-      render(<SnippetFormFields {...defaultProps} description={multilineText} />)
-      const descriptionTextarea = screen.getByTestId('snippet-description-textarea') as HTMLTextAreaElement
+      render(
+        <SnippetFormFields {...defaultProps} description={multilineText} />,
+      )
+      const descriptionTextarea = screen.getByTestId(
+        'snippet-description-textarea',
+      ) as HTMLTextAreaElement
 
       expect(descriptionTextarea.value).toBe(multilineText)
     })
 
     it('has correct rows attribute', () => {
       render(<SnippetFormFields {...defaultProps} />)
-      const descriptionTextarea = screen.getByTestId('snippet-description-textarea') as HTMLTextAreaElement
+      const descriptionTextarea = screen.getByTestId(
+        'snippet-description-textarea',
+      ) as HTMLTextAreaElement
       expect(descriptionTextarea.rows).toBe(2)
     })
 
     it('has aria-label attribute', () => {
       render(<SnippetFormFields {...defaultProps} />)
-      const descriptionTextarea = screen.getByTestId('snippet-description-textarea')
-      expect(descriptionTextarea).toHaveAttribute('aria-label', expect.stringContaining('description'))
+      const descriptionTextarea = screen.getByTestId(
+        'snippet-description-textarea',
+      )
+      expect(descriptionTextarea).toHaveAttribute(
+        'aria-label',
+        expect.stringContaining('description'),
+      )
     })
   })
 
@@ -226,7 +258,10 @@ describe('SnippetFormFields Component', () => {
     it('has aria-label attribute', () => {
       render(<SnippetFormFields {...defaultProps} />)
       const languageSelect = screen.getByTestId('snippet-language-select')
-      expect(languageSelect).toHaveAttribute('aria-label', expect.stringContaining('language'))
+      expect(languageSelect).toHaveAttribute(
+        'aria-label',
+        expect.stringContaining('language'),
+      )
     })
 
     it('includes JavaScript as default language option', async () => {
@@ -252,17 +287,20 @@ describe('SnippetFormFields Component', () => {
 
       const titleInput = screen.getByTestId('snippet-title-input')
       const languageSelect = screen.getByTestId('snippet-language-select')
-      const descriptionTextarea = screen.getByTestId('snippet-description-textarea')
+      const descriptionTextarea = screen.getByTestId(
+        'snippet-description-textarea',
+      )
 
       const titlePosition = titleInput.compareDocumentPosition(languageSelect)
-      const languagePosition = languageSelect.compareDocumentPosition(descriptionTextarea)
+      const languagePosition =
+        languageSelect.compareDocumentPosition(descriptionTextarea)
 
       // Should be in document order (before = 4)
       expect(titlePosition & Node.DOCUMENT_POSITION_FOLLOWING).toBe(
-        Node.DOCUMENT_POSITION_FOLLOWING
+        Node.DOCUMENT_POSITION_FOLLOWING,
       )
       expect(languagePosition & Node.DOCUMENT_POSITION_FOLLOWING).toBe(
-        Node.DOCUMENT_POSITION_FOLLOWING
+        Node.DOCUMENT_POSITION_FOLLOWING,
       )
     })
   })
@@ -273,7 +311,9 @@ describe('SnippetFormFields Component', () => {
 
       const titleLabel = screen.getByText(/title/i, { selector: 'label' })
       const languageLabel = screen.getByText(/language/i, { selector: 'label' })
-      const descriptionLabel = screen.getByText(/description/i, { selector: 'label' })
+      const descriptionLabel = screen.getByText(/description/i, {
+        selector: 'label',
+      })
 
       expect(titleLabel).toBeInTheDocument()
       expect(languageLabel).toBeInTheDocument()
@@ -316,7 +356,7 @@ describe('SnippetFormFields Component', () => {
         <SnippetFormFields
           {...defaultProps}
           errors={{ title: 'Title is required' }}
-        />
+        />,
       )
 
       const titleInput = screen.getByTestId('snippet-title-input')
@@ -328,8 +368,12 @@ describe('SnippetFormFields Component', () => {
   describe('Edge Cases', () => {
     it('handles empty string values', () => {
       render(<SnippetFormFields {...defaultProps} title="" description="" />)
-      const titleInput = screen.getByTestId('snippet-title-input') as HTMLInputElement
-      const descriptionTextarea = screen.getByTestId('snippet-description-textarea') as HTMLTextAreaElement
+      const titleInput = screen.getByTestId(
+        'snippet-title-input',
+      ) as HTMLInputElement
+      const descriptionTextarea = screen.getByTestId(
+        'snippet-description-textarea',
+      ) as HTMLTextAreaElement
 
       expect(titleInput.value).toBe('')
       expect(descriptionTextarea.value).toBe('')
@@ -338,7 +382,9 @@ describe('SnippetFormFields Component', () => {
     it('handles very long text input', () => {
       const longText = 'A'.repeat(1000)
       render(<SnippetFormFields {...defaultProps} title={longText} />)
-      const titleInput = screen.getByTestId('snippet-title-input') as HTMLInputElement
+      const titleInput = screen.getByTestId(
+        'snippet-title-input',
+      ) as HTMLInputElement
 
       expect(titleInput.value).toBe(longText)
     })
@@ -346,7 +392,9 @@ describe('SnippetFormFields Component', () => {
     it('handles special characters in input', () => {
       const specialText = '<script>alert("xss")</script>'
       render(<SnippetFormFields {...defaultProps} description={specialText} />)
-      const descriptionTextarea = screen.getByTestId('snippet-description-textarea') as HTMLTextAreaElement
+      const descriptionTextarea = screen.getByTestId(
+        'snippet-description-textarea',
+      ) as HTMLTextAreaElement
 
       expect(descriptionTextarea.value).toBe(specialText)
     })
@@ -356,7 +404,9 @@ describe('SnippetFormFields Component', () => {
       render(<SnippetFormFields {...defaultProps} />)
 
       const titleInput = screen.getByTestId('snippet-title-input')
-      const descriptionTextarea = screen.getByTestId('snippet-description-textarea')
+      const descriptionTextarea = screen.getByTestId(
+        'snippet-description-textarea',
+      )
       const languageSelect = screen.getByTestId('snippet-language-select')
 
       // Make rapid changes
@@ -371,7 +421,9 @@ describe('SnippetFormFields Component', () => {
     it('updates when props change', () => {
       const { rerender } = render(<SnippetFormFields {...defaultProps} />)
 
-      let titleInput = screen.getByTestId('snippet-title-input') as HTMLInputElement
+      let titleInput = screen.getByTestId(
+        'snippet-title-input',
+      ) as HTMLInputElement
       expect(titleInput.value).toBe('')
 
       rerender(<SnippetFormFields {...defaultProps} title="Updated Title" />)

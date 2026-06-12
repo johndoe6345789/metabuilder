@@ -1,4 +1,9 @@
-import { Card, Button, Chip, MaterialIcon } from '@metabuilder/components/fakemui'
+import {
+  Card,
+  Button,
+  Chip,
+  MaterialIcon,
+} from '@metabuilder/components/fakemui'
 import styles from './TaskListsShowcase.module.scss'
 
 const onSurfaceVariant = 'var(--mat-sys-on-surface-variant)'
@@ -52,25 +57,36 @@ function TaskItem({ task }: { task: Task }) {
         />
         <div style={{ flex: 1, minWidth: 0 }}>
           <h4 style={{ fontWeight: 500 }}>{task.title}</h4>
-          <p style={{
-            fontSize: '0.875rem',
-            lineHeight: '1.25rem',
-            color: onSurfaceVariant,
-            marginTop: '4px',
-          }}>
+          <p
+            style={{
+              fontSize: '0.875rem',
+              lineHeight: '1.25rem',
+              color: onSurfaceVariant,
+              marginTop: '4px',
+            }}
+          >
             {task.description}
           </p>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '12px' }}>
-            {task.chips.map((chip) => (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px',
+              marginTop: '12px',
+            }}
+          >
+            {task.chips.map(chip => (
               <Chip key={chip.label} color={chip.color as any}>
                 {chip.label}
               </Chip>
             ))}
-            <span style={{
-              fontSize: '0.75rem',
-              lineHeight: '1rem',
-              color: onSurfaceVariant,
-            }}>
+            <span
+              style={{
+                fontSize: '0.75rem',
+                lineHeight: '1rem',
+                color: onSurfaceVariant,
+              }}
+            >
               {task.status}
             </span>
           </div>
@@ -90,7 +106,14 @@ export function TaskListsShowcase() {
       aria-label="Task lists showcase"
     >
       <div>
-        <h2 style={{ fontSize: '1.875rem', lineHeight: '2.25rem', fontWeight: 700, marginBottom: '8px' }}>
+        <h2
+          style={{
+            fontSize: '1.875rem',
+            lineHeight: '2.25rem',
+            fontWeight: 700,
+            marginBottom: '8px',
+          }}
+        >
           Task Lists
         </h2>
         <p style={{ color: onSurfaceVariant }}>
@@ -99,9 +122,26 @@ export function TaskListsShowcase() {
       </div>
 
       <Card>
-        <div style={{ padding: '16px', borderBottom: '1px solid var(--mat-sys-outline-variant)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <h3 style={{ fontWeight: 600, fontSize: '1.125rem', lineHeight: '1.75rem' }}>
+        <div
+          style={{
+            padding: '16px',
+            borderBottom: '1px solid var(--mat-sys-outline-variant)',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <h3
+              style={{
+                fontWeight: 600,
+                fontSize: '1.125rem',
+                lineHeight: '1.75rem',
+              }}
+            >
               Project Tasks
             </h3>
             <Button size="sm">
@@ -116,7 +156,7 @@ export function TaskListsShowcase() {
         </div>
 
         <div className="divide-y">
-          {TASKS.map((task) => (
+          {TASKS.map(task => (
             <TaskItem key={task.title} task={task} />
           ))}
         </div>

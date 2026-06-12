@@ -1,6 +1,10 @@
 import {
-  Button, Dialog, DialogHeader, DialogTitle,
-  DialogContent, DialogActions,
+  Button,
+  Dialog,
+  DialogHeader,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@metabuilder/components/fakemui'
 import { useTranslation } from '@/hooks/useTranslation'
 
@@ -19,23 +23,13 @@ export function SnippetDeleteDialog({
 }: SnippetDeleteDialogProps) {
   const t = useTranslation()
   return (
-    <Dialog
-      open={open}
-      onClose={onCancel}
-      maxWidth="xs"
-      fullWidth
-    >
+    <Dialog open={open} onClose={onCancel} maxWidth="xs" fullWidth>
       <DialogHeader>
-        <DialogTitle>
-          {t.snippetCard.deleteDialog.title}
-        </DialogTitle>
+        <DialogTitle>{t.snippetCard.deleteDialog.title}</DialogTitle>
       </DialogHeader>
       <DialogContent>
         <p>
-          {t.snippetCard.deleteDialog.body.replace(
-            '{title}',
-            snippetTitle,
-          )}
+          {t.snippetCard.deleteDialog.body.replace('{title}', snippetTitle)}
         </p>
       </DialogContent>
       <DialogActions>

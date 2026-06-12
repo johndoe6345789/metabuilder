@@ -10,7 +10,7 @@ jest.mock('./MonacoEditor', () => ({
       <textarea
         data-testid="monaco-code-input"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={e => onChange(e.target.value)}
         placeholder={`Code in ${language}`}
       />
     </div>
@@ -19,6 +19,7 @@ jest.mock('./MonacoEditor', () => ({
 
 // Mock React Preview
 jest.mock('./ReactPreview', () => ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ReactPreview: ({ code, language, functionName }: any) => (
     <div data-testid="react-preview">
       React Preview: {language} - {functionName}
@@ -28,6 +29,7 @@ jest.mock('./ReactPreview', () => ({
 
 // Mock Python Output
 jest.mock('@/components/features/python-runner/PythonOutput', () => ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   PythonOutput: ({ code }: any) => (
     <div data-testid="python-output">Python Output</div>
   ),
@@ -49,9 +51,7 @@ describe('SplitScreenEditor Component', () => {
 
   describe('Unsupported Language Handling', () => {
     it('renders only MonacoEditor for unsupported languages', () => {
-      render(
-        <SplitScreenEditor {...defaultProps} language="Go" />
-      )
+      render(<SplitScreenEditor {...defaultProps} language="Go" />)
 
       expect(screen.getByTestId('monaco-editor')).toBeInTheDocument()
       expect(screen.queryByTestId('react-preview')).not.toBeInTheDocument()
@@ -59,13 +59,17 @@ describe('SplitScreenEditor Component', () => {
     })
 
     it('does not show view mode buttons for unsupported languages', () => {
-      render(
-        <SplitScreenEditor {...defaultProps} language="Rust" />
-      )
+      render(<SplitScreenEditor {...defaultProps} language="Rust" />)
 
-      expect(screen.queryByRole('button', { name: /code/i })).not.toBeInTheDocument()
-      expect(screen.queryByRole('button', { name: /split/i })).not.toBeInTheDocument()
-      expect(screen.queryByRole('button', { name: /preview/i })).not.toBeInTheDocument()
+      expect(
+        screen.queryByRole('button', { name: /code/i }),
+      ).not.toBeInTheDocument()
+      expect(
+        screen.queryByRole('button', { name: /split/i }),
+      ).not.toBeInTheDocument()
+      expect(
+        screen.queryByRole('button', { name: /preview/i }),
+      ).not.toBeInTheDocument()
     })
   })
 
@@ -75,13 +79,13 @@ describe('SplitScreenEditor Component', () => {
 
       expect(screen.getByRole('button', { name: /code/i })).toBeInTheDocument()
       expect(screen.getByRole('button', { name: /split/i })).toBeInTheDocument()
-      expect(screen.getByRole('button', { name: /preview/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /preview/i }),
+      ).toBeInTheDocument()
     })
 
     it('displays "Output" instead of "Preview" for Python', () => {
-      render(
-        <SplitScreenEditor {...defaultProps} language="Python" />
-      )
+      render(<SplitScreenEditor {...defaultProps} language="Python" />)
 
       // Should show "Output" for Python
       const outputBtn = screen.getByRole('button', { name: /output/i })
@@ -89,9 +93,7 @@ describe('SplitScreenEditor Component', () => {
     })
 
     it('displays "Preview" for non-Python supported languages', () => {
-      render(
-        <SplitScreenEditor {...defaultProps} language="JSX" />
-      )
+      render(<SplitScreenEditor {...defaultProps} language="JSX" />)
 
       const previewBtn = screen.getByRole('button', { name: /preview/i })
       expect(previewBtn).toBeInTheDocument()
@@ -119,6 +121,7 @@ describe('SplitScreenEditor Component', () => {
       expect(screen.queryByTestId('react-preview')).not.toBeInTheDocument()
     })
 
+    // eslint-disable-next-line max-len
     it('switches to preview-only view when preview button is clicked', async () => {
       const user = userEvent.setup()
       render(<SplitScreenEditor {...defaultProps} language="JSX" />)
@@ -178,7 +181,13 @@ describe('SplitScreenEditor Component', () => {
   describe('Code Editing', () => {
     it('calls onChange when code is edited in code view', async () => {
       const user = userEvent.setup()
-      render(<SplitScreenEditor {...defaultProps} language="JavaScript" onChange={mockOnChange} />)
+      render(
+        <SplitScreenEditor
+          {...defaultProps}
+          language="JavaScript"
+          onChange={mockOnChange}
+        />,
+      )
 
       const codeBtn = screen.getByRole('button', { name: /code/i })
       await user.click(codeBtn)
@@ -208,14 +217,24 @@ describe('SplitScreenEditor Component', () => {
 
     it('updates editor with controlled value', () => {
       const { rerender } = render(
-        <SplitScreenEditor {...defaultProps} value="initial code" language="JavaScript" />
+        <SplitScreenEditor
+          {...defaultProps}
+          value="initial code"
+          language="JavaScript"
+        />,
       )
 
-      let codeInput = screen.getByTestId('monaco-code-input') as HTMLTextAreaElement
+      let codeInput = screen.getByTestId(
+        'monaco-code-input',
+      ) as HTMLTextAreaElement
       expect(codeInput.value).toBe('initial code')
 
       rerender(
-        <SplitScreenEditor {...defaultProps} value="updated code" language="JavaScript" />
+        <SplitScreenEditor
+          {...defaultProps}
+          value="updated code"
+          language="JavaScript"
+        />,
       )
 
       codeInput = screen.getByTestId('monaco-code-input') as HTMLTextAreaElement
@@ -248,7 +267,7 @@ describe('SplitScreenEditor Component', () => {
           {...defaultProps}
           language="Python"
           value={pythonCode}
-        />
+        />,
       )
 
       expect(screen.getByTestId('python-output')).toBeInTheDocument()
@@ -260,11 +279,7 @@ describe('SplitScreenEditor Component', () => {
       const user = userEvent.setup()
       const jsxCode = 'export default () => <div>Test</div>'
       render(
-        <SplitScreenEditor
-          {...defaultProps}
-          language="JSX"
-          value={jsxCode}
-        />
+        <SplitScreenEditor {...defaultProps} language="JSX" value={jsxCode} />,
       )
 
       const previewBtn = screen.getByRole('button', { name: /preview/i })
@@ -273,6 +288,7 @@ describe('SplitScreenEditor Component', () => {
       expect(screen.getByTestId('react-preview')).toBeInTheDocument()
     })
 
+    // eslint-disable-next-line max-len
     it('passes function name and input parameters to ReactPreview', async () => {
       const user = userEvent.setup()
       render(
@@ -283,7 +299,7 @@ describe('SplitScreenEditor Component', () => {
           inputParameters={[
             { name: 'count', type: 'number', defaultValue: '0' },
           ]}
-        />
+        />,
       )
 
       const previewBtn = screen.getByRole('button', { name: /preview/i })
@@ -297,7 +313,11 @@ describe('SplitScreenEditor Component', () => {
   describe('Height Configuration', () => {
     it('applies custom height to container', () => {
       render(
-        <SplitScreenEditor {...defaultProps} language="JavaScript" height="600px" />
+        <SplitScreenEditor
+          {...defaultProps}
+          language="JavaScript"
+          height="600px"
+        />,
       )
 
       // In code view, the height is passed to Monaco editor
@@ -307,9 +327,10 @@ describe('SplitScreenEditor Component', () => {
     })
 
     it('uses default height when not specified', () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { height, ...propsWithoutHeight } = defaultProps
       render(
-        <SplitScreenEditor {...propsWithoutHeight} language="JavaScript" />
+        <SplitScreenEditor {...propsWithoutHeight} language="JavaScript" />,
       )
 
       expect(screen.getByTestId('monaco-editor')).toBeInTheDocument()
@@ -317,7 +338,11 @@ describe('SplitScreenEditor Component', () => {
 
     it('passes height to Monaco editor', () => {
       render(
-        <SplitScreenEditor {...defaultProps} language="JavaScript" height="700px" />
+        <SplitScreenEditor
+          {...defaultProps}
+          language="JavaScript"
+          height="700px"
+        />,
       )
 
       // Monaco editor receives the height prop and uses it in split view
@@ -328,27 +353,37 @@ describe('SplitScreenEditor Component', () => {
   describe('Language Support Detection', () => {
     it('supports JSX language', () => {
       render(<SplitScreenEditor {...defaultProps} language="JSX" />)
-      expect(screen.getByRole('button', { name: /preview/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /preview/i }),
+      ).toBeInTheDocument()
     })
 
     it('supports TSX language', () => {
       render(<SplitScreenEditor {...defaultProps} language="TSX" />)
-      expect(screen.getByRole('button', { name: /preview/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /preview/i }),
+      ).toBeInTheDocument()
     })
 
     it('supports JavaScript language', () => {
       render(<SplitScreenEditor {...defaultProps} language="JavaScript" />)
-      expect(screen.getByRole('button', { name: /preview/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /preview/i }),
+      ).toBeInTheDocument()
     })
 
     it('supports TypeScript language', () => {
       render(<SplitScreenEditor {...defaultProps} language="TypeScript" />)
-      expect(screen.getByRole('button', { name: /preview/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /preview/i }),
+      ).toBeInTheDocument()
     })
 
     it('supports Python language', () => {
       render(<SplitScreenEditor {...defaultProps} language="Python" />)
-      expect(screen.getByRole('button', { name: /output/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /output/i }),
+      ).toBeInTheDocument()
     })
   })
 
@@ -393,14 +428,12 @@ describe('SplitScreenEditor Component', () => {
   describe('Edge Cases', () => {
     it('handles empty code value', () => {
       render(
-        <SplitScreenEditor
-          {...defaultProps}
-          value=""
-          language="JavaScript"
-        />
+        <SplitScreenEditor {...defaultProps} value="" language="JavaScript" />,
       )
 
-      const codeInput = screen.getByTestId('monaco-code-input') as HTMLTextAreaElement
+      const codeInput = screen.getByTestId(
+        'monaco-code-input',
+      ) as HTMLTextAreaElement
       expect(codeInput.value).toBe('')
     })
 
@@ -411,10 +444,12 @@ describe('SplitScreenEditor Component', () => {
           {...defaultProps}
           value={longCode}
           language="JavaScript"
-        />
+        />,
       )
 
-      const codeInput = screen.getByTestId('monaco-code-input') as HTMLTextAreaElement
+      const codeInput = screen.getByTestId(
+        'monaco-code-input',
+      ) as HTMLTextAreaElement
       expect(codeInput.value).toContain('const x = 1;')
     })
 
@@ -425,10 +460,12 @@ describe('SplitScreenEditor Component', () => {
           {...defaultProps}
           value={specialCode}
           language="JavaScript"
-        />
+        />,
       )
 
-      const codeInput = screen.getByTestId('monaco-code-input') as HTMLTextAreaElement
+      const codeInput = screen.getByTestId(
+        'monaco-code-input',
+      ) as HTMLTextAreaElement
       expect(codeInput.value).toBe(specialCode)
     })
 
@@ -456,7 +493,7 @@ describe('SplitScreenEditor Component', () => {
           {...defaultProps}
           language="JSX"
           value="<div>Initial</div>"
-        />
+        />,
       )
 
       // Start in split view
@@ -482,7 +519,7 @@ describe('SplitScreenEditor Component', () => {
           {...defaultProps}
           language="Python"
           value='print("test")'
-        />
+        />,
       )
 
       // Should show split view with Python output

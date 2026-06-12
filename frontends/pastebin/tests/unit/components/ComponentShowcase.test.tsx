@@ -81,39 +81,29 @@ describe('ComponentShowcase Component', () => {
 
     it('should use custom code prop', () => {
       const customCode = 'const customExample = () => null'
-      render(
-        <ComponentShowcase
-          {...defaultProps}
-          code={customCode}
-        />
-      )
+      render(<ComponentShowcase {...defaultProps} code={customCode} />)
       expect(screen.getByTestId('showcase-children')).toBeInTheDocument()
     })
 
     it('should use custom title prop', () => {
       const customTitle = 'Custom Title'
-      render(
-        <ComponentShowcase
-          {...defaultProps}
-          title={customTitle}
-        />
-      )
+      render(<ComponentShowcase {...defaultProps} title={customTitle} />)
       expect(screen.getByTestId('showcase-children')).toBeInTheDocument()
     })
 
     it('should use custom description prop', () => {
       const customDescription = 'Custom description'
       render(
-        <ComponentShowcase
-          {...defaultProps}
-          description={customDescription}
-        />
+        <ComponentShowcase {...defaultProps} description={customDescription} />,
       )
       expect(screen.getByTestId('showcase-children')).toBeInTheDocument()
     })
 
     it('should handle optional description prop', () => {
-      const propsWithoutDescription = { ...defaultProps, description: undefined }
+      const propsWithoutDescription = {
+        ...defaultProps,
+        description: undefined,
+      }
       expect(() => {
         render(<ComponentShowcase {...propsWithoutDescription} />)
       }).not.toThrow()
@@ -121,23 +111,13 @@ describe('ComponentShowcase Component', () => {
 
     it('should use custom language prop', () => {
       const customLanguage = 'javascript'
-      render(
-        <ComponentShowcase
-          {...defaultProps}
-          language={customLanguage}
-        />
-      )
+      render(<ComponentShowcase {...defaultProps} language={customLanguage} />)
       expect(screen.getByTestId('showcase-children')).toBeInTheDocument()
     })
 
     it('should use custom category prop', () => {
       const customCategory = 'molecules'
-      render(
-        <ComponentShowcase
-          {...defaultProps}
-          category={customCategory}
-        />
-      )
+      render(<ComponentShowcase {...defaultProps} category={customCategory} />)
       expect(screen.getByTestId('showcase-children')).toBeInTheDocument()
     })
   })
@@ -150,22 +130,14 @@ describe('ComponentShowcase Component', () => {
           <p>With multiple elements</p>
         </div>
       )
-      render(
-        <ComponentShowcase
-          {...defaultProps}
-          children={complexChildren}
-        />
-      )
+      render(<ComponentShowcase {...defaultProps} children={complexChildren} />)
       expect(screen.getByTestId('complex-children')).toBeInTheDocument()
       expect(screen.getByText('Complex Content')).toBeInTheDocument()
     })
 
     it('should render text children', () => {
       render(
-        <ComponentShowcase
-          {...defaultProps}
-          children="Simple Text Content"
-        />
+        <ComponentShowcase {...defaultProps} children="Simple Text Content" />,
       )
       expect(screen.getByText('Simple Text Content')).toBeInTheDocument()
     })
@@ -186,22 +158,12 @@ describe('ComponentShowcase Component', () => {
   describe('Code Content', () => {
     it('should accept code string prop', () => {
       const codeExample = 'function test() { return "hello"; }'
-      render(
-        <ComponentShowcase
-          {...defaultProps}
-          code={codeExample}
-        />
-      )
+      render(<ComponentShowcase {...defaultProps} code={codeExample} />)
       expect(screen.getByTestId('showcase-children')).toBeInTheDocument()
     })
 
     it('should handle empty code string', () => {
-      render(
-        <ComponentShowcase
-          {...defaultProps}
-          code=""
-        />
-      )
+      render(<ComponentShowcase {...defaultProps} code="" />)
       expect(screen.getByTestId('showcase-children')).toBeInTheDocument()
     })
 
@@ -211,44 +173,24 @@ describe('ComponentShowcase Component', () => {
           return "hello";
         }
       `
-      render(
-        <ComponentShowcase
-          {...defaultProps}
-          code={multilineCode}
-        />
-      )
+      render(<ComponentShowcase {...defaultProps} code={multilineCode} />)
       expect(screen.getByTestId('showcase-children')).toBeInTheDocument()
     })
   })
 
   describe('Language Support', () => {
     it('should handle tsx language', () => {
-      render(
-        <ComponentShowcase
-          {...defaultProps}
-          language="tsx"
-        />
-      )
+      render(<ComponentShowcase {...defaultProps} language="tsx" />)
       expect(screen.getByTestId('showcase-children')).toBeInTheDocument()
     })
 
     it('should handle javascript language', () => {
-      render(
-        <ComponentShowcase
-          {...defaultProps}
-          language="javascript"
-        />
-      )
+      render(<ComponentShowcase {...defaultProps} language="javascript" />)
       expect(screen.getByTestId('showcase-children')).toBeInTheDocument()
     })
 
     it('should handle other languages', () => {
-      render(
-        <ComponentShowcase
-          {...defaultProps}
-          language="python"
-        />
-      )
+      render(<ComponentShowcase {...defaultProps} language="python" />)
       expect(screen.getByTestId('showcase-children')).toBeInTheDocument()
     })
   })
@@ -289,7 +231,7 @@ describe('ComponentShowcase Component', () => {
             onSaveSnippet={mockOnSaveSnippet}
           >
             {defaultProps.children}
-          </ComponentShowcase>
+          </ComponentShowcase>,
         )
       }).not.toThrow()
     })

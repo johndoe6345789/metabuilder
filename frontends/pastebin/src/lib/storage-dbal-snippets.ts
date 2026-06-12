@@ -35,7 +35,7 @@ export function toSnippet(raw: Record<string, unknown>): Snippet {
 
 export function snippetToBody(
   snippet: Snippet,
-  userId: string
+  userId: string,
 ): Record<string, unknown> {
   return {
     title: snippet.title,

@@ -13,19 +13,16 @@ import type {
   Finding,
   ScoringWeights,
   ResultMetadata,
-} from '../types/index.js';
-import { trendAnalyzer } from './trendAnalyzer';
-import {
-  saveTrendHistory,
-  createHistoricalRecord,
-} from '../utils/trendStorage';
+} from '../types/index.js'
+import { trendAnalyzer } from './trendAnalyzer'
+import { saveTrendHistory, createHistoricalRecord } from '../utils/trendStorage'
 import {
   calcCodeQualityScore,
   calcTestCoverageScore,
   calcArchitectureScore,
   calcSecurityScore,
-} from './category-scorers.js';
-import { generateRecommendations } from './recommendation-generator.js';
+} from './category-scorers.js'
+import { generateRecommendations } from './recommendation-generator.js'
 
 export class ScoringEngine {
   calculateScore(
@@ -35,37 +32,45 @@ export class ScoringEngine {
     security: SecurityMetrics | null,
     weights: ScoringWeights,
     findings: Finding[],
-    metadata: ResultMetadata
+    metadata: ResultMetadata,
   ): ScoringResult {
-    const cqScore = calcCodeQualityScore(codeQuality);
-    const tcScore = calcTestCoverageScore(testCoverage);
-    const archScore = calcArchitectureScore(architecture);
-    const secScore = calcSecurityScore(security);
+    const cqScore = calcCodeQualityScore(codeQuality)
+    const tcScore = calcTestCoverageScore(testCoverage)
+    const archScore = calcArchitectureScore(architecture)
+    const secScore = calcSecurityScore(security)
 
     const componentScores = this.buildComponentScores(
-      cqScore, tcScore, archScore, secScore, weights
-    );
+      cqScore,
+      tcScore,
+      archScore,
+      secScore,
+      weights,
+    )
 
     const overallScore =
       componentScores.codeQuality.weightedScore +
       componentScores.testCoverage.weightedScore +
       componentScores.architecture.weightedScore +
-      componentScores.security.weightedScore;
+      componentScores.security.weightedScore
 
-    const grade = this.assignGrade(overallScore);
-    const status = overallScore >= 80 ? 'pass' : 'fail';
+    const grade = this.assignGrade(overallScore)
+    const status = overallScore >= 80 ? 'pass' : 'fail'
 
     const recommendations = generateRecommendations(
-      codeQuality, testCoverage, architecture, security, findings
-    );
+      codeQuality,
+      testCoverage,
+      architecture,
+      security,
+      findings,
+    )
 
-    const trend = trendAnalyzer.analyzeTrend(
-      overallScore, componentScores
-    );
+    const trend = trendAnalyzer.analyzeTrend(overallScore, componentScores)
     const historicalRecord = createHistoricalRecord(
-      overallScore, grade, componentScores
-    );
-    saveTrendHistory(historicalRecord);
+      overallScore,
+      grade,
+      componentScores,
+    )
+    saveTrendHistory(historicalRecord)
 
     return {
       overall: {
@@ -80,7 +85,7 @@ export class ScoringEngine {
       recommendations,
       trend,
       metadata,
-    };
+    }
   }
 
   private buildComponentScores(
@@ -88,7 +93,7 @@ export class ScoringEngine {
     tc: number,
     arch: number,
     sec: number,
-    weights: ScoringWeights
+    weights: ScoringWeights,
   ): ComponentScores {
     return {
       codeQuality: {
@@ -111,15 +116,15 @@ export class ScoringEngine {
         weight: weights.security,
         weightedScore: sec * weights.security,
       },
-    };
+    }
   }
 
   private assignGrade(score: number): 'A' | 'B' | 'C' | 'D' | 'F' {
-    if (score >= 90) return 'A';
-    if (score >= 80) return 'B';
-    if (score >= 70) return 'C';
-    if (score >= 60) return 'D';
-    return 'F';
+    if (score >= 90) return 'A'
+    if (score >= 80) return 'B'
+    if (score >= 70) return 'C'
+    if (score >= 60) return 'D'
+    return 'F'
   }
 
   private generateSummary(grade: string, score: number): string {
@@ -129,9 +134,9 @@ export class ScoringEngine {
       C: 'Acceptable code quality - areas for improvement',
       D: 'Poor code quality - significant issues',
       F: 'Failing code quality - critical issues',
-    };
-    return `${descriptions[grade] ?? 'Unknown'} (${score.toFixed(1)}%)`;
+    }
+    return `${descriptions[grade] ?? 'Unknown'} (${score.toFixed(1)}%)`
   }
 }
 
-export const scoringEngine = new ScoringEngine();
+export const scoringEngine = new ScoringEngine()

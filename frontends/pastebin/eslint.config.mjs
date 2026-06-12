@@ -7,7 +7,11 @@ import globals from 'globals'
 
 export default [
   {
-    ignores: ['node_modules', '.next', 'dist', 'coverage', 'src/styles/m3-scss/**', 'scripts/**'],
+    ignores: [
+      'node_modules', '.next', 'dist', 'coverage',
+      'src/styles/m3-scss/**', 'scripts/**',
+      'public/**',
+    ],
   },
   {
     languageOptions: {
@@ -38,6 +42,20 @@ export default [
       '@typescript-eslint/consistent-type-definitions': 'warn',
       '@typescript-eslint/consistent-indexed-object-style': 'warn',
       '@typescript-eslint/array-type': 'warn',
+    },
+  },
+  {
+    // Next.js dynamic-segment dirs ([id]/) have literal brackets in path names.
+    // ESLint's glob expansion escapes them (\[id\]/), breaking TypeScript project
+    // resolution. Override project:true with project:false for these files.
+    // The pattern 'src/app/snippet/*/**' matches both the real and escaped paths.
+    name: 'dynamic-segment-override',
+    files: ['src/app/snippet/*/**'],
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        project: false,
+      },
     },
   },
   {

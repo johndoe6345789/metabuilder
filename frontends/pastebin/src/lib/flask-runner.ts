@@ -32,7 +32,10 @@ function getFlaskBaseUrl(): string | null {
 
 function requireUrl(): string {
   const url = getFlaskBaseUrl()
-  if (!url) throw new Error('Flask backend not configured (NEXT_PUBLIC_FLASK_BACKEND_URL is not set)')
+  if (!url)
+    throw new Error(
+      'Flask backend not configured (NEXT_PUBLIC_FLASK_BACKEND_URL is not set)',
+    )
   return url
 }
 
@@ -72,14 +75,19 @@ export async function runCodeViaFlask(opts: RunOptions): Promise<RunResult> {
 
 /** @deprecated Use runCodeViaFlask */
 export async function runPythonViaFlask(code: string): Promise<RunResult> {
-  return runCodeViaFlask({ language: 'python', files: [{ name: 'main.py', content: code }] })
+  return runCodeViaFlask({
+    language: 'python',
+    files: [{ name: 'main.py', content: code }],
+  })
 }
 
 // ---------------------------------------------------------------------------
 // Interactive session
 // ---------------------------------------------------------------------------
 
-export async function startInteractiveSession(opts: RunOptions): Promise<string> {
+export async function startInteractiveSession(
+  opts: RunOptions,
+): Promise<string> {
   const base = requireUrl()
   const response = await fetch(`${base}/api/run/interactive`, {
     method: 'POST',
@@ -93,30 +101,41 @@ export async function startInteractiveSession(opts: RunOptions): Promise<string>
   })
   if (!response.ok) {
     const body = await response.json().catch(() => null)
-    throw new Error(body?.error ?? `Failed to start session: ${response.statusText}`)
+    throw new Error(
+      body?.error ?? `Failed to start session: ${response.statusText}`,
+    )
   }
   const data = await response.json()
   return data.session_id as string
 }
 
-export async function pollSession(sessionId: string, offset: number): Promise<PollResult> {
+export async function pollSession(
+  sessionId: string,
+  offset: number,
+): Promise<PollResult> {
   const base = requireUrl()
   const response = await fetch(
     `${base}/api/run/interactive/${sessionId}/poll?offset=${offset}`,
-    { headers: authHeaders(), signal: AbortSignal.timeout(5000) }
+    { headers: authHeaders(), signal: AbortSignal.timeout(5000) },
   )
   if (!response.ok) throw new Error(`Poll failed: ${response.statusText}`)
   return response.json()
 }
 
-export async function sendSessionInput(sessionId: string, value: string): Promise<void> {
+export async function sendSessionInput(
+  sessionId: string,
+  value: string,
+): Promise<void> {
   const base = requireUrl()
-  const response = await fetch(`${base}/api/run/interactive/${sessionId}/input`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...authHeaders() },
-    body: JSON.stringify({ value }),
-    signal: AbortSignal.timeout(5000),
-  })
+  const response = await fetch(
+    `${base}/api/run/interactive/${sessionId}/input`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...authHeaders() },
+      body: JSON.stringify({ value }),
+      signal: AbortSignal.timeout(5000),
+    },
+  )
   if (!response.ok) throw new Error(`Send input failed: ${response.statusText}`)
 }
 

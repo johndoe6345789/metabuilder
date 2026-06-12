@@ -14,7 +14,11 @@ interface ForkDialogProps {
 }
 
 export function ForkDialog({
-  open, onClose, snippet, isShared, token,
+  open,
+  onClose,
+  snippet,
+  isShared,
+  token,
 }: ForkDialogProps) {
   const { title, setTitle, forking, handleFork } = useForkDialog({
     snippetId: snippet.id,
@@ -22,14 +26,16 @@ export function ForkDialog({
     isShared,
     token,
     onClose,
-  });
+  })
 
-  if (!open) return null;
+  if (!open) return null
 
   return (
     <div
       className={styles.overlay}
-      onClick={e => { if (e.target === e.currentTarget) onClose() }}
+      onClick={e => {
+        if (e.target === e.currentTarget) onClose()
+      }}
       role="dialog"
       aria-modal="true"
       aria-label="Fork snippet"
@@ -86,5 +92,5 @@ export function ForkDialog({
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -5,8 +5,15 @@ import { ViewModeButton } from './ViewModeButton'
 
 // Mock @metabuilder/components/fakemui
 jest.mock('@metabuilder/components/fakemui', () => ({
-  Button: ({ children, onClick, 'aria-label': ariaLabel, 'aria-pressed': ariaPressed,
-    'data-testid': testId, variant, ...rest }: any) => (
+  Button: ({
+    children,
+    onClick,
+    'aria-label': ariaLabel,
+    'aria-pressed': ariaPressed,
+    'data-testid': testId,
+    variant,
+    ...rest
+  }: any) => (
     <button
       onClick={onClick}
       aria-label={ariaLabel}
@@ -48,12 +55,17 @@ describe('ViewModeButton', () => {
 
   it('renders the icon with correct name', () => {
     render(<ViewModeButton {...defaultProps} />)
-    expect(screen.getByRole('button').querySelector('[data-icon="code"]')).toBeInTheDocument()
+    expect(
+      screen.getByRole('button').querySelector('[data-icon="code"]'),
+    ).toBeInTheDocument()
   })
 
   it('sets aria-label on the button', () => {
     render(<ViewModeButton {...defaultProps} />)
-    expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'Code view')
+    expect(screen.getByRole('button')).toHaveAttribute(
+      'aria-label',
+      'Code view',
+    )
   })
 
   it('sets aria-pressed to false when not active', () => {
@@ -84,7 +96,14 @@ describe('ViewModeButton', () => {
   })
 
   it('renders with different mode', () => {
-    render(<ViewModeButton {...defaultProps} mode="preview" label="Preview" iconName="preview" />)
+    render(
+      <ViewModeButton
+        {...defaultProps}
+        mode="preview"
+        label="Preview"
+        iconName="preview"
+      />,
+    )
     expect(screen.getByTestId('view-mode-preview-btn')).toBeInTheDocument()
   })
 })

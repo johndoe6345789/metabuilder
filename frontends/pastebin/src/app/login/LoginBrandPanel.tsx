@@ -37,10 +37,7 @@ export function LoginBrandPanel({ mode }: LoginBrandPanelProps) {
         <ul className={styles.features}>
           {FEATURES.map(f => (
             <li key={f.icon} className={styles.featureItem}>
-              <MaterialIcon
-                name={f.icon}
-                className={styles.featureIcon}
-              />
+              <MaterialIcon name={f.icon} className={styles.featureIcon} />
               {f.label}
             </li>
           ))}
@@ -49,13 +46,13 @@ export function LoginBrandPanel({ mode }: LoginBrandPanelProps) {
 
       <div className={styles.codeWindow}>
         <div className={styles.codeChrome}>
-          <span /><span /><span />
+          <span />
+          <span />
+          <span />
           <span className={styles.codeFile}>snippet.ts</span>
         </div>
         <pre className={styles.codePre}>
-          <span className={styles.cm}>
-            {'// Smart snippet manager'}
-          </span>
+          <span className={styles.cm}>{'// Smart snippet manager'}</span>
           {'\n'}
           <span className={styles.kw}>{'const'}</span>
           {' snippet '}
@@ -74,13 +71,11 @@ export function LoginBrandPanel({ mode }: LoginBrandPanelProps) {
           {'],\n'}
           {'  '}
           <span className={styles.fn}>{'run'}</span>
-          <span className={styles.op}>{'()'}</span>
-          {' '}
+          <span className={styles.op}>{'()'}</span>{' '}
           <span className={styles.op}>{'{'}</span>
           {'\n'}
           {'    '}
-          <span className={styles.kw}>{'await'}</span>
-          {' '}
+          <span className={styles.kw}>{'await'}</span>{' '}
           <span className={styles.fn}>{'execute'}</span>
           <span className={styles.op}>{'()'}</span>
           {'\n'}
@@ -91,9 +86,7 @@ export function LoginBrandPanel({ mode }: LoginBrandPanelProps) {
         </pre>
       </div>
 
-      <p className={styles.brandBottom}>
-        CodeSnippet · v{pkg.version}
-      </p>
+      <p className={styles.brandBottom}>CodeSnippet · v{pkg.version}</p>
     </div>
   )
 }

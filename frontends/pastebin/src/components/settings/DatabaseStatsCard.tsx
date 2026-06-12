@@ -1,6 +1,11 @@
 'use client'
 
-import { Card, CardHeader, CardContent, MaterialIcon } from '@metabuilder/components/fakemui'
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  MaterialIcon,
+} from '@metabuilder/components/fakemui'
 import { useTranslation } from '@/hooks/useTranslation'
 import styles from './settings-card.module.scss'
 
@@ -16,7 +21,9 @@ interface DatabaseStatsCardProps {
 }
 
 export function DatabaseStatsCard({
-  loading, stats, formatBytes,
+  loading,
+  stats,
+  formatBytes,
 }: DatabaseStatsCardProps) {
   const t = useTranslation()
   const s = t.settingsCards.stats
@@ -29,9 +36,7 @@ export function DatabaseStatsCard({
             {s.title}
           </h3>
         }
-        subheader={
-          <p className={styles.cardDescription}>{s.description}</p>
-        }
+        subheader={<p className={styles.cardDescription}>{s.description}</p>}
       />
       <CardContent>
         {loading ? (
@@ -40,7 +45,9 @@ export function DatabaseStatsCard({
             data-testid="stats-loading"
             role="status"
             aria-busy="true"
-          >{s.loading}</p>
+          >
+            {s.loading}
+          </p>
         ) : stats ? (
           <div
             className={styles.statsContainer}
@@ -74,7 +81,9 @@ export function DatabaseStatsCard({
             className={styles.textDestructive}
             data-testid="stats-error"
             role="alert"
-          >{s.error}</p>
+          >
+            {s.error}
+          </p>
         )}
       </CardContent>
     </Card>

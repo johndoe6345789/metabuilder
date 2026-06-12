@@ -1,9 +1,11 @@
 import { EmptyState } from '@/components/features/snippet-display/EmptyState'
+// eslint-disable-next-line max-len
 import { NamespaceSelector } from '@/components/features/namespace-manager/NamespaceSelector'
 import { SnippetTemplate } from '@/lib/types'
 import templatesData from '@/data/templates.json'
 import { useSnippetManager } from '@/hooks/useSnippetManager'
 import { SnippetToolbar } from '@/components/snippet-manager/SnippetToolbar'
+// eslint-disable-next-line max-len
 import { SelectionControls } from '@/components/snippet-manager/SelectionControls'
 import { SnippetGrid } from '@/components/snippet-manager/SnippetGrid'
 import styles from '@/components/snippet-manager/snippet-manager.module.scss'
@@ -103,6 +105,7 @@ export function SnippetManagerRedux() {
       )}
 
       <div
+        // eslint-disable-next-line max-len
         className={`${styles.gridWrapper}${vm.loading ? ` ${styles.gridFading}` : ''}`}
         aria-busy={vm.loading}
       >

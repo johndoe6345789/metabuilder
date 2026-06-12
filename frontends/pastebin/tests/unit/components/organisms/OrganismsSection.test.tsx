@@ -1,10 +1,10 @@
-
 import { render, screen } from '@/test-utils'
 import { OrganismsSection } from '@/components/organisms/OrganismsSection'
 import { Snippet } from '@/lib/types'
 
 // Mock showcase components
 jest.mock('@/components/organisms/showcases/NavigationBarsShowcase', () => ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   NavigationBarsShowcase: ({ onSaveSnippet }: any) => (
     <div data-testid="navigation-bars-showcase">Navigation Bars Showcase</div>
   ),
@@ -17,9 +17,7 @@ jest.mock('@/components/organisms/showcases/DataTablesShowcase', () => ({
 }))
 
 jest.mock('@/components/organisms/showcases/FormsShowcase', () => ({
-  FormsShowcase: () => (
-    <div data-testid="forms-showcase">Forms Showcase</div>
-  ),
+  FormsShowcase: () => <div data-testid="forms-showcase">Forms Showcase</div>,
 }))
 
 jest.mock('@/components/organisms/showcases/TaskListsShowcase', () => ({
@@ -36,7 +34,9 @@ jest.mock('@/components/organisms/showcases/ContentGridsShowcase', () => ({
 
 jest.mock('@/components/organisms/showcases/SidebarNavigationShowcase', () => ({
   SidebarNavigationShowcase: () => (
-    <div data-testid="sidebar-navigation-showcase">Sidebar Navigation Showcase</div>
+    <div data-testid="sidebar-navigation-showcase">
+      Sidebar Navigation Showcase
+    </div>
   ),
 }))
 
@@ -60,7 +60,9 @@ describe('OrganismsSection', () => {
       expect(screen.getByTestId('forms-showcase')).toBeInTheDocument()
       expect(screen.getByTestId('task-lists-showcase')).toBeInTheDocument()
       expect(screen.getByTestId('content-grids-showcase')).toBeInTheDocument()
-      expect(screen.getByTestId('sidebar-navigation-showcase')).toBeInTheDocument()
+      expect(
+        screen.getByTestId('sidebar-navigation-showcase'),
+      ).toBeInTheDocument()
     })
 
     it('should render navigation bars showcase', () => {
@@ -95,8 +97,12 @@ describe('OrganismsSection', () => {
 
     it('should render sidebar navigation showcase', () => {
       render(<OrganismsSection onSaveSnippet={mockOnSaveSnippet} />)
-      expect(screen.getByTestId('sidebar-navigation-showcase')).toBeInTheDocument()
-      expect(screen.getByText('Sidebar Navigation Showcase')).toBeInTheDocument()
+      expect(
+        screen.getByTestId('sidebar-navigation-showcase'),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByText('Sidebar Navigation Showcase'),
+      ).toBeInTheDocument()
     })
   })
 
@@ -135,7 +141,10 @@ describe('OrganismsSection', () => {
     it('should have proper aria-label', () => {
       render(<OrganismsSection onSaveSnippet={mockOnSaveSnippet} />)
       const container = screen.getByTestId('organisms-section')
-      expect(container).toHaveAttribute('aria-label', 'Organism design system components')
+      expect(container).toHaveAttribute(
+        'aria-label',
+        'Organism design system components',
+      )
     })
   })
 
@@ -145,12 +154,21 @@ describe('OrganismsSection', () => {
       const container = screen.getByTestId('organisms-section')
       const children = container.children
 
-      expect(children[0]).toHaveAttribute('data-testid', 'navigation-bars-showcase')
+      expect(children[0]).toHaveAttribute(
+        'data-testid',
+        'navigation-bars-showcase',
+      )
       expect(children[1]).toHaveAttribute('data-testid', 'data-tables-showcase')
       expect(children[2]).toHaveAttribute('data-testid', 'forms-showcase')
       expect(children[3]).toHaveAttribute('data-testid', 'task-lists-showcase')
-      expect(children[4]).toHaveAttribute('data-testid', 'content-grids-showcase')
-      expect(children[5]).toHaveAttribute('data-testid', 'sidebar-navigation-showcase')
+      expect(children[4]).toHaveAttribute(
+        'data-testid',
+        'content-grids-showcase',
+      )
+      expect(children[5]).toHaveAttribute(
+        'data-testid',
+        'sidebar-navigation-showcase',
+      )
     })
   })
 
@@ -183,9 +201,12 @@ describe('OrganismsSection', () => {
     })
 
     it('should accept snippet type in callback', () => {
-      const onSaveSnippet = jest.fn((snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>) => {
-        // Callback should handle snippet save
-      })
+      const onSaveSnippet = jest.fn(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        (snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>) => {
+          // Callback should handle snippet save
+        },
+      )
       render(<OrganismsSection onSaveSnippet={onSaveSnippet} />)
       expect(screen.getByTestId('organisms-section')).toBeInTheDocument()
     })
@@ -195,7 +216,7 @@ describe('OrganismsSection', () => {
     it('should handle prop changes', () => {
       const onSaveSnippet1 = jest.fn()
       const { rerender } = render(
-        <OrganismsSection onSaveSnippet={onSaveSnippet1} />
+        <OrganismsSection onSaveSnippet={onSaveSnippet1} />,
       )
       expect(screen.getByTestId('organisms-section')).toBeInTheDocument()
 
@@ -206,7 +227,7 @@ describe('OrganismsSection', () => {
 
     it('should maintain all showcases on re-render', () => {
       const { rerender } = render(
-        <OrganismsSection onSaveSnippet={jest.fn()} />
+        <OrganismsSection onSaveSnippet={jest.fn()} />,
       )
       expect(screen.getByTestId('navigation-bars-showcase')).toBeInTheDocument()
 
@@ -216,7 +237,9 @@ describe('OrganismsSection', () => {
       expect(screen.getByTestId('forms-showcase')).toBeInTheDocument()
       expect(screen.getByTestId('task-lists-showcase')).toBeInTheDocument()
       expect(screen.getByTestId('content-grids-showcase')).toBeInTheDocument()
-      expect(screen.getByTestId('sidebar-navigation-showcase')).toBeInTheDocument()
+      expect(
+        screen.getByTestId('sidebar-navigation-showcase'),
+      ).toBeInTheDocument()
     })
   })
 
@@ -246,14 +269,14 @@ describe('OrganismsSection', () => {
         'sidebar-navigation-showcase',
       ]
 
-      showcases.forEach((showcase) => {
+      showcases.forEach(showcase => {
         expect(screen.getByTestId(showcase)).toBeInTheDocument()
       })
     })
 
     it('should handle multiple renders efficiently', () => {
       const { rerender } = render(
-        <OrganismsSection onSaveSnippet={mockOnSaveSnippet} />
+        <OrganismsSection onSaveSnippet={mockOnSaveSnippet} />,
       )
 
       for (let i = 0; i < 3; i++) {
@@ -285,7 +308,7 @@ describe('OrganismsSection', () => {
 
     it('should handle rapid re-renders', () => {
       const { rerender } = render(
-        <OrganismsSection onSaveSnippet={mockOnSaveSnippet} />
+        <OrganismsSection onSaveSnippet={mockOnSaveSnippet} />,
       )
 
       for (let i = 0; i < 10; i++) {
@@ -317,7 +340,7 @@ describe('OrganismsSection', () => {
       const container = screen.getByTestId('organisms-section')
       expect(container.children.length).toBe(6)
 
-      Array.from(container.children).forEach((child) => {
+      Array.from(container.children).forEach(child => {
         expect(child.tagName.toLowerCase()).toBe('div')
       })
     })
@@ -342,7 +365,7 @@ describe('OrganismsSection', () => {
         'sidebar-navigation-showcase',
       ]
 
-      showcases.forEach((showcase) => {
+      showcases.forEach(showcase => {
         expect(screen.getByTestId(showcase)).toBeInTheDocument()
       })
     })
@@ -401,7 +424,9 @@ describe('OrganismsSection', () => {
       const contentGrids = screen.getAllByTestId('content-grids-showcase')
       expect(contentGrids.length).toBe(1)
 
-      const sidebarNavigation = screen.getAllByTestId('sidebar-navigation-showcase')
+      const sidebarNavigation = screen.getAllByTestId(
+        'sidebar-navigation-showcase',
+      )
       expect(sidebarNavigation.length).toBe(1)
     })
   })

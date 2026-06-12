@@ -145,6 +145,7 @@ export class ArchitectureChecker {
                     }
                 }
             }
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             catch (error) {
                 logger.debug(`Failed to analyze dependencies in ${filePath}`);
             }
@@ -229,6 +230,7 @@ export class ArchitectureChecker {
                     }
                 }
             }
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             catch (error) {
                 logger.debug(`Failed to analyze patterns in ${filePath}`);
             }

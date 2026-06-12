@@ -20,18 +20,24 @@ export function DashboardTemplate() {
         <DashboardSidebar />
 
         <main style={{ flex: 1, padding: '24px' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}>
+          <div
+            style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
               <div>
-                <h1 style={{
-                  fontSize: '1.875rem',
-                  lineHeight: '2.25rem',
-                  fontWeight: 700,
-                }}>
+                <h1
+                  style={{
+                    fontSize: '1.875rem',
+                    lineHeight: '2.25rem',
+                    fontWeight: 700,
+                  }}
+                >
                   Overview
                 </h1>
                 <p style={{ color: 'var(--mat-sys-on-surface-variant)' }}>

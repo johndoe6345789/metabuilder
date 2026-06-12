@@ -4,8 +4,7 @@ import languageDefaultFiles from '@/data/languageDefaultFiles.json'
 
 export function getDefaultFileName(language: string): string {
   return (
-    (languageDefaultFiles as Record<string, string>)[language] ??
-    'main.txt'
+    (languageDefaultFiles as Record<string, string>)[language] ?? 'main.txt'
   )
 }
 
@@ -32,14 +31,12 @@ export function useSnippetFormFiles(initialLanguage: string) {
   }
 
   const updateFileContent = (name: string, content: string) => {
-    setFiles(prev =>
-      prev.map(f => f.name === name ? { ...f, content } : f)
-    )
+    setFiles(prev => prev.map(f => (f.name === name ? { ...f, content } : f)))
   }
 
   const renameFile = (oldName: string, newName: string) => {
     setFiles(prev =>
-      prev.map(f => f.name === oldName ? { ...f, name: newName } : f)
+      prev.map(f => (f.name === oldName ? { ...f, name: newName } : f)),
     )
     if (activeFile === oldName) setActiveFile(newName)
   }
@@ -51,9 +48,7 @@ export function useSnippetFormFiles(initialLanguage: string) {
       setFiles(prev => {
         const idx = prev.findIndex(f => f.name === file.name)
         if (idx >= 0) {
-          return prev.map((f, i) =>
-            i === idx ? { ...f, content } : f
-          )
+          return prev.map((f, i) => (i === idx ? { ...f, content } : f))
         }
         return [...prev, { name: file.name, content }]
       })
@@ -69,8 +64,15 @@ export function useSnippetFormFiles(initialLanguage: string) {
   }
 
   return {
-    files, activeFile, setFiles, setActiveFile,
-    addFile, deleteFile, updateFileContent,
-    renameFile, uploadFile, resetFiles,
+    files,
+    activeFile,
+    setFiles,
+    setActiveFile,
+    addFile,
+    deleteFile,
+    updateFileContent,
+    renameFile,
+    uploadFile,
+    resetFiles,
   }
 }

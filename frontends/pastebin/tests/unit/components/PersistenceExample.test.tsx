@@ -18,7 +18,7 @@ jest.mock('sonner', () => ({
 }))
 
 jest.mock('@/store/slices/snippetsSlice', () => ({
-  createSnippet: jest.fn((payload) => ({ type: 'test', payload })),
+  createSnippet: jest.fn(payload => ({ type: 'test', payload })),
 }))
 
 describe('PersistenceExample Component', () => {
@@ -42,7 +42,11 @@ describe('PersistenceExample Component', () => {
 
     it('should display the description', () => {
       render(<PersistenceExample />)
-      expect(screen.getByText('Create a snippet and watch it automatically save to the database')).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          'Create a snippet and watch it automatically save to the database',
+        ),
+      ).toBeInTheDocument()
     })
 
     it('should render Card component', () => {
@@ -80,7 +84,9 @@ describe('PersistenceExample Component', () => {
 
     it('should have placeholder for code textarea', () => {
       render(<PersistenceExample />)
-      const codeTextarea = screen.getByPlaceholderText("console.log('Hello World')")
+      const codeTextarea = screen.getByPlaceholderText(
+        "console.log('Hello World')",
+      )
       expect(codeTextarea).toBeInTheDocument()
     })
   })
@@ -88,12 +94,16 @@ describe('PersistenceExample Component', () => {
   describe('Create Button', () => {
     it('should render create button', () => {
       render(<PersistenceExample />)
-      expect(screen.getByRole('button', { name: /Create Snippet/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /Create Snippet/i }),
+      ).toBeInTheDocument()
     })
 
     it('should have correct button text', () => {
       render(<PersistenceExample />)
-      expect(screen.getByText(/Create Snippet \(Auto-Saves\)/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/Create Snippet \(Auto-Saves\)/i),
+      ).toBeInTheDocument()
     })
   })
 
@@ -102,7 +112,9 @@ describe('PersistenceExample Component', () => {
       const user = userEvent.setup()
       render(<PersistenceExample />)
 
-      const titleInput = screen.getByPlaceholderText('My Awesome Snippet') as HTMLInputElement
+      const titleInput = screen.getByPlaceholderText(
+        'My Awesome Snippet',
+      ) as HTMLInputElement
       await user.type(titleInput, 'My Test Snippet')
       expect(titleInput.value).toBe('My Test Snippet')
     })
@@ -111,7 +123,9 @@ describe('PersistenceExample Component', () => {
       const user = userEvent.setup()
       render(<PersistenceExample />)
 
-      const codeTextarea = screen.getByPlaceholderText("console.log('Hello World')") as HTMLTextAreaElement
+      const codeTextarea = screen.getByPlaceholderText(
+        "console.log('Hello World')",
+      ) as HTMLTextAreaElement
       await user.type(codeTextarea, 'console.log("test")')
       expect(codeTextarea.value).toBe('console.log("test")')
     })
@@ -120,9 +134,15 @@ describe('PersistenceExample Component', () => {
       const user = userEvent.setup()
       render(<PersistenceExample />)
 
-      const titleInput = screen.getByPlaceholderText('My Awesome Snippet') as HTMLInputElement
-      const codeTextarea = screen.getByPlaceholderText("console.log('Hello World')") as HTMLTextAreaElement
-      const createButton = screen.getByRole('button', { name: /Create Snippet/i })
+      const titleInput = screen.getByPlaceholderText(
+        'My Awesome Snippet',
+      ) as HTMLInputElement
+      const codeTextarea = screen.getByPlaceholderText(
+        "console.log('Hello World')",
+      ) as HTMLTextAreaElement
+      const createButton = screen.getByRole('button', {
+        name: /Create Snippet/i,
+      })
 
       await user.type(titleInput, 'Test Title')
       await user.type(codeTextarea, 'console.log("test")')
@@ -144,8 +164,12 @@ describe('PersistenceExample Component', () => {
       render(<PersistenceExample />)
 
       const titleInput = screen.getByPlaceholderText('My Awesome Snippet')
-      const codeTextarea = screen.getByPlaceholderText("console.log('Hello World')")
-      const createButton = screen.getByRole('button', { name: /Create Snippet/i })
+      const codeTextarea = screen.getByPlaceholderText(
+        "console.log('Hello World')",
+      )
+      const createButton = screen.getByRole('button', {
+        name: /Create Snippet/i,
+      })
 
       await user.type(titleInput, 'Test Title')
       await user.type(codeTextarea, 'console.log("test")')
@@ -160,13 +184,19 @@ describe('PersistenceExample Component', () => {
       const user = userEvent.setup()
       render(<PersistenceExample />)
 
-      const codeTextarea = screen.getByPlaceholderText("console.log('Hello World')")
-      const createButton = screen.getByRole('button', { name: /Create Snippet/i })
+      const codeTextarea = screen.getByPlaceholderText(
+        "console.log('Hello World')",
+      )
+      const createButton = screen.getByRole('button', {
+        name: /Create Snippet/i,
+      })
 
       await user.type(codeTextarea, 'console.log("test")')
       await user.click(createButton)
 
-      expect(sonner.toast.error).toHaveBeenCalledWith('Please enter both title and code')
+      expect(sonner.toast.error).toHaveBeenCalledWith(
+        'Please enter both title and code',
+      )
     })
 
     it('should show error toast when code is empty', async () => {
@@ -174,12 +204,16 @@ describe('PersistenceExample Component', () => {
       render(<PersistenceExample />)
 
       const titleInput = screen.getByPlaceholderText('My Awesome Snippet')
-      const createButton = screen.getByRole('button', { name: /Create Snippet/i })
+      const createButton = screen.getByRole('button', {
+        name: /Create Snippet/i,
+      })
 
       await user.type(titleInput, 'Test Title')
       await user.click(createButton)
 
-      expect(sonner.toast.error).toHaveBeenCalledWith('Please enter both title and code')
+      expect(sonner.toast.error).toHaveBeenCalledWith(
+        'Please enter both title and code',
+      )
     })
   })
 
@@ -191,9 +225,17 @@ describe('PersistenceExample Component', () => {
 
     it('should render instruction list items', () => {
       render(<PersistenceExample />)
-      expect(screen.getByText(/Click "Create Snippet" to dispatch a Redux action/i)).toBeInTheDocument()
-      expect(screen.getByText(/Persistence middleware intercepts the action/i)).toBeInTheDocument()
-      expect(screen.getByText(/Database save happens automatically \(100ms debounce\)/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/Click "Create Snippet" to dispatch a Redux action/i),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByText(/Persistence middleware intercepts the action/i),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          /Database save happens automatically \(100ms debounce\)/i,
+        ),
+      ).toBeInTheDocument()
       expect(screen.getByText(/Check console for/i)).toBeInTheDocument()
     })
 
@@ -210,8 +252,12 @@ describe('PersistenceExample Component', () => {
       render(<PersistenceExample />)
 
       const titleInput = screen.getByPlaceholderText('My Awesome Snippet')
-      const codeTextarea = screen.getByPlaceholderText("console.log('Hello World')")
-      const createButton = screen.getByRole('button', { name: /Create Snippet/i })
+      const codeTextarea = screen.getByPlaceholderText(
+        "console.log('Hello World')",
+      )
+      const createButton = screen.getByRole('button', {
+        name: /Create Snippet/i,
+      })
 
       await user.type(titleInput, 'Test Title')
       await user.type(codeTextarea, 'const test = () => {}')
@@ -251,7 +297,11 @@ describe('PersistenceExample Component', () => {
 
     it('should have descriptive text for context', () => {
       render(<PersistenceExample />)
-      expect(screen.getByText('Create a snippet and watch it automatically save to the database')).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          'Create a snippet and watch it automatically save to the database',
+        ),
+      ).toBeInTheDocument()
     })
   })
 
@@ -260,10 +310,14 @@ describe('PersistenceExample Component', () => {
       const user = userEvent.setup()
       render(<PersistenceExample />)
 
-      const createButton = screen.getByRole('button', { name: /Create Snippet/i })
+      const createButton = screen.getByRole('button', {
+        name: /Create Snippet/i,
+      })
       await user.click(createButton)
 
-      expect(sonner.toast.error).toHaveBeenCalledWith('Please enter both title and code')
+      expect(sonner.toast.error).toHaveBeenCalledWith(
+        'Please enter both title and code',
+      )
     })
 
     it('should allow submission with both title and code filled', async () => {
@@ -271,8 +325,12 @@ describe('PersistenceExample Component', () => {
       render(<PersistenceExample />)
 
       const titleInput = screen.getByPlaceholderText('My Awesome Snippet')
-      const codeTextarea = screen.getByPlaceholderText("console.log('Hello World')")
-      const createButton = screen.getByRole('button', { name: /Create Snippet/i })
+      const codeTextarea = screen.getByPlaceholderText(
+        "console.log('Hello World')",
+      )
+      const createButton = screen.getByRole('button', {
+        name: /Create Snippet/i,
+      })
 
       await user.type(titleInput, 'Title')
       await user.type(codeTextarea, 'Code')
@@ -290,8 +348,12 @@ describe('PersistenceExample Component', () => {
       const user = userEvent.setup()
       render(<PersistenceExample />)
 
-      const codeTextarea = screen.getByPlaceholderText("console.log('Hello World')")
-      const createButton = screen.getByRole('button', { name: /Create Snippet/i })
+      const codeTextarea = screen.getByPlaceholderText(
+        "console.log('Hello World')",
+      )
+      const createButton = screen.getByRole('button', {
+        name: /Create Snippet/i,
+      })
 
       await user.type(codeTextarea, 'test code')
       await user.click(createButton)
@@ -304,7 +366,9 @@ describe('PersistenceExample Component', () => {
       render(<PersistenceExample />)
 
       const titleInput = screen.getByPlaceholderText('My Awesome Snippet')
-      const createButton = screen.getByRole('button', { name: /Create Snippet/i })
+      const createButton = screen.getByRole('button', {
+        name: /Create Snippet/i,
+      })
 
       await user.type(titleInput, 'Test Title')
       await user.click(createButton)

@@ -52,6 +52,7 @@ export function useSnippetManager(templates: SnippetTemplate[]) {
       }
     }
     loadData()
+  // eslint-disable-next-line max-len
   }, [dispatch, templates, isAuthenticated]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {

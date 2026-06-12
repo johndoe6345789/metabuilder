@@ -2,6 +2,7 @@
  * Quality Validation CLI Tool
  * Main entry point and command orchestration
  */
+/* global process */
 import { ExitCode } from './types/index.js';
 import { configLoader } from './config/ConfigLoader.js';
 import { logger } from './utils/logger.js';

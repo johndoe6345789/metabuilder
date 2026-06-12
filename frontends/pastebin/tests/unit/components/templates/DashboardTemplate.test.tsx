@@ -137,7 +137,9 @@ describe('DashboardTemplate', () => {
     it('should be a button element', () => {
       render(<DashboardTemplate />)
       const buttons = screen.getAllByRole('button')
-      const newProjectBtn = buttons.find(b => b.textContent?.includes('New Project'))
+      const newProjectBtn = buttons.find(b =>
+        b.textContent?.includes('New Project'),
+      )
       expect(newProjectBtn).toBeInTheDocument()
     })
   })
@@ -145,9 +147,14 @@ describe('DashboardTemplate', () => {
   describe('Stat Cards', () => {
     it('should render three stat cards', () => {
       const { container } = render(<DashboardTemplate />)
-      const cards = container.querySelectorAll('[class*="p-6"][class*="border"]')
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const cards = container.querySelectorAll(
+        '[class*="p-6"][class*="border"]',
+      )
       // Should have header, nav, and multiple stat cards
-      expect(container.querySelectorAll('[class*="p-6"]').length).toBeGreaterThan(2)
+      expect(
+        container.querySelectorAll('[class*="p-6"]').length,
+      ).toBeGreaterThan(2)
     })
 
     it('should display Total Revenue card', () => {
@@ -383,6 +390,7 @@ describe('DashboardTemplate', () => {
     })
 
     it('should have icon buttons in header', () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { container } = render(<DashboardTemplate />)
       const buttons = screen.getAllByRole('button')
       expect(buttons.length).toBeGreaterThanOrEqual(5)

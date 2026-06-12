@@ -9,7 +9,8 @@ jest.mock('@metabuilder/components/fakemui', () => ({
 describe('ShareDialogEmailApps', () => {
   const defaultProps = {
     gmailUrl: 'https://mail.google.com/mail/?view=cm&body=hello',
-    outlookUrl: 'https://outlook.live.com/owa/?path=/mail/action/compose&body=hello',
+    outlookUrl:
+      'https://outlook.live.com/owa/?path=/mail/action/compose&body=hello',
     mailtoUrl: 'mailto:?body=hello',
   }
 

@@ -9,7 +9,7 @@ const DBAL_TENANT = 'pastebin'
 export async function dbalGetSnippetComments(
   entityUrl: string,
   snippetId: string,
-  authHeader: Record<string, string>
+  authHeader: Record<string, string>,
 ): Promise<SnippetComment[]> {
   const url =
     `${entityUrl}/SnippetComment` +
@@ -24,15 +24,14 @@ export async function dbalGetSnippetComments(
 export async function dbalCreateSnippetComment(
   entityUrl: string,
   comment: SnippetComment,
-  authHeader: Record<string, string>
+  authHeader: Record<string, string>,
 ): Promise<SnippetComment> {
   const r = await fetch(`${entityUrl}/SnippetComment`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...authHeader },
     body: JSON.stringify({ ...comment, tenantId: DBAL_TENANT }),
   })
-  if (!r.ok)
-    throw new Error(`Failed to create comment: ${r.statusText}`)
+  if (!r.ok) throw new Error(`Failed to create comment: ${r.statusText}`)
   const json = await r.json()
   return json.data ?? json
 }
@@ -40,7 +39,7 @@ export async function dbalCreateSnippetComment(
 export async function dbalGetProfileComments(
   entityUrl: string,
   profileUserId: string,
-  authHeader: Record<string, string>
+  authHeader: Record<string, string>,
 ): Promise<ProfileComment[]> {
   const url =
     `${entityUrl}/ProfileComment` +
@@ -55,15 +54,14 @@ export async function dbalGetProfileComments(
 export async function dbalCreateProfileComment(
   entityUrl: string,
   comment: ProfileComment,
-  authHeader: Record<string, string>
+  authHeader: Record<string, string>,
 ): Promise<ProfileComment> {
   const r = await fetch(`${entityUrl}/ProfileComment`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...authHeader },
     body: JSON.stringify({ ...comment, tenantId: DBAL_TENANT }),
   })
-  if (!r.ok)
-    throw new Error(`Failed to create comment: ${r.statusText}`)
+  if (!r.ok) throw new Error(`Failed to create comment: ${r.statusText}`)
   const json = await r.json()
   return json.data ?? json
 }

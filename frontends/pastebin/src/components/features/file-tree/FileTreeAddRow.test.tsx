@@ -4,7 +4,17 @@ import userEvent from '@testing-library/user-event'
 import { FileTreeAddRow } from './FileTreeAddRow'
 
 jest.mock('@metabuilder/components/fakemui', () => ({
-  Input: ({ value, onChange, onKeyDown, placeholder, autoFocus, 'aria-label': ariaLabel, 'data-testid': testId, ...rest }: any) => (
+  Input: ({
+    value,
+    onChange,
+    onKeyDown,
+    placeholder,
+    autoFocus,
+    'aria-label': ariaLabel,
+    'data-testid': testId,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    ...rest
+  }: any) => (
     <input
       value={value}
       onChange={onChange}
@@ -75,7 +85,9 @@ describe('FileTreeAddRow', () => {
 
   it('renders input with provided value', () => {
     render(<FileTreeAddRow {...defaultProps} newFileName="app.ts" />)
-    const input = screen.getByTestId('file-tree-new-name-input') as HTMLInputElement
+    const input = screen.getByTestId(
+      'file-tree-new-name-input',
+    ) as HTMLInputElement
     expect(input.value).toBe('app.ts')
   })
 })
