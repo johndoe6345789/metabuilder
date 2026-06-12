@@ -3,37 +3,66 @@ import { render, screen, waitFor } from '@/test-utils'
 import userEvent from '@testing-library/user-event'
 import { MonacoEditor } from './MonacoEditor'
 
-// Mock monaco-editor/react
-jest.mock('@monaco-editor/react', () => ({
-  __esModule: true,
-  default: ({
-    value,
-    onChange,
-    language,
-    height,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    options,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    theme,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    beforeMount,
-  }: any) => (
-    <div
-      data-testid="monaco-editor-mock"
-      style={{ height }}
-      role="textbox"
-      aria-multiline="true"
-      aria-label={`Code editor in ${language}`}
-    >
-      <textarea
-        data-testid="editor-textarea"
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        style={{ width: '100%', height: '100%' }}
-      />
-    </div>
-  ),
-}))
+// ── Breakpoint test helpers ──────────────────────────────────────────────────
+// Stable mock refs updated by the mock's useEffect each render
+const _decorationsSet = jest.fn()
+let _capturedMouseDown: ((e: unknown) => void) | null = null
+
+// Mock monaco-editor/react — calls onMount synchronously after first paint
+// so breakpoint tests can drive the editor's internal event handlers.
+jest.mock('@monaco-editor/react', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const R = require('react') as typeof import('react')
+  return {
+    __esModule: true,
+    default: function MockEditor({
+      value,
+      onChange,
+      language,
+      height,
+      onMount,
+    }: any) {
+      R.useEffect(() => {
+        if (!onMount) return
+        const fakeEditor = {
+          createDecorationsCollection: jest.fn(() => ({
+            set: _decorationsSet,
+          })),
+          onMouseDown: (h: (e: unknown) => void) => {
+            _capturedMouseDown = h
+          },
+        }
+        const fakeMonaco = {
+          // eslint-disable-next-line max-len
+          Range: class { constructor(public sl: number, public sc: number, public el: number, public ec: number) {} },
+          editor: {
+            MouseTargetType: {
+              GUTTER_GLYPH_MARGIN: 2,
+              GUTTER_LINE_NUMBERS: 3,
+            },
+          },
+        }
+        onMount(fakeEditor, fakeMonaco)
+      }, []) // eslint-disable-line react-hooks/exhaustive-deps
+      return (
+        <div
+          data-testid="monaco-editor-mock"
+          style={{ height }}
+          role="textbox"
+          aria-multiline="true"
+          aria-label={`Code editor in ${language}`}
+        >
+          <textarea
+            data-testid="editor-textarea"
+            value={value}
+            onChange={e => onChange(e.target.value)}
+            style={{ width: '100%', height: '100%' }}
+          />
+        </div>
+      )
+    },
+  }
+})
 
 // Mock config functions
 jest.mock('@/lib/monaco-config', () => ({
@@ -502,6 +531,110 @@ describe('MonacoEditor Component', () => {
       render(<MonacoEditor {...defaultProps} />)
 
       expect(screen.getByTestId('monaco-editor-mock')).toBeInTheDocument()
+    })
+  })
+
+  describe('Breakpoints', () => {
+    beforeEach(() => {
+      _capturedMouseDown = null
+      _decorationsSet.mockClear()
+    })
+
+    it('calls onToggleBreakpoint when glyph margin is clicked', async () => {
+      const onToggle = jest.fn()
+      render(<MonacoEditor {...defaultProps} onToggleBreakpoint={onToggle} />)
+      await waitFor(() => expect(_capturedMouseDown).not.toBeNull())
+      _capturedMouseDown!({ target: { type: 2, position: { lineNumber: 5 } } })
+      expect(onToggle).toHaveBeenCalledWith(5)
+    })
+
+    // eslint-disable-next-line max-len
+    it('calls onToggleBreakpoint when line number column is clicked', async () => {
+      const onToggle = jest.fn()
+      render(<MonacoEditor {...defaultProps} onToggleBreakpoint={onToggle} />)
+      await waitFor(() => expect(_capturedMouseDown).not.toBeNull())
+      _capturedMouseDown!({ target: { type: 3, position: { lineNumber: 3 } } })
+      expect(onToggle).toHaveBeenCalledWith(3)
+    })
+
+    it('does not call onToggleBreakpoint for content-area clicks', async () => {
+      const onToggle = jest.fn()
+      render(<MonacoEditor {...defaultProps} onToggleBreakpoint={onToggle} />)
+      await waitFor(() => expect(_capturedMouseDown).not.toBeNull())
+      // type 6 = CONTENT_TEXT
+      _capturedMouseDown!({ target: { type: 6, position: { lineNumber: 1 } } })
+      expect(onToggle).not.toHaveBeenCalled()
+    })
+
+    // eslint-disable-next-line max-len
+    it('does not crash when clicked with no onToggleBreakpoint prop', async () => {
+      render(<MonacoEditor {...defaultProps} />)
+      await waitFor(() => expect(_capturedMouseDown).not.toBeNull())
+      expect(() => {
+        _capturedMouseDown!({
+          target: { type: 2, position: { lineNumber: 1 } },
+        })
+      }).not.toThrow()
+    })
+
+    it('applies breakpoint decorations for each line in the prop', async () => {
+      render(
+        <MonacoEditor
+          {...defaultProps}
+          breakpoints={[3, 7]}
+          onToggleBreakpoint={jest.fn()}
+        />,
+      )
+      await waitFor(() => expect(_decorationsSet).toHaveBeenCalled())
+      const decorations = _decorationsSet.mock.calls[0][0] as any[]
+      expect(decorations.map((d: any) => d.range.sl)).toEqual([3, 7])
+      expect(decorations[0].options.glyphMarginClassName).toBe(
+        'dbg-breakpoint',
+      )
+    })
+
+    it('updates decorations when breakpoints prop changes', async () => {
+      const { rerender } = render(
+        <MonacoEditor
+          {...defaultProps}
+          breakpoints={[2]}
+          onToggleBreakpoint={jest.fn()}
+        />,
+      )
+      await waitFor(() => expect(_decorationsSet).toHaveBeenCalled())
+      _decorationsSet.mockClear()
+
+      rerender(
+        <MonacoEditor
+          {...defaultProps}
+          breakpoints={[2, 5]}
+          onToggleBreakpoint={jest.fn()}
+        />,
+      )
+      await waitFor(() => expect(_decorationsSet).toHaveBeenCalled())
+      expect(_decorationsSet.mock.calls[0][0]).toHaveLength(2)
+    })
+
+    it('clears decorations when breakpoints prop becomes empty', async () => {
+      const { rerender } = render(
+        <MonacoEditor
+          {...defaultProps}
+          breakpoints={[4]}
+          onToggleBreakpoint={jest.fn()}
+        />,
+      )
+      await waitFor(() => expect(_decorationsSet).toHaveBeenCalled())
+      _decorationsSet.mockClear()
+
+      rerender(
+        <MonacoEditor
+          {...defaultProps}
+          breakpoints={[]}
+          onToggleBreakpoint={jest.fn()}
+        />,
+      )
+      await waitFor(() => expect(_decorationsSet).toHaveBeenCalled())
+      expect(_decorationsSet.mock.calls[0][0]).toHaveLength(0)
     })
   })
 })

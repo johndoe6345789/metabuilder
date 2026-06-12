@@ -345,6 +345,59 @@ export const setupHooks: Record<string, SetupHook> = {
       throw new Error(`Network errors detected:\n${errors.join('\n')}`)
     }
   },
+
+  /**
+   * Click the Monaco glyph margin at a given 1-indexed line number.
+   * args: { line: number }
+   *
+   * Finds the glyph-margin element, computes the y-offset for the requested
+   * line (using Monaco's margin-view-overlays children for accurate positions),
+   * and clicks at that position.
+   */
+  clickGlyphMarginAtLine: async (page, args) => {
+    const line = (args.line as number) ?? 1
+
+    // Wait for Monaco editor and its glyph margin to be present
+    await page.waitForSelector('.monaco-editor .glyph-margin', {
+      timeout: 15_000,
+    })
+
+    // Use margin-view-overlays children to find the y-centre of the target line
+    const yCenter = await page.evaluate((targetLine: number) => {
+      const overlays = document.querySelector(
+        '.monaco-editor .margin-view-overlays',
+      )
+      if (!overlays) return null
+      const children = Array.from(overlays.children) as HTMLElement[]
+      // Each child's inline style has top/height
+      for (const child of children) {
+        const top = parseInt(child.style.top ?? '0', 10)
+        const height = parseInt(child.style.height ?? '18', 10)
+        // Monaco line numbers start at 1; children are ordered top-to-bottom
+        if (children.indexOf(child) === targetLine - 1) {
+          const rect = overlays.getBoundingClientRect()
+          return rect.top + top + height / 2
+        }
+      }
+      // Fallback: estimate with default 18 px line height
+      const rect = document
+        .querySelector('.monaco-editor .glyph-margin')!
+        .getBoundingClientRect()
+      return rect.top + (targetLine - 0.5) * 18
+    }, line)
+
+    if (yCenter === null) throw new Error('clickGlyphMarginAtLine: no overlays')
+
+    // x = centre of the glyph-margin strip
+    const glyphBox = await page
+      .locator('.monaco-editor .glyph-margin')
+      .first()
+      .boundingBox()
+    if (!glyphBox)
+      throw new Error('clickGlyphMarginAtLine: glyph-margin not found')
+
+    await page.mouse.click(glyphBox.x + glyphBox.width / 2, yCenter)
+  },
 }
 
 // ─── Eval hooks ───────────────────────────────────────────────────────────────
@@ -506,5 +559,15 @@ export const evalHooks: Record<string, EvalHook> = {
     const { testId, selector } = args as { testId?: string; selector?: string }
     const loc = testId ? page.getByTestId(testId) : page.locator(selector!)
     return loc.count()
+  },
+
+  /**
+   * Count Monaco breakpoint decoration elements currently visible in the DOM.
+   * Returns: number
+   */
+  getBreakpointCount: async page => {
+    return page.evaluate(
+      () => document.querySelectorAll('.dbg-breakpoint').length,
+    )
   },
 }

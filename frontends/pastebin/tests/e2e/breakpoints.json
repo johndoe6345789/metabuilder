@@ -1,0 +1,63 @@
+{
+  "$schema": "../../../schemas/package-schemas/playwright.schema.json",
+  "package": "pastebin",
+  "version": "1.0.0",
+  "description": "Breakpoint add / remove tests for the Monaco glyph margin",
+  "suite": "Breakpoints",
+  "tests": [
+    {
+      "name": "clicking glyph margin adds a breakpoint red circle",
+      "steps": [
+        { "action": "hook", "name": "createAndViewSnippet" },
+        { "action": "waitForSelector", "selector": ".monaco-editor .glyph-margin", "timeout": 20000 },
+        { "action": "evalExpect", "name": "getBreakpointCount",
+          "assertion": { "matcher": "toEqual", "expected": 0 } },
+        { "action": "hook", "name": "clickGlyphMarginAtLine", "args": { "line": 1 } },
+        { "action": "waitForSelector", "selector": ".dbg-breakpoint", "timeout": 5000 },
+        { "action": "evalExpect", "name": "getBreakpointCount",
+          "assertion": { "matcher": "toEqual", "expected": 1 } }
+      ]
+    },
+    {
+      "name": "clicking glyph margin twice removes the breakpoint",
+      "steps": [
+        { "action": "hook", "name": "createAndViewSnippet" },
+        { "action": "waitForSelector", "selector": ".monaco-editor .glyph-margin", "timeout": 20000 },
+        { "action": "hook", "name": "clickGlyphMarginAtLine", "args": { "line": 1 } },
+        { "action": "waitForSelector", "selector": ".dbg-breakpoint", "timeout": 5000 },
+        { "action": "hook", "name": "clickGlyphMarginAtLine", "args": { "line": 1 } },
+        { "action": "waitForSelector", "selector": ".dbg-breakpoint",
+          "state": "detached", "timeout": 5000 },
+        { "action": "evalExpect", "name": "getBreakpointCount",
+          "assertion": { "matcher": "toEqual", "expected": 0 } }
+      ]
+    },
+    {
+      "name": "multiple breakpoints can be set on different lines",
+      "steps": [
+        { "action": "hook", "name": "createAndViewSnippet" },
+        { "action": "waitForSelector", "selector": ".monaco-editor .glyph-margin", "timeout": 20000 },
+        { "action": "hook", "name": "clickGlyphMarginAtLine", "args": { "line": 1 } },
+        { "action": "waitForSelector", "selector": ".dbg-breakpoint", "timeout": 5000 },
+        { "action": "hook", "name": "clickGlyphMarginAtLine", "args": { "line": 2 } },
+        { "action": "evalExpect", "name": "getBreakpointCount",
+          "assertion": { "matcher": "toEqual", "expected": 2 } }
+      ]
+    },
+    {
+      "name": "removing one breakpoint leaves others intact",
+      "steps": [
+        { "action": "hook", "name": "createAndViewSnippet" },
+        { "action": "waitForSelector", "selector": ".monaco-editor .glyph-margin", "timeout": 20000 },
+        { "action": "hook", "name": "clickGlyphMarginAtLine", "args": { "line": 1 } },
+        { "action": "waitForSelector", "selector": ".dbg-breakpoint", "timeout": 5000 },
+        { "action": "hook", "name": "clickGlyphMarginAtLine", "args": { "line": 2 } },
+        { "action": "evalExpect", "name": "getBreakpointCount",
+          "assertion": { "matcher": "toEqual", "expected": 2 } },
+        { "action": "hook", "name": "clickGlyphMarginAtLine", "args": { "line": 1 } },
+        { "action": "evalExpect", "name": "getBreakpointCount",
+          "assertion": { "matcher": "toEqual", "expected": 1 } }
+      ]
+    }
+  ]
+}
