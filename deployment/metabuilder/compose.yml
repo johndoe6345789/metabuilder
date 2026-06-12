@@ -578,6 +578,10 @@ services:
       POSTGRES_RUNNER_IMAGE: "${POSTGRES_RUNNER_IMAGE:-postgres:16-alpine}"
       SQL_RUN_TIMEOUT: "${SQL_RUN_TIMEOUT:-120}"
       JWT_SECRET_KEY: "${JWT_SECRET_KEY:-changeme-in-production}"
+      PYTHON_DEBUG_IMAGE: "${PYTHON_DEBUG_IMAGE:-python-debug:latest}"
+      NODE_DEBUG_IMAGE: "${NODE_DEBUG_IMAGE:-node-debug:latest}"
+      GO_DEBUG_IMAGE: "${GO_DEBUG_IMAGE:-golang:1.22-alpine}"
+      CPP_DEBUG_IMAGE: "${CPP_DEBUG_IMAGE:-cpp-debug:latest}"
       SMTP_HOST: "smtp-relay"
       SMTP_PORT: "2525"
       MAIL_FROM: "noreply@codesnippet.local"
@@ -902,9 +906,10 @@ services:
     container_name: metabuilder-grafana
     restart: unless-stopped
     profiles: [monitoring]
+    env_file:
+      - ../../../jenkins/secrets/grafana.env
     environment:
       GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
-      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
       GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource
       GF_AUTH_ANONYMOUS_ENABLED: "false"
       GF_SERVER_ROOT_URL: "%(protocol)s://%(domain)s/grafana/"

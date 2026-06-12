@@ -136,7 +136,9 @@ export function useSnippetViewPage() {
     handleCopy: actions.handleCopy,
     handleCopyPath: actions.handleCopyPath,
     handleRun: actions.handleRun,
+    handleDebug: actions.handleDebug,
     handleSave: actions.handleSave,
+    debugger: actions.debugger,
     openInTab, closeTab,
     ...fileOps,
   }

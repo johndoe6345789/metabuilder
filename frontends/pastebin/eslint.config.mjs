@@ -84,6 +84,26 @@ export default [
     },
   },
   {
+    name: 'project/80-80',
+    files: ['src/**/*.{ts,tsx}'],
+    rules: {
+      'max-len': [
+        'error',
+        {
+          code: 80,
+          ignoreUrls: true,
+          ignoreTemplateLiterals: false,
+          ignoreStrings: false,
+          ignoreComments: false,
+        },
+      ],
+      'max-lines': [
+        'warn',
+        { max: 80, skipBlankLines: false, skipComments: true },
+      ],
+    },
+  },
+  {
     name: 'config-files',
     files: ['*.config.js', '*.config.cjs', '*.config.mjs', 'next.config.js'],
     languageOptions: {

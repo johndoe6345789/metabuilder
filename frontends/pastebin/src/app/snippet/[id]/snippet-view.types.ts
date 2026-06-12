@@ -13,7 +13,7 @@ export interface SnippetFileTreeProps {
   newFileName: string
   menuFile: string | null
   snippetTitle: string
-  newFileInputRef: React.RefObject<HTMLInputElement>
+  newFileInputRef: React.RefObject<HTMLInputElement | null>
   onOpenInTab: (name: string) => void
   onSetRenameValue: (v: string) => void
   onRenameKeyDown: (

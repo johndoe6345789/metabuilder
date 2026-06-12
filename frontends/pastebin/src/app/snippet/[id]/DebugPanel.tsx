@@ -1,98 +1,65 @@
-import type { RunDebugInfo } from '@/hooks/useCodeTerminal'
-import { DebugFilesTable } from './DebugFilesTable'
-import { DebugTree } from './DebugTree'
-import styles from './snippet-view-page.module.scss'
+'use client'
 
-interface DebugPanelProps {
-  lastRunInfo: RunDebugInfo | null
+import { MaterialIcon } from '@metabuilder/components/fakemui'
+import type { useDebugger } from '@/hooks/useDebugger'
+import { DebugControls } from './DebugControls'
+import {
+  VariablesPanel, CallStackPanel, DebugOutput,
+} from './DebugPanelSections'
+import { DebugWatchPanel } from './DebugWatchPanel'
+import styles from './DebugPanel.module.scss'
+
+type Debugger = ReturnType<typeof useDebugger>
+
+interface Props {
+  language: string
+  debugger: Debugger
+  onStart: () => void
 }
 
-export function DebugPanel({ lastRunInfo }: DebugPanelProps) {
-  if (!lastRunInfo) return (
-    <section className={styles.debugSection}>
-      <p className={styles.debugEmpty}>
-        Press <strong>Run</strong> to see how this snippet is executed.
-      </p>
-    </section>
+export function DebugPanel({ language, debugger: dbg, onStart }: Props) {
+  const { state, isActive, supportedLanguages } = dbg
+  const langKey = language.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+  const supported = supportedLanguages.some(
+    k => k === langKey || language.toLowerCase().startsWith(k),
   )
 
-  const {
-    language, runnerKey, interactive, startedAt,
-    entryPointOriginal, entryPointSent, files,
-  } = lastRunInfo
+  if (!isActive) {
+    return (
+      <div className={styles.idle}>
+        {supported ? (
+          <>
+            <p className={styles.idleHint}>
+              Click the gutter to set breakpoints, then start the
+              debugger.
+            </p>
+            <button className={styles.startBtn} onClick={onStart}>
+              <MaterialIcon name="bug_report" size={16} />
+              Start Debugging
+            </button>
+          </>
+        ) : (
+          <p className={styles.idleHint}>
+            Debugger not supported for <strong>{language}</strong>.
+            Supported: Python, JavaScript, TypeScript, Go.
+          </p>
+        )}
+        {state.status === 'error' && state.error && (
+          <p className={styles.errorMsg}>{state.error}</p>
+        )}
+      </div>
+    )
+  }
 
   return (
-    <>
-      <section className={styles.debugSection}>
-        <h3 className={styles.debugHeading}>How it ran</h3>
-        <p className={styles.debugNote}>
-          Your files were renamed to random IDs before being sent to
-          the runner, so your file names never appear in the
-          container. The file to run was picked by matching the
-          stored entry point — if it didn&apos;t match any file
-          name, the first file was used instead.
-        </p>
-      </section>
-
-      <section className={styles.debugSection}>
-        <h3 className={styles.debugHeading}>Runner</h3>
-        <dl className={styles.debugTable}>
-          <dt>Language</dt><dd>{language}</dd>
-          <dt>Runner</dt>
-          <dd className={styles.debugMono}>{runnerKey}</dd>
-          <dt>Mode</dt>
-          <dd>
-            {interactive
-              ? 'Interactive — reads input() in real time'
-              : 'Non-interactive — runs to completion'}
-          </dd>
-          <dt>Started at</dt>
-          <dd>{new Date(startedAt).toLocaleTimeString()}</dd>
-        </dl>
-      </section>
-
-      <section className={styles.debugSection}>
-        <h3 className={styles.debugHeading}>Entry point</h3>
-        <dl className={styles.debugTable}>
-          <dt>Stored value</dt>
-          <dd className={styles.debugMono}>
-            {entryPointOriginal || <em>not set</em>}
-          </dd>
-          <dt>Ran as</dt>
-          <dd className={styles.debugMono}>{entryPointSent}</dd>
-          {entryPointOriginal !== entryPointSent && (
-            <>
-              <dt></dt>
-              <dd className={styles.debugWarn}>
-                Stored value didn&apos;t match any file — fell back
-                to the first file.
-              </dd>
-            </>
-          )}
-        </dl>
-      </section>
-
-      <section className={styles.debugSection}>
-        <h3 className={styles.debugHeading}>Files</h3>
-        <DebugFilesTable
-          files={files}
-          entryPointSent={entryPointSent}
-        />
-      </section>
-
-      <section className={styles.debugSection}>
-        <h3 className={styles.debugHeading}>
-          Container workspace
-        </h3>
-        <p className={styles.debugNote}>
-          What <code>/workspace/</code> looked like inside the
-          runner container:
-        </p>
-        <DebugTree
-          files={files}
-          entryPointSent={entryPointSent}
-        />
-      </section>
-    </>
+    <div className={styles.root}>
+      <DebugControls dbg={dbg} />
+      <div className={styles.panels}>
+        <VariablesPanel dbg={dbg} />
+        <CallStackPanel frames={state.callStack} />
+        <DebugWatchPanel dbg={dbg} />
+        <DebugOutput output={state.output} />
+      </div>
+    </div>
   )
 }

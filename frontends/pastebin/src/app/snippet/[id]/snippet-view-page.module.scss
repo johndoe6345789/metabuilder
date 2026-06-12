@@ -168,6 +168,22 @@
       cursor: not-allowed;
     }
   }
+
+  // Debug button — secondary/purple accent
+  &.toolBtnDebug {
+    color: var(--mat-sys-secondary);
+    border-color: color-mix(in srgb, var(--mat-sys-secondary) 30%, transparent);
+
+    &:hover:not(:disabled) {
+      background: color-mix(in srgb, var(--mat-sys-secondary) 15%, transparent);
+      border-color: color-mix(in srgb, var(--mat-sys-secondary) 60%, transparent);
+    }
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+  }
 }
 
 // ────────────────────────────────────────────────────────────────
