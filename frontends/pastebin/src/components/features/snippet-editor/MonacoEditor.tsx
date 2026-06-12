@@ -158,8 +158,10 @@ export function MonacoEditor({
     editor.onMouseDown(e => {
       if (!onToggleRef.current) return
       const { type, position } = e.target
-      // GUTTER_GLYPH_MARGIN = 2, GUTTER_LINE_NUMBERS = 3
-      if ((type === 2 || type === 3) && position) {
+      const { GUTTER_GLYPH_MARGIN, GUTTER_LINE_NUMBERS } =
+        monaco.editor.MouseTargetType
+      if ((type === GUTTER_GLYPH_MARGIN || type === GUTTER_LINE_NUMBERS) &&
+          position) {
         onToggleRef.current(position.lineNumber)
       }
     })
@@ -171,11 +173,6 @@ export function MonacoEditor({
 
   return (
     <Suspense fallback={<EditorLoadingSkeleton height={height} />}>
-      <style>{`
-        .dbg-breakpoint    { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%23e51400'/%3E%3C/svg%3E") center/12px no-repeat; }
-        .dbg-current-arrow { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpolygon points='2,4 12,8 2,12' fill='%23ffcc00'/%3E%3C/svg%3E") center/12px no-repeat; }
-        .dbg-current-line  { background: rgba(255,204,0,0.12) !important; }
-      `}</style>
       <div
         data-testid="monaco-editor-container"
         style={{ height }}
