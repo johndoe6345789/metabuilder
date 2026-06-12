@@ -23,7 +23,7 @@ export function DebugPanel({ language, debugger: dbg, onStart }: Props) {
   const { state, isActive, supportedLanguages } = dbg
   const langKey = language.toLowerCase().replace(/[^a-z0-9]+/g, '-')
   const supported = supportedLanguages.some(
-    k => k === langKey || language.toLowerCase().startsWith(k),
+    k => k.toLowerCase() === langKey || language.toLowerCase().startsWith(k.toLowerCase()),
   )
 
   if (!isActive) {
