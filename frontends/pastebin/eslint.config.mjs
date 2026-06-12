@@ -81,6 +81,11 @@ export default [
     name: 'project/custom-rules',
     rules: {
       '@next/next/no-page-custom-font': 'off',
+      // Broken in @next/eslint-plugin-next when non-page .tsx files live
+      // inside dynamic-segment directories (e.g. [id]/DebugPanel.tsx):
+      // the plugin builds an invalid regex and crashes ESLint.
+      // The rule is irrelevant for App Router projects anyway.
+      '@next/next/no-html-link-for-pages': 'off',
     },
   },
   {

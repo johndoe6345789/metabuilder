@@ -1,6 +1,5 @@
 'use client'
 
-import { Snippet } from '@/lib/types'
 import { SnippetComments } from
   '@/components/features/comments/SnippetComments'
 import { SnippetDialogs } from './SnippetDialogs'

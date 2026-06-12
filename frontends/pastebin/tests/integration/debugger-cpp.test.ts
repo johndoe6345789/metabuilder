@@ -1,4 +1,6 @@
 /**
+ * @jest-environment node
+ *
  * Integration tests: cpp-debug Docker image + codelldb DAP adapter.
  * Spins up the real container, compiles a C++ file, connects TCP,
  * and validates the DAP handshake.

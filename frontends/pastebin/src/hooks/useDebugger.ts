@@ -49,13 +49,15 @@ export interface DebuggerState {
 type Action =
   | { type: 'START' }
   | { type: 'RUNNING' }
-  | { type: 'PAUSED'; threadId: number; file: string | null; line: number | null }
+  | { type: 'PAUSED'; threadId: number
+      file: string | null; line: number | null }
   | { type: 'TERMINATED' }
   | { type: 'ERROR'; error: string }
   | { type: 'CALL_STACK'; frames: DapStackFrame[] }
   | { type: 'SCOPES'; scopes: DapScope[] }
   | { type: 'VARIABLES'; ref: number; vars: DapVariable[] }
-  | { type: 'WATCH_RESULT'; index: number; value: string | null; error?: string }
+  | { type: 'WATCH_RESULT'; index: number
+      value: string | null; error?: string }
   | { type: 'ADD_WATCH'; expr: string }
   | { type: 'REMOVE_WATCH'; index: number }
   | { type: 'TOGGLE_BP'; file: string; line: number }
@@ -72,7 +74,8 @@ function reducer(s: DebuggerState, a: Action): DebuggerState {
   switch (a.type) {
     case 'START':
       return { ...s, status: 'starting', error: null, output: [],
-        callStack: [], scopes: [], variables: {}, currentFile: null, currentLine: null }
+        callStack: [], scopes: [], variables: {},
+        currentFile: null, currentLine: null }
     case 'RUNNING':
       return { ...s, status: 'running', currentFile: null, currentLine: null,
         callStack: [], scopes: [], variables: {} }
@@ -80,7 +83,8 @@ function reducer(s: DebuggerState, a: Action): DebuggerState {
       return { ...s, status: 'paused', threadId: a.threadId,
         currentFile: a.file, currentLine: a.line }
     case 'TERMINATED':
-      return { ...s, status: 'terminated', currentFile: null, currentLine: null }
+      return {
+        ...s, status: 'terminated', currentFile: null, currentLine: null }
     case 'ERROR':
       return { ...s, status: 'error', error: a.error }
     case 'CALL_STACK':
@@ -104,7 +108,9 @@ function reducer(s: DebuggerState, a: Action): DebuggerState {
       return { ...s, breakpoints: { ...s.breakpoints, [a.file]: next } }
     }
     case 'OUTPUT':
-      return { ...s, output: [...s.output, { category: a.category, text: a.text }] }
+      return {
+        ...s, output: [...s.output,
+          { category: a.category, text: a.text }] }
     case 'RESET':
       return { ...initial, breakpoints: s.breakpoints,
         watches: s.watches.map(w => ({ ...w, value: null })) }
@@ -227,7 +233,9 @@ export function useDebugger() {
     dispatch({ type: 'SCOPES', scopes })
 
     await Promise.all(
-      scopes.filter(sc => !sc.expensive).map(sc => fetchVars(sc.variablesReference))
+      scopes
+        .filter(sc => !sc.expensive)
+        .map(sc => fetchVars(sc.variablesReference))
     )
 
     // Re-evaluate watches
@@ -295,7 +303,8 @@ export function useDebugger() {
     }
 
     try {
-      const result = await session.start({ language: runnerKey, files, entryPoint })
+      const result = await session.start(
+        { language: runnerKey, files, entryPoint })
       launchRef.current = result.launch_args
 
       await session.send({
@@ -351,7 +360,8 @@ export function useDebugger() {
     dispatch({ type: 'TOGGLE_BP', file, line })
 
   const addWatch = (expr: string) => dispatch({ type: 'ADD_WATCH', expr })
-  const removeWatch = (index: number) => dispatch({ type: 'REMOVE_WATCH', index })
+  const removeWatch = (index: number) =>
+    dispatch({ type: 'REMOVE_WATCH', index })
 
   const expandVariable = (ref: number) => { void fetchVars(ref) }
 

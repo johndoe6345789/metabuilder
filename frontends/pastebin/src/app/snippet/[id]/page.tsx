@@ -37,8 +37,11 @@ export default function SnippetViewPage() {
   const activeCode = activeFileObj?.content ?? snippet.code
   const lineCount = (localCode ?? activeCode).split('\n').length
 
+  // eslint-disable-next-line react-hooks/refs
   snippetRef.current = snippet
+  // eslint-disable-next-line react-hooks/refs
   activeFileRef.current = activeFile || (files[0]?.name ?? '')
+  // eslint-disable-next-line react-hooks/refs
   filesRef.current = files
 
   const viewSnippet = { ...snippet, code: localCode ?? activeCode }

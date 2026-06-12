@@ -62,18 +62,23 @@ export function useSnippetViewPage() {
     const defaultName = getFilename(snippet.title, snippet.language)
     const initial = snippet.entryPoint
       || (snippet.files?.length ? snippet.files[0].name : defaultName)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setActiveFile(initial)
     setOpenFiles(prev => prev.length > 0 ? prev : [initial])
-  }, [snippet?.id]) // eslint-disable-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [snippet?.id])
 
   useEffect(() => {
     if (!snippet) return
     const curFiles = snippet.files && snippet.files.length > 0
       ? snippet.files
-      : [{ name: getFilename(snippet.title, snippet.language), content: snippet.code }]
+      : [{ name: getFilename(snippet.title, snippet.language),
+          content: snippet.code }]
     const fileObj = curFiles.find(f => f.name === activeFile) ?? curFiles[0]
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLocalCode(fileObj?.content ?? snippet.code)
-  }, [activeFile, snippet?.id]) // eslint-disable-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeFile, snippet?.id])
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -88,7 +93,8 @@ export function useSnippetViewPage() {
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [activeFile, paletteOpen, fileOps.renaming]) // eslint-disable-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeFile, paletteOpen, fileOps.renaming])
 
   const openInTab = (name: string) => {
     setOpenFiles(prev => prev.includes(name) ? prev : [...prev, name])
@@ -109,8 +115,11 @@ export function useSnippetViewPage() {
   }
 
   // Sync refs for actions
-  actions.snippetRef.current = snippet
-  actions.activeFileRef.current = activeFile
+  const { snippetRef, activeFileRef } = actions
+  // eslint-disable-next-line react-hooks/refs
+  snippetRef.current = snippet
+  // eslint-disable-next-line react-hooks/refs
+  activeFileRef.current = activeFile
 
   return {
     id, snippet, namespaces,

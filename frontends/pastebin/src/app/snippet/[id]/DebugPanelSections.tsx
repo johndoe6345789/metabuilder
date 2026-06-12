@@ -65,7 +65,7 @@ export function CallStackPanel({ frames }: { frames: DapStackFrame[] }) {
 }
 export function DebugOutput({
   output,
-}: { output: Array<{ category: string; text: string }> }) {
+}: { output: { category: string; text: string }[] }) {
   if (!output.length) return null
   return (
     <section className={styles.pane}>
