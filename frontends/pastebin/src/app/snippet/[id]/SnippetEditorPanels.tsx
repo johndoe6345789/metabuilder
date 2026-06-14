@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import { Snippet } from '@/lib/types'
-import { DebugTabPanel } from './DebugTabPanel'
+import { DebugPanel } from './DebugPanel'
 import styles from './snippet-view-page.module.scss'
 import type { ActiveTab } from './hooks/useSnippetViewPage'
 import type { useDebugger } from '@/hooks/useDebugger'
@@ -55,33 +55,63 @@ export function SnippetEditorPanels({
   terminal,
   onCodeChange,
 }: Props) {
-  const vis = (tab: ActiveTab) => activeTab === tab
   const bps = dbg.state.breakpoints[activeFile] ?? []
   const curLine =
     dbg.state.currentFile === activeFile ? dbg.state.currentLine : null
   const inlineValues = computeInlineValues(dbg, activeFile, curLine)
-  const panelCls = (tab: ActiveTab) =>
-    `${styles.editorPanel} ${
-      vis(tab) ? styles.editorPanelVisible : styles.editorPanelHidden
-    }`
+
+  // Dock the debug panel beneath the code (IDE-style) whenever a session is
+  // live or the Debug tab is selected, so the code — with its breakpoints and
+  // current-line highlight — stays visible while you inspect debugger state.
+  const docked = dbg.isActive || activeTab === 'debug'
+  // The code area shows for both the 'code' and 'debug' tabs; only the
+  // terminal takes over the full editor area.
+  const codeVisible = activeTab !== 'terminal'
 
   return (
     <>
-      <div className={panelCls('code')} role="tabpanel">
-        <SnippetViewerContent
-          snippet={viewSnippet}
-          canPreview={canPreview}
-          showPreview={showPreview}
-          isPython={snippet.language === 'Python'}
-          wordWrap={wordWrap}
-          onChange={onCodeChange}
-          breakpoints={bps}
-          currentDebugLine={curLine}
-          inlineValues={inlineValues}
-          onToggleBreakpoint={line => dbg.toggleBreakpoint(activeFile, line)}
-        />
+      <div
+        className={`${styles.editorPanel} ${
+          codeVisible ? styles.editorPanelVisible : styles.editorPanelHidden
+        }`}
+        role="tabpanel"
+      >
+        <div className={styles.editorSplit}>
+          <div className={styles.editorSplitMain}>
+            <SnippetViewerContent
+              snippet={viewSnippet}
+              canPreview={canPreview}
+              showPreview={showPreview}
+              isPython={snippet.language === 'Python'}
+              wordWrap={wordWrap}
+              onChange={onCodeChange}
+              breakpoints={bps}
+              currentDebugLine={curLine}
+              inlineValues={inlineValues}
+              onToggleBreakpoint={line =>
+                dbg.toggleBreakpoint(activeFile, line)
+              }
+            />
+          </div>
+          {docked && (
+            <div className={styles.debugDock}>
+              <DebugPanel
+                language={snippet.language}
+                debugger={dbg}
+                onStart={onDebugStart}
+              />
+            </div>
+          )}
+        </div>
       </div>
-      <div className={panelCls('terminal')} role="tabpanel">
+      <div
+        className={`${styles.editorPanel} ${
+          activeTab === 'terminal'
+            ? styles.editorPanelVisible
+            : styles.editorPanelHidden
+        }`}
+        role="tabpanel"
+      >
         <CodeTerminal
           language={snippet.language}
           files={files}
@@ -89,12 +119,6 @@ export function SnippetEditorPanels({
           controller={terminal}
         />
       </div>
-      <DebugTabPanel
-        visible={vis('debug')}
-        language={snippet.language}
-        debugger={dbg}
-        onStart={onDebugStart}
-      />
     </>
   )
 }
