@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic'
 import { Snippet } from '@/lib/types'
 import { DebugPanel } from './DebugPanel'
+import { useResizableDock } from '@/hooks/useResizableDock'
 import styles from './snippet-view-page.module.scss'
 import type { ActiveTab } from './hooks/useSnippetViewPage'
 import type { useDebugger } from '@/hooks/useDebugger'
@@ -59,6 +60,12 @@ export function SnippetEditorPanels({
   const curLine =
     dbg.state.currentFile === activeFile ? dbg.state.currentLine : null
   const inlineValues = computeInlineValues(dbg, activeFile, curLine)
+  const {
+    containerRef: splitRef,
+    height: dockHeight,
+    dragging: dockDragging,
+    onHandleMouseDown: onDockResize,
+  } = useResizableDock()
 
   // Dock the debug panel beneath the code (IDE-style) whenever a session is
   // live or the Debug tab is selected, so the code — with its breakpoints and
@@ -76,7 +83,12 @@ export function SnippetEditorPanels({
         }`}
         role="tabpanel"
       >
-        <div className={styles.editorSplit}>
+        <div
+          ref={splitRef}
+          className={`${styles.editorSplit} ${
+            dockDragging ? styles.editorSplitDragging : ''
+          }`}
+        >
           <div className={styles.editorSplitMain}>
             <SnippetViewerContent
               snippet={viewSnippet}
@@ -94,12 +106,21 @@ export function SnippetEditorPanels({
             />
           </div>
           {docked && (
-            <div className={styles.debugDock}>
-              <DebugPanel
-                language={snippet.language}
-                debugger={dbg}
-                onStart={onDebugStart}
+            <div className={styles.debugDock} style={{ height: dockHeight }}>
+              <div
+                className={styles.debugDockHandle}
+                onMouseDown={onDockResize}
+                role="separator"
+                aria-orientation="horizontal"
+                aria-label="Resize debug panel"
               />
+              <div className={styles.debugDockBody}>
+                <DebugPanel
+                  language={snippet.language}
+                  debugger={dbg}
+                  onStart={onDebugStart}
+                />
+              </div>
             </div>
           )}
         </div>
