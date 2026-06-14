@@ -67,6 +67,7 @@
     },
     "hono": "^4.12.0",
     "@storybook/builder-vite": {
+      ".": "10.4.4",
       "vite": "^7.3.1"
     },
     "@joshwooding/vite-plugin-react-docgen-typescript": {
@@ -77,7 +78,12 @@
     "monaco-editor": "0.53.0",
     "esbuild": ">=0.25.0",
     "immutable": ">=5.1.5",
-    "storybook": "10.2.19",
+    "storybook": "10.4.4",
+    "@storybook/addon-docs": "10.4.4",
+    "@storybook/addon-a11y": "10.4.4",
+    "@storybook/react": "10.4.4",
+    "@storybook/addon-vitest": "10.4.4",
+    "@storybook/nextjs-vite": "10.4.4",
     "eslint-plugin-jsx-a11y": {
       "eslint": "$eslint"
     },
@@ -91,6 +97,7 @@
       "esbuild": ">=0.25.0"
     },
     "@storybook/react-vite": {
+      ".": "10.4.4",
       "vite": "^7.3.1"
     }
   }
