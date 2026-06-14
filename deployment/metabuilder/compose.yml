@@ -61,6 +61,13 @@ services:
     image: verdaccio/verdaccio:6
     container_name: metabuilder-verdaccio
     restart: unless-stopped
+    # Dev-only npm-patch registry — nothing in the running stack depends on it
+    # (used solely by `deployment.py npm publish-patches --verdaccio`). Gated
+    # behind a profile so a plain `docker compose up` (the deploy path) never
+    # starts it; otherwise a stale/root-owned ../verdaccio.yaml on a CI agent
+    # makes the single-file bind mount fail and aborts the whole `up`.
+    # Start explicitly with: docker compose --profile npm-tools up -d verdaccio
+    profiles: ["npm-tools"]
     volumes:
       - ../verdaccio.yaml:/verdaccio/conf/config.yaml:ro
       - ../npm-patches:/verdaccio/patches:ro
