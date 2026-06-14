@@ -12,6 +12,7 @@ interface Props {
   breakpoints?: number[]
   onToggleBreakpoint?: (line: number) => void
   currentDebugLine?: number | null
+  inlineValues?: { line: number; text: string }[]
 }
 
 export function SnippetPreviewContent({
@@ -22,6 +23,7 @@ export function SnippetPreviewContent({
   breakpoints,
   onToggleBreakpoint,
   currentDebugLine,
+  inlineValues,
 }: Props) {
   return (
     <>
@@ -40,6 +42,7 @@ export function SnippetPreviewContent({
           breakpoints={breakpoints}
           onToggleBreakpoint={onToggleBreakpoint}
           currentDebugLine={currentDebugLine}
+          inlineValues={inlineValues}
         />
       </div>
       <div

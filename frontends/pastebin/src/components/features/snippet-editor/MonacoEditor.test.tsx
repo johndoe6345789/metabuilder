@@ -6,6 +6,7 @@ import { MonacoEditor } from './MonacoEditor'
 // ── Breakpoint test helpers ──────────────────────────────────────────────────
 // Stable mock refs updated by the mock's useEffect each render
 const _decorationsSet = jest.fn()
+const _revealLine = jest.fn()
 let _capturedMouseDown: ((e: unknown) => void) | null = null
 
 // Mock monaco-editor/react — calls onMount synchronously after first paint
@@ -31,6 +32,8 @@ jest.mock('@monaco-editor/react', () => {
           onMouseDown: (h: (e: unknown) => void) => {
             _capturedMouseDown = h
           },
+          getModel: () => ({ getLineMaxColumn: () => 1 }),
+          revealLineInCenterIfOutsideViewport: _revealLine,
         }
         const fakeMonaco = {
           // eslint-disable-next-line max-len
@@ -538,6 +541,7 @@ describe('MonacoEditor Component', () => {
     beforeEach(() => {
       _capturedMouseDown = null
       _decorationsSet.mockClear()
+      _revealLine.mockClear()
     })
 
     it('calls onToggleBreakpoint when glyph margin is clicked', async () => {
@@ -635,6 +639,49 @@ describe('MonacoEditor Component', () => {
       )
       await waitFor(() => expect(_decorationsSet).toHaveBeenCalled())
       expect(_decorationsSet.mock.calls[0][0]).toHaveLength(0)
+    })
+
+    it('scrolls the current debug line into view when paused', async () => {
+      render(
+        <MonacoEditor
+          {...defaultProps}
+          breakpoints={[]}
+          currentDebugLine={12}
+          onToggleBreakpoint={jest.fn()}
+        />,
+      )
+      await waitFor(() => expect(_revealLine).toHaveBeenCalledWith(12))
+    })
+
+    it('does not scroll when there is no current debug line', async () => {
+      render(
+        <MonacoEditor
+          {...defaultProps}
+          breakpoints={[2]}
+          currentDebugLine={null}
+          onToggleBreakpoint={jest.fn()}
+        />,
+      )
+      await waitFor(() => expect(_decorationsSet).toHaveBeenCalled())
+      expect(_revealLine).not.toHaveBeenCalled()
+    })
+
+    // eslint-disable-next-line max-len
+    it('renders inline variable values as after-content decorations', async () => {
+      render(
+        <MonacoEditor
+          {...defaultProps}
+          currentDebugLine={4}
+          inlineValues={[{ line: 4, text: 'x = 1, y = 2' }]}
+          onToggleBreakpoint={jest.fn()}
+        />,
+      )
+      await waitFor(() => expect(_decorationsSet).toHaveBeenCalled())
+      // bp set = call 0, current-line set = call 1, inline set = call 2
+      const inline = _decorationsSet.mock.calls[2][0] as any[]
+      expect(inline).toHaveLength(1)
+      expect(inline[0].options.after.content).toContain('x = 1, y = 2')
+      expect(inline[0].options.after.inlineClassName).toBe('dbg-inline-value')
     })
   })
 })

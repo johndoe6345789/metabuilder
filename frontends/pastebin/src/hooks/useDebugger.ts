@@ -355,7 +355,10 @@ export function useDebugger() {
       LANG_KEY[language] ?? language.toLowerCase().replace(/[^a-z0-9]+/g, '-')
     const bps = stateRef.current.breakpoints // capture now
 
-    // Called when the adapter sends 'initialized'
+    // The adapter emits 'initialized' after we request launch/attach. Per the
+    // DAP spec the program only starts running once we send configurationDone,
+    // so breakpoints MUST be set here first and configurationDone sent last —
+    // otherwise the debuggee runs to completion before any breakpoint binds.
     onInitRef.current = async () => {
       for (const [filename, lines] of Object.entries(bps)) {
         if (!lines.length) continue
@@ -376,12 +379,6 @@ export function useDebugger() {
         command: 'configurationDone',
         arguments: {},
       })
-      await session.send({
-        seq: nextSeq(),
-        type: 'request',
-        command: 'launch',
-        arguments: launchRef.current,
-      })
     }
 
     try {
@@ -392,6 +389,9 @@ export function useDebugger() {
       })
       launchRef.current = result.launch_args
 
+      // 1. initialize. DAP messages are ordered over the adapter's TCP stream,
+      //    so we can pipeline initialize then launch/attach without awaiting
+      //    the initialize response — the adapter processes them in order.
       await session.send({
         seq: nextSeq(),
         type: 'request',
@@ -407,6 +407,20 @@ export function useDebugger() {
           supportsVariablePaging: false,
           supportsRunInTerminalRequest: false,
         },
+      })
+
+      // 2. launch/attach — this triggers the adapter's 'initialized' event,
+      //    which runs onInitRef (setBreakpoints → configurationDone). The
+      //    command must match the runner: debugpy server-mode wants 'attach',
+      //    spawn-adapters (node/go/cpp) want 'launch'. Its response only
+      //    arrives after configurationDone, so we don't await it.
+      const reqCommand =
+        (launchRef.current as { request?: string }).request ?? 'launch'
+      await session.send({
+        seq: nextSeq(),
+        type: 'request',
+        command: reqCommand,
+        arguments: launchRef.current,
       })
     } catch (err) {
       dispatch({

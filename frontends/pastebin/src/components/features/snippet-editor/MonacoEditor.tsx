@@ -36,6 +36,8 @@ interface MonacoEditorProps {
   onToggleBreakpoint?: (line: number) => void
   /** 1-indexed line to highlight as the current debug execution point. */
   currentDebugLine?: number | null
+  /** Inline variable values rendered greyed-in at the end of a line. */
+  inlineValues?: { line: number; text: string }[]
 }
 
 function EditorLoadingSkeleton({ height = '400px' }: { height?: string }) {
@@ -65,6 +67,7 @@ export function MonacoEditor({
   breakpoints,
   onToggleBreakpoint,
   currentDebugLine,
+  inlineValues,
 }: MonacoEditorProps) {
   const monacoLanguage = getMonacoLanguage(language)
   const theme = useAppSelector(selectTheme)
@@ -75,6 +78,8 @@ export function MonacoEditor({
   const bpCollection =
     useRef<MonacoEditorNS.IEditorDecorationsCollection | null>(null)
   const currCollection =
+    useRef<MonacoEditorNS.IEditorDecorationsCollection | null>(null)
+  const inlineCollection =
     useRef<MonacoEditorNS.IEditorDecorationsCollection | null>(null)
 
   // Refs give the stable onMouseDown handler access to the latest prop values
@@ -88,18 +93,25 @@ export function MonacoEditor({
   const currentDebugLineRef = useRef(currentDebugLine)
   // eslint-disable-next-line react-hooks/refs
   currentDebugLineRef.current = currentDebugLine
+  const inlineValuesRef = useRef(inlineValues)
+  // eslint-disable-next-line react-hooks/refs
+  inlineValuesRef.current = inlineValues
 
   function applyDecorations(
     editor: MonacoEditorNS.IStandaloneCodeEditor,
     monaco: Monaco,
     bps: number[],
     curLine: number | null | undefined,
+    inline: { line: number; text: string }[] | undefined,
   ) {
     if (!bpCollection.current) {
       bpCollection.current = editor.createDecorationsCollection()
     }
     if (!currCollection.current) {
       currCollection.current = editor.createDecorationsCollection()
+    }
+    if (!inlineCollection.current) {
+      inlineCollection.current = editor.createDecorationsCollection()
     }
 
     bpCollection.current.set(
@@ -129,16 +141,43 @@ export function MonacoEditor({
           ]
         : [],
     )
+
+    // Inline variable values: greyed-in text injected at the end of the line,
+    // PyCharm/VS-Code style. Anchored at the line's last column.
+    const model = editor.getModel()
+    inlineCollection.current.set(
+      (inline ?? []).map(iv => {
+        const col = model?.getLineMaxColumn(iv.line) ?? 1
+        return {
+          range: new monaco.Range(iv.line, col, iv.line, col),
+          options: {
+            after: {
+              content: `    ${iv.text}`,
+              inlineClassName: 'dbg-inline-value',
+            },
+          },
+        }
+      }),
+    )
   }
 
-  // Re-render breakpoint and current-line decorations whenever they change
+  // Re-render breakpoint, current-line, and inline-value decorations whenever
+  // they change; scroll the stopped line into view like a real debugger.
   useEffect(() => {
     const editor = editorRef.current
     const monaco = monacoRef.current
     if (!editor || !monaco) return
-    applyDecorations(editor, monaco, breakpoints ?? [], currentDebugLine)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [breakpoints, currentDebugLine])
+    applyDecorations(
+      editor,
+      monaco,
+      breakpoints ?? [],
+      currentDebugLine,
+      inlineValues,
+    )
+    if (currentDebugLine) {
+      editor.revealLineInCenterIfOutsideViewport(currentDebugLine)
+    }
+  }, [breakpoints, currentDebugLine, inlineValues])
 
   const handleMount = (
     editor: MonacoEditorNS.IStandaloneCodeEditor,
@@ -153,7 +192,11 @@ export function MonacoEditor({
       monaco,
       breakpointsRef.current ?? [],
       currentDebugLineRef.current,
+      inlineValuesRef.current,
     )
+    if (currentDebugLineRef.current) {
+      editor.revealLineInCenterIfOutsideViewport(currentDebugLineRef.current)
+    }
 
     editor.onMouseDown(e => {
       if (!onToggleRef.current) return

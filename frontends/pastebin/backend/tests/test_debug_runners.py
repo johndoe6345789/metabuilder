@@ -167,6 +167,20 @@ class TestDebugRunnersExistingLanguages(unittest.TestCase):
             self.assertNotIn('npm root', cmd,
                 f'{lang}: dap command must not use npm root')
 
+    def test_python_uses_attach_request(self):
+        # debugpy `--listen … --wait-for-client <script>` is a server that
+        # already holds the debuggee — the client must ATTACH, not launch,
+        # or breakpoints never bind.
+        args = _DEBUG_RUNNERS['python']['launch']('main.py')
+        self.assertEqual(args['request'], 'attach')
+        self.assertNotIn('program', args,
+            'attach must not re-specify program (set on the command line)')
+
+    def test_python_dap_waits_for_client(self):
+        cmd = _DEBUG_RUNNERS['python']['dap'].format(port=5678, entry='main.py')
+        self.assertIn('--wait-for-client', cmd)
+        self.assertIn('debugpy', cmd)
+
 
 if __name__ == '__main__':
     unittest.main()

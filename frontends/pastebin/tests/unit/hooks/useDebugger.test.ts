@@ -189,3 +189,80 @@ describe('useDebugger – startDebugging maps C++ to cpp-cmake', () => {
     )
   })
 })
+
+describe('useDebugger – DAP handshake order', () => {
+  const commands = () =>
+    mockSend.mock.calls.map(c => (c[0] as { command: string }).command)
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+    mockSend.mockResolvedValue(undefined)
+  })
+
+  it('sends initialize then attach (not launch) for Python', async () => {
+    mockStart.mockResolvedValue({
+      session_id: 'sid',
+      launch_args: { request: 'attach', justMyCode: false },
+    })
+    const { result } = renderHook(() => useDebugger())
+    await act(async () => {
+      await result.current.startDebugging(
+        'Python',
+        [{ name: 'main.py', content: 'print(1)' }],
+        'main.py',
+      )
+    })
+    const cmds = commands()
+    expect(cmds).toContain('initialize')
+    expect(cmds).toContain('attach')
+    expect(cmds).not.toContain('launch')
+    // initialize must precede attach
+    expect(cmds.indexOf('initialize')).toBeLessThan(cmds.indexOf('attach'))
+  })
+
+  it('sets breakpoints then configurationDone on initialized event', async () => {
+    mockStart.mockResolvedValue({
+      session_id: 'sid',
+      launch_args: { request: 'attach' },
+    })
+    const { result } = renderHook(() => useDebugger())
+    act(() => {
+      result.current.toggleBreakpoint('main.py', 3)
+    })
+    await act(async () => {
+      await result.current.startDebugging(
+        'Python',
+        [{ name: 'main.py', content: 'x=1\ny=2\nprint(x)' }],
+        'main.py',
+      )
+    })
+    mockSend.mockClear()
+    await act(async () => {
+      capturedOnMessage(event('initialized'))
+    })
+    const cmds = commands()
+    expect(cmds).toEqual(['setBreakpoints', 'configurationDone'])
+    // configurationDone must come last so the program doesn't run early
+    expect(cmds.indexOf('setBreakpoints')).toBeLessThan(
+      cmds.indexOf('configurationDone'),
+    )
+  })
+
+  it('uses launch (not attach) for spawn-adapter languages like Go', async () => {
+    mockStart.mockResolvedValue({
+      session_id: 'sid',
+      launch_args: { request: 'launch', mode: 'debug' },
+    })
+    const { result } = renderHook(() => useDebugger())
+    await act(async () => {
+      await result.current.startDebugging(
+        'Go',
+        [{ name: 'main.go', content: 'package main' }],
+        'main.go',
+      )
+    })
+    const cmds = commands()
+    expect(cmds).toContain('launch')
+    expect(cmds).not.toContain('attach')
+  })
+})

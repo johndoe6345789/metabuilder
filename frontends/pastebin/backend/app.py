@@ -665,10 +665,17 @@ _DEBUG_RUNNERS: dict = {
         'image':  lambda: os.environ.get('PYTHON_DEBUG_IMAGE', 'python:3.11-slim'),
         'setup':  'pip install debugpy -q 2>/dev/null',
         'dap':    'python -m debugpy --listen 0.0.0.0:{port} --wait-for-client /workspace/{entry}',
+        # debugpy started with `--listen … --wait-for-client <script>` is a DAP
+        # *server* that already holds the debuggee process — the client must
+        # ATTACH, not launch (a launch would tell it to spawn the program a
+        # second time and breakpoints would never bind). The script path is
+        # fixed by the command line, so no 'program' is needed here.
         'launch': lambda entry: {
-            'type': 'python', 'request': 'launch',
-            'program': f'/workspace/{entry}',
-            'console': 'internalConsole', 'justMyCode': False,
+            'type': 'python', 'request': 'attach',
+            'justMyCode': False,
+            'pathMappings': [
+                {'localRoot': '/workspace', 'remoteRoot': '/workspace'},
+            ],
         },
     },
     'javascript': {

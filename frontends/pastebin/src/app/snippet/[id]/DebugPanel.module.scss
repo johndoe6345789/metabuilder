@@ -66,10 +66,21 @@
   color: var(--mat-sys-on-surface);
   cursor: pointer;
   transition: background 0.1s;
-  &:hover { background: var(--mat-sys-surface-container-high); }
+  &:hover:not(:disabled) { background: var(--mat-sys-surface-container-high); }
+  &:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
 }
 
 .ctrlStop { color: var(--mat-sys-error); }
+
+.ctrlDivider {
+  width: 1px;
+  height: 18px;
+  margin: 0 4px;
+  background: var(--mat-sys-outline-variant);
+}
 
 .statusBadge {
   margin-left: auto;

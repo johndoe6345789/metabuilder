@@ -284,3 +284,8 @@ select {
 .dbg-current-line {
   background: rgba(255, 204, 0, 0.12) !important;
 }
+.dbg-inline-value {
+  color: #8a8a8a !important;
+  font-style: italic !important;
+  opacity: 0.85;
+}

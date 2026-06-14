@@ -13,6 +13,7 @@ interface SnippetViewerContentProps {
   breakpoints?: number[]
   onToggleBreakpoint?: (line: number) => void
   currentDebugLine?: number | null
+  inlineValues?: { line: number; text: string }[]
 }
 
 export function SnippetViewerContent({
@@ -25,6 +26,7 @@ export function SnippetViewerContent({
   breakpoints,
   onToggleBreakpoint,
   currentDebugLine,
+  inlineValues,
 }: SnippetViewerContentProps) {
   if (canPreview && showPreview) {
     return (
@@ -36,6 +38,7 @@ export function SnippetViewerContent({
         breakpoints={breakpoints}
         onToggleBreakpoint={onToggleBreakpoint}
         currentDebugLine={currentDebugLine}
+        inlineValues={inlineValues}
       />
     )
   }
@@ -56,6 +59,7 @@ export function SnippetViewerContent({
         breakpoints={breakpoints}
         onToggleBreakpoint={onToggleBreakpoint}
         currentDebugLine={currentDebugLine}
+        inlineValues={inlineValues}
       />
     </div>
   )

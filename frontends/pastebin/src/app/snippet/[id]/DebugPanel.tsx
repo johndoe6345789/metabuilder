@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import { MaterialIcon } from '@metabuilder/components/fakemui'
 import type { useDebugger } from '@/hooks/useDebugger'
 import { DebugControls } from './DebugControls'
@@ -20,11 +21,44 @@ interface Props {
 }
 
 export function DebugPanel({ language, debugger: dbg, onStart }: Props) {
-  const { state, isActive, supportedLanguages } = dbg
+  const { state, isActive, isPaused, supportedLanguages } = dbg
   const langKey = language.toLowerCase().replace(/[^a-z0-9]+/g, '-')
-  const supported = supportedLanguages.some(
-    k => k.toLowerCase() === langKey || language.toLowerCase().startsWith(k.toLowerCase()),
-  )
+  const lang = language.toLowerCase()
+  const supported = supportedLanguages.some(k => {
+    const lk = k.toLowerCase()
+    return lk === langKey || lang.startsWith(lk)
+  })
+
+  // PyCharm-style debug keys: F9 resume, F8 step over, F7 step into,
+  // ⇧F8 step out, ⇧F5 stop. Active only while a session is live.
+  useEffect(() => {
+    if (!isActive) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'F5' && e.shiftKey) {
+        e.preventDefault()
+        void dbg.stopDebugging()
+        return
+      }
+      if (!isPaused) return
+      switch (e.key) {
+        case 'F9':
+          e.preventDefault()
+          void dbg.resume()
+          break
+        case 'F8':
+          e.preventDefault()
+          if (e.shiftKey) void dbg.stepOut()
+          else void dbg.stepOver()
+          break
+        case 'F7':
+          e.preventDefault()
+          void dbg.stepIn()
+          break
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [isActive, isPaused, dbg])
 
   if (!isActive) {
     return (
