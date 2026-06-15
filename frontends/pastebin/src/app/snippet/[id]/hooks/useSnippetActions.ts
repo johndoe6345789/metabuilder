@@ -76,7 +76,10 @@ export function useSnippetActions(
       .catch(err => {
         toast.error(err instanceof Error ? err.message : String(err))
       })
-    setActiveTab('debug')
+    // Show the script's own file tab, not the Debug tab — the debug dock
+    // appears on its own while a session is active, so forcing the Debug tab
+    // would just hide which file you're looking at for no reason.
+    setActiveTab('code')
   }
 
   const handleSave = (
