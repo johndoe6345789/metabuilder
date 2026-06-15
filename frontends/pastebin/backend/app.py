@@ -642,20 +642,6 @@ def _own_container_id() -> str | None:
     return cid
 
 
-def _wait_for_port(host: str, port: int, timeout: float = 90.0) -> None:
-    deadline = time.time() + timeout
-    while time.time() < deadline:
-        try:
-            s = _socket.socket()
-            s.settimeout(0.5)
-            s.connect((host, port))
-            s.close()
-            return
-        except (ConnectionRefusedError, _socket.timeout, OSError):
-            time.sleep(0.3)
-    raise TimeoutError(f'{host}:{port} not ready after {timeout:.0f}s')
-
-
 # Language → DAP adapter config.
 # 'setup'   shell command to install the adapter (run once per container)
 # 'dap'     shell command to start the adapter (must listen on 0.0.0.0:{port})
@@ -787,10 +773,32 @@ class DebugSession:
         nets         = self._container.attrs['NetworkSettings']['Networks']
         container_ip = nets[net_name]['IPAddress']
 
-        _wait_for_port(container_ip, _DAP_PORT, timeout=90)
-
-        self._sock = _socket.socket(_socket.AF_INET, _socket.SOCK_STREAM)
-        self._sock.connect((container_ip, _DAP_PORT))
+        # debugpy runs with `--wait-for-client` and treats the FIRST TCP
+        # connection to the DAP port as the debug client. A throwaway readiness
+        # probe (connect then close) would consume that one client slot, leaving
+        # the real session socket with no handshake — the program would never
+        # start and no output/stops would ever come back. So DO NOT pre-probe:
+        # connect the real session socket directly, retrying until the adapter
+        # is listening. The first socket that connects IS the debug client.
+        deadline = time.time() + 90
+        last_err = None
+        self._sock = None
+        while time.time() < deadline:
+            try:
+                sock = _socket.socket(_socket.AF_INET, _socket.SOCK_STREAM)
+                sock.settimeout(10)
+                sock.connect((container_ip, _DAP_PORT))
+                sock.settimeout(None)   # blocking reads for the session
+                self._sock = sock
+                break
+            except (ConnectionRefusedError, _socket.timeout, OSError) as exc:
+                last_err = exc
+                time.sleep(0.3)
+        if self._sock is None:
+            raise TimeoutError(
+                f'{container_ip}:{_DAP_PORT} DAP adapter not ready after 90s '
+                f'({last_err})'
+            )
         threading.Thread(target=self._read_loop, daemon=True).start()
 
     # ------------------------------------------------------------------
@@ -863,13 +871,20 @@ class DebugSession:
                 pass
         self._sock = self._container = None
 
-        own_id = _own_container_id()
-        if own_id and self._network:
+        # Detach EVERY endpoint before removing the network. Disconnecting only
+        # by our cached own-id leaked networks whenever that id didn't match the
+        # endpoint Docker recorded (cgroup v2 hostnames), because remove() then
+        # failed with "network has active endpoints".
+        if self._network:
             try:
-                self._network.disconnect(own_id, force=True)
+                self._network.reload()
+                for cid in list(self._network.attrs.get('Containers', {})):
+                    try:
+                        self._network.disconnect(cid, force=True)
+                    except Exception:
+                        pass
             except Exception:
                 pass
-        if self._network:
             try:
                 self._network.remove()
             except Exception:
