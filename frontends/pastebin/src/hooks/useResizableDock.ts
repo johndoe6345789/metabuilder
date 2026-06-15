@@ -7,12 +7,14 @@ import {
 } from 'react'
 
 interface ResizableDockOptions {
-  /** Initial dock height in px. */
+  /** Fallback dock height in px before the container is measured. */
   initial?: number
   /** Minimum dock height in px. */
   min?: number
   /** Minimum px kept for the area above the dock (keeps the editor usable). */
   minMain?: number
+  /** Initial dock height as a fraction of the container (scales w/ screen). */
+  fraction?: number
 }
 
 /**
@@ -23,15 +25,30 @@ interface ResizableDockOptions {
  * `min` and `container height − minMain`.
  */
 export function useResizableDock({
-  initial = 360,
+  initial = 300,
   min = 170,
-  minMain = 140,
+  minMain = 160,
+  fraction = 0.38,
 }: ResizableDockOptions = {}) {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const [height, setHeight] = useState(initial)
   const [dragging, setDragging] = useState(false)
   const startYRef = useRef(0)
   const startHRef = useRef(0)
+  const sizedRef = useRef(false)
+
+  // Size the dock to a fraction of the available area once the container is
+  // measured, so it never squashes the editor on small screens (a fixed px
+  // default is too tall on laptops, too short on big monitors). Runs until the
+  // container has a real height, then leaves it to the user to resize.
+  useEffect(() => {
+    if (sizedRef.current) return
+    const h = containerRef.current?.clientHeight ?? 0
+    if (h <= 0) return
+    sizedRef.current = true
+    const target = Math.round(h * fraction)
+    setHeight(Math.min(Math.max(min, target), Math.max(min, h - minMain)))
+  })
 
   const onHandleMouseDown = useCallback(
     (e: ReactMouseEvent) => {
