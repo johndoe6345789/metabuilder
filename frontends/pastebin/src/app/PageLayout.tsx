@@ -20,19 +20,36 @@ import { ProfileMenu } from '@/components/layout/ProfileMenu'
 import { ReactNode } from 'react'
 import styles from './page-layout.module.scss'
 
-export function PageLayout({ children }: { children: ReactNode }) {
+interface PageLayoutProps {
+  children: ReactNode
+  /**
+   * Editor/IDE mode: pin the shell to the viewport (no page scroll), drop the
+   * main content padding + footer so a child can flex-fill the space below the
+   * header and scroll internally instead.
+   */
+  fitViewport?: boolean
+}
+
+export function PageLayout({ children, fitViewport = false }: PageLayoutProps) {
   const t = useTranslation()
   const isAuthenticated = useAppSelector(selectIsAuthenticated)
   const user = useAppSelector(selectCurrentUser)
 
   return (
-    <div className={styles.root} data-testid="page-layout">
+    <div
+      className={`${styles.root} ${fitViewport ? styles.rootFit : ''}`}
+      data-testid="page-layout"
+    >
       <div className={styles.gridPattern} aria-hidden="true" />
 
       <ThemeApplier />
       <NavigationSidebar />
 
-      <div className={styles.contentWrapper}>
+      <div
+        className={`${styles.contentWrapper} ${
+          fitViewport ? styles.contentWrapperFit : ''
+        }`}
+      >
         <header className={styles.header} data-testid="page-header">
           <div className={styles.headerInner}>
             <div className={styles.headerRow}>
@@ -88,18 +105,23 @@ export function PageLayout({ children }: { children: ReactNode }) {
           </div>
         </header>
 
-        <main className={styles.main} data-testid="main-content">
+        <main
+          className={`${styles.main} ${fitViewport ? styles.mainFit : ''}`}
+          data-testid="main-content"
+        >
           <AuthGuard>{children}</AuthGuard>
         </main>
 
-        <footer className={styles.footer}>
-          <div className={styles.footerInner}>
-            <div className={styles.footerText}>
-              <p>{t.page.footer.tagline}</p>
-              <p className={styles.footerNote}>{t.page.footer.techNote}</p>
+        {!fitViewport && (
+          <footer className={styles.footer}>
+            <div className={styles.footerInner}>
+              <div className={styles.footerText}>
+                <p>{t.page.footer.tagline}</p>
+                <p className={styles.footerNote}>{t.page.footer.techNote}</p>
+              </div>
             </div>
-          </div>
-        </footer>
+          </footer>
+        )}
       </div>
     </div>
   )

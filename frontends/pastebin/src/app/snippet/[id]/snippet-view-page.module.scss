@@ -4,8 +4,9 @@
 .page {
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - 140px);
-  overflow-x: hidden;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -192,7 +193,7 @@
 .workArea {
   flex: 1;
   display: flex;
-  min-height: calc(100vh - 310px);
+  min-height: 0;
   border: 1px solid var(--mat-sys-outline-variant);
   border-top: none;
   overflow: hidden;

@@ -74,7 +74,7 @@ export default function SnippetViewPage() {
     })
 
   return (
-    <PageLayout>
+    <PageLayout fitViewport>
       <SnippetPageBody
         vm={vm}
         onBack={() => router.push('/')}
