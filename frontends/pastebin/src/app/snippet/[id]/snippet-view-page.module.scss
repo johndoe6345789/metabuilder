@@ -525,16 +525,35 @@
   background: var(--mat-sys-surface);
 }
 
-// Grab handle at the top edge of the dock (the split divider).
+// Grab handle at the top edge of the dock (the split divider). Tall enough to
+// grab easily, with a visible grip so it's obviously draggable.
 .debugDockHandle {
-  flex: 0 0 6px;
-  cursor: row-resize;
-  background: var(--mat-sys-outline-variant);
+  flex: 0 0 10px;
+  cursor: ns-resize;
+  position: relative;
+  background: var(--mat-sys-surface-container-high);
   border-top: 1px solid var(--mat-sys-outline-variant);
-  transition: background 0.1s;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  touch-action: none;
+  transition: background 0.12s;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--mat-sys-outline);
+  }
 
   &:hover {
     background: var(--mat-sys-primary);
+  }
+  &:hover::after {
+    background: var(--mat-sys-on-primary);
   }
 }
 

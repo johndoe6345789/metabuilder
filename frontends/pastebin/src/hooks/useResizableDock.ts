@@ -23,7 +23,7 @@ interface ResizableDockOptions {
  * `min` and `container height − minMain`.
  */
 export function useResizableDock({
-  initial = 300,
+  initial = 360,
   min = 170,
   minMain = 140,
 }: ResizableDockOptions = {}) {
