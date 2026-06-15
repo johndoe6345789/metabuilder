@@ -27,6 +27,26 @@
   overflow: hidden;
 }
 
+// ── Grown past the viewport: let the document (window) scroll ──────────────
+// Relaxes the fixed-height/overflow clamps so a deliberately-oversized IDE
+// pushes the page taller and the browser shows a window scrollbar.
+.rootScroll {
+  height: auto;
+  min-height: 100dvh;
+  overflow: visible;
+}
+
+.contentWrapperScroll {
+  height: auto;
+  min-height: 100dvh;
+}
+
+.mainScroll {
+  flex: 1 0 auto;
+  min-height: auto;
+  overflow: visible;
+}
+
 .gridPattern {
   position: fixed;
   inset: 0;

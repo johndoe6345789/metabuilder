@@ -59,7 +59,7 @@ export function SnippetPageBody({
     <div
       className={`${styles.page} ${
         vm.ideDragging ? styles.pageResizing : ''
-      }`}
+      } ${vm.ideHeight != null ? styles.pageGrown : ''}`}
       data-testid="snippet-view-page"
     >
       <SnippetTopBar

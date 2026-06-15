@@ -30,20 +30,30 @@ interface PageLayoutProps {
   fitViewport?: boolean
   /** Hide the site header (maximize the IDE to fill the whole window). */
   hideChrome?: boolean
+  /**
+   * The fit child has grown past the viewport (user dragged it): relax the
+   * fixed-viewport clamp so the WINDOW scrolls (a far-right scrollbar the
+   * editor can't intercept) instead of clipping the overflow.
+   */
+  scrollable?: boolean
 }
 
 export function PageLayout({
   children,
   fitViewport = false,
   hideChrome = false,
+  scrollable = false,
 }: PageLayoutProps) {
   const t = useTranslation()
   const isAuthenticated = useAppSelector(selectIsAuthenticated)
   const user = useAppSelector(selectCurrentUser)
+  const grow = fitViewport && scrollable
 
   return (
     <div
-      className={`${styles.root} ${fitViewport ? styles.rootFit : ''}`}
+      className={`${styles.root} ${fitViewport ? styles.rootFit : ''} ${
+        grow ? styles.rootScroll : ''
+      }`}
       data-testid="page-layout"
     >
       <div className={styles.gridPattern} aria-hidden="true" />
@@ -54,7 +64,7 @@ export function PageLayout({
       <div
         className={`${styles.contentWrapper} ${
           fitViewport ? styles.contentWrapperFit : ''
-        }`}
+        } ${grow ? styles.contentWrapperScroll : ''}`}
       >
         {!hideChrome && (
         <header className={styles.header} data-testid="page-header">
@@ -114,7 +124,9 @@ export function PageLayout({
         )}
 
         <main
-          className={`${styles.main} ${fitViewport ? styles.mainFit : ''}`}
+          className={`${styles.main} ${fitViewport ? styles.mainFit : ''} ${
+            grow ? styles.mainScroll : ''
+          }`}
           data-testid="main-content"
         >
           <AuthGuard>{children}</AuthGuard>

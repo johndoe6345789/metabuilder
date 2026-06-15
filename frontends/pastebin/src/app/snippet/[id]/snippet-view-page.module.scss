@@ -6,10 +6,17 @@
   flex-direction: column;
   flex: 1;
   min-height: 0;
-  // Fills the viewport by default (work area is flex:1 → no scroll). When the
-  // IDE is dragged taller than the viewport, this scrolls to reveal it.
-  overflow-x: hidden;
-  overflow-y: auto;
+  // Fills the viewport by default (work area is flex:1) → nothing scrolls.
+  overflow: hidden;
+}
+
+// IDE dragged taller than the viewport: size to content and let the document
+// (window) scroll instead of clipping — the window scrollbar stays reachable
+// even over the editor, which would otherwise eat an inner scroll.
+.pageGrown {
+  flex: 1 0 auto;
+  min-height: auto;
+  overflow: visible;
 }
 
 // While dragging the IDE resizer: show the cursor everywhere and stop the
