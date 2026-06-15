@@ -254,3 +254,73 @@
   [data-cat='stderr']  { color: var(--mat-sys-error); }
   [data-cat='console'] { color: var(--mat-sys-on-surface-variant); }
 }
+
+// ────────────────────────────────────────────────────────────────
+// Debug sandbox "nerd info" card (idle state) — terminal aesthetic
+// ────────────────────────────────────────────────────────────────
+.sandbox {
+  width: 100%;
+  max-width: 420px;
+  margin-top: 4px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-left: 3px solid var(--mat-sys-primary);
+  border-radius: 6px;
+  background: var(--mat-sys-surface-container-lowest);
+  font-family: var(--mono-font, 'JetBrains Mono', monospace);
+  overflow: hidden;
+}
+
+.sbHead {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: var(--mat-sys-surface-container);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.sbDot {
+  margin-left: auto;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--mat-sys-tertiary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--mat-sys-tertiary) 22%, transparent);
+}
+
+.sbRow {
+  display: flex;
+  gap: 10px;
+  padding: 3px 10px;
+  font-size: 11.5px;
+  line-height: 1.5;
+
+  &:nth-child(even) {
+    background: color-mix(in srgb, var(--mat-sys-on-surface) 3%, transparent);
+  }
+}
+
+.sbKey {
+  flex: 0 0 64px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.sbVal {
+  color: var(--mat-sys-on-surface);
+  word-break: break-word;
+}
+
+.sbNote {
+  margin: 0;
+  padding: 7px 10px 9px;
+  font-family: inherit;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--mat-sys-on-surface-variant);
+  border-top: 1px solid var(--mat-sys-outline-variant);
+}

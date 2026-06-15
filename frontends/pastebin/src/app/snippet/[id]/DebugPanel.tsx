@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { MaterialIcon } from '@metabuilder/components/fakemui'
 import type { useDebugger } from '@/hooks/useDebugger'
 import { DebugControls } from './DebugControls'
+import { DebugSandboxInfo } from './DebugSandboxInfo'
 import {
   VariablesPanel,
   CallStackPanel,
@@ -72,6 +73,7 @@ export function DebugPanel({ language, debugger: dbg, onStart }: Props) {
               <MaterialIcon name="bug_report" size={16} />
               Start Debugging
             </button>
+            <DebugSandboxInfo language={language} />
           </>
         ) : (
           <p className={styles.idleHint}>
