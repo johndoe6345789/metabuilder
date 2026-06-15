@@ -72,7 +72,14 @@ export function useSnippetViewPage() {
   const [menuRect, setMenuRect] = useState<DOMRect | null>(null)
 
   const fileOps = useSnippetFileOps(snippet)
-  const actions = useSnippetActions(snippet, id, activeFile, setActiveTab)
+  const actions = useSnippetActions(
+    snippet,
+    id,
+    activeFile,
+    setActiveTab,
+    setActiveFile,
+    setOpenFiles,
+  )
 
   useEffect(() => {
     if (snippets.length > 0 && !snippet) router.replace('/')
@@ -147,6 +154,21 @@ export function useSnippetViewPage() {
   snippetRef.current = snippet
   // eslint-disable-next-line react-hooks/refs
   activeFileRef.current = activeFile
+
+  // Follow execution: when the debugger stops in a known file, jump the editor
+  // to it so the current line / breakpoint hit is always visible.
+  const debugFile = actions.debugger.state.currentFile
+  useEffect(() => {
+    if (!debugFile || debugFile === activeFile) return
+    if (!snippet?.files?.some(f => f.name === debugFile)) return
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setOpenFiles(prev =>
+      prev.includes(debugFile) ? prev : [...prev, debugFile],
+    )
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setActiveFile(debugFile)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debugFile])
 
   return {
     id,

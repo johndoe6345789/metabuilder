@@ -324,3 +324,8 @@
   color: var(--mat-sys-on-surface-variant);
   border-top: 1px solid var(--mat-sys-outline-variant);
 }
+
+// Keep the sandbox card present (not overwritten) during an active session.
+.sandboxWrap {
+  padding: 10px 12px 14px;
+}

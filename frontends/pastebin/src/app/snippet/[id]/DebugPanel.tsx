@@ -96,6 +96,9 @@ export function DebugPanel({ language, debugger: dbg, onStart }: Props) {
         <CallStackPanel frames={state.callStack} />
         <DebugWatchPanel dbg={dbg} />
         <DebugOutput output={state.output} />
+        <div className={styles.sandboxWrap}>
+          <DebugSandboxInfo language={language} />
+        </div>
       </div>
     </div>
   )
