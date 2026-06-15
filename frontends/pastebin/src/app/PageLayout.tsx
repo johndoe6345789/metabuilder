@@ -28,9 +28,15 @@ interface PageLayoutProps {
    * header and scroll internally instead.
    */
   fitViewport?: boolean
+  /** Hide the site header (maximize the IDE to fill the whole window). */
+  hideChrome?: boolean
 }
 
-export function PageLayout({ children, fitViewport = false }: PageLayoutProps) {
+export function PageLayout({
+  children,
+  fitViewport = false,
+  hideChrome = false,
+}: PageLayoutProps) {
   const t = useTranslation()
   const isAuthenticated = useAppSelector(selectIsAuthenticated)
   const user = useAppSelector(selectCurrentUser)
@@ -50,6 +56,7 @@ export function PageLayout({ children, fitViewport = false }: PageLayoutProps) {
           fitViewport ? styles.contentWrapperFit : ''
         }`}
       >
+        {!hideChrome && (
         <header className={styles.header} data-testid="page-header">
           <div className={styles.headerInner}>
             <div className={styles.headerRow}>
@@ -104,6 +111,7 @@ export function PageLayout({ children, fitViewport = false }: PageLayoutProps) {
             </div>
           </div>
         </header>
+        )}
 
         <main
           className={`${styles.main} ${fitViewport ? styles.mainFit : ''}`}

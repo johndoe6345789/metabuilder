@@ -56,11 +56,18 @@ export function SnippetPageBody({
   const isDebugging = ['starting', 'running'].includes(dbg.state.status)
 
   return (
-    <div className={styles.page} data-testid="snippet-view-page">
+    <div
+      className={`${styles.page} ${
+        vm.ideDragging ? styles.pageResizing : ''
+      }`}
+      data-testid="snippet-view-page"
+    >
       <SnippetTopBar
         title={snippet.title}
         description={snippet.description}
         onBack={onBack}
+        maximized={vm.maximized}
+        onToggleMaximize={vm.toggleMaximized}
       />
       <SnippetToolbar
         isCopied={isCopied}

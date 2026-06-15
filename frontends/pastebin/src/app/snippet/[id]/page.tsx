@@ -74,7 +74,7 @@ export default function SnippetViewPage() {
     })
 
   return (
-    <PageLayout fitViewport>
+    <PageLayout fitViewport hideChrome={vm.maximized}>
       <SnippetPageBody
         vm={vm}
         onBack={() => router.push('/')}

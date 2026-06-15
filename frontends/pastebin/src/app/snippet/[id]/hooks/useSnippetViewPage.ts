@@ -4,6 +4,7 @@ import { useAppSelector } from '@/store/hooks'
 import { selectSnippets, selectNamespaces } from '@/store/selectors'
 import { useSnippetFileOps } from './useSnippetFileOps'
 import { useSnippetActions } from './useSnippetActions'
+import { useIdeLayout } from '@/hooks/useIdeLayout'
 
 const LANGUAGE_EXTENSIONS: Record<string, string> = {
   JavaScript: 'js',
@@ -170,7 +171,10 @@ export function useSnippetViewPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debugFile])
 
+  const ide = useIdeLayout()
+
   return {
+    ...ide,
     id,
     snippet,
     namespaces,

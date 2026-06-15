@@ -3,6 +3,7 @@
 import { Snippet, Namespace } from '@/lib/types'
 import { SnippetWorkArea } from './SnippetWorkArea'
 import { SnippetStatusBar } from './SnippetStatusBar'
+import styles from './snippet-view-page.module.scss'
 import type { useSnippetViewPage } from './hooks/useSnippetViewPage'
 import type { useDebugger } from '@/hooks/useDebugger'
 import type { UseCodeTerminalReturn } from '@/hooks/useCodeTerminal'
@@ -59,6 +60,7 @@ export function SnippetPageWork({
   return (
     <>
       <SnippetWorkArea
+        ideHeight={vm.ideHeight}
         snippet={snippet}
         viewSnippet={viewSnippet}
         files={files}
@@ -105,6 +107,17 @@ export function SnippetPageWork({
         onTerminalClick={() => vm.setActiveTab('terminal')}
         onDebugClick={() => vm.setActiveTab('debug')}
         onCodeChange={vm.handleCodeChange}
+      />
+      <div
+        className={`${styles.ideResizer} ${
+          vm.ideDragging ? styles.ideResizerActive : ''
+        }`}
+        onMouseDown={vm.onIdeHandleMouseDown}
+        onDoubleClick={vm.resetIdeHeight}
+        role="separator"
+        aria-orientation="horizontal"
+        aria-label="Resize IDE (double-click to fit)"
+        title="Drag to grow the IDE · double-click to fit"
       />
       <SnippetStatusBar
         language={snippet.language}

@@ -13,6 +13,8 @@ type FileList = { name: string; content: string }[]
 type Debugger = ReturnType<typeof useDebugger>
 
 interface Props {
+  /** Explicit work-area height in px (from the IDE resizer); null = fill. */
+  ideHeight: number | null
   snippet: Snippet
   viewSnippet: Snippet
   files: FileList
@@ -50,6 +52,7 @@ interface Props {
 }
 
 export function SnippetWorkArea({
+  ideHeight,
   snippet,
   viewSnippet,
   files,
@@ -85,7 +88,14 @@ export function SnippetWorkArea({
   onCodeChange,
 }: Props) {
   return (
-    <div className={styles.workArea}>
+    <div
+      className={styles.workArea}
+      style={
+        ideHeight != null
+          ? { flex: '0 0 auto', height: ideHeight }
+          : undefined
+      }
+    >
       <SnippetFileTreeArea
         files={files}
         activeFile={activeFile}

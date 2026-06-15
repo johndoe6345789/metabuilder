@@ -7,12 +7,16 @@ interface SnippetTopBarProps {
   title: string
   description?: string
   onBack: () => void
+  maximized?: boolean
+  onToggleMaximize?: () => void
 }
 
 export function SnippetTopBar({
   title,
   description,
   onBack,
+  maximized = false,
+  onToggleMaximize,
 }: SnippetTopBarProps) {
   return (
     <div className={styles.topBar}>
@@ -32,6 +36,20 @@ export function SnippetTopBar({
           </span>
         )}
       </div>
+      {onToggleMaximize && (
+        <button
+          className={styles.maximizeBtn}
+          onClick={onToggleMaximize}
+          title={maximized ? 'Restore' : 'Maximize IDE'}
+          aria-label={maximized ? 'Restore IDE' : 'Maximize IDE'}
+          aria-pressed={maximized}
+        >
+          <MaterialIcon
+            name={maximized ? 'fullscreen_exit' : 'fullscreen'}
+            size={16}
+          />
+        </button>
+      )}
     </div>
   )
 }
