@@ -5,20 +5,12 @@ import type { WatchEntry } from './debugger-types'
 import { debuggerReducer, initialDebuggerState } from './debugger-reducer'
 import { SUPPORTED_LANGUAGES } from './debugger-runners'
 import { dapRequest } from './debugger-requests'
+import { runDapRequest } from './debugger-dap'
 import { fetchVars } from './debugger-inspection'
 import { handleDapMessage } from './debugger-messages'
 import { startSession } from './debugger-start'
 import { makeControls } from './debugger-controls'
 import { useLatestRef } from './useLatestRef'
-
-export type {
-  DebugStatus,
-  DapStackFrame,
-  DapScope,
-  DapVariable,
-  WatchEntry,
-  DebuggerState,
-} from './debugger-types'
 
 export function useDebugger() {
   const [state, dispatch] = useReducer(
@@ -73,25 +65,16 @@ export function useDebugger() {
 
   const session = useDebugSession(onMessage, onDone)
 
-  // ------------------------------------------------------------------
-  // Promise-based DAP request helper
-  // ------------------------------------------------------------------
-  async function dap<T = unknown>(
+  // Promise-based DAP request (logic in debugger-dap; deps built at call time).
+  function dap<T = unknown>(
     command: string,
     args: Record<string, unknown> = {},
-  ): Promise<T> {
-    const seq = nextSeq()
-    const p = new Promise<DapMessage>(resolve =>
-      pendingRef.current.set(seq, resolve),
+  ) {
+    return runDapRequest<T>(
+      { nextSeq, pendingRef, send: msg => session.send(msg) },
+      command,
+      args,
     )
-    await session.send(dapRequest(seq, command, args))
-    const resp = await p
-    if (!(resp as { success?: boolean }).success) {
-      throw new Error(
-        (resp as { message?: string }).message ?? `${command} failed`,
-      )
-    }
-    return (resp as { body?: T }).body as T
   }
 
   // ------------------------------------------------------------------

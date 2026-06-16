@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import type { useDebugger, WatchEntry } from '@/hooks/useDebugger'
+import type { useDebugger } from '@/hooks/useDebugger'
+import type { WatchEntry } from '@/hooks/debugger-types'
 import styles from './DebugPanel.module.scss'
 
 type Debugger = ReturnType<typeof useDebugger>
