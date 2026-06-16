@@ -8,6 +8,8 @@ import {
   currentLineDecorations,
   inlineValueDecorations,
 } from '@/components/features/snippet-editor/monaco-decorations'
+import { attachBreakpointToggle } from
+  '@/components/features/snippet-editor/monaco-gutter-click'
 
 interface Args {
   breakpoints?: number[]
@@ -107,18 +109,7 @@ export function useMonacoDebugDecorations({
       editor.revealLineInCenterIfOutsideViewport(currentDebugLineRef.current)
     }
 
-    editor.onMouseDown(e => {
-      if (!onToggleRef.current) return
-      const { type, position } = e.target
-      const { GUTTER_GLYPH_MARGIN, GUTTER_LINE_NUMBERS } =
-        monaco.editor.MouseTargetType
-      if (
-        (type === GUTTER_GLYPH_MARGIN || type === GUTTER_LINE_NUMBERS) &&
-        position
-      ) {
-        onToggleRef.current(position.lineNumber)
-      }
-    })
+    attachBreakpointToggle(editor, monaco, () => onToggleRef.current)
   }
 
   return { onEditorMount }

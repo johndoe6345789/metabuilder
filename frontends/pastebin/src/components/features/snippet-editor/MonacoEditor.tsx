@@ -8,6 +8,7 @@ import { useAppSelector } from '@/store/hooks'
 import { selectTheme } from '@/store/selectors'
 import { useMonacoDebugDecorations } from '@/hooks/useMonacoDebugDecorations'
 import { EditorLoadingSkeleton, srOnly } from './EditorLoadingSkeleton'
+import { buildEditorOptions } from './monaco-editor-options'
 import type { MonacoEditorProps } from './monaco-editor.types'
 
 const Editor = lazy(() => import('@monaco-editor/react'))
@@ -69,29 +70,15 @@ export function MonacoEditor({
           theme={monacoTheme}
           beforeMount={handleEditorBeforeMount}
           onMount={onEditorMount}
-          options={{
-            minimap: { enabled: false },
-            fontSize: 14,
-            lineNumbers: 'on',
+          options={buildEditorOptions({
+            wordWrap,
+            readOnly,
             glyphMargin: !!(
               onToggleBreakpoint ||
               breakpoints?.length ||
               currentDebugLine
             ),
-            scrollBeyondLastLine: false,
-            automaticLayout: true,
-            tabSize: 2,
-            wordWrap,
-            readOnly,
-            scrollbar: {
-              vertical: 'auto',
-              horizontal: 'auto',
-              useShadows: false,
-            },
-            padding: { top: 12, bottom: 12 },
-            fontFamily: 'JetBrains Mono, monospace',
-            fontLigatures: true,
-          }}
+          })}
         />
       </div>
     </Suspense>
