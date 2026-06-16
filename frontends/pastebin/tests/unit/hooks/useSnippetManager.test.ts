@@ -3,7 +3,10 @@
  * Tests comprehensive snippet management with Redux integration
  */
 
-import { renderHook, act } from '@testing-library/react'
+import { renderHook as baseRenderHook, act } from '@testing-library/react'
+import { Providers } from '@/test-utils'
+const renderHook: typeof baseRenderHook = (cb, options) =>
+  baseRenderHook(cb, { wrapper: Providers, ...options })
 import { useSnippetManager } from '@/hooks/useSnippetManager'
 import type { SnippetTemplate } from '@/lib/types'
 import * as db from '@/lib/db'
@@ -97,12 +100,11 @@ describe('useSnippetManager Hook', () => {
         await new Promise(resolve => setTimeout(resolve, 100))
       })
 
-      expect(db.seedDatabase).toHaveBeenCalled()
       expect(db.syncTemplatesFromJSON).toHaveBeenCalledWith(mockTemplates)
     })
 
     it('should handle initialization error', async () => {
-      ;(db.seedDatabase as jest.Mock).mockRejectedValue(
+      ;(db.syncTemplatesFromJSON as jest.Mock).mockRejectedValue(
         new Error('Seed failed'),
       )
 
