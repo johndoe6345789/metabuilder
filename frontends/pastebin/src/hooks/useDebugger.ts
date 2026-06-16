@@ -9,7 +9,7 @@ import { runDapRequest } from './debugger-dap'
 import { fetchVars } from './debugger-inspection'
 import { handleDapMessage } from './debugger-messages'
 import { startSession } from './debugger-start'
-import { makeControls } from './debugger-controls'
+import { makeControls, makeStateActions } from './debugger-controls'
 import { useLatestRef } from './useLatestRef'
 
 export function useDebugger() {
@@ -111,31 +111,18 @@ export function useDebugger() {
     threadId,
   })
 
-  const toggleBreakpoint = (file: string, line: number) =>
-    dispatch({ type: 'TOGGLE_BP', file, line })
-
-  const addWatch = (expr: string) => dispatch({ type: 'ADD_WATCH', expr })
-  const removeWatch = (index: number) =>
-    dispatch({ type: 'REMOVE_WATCH', index })
-
   const expandVariable = (ref: number) => {
     void fetchVars(inspect.current, ref)
   }
 
-  const isActive = state.status !== 'idle'
-  const isPaused = state.status === 'paused'
-  const supportedLanguages = SUPPORTED_LANGUAGES
-
   return {
     state,
-    isActive,
-    isPaused,
-    supportedLanguages,
+    isActive: state.status !== 'idle',
+    isPaused: state.status === 'paused',
+    supportedLanguages: SUPPORTED_LANGUAGES,
     startDebugging,
-    ...controls,
-    toggleBreakpoint,
-    addWatch,
-    removeWatch,
     expandVariable,
+    ...controls,
+    ...makeStateActions(dispatch),
   }
 }

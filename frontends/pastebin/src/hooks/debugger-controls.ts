@@ -8,6 +8,16 @@ export interface ControlDeps {
   threadId: () => number
 }
 
+/** Reducer-dispatch wrappers for breakpoints and watch expressions. */
+export function makeStateActions(dispatch: Dispatch<DebuggerAction>) {
+  return {
+    toggleBreakpoint: (file: string, line: number) =>
+      dispatch({ type: 'TOGGLE_BP', file, line }),
+    addWatch: (expr: string) => dispatch({ type: 'ADD_WATCH', expr }),
+    removeWatch: (index: number) => dispatch({ type: 'REMOVE_WATCH', index }),
+  }
+}
+
 /** Execution controls: step over/into/out, resume, pause, stop. */
 export function makeControls(d: ControlDeps) {
   const thread = () => ({ threadId: d.threadId() })
