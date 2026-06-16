@@ -135,6 +135,7 @@ export function MonacoEditor({
                 isWholeLine: true,
                 className: 'dbg-current-line',
                 glyphMarginClassName: 'dbg-current-arrow',
+                lineNumberClassName: 'dbg-current-line-num',
                 overviewRuler: { color: '#ffcc00', position: 1 },
               },
             },

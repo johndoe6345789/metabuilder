@@ -288,10 +288,15 @@ export function useDebugger() {
 
     const top = frames[0]
     if (top) {
+      // debugpy (and others) often send only source.path, no source.name —
+      // derive the bare filename so it matches the editor's active file.
+      const src = top.source
+      const file =
+        src?.name ?? (src?.path ? (src.path.split('/').pop() ?? null) : null)
       dispatch({
         type: 'PAUSED',
         threadId,
-        file: top.source?.name ?? null,
+        file,
         line: top.line,
       })
     }
