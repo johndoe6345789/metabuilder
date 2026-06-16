@@ -67,13 +67,12 @@ export function SnippetEditorPanels({
     onHandleMouseDown: onDockResize,
   } = useResizableDock()
 
-  // Dock the debug panel beneath the code (IDE-style) whenever a session is
-  // live or the Debug tab is selected, so the code — with its breakpoints and
-  // current-line highlight — stays visible while you inspect debugger state.
-  const docked = dbg.isActive || activeTab === 'debug'
-  // The code area shows for both the 'code' and 'debug' tabs; only the
-  // terminal takes over the full editor area.
-  const codeVisible = activeTab !== 'terminal'
+  // Code tab shows the editor, with the debugger docked beneath it while a
+  // session is live (so you see code + current line + debugger together). The
+  // Debug tab is a focused, full-height debugger view (sandbox stats, controls,
+  // variables) — not the code.
+  const docked = dbg.isActive && activeTab === 'code'
+  const codeVisible = activeTab === 'code'
 
   return (
     <>
@@ -139,6 +138,22 @@ export function SnippetEditorPanels({
           entryPoint={snippet.entryPoint ?? activeFile}
           controller={terminal}
         />
+      </div>
+      <div
+        className={`${styles.editorPanel} ${
+          activeTab === 'debug'
+            ? styles.editorPanelVisible
+            : styles.editorPanelHidden
+        }`}
+        role="tabpanel"
+      >
+        <div className={styles.debugFull}>
+          <DebugPanel
+            language={snippet.language}
+            debugger={dbg}
+            onStart={onDebugStart}
+          />
+        </div>
       </div>
     </>
   )

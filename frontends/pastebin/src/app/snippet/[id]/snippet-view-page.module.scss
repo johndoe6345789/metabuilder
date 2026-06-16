@@ -643,6 +643,19 @@
   }
 }
 
+// Debug tab: the DebugPanel fills the whole editor area (focused debug view).
+.debugFull {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  overflow: hidden;
+
+  > * {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
 // ────────────────────────────────────────────────────────────────
 // Status bar (VSCode-style, dark)
 // ────────────────────────────────────────────────────────────────

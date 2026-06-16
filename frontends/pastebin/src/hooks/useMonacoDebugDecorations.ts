@@ -3,6 +3,11 @@ import type { Monaco } from '@monaco-editor/react'
 import type { editor as MonacoEditorNS } from 'monaco-editor'
 import type { InlineValue } from
   '@/components/features/snippet-editor/monaco-editor.types'
+import {
+  breakpointDecorations,
+  currentLineDecorations,
+  inlineValueDecorations,
+} from '@/components/features/snippet-editor/monaco-decorations'
 
 interface Args {
   breakpoints?: number[]
@@ -65,52 +70,9 @@ export function useMonacoDebugDecorations({
       inlineCollection.current = editor.createDecorationsCollection()
     }
 
-    bpCollection.current.set(
-      bps.map(line => ({
-        range: new monaco.Range(line, 1, line, 1),
-        options: {
-          isWholeLine: true,
-          glyphMarginClassName: 'dbg-breakpoint',
-          glyphMarginHoverMessage: { value: 'Breakpoint' },
-          overviewRuler: { color: '#e51400', position: 1 },
-        },
-      })),
-    )
-
-    currCollection.current.set(
-      curLine
-        ? [
-            {
-              range: new monaco.Range(curLine, 1, curLine, 1),
-              options: {
-                isWholeLine: true,
-                className: 'dbg-current-line',
-                glyphMarginClassName: 'dbg-current-arrow',
-                lineNumberClassName: 'dbg-current-line-num',
-                overviewRuler: { color: '#ffcc00', position: 1 },
-              },
-            },
-          ]
-        : [],
-    )
-
-    // Inline variable values: greyed-in text injected at the end of the line,
-    // PyCharm/VS-Code style. Anchored at the line's last column.
-    const model = editor.getModel()
-    inlineCollection.current.set(
-      (inline ?? []).map(iv => {
-        const col = model?.getLineMaxColumn(iv.line) ?? 1
-        return {
-          range: new monaco.Range(iv.line, col, iv.line, col),
-          options: {
-            after: {
-              content: `    ${iv.text}`,
-              inlineClassName: 'dbg-inline-value',
-            },
-          },
-        }
-      }),
-    )
+    bpCollection.current.set(breakpointDecorations(monaco, bps))
+    currCollection.current.set(currentLineDecorations(monaco, curLine))
+    inlineCollection.current.set(inlineValueDecorations(monaco, editor, inline))
   }
 
   // Re-render decorations when they change; scroll the stopped line into view.
