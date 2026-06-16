@@ -1,188 +1,29 @@
 import { useReducer, useRef, useCallback, useEffect } from 'react'
 import { useDebugSession } from './useDebugSession'
 import type { DapMessage } from '@/lib/flask-debugger'
+import type {
+  DapStackFrame,
+  DapScope,
+  DapVariable,
+  WatchEntry,
+} from './debugger-types'
+import { debuggerReducer, initialDebuggerState } from './debugger-reducer'
+import { runnerKeyFor, SUPPORTED_LANGUAGES } from './debugger-runners'
 
-export type DebugStatus =
-  | 'idle'
-  | 'starting'
-  | 'running'
-  | 'paused'
-  | 'terminated'
-  | 'error'
-
-export interface DapStackFrame {
-  id: number
-  name: string
-  source?: { name?: string; path?: string }
-  line: number
-  column: number
-}
-
-export interface DapScope {
-  name: string
-  variablesReference: number
-  expensive: boolean
-}
-
-export interface DapVariable {
-  name: string
-  value: string
-  type?: string
-  variablesReference: number
-}
-
-export interface WatchEntry {
-  expr: string
-  value: string | null
-  error?: string
-}
-
-export interface DebuggerState {
-  status: DebugStatus
-  error: string | null
-  breakpoints: Record<string, number[]> // filename → 1-indexed line numbers
-  currentFile: string | null
-  currentLine: number | null
-  threadId: number
-  callStack: DapStackFrame[]
-  scopes: DapScope[]
-  variables: Record<number, DapVariable[]> // variablesReference → vars
-  watches: WatchEntry[]
-  output: { category: string; text: string }[]
-}
-
-type Action =
-  | { type: 'START' }
-  | { type: 'RUNNING' }
-  | {
-      type: 'PAUSED'
-      threadId: number
-      file: string | null
-      line: number | null
-    }
-  | { type: 'TERMINATED' }
-  | { type: 'ERROR'; error: string }
-  | { type: 'CALL_STACK'; frames: DapStackFrame[] }
-  | { type: 'SCOPES'; scopes: DapScope[] }
-  | { type: 'VARIABLES'; ref: number; vars: DapVariable[] }
-  | {
-      type: 'WATCH_RESULT'
-      index: number
-      value: string | null
-      error?: string
-    }
-  | { type: 'ADD_WATCH'; expr: string }
-  | { type: 'REMOVE_WATCH'; index: number }
-  | { type: 'TOGGLE_BP'; file: string; line: number }
-  | { type: 'OUTPUT'; category: string; text: string }
-  | { type: 'RESET' }
-
-const initial: DebuggerState = {
-  status: 'idle',
-  error: null,
-  breakpoints: {},
-  currentFile: null,
-  currentLine: null,
-  threadId: 1,
-  callStack: [],
-  scopes: [],
-  variables: {},
-  watches: [],
-  output: [],
-}
-
-function reducer(s: DebuggerState, a: Action): DebuggerState {
-  switch (a.type) {
-    case 'START':
-      return {
-        ...s,
-        status: 'starting',
-        error: null,
-        output: [],
-        callStack: [],
-        scopes: [],
-        variables: {},
-        currentFile: null,
-        currentLine: null,
-      }
-    case 'RUNNING':
-      return {
-        ...s,
-        status: 'running',
-        currentFile: null,
-        currentLine: null,
-        callStack: [],
-        scopes: [],
-        variables: {},
-      }
-    case 'PAUSED':
-      return {
-        ...s,
-        status: 'paused',
-        threadId: a.threadId,
-        currentFile: a.file,
-        currentLine: a.line,
-      }
-    case 'TERMINATED':
-      return {
-        ...s,
-        status: 'terminated',
-        currentFile: null,
-        currentLine: null,
-      }
-    case 'ERROR':
-      return { ...s, status: 'error', error: a.error }
-    case 'CALL_STACK':
-      return { ...s, callStack: a.frames }
-    case 'SCOPES':
-      return { ...s, scopes: a.scopes }
-    case 'VARIABLES':
-      return { ...s, variables: { ...s.variables, [a.ref]: a.vars } }
-    case 'WATCH_RESULT':
-      return {
-        ...s,
-        watches: s.watches.map((w, i) =>
-          i === a.index ? { ...w, value: a.value, error: a.error } : w,
-        ),
-      }
-    case 'ADD_WATCH':
-      return { ...s, watches: [...s.watches, { expr: a.expr, value: null }] }
-    case 'REMOVE_WATCH':
-      return { ...s, watches: s.watches.filter((_, i) => i !== a.index) }
-    case 'TOGGLE_BP': {
-      const lines = s.breakpoints[a.file] ?? []
-      const next = lines.includes(a.line)
-        ? lines.filter(l => l !== a.line)
-        : [...lines, a.line].sort((x, y) => x - y)
-      return { ...s, breakpoints: { ...s.breakpoints, [a.file]: next } }
-    }
-    case 'OUTPUT':
-      return {
-        ...s,
-        output: [...s.output, { category: a.category, text: a.text }],
-      }
-    case 'RESET':
-      return {
-        ...initial,
-        breakpoints: s.breakpoints,
-        watches: s.watches.map(w => ({ ...w, value: null })),
-      }
-    default:
-      return s
-  }
-}
-
-// Map display language names to runner keys
-const LANG_KEY: Record<string, string> = {
-  Python: 'python',
-  JavaScript: 'javascript',
-  TypeScript: 'typescript',
-  Go: 'go',
-  'C++': 'cpp-cmake',
-}
+export type {
+  DebugStatus,
+  DapStackFrame,
+  DapScope,
+  DapVariable,
+  WatchEntry,
+  DebuggerState,
+} from './debugger-types'
 
 export function useDebugger() {
-  const [state, dispatch] = useReducer(reducer, initial)
+  const [state, dispatch] = useReducer(
+    debuggerReducer,
+    initialDebuggerState,
+  )
 
   // Refs for values accessed inside stable callbacks
   const seqRef = useRef(1)
@@ -356,8 +197,7 @@ export function useDebugger() {
     entryPoint: string,
   ) {
     dispatch({ type: 'START' })
-    const runnerKey =
-      LANG_KEY[language] ?? language.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+    const runnerKey = runnerKeyFor(language)
     const bps = stateRef.current.breakpoints // capture now
 
     // The adapter emits 'initialized' after we request launch/attach. Per the
@@ -505,7 +345,7 @@ export function useDebugger() {
 
   const isActive = state.status !== 'idle'
   const isPaused = state.status === 'paused'
-  const supportedLanguages = Object.keys(LANG_KEY)
+  const supportedLanguages = SUPPORTED_LANGUAGES
 
   return {
     state,
