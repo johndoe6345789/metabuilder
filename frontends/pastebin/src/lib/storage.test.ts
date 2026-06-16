@@ -412,7 +412,7 @@ describe('DBALStorageAdapter', () => {
     it('aggregates counts from snippets and namespaces', async () => {
       mockFetch
         .mockResolvedValueOnce(okJson([snip(), snip({ isTemplate: true })]))
-        .mockResolvedValueOnce(okJson([{ id: 'n', name: 'd', isDefault: true }]))
+        .mockResolvedValueOnce(okJson([{ id: 'n', isDefault: true }]))
       const stats = await new DBALStorageAdapter(URL).getStats()
       expect(stats.snippetCount).toBe(2)
       expect(stats.templateCount).toBe(1)
