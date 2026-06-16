@@ -3,14 +3,11 @@ import { useDebugSession } from './useDebugSession'
 import type { DapMessage } from '@/lib/flask-debugger'
 import type { WatchEntry } from './debugger-types'
 import { debuggerReducer, initialDebuggerState } from './debugger-reducer'
-import { runnerKeyFor, SUPPORTED_LANGUAGES } from './debugger-runners'
-import {
-  dapRequest,
-  initializeArgs,
-  setBreakpointsArgs,
-} from './debugger-requests'
+import { SUPPORTED_LANGUAGES } from './debugger-runners'
+import { dapRequest } from './debugger-requests'
 import { fetchVars } from './debugger-inspection'
 import { handleDapMessage } from './debugger-messages'
+import { startSession } from './debugger-start'
 import { useLatestRef } from './useLatestRef'
 
 export type {
@@ -96,55 +93,24 @@ export function useDebugger() {
   // Public API
   // ------------------------------------------------------------------
 
-  async function startDebugging(
+  function startDebugging(
     language: string,
     files: { name: string; content: string }[],
     entryPoint: string,
   ) {
-    dispatch({ type: 'START' })
-    const runnerKey = runnerKeyFor(language)
-    const bps = stateRef.current.breakpoints // capture now
-
-    // The adapter emits 'initialized' after we request launch/attach. Per the
-    // DAP spec the program only starts running once we send configurationDone,
-    // so breakpoints MUST be set here first and configurationDone sent last —
-    // otherwise the debuggee runs to completion before any breakpoint binds.
-    onInitRef.current = async () => {
-      for (const [filename, lines] of Object.entries(bps)) {
-        if (!lines.length) continue
-        await send('setBreakpoints', setBreakpointsArgs(filename, lines))
-      }
-      await send('configurationDone')
-    }
-
-    try {
-      const result = await session.start({
-        language: runnerKey,
-        files,
-        entryPoint,
-      })
-      launchRef.current = result.launch_args
-
-      // 1. initialize. DAP messages are ordered over the adapter's TCP stream,
-      //    so we can pipeline initialize then launch/attach without awaiting
-      //    the initialize response — the adapter processes them in order.
-      await send('initialize', initializeArgs(runnerKey))
-
-      // 2. launch/attach — this triggers the adapter's 'initialized' event,
-      //    which runs onInitRef (setBreakpoints → configurationDone). The
-      //    command must match the runner: debugpy server-mode wants 'attach',
-      //    spawn-adapters (node/go/cpp) want 'launch'. Its response only
-      //    arrives after configurationDone, so we don't await it.
-      const reqCommand =
-        (launchRef.current as { request?: string }).request ?? 'launch'
-      await send(reqCommand, launchRef.current)
-    } catch (err) {
-      dispatch({
-        type: 'ERROR',
-        error: err instanceof Error ? err.message : String(err),
-      })
-      throw err
-    }
+    return startSession(
+      {
+        send,
+        start: opts => session.start(opts),
+        dispatch,
+        onInitRef,
+        launchRef,
+        breakpoints: () => stateRef.current.breakpoints,
+      },
+      language,
+      files,
+      entryPoint,
+    )
   }
 
   async function stopDebugging() {
