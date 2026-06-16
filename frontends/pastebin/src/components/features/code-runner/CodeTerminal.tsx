@@ -6,25 +6,19 @@ import { TerminalOutput } from '@/components/features/python-runner/TerminalOutp
 import { TerminalInput } from '@/components/features/python-runner/TerminalInput'
 import { type SnippetFile } from '@/lib/types'
 import { type UseCodeTerminalReturn } from '@/hooks/useCodeTerminal'
-import { appConfig } from '@/lib/config'
+import { isInteractiveRunner } from './runnerKey'
 import { useTerminalScroll } from './hooks/useTerminalScroll'
+import { debugTerminalLines } from './debugTerminalLines'
+import { TerminalStatus } from './TerminalStatus'
 import styles from './CodeTerminal.module.scss'
-
-const INTERACTIVE_RUNNER_KEYS = new Set(['python'])
-const languageRunnerMap: Record<string, string> =
-  (
-    appConfig as unknown as {
-      languageRunnerMap: Record<string, string>
-    }
-  ).languageRunnerMap ?? {}
-const getRunnerKey = (lang: string) =>
-  languageRunnerMap[lang] ?? lang.toLowerCase().replace(/[^a-z0-9]+/g, '-')
 
 interface CodeTerminalProps {
   language: string
   files: SnippetFile[]
   entryPoint?: string
   controller: UseCodeTerminalReturn
+  debugOutput?: { category: string; text: string }[]
+  debugActive?: boolean
 }
 
 export function CodeTerminal({
@@ -34,9 +28,11 @@ export function CodeTerminal({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   entryPoint,
   controller,
+  debugOutput,
+  debugActive,
 }: CodeTerminalProps) {
   const {
-    lines,
+    lines: runLines,
     isRunning,
     inputValue,
     waitingForInput,
@@ -44,28 +40,22 @@ export function CodeTerminal({
     handleInputSubmit,
   } = controller
 
+  // While a debug session is live the Terminal tab mirrors the debuggee's
+  // stdout/stderr so output is visible while stepping; otherwise it shows the
+  // normal "Run" output.
+  const lines = debugActive ? debugTerminalLines(debugOutput ?? []) : runLines
   const terminalEndRef = useTerminalScroll(lines)
-
   const hasErrors = lines.some(line => line.type === 'error')
-  const supportsInteractive = INTERACTIVE_RUNNER_KEYS.has(
-    getRunnerKey(language),
-  )
+  const supportsInteractive = isInteractiveRunner(language)
 
   return (
     <div className={styles.terminal} data-testid="code-terminal">
-      <div
-        className={styles.srOnly}
-        role="status"
-        aria-live={hasErrors ? 'assertive' : 'polite'}
-        aria-atomic="true"
-        data-testid="terminal-status"
-      >
-        {isRunning && 'Code is running'}
-        {waitingForInput && supportsInteractive && 'Waiting for user input'}
-        {!isRunning && lines.length > 0 && `${lines.length} lines of output`}
-        {hasErrors && 'Errors detected in output'}
-      </div>
-
+      <TerminalStatus
+        isRunning={isRunning}
+        waitingForInput={waitingForInput && supportsInteractive}
+        lineCount={lines.length}
+        hasErrors={hasErrors}
+      />
       <div
         className={styles.output}
         data-testid="terminal-output-area"

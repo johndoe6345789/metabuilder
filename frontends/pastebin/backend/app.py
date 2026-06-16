@@ -659,6 +659,10 @@ _DEBUG_RUNNERS: dict = {
         'launch': lambda entry: {
             'type': 'python', 'request': 'attach',
             'justMyCode': False,
+            # Without redirectOutput debugpy writes the debuggee's stdout/stderr
+            # straight to the container pipe and emits NO DAP 'output' events,
+            # so print() output never reaches the UI while stepping. Capture it.
+            'redirectOutput': True,
             'pathMappings': [
                 {'localRoot': '/workspace', 'remoteRoot': '/workspace'},
             ],

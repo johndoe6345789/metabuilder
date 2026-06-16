@@ -12,6 +12,10 @@ const config: Config = {
   testMatch: ['**/__tests__/**/*.test.ts?(x)', '**/?(*.)+(spec|test).ts?(x)'],
   testPathIgnorePatterns: ['/tests/e2e/', '/tests/md3/', '/tests/integration/'],
   moduleNameMapper: {
+    // Source uses ESM-style `.js` extensions on relative imports (e.g.
+    // `./profile-types.js`) which resolve to the `.ts` source at build time.
+    // Jest can't strip the extension itself, so map it away here.
+    '^(\\.{1,2}/.*)\\.js$': '$1',
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@styles/(.*)$': '<rootDir>/src/styles/$1',
     // nanoid is ESM-only; redirect to CJS build so Jest can consume it
