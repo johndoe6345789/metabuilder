@@ -318,7 +318,7 @@ describe('snippetsSlice Redux Reducer', () => {
   })
 
   describe('async thunks - moveSnippet', () => {
-    it('should remove moved snippet from items', () => {
+    it('updates the moved snippet namespace in place', () => {
       const stateWithItems = {
         ...initialState,
         items: [mockSnippet, { ...mockSnippet, id: '2' }],
@@ -330,13 +330,13 @@ describe('snippetsSlice Redux Reducer', () => {
       }
       const state = snippetsReducer(stateWithItems, action as any)
 
-      expect(state.items).toHaveLength(1)
-      expect(state.items[0].id).toBe('2')
+      expect(state.items).toHaveLength(2)
+      expect(state.items.find(s => s.id === '1')?.namespaceId).toBe('new-ns')
     })
   })
 
   describe('async thunks - bulkMoveSnippets', () => {
-    it('should remove moved snippets from items', () => {
+    it('updates moved snippets in place and clears selection', () => {
       const stateWithItems = {
         ...initialState,
         items: [
@@ -354,8 +354,10 @@ describe('snippetsSlice Redux Reducer', () => {
       }
       const state = snippetsReducer(stateWithItems, action as any)
 
-      expect(state.items).toHaveLength(1)
-      expect(state.items[0].id).toBe('3')
+      expect(state.items).toHaveLength(3)
+      expect(state.items.find(s => s.id === '1')?.namespaceId).toBe('new-ns')
+      expect(state.items.find(s => s.id === '2')?.namespaceId).toBe('new-ns')
+      expect(state.items.find(s => s.id === '3')?.namespaceId).toBe('default')
       expect(state.selectedIds).toEqual([])
       expect(state.selectionMode).toBe(false)
     })

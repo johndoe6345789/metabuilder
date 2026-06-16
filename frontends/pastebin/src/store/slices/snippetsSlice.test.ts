@@ -423,7 +423,8 @@ describe('snippetsSlice', () => {
         )
 
         const state = store.getState().snippets
-        expect(state.items.length).toBe(0)
+        // bulkMove updates namespaceId in place; items are not removed.
+        expect(state.items.every(s => s.namespaceId === 'ns2')).toBe(true)
         expect(state.selectedIds).toEqual([])
         expect(state.selectionMode).toBe(false)
       })

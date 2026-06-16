@@ -39,7 +39,9 @@ export const createNamespace = createAsyncThunk(
       createdAt: Date.now(),
       isDefault: false,
     }
-    return await createNamespaceDB(namespace)
+    // Some backends persist and return void; fall back to the namespace we
+    // built so the store always receives a complete object to push.
+    return (await createNamespaceDB(namespace)) ?? namespace
   },
 )
 
