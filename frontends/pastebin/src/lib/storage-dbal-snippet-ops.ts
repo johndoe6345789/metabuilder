@@ -100,10 +100,13 @@ export async function dbalBulkMoveSnippets(
   h: H,
 ): Promise<void> {
   for (const id of ids) {
-    await fetch(`${eu}/Snippet/${id}`, {
+    const r = await fetch(`${eu}/Snippet/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', ...h },
       body: JSON.stringify({ namespaceId: targetNs, updatedAt: Date.now() }),
     })
+    if (!r.ok) {
+      throw new Error(`Failed to bulk move snippets: ${r.statusText}`)
+    }
   }
 }

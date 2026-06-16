@@ -35,6 +35,9 @@ const T = 'pastebin',
 export class DBALStorageAdapter {
   private base: string
   constructor(url: string) {
+    if (!url || !url.trim()) {
+      throw new Error('DBAL backend URL cannot be empty')
+    }
     this.base = url.replace(/\/$/, '')
   }
   private h = () => {
