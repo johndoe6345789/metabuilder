@@ -9,6 +9,11 @@ import type {
 } from './debugger-types'
 import { debuggerReducer, initialDebuggerState } from './debugger-reducer'
 import { runnerKeyFor, SUPPORTED_LANGUAGES } from './debugger-runners'
+import {
+  dapRequest,
+  initializeArgs,
+  setBreakpointsArgs,
+} from './debugger-requests'
 
 export type {
   DebugStatus,
@@ -41,6 +46,15 @@ export function useDebugger() {
 
   function nextSeq() {
     return seqRef.current++
+  }
+
+  // Fire-and-forget DAP request (returns the send promise).
+  function send(command: string, args: Record<string, unknown> = {}) {
+    return session.send(dapRequest(nextSeq(), command, args))
+  }
+
+  function threadId() {
+    return stateRef.current.threadId
   }
 
   // ------------------------------------------------------------------
@@ -105,7 +119,7 @@ export function useDebugger() {
     const p = new Promise<DapMessage>(resolve =>
       pendingRef.current.set(seq, resolve),
     )
-    await session.send({ seq, type: 'request', command, arguments: args })
+    await session.send(dapRequest(seq, command, args))
     const resp = await p
     if (!(resp as { success?: boolean }).success) {
       throw new Error(
@@ -207,23 +221,9 @@ export function useDebugger() {
     onInitRef.current = async () => {
       for (const [filename, lines] of Object.entries(bps)) {
         if (!lines.length) continue
-        await session.send({
-          seq: nextSeq(),
-          type: 'request',
-          command: 'setBreakpoints',
-          arguments: {
-            source: { name: filename, path: `/workspace/${filename}` },
-            breakpoints: lines.map(l => ({ line: l })),
-            sourceModified: false,
-          },
-        })
+        await send('setBreakpoints', setBreakpointsArgs(filename, lines))
       }
-      await session.send({
-        seq: nextSeq(),
-        type: 'request',
-        command: 'configurationDone',
-        arguments: {},
-      })
+      await send('configurationDone')
     }
 
     try {
@@ -237,22 +237,7 @@ export function useDebugger() {
       // 1. initialize. DAP messages are ordered over the adapter's TCP stream,
       //    so we can pipeline initialize then launch/attach without awaiting
       //    the initialize response — the adapter processes them in order.
-      await session.send({
-        seq: nextSeq(),
-        type: 'request',
-        command: 'initialize',
-        arguments: {
-          clientID: 'codesnippet',
-          clientName: 'CodeSnippet Debugger',
-          adapterID: runnerKey,
-          pathFormat: 'path',
-          linesStartAt1: true,
-          columnsStartAt1: true,
-          supportsVariableType: true,
-          supportsVariablePaging: false,
-          supportsRunInTerminalRequest: false,
-        },
-      })
+      await send('initialize', initializeArgs(runnerKey))
 
       // 2. launch/attach — this triggers the adapter's 'initialized' event,
       //    which runs onInitRef (setBreakpoints → configurationDone). The
@@ -261,12 +246,7 @@ export function useDebugger() {
       //    arrives after configurationDone, so we don't await it.
       const reqCommand =
         (launchRef.current as { request?: string }).request ?? 'launch'
-      await session.send({
-        seq: nextSeq(),
-        type: 'request',
-        command: reqCommand,
-        arguments: launchRef.current,
-      })
+      await send(reqCommand, launchRef.current)
     } catch (err) {
       dispatch({
         type: 'ERROR',
@@ -278,59 +258,20 @@ export function useDebugger() {
 
   async function stopDebugging() {
     // Best-effort disconnect request before killing
-    await session
-      .send({
-        seq: nextSeq(),
-        type: 'request',
-        command: 'disconnect',
-        arguments: { restart: false },
-      })
-      .catch(() => {})
+    await send('disconnect', { restart: false }).catch(() => {})
     dispatch({ type: 'RESET' })
     await session.stop()
   }
 
-  const stepOver = () =>
-    session.send({
-      seq: nextSeq(),
-      type: 'request',
-      command: 'next',
-      arguments: { threadId: stateRef.current.threadId },
-    })
-
-  const stepIn = () =>
-    session.send({
-      seq: nextSeq(),
-      type: 'request',
-      command: 'stepIn',
-      arguments: { threadId: stateRef.current.threadId },
-    })
-
-  const stepOut = () =>
-    session.send({
-      seq: nextSeq(),
-      type: 'request',
-      command: 'stepOut',
-      arguments: { threadId: stateRef.current.threadId },
-    })
+  const stepOver = () => send('next', { threadId: threadId() })
+  const stepIn = () => send('stepIn', { threadId: threadId() })
+  const stepOut = () => send('stepOut', { threadId: threadId() })
+  const pause = () => send('pause', { threadId: threadId() })
 
   const resume = () => {
     dispatch({ type: 'RUNNING' })
-    session.send({
-      seq: nextSeq(),
-      type: 'request',
-      command: 'continue',
-      arguments: { threadId: stateRef.current.threadId },
-    })
+    send('continue', { threadId: threadId() })
   }
-
-  const pause = () =>
-    session.send({
-      seq: nextSeq(),
-      type: 'request',
-      command: 'pause',
-      arguments: { threadId: stateRef.current.threadId },
-    })
 
   const toggleBreakpoint = (file: string, line: number) =>
     dispatch({ type: 'TOGGLE_BP', file, line })
