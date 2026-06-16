@@ -8,6 +8,7 @@ import { dapRequest } from './debugger-requests'
 import { fetchVars } from './debugger-inspection'
 import { handleDapMessage } from './debugger-messages'
 import { startSession } from './debugger-start'
+import { makeControls } from './debugger-controls'
 import { useLatestRef } from './useLatestRef'
 
 export type {
@@ -46,6 +47,10 @@ export function useDebugger() {
   // Fire-and-forget DAP request (returns the send promise).
   function send(command: string, args: Record<string, unknown> = {}) {
     return session.send(dapRequest(nextSeq(), command, args))
+  }
+
+  function stopSession() {
+    return session.stop()
   }
 
   function threadId() {
@@ -113,22 +118,15 @@ export function useDebugger() {
     )
   }
 
-  async function stopDebugging() {
-    // Best-effort disconnect request before killing
-    await send('disconnect', { restart: false }).catch(() => {})
-    dispatch({ type: 'RESET' })
-    await session.stop()
-  }
-
-  const stepOver = () => send('next', { threadId: threadId() })
-  const stepIn = () => send('stepIn', { threadId: threadId() })
-  const stepOut = () => send('stepOut', { threadId: threadId() })
-  const pause = () => send('pause', { threadId: threadId() })
-
-  const resume = () => {
-    dispatch({ type: 'RUNNING' })
-    send('continue', { threadId: threadId() })
-  }
+  // send/stop/threadId only read refs when invoked (event handlers), not
+  // during render — the react-hooks/refs rule can't see that here.
+  // eslint-disable-next-line react-hooks/refs
+  const controls = makeControls({
+    send,
+    stop: stopSession,
+    dispatch,
+    threadId,
+  })
 
   const toggleBreakpoint = (file: string, line: number) =>
     dispatch({ type: 'TOGGLE_BP', file, line })
@@ -151,12 +149,7 @@ export function useDebugger() {
     isPaused,
     supportedLanguages,
     startDebugging,
-    stopDebugging,
-    stepOver,
-    stepIn,
-    stepOut,
-    resume,
-    pause,
+    ...controls,
     toggleBreakpoint,
     addWatch,
     removeWatch,
