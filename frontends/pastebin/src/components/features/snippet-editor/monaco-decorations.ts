@@ -4,6 +4,40 @@ import type { InlineValue } from './monaco-editor.types'
 
 type Editor = MonacoEditorNS.IStandaloneCodeEditor
 type Decoration = MonacoEditorNS.IModelDeltaDecoration
+type Collection = MonacoEditorNS.IEditorDecorationsCollection
+
+/** Lazily-created decoration collections for one editor. */
+export interface DecorationCollections {
+  bp: Collection | null
+  current: Collection | null
+  inline: Collection | null
+}
+
+export function emptyCollections(): DecorationCollections {
+  return { bp: null, current: null, inline: null }
+}
+
+export interface DecorationData {
+  breakpoints: number[]
+  currentLine: number | null | undefined
+  inlineValues: InlineValue[] | undefined
+}
+
+/** Create collections on first use, then (re)set all debugger decorations. */
+export function applyDebugDecorations(
+  editor: Editor,
+  monaco: Monaco,
+  cols: DecorationCollections,
+  data: DecorationData,
+) {
+  if (!cols.bp) cols.bp = editor.createDecorationsCollection()
+  if (!cols.current) cols.current = editor.createDecorationsCollection()
+  if (!cols.inline) cols.inline = editor.createDecorationsCollection()
+
+  cols.bp.set(breakpointDecorations(monaco, data.breakpoints))
+  cols.current.set(currentLineDecorations(monaco, data.currentLine))
+  cols.inline.set(inlineValueDecorations(monaco, editor, data.inlineValues))
+}
 
 /** Red dot in the glyph margin for each breakpoint line. */
 export function breakpointDecorations(

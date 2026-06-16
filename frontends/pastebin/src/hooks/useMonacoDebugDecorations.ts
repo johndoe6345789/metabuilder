@@ -4,12 +4,12 @@ import type { editor as MonacoEditorNS } from 'monaco-editor'
 import type { InlineValue } from
   '@/components/features/snippet-editor/monaco-editor.types'
 import {
-  breakpointDecorations,
-  currentLineDecorations,
-  inlineValueDecorations,
+  applyDebugDecorations,
+  emptyCollections,
 } from '@/components/features/snippet-editor/monaco-decorations'
 import { attachBreakpointToggle } from
   '@/components/features/snippet-editor/monaco-gutter-click'
+import { useLatestRef } from './useLatestRef'
 
 interface Args {
   breakpoints?: number[]
@@ -19,7 +19,6 @@ interface Args {
 }
 
 type Editor = MonacoEditorNS.IStandaloneCodeEditor
-type Collection = MonacoEditorNS.IEditorDecorationsCollection
 
 /**
  * Debugger decorations for a Monaco editor: breakpoint glyphs, the current
@@ -27,8 +26,8 @@ type Collection = MonacoEditorNS.IEditorDecorationsCollection
  * values — plus the glyph-margin/line-number click that toggles breakpoints.
  * Returns `onEditorMount` to wire to @monaco-editor/react's `onMount`.
  *
- * @monaco-editor/react only fires onMount once, so the click handler reads the
- * latest props through refs to avoid stale closures.
+ * @monaco-editor/react only fires onMount once, so the click handler and the
+ * mount-time decoration pass read the latest props through refs.
  */
 export function useMonacoDebugDecorations({
   breakpoints,
@@ -38,43 +37,15 @@ export function useMonacoDebugDecorations({
 }: Args) {
   const editorRef = useRef<Editor | null>(null)
   const monacoRef = useRef<Monaco | null>(null)
-  const bpCollection = useRef<Collection | null>(null)
-  const currCollection = useRef<Collection | null>(null)
-  const inlineCollection = useRef<Collection | null>(null)
+  const colsRef = useRef(emptyCollections())
 
-  const onToggleRef = useRef(onToggleBreakpoint)
-  // eslint-disable-next-line react-hooks/refs
-  onToggleRef.current = onToggleBreakpoint
-  const breakpointsRef = useRef(breakpoints)
-  // eslint-disable-next-line react-hooks/refs
-  breakpointsRef.current = breakpoints
-  const currentDebugLineRef = useRef(currentDebugLine)
-  // eslint-disable-next-line react-hooks/refs
-  currentDebugLineRef.current = currentDebugLine
-  const inlineValuesRef = useRef(inlineValues)
-  // eslint-disable-next-line react-hooks/refs
-  inlineValuesRef.current = inlineValues
+  const onToggleRef = useLatestRef(onToggleBreakpoint)
+  const breakpointsRef = useLatestRef(breakpoints)
+  const currentDebugLineRef = useLatestRef(currentDebugLine)
+  const inlineValuesRef = useLatestRef(inlineValues)
 
-  function applyDecorations(
-    editor: Editor,
-    monaco: Monaco,
-    bps: number[],
-    curLine: number | null | undefined,
-    inline: InlineValue[] | undefined,
-  ) {
-    if (!bpCollection.current) {
-      bpCollection.current = editor.createDecorationsCollection()
-    }
-    if (!currCollection.current) {
-      currCollection.current = editor.createDecorationsCollection()
-    }
-    if (!inlineCollection.current) {
-      inlineCollection.current = editor.createDecorationsCollection()
-    }
-
-    bpCollection.current.set(breakpointDecorations(monaco, bps))
-    currCollection.current.set(currentLineDecorations(monaco, curLine))
-    inlineCollection.current.set(inlineValueDecorations(monaco, editor, inline))
+  function reveal(line: number | null | undefined) {
+    if (line) editorRef.current?.revealLineInCenterIfOutsideViewport(line)
   }
 
   // Re-render decorations when they change; scroll the stopped line into view.
@@ -82,32 +53,24 @@ export function useMonacoDebugDecorations({
     const editor = editorRef.current
     const monaco = monacoRef.current
     if (!editor || !monaco) return
-    applyDecorations(
-      editor,
-      monaco,
-      breakpoints ?? [],
-      currentDebugLine,
+    applyDebugDecorations(editor, monaco, colsRef.current, {
+      breakpoints: breakpoints ?? [],
+      currentLine: currentDebugLine,
       inlineValues,
-    )
-    if (currentDebugLine) {
-      editor.revealLineInCenterIfOutsideViewport(currentDebugLine)
-    }
+    })
+    reveal(currentDebugLine)
   }, [breakpoints, currentDebugLine, inlineValues])
 
   const onEditorMount = (editor: Editor, monaco: Monaco) => {
     editorRef.current = editor
     monacoRef.current = monaco
 
-    applyDecorations(
-      editor,
-      monaco,
-      breakpointsRef.current ?? [],
-      currentDebugLineRef.current,
-      inlineValuesRef.current,
-    )
-    if (currentDebugLineRef.current) {
-      editor.revealLineInCenterIfOutsideViewport(currentDebugLineRef.current)
-    }
+    applyDebugDecorations(editor, monaco, colsRef.current, {
+      breakpoints: breakpointsRef.current ?? [],
+      currentLine: currentDebugLineRef.current,
+      inlineValues: inlineValuesRef.current,
+    })
+    reveal(currentDebugLineRef.current)
 
     attachBreakpointToggle(editor, monaco, () => onToggleRef.current)
   }
