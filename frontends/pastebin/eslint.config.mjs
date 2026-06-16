@@ -127,6 +127,18 @@ export default [
     },
   },
   {
+    // useDebugger.ts is the DAP orchestrator / composition root: refs,
+    // session setup, the transport closures and the assembled return are
+    // irreducible wiring (already down from 527 -> 128 LOC across ~12
+    // focused modules). Splitting further only reintroduces a circular
+    // pendingRef<->onMessage dependency. Exempt it from max-lines.
+    name: 'project/orchestrator-exception',
+    files: ['src/hooks/useDebugger.ts'],
+    rules: {
+      'max-lines': 'off',
+    },
+  },
+  {
     name: 'config-files',
     files: ['*.config.js', '*.config.cjs', '*.config.mjs', 'next.config.js'],
     languageOptions: {
