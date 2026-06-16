@@ -1,12 +1,7 @@
 import { useReducer, useRef, useCallback, useEffect } from 'react'
 import { useDebugSession } from './useDebugSession'
 import type { DapMessage } from '@/lib/flask-debugger'
-import type {
-  DapStackFrame,
-  DapScope,
-  DapVariable,
-  WatchEntry,
-} from './debugger-types'
+import type { WatchEntry } from './debugger-types'
 import { debuggerReducer, initialDebuggerState } from './debugger-reducer'
 import { runnerKeyFor, SUPPORTED_LANGUAGES } from './debugger-runners'
 import {
@@ -14,6 +9,8 @@ import {
   initializeArgs,
   setBreakpointsArgs,
 } from './debugger-requests'
+import { onStopped, fetchVars } from './debugger-inspection'
+import { useLatestRef } from './useLatestRef'
 
 export type {
   DebugStatus,
@@ -57,6 +54,10 @@ export function useDebugger() {
     return stateRef.current.threadId
   }
 
+  // Deps for the extracted inspection helpers; read lazily so the stable
+  // onMessage callback always uses the current dap/dispatch/watches.
+  const inspect = useLatestRef({ dap, dispatch, watchesRef })
+
   // ------------------------------------------------------------------
   // Message handler — must be stable (no state deps); uses only refs
   // ------------------------------------------------------------------
@@ -80,7 +81,7 @@ export function useDebugger() {
         const body = (msg.body ?? {}) as { reason?: string; threadId?: number }
         const tid = body.threadId ?? 1
         dispatch({ type: 'PAUSED', threadId: tid, file: null, line: null })
-        void onStopped(tid)
+        void onStopped(inspect.current, tid)
         break
       }
       case 'continued':
@@ -127,78 +128,6 @@ export function useDebugger() {
       )
     }
     return (resp as { body?: T }).body as T
-  }
-
-  // ------------------------------------------------------------------
-  // Fetch + dispatch call stack, scopes, variables on pause
-  // ------------------------------------------------------------------
-  async function onStopped(threadId: number) {
-    const stBody = await dap<{ stackFrames?: DapStackFrame[] }>('stackTrace', {
-      threadId,
-      startFrame: 0,
-      levels: 20,
-    }).catch(() => null)
-    const frames = stBody?.stackFrames ?? []
-    dispatch({ type: 'CALL_STACK', frames })
-
-    const top = frames[0]
-    if (top) {
-      // debugpy (and others) often send only source.path, no source.name —
-      // derive the bare filename so it matches the editor's active file.
-      const src = top.source
-      const file =
-        src?.name ?? (src?.path ? (src.path.split('/').pop() ?? null) : null)
-      dispatch({
-        type: 'PAUSED',
-        threadId,
-        file,
-        line: top.line,
-      })
-    }
-
-    if (!top) return
-
-    const scopeBody = await dap<{ scopes?: DapScope[] }>('scopes', {
-      frameId: top.id,
-    }).catch(() => null)
-    const scopes = scopeBody?.scopes ?? []
-    dispatch({ type: 'SCOPES', scopes })
-
-    await Promise.all(
-      scopes
-        .filter(sc => !sc.expensive)
-        .map(sc => fetchVars(sc.variablesReference)),
-    )
-
-    // Re-evaluate watches
-    const watches = watchesRef.current
-    await Promise.all(watches.map((w, i) => evalWatch(i, w.expr, top.id)))
-  }
-
-  async function fetchVars(ref: number) {
-    const body = await dap<{ variables?: DapVariable[] }>('variables', {
-      variablesReference: ref,
-    }).catch(() => null)
-    const vars = body?.variables ?? []
-    dispatch({ type: 'VARIABLES', ref, vars })
-  }
-
-  async function evalWatch(index: number, expr: string, frameId?: number) {
-    try {
-      const body = await dap<{ result?: string }>('evaluate', {
-        expression: expr,
-        frameId,
-        context: 'watch',
-      })
-      dispatch({ type: 'WATCH_RESULT', index, value: body?.result ?? null })
-    } catch (err) {
-      dispatch({
-        type: 'WATCH_RESULT',
-        index,
-        value: null,
-        error: err instanceof Error ? err.message : 'error',
-      })
-    }
   }
 
   // ------------------------------------------------------------------
@@ -281,7 +210,7 @@ export function useDebugger() {
     dispatch({ type: 'REMOVE_WATCH', index })
 
   const expandVariable = (ref: number) => {
-    void fetchVars(ref)
+    void fetchVars(inspect.current, ref)
   }
 
   const isActive = state.status !== 'idle'
