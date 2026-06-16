@@ -1,54 +1,8 @@
-import type { Dispatch } from 'react'
-import type {
-  DebuggerAction,
-  DapStackFrame,
-  DapScope,
-  DapVariable,
-  WatchEntry,
-} from './debugger-types'
+import type { DapStackFrame, DapScope } from './debugger-types'
+import type { InspectDeps } from './debugger-deps'
+import { fetchVars, evalWatch } from './debugger-fetch'
 
-type Dap = <T = unknown>(
-  command: string,
-  args?: Record<string, unknown>,
-) => Promise<T>
-
-export interface InspectDeps {
-  dap: Dap
-  dispatch: Dispatch<DebuggerAction>
-  watchesRef: { current: WatchEntry[] }
-}
-
-export async function fetchVars(d: InspectDeps, ref: number) {
-  const body = await d
-    .dap<{ variables?: DapVariable[] }>('variables', {
-      variablesReference: ref,
-    })
-    .catch(() => null)
-  d.dispatch({ type: 'VARIABLES', ref, vars: body?.variables ?? [] })
-}
-
-export async function evalWatch(
-  d: InspectDeps,
-  index: number,
-  expr: string,
-  frameId?: number,
-) {
-  try {
-    const body = await d.dap<{ result?: string }>('evaluate', {
-      expression: expr,
-      frameId,
-      context: 'watch',
-    })
-    d.dispatch({ type: 'WATCH_RESULT', index, value: body?.result ?? null })
-  } catch (err) {
-    d.dispatch({
-      type: 'WATCH_RESULT',
-      index,
-      value: null,
-      error: err instanceof Error ? err.message : 'error',
-    })
-  }
-}
+export type { InspectDeps } from './debugger-deps'
 
 /** On pause: fetch call stack, current line, scopes, variables and watches. */
 export async function onStopped(d: InspectDeps, threadId: number) {

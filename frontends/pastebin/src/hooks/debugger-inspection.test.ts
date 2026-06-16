@@ -1,5 +1,6 @@
-import { onStopped, fetchVars, evalWatch } from './debugger-inspection'
-import type { InspectDeps } from './debugger-inspection'
+import { onStopped } from './debugger-inspection'
+import { fetchVars, evalWatch } from './debugger-fetch'
+import type { InspectDeps } from './debugger-deps'
 import type { DebuggerAction } from './debugger-types'
 
 function makeDeps(responses: Record<string, unknown>) {

@@ -1,7 +1,8 @@
 import type { Dispatch } from 'react'
 import type { DapMessage } from '@/lib/flask-debugger'
 import type { DebuggerAction } from './debugger-types'
-import { onStopped, type InspectDeps } from './debugger-inspection'
+import { onStopped } from './debugger-inspection'
+import type { InspectDeps } from './debugger-deps'
 
 export interface MessageDeps {
   dispatch: Dispatch<DebuggerAction>
