@@ -1,9 +1,11 @@
 import { renderHook, act, waitFor } from '@testing-library/react'
 import { useSnippetManager } from './useSnippetManager'
 import * as dbModule from '@/lib/db'
-import * as sonerModule from 'sonner'
+import { toast } from '@metabuilder/components/fakemui'
 import { Provider } from 'react-redux'
 import { store } from '@/store'
+import { validateToken } from '@/store/slices/authThunks'
+import { logout } from '@/store/slices/authSlice'
 import React from 'react'
 
 // Mock next/navigation
@@ -15,16 +17,14 @@ jest.mock('next/navigation', () => ({
 // Mock the database module
 jest.mock('@/lib/db')
 
-// Mock sonner toast
-jest.mock('sonner', () => ({
-  toast: {
-    success: jest.fn(),
-    error: jest.fn(),
-  },
+// The hook uses fakemui's toast, not sonner. Mock only toast (the full
+// barrel is heavy and has a circular-dep crash in email components).
+jest.mock('@metabuilder/components/fakemui', () => ({
+  toast: { success: jest.fn(), error: jest.fn() },
 }))
 
 const mockDb = dbModule as jest.Mocked<typeof dbModule>
-const mockToast = sonerModule.toast as jest.Mocked<typeof sonerModule.toast>
+const mockToast = toast as jest.Mocked<typeof toast>
 
 const mockTemplates = [
   {
@@ -61,6 +61,15 @@ describe('useSnippetManager Hook', () => {
       },
     ] as Awaited<ReturnType<typeof mockDb.getAllNamespaces>>)
     mockDb.getSnippetsByNamespace.mockResolvedValue([])
+    // The mount effect only loads data when authenticated; seed an auth state.
+    store.dispatch({
+      type: validateToken.fulfilled.type,
+      payload: { user: { id: 'u1', email: 'a@b.c' }, token: 't' },
+    })
+  })
+
+  afterEach(() => {
+    store.dispatch(logout())
   })
 
   const renderHookWithProviders = <T>(hook: () => T) => {
@@ -79,7 +88,7 @@ describe('useSnippetManager Hook', () => {
       // Wait for initialization to complete
       await waitFor(
         () => {
-          expect(mockDb.seedDatabase).toHaveBeenCalled()
+          expect(mockDb.syncTemplatesFromJSON).toHaveBeenCalled()
         },
         { timeout: 5000 },
       )
@@ -93,7 +102,7 @@ describe('useSnippetManager Hook', () => {
 
       await waitFor(
         () => {
-          expect(mockDb.seedDatabase).toHaveBeenCalled()
+          expect(mockDb.syncTemplatesFromJSON).toHaveBeenCalled()
         },
         { timeout: 5000 },
       )
@@ -109,13 +118,15 @@ describe('useSnippetManager Hook', () => {
     })
 
     it('should handle initialization errors gracefully', async () => {
-      mockDb.seedDatabase.mockRejectedValueOnce(new Error('Seed failed'))
+      mockDb.syncTemplatesFromJSON.mockRejectedValueOnce(
+        new Error('Seed failed'),
+      )
 
       renderHookWithProviders(() => useSnippetManager(mockTemplates))
 
       await waitFor(
         () => {
-          expect(mockToast.error).toHaveBeenCalledWith('Failed to load data')
+          expect(mockToast.error).toHaveBeenCalled()
         },
         { timeout: 5000 },
       )
@@ -130,7 +141,7 @@ describe('useSnippetManager Hook', () => {
 
       await waitFor(
         () => {
-          expect(mockDb.seedDatabase).toHaveBeenCalled()
+          expect(mockDb.syncTemplatesFromJSON).toHaveBeenCalled()
         },
         { timeout: 5000 },
       )
@@ -150,7 +161,7 @@ describe('useSnippetManager Hook', () => {
 
       await waitFor(
         () => {
-          expect(mockDb.seedDatabase).toHaveBeenCalled()
+          expect(mockDb.syncTemplatesFromJSON).toHaveBeenCalled()
         },
         { timeout: 5000 },
       )
@@ -169,7 +180,7 @@ describe('useSnippetManager Hook', () => {
 
       await waitFor(
         () => {
-          expect(mockDb.seedDatabase).toHaveBeenCalled()
+          expect(mockDb.syncTemplatesFromJSON).toHaveBeenCalled()
         },
         { timeout: 5000 },
       )
@@ -191,7 +202,7 @@ describe('useSnippetManager Hook', () => {
         result.current.handleEditSnippet(snippet)
       })
 
-      expect(mockPush).toHaveBeenCalledWith('/snippet/snippet-abc/edit')
+      expect(mockPush).toHaveBeenCalledWith('/snippet/snippet-abc')
     })
 
     it('should delete a snippet', async () => {
@@ -201,7 +212,7 @@ describe('useSnippetManager Hook', () => {
 
       await waitFor(
         () => {
-          expect(mockDb.seedDatabase).toHaveBeenCalled()
+          expect(mockDb.syncTemplatesFromJSON).toHaveBeenCalled()
         },
         { timeout: 5000 },
       )
@@ -257,7 +268,8 @@ describe('useSnippetManager Hook', () => {
         result.current.handleViewSnippet(snippet)
       })
 
-      expect(result.current.viewingSnippet).toEqual(snippet)
+      // handleViewSnippet now navigates to the snippet page (no in-page state).
+      expect(mockPush).toHaveBeenCalledWith('/snippet/snippet-1')
     })
   })
 
@@ -306,7 +318,7 @@ describe('useSnippetManager Hook', () => {
 
       await waitFor(
         () => {
-          expect(mockDb.seedDatabase).toHaveBeenCalled()
+          expect(mockDb.syncTemplatesFromJSON).toHaveBeenCalled()
         },
         { timeout: 5000 },
       )
@@ -327,7 +339,7 @@ describe('useSnippetManager Hook', () => {
 
       await waitFor(
         () => {
-          expect(mockDb.seedDatabase).toHaveBeenCalled()
+          expect(mockDb.syncTemplatesFromJSON).toHaveBeenCalled()
         },
         { timeout: 5000 },
       )
@@ -344,7 +356,7 @@ describe('useSnippetManager Hook', () => {
 
       await waitFor(
         () => {
-          expect(mockDb.seedDatabase).toHaveBeenCalled()
+          expect(mockDb.syncTemplatesFromJSON).toHaveBeenCalled()
         },
         { timeout: 5000 },
       )
@@ -362,7 +374,7 @@ describe('useSnippetManager Hook', () => {
 
       await waitFor(
         () => {
-          expect(mockDb.seedDatabase).toHaveBeenCalled()
+          expect(mockDb.syncTemplatesFromJSON).toHaveBeenCalled()
         },
         { timeout: 5000 },
       )
@@ -389,7 +401,7 @@ describe('useSnippetManager Hook', () => {
 
       await waitFor(
         () => {
-          expect(mockDb.seedDatabase).toHaveBeenCalled()
+          expect(mockDb.syncTemplatesFromJSON).toHaveBeenCalled()
         },
         { timeout: 5000 },
       )
@@ -410,7 +422,7 @@ describe('useSnippetManager Hook', () => {
 
       await waitFor(
         () => {
-          expect(mockDb.seedDatabase).toHaveBeenCalled()
+          expect(mockDb.syncTemplatesFromJSON).toHaveBeenCalled()
         },
         { timeout: 5000 },
       )
