@@ -92,7 +92,9 @@ export function validateUrl(url: string): boolean {
 }
 
 export function validateMetrics(metrics: unknown): boolean {
-  if (!metrics || typeof metrics !== 'object') return false
+  if (!metrics || typeof metrics !== 'object' || Array.isArray(metrics)) {
+    return false
+  }
   const m = metrics as Record<string, unknown>
   if (m.complexity !== undefined && typeof m.complexity !== 'object') {
     return false

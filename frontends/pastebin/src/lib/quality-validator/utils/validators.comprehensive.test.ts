@@ -210,21 +210,21 @@ describe('Validators - Finding Validation', () => {
       const finding = createValidFinding()
       ;(finding as Partial<typeof finding>).id = undefined
       const errors = validateFinding(finding)
-      expect(errors).toContain(expect.stringContaining('id'))
+      expect(errors).toContainEqual(expect.stringContaining('id'))
     })
 
     it('should reject finding with empty id', () => {
       const finding = createValidFinding()
       finding.id = ''
       const errors = validateFinding(finding)
-      expect(errors).toContain(expect.stringContaining('id'))
+      expect(errors).toContainEqual(expect.stringContaining('id'))
     })
 
     it('should reject invalid severity levels', () => {
       const finding = createValidFinding()
       finding.severity = 'invalid' as any
       const errors = validateFinding(finding)
-      expect(errors).toContain(expect.stringContaining('severity'))
+      expect(errors).toContainEqual(expect.stringContaining('severity'))
     })
 
     it('should accept all valid severity levels', () => {
@@ -243,21 +243,21 @@ describe('Validators - Finding Validation', () => {
       const finding = createValidFinding()
       ;(finding as Partial<typeof finding>).title = undefined
       const errors = validateFinding(finding)
-      expect(errors).toContain(expect.stringContaining('title'))
+      expect(errors).toContainEqual(expect.stringContaining('title'))
     })
 
     it('should reject finding without description', () => {
       const finding = createValidFinding()
       ;(finding as Partial<typeof finding>).description = undefined
       const errors = validateFinding(finding)
-      expect(errors).toContain(expect.stringContaining('description'))
+      expect(errors).toContainEqual(expect.stringContaining('description'))
     })
 
     it('should reject finding without remediation', () => {
       const finding = createValidFinding()
       ;(finding as Partial<typeof finding>).remediation = undefined
       const errors = validateFinding(finding)
-      expect(errors).toContain(expect.stringContaining('remediation'))
+      expect(errors).toContainEqual(expect.stringContaining('remediation'))
     })
 
     it('should accept finding with location', () => {
@@ -271,7 +271,7 @@ describe('Validators - Finding Validation', () => {
       const finding = createValidFinding()
       finding.location = { file: '', line: 45 }
       const errors = validateFinding(finding)
-      expect(errors).toContain(expect.stringContaining('location'))
+      expect(errors).toContainEqual(expect.stringContaining('location'))
     })
 
     it('should accumulate multiple errors', () => {
@@ -403,7 +403,7 @@ describe('Validators - Recommendation Validation', () => {
       const rec = createValidRecommendation()
       rec.priority = 'urgent' as any
       const errors = validateRecommendation(rec)
-      expect(errors).toContain(expect.stringContaining('priority'))
+      expect(errors).toContainEqual(expect.stringContaining('priority'))
     })
 
     it('should accept all valid priorities', () => {
@@ -426,7 +426,7 @@ describe('Validators - Recommendation Validation', () => {
       const rec = createValidRecommendation()
       rec.estimatedEffort = 'maximum' as any
       const errors = validateRecommendation(rec)
-      expect(errors).toContain(expect.stringContaining('estimatedEffort'))
+      expect(errors).toContainEqual(expect.stringContaining('estimatedEffort'))
     })
 
     it('should accept all valid effort levels', () => {
@@ -450,21 +450,21 @@ describe('Validators - Recommendation Validation', () => {
       const rec = createValidRecommendation()
       ;(rec as Partial<typeof rec>).issue = undefined
       const errors = validateRecommendation(rec)
-      expect(errors).toContain(expect.stringContaining('issue'))
+      expect(errors).toContainEqual(expect.stringContaining('issue'))
     })
 
     it('should reject recommendation without remediation', () => {
       const rec = createValidRecommendation()
       ;(rec as Partial<typeof rec>).remediation = undefined
       const errors = validateRecommendation(rec)
-      expect(errors).toContain(expect.stringContaining('remediation'))
+      expect(errors).toContainEqual(expect.stringContaining('remediation'))
     })
 
     it('should reject recommendation without expectedImpact', () => {
       const rec = createValidRecommendation()
       ;(rec as Partial<typeof rec>).expectedImpact = undefined
       const errors = validateRecommendation(rec)
-      expect(errors).toContain(expect.stringContaining('expectedImpact'))
+      expect(errors).toContainEqual(expect.stringContaining('expectedImpact'))
     })
 
     it('should accumulate multiple errors', () => {
@@ -613,21 +613,21 @@ describe('Validators - Metrics and Scoring', () => {
       const result = createValidResult()
       ;(result as Partial<typeof result>).overall = undefined
       const errors = validateScoringResult(result)
-      expect(errors).toContain(expect.stringContaining('overall'))
+      expect(errors).toContainEqual(expect.stringContaining('overall'))
     })
 
     it('should reject invalid overall score', () => {
       const result = createValidResult()
       result.overall.score = 150
       const errors = validateScoringResult(result)
-      expect(errors).toContain(expect.stringContaining('score'))
+      expect(errors).toContainEqual(expect.stringContaining('score'))
     })
 
     it('should reject invalid grade', () => {
       const result = createValidResult()
       result.overall.grade = 'G' as any
       const errors = validateScoringResult(result)
-      expect(errors).toContain(expect.stringContaining('grade'))
+      expect(errors).toContainEqual(expect.stringMatching(/grade/i))
     })
 
     it('should accept all valid grades', () => {
@@ -651,7 +651,7 @@ describe('Validators - Metrics and Scoring', () => {
       const result = createValidResult()
       result.overall.status = 'maybe' as any
       const errors = validateScoringResult(result)
-      expect(errors).toContain(expect.stringContaining('status'))
+      expect(errors).toContainEqual(expect.stringMatching(/status/i))
     })
 
     it('should accept valid statuses', () => {
@@ -669,14 +669,14 @@ describe('Validators - Metrics and Scoring', () => {
       const result = createValidResult()
       result.findings = 'not an array' as any
       const errors = validateScoringResult(result)
-      expect(errors).toContain(expect.stringContaining('Findings'))
+      expect(errors).toContainEqual(expect.stringContaining('Findings'))
     })
 
     it('should reject non-array recommendations', () => {
       const result = createValidResult()
       result.recommendations = 'not an array' as any
       const errors = validateScoringResult(result)
-      expect(errors).toContain(expect.stringContaining('Recommendations'))
+      expect(errors).toContainEqual(expect.stringContaining('Recommendations'))
     })
 
     it('should validate findings in result', () => {
