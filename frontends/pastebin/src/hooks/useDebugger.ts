@@ -9,7 +9,8 @@ import {
   initializeArgs,
   setBreakpointsArgs,
 } from './debugger-requests'
-import { onStopped, fetchVars } from './debugger-inspection'
+import { fetchVars } from './debugger-inspection'
+import { handleDapMessage } from './debugger-messages'
 import { useLatestRef } from './useLatestRef'
 
 export type {
@@ -58,51 +59,12 @@ export function useDebugger() {
   // onMessage callback always uses the current dap/dispatch/watches.
   const inspect = useLatestRef({ dap, dispatch, watchesRef })
 
-  // ------------------------------------------------------------------
-  // Message handler — must be stable (no state deps); uses only refs
-  // ------------------------------------------------------------------
+  // Stable message handler (no state deps); reads everything through refs.
   const onMessage = useCallback((msg: DapMessage) => {
-    if (msg.type === 'response') {
-      const seq = msg.request_seq as number
-      const resolve = pendingRef.current.get(seq)
-      if (resolve) {
-        pendingRef.current.delete(seq)
-        resolve(msg)
-      }
-      return
-    }
-    if (msg.type !== 'event') return
-
-    switch (msg.event as string) {
-      case 'initialized':
-        void onInitRef.current?.()
-        break
-      case 'stopped': {
-        const body = (msg.body ?? {}) as { reason?: string; threadId?: number }
-        const tid = body.threadId ?? 1
-        dispatch({ type: 'PAUSED', threadId: tid, file: null, line: null })
-        void onStopped(inspect.current, tid)
-        break
-      }
-      case 'continued':
-        dispatch({ type: 'RUNNING' })
-        break
-      case 'terminated':
-      case 'exited':
-        dispatch({ type: 'TERMINATED' })
-        break
-      case 'output': {
-        const body = (msg.body ?? {}) as { category?: string; output?: string }
-        if (body.output) {
-          dispatch({
-            type: 'OUTPUT',
-            category: body.category ?? 'stdout',
-            text: body.output,
-          })
-        }
-        break
-      }
-    }
+    handleDapMessage(
+      { dispatch, pendingRef, onInitRef, inspectRef: inspect },
+      msg,
+    )
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const onDone = useCallback(() => dispatch({ type: 'TERMINATED' }), [])
