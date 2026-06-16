@@ -1,4 +1,7 @@
-import { renderHook, act } from '@testing-library/react'
+import { renderHook as baseRenderHook, act } from '@testing-library/react'
+import { Providers } from '@/test-utils'
+const renderHook: typeof baseRenderHook = (cb, options) =>
+  baseRenderHook(cb, { wrapper: Providers, ...options })
 import { useSnippetForm } from './useSnippetForm'
 import { Snippet } from '@/lib/types'
 
