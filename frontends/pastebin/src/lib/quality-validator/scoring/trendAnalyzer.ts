@@ -132,3 +132,6 @@ export class TrendAnalyzer {
     return null
   }
 }
+
+/** Shared singleton, matching the configLoader/logger module convention. */
+export const trendAnalyzer = new TrendAnalyzer()

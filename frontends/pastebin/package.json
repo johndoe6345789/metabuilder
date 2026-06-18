@@ -17,6 +17,7 @@
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:local": "NO_CONTAINERS=true playwright test",
     "test:unit": "jest --coverage",
+    "build:quality": "tsc -p tsconfig.quality-build.json",
     "quality-check": "node run-quality-check.mjs",
     "quality-check:json": "node run-quality-check.mjs --format json --output .quality/report.json",
     "quality-check:html": "node run-quality-check.mjs --format html --output .quality/report.html",

@@ -38,7 +38,7 @@ export type {
   RulesEngineConfig,
   RulesExecutionResult,
 } from './rule-types.js'
-export {
+export type {
   PatternRule,
   ComplexityRule,
   NamingRule,

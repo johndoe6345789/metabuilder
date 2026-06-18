@@ -19,7 +19,7 @@ export function renderTrendSection(
 ): string {
   const { trend } = result
   if (!trend) return ''
-  const td = trend as Record<string, unknown>
+  const td = trend as unknown as Record<string, unknown>
   const lines = [c(B.trnd, 'cyan')]
 
   if (trend.previousScore !== undefined) {

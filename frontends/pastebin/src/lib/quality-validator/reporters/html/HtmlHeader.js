@@ -23,7 +23,8 @@ export function generateHead(projectName, timestamp) {
     return `<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Quality validation report for ${projectName}">
+  <meta name="description"
+    content="Quality validation report for ${projectName}">
   <meta name="generator" content="Quality Validator v1.0.0">
   <meta name="created" content="${timestamp}">
   <title>Quality Validation Report - ${formattedDate}</title>
