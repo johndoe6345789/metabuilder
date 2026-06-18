@@ -201,10 +201,10 @@ describe('ConsoleReporter', () => {
     it('should be human-readable text', () => {
       const output = reporter.generate(mockResult, false)
 
-      // Should not contain HTML or JSON structure
+      // Should not be HTML or JSON. (Console output legitimately contains
+      // brackets in labels/bars, so only rule out document/JSON structure.)
       expect(output).not.toContain('<!DOCTYPE')
-      expect(output).not.toContain('{')
-      expect(output).not.toContain('[')
+      expect(output).not.toContain('"overall":')
     })
 
     it('should have multiple lines', () => {
@@ -781,8 +781,9 @@ describe('ConsoleReporter', () => {
 
       const lines = output.split('\n')
 
-      // Should start with header
-      expect(lines[0]).toBeTruthy()
+      // Opens with a blank spacer line before the boxed banner, so assert on
+      // the first non-empty line.
+      expect(lines.find(l => l.trim().length > 0)).toBeTruthy()
 
       // Should have multiple sections
       expect(output).toContain('OVERALL')

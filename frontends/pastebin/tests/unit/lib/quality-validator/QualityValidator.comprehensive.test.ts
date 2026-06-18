@@ -10,21 +10,21 @@
  * 5. Error handling (10+ cases)
  */
 
-import { QualityValidator } from '../../../../src/lib/quality-validator/index.js'
+import { QualityValidator } from '../../../../src/lib/quality-validator/index'
 import {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   CommandLineOptions,
   ExitCode,
-} from '../../../../src/lib/quality-validator/types/index.js'
-import * as configLoaderModule from '../../../../src/lib/quality-validator/config/ConfigLoader.js'
-import * as profileManagerModule from '../../../../src/lib/quality-validator/config/ProfileManager.js'
-import * as fileSystemModule from '../../../../src/lib/quality-validator/utils/fileSystem.js'
-import * as codeQualityModule from '../../../../src/lib/quality-validator/analyzers/codeQualityAnalyzer.js'
-import * as coverageModule from '../../../../src/lib/quality-validator/analyzers/coverageAnalyzer.js'
-import * as architectureModule from '../../../../src/lib/quality-validator/analyzers/architectureChecker.js'
-import * as securityModule from '../../../../src/lib/quality-validator/analyzers/securityScanner.js'
-import * as scoringModule from '../../../../src/lib/quality-validator/scoring/scoringEngine.js'
-import * as consoleReporterModule from '../../../../src/lib/quality-validator/reporters/ConsoleReporter.js'
+} from '../../../../src/lib/quality-validator/types/index'
+import * as configLoaderModule from '../../../../src/lib/quality-validator/config/ConfigLoader'
+import * as profileManagerModule from '../../../../src/lib/quality-validator/config/ProfileManager'
+import * as fileSystemModule from '../../../../src/lib/quality-validator/utils/fileSystem'
+import * as codeQualityModule from '../../../../src/lib/quality-validator/analyzers/codeQualityAnalyzer'
+import * as coverageModule from '../../../../src/lib/quality-validator/analyzers/coverageAnalyzer'
+import * as architectureModule from '../../../../src/lib/quality-validator/analyzers/architectureChecker'
+import * as securityModule from '../../../../src/lib/quality-validator/analyzers/securityScanner'
+import * as scoringModule from '../../../../src/lib/quality-validator/scoring/scoringEngine'
+import * as consoleReporterModule from '../../../../src/lib/quality-validator/reporters/ConsoleReporter'
 
 jest.mock('../../../../src/lib/quality-validator/config/ConfigLoader', () => ({
   configLoader: {
