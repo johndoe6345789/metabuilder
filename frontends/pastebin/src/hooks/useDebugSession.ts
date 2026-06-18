@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import {
   startDebugSession,
   pollDebugSession,
@@ -72,6 +72,18 @@ export function useDebugSession(
     sessionIdRef.current = null
     if (sid) await stopDebugSession(sid)
   }
+
+  // On unmount, kill the poll loop and tear down the backend session so a
+  // navigate-away mid-debug can't leave an orphaned setTimeout loop (holding
+  // the unmounted component's closures) or a stranded debug container.
+  useEffect(() => {
+    return () => {
+      activeRef.current = false
+      if (timerRef.current) clearTimeout(timerRef.current)
+      const sid = sessionIdRef.current
+      if (sid) void stopDebugSession(sid)
+    }
+  }, [])
 
   return { sessionIdRef, start, send, stop }
 }

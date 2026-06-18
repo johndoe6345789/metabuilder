@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import {
   startInteractiveSession,
   pollSession,
@@ -25,8 +25,10 @@ export function useCodeTerminalSession(
   const sessionIdRef = useRef<string | null>(null)
   const offsetRef = useRef(0)
   const pollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const activeRef = useRef(false)
 
   function stopPolling() {
+    activeRef.current = false
     if (pollTimerRef.current) {
       clearTimeout(pollTimerRef.current)
       pollTimerRef.current = null
@@ -35,7 +37,7 @@ export function useCodeTerminalSession(
 
   async function poll() {
     const sid = sessionIdRef.current
-    if (!sid) return
+    if (!sid || !activeRef.current) return
     try {
       const result = await pollSession(sid, offsetRef.current)
       offsetRef.current += result.output.length
@@ -51,7 +53,11 @@ export function useCodeTerminalSession(
     } catch {
       // transient network error — keep polling
     }
-    pollTimerRef.current = setTimeout(poll, POLL_INTERVAL_MS)
+    // Re-arm only if still active: stopPolling() during the await above must
+    // not be overwritten by a stale in-flight poll rescheduling itself.
+    if (activeRef.current) {
+      pollTimerRef.current = setTimeout(poll, POLL_INTERVAL_MS)
+    }
   }
 
   async function startSession(opts: {
@@ -61,6 +67,7 @@ export function useCodeTerminalSession(
   }) {
     const sid = await startInteractiveSession(opts)
     sessionIdRef.current = sid
+    activeRef.current = true
     pollTimerRef.current = setTimeout(poll, POLL_INTERVAL_MS)
   }
 
@@ -74,6 +81,10 @@ export function useCodeTerminalSession(
     stopPolling()
     sessionIdRef.current = null
   }
+
+  // Stop the poll loop on unmount so navigating away mid-run can't leave a
+  // setTimeout loop alive holding the unmounted component's callbacks.
+  useEffect(() => () => stopPolling(), [])
 
   return {
     sessionIdRef,

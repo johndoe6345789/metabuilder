@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import {
   startInteractiveSession,
   pollSession,
@@ -35,6 +35,7 @@ export function usePythonTerminal() {
   const sessionIdRef = useRef<string | null>(null)
   const offsetRef = useRef(0)
   const pollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const activeRef = useRef(false)
 
   function addLine(type: TerminalLine['type'], content: string) {
     setLines(prev => [
@@ -43,6 +44,7 @@ export function usePythonTerminal() {
     ])
   }
   function stopPolling() {
+    activeRef.current = false
     if (pollTimerRef.current) {
       clearTimeout(pollTimerRef.current)
       pollTimerRef.current = null
@@ -51,7 +53,7 @@ export function usePythonTerminal() {
 
   async function poll() {
     const sid = sessionIdRef.current
-    if (!sid) return
+    if (!sid || !activeRef.current) return
 
     try {
       const result = await pollSession(sid, offsetRef.current)
@@ -72,7 +74,11 @@ export function usePythonTerminal() {
       // transient network error — keep polling
     }
 
-    pollTimerRef.current = setTimeout(poll, POLL_INTERVAL_MS)
+    // Re-arm only if still active, so a stopPolling() during the await can't
+    // be overwritten by a stale in-flight poll rescheduling itself.
+    if (activeRef.current) {
+      pollTimerRef.current = setTimeout(poll, POLL_INTERVAL_MS)
+    }
   }
 
   const handleRun = async (code: string) => {
@@ -90,6 +96,7 @@ export function usePythonTerminal() {
         files: [{ name: 'main.py', content: code }],
       })
       sessionIdRef.current = sid
+      activeRef.current = true
       pollTimerRef.current = setTimeout(poll, POLL_INTERVAL_MS)
     } catch (err) {
       addLine('error', err instanceof Error ? err.message : String(err))
@@ -112,6 +119,10 @@ export function usePythonTerminal() {
       addLine('error', err instanceof Error ? err.message : String(err))
     }
   }
+
+  // Stop the poll loop on unmount so navigating away mid-run can't leave a
+  // setTimeout loop alive holding the unmounted component's callbacks.
+  useEffect(() => () => stopPolling(), [])
 
   return {
     lines,
