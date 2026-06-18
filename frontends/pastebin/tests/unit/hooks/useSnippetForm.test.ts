@@ -3,7 +3,8 @@
  * Tests form state management for snippet creation/editing
  */
 
-import { renderHook, act } from '@testing-library/react'
+import { act } from '@testing-library/react'
+import { renderHookWithStore as renderHook } from '@/test-utils'
 import { useSnippetForm } from '@/hooks/useSnippetForm'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { Snippet, InputParameter } from '@/lib/types'
@@ -316,17 +317,15 @@ describe('useSnippetForm Hook', () => {
     it('should clear previous errors on revalidation', () => {
       const { result } = renderHook(() => useSnippetForm())
 
-      act(() => {
-        result.current.setTitle('')
-        result.current.validate()
-      })
+      // setTitle and validate must be in separate acts: a state update is
+      // batched, so validate() in the same act would read the stale title.
+      act(() => result.current.setTitle(''))
+      act(() => result.current.validate())
 
       expect(result.current.errors.title).toBeTruthy()
 
-      act(() => {
-        result.current.setTitle('Valid Title')
-        result.current.validate()
-      })
+      act(() => result.current.setTitle('Valid Title'))
+      act(() => result.current.validate())
 
       expect(result.current.errors.title).toBeFalsy()
     })
@@ -433,9 +432,11 @@ describe('useSnippetForm Hook', () => {
     })
 
     it('should preserve category from editing snippet', () => {
-      const { result } = renderHook(() =>
-        useSnippetForm({ ...mockSnippet, category: 'utility' }),
-      )
+      // Hoisted so the object identity is stable across renders — an inline
+      // object would change every render and make the hook's editingSnippet
+      // effect re-fire forever (infinite render loop / OOM).
+      const editing = { ...mockSnippet, category: 'utility' }
+      const { result } = renderHook(() => useSnippetForm(editing))
 
       const formData = result.current.getFormData()
       expect(formData.category).toBe('utility')
