@@ -26,7 +26,7 @@ import * as securityModule from '../../../../src/lib/quality-validator/analyzers
 import * as scoringModule from '../../../../src/lib/quality-validator/scoring/scoringEngine.js'
 import * as consoleReporterModule from '../../../../src/lib/quality-validator/reporters/ConsoleReporter.js'
 
-jest.mock('../../../src/lib/quality-validator/config/ConfigLoader', () => ({
+jest.mock('../../../../src/lib/quality-validator/config/ConfigLoader', () => ({
   configLoader: {
     loadConfiguration: jest.fn().mockResolvedValue({
       projectName: 'test',
@@ -49,7 +49,7 @@ jest.mock('../../../src/lib/quality-validator/config/ConfigLoader', () => ({
   },
 }))
 
-jest.mock('../../../src/lib/quality-validator/config/ProfileManager', () => ({
+jest.mock('../../../../src/lib/quality-validator/config/ProfileManager', () => ({
   profileManager: {
     initialize: jest.fn().mockResolvedValue(undefined),
     getAllProfiles: jest.fn(() => []),
@@ -58,14 +58,14 @@ jest.mock('../../../src/lib/quality-validator/config/ProfileManager', () => ({
   },
 }))
 
-jest.mock('../../../src/lib/quality-validator/utils/fileSystem', () => ({
+jest.mock('../../../../src/lib/quality-validator/utils/fileSystem', () => ({
   getSourceFiles: jest.fn(() => ['src/test.ts']),
   writeFile: jest.fn(),
   ensureDirectory: jest.fn(),
 }))
 
 jest.mock(
-  '../../../src/lib/quality-validator/analyzers/codeQualityAnalyzer',
+  '../../../../src/lib/quality-validator/analyzers/codeQualityAnalyzer',
   () => ({
     codeQualityAnalyzer: {
       analyze: jest.fn().mockResolvedValue({
@@ -81,7 +81,7 @@ jest.mock(
 )
 
 jest.mock(
-  '../../../src/lib/quality-validator/analyzers/coverageAnalyzer',
+  '../../../../src/lib/quality-validator/analyzers/coverageAnalyzer',
   () => ({
     coverageAnalyzer: {
       analyze: jest.fn().mockResolvedValue({
@@ -97,7 +97,7 @@ jest.mock(
 )
 
 jest.mock(
-  '../../../src/lib/quality-validator/analyzers/architectureChecker',
+  '../../../../src/lib/quality-validator/analyzers/architectureChecker',
   () => ({
     architectureChecker: {
       analyze: jest.fn().mockResolvedValue({
@@ -113,7 +113,7 @@ jest.mock(
 )
 
 jest.mock(
-  '../../../src/lib/quality-validator/analyzers/securityScanner',
+  '../../../../src/lib/quality-validator/analyzers/securityScanner',
   () => ({
     securityScanner: {
       analyze: jest.fn().mockResolvedValue({
@@ -128,7 +128,7 @@ jest.mock(
   }),
 )
 
-jest.mock('../../../src/lib/quality-validator/scoring/scoringEngine', () => ({
+jest.mock('../../../../src/lib/quality-validator/scoring/scoringEngine', () => ({
   scoringEngine: {
     calculateScore: jest.fn().mockReturnValue({
       overall: {
@@ -153,7 +153,7 @@ jest.mock('../../../src/lib/quality-validator/scoring/scoringEngine', () => ({
 }))
 
 jest.mock(
-  '../../../src/lib/quality-validator/reporters/ConsoleReporter',
+  '../../../../src/lib/quality-validator/reporters/ConsoleReporter',
   () => ({
     consoleReporter: {
       generate: jest.fn().mockReturnValue('Console report'),
@@ -161,25 +161,25 @@ jest.mock(
   }),
 )
 
-jest.mock('../../../src/lib/quality-validator/reporters/JsonReporter', () => ({
+jest.mock('../../../../src/lib/quality-validator/reporters/JsonReporter', () => ({
   jsonReporter: {
     generate: jest.fn().mockReturnValue('{"report": true}'),
   },
 }))
 
-jest.mock('../../../src/lib/quality-validator/reporters/HtmlReporter', () => ({
+jest.mock('../../../../src/lib/quality-validator/reporters/HtmlReporter', () => ({
   htmlReporter: {
     generate: jest.fn().mockReturnValue('<html></html>'),
   },
 }))
 
-jest.mock('../../../src/lib/quality-validator/reporters/CsvReporter', () => ({
+jest.mock('../../../../src/lib/quality-validator/reporters/CsvReporter', () => ({
   csvReporter: {
     generate: jest.fn().mockReturnValue('report,data'),
   },
 }))
 
-jest.mock('../../../src/lib/quality-validator/utils/logger', () => ({
+jest.mock('../../../../src/lib/quality-validator/utils/logger', () => ({
   logger: {
     configure: jest.fn(),
     info: jest.fn(),

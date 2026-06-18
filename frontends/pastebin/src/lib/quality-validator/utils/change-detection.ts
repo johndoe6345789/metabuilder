@@ -96,14 +96,11 @@ export function getChangedFilesByHash(
         continue
       }
 
-      if (
-        previousRecord.size !== metadata.size ||
-        previousRecord.modifiedTime !== metadata.modifiedTime
-      ) {
-        const hash = hashFile(file)
-        if (hash !== previousRecord.hash) {
-          changed.add(file)
-        }
+      // Always compare the content hash. Gating on size/mtime first would
+      // miss a same-size edit made within the same clock second (and the
+      // detector's whole contract is hash-based change detection).
+      if (hashFile(file) !== previousRecord.hash) {
+        changed.add(file)
       }
     } catch (error) {
       logger.debug(`Failed to check file changes: ${file}`, {

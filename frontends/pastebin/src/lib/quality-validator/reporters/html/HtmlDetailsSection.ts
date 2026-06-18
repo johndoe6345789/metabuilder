@@ -78,6 +78,12 @@ export function generateFindingCard(finding: Finding): string {
     html += `<p><small><strong>Evidence:</strong> ${escapeHtml(finding.evidence)}</small></p>`
   }
 
+  if (finding.moreInfo) {
+    const href = escapeHtml(finding.moreInfo)
+    // eslint-disable-next-line max-len
+    html += `<p class="more-info"><a href="${href}" target="_blank" rel="noopener">More info</a></p>`
+  }
+
   html += '</div>'
   return html
 }

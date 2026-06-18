@@ -73,5 +73,12 @@ export function validateConfiguration(config: Configuration): string[] {
   ) {
     errors.push('Complexity warning threshold must be less than max threshold')
   }
+  if (
+    config.testCoverage?.warningPercent !== undefined &&
+    config.testCoverage?.minimumPercent !== undefined &&
+    config.testCoverage.warningPercent < config.testCoverage.minimumPercent
+  ) {
+    errors.push('Coverage warning threshold must be >= minimum threshold')
+  }
   return errors
 }

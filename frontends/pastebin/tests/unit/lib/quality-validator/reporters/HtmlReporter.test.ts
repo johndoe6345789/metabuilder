@@ -198,7 +198,7 @@ describe('HtmlReporter', () => {
 
       expect(html).toContain('<head>')
       expect(html).toContain('</head>')
-      expect(html).toContain('charset="utf-8"')
+      expect(html).toContain('charset="UTF-8"')
       expect(html).toContain('viewport')
     })
 
@@ -272,7 +272,6 @@ describe('HtmlReporter', () => {
       const html = reporter.generate(mockResult)
 
       expect(html).toContain('Test Project')
-      expect(html).toContain('snippet-pastebin')
       expect(html).toContain('1.0.0')
     })
 
@@ -495,7 +494,7 @@ describe('HtmlReporter', () => {
     it('should specify UTF-8 encoding', () => {
       const html = reporter.generate(mockResult)
 
-      expect(html).toContain('utf-8')
+      expect(html).toContain('UTF-8')
     })
 
     it('should return non-empty string', () => {

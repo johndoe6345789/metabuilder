@@ -88,20 +88,32 @@ export function compareProfiles(
   name1: string,
   name2: string,
 ): Record<string, unknown> {
-  const w1 = getProfile(name1).weights
-  const w2 = getProfile(name2).weights
+  const p1 = getProfile(name1)
+  const p2 = getProfile(name2)
+  type Quad = {
+    codeQuality: number
+    testCoverage: number
+    architecture: number
+    security: number
+  }
+  const diff = (a: Quad, b: Quad) => ({
+    codeQuality: Math.abs(a.codeQuality - b.codeQuality),
+    testCoverage: Math.abs(a.testCoverage - b.testCoverage),
+    architecture: Math.abs(a.architecture - b.architecture),
+    security: Math.abs(a.security - b.security),
+  })
   return {
     profile1Name: name1,
     profile2Name: name2,
     weights: {
-      profile1: w1,
-      profile2: w2,
-      differences: {
-        codeQuality: Math.abs(w1.codeQuality - w2.codeQuality),
-        testCoverage: Math.abs(w1.testCoverage - w2.testCoverage),
-        architecture: Math.abs(w1.architecture - w2.architecture),
-        security: Math.abs(w1.security - w2.security),
-      },
+      profile1: p1.weights,
+      profile2: p2.weights,
+      differences: diff(p1.weights, p2.weights),
+    },
+    minimumScores: {
+      profile1: p1.minimumScores,
+      profile2: p2.minimumScores,
+      differences: diff(p1.minimumScores, p2.minimumScores),
     },
   }
 }

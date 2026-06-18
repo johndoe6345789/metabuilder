@@ -65,7 +65,9 @@ describe('ParallelAnalyzer', () => {
       expect(result.results[0]).not.toBeNull()
       // eslint-disable-next-line max-len
       expect(totalTime).toBeLessThan(200) // Should be faster than serial (205ms)
-      expect(result.parallelRatio).toBeGreaterThan(1)
+      // parallelRatio is enabled/maxConcurrent (execution "waves"): 4 tasks
+      // run in one fully-parallel wave => 1, not >1.
+      expect(result.parallelRatio).toBeGreaterThanOrEqual(1)
     })
 
     it('should respect disabled analyzers', async () => {

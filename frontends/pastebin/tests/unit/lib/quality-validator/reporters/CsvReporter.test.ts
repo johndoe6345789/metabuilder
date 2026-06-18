@@ -343,9 +343,10 @@ describe('CsvReporter', () => {
         line => !line.startsWith('#') && line.trim().length > 0,
       )
 
-      // Should have findings section header + each finding
-      expect(csv).toContain('f1')
-      expect(csv).toContain('f2')
+      // Each finding produces a row (the CSV format has no id column, so
+      // verify by the finding titles which are rendered).
+      expect(csv).toContain('Complex function')
+      expect(csv).toContain('Low coverage')
     })
 
     it('should include file and line information', () => {

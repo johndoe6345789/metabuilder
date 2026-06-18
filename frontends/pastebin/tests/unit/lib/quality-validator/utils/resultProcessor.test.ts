@@ -204,9 +204,7 @@ describe('deduplicateFindings', () => {
 })
 
 describe('deduplicateRecommendations', () => {
-  it('should attempt to remove duplicate recommendations by priority and issue', () => {
-    // NOTE: There's a bug in the implementation - line 76 should be seenIssues.add(key)
-    // This test documents current behavior (not deduplicating)
+  it('removes duplicate recommendations by priority and issue', () => {
     const recommendations = [
       createRecommendation({ priority: 'high', issue: 'Issue1' }),
       createRecommendation({ priority: 'medium', issue: 'Issue2' }),
@@ -215,8 +213,8 @@ describe('deduplicateRecommendations', () => {
 
     const result = resultProcessor.deduplicateRecommendations(recommendations)
 
-    // Current implementation doesn't actually deduplicate due to bug
-    expect(result).toHaveLength(3)
+    // The duplicate high/Issue1 collapses, leaving two unique entries.
+    expect(result).toHaveLength(2)
   })
 
   it('should distinguish by priority', () => {
@@ -249,8 +247,7 @@ describe('mergeFindingsArrays', () => {
 })
 
 describe('mergeRecommendationsArrays', () => {
-  it('should merge recommendations (deduplication has a bug)', () => {
-    // NOTE: deduplicateRecommendations has a bug that prevents it from working
+  it('merges arrays and de-duplicates by priority+issue', () => {
     const rec1 = createRecommendation({ priority: 'high', issue: 'Issue1' })
     const rec2 = createRecommendation({ priority: 'medium', issue: 'Issue2' })
 
@@ -259,8 +256,8 @@ describe('mergeRecommendationsArrays', () => {
       [rec2, rec1],
     ])
 
-    // Due to bug in deduplicateRecommendations, all 3 are returned
-    expect(result).toHaveLength(3)
+    // rec1 appears twice across the arrays but is collapsed to one.
+    expect(result).toHaveLength(2)
   })
 })
 
