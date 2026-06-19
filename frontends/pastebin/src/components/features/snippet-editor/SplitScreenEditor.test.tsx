@@ -1,5 +1,6 @@
 import React from 'react'
 import { render, screen, waitFor } from '@/test-utils'
+import { act } from 'react'
 import userEvent from '@testing-library/user-event'
 
 // Mock components - handle undefined/null props safely
@@ -46,39 +47,60 @@ jest.mock('@/components/features/python-runner/PythonOutput', () => ({
   PythonOutput: MockPythonOutput,
 }))
 
-// Mock next/dynamic - render components immediately without async delay
+// Mock next/dynamic - simplified version that works with async imports
 jest.mock('next/dynamic', () => {
-  // Map to store loaded components
-  const loadedComponents = new Map<string, React.ComponentType<any>>()
+  // Global cache for components across all instances
+  const componentCache = new Map<string, React.ComponentType<any>>()
+  const loadingPromises = new Map<
+    string,
+    Promise<React.ComponentType<any>>
+  >()
 
   return (
     importFunc: () => Promise<{ default: React.ComponentType<any> }>,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _options?: any,
   ) => {
-    const funcKey = String(importFunc)
+    const cacheKey = String(importFunc)
+
+    // Start loading immediately if not already loading
+    if (!loadingPromises.has(cacheKey)) {
+      const promise = importFunc()
+        .then((mod: any) => {
+          const component = mod.default
+          componentCache.set(cacheKey, component)
+          return component
+        })
+        .catch(() => null as any)
+      loadingPromises.set(cacheKey, promise)
+    }
 
     // eslint-disable-next-line react/display-name
     return (props: any) => {
       const [Comp, setComp] =
-        React.useState<React.ComponentType<any> | null>(null)
+        React.useState<React.ComponentType<any> | null>(
+          componentCache.get(cacheKey) || null,
+        )
 
-      // Load component on first render
       React.useEffect(() => {
-        if (loadedComponents.has(funcKey)) {
-          setComp(loadedComponents.get(funcKey) || null)
-        } else {
-          importFunc()
-            .then((mod: any) => {
-              const component = mod.default
-              loadedComponents.set(funcKey, component)
-              setComp(component)
-            })
-            .catch(() => {
-              setComp(null)
-            })
+        const cached = componentCache.get(cacheKey)
+        if (cached && !Comp) {
+          setComp(cached)
+          return
         }
-      }, [])
+
+        if (!Comp) {
+          const promise = loadingPromises.get(cacheKey)
+          if (promise) {
+            promise.then((component: React.ComponentType<any> | null) => {
+              if (component) {
+                componentCache.set(cacheKey, component)
+                setComp(component)
+              }
+            })
+          }
+        }
+      }, [Comp])
 
       return Comp ? <Comp {...props} /> : null
     }
@@ -88,7 +110,20 @@ jest.mock('next/dynamic', () => {
 // Import after mocks are set up
 import { SplitScreenEditor } from './SplitScreenEditor'
 
+// Pre-load all dynamic imports to ensure they're available
+const preloadDynamicImports = async () => {
+  await Promise.all([
+    import('./MonacoEditor'),
+    import('./ReactPreview'),
+    import('@/components/features/python-runner/PythonOutput'),
+  ])
+}
+
 describe('SplitScreenEditor Component', () => {
+  beforeAll(async () => {
+    // Pre-load all modules
+    await preloadDynamicImports()
+  })
   const mockOnChange = jest.fn()
 
   const defaultProps = {
@@ -100,12 +135,20 @@ describe('SplitScreenEditor Component', () => {
 
   // Helper to wait for async components to load after render
   const renderAndWait = async (element: React.ReactElement) => {
-    render(element)
-    // Give time for the async imports to resolve
-    await waitFor(() => {
-      // Just wait a moment for promises to resolve
-      expect(true).toBe(true)
+    let result: any
+    await act(async () => {
+      result = render(element)
+      // Give promises a chance to resolve
+      await new Promise(resolve => setTimeout(resolve, 0))
     })
+    // Wait for at least the root element to be present
+    await waitFor(
+      () => {
+        screen.getByTestId('split-screen-editor')
+      },
+      { timeout: 3000 },
+    )
+    return result
   }
 
   beforeEach(() => {
@@ -129,11 +172,18 @@ describe('SplitScreenEditor Component', () => {
     it('does not show view mode buttons for unsupported languages', async () => {
       await renderAndWait(<SplitScreenEditor {...defaultProps} language="Rust" />)
 
-      await waitFor(() => {
-        expect(
-          screen.queryByRole('button', { name: /code/i }),
-        ).not.toBeInTheDocument()
-      })
+      // Wait for the monaco editor to load
+      await waitFor(
+        () => {
+          expect(screen.getByTestId('monaco-editor')).toBeInTheDocument()
+        },
+        { timeout: 3000 },
+      )
+
+      // Then check that view mode buttons are NOT shown
+      expect(
+        screen.queryByRole('button', { name: /code/i }),
+      ).not.toBeInTheDocument()
       expect(
         screen.queryByRole('button', { name: /split/i }),
       ).not.toBeInTheDocument()
@@ -186,6 +236,12 @@ describe('SplitScreenEditor Component', () => {
       const codeBtn = screen.getByRole('button', { name: /code/i })
       await user.click(codeBtn)
 
+      await waitFor(
+        () => {
+          screen.getByTestId('monaco-editor')
+        },
+        { timeout: 3000 },
+      )
       const monacoEditor = screen.getByTestId('monaco-editor')
       expect(monacoEditor).toBeInTheDocument()
       expect(screen.queryByTestId('react-preview')).not.toBeInTheDocument()
@@ -199,7 +255,12 @@ describe('SplitScreenEditor Component', () => {
       const previewBtn = screen.getByRole('button', { name: /preview/i })
       await user.click(previewBtn)
 
-      expect(screen.getByTestId('react-preview')).toBeInTheDocument()
+      await waitFor(
+        () => {
+          expect(screen.getByTestId('react-preview')).toBeInTheDocument()
+        },
+        { timeout: 3000 },
+      )
       expect(screen.queryByTestId('monaco-editor')).not.toBeInTheDocument()
     })
 
@@ -217,7 +278,12 @@ describe('SplitScreenEditor Component', () => {
 
       // Should now show both editor and preview
       expect(screen.getAllByTestId('monaco-editor').length).toBeGreaterThan(0)
-      expect(screen.getByTestId('react-preview')).toBeInTheDocument()
+      await waitFor(
+        () => {
+          expect(screen.getByTestId('react-preview')).toBeInTheDocument()
+        },
+        { timeout: 3000 },
+      )
     })
 
     it('returns to split view from code view', async () => {
@@ -244,7 +310,12 @@ describe('SplitScreenEditor Component', () => {
       await user.click(splitBtn)
 
       expect(screen.getAllByTestId('monaco-editor').length).toBeGreaterThan(0)
-      expect(screen.getByTestId('react-preview')).toBeInTheDocument()
+      await waitFor(
+        () => {
+          expect(screen.getByTestId('react-preview')).toBeInTheDocument()
+        },
+        { timeout: 3000 },
+      )
     })
   })
 
@@ -320,17 +391,27 @@ describe('SplitScreenEditor Component', () => {
       const previewBtn = screen.getByRole('button', { name: /output/i })
       await user.click(previewBtn)
 
-      expect(screen.getByTestId('python-output')).toBeInTheDocument()
+      await waitFor(
+        () => {
+          expect(screen.getByTestId('python-output')).toBeInTheDocument()
+        },
+        { timeout: 3000 },
+      )
     })
 
-    it('shows PythonOutput in split view for Python', () => {
+    it('shows PythonOutput in split view for Python', async () => {
       await renderAndWait(<SplitScreenEditor {...defaultProps} language="Python" />)
 
       // Split view should show Python output
-      expect(screen.getByTestId('python-output')).toBeInTheDocument()
+      await waitFor(
+        () => {
+          expect(screen.getByTestId('python-output')).toBeInTheDocument()
+        },
+        { timeout: 3000 },
+      )
     })
 
-    it('passes code to PythonOutput', () => {
+    it('passes code to PythonOutput', async () => {
       const pythonCode = 'print("Hello, World!")'
       render(
         <SplitScreenEditor
@@ -340,7 +421,12 @@ describe('SplitScreenEditor Component', () => {
         />,
       )
 
-      expect(screen.getByTestId('python-output')).toBeInTheDocument()
+      await waitFor(
+        () => {
+          expect(screen.getByTestId('python-output')).toBeInTheDocument()
+        },
+        { timeout: 3000 },
+      )
     })
   })
 
@@ -355,7 +441,12 @@ describe('SplitScreenEditor Component', () => {
       const previewBtn = screen.getByRole('button', { name: /preview/i })
       await user.click(previewBtn)
 
-      expect(screen.getByTestId('react-preview')).toBeInTheDocument()
+      await waitFor(
+        () => {
+          expect(screen.getByTestId('react-preview')).toBeInTheDocument()
+        },
+        { timeout: 3000 },
+      )
     })
 
     // eslint-disable-next-line max-len
@@ -567,7 +658,12 @@ describe('SplitScreenEditor Component', () => {
       )
 
       // Start in split view
-      expect(screen.getByTestId('react-preview')).toBeInTheDocument()
+      await waitFor(
+        () => {
+          expect(screen.getByTestId('react-preview')).toBeInTheDocument()
+        },
+        { timeout: 3000 },
+      )
 
       // Switch to code view
       const codeBtn = screen.getByRole('button', { name: /code/i })
@@ -593,7 +689,12 @@ describe('SplitScreenEditor Component', () => {
       )
 
       // Should show split view with Python output
-      expect(screen.getByTestId('python-output')).toBeInTheDocument()
+      await waitFor(
+        () => {
+          expect(screen.getByTestId('python-output')).toBeInTheDocument()
+        },
+        { timeout: 3000 },
+      )
 
       // Switch to code view
       const codeBtn = screen.getByRole('button', { name: /code/i })
@@ -603,7 +704,12 @@ describe('SplitScreenEditor Component', () => {
       const outputBtn = screen.getByRole('button', { name: /output/i })
       await user.click(outputBtn)
 
-      expect(screen.getByTestId('python-output')).toBeInTheDocument()
+      await waitFor(
+        () => {
+          expect(screen.getByTestId('python-output')).toBeInTheDocument()
+        },
+        { timeout: 3000 },
+      )
     })
   })
 })
