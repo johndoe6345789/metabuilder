@@ -54,8 +54,10 @@ import {
 describe('FileChangeDetector - Core Functionality', () => {
   let tempDir: string
   let detector: FileChangeDetector
+  let originalCwd: string
 
   beforeEach(() => {
+    originalCwd = process.cwd()
     tempDir = createTempDir()
     // Create state directory
     const stateDir = path.join(tempDir, '.quality')
@@ -68,6 +70,10 @@ describe('FileChangeDetector - Core Functionality', () => {
   })
 
   afterEach(() => {
+    // Restore cwd BEFORE removing tempDir, else the jest worker is left with
+    // its working directory inside a deleted folder, which corrupts cwd-based
+    // tests in later files (e.g. the architecture/coverage analyzers).
+    process.chdir(originalCwd)
     cleanupTempDir(tempDir)
     resetGlobalChangeDetector()
   })
@@ -450,8 +456,10 @@ describe('FileChangeDetector - Core Functionality', () => {
 
 describe('FileChangeDetector - Global Instance', () => {
   let tempDir: string
+  let originalCwd: string
 
   beforeEach(() => {
+    originalCwd = process.cwd()
     tempDir = createTempDir()
     const stateDir = path.join(tempDir, '.quality')
     if (!fs.existsSync(stateDir)) {
@@ -462,6 +470,7 @@ describe('FileChangeDetector - Global Instance', () => {
   })
 
   afterEach(() => {
+    process.chdir(originalCwd)
     cleanupTempDir(tempDir)
     resetGlobalChangeDetector()
   })
@@ -495,8 +504,10 @@ describe('FileChangeDetector - Global Instance', () => {
 describe('FileChangeDetector - Edge Cases', () => {
   let tempDir: string
   let detector: FileChangeDetector
+  let originalCwd: string
 
   beforeEach(() => {
+    originalCwd = process.cwd()
     tempDir = createTempDir()
     const stateDir = path.join(tempDir, '.quality')
     if (!fs.existsSync(stateDir)) {
@@ -507,6 +518,7 @@ describe('FileChangeDetector - Edge Cases', () => {
   })
 
   afterEach(() => {
+    process.chdir(originalCwd)
     cleanupTempDir(tempDir)
   })
 

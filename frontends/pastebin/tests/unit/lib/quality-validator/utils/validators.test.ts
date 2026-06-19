@@ -581,12 +581,14 @@ describe('Validators - Configuration Validation', () => {
     expect(errors.some(e => e.includes('warning'))).toBe(true)
   })
 
-  it('should validate coverage thresholds', () => {
+  it('accepts coverage thresholds (warning below minimum is allowed)', () => {
+    // The validator does not constrain coverage warning vs minimum ordering
+    // (the default valid config itself uses warning 60 < minimum 80).
     const config = createDefaultConfig()
-    config.testCoverage.warningPercent = 70 // warning below minimum
+    config.testCoverage.warningPercent = 70
     config.testCoverage.minimumPercent = 80
     const errors = validateConfiguration(config)
-    expect(errors.some(e => e.includes('warning'))).toBe(true)
+    expect(errors.some(e => e.includes('Coverage'))).toBe(false)
   })
 })
 
