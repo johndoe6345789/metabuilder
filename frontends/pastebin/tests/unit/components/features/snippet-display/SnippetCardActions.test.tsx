@@ -525,10 +525,10 @@ describe('SnippetCardActions', () => {
       )
 
       const menuBtn = screen.getByTestId('snippet-card-actions-menu')
-      fireEvent.click(menuBtn)
 
       const items = mockNamespaces.slice(0, 2)
       items.forEach(ns => {
+        fireEvent.click(menuBtn)
         const nsItem = screen.getByTestId(`move-to-namespace-${ns.id}`)
         fireEvent.click(nsItem)
       })
