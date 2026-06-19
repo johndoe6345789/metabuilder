@@ -417,14 +417,15 @@ describe('EmptyState', () => {
       )
 
       const button = screen.getByTestId('empty-state-create-menu')
-      fireEvent.click(button)
 
       // Test blank snippet
+      fireEvent.click(button)
       const blankItem = screen.getByTestId('create-blank-snippet-item')
       fireEvent.click(blankItem)
       expect(onCreateClick).toHaveBeenCalled()
 
-      // Test template
+      // Test template - reopen menu for template selection
+      fireEvent.click(button)
       const templateItem = screen.getByTestId('template-react-react-1')
       fireEvent.click(templateItem)
       expect(onCreateFromTemplate).toHaveBeenCalledWith('react-1')

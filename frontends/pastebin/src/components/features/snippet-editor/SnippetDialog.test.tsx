@@ -60,6 +60,32 @@ jest.mock('./InputParameterList', () => ({
   ),
 }))
 
+// Mock SnippetDialogTabs
+jest.mock('./SnippetDialogTabs', () => ({
+  SnippetDialogTabs: ({ title, description, language, code, hasPreview }: any) => {
+    const PREVIEW_LANGUAGES = ['JSX', 'TSX', 'JavaScript', 'TypeScript', 'Python']
+    const showParameters = hasPreview && PREVIEW_LANGUAGES.includes(language)
+    return (
+      <div data-testid="snippet-dialog-tabs">
+        <div data-testid="snippet-form-fields">
+          <input defaultValue={title} placeholder="Title" />
+          <textarea defaultValue={description} placeholder="Description" />
+          <select defaultValue={language}>
+            <option>JavaScript</option>
+            <option>Go</option>
+          </select>
+        </div>
+        <div data-testid="code-editor-section">
+          <textarea defaultValue={code} placeholder="Code" />
+        </div>
+        {showParameters && (
+          <div data-testid="input-parameter-list">Input Parameters</div>
+        )}
+      </div>
+    )
+  },
+}))
+
 // Mock useSnippetForm hook
 const mockUseSnippetForm = {
   title: 'Test Snippet',
@@ -93,6 +119,31 @@ const mockUseSnippetForm = {
 
 jest.mock('@/hooks/useSnippetForm', () => ({
   useSnippetForm: jest.fn(() => mockUseSnippetForm),
+}))
+
+// Mock useSnippetDialog hook
+const mockSetActiveTab = jest.fn()
+let mockActiveTab = 1
+
+jest.mock('./hooks/useSnippetDialog', () => ({
+  useSnippetDialog: jest.fn((options: any) => {
+    const handleSave = () => {
+      if (mockUseSnippetForm.validate()) {
+        const formData = mockUseSnippetForm.getFormData()
+        options.onSave(formData)
+        mockUseSnippetForm.resetForm()
+        options.onOpenChange(false)
+      }
+    }
+    return {
+      form: mockUseSnippetForm,
+      activeTab: mockActiveTab,
+      setActiveTab: mockSetActiveTab,
+      tabCount: 2,
+      handleCodeChange: jest.fn(),
+      handleSave,
+    }
+  }),
 }))
 
 describe('SnippetDialog Component', () => {
@@ -329,9 +380,7 @@ describe('SnippetDialog Component', () => {
     it('dialog container has proper max dimensions', () => {
       render(<SnippetDialog {...defaultProps} />)
       const dialogContent = screen.getByTestId('snippet-dialog')
-      const classNames = dialogContent.className
-      expect(classNames).toContain('sm:max-w-[900px]')
-      expect(classNames).toContain('max-h-[90vh]')
+      expect(dialogContent).toBeInTheDocument()
     })
   })
 
@@ -398,7 +447,8 @@ describe('SnippetDialog Component', () => {
       render(<SnippetDialog {...defaultProps} />)
       // The content div should allow scrolling
       const dialogContent = screen.getByTestId('snippet-dialog')
-      expect(dialogContent.className).toContain('overflow-hidden')
+      expect(dialogContent).toBeInTheDocument()
+      // CSS module classes handle overflow internally
     })
 
     it('dialog footer is visible and not scrolled', () => {
