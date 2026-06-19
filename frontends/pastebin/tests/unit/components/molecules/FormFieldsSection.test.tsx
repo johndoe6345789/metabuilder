@@ -179,7 +179,7 @@ describe('FormFieldsSection', () => {
       const { container } = render(
         <FormFieldsSection onSaveSnippet={mockOnSaveSnippet} />,
       )
-      const icons = container.querySelectorAll('svg')
+      const icons = container.querySelectorAll('.material-symbols-outlined')
       expect(icons.length).toBeGreaterThan(0)
     })
 
@@ -187,16 +187,16 @@ describe('FormFieldsSection', () => {
       const { container } = render(
         <FormFieldsSection onSaveSnippet={mockOnSaveSnippet} />,
       )
-      const svgs = container.querySelectorAll('svg')
-      expect(svgs.length).toBeGreaterThan(0)
+      const icons = container.querySelectorAll('.material-symbols-outlined')
+      expect(icons.length).toBeGreaterThan(0)
     })
 
     it('should position icons absolutely', () => {
       const { container } = render(
         <FormFieldsSection onSaveSnippet={mockOnSaveSnippet} />,
       )
-      const svgs = container.querySelectorAll('svg')
-      expect(svgs.length).toBeGreaterThan(0)
+      const icons = container.querySelectorAll('.material-symbols-outlined')
+      expect(icons.length).toBeGreaterThan(0)
     })
   })
 
@@ -232,7 +232,6 @@ describe('FormFieldsSection', () => {
         <FormFieldsSection onSaveSnippet={mockOnSaveSnippet} />,
       )
       const card = container.querySelector('[class*="p-"]')
-      // Form container should have proper padding
       expect(card).toBeInTheDocument()
     })
 
@@ -240,16 +239,16 @@ describe('FormFieldsSection', () => {
       const { container } = render(
         <FormFieldsSection onSaveSnippet={mockOnSaveSnippet} />,
       )
-      const svgs = container.querySelectorAll('svg')
-      expect(svgs.length).toBeGreaterThan(0)
+      const icons = container.querySelectorAll('.material-symbols-outlined')
+      expect(icons.length).toBeGreaterThan(0)
     })
 
     it('should have left positioning for icons', () => {
       const { container } = render(
         <FormFieldsSection onSaveSnippet={mockOnSaveSnippet} />,
       )
-      const svgs = container.querySelectorAll('svg')
-      expect(svgs.length).toBeGreaterThan(0)
+      const icons = container.querySelectorAll('.material-symbols-outlined')
+      expect(icons.length).toBeGreaterThan(0)
     })
 
     it('should have padding for inputs with icons', () => {
@@ -340,16 +339,16 @@ describe('FormFieldsSection', () => {
       const { container } = render(
         <FormFieldsSection onSaveSnippet={mockOnSaveSnippet} />,
       )
-      const svgs = container.querySelectorAll('svg')
-      expect(svgs.length).toBeGreaterThan(0)
+      const icons = container.querySelectorAll('.material-symbols-outlined')
+      expect(icons.length).toBeGreaterThan(0)
     })
 
     it('should have -translate-y-1/2 for vertical centering', () => {
       const { container } = render(
         <FormFieldsSection onSaveSnippet={mockOnSaveSnippet} />,
       )
-      const svgs = container.querySelectorAll('svg')
-      expect(svgs.length).toBeGreaterThan(0)
+      const icons = container.querySelectorAll('.material-symbols-outlined')
+      expect(icons.length).toBeGreaterThan(0)
     })
   })
 

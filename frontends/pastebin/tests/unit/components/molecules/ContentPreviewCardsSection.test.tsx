@@ -192,7 +192,7 @@ describe('ContentPreviewCardsSection', () => {
   describe('Metadata Display', () => {
     it('should display calendar icon', () => {
       const { container } = render(<ContentPreviewCardsSection />)
-      const icons = container.querySelectorAll('svg')
+      const icons = container.querySelectorAll('.material-symbols-outlined')
       expect(icons.length).toBeGreaterThan(0)
     })
 

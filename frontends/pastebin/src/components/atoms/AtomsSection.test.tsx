@@ -91,7 +91,7 @@ describe('AtomsSection', () => {
       <AtomsSection onSaveSnippet={mockOnSaveSnippet} />,
     )
     const sections = container.querySelectorAll('[data-testid]')
-    expect(sections.length).toBe(6)
+    expect(sections.length).toBe(7)
   })
 
   test('applies space-y-16 styling for spacing', () => {
