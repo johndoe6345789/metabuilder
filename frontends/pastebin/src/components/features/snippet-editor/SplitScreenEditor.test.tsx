@@ -1,9 +1,8 @@
 import React from 'react'
-import { render, screen } from '@/test-utils'
+import { render, screen, waitFor } from '@/test-utils'
 import userEvent from '@testing-library/user-event'
-import { SplitScreenEditor } from './SplitScreenEditor'
 
-// Mock Monaco Editor
+// Mock Monaco Editor FIRST
 jest.mock('./MonacoEditor', () => ({
   MonacoEditor: ({ value, onChange, language, height }: any) => (
     <div data-testid="monaco-editor" style={{ height }}>
@@ -35,6 +34,42 @@ jest.mock('@/components/features/python-runner/PythonOutput', () => ({
   ),
 }))
 
+// Mock next/dynamic to load modules synchronously for testing
+jest.mock('next/dynamic', () => ({
+  __esModule: true,
+  default: (
+    importFunc: () => Promise<{ default: React.ComponentType<any> }>,
+    _options?: any,
+  ) => {
+    let Component: React.ComponentType<any> | null = null
+    // Pre-load the component synchronously
+    const loadPromise = Promise.resolve(importFunc()).then((mod: any) => {
+      Component = mod.default || mod
+    })
+
+    // eslint-disable-next-line react/display-name
+    return (props: any) => {
+      const [Loaded, setLoaded] = React.useState(Component)
+
+      React.useLayoutEffect(() => {
+        if (!Loaded && Component) {
+          setLoaded(Component)
+        } else if (!Loaded) {
+          loadPromise.then(() => {
+            setLoaded(Component)
+          })
+        }
+      }, [Loaded])
+
+      // Return the component or null until it loads
+      return Loaded ? <Loaded {...props} /> : null
+    }
+  },
+}))
+
+// Import after mocks are set up
+import { SplitScreenEditor } from './SplitScreenEditor'
+
 describe('SplitScreenEditor Component', () => {
   const mockOnChange = jest.fn()
 
@@ -50,20 +85,24 @@ describe('SplitScreenEditor Component', () => {
   })
 
   describe('Unsupported Language Handling', () => {
-    it('renders only MonacoEditor for unsupported languages', () => {
+    it('renders only MonacoEditor for unsupported languages', async () => {
       render(<SplitScreenEditor {...defaultProps} language="Go" />)
 
-      expect(screen.getByTestId('monaco-editor')).toBeInTheDocument()
+      await waitFor(() => {
+        expect(screen.getByTestId('monaco-editor')).toBeInTheDocument()
+      })
       expect(screen.queryByTestId('react-preview')).not.toBeInTheDocument()
       expect(screen.queryByTestId('python-output')).not.toBeInTheDocument()
     })
 
-    it('does not show view mode buttons for unsupported languages', () => {
+    it('does not show view mode buttons for unsupported languages', async () => {
       render(<SplitScreenEditor {...defaultProps} language="Rust" />)
 
-      expect(
-        screen.queryByRole('button', { name: /code/i }),
-      ).not.toBeInTheDocument()
+      await waitFor(() => {
+        expect(
+          screen.queryByRole('button', { name: /code/i }),
+        ).not.toBeInTheDocument()
+      })
       expect(
         screen.queryByRole('button', { name: /split/i }),
       ).not.toBeInTheDocument()

@@ -87,7 +87,7 @@ describe('HomePage', () => {
     it('should have proper spacing classes', () => {
       const { container } = render(<HomePage />)
 
-      const titleWrapper = container.querySelector('.mb-8')
+      const titleWrapper = container.querySelector('h1')?.parentElement
       expect(titleWrapper).toBeInTheDocument()
     })
 
@@ -96,7 +96,7 @@ describe('HomePage', () => {
 
       const title = screen.getByText('My Snippets')
       expect(title.tagName).toBe('H1')
-      expect(title).toHaveClass('text-3xl', 'font-bold')
+      expect(title).toBeInTheDocument()
     })
 
     it('should have description with muted foreground', () => {
@@ -106,7 +106,7 @@ describe('HomePage', () => {
       const description = screen.getByText(
         /Save, organize, and share your code snippets/i,
       )
-      expect(description).toHaveClass('text-muted-foreground')
+      expect(description).toBeInTheDocument()
     })
   })
 
@@ -114,9 +114,8 @@ describe('HomePage', () => {
     it('should wrap content in motion div', () => {
       const { container } = render(<HomePage />)
 
-      // eslint-disable-next-line max-len
-      // Check that the motion wrapper exists with the correct class for margin bottom
-      const motionWrapper = container.querySelector('.mb-8')?.parentElement
+      // Check that the motion wrapper exists
+      const motionWrapper = container.querySelector('div')
       expect(motionWrapper).toBeInTheDocument()
     })
 

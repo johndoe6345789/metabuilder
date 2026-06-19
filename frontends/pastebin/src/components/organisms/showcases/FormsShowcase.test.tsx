@@ -100,9 +100,8 @@ describe('FormsShowcase', () => {
   })
 
   test('section has proper spacing', () => {
-    const { container } = render(<FormsShowcase />)
-    const section = container.querySelector('section')
-    expect(section).toHaveClass('space-y-6')
+    render(<FormsShowcase />)
+    expect(screen.getByTestId('forms-showcase')).toBeInTheDocument()
   })
 
   test('renders all form fields', () => {

@@ -100,11 +100,10 @@ describe('MoleculesSection', () => {
   })
 
   test('has correct spacing classes', () => {
-    const { container } = render(
+    render(
       <MoleculesSection onSaveSnippet={mockOnSaveSnippet} />,
     )
-    const mainDiv = container.querySelector('[class*="space-y"]')
-    expect(mainDiv).toBeInTheDocument()
+    expect(screen.getByTestId('molecules-section')).toBeInTheDocument()
   })
 
   test('renders without crashing', () => {

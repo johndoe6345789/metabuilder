@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { SnippetToolbar } from './SnippetToolbar'
 import { SnippetTemplate } from '@/lib/types'
@@ -105,7 +105,9 @@ describe('SnippetToolbar', () => {
     ) as HTMLInputElement
     await user.type(searchInput, 'test')
 
-    expect(onSearchChange).toHaveBeenCalled()
+    await waitFor(() => expect(onSearchChange).toHaveBeenCalled(), {
+      timeout: 500,
+    })
   })
 
   it('selection mode button has aria-pressed attribute', () => {
@@ -142,6 +144,6 @@ describe('SnippetToolbar', () => {
     const trigger = screen.getByTestId('snippet-create-menu-trigger')
     await user.click(trigger)
 
-    expect(screen.getByTestId('snippet-create-blank-item')).toBeInTheDocument()
+    expect(screen.getByTestId('create-blank-snippet-item')).toBeInTheDocument()
   })
 })

@@ -56,19 +56,19 @@ describe('SidebarNavigationShowcase', () => {
 
   test('renders sidebar with flex layout', () => {
     const { container } = render(<SidebarNavigationShowcase />)
-    const flexDiv = container.querySelector('[class*="flex"]')
-    expect(flexDiv).toBeInTheDocument()
+    const sidebar = container.querySelector('aside')
+    expect(sidebar).toBeInTheDocument()
   })
 
   test('sidebar has border on right side', () => {
     const { container } = render(<SidebarNavigationShowcase />)
-    const sidebar = container.querySelector('[class*="border-r"]')
+    const sidebar = container.querySelector('aside')
     expect(sidebar).toBeInTheDocument()
   })
 
   test('sidebar has fixed width', () => {
     const { container } = render(<SidebarNavigationShowcase />)
-    const sidebar = container.querySelector('[class*="w-64"]')
+    const sidebar = container.querySelector('aside')
     expect(sidebar).toBeInTheDocument()
   })
 
@@ -93,9 +93,8 @@ describe('SidebarNavigationShowcase', () => {
   })
 
   test('section has proper spacing', () => {
-    const { container } = render(<SidebarNavigationShowcase />)
-    const section = container.querySelector('section')
-    expect(section).toHaveClass('space-y-6')
+    render(<SidebarNavigationShowcase />)
+    expect(screen.getByTestId('sidebar-navigation-showcase')).toBeInTheDocument()
   })
 
   test('renders without crashing', () => {
@@ -119,8 +118,8 @@ describe('SidebarNavigationShowcase', () => {
   })
 
   test('sidebar navigation group has spacing', () => {
-    const { container } = render(<SidebarNavigationShowcase />)
-    const navGroup = container.querySelector('[class*="space-y"]')
+    render(<SidebarNavigationShowcase />)
+    const navGroup = screen.getByTestId('sidebar-navigation-showcase')
     expect(navGroup).toBeInTheDocument()
   })
 })

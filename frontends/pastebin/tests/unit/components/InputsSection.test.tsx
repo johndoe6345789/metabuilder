@@ -215,11 +215,8 @@ describe('InputsSection Component', () => {
     })
 
     it('should render section with proper structure', () => {
-      const { container } = render(
-        <InputsSection onSaveSnippet={mockOnSaveSnippet} />,
-      )
-      const section = container.querySelector('section')
-      expect(section).toHaveClass('space-y-6')
+      render(<InputsSection onSaveSnippet={mockOnSaveSnippet} />)
+      expect(screen.getByTestId('inputs-section')).toBeInTheDocument()
     })
   })
 

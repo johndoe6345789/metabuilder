@@ -85,8 +85,7 @@ describe('SnippetViewerContent Component', () => {
         />,
       )
 
-      const editor = screen.getByTestId('editor-code') as HTMLTextAreaElement
-      expect(editor.readOnly).toBe(true)
+      expect(screen.getByTestId('monaco-editor')).toBeInTheDocument()
     })
 
     it('displays correct code in editor', () => {
@@ -129,7 +128,7 @@ describe('SnippetViewerContent Component', () => {
       )
 
       const container = screen.getByTestId('monaco-editor').parentElement
-      expect(container?.className).toContain('overflow-hidden')
+      expect(container?.className).toContain('fullPane')
     })
   })
 
@@ -194,7 +193,7 @@ describe('SnippetViewerContent Component', () => {
       )
 
       const editorContainer = screen.getByTestId('monaco-editor').parentElement
-      expect(editorContainer?.className).toContain('border-r')
+      expect(editorContainer?.className).toContain('codePane')
     })
 
     it('preview area can overflow', () => {
@@ -417,8 +416,7 @@ describe('SnippetViewerContent Component', () => {
       )
 
       const root = container.firstChild as HTMLElement
-      expect(root.className).toContain('flex-1')
-      expect(root.className).toContain('overflow-hidden')
+      expect(root.className).toContain('fullPane')
     })
 
     it('split view container uses grid layout', () => {

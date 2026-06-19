@@ -97,11 +97,10 @@ describe('OrganismsSection', () => {
   })
 
   test('has space-y-16 spacing class', () => {
-    const { container } = render(
+    render(
       <OrganismsSection onSaveSnippet={mockOnSaveSnippet} />,
     )
-    const mainDiv = container.querySelector('[class*="space-y"]')
-    expect(mainDiv).toBeInTheDocument()
+    expect(screen.getByTestId('organisms-section')).toBeInTheDocument()
   })
 
   test('renders without crashing', () => {

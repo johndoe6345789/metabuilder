@@ -42,7 +42,6 @@ export function TemplatePicker({
       anchorEl={anchor}
       onClose={onClose}
       className={styles.menu}
-      data-testid={testId}
     >
       <div className={`overflow-y-auto max-h-[500px]`} data-testid={testId}>
         <MenuItem

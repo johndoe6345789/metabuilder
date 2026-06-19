@@ -10,7 +10,7 @@ RUN for i in 1 2 3 4 5; do \
     done
 
 # Copy application files
-COPY backend/app.py backend/auth.py backend/config_db.py backend/auth_sqlalchemy.py backend/config_db_sqlalchemy.py backend/models.py backend/rocksdb_store.py ./
+COPY backend/app.py backend/auth.py backend/config_db.py backend/auth_sqlalchemy.py backend/config_db_sqlalchemy.py backend/models.py backend/rocksdb_store.py backend/workflow_loader_v2.py ./
 
 # Copy schema to where app.py expects it (parent of /app = /)
 COPY schema.json /schema.json

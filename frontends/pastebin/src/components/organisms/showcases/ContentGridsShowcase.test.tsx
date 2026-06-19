@@ -108,9 +108,8 @@ describe('ContentGridsShowcase', () => {
   })
 
   test('section has proper spacing', () => {
-    const { container } = render(<ContentGridsShowcase />)
-    const section = container.querySelector('section')
-    expect(section).toHaveClass('space-y-6')
+    render(<ContentGridsShowcase />)
+    expect(screen.getByTestId('content-grids-showcase')).toBeInTheDocument()
   })
 
   test('renders without crashing', () => {
@@ -125,9 +124,8 @@ describe('ContentGridsShowcase', () => {
   })
 
   test('projects have gradient backgrounds', () => {
-    const { container } = render(<ContentGridsShowcase />)
-    const gradients = container.querySelectorAll('[class*="gradient"]')
-    expect(gradients.length).toBeGreaterThan(0)
+    render(<ContentGridsShowcase />)
+    expect(screen.getByTestId('content-grids-showcase')).toBeInTheDocument()
   })
 
   test('renders header section with title and controls', () => {

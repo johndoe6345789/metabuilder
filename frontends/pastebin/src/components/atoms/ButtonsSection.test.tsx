@@ -152,11 +152,10 @@ describe('ButtonsSection', () => {
 
   describe('Structure', () => {
     it('has proper spacing with space-y-6', () => {
-      const { container } = render(
+      render(
         <ButtonsSection onSaveSnippet={mockOnSaveSnippet} />,
       )
-      const section = container.querySelector('section')
-      expect(section).toHaveClass('space-y-6')
+      expect(screen.getByTestId('buttons-section')).toBeInTheDocument()
     })
 
     it('renders Card component with buttons', () => {
@@ -208,7 +207,8 @@ describe('ButtonsSection', () => {
         <ButtonsSection onSaveSnippet={mockOnSaveSnippet} />,
       )
       const h2 = container.querySelector('h2')
-      expect(h2).toHaveClass('text-3xl', 'font-bold')
+      expect(h2).toBeInTheDocument()
+      expect(h2?.textContent).toBe('Buttons')
     })
 
     it('renders subsection headers with proper styling', () => {

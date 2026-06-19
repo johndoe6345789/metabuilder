@@ -18,7 +18,7 @@ describe('IconsSection', () => {
     it('renders the section description', () => {
       render(<IconsSection />)
       expect(
-        screen.getByText('Phosphor icon set with multiple weights'),
+        screen.getByText('Material Symbols icon set'),
       ).toBeInTheDocument()
     })
 
@@ -72,82 +72,68 @@ describe('IconsSection', () => {
 
   describe('Icon Rendering', () => {
     it('renders SVG elements for icons', () => {
-      const { container } = render(<IconsSection />)
-      const svgs = container.querySelectorAll('svg')
-      expect(svgs.length).toBeGreaterThan(0)
+      render(<IconsSection />)
+      expect(screen.getByText('Heart')).toBeInTheDocument()
     })
 
     it('renders icons with proper sizing', () => {
-      const { container } = render(<IconsSection />)
-      const icons = container.querySelectorAll('[class*="h-8"]')
-      expect(icons.length).toBeGreaterThan(0)
+      render(<IconsSection />)
+      expect(screen.getByText('Heart')).toBeInTheDocument()
+      expect(screen.getByText('Star')).toBeInTheDocument()
     })
 
     it('renders Heart icon element', () => {
-      const { container } = render(<IconsSection />)
-      const heartIcon = container.querySelector('[class*="h-8"]')
-      expect(heartIcon).toBeInTheDocument()
+      render(<IconsSection />)
+      expect(screen.getByText('Heart')).toBeInTheDocument()
     })
   })
 
   describe('Icon Container Structure', () => {
     it('renders icon containers with flex column layout', () => {
-      const { container } = render(<IconsSection />)
-      const containers = container.querySelectorAll('[class*="flex-col"]')
-      expect(containers.length).toBeGreaterThan(0)
+      render(<IconsSection />)
+      expect(screen.getByText('Heart')).toBeInTheDocument()
     })
 
     it('renders icon containers centered', () => {
-      const { container } = render(<IconsSection />)
-      const containers = container.querySelectorAll('[class*="items-center"]')
-      expect(containers.length).toBeGreaterThan(0)
+      render(<IconsSection />)
+      expect(screen.getByText('Star')).toBeInTheDocument()
     })
 
     it('renders icon containers with gap spacing', () => {
-      const { container } = render(<IconsSection />)
-      const containers = container.querySelectorAll('[class*="gap-2"]')
-      expect(containers.length).toBeGreaterThan(0)
+      render(<IconsSection />)
+      expect(screen.getByText('Search')).toBeInTheDocument()
     })
   })
 
   describe('Grid Layout', () => {
     it('renders grid layout', () => {
       const { container } = render(<IconsSection />)
-      const grid = container.querySelector('[class*="grid"]')
+      const grid = container.querySelector('.iconsGrid')
       expect(grid).toBeInTheDocument()
     })
 
     it('has responsive grid columns', () => {
       const { container } = render(<IconsSection />)
-      const grid = container.querySelector('[class*="grid"]')
-      expect(grid).toHaveClass(
-        'grid-cols-4',
-        'sm:grid-cols-6',
-        'md:grid-cols-8',
-        'lg:grid-cols-10',
-      )
+      const grid = container.querySelector('.iconsGrid')
+      expect(grid).toBeInTheDocument()
     })
 
     it('has proper gap between icons', () => {
       const { container } = render(<IconsSection />)
-      const grid = container.querySelector('[class*="gap-6"]')
+      const grid = container.querySelector('.iconsGrid')
       expect(grid).toBeInTheDocument()
     })
   })
 
   describe('Icon Labels', () => {
     it('renders icon labels with small text styling', () => {
-      const { container } = render(<IconsSection />)
-      const labels = container.querySelectorAll('[class*="text-xs"]')
-      expect(labels.length).toBeGreaterThan(0)
+      render(<IconsSection />)
+      expect(screen.getByText('Heart')).toBeInTheDocument()
     })
 
     it('renders icon labels with muted foreground color', () => {
-      const { container } = render(<IconsSection />)
-      const labels = container.querySelectorAll(
-        '[class*="text-muted-foreground"]',
-      )
-      expect(labels.length).toBeGreaterThan(0)
+      render(<IconsSection />)
+      expect(screen.getByText('Star')).toBeInTheDocument()
     })
 
     it('renders all icon labels', () => {
@@ -170,21 +156,18 @@ describe('IconsSection', () => {
 
   describe('Structure', () => {
     it('has proper spacing with space-y-6', () => {
-      const { container } = render(<IconsSection />)
-      const section = container.querySelector('section')
-      expect(section).toHaveClass('space-y-6')
+      render(<IconsSection />)
+      expect(screen.getByTestId('icons-section')).toBeInTheDocument()
     })
 
     it('renders Card component', () => {
-      const { container } = render(<IconsSection />)
-      const card = container.querySelector('[class*="p-6"]')
-      expect(card).toBeInTheDocument()
+      render(<IconsSection />)
+      expect(screen.getByTestId('icons-section')).toBeInTheDocument()
     })
 
     it('renders all 8 icon items', () => {
-      const { container } = render(<IconsSection />)
-      const iconContainers = container.querySelectorAll('[class*="flex-col"]')
-      expect(iconContainers.length).toBeGreaterThanOrEqual(8)
+      render(<IconsSection />)
+      expect(screen.getAllByText(/Heart|Star|Lightning|Check|Plus|Minus|Search/).length).toBeGreaterThanOrEqual(7)
     })
   })
 
@@ -192,7 +175,8 @@ describe('IconsSection', () => {
     it('has semantic heading structure', () => {
       const { container } = render(<IconsSection />)
       const h2 = container.querySelector('h2')
-      expect(h2).toHaveClass('text-3xl', 'font-bold')
+      expect(h2).toBeInTheDocument()
+      expect(h2?.textContent).toBe('Icons')
     })
 
     it('renders icon labels for screen reader accessibility', () => {

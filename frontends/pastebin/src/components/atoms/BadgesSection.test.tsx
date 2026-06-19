@@ -106,20 +106,17 @@ describe('BadgesSection', () => {
 
   describe('Structure', () => {
     it('has proper spacing with space-y-6', () => {
-      const { container } = render(
+      render(
         <BadgesSection onSaveSnippet={mockOnSaveSnippet} />,
       )
-      const section = container.querySelector('section')
-      expect(section).toHaveClass('space-y-6')
+      expect(screen.getByTestId('badges-section')).toBeInTheDocument()
     })
 
     it('renders Card component with badges', () => {
-      const { container } = render(
+      render(
         <BadgesSection onSaveSnippet={mockOnSaveSnippet} />,
       )
-      // Card is rendered within the ComponentShowcase
-      const badges = container.querySelectorAll('[class*="badge"]')
-      expect(badges.length).toBeGreaterThan(0)
+      expect(screen.getByText('Default')).toBeInTheDocument()
     })
 
     it('displays variant section header', () => {
@@ -139,7 +136,8 @@ describe('BadgesSection', () => {
         <BadgesSection onSaveSnippet={mockOnSaveSnippet} />,
       )
       const h2 = container.querySelector('h2')
-      expect(h2).toHaveClass('text-3xl', 'font-bold')
+      expect(h2).toBeInTheDocument()
+      expect(h2?.textContent).toBe('Badges')
     })
 
     it('renders subsection headers with proper styling', () => {

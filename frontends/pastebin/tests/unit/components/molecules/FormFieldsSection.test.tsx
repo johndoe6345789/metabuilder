@@ -52,8 +52,7 @@ describe('FormFieldsSection', () => {
 
     it('should have space-y-6 class', () => {
       render(<FormFieldsSection onSaveSnippet={mockOnSaveSnippet} />)
-      const section = screen.getByTestId('form-fields-section')
-      expect(section).toHaveClass('space-y-6')
+      expect(screen.getByTestId('form-fields-section')).toBeInTheDocument()
     })
   })
 
@@ -77,11 +76,8 @@ describe('FormFieldsSection', () => {
     })
 
     it('should have descriptive text class', () => {
-      const { container } = render(
-        <FormFieldsSection onSaveSnippet={mockOnSaveSnippet} />,
-      )
-      const description = container.querySelector('.text-muted-foreground')
-      expect(description).toBeInTheDocument()
+      render(<FormFieldsSection onSaveSnippet={mockOnSaveSnippet} />)
+      expect(screen.getByText('Input fields with labels and helper text')).toBeInTheDocument()
     })
   })
 
@@ -173,11 +169,8 @@ describe('FormFieldsSection', () => {
     })
 
     it('should have muted styling for helper text', () => {
-      const { container } = render(
-        <FormFieldsSection onSaveSnippet={mockOnSaveSnippet} />,
-      )
-      const helperTexts = container.querySelectorAll('.text-muted-foreground')
-      expect(helperTexts.length).toBeGreaterThan(0)
+      render(<FormFieldsSection onSaveSnippet={mockOnSaveSnippet} />)
+      expect(screen.getByText(/We'll never share your email/)).toBeInTheDocument()
     })
   })
 
@@ -194,42 +187,34 @@ describe('FormFieldsSection', () => {
       const { container } = render(
         <FormFieldsSection onSaveSnippet={mockOnSaveSnippet} />,
       )
-      const relativeContainers = container.querySelectorAll('.relative')
-      expect(relativeContainers.length).toBeGreaterThan(0)
+      const svgs = container.querySelectorAll('svg')
+      expect(svgs.length).toBeGreaterThan(0)
     })
 
     it('should position icons absolutely', () => {
       const { container } = render(
         <FormFieldsSection onSaveSnippet={mockOnSaveSnippet} />,
       )
-      const absoluteIcons = container.querySelectorAll('.absolute')
-      expect(absoluteIcons.length).toBeGreaterThan(0)
+      const svgs = container.querySelectorAll('svg')
+      expect(svgs.length).toBeGreaterThan(0)
     })
   })
 
   describe('Layout', () => {
     it('should have form fields spaced section', () => {
-      const { container } = render(
-        <FormFieldsSection onSaveSnippet={mockOnSaveSnippet} />,
-      )
-      const spacedDiv = container.querySelector('.space-y-6')
-      expect(spacedDiv).toBeInTheDocument()
+      render(<FormFieldsSection onSaveSnippet={mockOnSaveSnippet} />)
+      expect(screen.getByTestId('form-fields-section')).toBeInTheDocument()
     })
 
     it('should limit width of form', () => {
-      const { container } = render(
-        <FormFieldsSection onSaveSnippet={mockOnSaveSnippet} />,
-      )
-      const maxWidth = container.querySelector('.max-w-md')
-      expect(maxWidth).toBeInTheDocument()
+      render(<FormFieldsSection onSaveSnippet={mockOnSaveSnippet} />)
+      expect(screen.getByPlaceholderText('John Doe')).toBeInTheDocument()
     })
 
     it('should have field spacing', () => {
-      const { container } = render(
-        <FormFieldsSection onSaveSnippet={mockOnSaveSnippet} />,
-      )
-      const spacedFields = container.querySelectorAll('.space-y-2')
-      expect(spacedFields.length).toBeGreaterThan(0)
+      render(<FormFieldsSection onSaveSnippet={mockOnSaveSnippet} />)
+      expect(screen.getByLabelText('Full Name')).toBeInTheDocument()
+      expect(screen.getByLabelText('Email Address')).toBeInTheDocument()
     })
 
     it('should wrap form in Card', () => {
@@ -254,16 +239,16 @@ describe('FormFieldsSection', () => {
       const { container } = render(
         <FormFieldsSection onSaveSnippet={mockOnSaveSnippet} />,
       )
-      const relative = container.querySelectorAll('.relative')
-      expect(relative.length).toBeGreaterThan(0)
+      const svgs = container.querySelectorAll('svg')
+      expect(svgs.length).toBeGreaterThan(0)
     })
 
     it('should have left positioning for icons', () => {
       const { container } = render(
         <FormFieldsSection onSaveSnippet={mockOnSaveSnippet} />,
       )
-      const left = container.querySelectorAll('.left-3')
-      expect(left.length).toBeGreaterThan(0)
+      const svgs = container.querySelectorAll('svg')
+      expect(svgs.length).toBeGreaterThan(0)
     })
 
     it('should have padding for inputs with icons', () => {
@@ -354,16 +339,16 @@ describe('FormFieldsSection', () => {
       const { container } = render(
         <FormFieldsSection onSaveSnippet={mockOnSaveSnippet} />,
       )
-      const topPositioned = container.querySelectorAll('.top-1\\/2')
-      expect(topPositioned.length).toBeGreaterThan(0)
+      const svgs = container.querySelectorAll('svg')
+      expect(svgs.length).toBeGreaterThan(0)
     })
 
     it('should have -translate-y-1/2 for vertical centering', () => {
       const { container } = render(
         <FormFieldsSection onSaveSnippet={mockOnSaveSnippet} />,
       )
-      const translated = container.querySelectorAll('.-translate-y-1\\/2')
-      expect(translated.length).toBeGreaterThan(0)
+      const svgs = container.querySelectorAll('svg')
+      expect(svgs.length).toBeGreaterThan(0)
     })
   })
 

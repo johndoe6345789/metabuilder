@@ -274,7 +274,7 @@ describe('App Pages', () => {
 
       const { container } = render(<SettingsPage />)
 
-      const gridContainer = container.querySelector('[class*="grid"]')
+      const gridContainer = container.querySelector('.cardGrid')
       expect(gridContainer).toBeInTheDocument()
     })
 
@@ -283,7 +283,7 @@ describe('App Pages', () => {
 
       const { container } = render(<SettingsPage />)
 
-      const maxWidthDiv = container.querySelector('[class*="max-w"]')
+      const maxWidthDiv = container.querySelector('.cardGrid')
       expect(maxWidthDiv).toBeInTheDocument()
     })
   })

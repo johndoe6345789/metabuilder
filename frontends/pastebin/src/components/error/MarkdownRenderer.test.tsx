@@ -55,7 +55,7 @@ More content
       render(<MarkdownRenderer content={content} />)
 
       const heading = screen.getByText('Title')
-      expect(heading).toHaveClass('text-lg', 'font-semibold')
+      expect(heading).toHaveClass('h2')
     })
 
     it('applies correct styling to h3', () => {
@@ -63,7 +63,7 @@ More content
       render(<MarkdownRenderer content={content} />)
 
       const heading = screen.getByText('Subtitle')
-      expect(heading).toHaveClass('text-base', 'font-semibold')
+      expect(heading).toHaveClass('h3')
     })
   })
 
@@ -91,7 +91,7 @@ More content
       render(<MarkdownRenderer content={content} />)
 
       const item = screen.getByText('- Item one')
-      expect(item).toHaveClass('ml-4')
+      expect(item).toHaveClass('listItem')
     })
 
     it('applies indentation to numbered items', () => {
@@ -99,7 +99,7 @@ More content
       render(<MarkdownRenderer content={content} />)
 
       const item = screen.getByText('1. First step')
-      expect(item).toHaveClass('ml-2')
+      expect(item).toHaveClass('orderedItem')
     })
 
     it('handles mixed list types', () => {
@@ -131,7 +131,7 @@ More content
       render(<MarkdownRenderer content={content} />)
 
       const paragraph = screen.getByText('Regular text content')
-      expect(paragraph).toHaveClass('text-foreground/80', 'text-sm')
+      expect(paragraph).toHaveClass('paragraph')
     })
 
     it('skips empty lines', () => {
@@ -319,10 +319,10 @@ Regular text
       render(<MarkdownRenderer content={content} />)
 
       const heading = screen.getByText('Heading')
-      expect(heading).toHaveClass('text-foreground')
+      expect(heading).toHaveClass('h2')
 
       const paragraph = screen.getByText('Regular text')
-      expect(paragraph).toHaveClass('text-foreground/80')
+      expect(paragraph).toHaveClass('paragraph')
     })
 
     it('maintains spacing around headings', () => {
@@ -334,7 +334,7 @@ Content
 
       const headings = screen.getAllByText(/Section/)
       headings.forEach(heading => {
-        expect(heading).toHaveClass('mt-4', 'mb-2')
+        expect(heading).toHaveClass('h2')
       })
     })
 

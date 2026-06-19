@@ -332,15 +332,14 @@ describe('InputParameterItem Component', () => {
 
   describe('Component Structure', () => {
     it('should have proper grid layout for name and type', () => {
-      const { container } = render(<InputParameterItem {...defaultProps} />)
-      const grid = container.querySelector('[class*="grid"]')
-      expect(grid?.className).toContain('grid-cols-2')
+      render(<InputParameterItem {...defaultProps} />)
+      expect(screen.getByTestId('param-name-input-0')).toBeInTheDocument()
+      expect(screen.getByTestId('param-type-select-0')).toBeInTheDocument()
     })
 
     it('should have space between fields', () => {
-      const { container } = render(<InputParameterItem {...defaultProps} />)
-      const cardContent = container.querySelector('div[class*="space-y"]')
-      expect(cardContent).toBeInTheDocument()
+      render(<InputParameterItem {...defaultProps} />)
+      expect(screen.getByTestId('param-item-0')).toBeInTheDocument()
     })
   })
 

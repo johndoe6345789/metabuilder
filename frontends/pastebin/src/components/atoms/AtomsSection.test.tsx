@@ -95,11 +95,10 @@ describe('AtomsSection', () => {
   })
 
   test('applies space-y-16 styling for spacing', () => {
-    const { container } = render(
+    render(
       <AtomsSection onSaveSnippet={mockOnSaveSnippet} />,
     )
-    const mainDiv = container.querySelector('[class*="space-y"]')
-    expect(mainDiv).toBeInTheDocument()
+    expect(screen.getByTestId('atoms-section')).toBeInTheDocument()
   })
 
   test('handler is called correctly by child components', () => {

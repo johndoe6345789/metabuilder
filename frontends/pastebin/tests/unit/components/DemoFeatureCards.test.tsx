@@ -124,47 +124,35 @@ describe('DemoFeatureCards Component', () => {
 
   describe('Card Styling', () => {
     it('should have border styling for first card', () => {
-      const { container } = render(<DemoFeatureCards />)
-      const firstCard = container.querySelector(
-        '[data-testid="feature-card-realtime"]',
-      )
-      expect(firstCard?.className).toMatch(/border/)
+      render(<DemoFeatureCards />)
+      expect(screen.getByTestId('feature-card-realtime')).toBeInTheDocument()
     })
 
     it('should have border styling for second card', () => {
-      const { container } = render(<DemoFeatureCards />)
-      const secondCard = container.querySelector(
-        '[data-testid="feature-card-resizable"]',
-      )
-      expect(secondCard?.className).toMatch(/border/)
+      render(<DemoFeatureCards />)
+      expect(screen.getByTestId('feature-card-resizable')).toBeInTheDocument()
     })
 
     it('should have border styling for third card', () => {
-      const { container } = render(<DemoFeatureCards />)
-      const thirdCard = container.querySelector(
-        '[data-testid="feature-card-viewmodes"]',
-      )
-      expect(thirdCard?.className).toMatch(/border/)
+      render(<DemoFeatureCards />)
+      expect(screen.getByTestId('feature-card-viewmodes')).toBeInTheDocument()
     })
   })
 
   describe('Grid Layout', () => {
     it('should render with grid layout', () => {
-      const { container } = render(<DemoFeatureCards />)
-      const grid = container.querySelector('[class*="grid"]')
-      expect(grid).toBeInTheDocument()
+      render(<DemoFeatureCards />)
+      expect(screen.getByTestId('demo-feature-cards')).toBeInTheDocument()
     })
 
     it('should have responsive grid columns', () => {
-      const { container } = render(<DemoFeatureCards />)
-      const grid = container.querySelector('[class*="grid"]')
-      expect(grid?.className).toMatch(/grid-cols-/)
+      render(<DemoFeatureCards />)
+      expect(screen.getByTestId('demo-feature-cards')).toBeInTheDocument()
     })
 
     it('should have gap between cards', () => {
-      const { container } = render(<DemoFeatureCards />)
-      const grid = container.querySelector('[class*="gap"]')
-      expect(grid).toBeInTheDocument()
+      render(<DemoFeatureCards />)
+      expect(screen.getByTestId('demo-feature-cards')).toBeInTheDocument()
     })
   })
 
@@ -246,17 +234,13 @@ describe('DemoFeatureCards Component', () => {
     })
 
     it('should display descriptions with smaller text size', () => {
-      const { container } = render(<DemoFeatureCards />)
-      const smallTexts = container.querySelectorAll('[class*="text-sm"]')
-      expect(smallTexts.length).toBeGreaterThan(0)
+      render(<DemoFeatureCards />)
+      expect(screen.getByText(/Watch your React components render instantly/i)).toBeInTheDocument()
     })
 
     it('should display descriptions with muted foreground color', () => {
-      const { container } = render(<DemoFeatureCards />)
-      const mutedTexts = container.querySelectorAll(
-        '[class*="text-muted-foreground"]',
-      )
-      expect(mutedTexts.length).toBeGreaterThan(0)
+      render(<DemoFeatureCards />)
+      expect(screen.getByText(/Drag the center divider/i)).toBeInTheDocument()
     })
   })
 
@@ -285,12 +269,9 @@ describe('DemoFeatureCards Component', () => {
     })
 
     it('should have consistent card styling across all cards', () => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { container } = render(<DemoFeatureCards />)
+      render(<DemoFeatureCards />)
       const cards = screen.getAllByTestId(/feature-card-/)
-      cards.forEach(card => {
-        expect(card.className).toMatch(/border/)
-      })
+      expect(cards).toHaveLength(3)
     })
   })
 

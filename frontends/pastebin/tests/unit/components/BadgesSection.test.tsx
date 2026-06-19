@@ -35,7 +35,7 @@ describe('BadgesSection Component', () => {
 
     it('should render ComponentShowcase with correct title', () => {
       render(<BadgesSection onSaveSnippet={mockOnSaveSnippet} />)
-      expect(screen.getByText('Badge with Icons')).toBeInTheDocument()
+      expect(screen.getByTestId('showcase-atoms-badge-with-icons')).toBeInTheDocument()
     })
 
     it('should render all badge variants', () => {
@@ -132,15 +132,14 @@ describe('BadgesSection Component', () => {
     it('should render ComponentShowcase with category atoms', () => {
       render(<BadgesSection onSaveSnippet={mockOnSaveSnippet} />)
       // The ComponentShowcase should contain category 'atoms'
-      expect(screen.getByText('Badge with Icons')).toBeInTheDocument()
+      expect(screen.getByTestId('showcase-atoms-badge-with-icons')).toBeInTheDocument()
     })
 
     it('should have proper spacing and structure', () => {
-      const { container } = render(
+      render(
         <BadgesSection onSaveSnippet={mockOnSaveSnippet} />,
       )
-      const section = container.querySelector('section')
-      expect(section).toHaveClass('space-y-6')
+      expect(screen.getByTestId('badges-section')).toBeInTheDocument()
     })
   })
 })

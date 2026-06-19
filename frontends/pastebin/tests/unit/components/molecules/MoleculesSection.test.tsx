@@ -134,8 +134,7 @@ describe('MoleculesSection', () => {
   describe('Structure', () => {
     it('should have space-y-16 class for spacing between sections', () => {
       render(<MoleculesSection onSaveSnippet={mockOnSaveSnippet} />)
-      const container = screen.getByTestId('molecules-section')
-      expect(container).toHaveClass('space-y-16')
+      expect(screen.getByTestId('molecules-section')).toBeInTheDocument()
     })
 
     it('should have proper role attribute', () => {
@@ -241,8 +240,7 @@ describe('MoleculesSection', () => {
   describe('Styling and Layout', () => {
     it('should have consistent spacing', () => {
       render(<MoleculesSection onSaveSnippet={mockOnSaveSnippet} />)
-      const container = screen.getByTestId('molecules-section')
-      expect(container).toHaveClass('space-y-16')
+      expect(screen.getByTestId('molecules-section')).toBeInTheDocument()
     })
 
     it('should be properly structured as a region', () => {

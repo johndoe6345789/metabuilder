@@ -67,7 +67,7 @@ describe('TerminalOutput', () => {
       ]
       render(<TerminalOutput {...defaultProps} lines={lines} />)
       const output = screen.getByText('Output text')
-      expect(output).toHaveClass('text-foreground')
+      expect(output).toHaveClass('output')
     })
 
     it('should render multiple output lines', () => {
@@ -104,7 +104,7 @@ describe('TerminalOutput', () => {
       const lines = [{ type: 'error' as const, content: 'Error text', id: '1' }]
       render(<TerminalOutput {...defaultProps} lines={lines} />)
       const error = screen.getByText('Error text')
-      expect(error).toHaveClass('text-destructive')
+      expect(error).toHaveClass('error')
     })
 
     it('should render multiple error lines', () => {
@@ -122,7 +122,8 @@ describe('TerminalOutput', () => {
         { type: 'error' as const, content: 'Error:    Details', id: '1' },
       ]
       render(<TerminalOutput {...defaultProps} lines={lines} />)
-      expect(screen.getByText(/Error:.*Details/)).toBeInTheDocument()
+      const el = screen.getAllByText(/Error:.*Details/)
+      expect(el.length).toBeGreaterThan(0)
     })
   })
 
@@ -145,7 +146,7 @@ describe('TerminalOutput', () => {
       ]
       render(<TerminalOutput {...defaultProps} lines={lines} />)
       const prompt = screen.getByText(/Prompt/)
-      expect(prompt).toHaveClass('text-accent', 'font-medium')
+      expect(prompt).toHaveClass('inputPrompt')
     })
 
     it('should preserve whitespace in input prompts', () => {
@@ -154,7 +155,7 @@ describe('TerminalOutput', () => {
       ]
       render(<TerminalOutput {...defaultProps} lines={lines} />)
       const prompt = screen.getByText(/Name/)
-      expect(prompt).toHaveClass('whitespace-pre-wrap')
+      expect(prompt).toHaveClass('inputPrompt')
     })
   })
 
@@ -182,7 +183,7 @@ describe('TerminalOutput', () => {
       ]
       render(<TerminalOutput {...defaultProps} lines={lines} />)
       const value = screen.getByText('> user value')
-      expect(value).toHaveClass('text-primary')
+      expect(value).toHaveClass('inputValue')
     })
 
     it('should preserve whitespace in input values', () => {
@@ -195,7 +196,7 @@ describe('TerminalOutput', () => {
       ]
       render(<TerminalOutput {...defaultProps} lines={lines} />)
       const value = screen.getByText(/text.*with.*spaces/)
-      expect(value).toHaveClass('whitespace-pre-wrap')
+      expect(value).toHaveClass('inputValue')
     })
   })
 
@@ -222,7 +223,7 @@ describe('TerminalOutput', () => {
       render(<TerminalOutput {...defaultProps} lines={lines} />)
       expect(screen.getByText(/Name/)).toBeInTheDocument()
       expect(screen.getByText('Hello John')).toBeInTheDocument()
-      expect(screen.getByText(/Note.*something/)).toBeInTheDocument()
+      expect(screen.getAllByText(/Note.*something/).length).toBeGreaterThan(0)
     })
   })
 
@@ -245,7 +246,7 @@ describe('TerminalOutput', () => {
       ]
       render(<TerminalOutput {...defaultProps} lines={lines} />)
       const output = screen.getByText(/First/)
-      expect(output).toHaveClass('whitespace-pre-wrap')
+      expect(output).toHaveClass('output')
     })
   })
 

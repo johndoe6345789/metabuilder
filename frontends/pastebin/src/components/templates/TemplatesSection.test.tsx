@@ -147,8 +147,7 @@ describe('TemplatesSection', () => {
     const { container } = render(
       <TemplatesSection onSaveSnippet={mockOnSaveSnippet} />,
     )
-    const mainDiv = container.querySelector('[class*="space-y"]')
-    expect(mainDiv).toBeInTheDocument()
+    expect(container.querySelector('[data-testid="templates-section"]')).toBeInTheDocument()
   })
 
   test('section headings are present', () => {

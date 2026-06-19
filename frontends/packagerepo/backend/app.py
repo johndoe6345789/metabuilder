@@ -21,7 +21,6 @@ import jsonschema
 import auth_sqlalchemy as auth_module
 import config_db_sqlalchemy as config_db
 from rocksdb_store import RocksDBStore
-from workflow_loader_v2 import create_workflow_loader_v2
 
 app = Flask(__name__)
 CORS(app)
@@ -43,9 +42,9 @@ DB_CONFIG = config_db.get_repository_config()
 # This enables validation, registry integration, and multi-tenant safety
 WORKFLOW_LOADER = None
 def get_workflow_loader():
-    """Get or create the workflow loader instance (lazy initialization)."""
     global WORKFLOW_LOADER
     if WORKFLOW_LOADER is None:
+        from workflow_loader_v2 import create_workflow_loader_v2
         WORKFLOW_LOADER = create_workflow_loader_v2(app.config)
     return WORKFLOW_LOADER
 

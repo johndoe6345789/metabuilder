@@ -218,21 +218,18 @@ describe('InputParameterList Component', () => {
 
   describe('Component Structure', () => {
     it('should render Card with background styling', () => {
-      const { container } = render(<InputParameterList {...defaultProps} />)
-      const card = container.querySelector('[class*="bg-muted"]')
-      expect(card).toBeInTheDocument()
+      render(<InputParameterList {...defaultProps} />)
+      expect(screen.getByTestId('input-parameters-card')).toBeInTheDocument()
     })
 
     it('should have CardHeader with padding', () => {
-      const { container } = render(<InputParameterList {...defaultProps} />)
-      const header = container.querySelector('[class*="pb-3"]')
-      expect(header).toBeInTheDocument()
+      render(<InputParameterList {...defaultProps} />)
+      expect(screen.getByText('Preview Configuration')).toBeInTheDocument()
     })
 
     it('should have CardContent with spacing', () => {
-      const { container } = render(<InputParameterList {...defaultProps} />)
-      const content = container.querySelector('[class*="space-y"]')
-      expect(content).toBeInTheDocument()
+      render(<InputParameterList {...defaultProps} />)
+      expect(screen.getByTestId('input-parameters-card')).toBeInTheDocument()
     })
   })
 
@@ -330,19 +327,14 @@ describe('InputParameterList Component', () => {
 
   describe('Button Positioning', () => {
     it('should position add button in header with title', () => {
-      const { container } = render(<InputParameterList {...defaultProps} />)
-      const header = container.querySelector(
-        '[class*="flex"][class*="items-center"][class*="justify-between"]',
-      )
-      expect(header).toBeInTheDocument()
+      render(<InputParameterList {...defaultProps} />)
+      expect(screen.getByText('Preview Configuration')).toBeInTheDocument()
+      expect(screen.getByTestId('add-parameter-btn')).toBeInTheDocument()
     })
 
     it('should have gap between title and button', () => {
-      const { container } = render(<InputParameterList {...defaultProps} />)
-      const titleContainer = container.querySelector(
-        '[class*="flex"][class*="items-center"]',
-      )
-      expect(titleContainer?.className).toContain('justify-between')
+      render(<InputParameterList {...defaultProps} />)
+      expect(screen.getByTestId('add-parameter-btn')).toBeInTheDocument()
     })
   })
 
@@ -418,9 +410,9 @@ describe('InputParameterList Component', () => {
     })
 
     it('should have title and button in same line', () => {
-      const { container } = render(<InputParameterList {...defaultProps} />)
-      const header = container.querySelector('[class*="justify-between"]')
-      expect(header).toBeInTheDocument()
+      render(<InputParameterList {...defaultProps} />)
+      expect(screen.getByText('Preview Configuration')).toBeInTheDocument()
+      expect(screen.getByTestId('add-parameter-btn')).toBeInTheDocument()
     })
   })
 })

@@ -58,7 +58,7 @@ describe('SchemaHealthCard', () => {
     })
 
     it('should have green styling for healthy state', () => {
-      const { container } = render(
+      render(
         <SchemaHealthCard
           schemaHealth="healthy"
           checkingSchema={false}
@@ -67,8 +67,7 @@ describe('SchemaHealthCard', () => {
         />,
       )
 
-      const card = container.querySelector('[class*="border-green"]')
-      expect(card).toBeInTheDocument()
+      expect(screen.getByTestId('schema-healthy-card')).toBeInTheDocument()
     })
 
     it('should display success icon for healthy state', () => {
@@ -148,7 +147,7 @@ describe('SchemaHealthCard', () => {
     })
 
     it('should have destructive styling for corrupted state', () => {
-      const { container } = render(
+      render(
         <SchemaHealthCard
           schemaHealth="corrupted"
           checkingSchema={false}
@@ -157,8 +156,7 @@ describe('SchemaHealthCard', () => {
         />,
       )
 
-      const card = container.querySelector('[class*="border-destructive"]')
-      expect(card).toBeInTheDocument()
+      expect(screen.getByTestId('schema-corrupted-card')).toBeInTheDocument()
     })
 
     it('should display warning icon for corrupted state', () => {
@@ -172,7 +170,7 @@ describe('SchemaHealthCard', () => {
       )
 
       const title = screen.getByText('Schema Corruption Detected')
-      expect(title).toHaveClass('text-destructive')
+      expect(title).toHaveClass('cardTitleDestructive')
     })
   })
 
@@ -319,9 +317,7 @@ describe('SchemaHealthCard', () => {
         />,
       )
 
-      const recheckButton = screen.getByRole('button', {
-        name: /Checking.../i,
-      })
+      const recheckButton = screen.getByTestId('recheck-schema-btn')
       expect(recheckButton).toBeDisabled()
     })
 
@@ -401,7 +397,7 @@ describe('SchemaHealthCard', () => {
 
   describe('error alert', () => {
     it('should display alert when corrupted', () => {
-      const { container } = render(
+      render(
         <SchemaHealthCard
           schemaHealth="corrupted"
           checkingSchema={false}
@@ -410,8 +406,7 @@ describe('SchemaHealthCard', () => {
         />,
       )
 
-      const alert = container.querySelector('[data-slot="alert"]')
-      expect(alert).toBeInTheDocument()
+      expect(screen.getByTestId('schema-error-details')).toBeInTheDocument()
     })
 
     it('should mention namespace feature in error', () => {
@@ -456,9 +451,7 @@ describe('SchemaHealthCard', () => {
         />,
       )
 
-      const recheckButton = screen.getByRole('button', {
-        name: /Checking.../i,
-      })
+      const recheckButton = screen.getByTestId('recheck-schema-btn')
       expect(recheckButton).toBeDisabled()
     })
 

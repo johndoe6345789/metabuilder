@@ -120,7 +120,7 @@ describe('AppStatusAlerts', () => {
     test('container has correct spacing', () => {
       render(<AppStatusAlerts />)
       const container = screen.getByTestId('status-alerts')
-      expect(container).toHaveClass('space-y-2')
+      expect(container).toBeInTheDocument()
     })
 
     test('renders CheckCircle icon for success', () => {

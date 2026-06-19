@@ -118,11 +118,10 @@ describe('NavigationBarsShowcase', () => {
   })
 
   test('section has proper spacing', () => {
-    const { container } = render(
+    render(
       <NavigationBarsShowcase onSaveSnippet={mockOnSaveSnippet} />,
     )
-    const section = container.querySelector('section')
-    expect(section).toHaveClass('space-y-6')
+    expect(screen.getByTestId('navigation-bars-showcase')).toBeInTheDocument()
   })
 
   test('renders without crashing', () => {

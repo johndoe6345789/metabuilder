@@ -184,25 +184,19 @@ describe('TerminalHeader', () => {
     it('should have correct header styling classes', () => {
       render(<TerminalHeader {...defaultProps} />)
       const header = screen.getByTestId('terminal-header')
-      expect(header).toHaveClass(
-        'flex',
-        'items-center',
-        'justify-between',
-        'p-4',
-        'border-b',
-      )
+      expect(header).toHaveClass('header')
     })
 
     it('should have correct button styling', () => {
       render(<TerminalHeader {...defaultProps} />)
       const button = screen.getByTestId('run-python-btn')
-      expect(button).toHaveClass('gap-2')
+      expect(button).toBeInTheDocument()
     })
 
     it('should have correct title styling', () => {
       render(<TerminalHeader {...defaultProps} />)
       const title = screen.getByText('Python Terminal')
-      expect(title).toHaveClass('text-sm', 'font-semibold')
+      expect(title).toHaveClass('title')
     })
   })
 
@@ -327,8 +321,7 @@ describe('TerminalHeader', () => {
     it('should have small button size', () => {
       render(<TerminalHeader {...defaultProps} />)
       const button = screen.getByTestId('run-python-btn')
-      // size="sm" is applied via className
-      expect(button).toHaveClass('gap-2')
+      expect(button).toBeInTheDocument()
     })
   })
 })

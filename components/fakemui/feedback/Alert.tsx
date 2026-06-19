@@ -65,7 +65,7 @@ export const Alert: React.FC<AlertProps> = ({
     .join(' ')
 
   return (
-    <div className={classNames} role="alert" aria-live="assertive" aria-label={props['aria-label'] || `${severity.charAt(0).toUpperCase() + severity.slice(1)} alert`} data-testid={testId} {...props}>
+    <div className={classNames} role="alert" aria-live="assertive" aria-label={props['aria-label'] || `${severity.charAt(0).toUpperCase() + severity.slice(1)} alert`} data-testid={testId} data-slot="alert" {...props}>
       {icon !== false && <span className={styles.alertIcon}>{icon || getDefaultIcon(severity)}</span>}
       <div className={styles.alertContent}>
         {title && <AlertTitle>{title}</AlertTitle>}
@@ -96,7 +96,7 @@ export interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagrap
 }
 
 export const AlertDescription: React.FC<AlertDescriptionProps> = ({ children, className = '', ...props }) => (
-  <p className={`${styles.alertMessage} ${className}`.trim()} {...props}>
+  <p className={`${styles.alertMessage} ${className}`.trim()} data-slot="alert-description" {...props}>
     {children}
   </p>
 )

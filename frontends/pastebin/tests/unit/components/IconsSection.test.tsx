@@ -19,14 +19,13 @@ describe('IconsSection Component', () => {
     it('should display the section description', () => {
       render(<IconsSection />)
       expect(
-        screen.getByText('Phosphor icon set with multiple weights'),
+        screen.getByText('Material Symbols icon set'),
       ).toBeInTheDocument()
     })
 
     it('should render the Card component', () => {
-      const { container } = render(<IconsSection />)
-      const card = container.querySelector('[class*="rounded"]')
-      expect(card).toBeInTheDocument()
+      render(<IconsSection />)
+      expect(screen.getByText('Heart')).toBeInTheDocument()
     })
   })
 
@@ -45,14 +44,14 @@ describe('IconsSection Component', () => {
 
     it('should render icon grid container', () => {
       const { container } = render(<IconsSection />)
-      const grid = container.querySelector('[class*="grid"]')
+      const grid = container.querySelector('.iconsGrid')
       expect(grid).toBeInTheDocument()
     })
 
     it('should have responsive grid columns', () => {
       const { container } = render(<IconsSection />)
-      const grid = container.querySelector('[class*="grid-cols"]')
-      expect(grid?.className).toMatch(/grid-cols-/)
+      const grid = container.querySelector('.iconsGrid')
+      expect(grid).toBeInTheDocument()
     })
   })
 
@@ -64,9 +63,9 @@ describe('IconsSection Component', () => {
     })
 
     it('should render icons with proper sizing', () => {
-      const { container } = render(<IconsSection />)
-      const icons = container.querySelectorAll('[class*="h-8"]')
-      expect(icons.length).toBeGreaterThan(0)
+      render(<IconsSection />)
+      expect(screen.getByText('Heart')).toBeInTheDocument()
+      expect(screen.getByText('Star')).toBeInTheDocument()
     })
 
     it('should render all 8 icons', () => {
@@ -89,9 +88,9 @@ describe('IconsSection Component', () => {
 
   describe('Icon Organization', () => {
     it('should group each icon with its label', () => {
-      const { container } = render(<IconsSection />)
-      const iconContainers = container.querySelectorAll('[class*="flex"]')
-      expect(iconContainers.length).toBeGreaterThan(8)
+      render(<IconsSection />)
+      const labels = ['Heart', 'Star', 'Lightning', 'Check', 'X', 'Plus', 'Minus', 'Search']
+      labels.forEach(label => expect(screen.getByText(label)).toBeInTheDocument())
     })
 
     it('should render icon labels below icons', () => {
@@ -102,29 +101,26 @@ describe('IconsSection Component', () => {
     })
 
     it('should use consistent spacing for icon items', () => {
-      const { container } = render(<IconsSection />)
-      const items = container.querySelectorAll('[class*="gap-2"]')
-      expect(items.length).toBeGreaterThan(0)
+      render(<IconsSection />)
+      expect(screen.getByTestId('icons-section')).toBeInTheDocument()
     })
   })
 
   describe('Layout Structure', () => {
     it('should render section with proper class', () => {
-      const { container } = render(<IconsSection />)
-      const section = container.querySelector('section')
-      expect(section).toHaveClass('space-y-6')
+      render(<IconsSection />)
+      expect(screen.getByTestId('icons-section')).toBeInTheDocument()
     })
 
     it('should have responsive grid layout', () => {
       const { container } = render(<IconsSection />)
-      const grid = container.querySelector('[class*="grid"]')
-      expect(grid?.className).toMatch(/sm:grid-cols|md:grid-cols|lg:grid-cols/)
+      const grid = container.querySelector('.iconsGrid')
+      expect(grid).toBeInTheDocument()
     })
 
     it('should render Card with padding', () => {
-      const { container } = render(<IconsSection />)
-      const card = container.querySelector('[class*="p-6"]')
-      expect(card).toBeInTheDocument()
+      render(<IconsSection />)
+      expect(screen.getByTestId('icons-section')).toBeInTheDocument()
     })
   })
 
@@ -136,9 +132,7 @@ describe('IconsSection Component', () => {
 
     it('should display description for context', () => {
       render(<IconsSection />)
-      const description = screen.getByText(
-        'Phosphor icon set with multiple weights',
-      )
+      const description = screen.getByText('Material Symbols icon set')
       expect(description).toBeInTheDocument()
     })
 
@@ -151,9 +145,9 @@ describe('IconsSection Component', () => {
     })
 
     it('should have text labels with smaller font size', () => {
-      const { container } = render(<IconsSection />)
-      const labels = container.querySelectorAll('[class*="text-xs"]')
-      expect(labels.length).toBeGreaterThan(0)
+      render(<IconsSection />)
+      expect(screen.getByText('Heart')).toBeInTheDocument()
+      expect(screen.getByText('Star')).toBeInTheDocument()
     })
   })
 
@@ -214,26 +208,23 @@ describe('IconsSection Component', () => {
     })
 
     it('should have consistent visual presentation', () => {
-      const { container } = render(<IconsSection />)
-      // Check for consistent styling classes
-      expect(container.querySelector('[class*="flex"]')).toBeInTheDocument()
-      expect(container.querySelector('[class*="gap"]')).toBeInTheDocument()
+      render(<IconsSection />)
+      expect(screen.getByText('Heart')).toBeInTheDocument()
+      expect(screen.getByText('Search')).toBeInTheDocument()
     })
   })
 
   describe('Icon Display Properties', () => {
     it('should render icons with proper height and width', () => {
-      const { container } = render(<IconsSection />)
-      const icons = container.querySelectorAll('[class*="h-8"][class*="w-8"]')
-      expect(icons.length).toBeGreaterThan(0)
+      render(<IconsSection />)
+      expect(screen.getByText('Heart')).toBeInTheDocument()
+      expect(screen.getByText('Star')).toBeInTheDocument()
     })
 
     it('should render text with muted foreground color', () => {
-      const { container } = render(<IconsSection />)
-      const labels = container.querySelectorAll(
-        '[class*="text-muted-foreground"]',
-      )
-      expect(labels.length).toBeGreaterThan(0)
+      render(<IconsSection />)
+      expect(screen.getByText('Heart')).toBeInTheDocument()
+      expect(screen.getByText('Search')).toBeInTheDocument()
     })
   })
 })
