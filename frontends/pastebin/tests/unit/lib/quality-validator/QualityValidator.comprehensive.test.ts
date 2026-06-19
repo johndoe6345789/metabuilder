@@ -10,23 +10,23 @@
  * 5. Error handling (10+ cases)
  */
 
-import { QualityValidator } from '../../../../src/lib/quality-validator/index'
+import { QualityValidator } from '../../../../src/lib/quality-validator/index.js'
 import {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   CommandLineOptions,
   ExitCode,
-} from '../../../../src/lib/quality-validator/types/index'
-import * as configLoaderModule from '../../../../src/lib/quality-validator/config/ConfigLoader'
-import * as profileManagerModule from '../../../../src/lib/quality-validator/config/ProfileManager'
-import * as fileSystemModule from '../../../../src/lib/quality-validator/utils/fileSystem'
-import * as codeQualityModule from '../../../../src/lib/quality-validator/analyzers/codeQualityAnalyzer'
-import * as coverageModule from '../../../../src/lib/quality-validator/analyzers/coverageAnalyzer'
-import * as architectureModule from '../../../../src/lib/quality-validator/analyzers/architectureChecker'
-import * as securityModule from '../../../../src/lib/quality-validator/analyzers/securityScanner'
-import * as scoringModule from '../../../../src/lib/quality-validator/scoring/scoringEngine'
-import * as consoleReporterModule from '../../../../src/lib/quality-validator/reporters/ConsoleReporter'
+} from '../../../../src/lib/quality-validator/types/index.js'
+import * as configLoaderModule from '../../../../src/lib/quality-validator/config/ConfigLoader.js'
+import * as profileManagerModule from '../../../../src/lib/quality-validator/config/ProfileManager.js'
+import * as fileSystemModule from '../../../../src/lib/quality-validator/utils/fileSystem.js'
+import * as codeQualityModule from '../../../../src/lib/quality-validator/analyzers/codeQualityAnalyzer.js'
+import * as coverageModule from '../../../../src/lib/quality-validator/analyzers/coverageAnalyzer.js'
+import * as architectureModule from '../../../../src/lib/quality-validator/analyzers/architectureChecker.js'
+import * as securityModule from '../../../../src/lib/quality-validator/analyzers/securityScanner.js'
+import * as scoringModule from '../../../../src/lib/quality-validator/scoring/scoringEngine.js'
+import * as consoleReporterModule from '../../../../src/lib/quality-validator/reporters/ConsoleReporter.js'
 
-jest.mock('../../../../src/lib/quality-validator/config/ConfigLoader', () => ({
+jest.mock('../../../../src/lib/quality-validator/config/ConfigLoader.js', () => ({
   configLoader: {
     loadConfiguration: jest.fn().mockResolvedValue({
       projectName: 'test',
@@ -49,7 +49,7 @@ jest.mock('../../../../src/lib/quality-validator/config/ConfigLoader', () => ({
   },
 }))
 
-jest.mock('../../../../src/lib/quality-validator/config/ProfileManager', () => ({
+jest.mock('../../../../src/lib/quality-validator/config/ProfileManager.js', () => ({
   profileManager: {
     initialize: jest.fn().mockResolvedValue(undefined),
     getAllProfiles: jest.fn(() => []),
@@ -58,14 +58,14 @@ jest.mock('../../../../src/lib/quality-validator/config/ProfileManager', () => (
   },
 }))
 
-jest.mock('../../../../src/lib/quality-validator/utils/fileSystem', () => ({
+jest.mock('../../../../src/lib/quality-validator/utils/fileSystem.js', () => ({
   getSourceFiles: jest.fn(() => ['src/test.ts']),
   writeFile: jest.fn(),
   ensureDirectory: jest.fn(),
 }))
 
 jest.mock(
-  '../../../../src/lib/quality-validator/analyzers/codeQualityAnalyzer',
+  '../../../../src/lib/quality-validator/analyzers/codeQualityAnalyzer.js',
   () => ({
     codeQualityAnalyzer: {
       analyze: jest.fn().mockResolvedValue({
@@ -81,7 +81,7 @@ jest.mock(
 )
 
 jest.mock(
-  '../../../../src/lib/quality-validator/analyzers/coverageAnalyzer',
+  '../../../../src/lib/quality-validator/analyzers/coverageAnalyzer.js',
   () => ({
     coverageAnalyzer: {
       analyze: jest.fn().mockResolvedValue({
@@ -97,7 +97,7 @@ jest.mock(
 )
 
 jest.mock(
-  '../../../../src/lib/quality-validator/analyzers/architectureChecker',
+  '../../../../src/lib/quality-validator/analyzers/architectureChecker.js',
   () => ({
     architectureChecker: {
       analyze: jest.fn().mockResolvedValue({
@@ -113,7 +113,7 @@ jest.mock(
 )
 
 jest.mock(
-  '../../../../src/lib/quality-validator/analyzers/securityScanner',
+  '../../../../src/lib/quality-validator/analyzers/securityScanner.js',
   () => ({
     securityScanner: {
       analyze: jest.fn().mockResolvedValue({
@@ -128,7 +128,7 @@ jest.mock(
   }),
 )
 
-jest.mock('../../../../src/lib/quality-validator/scoring/scoringEngine', () => ({
+jest.mock('../../../../src/lib/quality-validator/scoring/scoringEngine.js', () => ({
   scoringEngine: {
     calculateScore: jest.fn().mockReturnValue({
       overall: {
@@ -153,7 +153,7 @@ jest.mock('../../../../src/lib/quality-validator/scoring/scoringEngine', () => (
 }))
 
 jest.mock(
-  '../../../../src/lib/quality-validator/reporters/ConsoleReporter',
+  '../../../../src/lib/quality-validator/reporters/ConsoleReporter.js',
   () => ({
     consoleReporter: {
       generate: jest.fn().mockReturnValue('Console report'),
@@ -161,25 +161,25 @@ jest.mock(
   }),
 )
 
-jest.mock('../../../../src/lib/quality-validator/reporters/JsonReporter', () => ({
+jest.mock('../../../../src/lib/quality-validator/reporters/JsonReporter.js', () => ({
   jsonReporter: {
     generate: jest.fn().mockReturnValue('{"report": true}'),
   },
 }))
 
-jest.mock('../../../../src/lib/quality-validator/reporters/HtmlReporter', () => ({
+jest.mock('../../../../src/lib/quality-validator/reporters/HtmlReporter.js', () => ({
   htmlReporter: {
     generate: jest.fn().mockReturnValue('<html></html>'),
   },
 }))
 
-jest.mock('../../../../src/lib/quality-validator/reporters/CsvReporter', () => ({
+jest.mock('../../../../src/lib/quality-validator/reporters/CsvReporter.js', () => ({
   csvReporter: {
     generate: jest.fn().mockReturnValue('report,data'),
   },
 }))
 
-jest.mock('../../../../src/lib/quality-validator/utils/logger', () => ({
+jest.mock('../../../../src/lib/quality-validator/utils/logger.js', () => ({
   logger: {
     configure: jest.fn(),
     info: jest.fn(),
@@ -194,11 +194,72 @@ describe('QualityValidator - Comprehensive Tests (60+ cases)', () => {
 
   beforeEach(() => {
     validator = new QualityValidator()
+    // clearAllMocks() only clears call history, NOT implementations set via
+    // .mockReturnValue / spyOn, so a prior test's override would otherwise
+    // leak. Restore spies and re-assert every default the validate() flow
+    // depends on, making the suite order-independent.
+    jest.restoreAllMocks()
     jest.clearAllMocks()
+    const analysis = (category: string) => ({
+      category,
+      score: 85,
+      status: 'pass',
+      findings: [],
+      metrics: {},
+      executionTime: 100,
+    })
+    const mock = (fn: unknown) => fn as jest.Mock
+    mock(fileSystemModule.getSourceFiles).mockReturnValue(['src/test.ts'])
+    mock(configLoaderModule.configLoader.loadConfiguration).mockResolvedValue({
+      projectName: 'test',
+      codeQuality: { enabled: true },
+      testCoverage: { enabled: true },
+      architecture: { enabled: true },
+      security: { enabled: true },
+      scoring: {
+        weights: {
+          codeQuality: 0.25,
+          testCoverage: 0.25,
+          architecture: 0.25,
+          security: 0.25,
+        },
+      },
+      reporting: { defaultFormat: 'console' },
+      excludePaths: [],
+    })
+    mock(configLoaderModule.configLoader.applyCliOptions).mockImplementation(
+      c => c,
+    )
+    mock(codeQualityModule.codeQualityAnalyzer.analyze).mockResolvedValue(
+      analysis('codeQuality'),
+    )
+    mock(coverageModule.coverageAnalyzer.analyze).mockResolvedValue(
+      analysis('testCoverage'),
+    )
+    mock(architectureModule.architectureChecker.analyze).mockResolvedValue(
+      analysis('architecture'),
+    )
+    mock(securityModule.securityScanner.analyze).mockResolvedValue(
+      analysis('security'),
+    )
+    mock(scoringModule.scoringEngine.calculateScore).mockReturnValue({
+      overall: {
+        score: 85,
+        grade: 'B',
+        status: 'pass',
+        summary: 'Good quality',
+        passesThresholds: true,
+      },
+      componentScores: {},
+      findings: [],
+      recommendations: [],
+      metadata: {},
+      trend: {},
+    })
   })
 
   afterEach(() => {
-    jest.clearAllMocks()
+    jest.restoreAllMocks()
   })
 
   // ============================================================================
