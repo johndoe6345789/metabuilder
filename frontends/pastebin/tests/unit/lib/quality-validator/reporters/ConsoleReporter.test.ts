@@ -584,8 +584,8 @@ describe('ConsoleReporter', () => {
     it('should display analysis time in readable format', () => {
       const output = reporter.generate(mockResult, false)
 
+      // Rendered as a human-readable duration (1500ms -> "1.5s"), not raw ms.
       expect(output).toContain('1.5s')
-      expect(output).toContain('1500')
     })
 
     it('should display tool version', () => {
@@ -611,8 +611,8 @@ describe('ConsoleReporter', () => {
     it('should have proper indentation for hierarchy', () => {
       const output = reporter.generate(mockResult, false)
 
-      // Check for indentation patterns
-      expect(output).toMatch(/\n {2}/)
+      // Hierarchy is indented inside the box border, e.g. "│   • finding".
+      expect(output).toMatch(/\n│ {2}/)
     })
 
     it('should use clear section separators', () => {
