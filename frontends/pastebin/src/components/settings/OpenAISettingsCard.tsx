@@ -88,6 +88,7 @@ export function OpenAISettingsCard() {
           <div className={styles.actionBtnRow}>
             <Button
               onClick={vm.handleSave}
+              disabled={!vm.apiKey.trim()}
               data-testid="save-api-key-btn"
               aria-label="Save AI settings"
             >

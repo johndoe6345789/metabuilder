@@ -185,7 +185,7 @@ describe('StorageBackendCard', () => {
       render(<StorageBackendCard {...defaultProps} envVarSet={true} />)
 
       const saveButton = screen.getByRole('button', {
-        name: /Save Storage Settings/i,
+        name: /Save storage configuration/i,
       })
       expect(saveButton).toBeDisabled()
     })
@@ -197,7 +197,7 @@ describe('StorageBackendCard', () => {
 
       expect(
         screen.getByRole('button', {
-          name: /Save Storage Settings/i,
+          name: /Save storage configuration/i,
         }),
       ).toBeInTheDocument()
     })
@@ -207,7 +207,7 @@ describe('StorageBackendCard', () => {
       render(<StorageBackendCard {...defaultProps} envVarSet={false} />)
 
       const saveButton = screen.getByRole('button', {
-        name: /Save Storage Settings/i,
+        name: /Save storage configuration/i,
       })
       await user.click(saveButton)
 
@@ -218,7 +218,7 @@ describe('StorageBackendCard', () => {
       render(<StorageBackendCard {...defaultProps} envVarSet={false} />)
 
       const saveButton = screen.getByRole('button', {
-        name: /Save Storage Settings/i,
+        name: /Save storage configuration/i,
       })
       expect(saveButton).not.toBeDisabled()
     })
@@ -235,7 +235,7 @@ describe('StorageBackendCard', () => {
       render(<StorageBackendCard {...defaultProps} onSaveConfig={slowSave} />)
 
       const saveButton = screen.getByRole('button', {
-        name: /Save Storage Settings/i,
+        name: /Save storage configuration/i,
       })
       await user.click(saveButton)
 

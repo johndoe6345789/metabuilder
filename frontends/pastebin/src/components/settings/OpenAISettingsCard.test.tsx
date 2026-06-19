@@ -14,14 +14,14 @@ describe('OpenAISettingsCard', () => {
       render(<OpenAISettingsCard />)
 
       expect(screen.getByTestId('openai-settings-card')).toBeInTheDocument()
-      expect(screen.getByText('OpenAI API Settings')).toBeInTheDocument()
+      expect(screen.getByText('AI Platform Settings')).toBeInTheDocument()
     })
 
     it('should render description', () => {
       render(<OpenAISettingsCard />)
 
       expect(
-        screen.getByText(/Configure your OpenAI API key/i),
+        screen.getByText(/Configure your AI platform/i),
       ).toBeInTheDocument()
     })
 
@@ -68,7 +68,7 @@ describe('OpenAISettingsCard', () => {
 
   describe('API key initialization', () => {
     it('should load API key from localStorage on mount', () => {
-      localStorage.setItem('openai_api_key', 'sk-test-key')
+      localStorage.setItem('ai_key_openai', 'sk-test-key')
       render(<OpenAISettingsCard />)
 
       const input = screen.getByTestId(
@@ -166,7 +166,7 @@ describe('OpenAISettingsCard', () => {
       const saveButton = screen.getByTestId('save-api-key-btn')
       await user.click(saveButton)
 
-      expect(localStorage.getItem('openai_api_key')).toBe('sk-testkey123')
+      expect(localStorage.getItem('ai_key_openai')).toBe('sk-testkey123')
     })
 
     it('should disable save button when no API key', () => {
@@ -189,7 +189,7 @@ describe('OpenAISettingsCard', () => {
 
   describe('clear functionality', () => {
     it('should clear input and localStorage on clear', async () => {
-      localStorage.setItem('openai_api_key', 'sk-test-key')
+      localStorage.setItem('ai_key_openai', 'sk-test-key')
       const user = userEvent.setup()
 
       render(<OpenAISettingsCard />)
@@ -202,7 +202,7 @@ describe('OpenAISettingsCard', () => {
       await user.click(clearButton)
 
       expect((input as HTMLInputElement).value).toBe('')
-      expect(localStorage.getItem('openai_api_key')).toBeNull()
+      expect(localStorage.getItem('ai_key_openai')).toBeNull()
     })
 
     it('should show clear button only when API key present', async () => {
