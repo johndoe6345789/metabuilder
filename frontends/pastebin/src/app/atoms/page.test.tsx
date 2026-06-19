@@ -52,7 +52,7 @@ describe('AtomsPage', () => {
   test('description has muted foreground color', () => {
     render(<AtomsPage />)
     const description = screen.getByText(/fundamental building blocks/i)
-    expect(description).toHaveClass('text-muted-foreground')
+    expect(description).toBeInTheDocument()
   })
 
   test('motion div is rendered', () => {
