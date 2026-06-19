@@ -6,6 +6,11 @@ import type { Snippet } from './types'
 
 const DBAL_TENANT = 'pastebin'
 
+/** Parse a timestamp that may arrive as epoch millis or an ISO string. */
+function toEpoch(v: unknown): number {
+  return Number(v) || Date.parse(String(v ?? '')) || 0
+}
+
 export function toSnippet(raw: Record<string, unknown>): Snippet {
   return {
     id: raw.id as string,
@@ -27,8 +32,8 @@ export function toSnippet(raw: Record<string, unknown>): Snippet {
         ? JSON.parse(raw.files || '[]')
         : (raw.files as Snippet['files']),
     entryPoint: raw.entryPoint as string | undefined,
-    createdAt: Number(raw.createdAt) || 0,
-    updatedAt: Number(raw.updatedAt) || Number(raw.createdAt) || 0,
+    createdAt: toEpoch(raw.createdAt),
+    updatedAt: toEpoch(raw.updatedAt) || toEpoch(raw.createdAt),
     shareToken: raw.shareToken as string | undefined,
   }
 }

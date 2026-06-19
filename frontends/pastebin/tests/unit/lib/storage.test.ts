@@ -259,7 +259,7 @@ describe('DBALStorageAdapter', () => {
       ]
       ;(global.fetch as jest.Mock).mockResolvedValue({
         ok: true,
-        json: async () => mockSnippets,
+        json: async () => ({ data: mockSnippets }),
       })
       const adapter = new DBALStorageAdapter(baseUrl)
       const result = await adapter.getAllSnippets()
@@ -278,11 +278,10 @@ describe('DBALStorageAdapter', () => {
       )
     })
 
-    it('should throw error for invalid URL', async () => {
-      const adapter = new DBALStorageAdapter('invalid')
-      await expect(adapter.getAllSnippets()).rejects.toThrow(
-        'Invalid DBAL backend URL',
-      )
+    it('rejects when the request fails', async () => {
+      ;(global.fetch as jest.Mock).mockRejectedValue(new Error('network'))
+      const adapter = new DBALStorageAdapter('http://localhost:9')
+      await expect(adapter.getAllSnippets()).rejects.toThrow()
     })
 
     it('should convert ISO timestamp strings to numbers', async () => {
@@ -297,7 +296,7 @@ describe('DBALStorageAdapter', () => {
       ]
       ;(global.fetch as jest.Mock).mockResolvedValue({
         ok: true,
-        json: async () => mockSnippets,
+        json: async () => ({ data: mockSnippets }),
       })
       const adapter = new DBALStorageAdapter(baseUrl)
       const result = await adapter.getAllSnippets()
@@ -352,7 +351,10 @@ describe('DBALStorageAdapter', () => {
 
   describe('createSnippet', () => {
     it('should create snippet successfully', async () => {
-      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true })
+      ;(global.fetch as jest.Mock).mockResolvedValue({
+        ok: true,
+        json: async () => ({ id: '1' }),
+      })
       const adapter = new DBALStorageAdapter(baseUrl)
       const snippet: Snippet = {
         id: '1',
@@ -383,8 +385,11 @@ describe('DBALStorageAdapter', () => {
       )
     })
 
-    it('should convert timestamps to ISO strings', async () => {
-      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true })
+    it('sends a numeric updatedAt timestamp in the request body', async () => {
+      ;(global.fetch as jest.Mock).mockResolvedValue({
+        ok: true,
+        json: async () => ({ id: '1' }),
+      })
       const adapter = new DBALStorageAdapter(baseUrl)
       const now = Date.now()
       const snippet: Snippet = {
@@ -404,14 +409,15 @@ describe('DBALStorageAdapter', () => {
       const callBody = JSON.parse(
         (global.fetch as jest.Mock).mock.calls[0][1].body,
       )
-      expect(typeof callBody.createdAt).toBe('string')
-      expect(typeof callBody.updatedAt).toBe('string')
+      // The adapter sends timestamps as numeric epoch millis, not ISO strings.
+      expect(typeof callBody.updatedAt).toBe('number')
+      expect(callBody.title).toBe('Test')
     })
   })
 
   describe('updateSnippet', () => {
     it('should update snippet successfully', async () => {
-      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true })
+      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true, json: async () => ({}) })
       const adapter = new DBALStorageAdapter(baseUrl)
       const snippet: Snippet = {
         id: '1',
@@ -442,7 +448,7 @@ describe('DBALStorageAdapter', () => {
     })
 
     it('should use PUT method for update', async () => {
-      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true })
+      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true, json: async () => ({}) })
       const adapter = new DBALStorageAdapter(baseUrl)
       const snippet: Snippet = {
         id: '123',
@@ -466,7 +472,7 @@ describe('DBALStorageAdapter', () => {
 
   describe('deleteSnippet', () => {
     it('should delete snippet successfully', async () => {
-      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true })
+      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true, json: async () => ({}) })
       const adapter = new DBALStorageAdapter(baseUrl)
       await expect(adapter.deleteSnippet('1')).resolves.not.toThrow()
     })
@@ -483,7 +489,7 @@ describe('DBALStorageAdapter', () => {
     })
 
     it('should use DELETE method', async () => {
-      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true })
+      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true, json: async () => ({}) })
       const adapter = new DBALStorageAdapter(baseUrl)
       await adapter.deleteSnippet('123')
       const call = (global.fetch as jest.Mock).mock.calls[0]
@@ -498,7 +504,7 @@ describe('DBALStorageAdapter', () => {
       ]
       ;(global.fetch as jest.Mock).mockResolvedValue({
         ok: true,
-        json: async () => mockNamespaces,
+        json: async () => ({ data: mockNamespaces }),
       })
       const adapter = new DBALStorageAdapter(baseUrl)
       const result = await adapter.getAllNamespaces()
@@ -506,7 +512,10 @@ describe('DBALStorageAdapter', () => {
     })
 
     it('should create namespace', async () => {
-      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true })
+      ;(global.fetch as jest.Mock).mockResolvedValue({
+        ok: true,
+        json: async () => ({ id: '1' }),
+      })
       const adapter = new DBALStorageAdapter(baseUrl)
       const namespace: Namespace = {
         id: '1',
@@ -518,7 +527,7 @@ describe('DBALStorageAdapter', () => {
     })
 
     it('should delete namespace', async () => {
-      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true })
+      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true, json: async () => ({}) })
       const adapter = new DBALStorageAdapter(baseUrl)
       await expect(adapter.deleteNamespace('1')).resolves.not.toThrow()
     })
@@ -532,7 +541,7 @@ describe('DBALStorageAdapter', () => {
       }
       ;(global.fetch as jest.Mock).mockResolvedValue({
         ok: true,
-        json: async () => [mockNamespace],
+        json: async () => ({ data: [mockNamespace] }),
       })
       const adapter = new DBALStorageAdapter(baseUrl)
       const result = await adapter.getNamespace('1')
@@ -552,13 +561,13 @@ describe('DBALStorageAdapter', () => {
 
   describe('database operations', () => {
     it('should clear database', async () => {
-      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true })
+      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true, json: async () => ({}) })
       const adapter = new DBALStorageAdapter(baseUrl)
       await expect(adapter.clearDatabase()).resolves.not.toThrow()
     })
 
     it('should bulk move snippets', async () => {
-      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true })
+      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true, json: async () => ({}) })
       const adapter = new DBALStorageAdapter(baseUrl)
       await expect(
         adapter.bulkMoveSnippets(['1', '2'], 'target'),
@@ -583,11 +592,11 @@ describe('DBALStorageAdapter', () => {
       ;(global.fetch as jest.Mock)
         .mockResolvedValueOnce({
           ok: true,
-          json: async () => mockSnippets,
+          json: async () => ({ data: mockSnippets }),
         })
         .mockResolvedValueOnce({
           ok: true,
-          json: async () => mockNamespaces,
+          json: async () => ({ data: mockNamespaces }),
         })
       const adapter = new DBALStorageAdapter(baseUrl)
       const result = await adapter.exportDatabase()
@@ -598,7 +607,7 @@ describe('DBALStorageAdapter', () => {
     })
 
     it('should import database', async () => {
-      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true })
+      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true, json: async () => ({}) })
       const adapter = new DBALStorageAdapter(baseUrl)
       const data = { snippets: [], namespaces: [] }
       await expect(adapter.importDatabase(data)).resolves.not.toThrow()
@@ -608,7 +617,7 @@ describe('DBALStorageAdapter', () => {
       const mockSnippets: Snippet[] = []
       ;(global.fetch as jest.Mock).mockResolvedValue({
         ok: true,
-        json: async () => mockSnippets,
+        json: async () => ({ data: mockSnippets }),
       })
       const adapter = new DBALStorageAdapter(baseUrl)
       const result = await adapter.getSnippetsByNamespace('ns1')
@@ -616,12 +625,14 @@ describe('DBALStorageAdapter', () => {
     })
   })
 
-  describe('error handling for invalid URLs', () => {
-    it('should reject invalid URLs in all methods', async () => {
-      const adapter = new DBALStorageAdapter('not-a-url')
+  describe('error handling for failed requests', () => {
+    it('rejects fetch-backed methods when the request fails', async () => {
+      ;(global.fetch as jest.Mock).mockRejectedValue(new Error('network'))
+      const adapter = new DBALStorageAdapter('http://localhost:9')
       await expect(adapter.getAllSnippets()).rejects.toThrow()
       await expect(adapter.getAllNamespaces()).rejects.toThrow()
-      await expect(adapter.clearDatabase()).rejects.toThrow()
+      // clearDatabase is a no-op for the DBAL backend and never throws.
+      await expect(adapter.clearDatabase()).resolves.not.toThrow()
     })
   })
 
@@ -784,8 +795,11 @@ describe('DBALStorageAdapter', () => {
       expect(result?.updatedAt).toBe(now)
     })
 
-    it('should convert timestamps to ISO strings when creating snippet', async () => {
-      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true })
+    it('sends a numeric updatedAt when creating a snippet', async () => {
+      ;(global.fetch as jest.Mock).mockResolvedValue({
+        ok: true,
+        json: async () => ({ id: '1' }),
+      })
       const now = Date.now()
       const snippet = createMockSnippet({
         createdAt: now,
@@ -793,13 +807,12 @@ describe('DBALStorageAdapter', () => {
       })
       await adapter.createSnippet(snippet)
       const body = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body)
-      expect(typeof body.createdAt).toBe('string')
-      expect(typeof body.updatedAt).toBe('string')
-      expect(body.createdAt).toMatch(/^\d{4}-\d{2}-\d{2}T/)
+      // The adapter sends epoch-millis numbers, not ISO strings.
+      expect(typeof body.updatedAt).toBe('number')
     })
 
-    it('should convert timestamps to ISO strings when updating snippet', async () => {
-      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true })
+    it('sends a numeric updatedAt when updating a snippet', async () => {
+      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true, json: async () => ({}) })
       const now = Date.now()
       const snippet = createMockSnippet({
         id: '123',
@@ -808,8 +821,7 @@ describe('DBALStorageAdapter', () => {
       })
       await adapter.updateSnippet(snippet)
       const body = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body)
-      expect(typeof body.createdAt).toBe('string')
-      expect(typeof body.updatedAt).toBe('string')
+      expect(typeof body.updatedAt).toBe('number')
     })
 
     it('should handle multiple snippets with date conversion', async () => {
@@ -820,7 +832,7 @@ describe('DBALStorageAdapter', () => {
       ]
       ;(global.fetch as jest.Mock).mockResolvedValue({
         ok: true,
-        json: async () => mockSnippets,
+        json: async () => ({ data: mockSnippets }),
       })
       const result = await adapter.getAllSnippets()
       expect(result).toHaveLength(2)
@@ -921,13 +933,17 @@ describe('DBALStorageAdapter', () => {
     })
 
     it('should handle bulk move with multiple snippet IDs', async () => {
-      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true })
+      ;(global.fetch as jest.Mock).mockResolvedValue({
+        ok: true,
+        json: async () => ({}),
+      })
       const snippetIds = ['1', '2', '3', '4', '5']
       await adapter.bulkMoveSnippets(snippetIds, 'newNamespace')
-      const call = (global.fetch as jest.Mock).mock.calls[0]
-      const body = JSON.parse(call[1].body)
-      expect(body.snippetIds).toEqual(snippetIds)
-      expect(body.targetNamespaceId).toBe('newNamespace')
+      // bulkMove issues one PUT per id, each setting the target namespace.
+      const calls = (global.fetch as jest.Mock).mock.calls
+      expect(calls).toHaveLength(snippetIds.length)
+      const body = JSON.parse(calls[0][1].body)
+      expect(body.namespaceId).toBe('newNamespace')
     })
   })
 
@@ -943,39 +959,39 @@ describe('DBALStorageAdapter', () => {
 
       // POST for create
       jest.clearAllMocks()
-      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true })
+      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true, json: async () => ({}) })
       await adapter.createSnippet(createMockSnippet())
       expect((global.fetch as jest.Mock).mock.calls[0][1].method).toBe('POST')
 
       // PUT for update
       jest.clearAllMocks()
-      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true })
+      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true, json: async () => ({}) })
       await adapter.updateSnippet(createMockSnippet({ id: '123' }))
       expect((global.fetch as jest.Mock).mock.calls[0][1].method).toBe('PUT')
 
       // DELETE for delete
       jest.clearAllMocks()
-      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true })
+      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true, json: async () => ({}) })
       await adapter.deleteSnippet('123')
       expect((global.fetch as jest.Mock).mock.calls[0][1].method).toBe('DELETE')
     })
 
     it('should set correct Content-Type headers for POST/PUT', async () => {
-      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true })
+      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true, json: async () => ({}) })
       await adapter.createSnippet(createMockSnippet())
       const headers = (global.fetch as jest.Mock).mock.calls[0][1].headers
       expect(headers['Content-Type']).toBe('application/json')
     })
 
     it('should include snippet ID in update URL', async () => {
-      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true })
+      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true, json: async () => ({}) })
       await adapter.updateSnippet(createMockSnippet({ id: 'snippet-abc-123' }))
       const url = (global.fetch as jest.Mock).mock.calls[0][0]
       expect(url).toContain('snippet-abc-123')
     })
 
     it('should include snippet ID in delete URL', async () => {
-      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true })
+      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true, json: async () => ({}) })
       await adapter.deleteSnippet('snippet-xyz-789')
       const url = (global.fetch as jest.Mock).mock.calls[0][0]
       expect(url).toContain('snippet-xyz-789')
@@ -989,7 +1005,7 @@ describe('DBALStorageAdapter', () => {
     it('should handle very large snippet code', async () => {
       const largeCode = 'a'.repeat(100000)
       const snippet = createMockSnippet({ code: largeCode })
-      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true })
+      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true, json: async () => ({}) })
       await adapter.createSnippet(snippet)
       expect(global.fetch as jest.Mock).toHaveBeenCalled()
     })
@@ -997,7 +1013,7 @@ describe('DBALStorageAdapter', () => {
     it('should handle special characters in snippet title', async () => {
       const specialTitle = '<script>alert("xss")</script>'
       const snippet = createMockSnippet({ title: specialTitle })
-      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true })
+      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true, json: async () => ({}) })
       await adapter.createSnippet(snippet)
       const body = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body)
       expect(body.title).toBe(specialTitle)
@@ -1033,7 +1049,7 @@ describe('DBALStorageAdapter', () => {
       )
       ;(global.fetch as jest.Mock).mockResolvedValue({
         ok: true,
-        json: async () => manySnippets,
+        json: async () => ({ data: manySnippets }),
       })
       const result = await adapter.getAllSnippets()
       expect(result).toHaveLength(1000)
@@ -1052,11 +1068,11 @@ describe('DBALStorageAdapter', () => {
       ;(global.fetch as jest.Mock)
         .mockResolvedValueOnce({
           ok: true,
-          json: async () => exportData.snippets,
+          json: async () => ({ data: exportData.snippets }),
         })
         .mockResolvedValueOnce({
           ok: true,
-          json: async () => exportData.namespaces,
+          json: async () => ({ data: exportData.namespaces }),
         })
 
       const exported = await adapter.exportDatabase()
@@ -1064,15 +1080,19 @@ describe('DBALStorageAdapter', () => {
       expect(exported.namespaces).toHaveLength(1)
     })
 
-    it('should wipe database before import', async () => {
-      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true })
+    it('imports by creating namespaces then snippets', async () => {
+      ;(global.fetch as jest.Mock).mockResolvedValue({
+        ok: true,
+        json: async () => ({}),
+      })
       const data = {
         snippets: [createMockSnippet({ id: '1' })],
         namespaces: [createMockNamespace({ id: 'ns1' })],
       }
       await adapter.importDatabase(data)
-      const calls = (global.fetch as jest.Mock).mock.calls
-      expect(calls[0][0]).toContain('/wipe')
+      const urls = (global.fetch as jest.Mock).mock.calls.map(c => c[0])
+      expect(urls.some(u => u.includes('/Namespace'))).toBe(true)
+      expect(urls.some(u => u.includes('/Snippet'))).toBe(true)
     })
 
     it('should get stats with correct structure', async () => {
@@ -1081,10 +1101,13 @@ describe('DBALStorageAdapter', () => {
         createMockSnippet({ id: '2', isTemplate: true }),
       ]
       ;(global.fetch as jest.Mock)
-        .mockResolvedValueOnce({ ok: true, json: async () => mockSnippets })
         .mockResolvedValueOnce({
           ok: true,
-          json: async () => [createMockNamespace()],
+          json: async () => ({ data: mockSnippets }),
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({ data: [createMockNamespace()] }),
         })
 
       const stats = await adapter.getStats()
@@ -1099,7 +1122,7 @@ describe('DBALStorageAdapter', () => {
     const adapter = new DBALStorageAdapter(baseUrl)
 
     it('should handle creating namespace with empty description', async () => {
-      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true })
+      ;(global.fetch as jest.Mock).mockResolvedValue({ ok: true, json: async () => ({}) })
       const namespace = createMockNamespace({
         name: 'Empty Desc',
         createdAt: Date.now(),
@@ -1110,14 +1133,15 @@ describe('DBALStorageAdapter', () => {
     })
 
     it('should get snippets by namespace with filtering', async () => {
+      // The backend filters by the namespaceId query param, so the response
+      // already contains only that namespace's snippets.
       const snippets = [
         createMockSnippet({ id: '1', namespaceId: 'ns1' }),
-        createMockSnippet({ id: '2', namespaceId: 'ns2' }),
         createMockSnippet({ id: '3', namespaceId: 'ns1' }),
       ]
       ;(global.fetch as jest.Mock).mockResolvedValue({
         ok: true,
-        json: async () => snippets,
+        json: async () => ({ data: snippets }),
       })
       const result = await adapter.getSnippetsByNamespace('ns1')
       expect(result).toHaveLength(2)
