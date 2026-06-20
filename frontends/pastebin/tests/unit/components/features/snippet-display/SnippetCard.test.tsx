@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@/test-utils'
+import userEvent from '@testing-library/user-event'
 import { SnippetCard } from '@/components/features/snippet-display/SnippetCard'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Snippet, Namespace } from '@/lib/types'
@@ -45,6 +46,18 @@ jest.mock('@/components/features/snippet-display/SnippetCardActions', () => ({
         Delete
       </button>
     </div>
+  ),
+}))
+
+jest.mock('@/components/features/snippet-display/SnippetDeleteDialog', () => ({
+  SnippetDeleteDialog: ({ open, onConfirm }: any) => (
+    open ? (
+      <div data-testid="delete-dialog">
+        <button onClick={onConfirm} data-testid="delete-confirm">
+          Confirm Delete
+        </button>
+      </div>
+    ) : null
   ),
 }))
 
@@ -305,11 +318,17 @@ describe('SnippetCard', () => {
   })
 
   describe('Delete Functionality', () => {
-    it('should call onDelete with snippet id', () => {
+    it('should call onDelete with snippet id', async () => {
       const onDelete = jest.fn()
+      const user = userEvent.setup()
       render(<SnippetCard {...defaultProps} onDelete={onDelete} />)
       const deleteBtn = screen.getByTestId('action-delete')
-      fireEvent.click(deleteBtn)
+      await user.click(deleteBtn)
+      await waitFor(() => {
+        expect(screen.getByTestId('delete-dialog')).toBeInTheDocument()
+      })
+      const confirmBtn = screen.getByTestId('delete-confirm')
+      await user.click(confirmBtn)
       expect(onDelete).toHaveBeenCalledWith(mockSnippet.id)
     })
   })
