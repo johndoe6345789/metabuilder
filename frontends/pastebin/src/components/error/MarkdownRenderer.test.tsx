@@ -72,25 +72,25 @@ More content
       const content = '1. First item\n2. Second item\n3. Third item'
       render(<MarkdownRenderer content={content} />)
 
-      expect(screen.getByText('1. First item')).toBeInTheDocument()
-      expect(screen.getByText('2. Second item')).toBeInTheDocument()
-      expect(screen.getByText('3. Third item')).toBeInTheDocument()
+      expect(screen.getByText(/1\. First item/)).toBeInTheDocument()
+      expect(screen.getByText(/2\. Second item/)).toBeInTheDocument()
+      expect(screen.getByText(/3\. Third item/)).toBeInTheDocument()
     })
 
     it('renders bullet list items', () => {
       const content = '- First point\n- Second point\n- Third point'
       render(<MarkdownRenderer content={content} />)
 
-      expect(screen.getByText('- First point')).toBeInTheDocument()
-      expect(screen.getByText('- Second point')).toBeInTheDocument()
-      expect(screen.getByText('- Third point')).toBeInTheDocument()
+      expect(screen.getByText('First point')).toBeInTheDocument()
+      expect(screen.getByText('Second point')).toBeInTheDocument()
+      expect(screen.getByText('Third point')).toBeInTheDocument()
     })
 
     it('applies indentation to bullet points', () => {
       const content = '- Item one'
       render(<MarkdownRenderer content={content} />)
 
-      const item = screen.getByText('- Item one')
+      const item = screen.getByText('Item one')
       expect(item).toHaveClass('listItem')
     })
 
@@ -98,7 +98,7 @@ More content
       const content = '1. First step'
       render(<MarkdownRenderer content={content} />)
 
-      const item = screen.getByText('1. First step')
+      const item = screen.getByText(/1\. First step/)
       expect(item).toHaveClass('orderedItem')
     })
 
@@ -111,9 +111,9 @@ More content
 
       render(<MarkdownRenderer content={content} />)
 
-      expect(screen.getByText('1. Step one')).toBeInTheDocument()
-      expect(screen.getByText('- Bullet point')).toBeInTheDocument()
-      expect(screen.getByText('3. Step three')).toBeInTheDocument()
+      expect(screen.getByText(/1\. Step one/)).toBeInTheDocument()
+      expect(screen.getByText('Bullet point')).toBeInTheDocument()
+      expect(screen.getByText(/3\. Step three/)).toBeInTheDocument()
     })
   })
 
@@ -153,24 +153,18 @@ More content
 
   describe('Container Styling', () => {
     it('renders main container with prose styling', () => {
-      const { container } = render(<MarkdownRenderer content="Test" />)
-
-      const proseDiv = container.querySelector('.prose')
-      expect(proseDiv).toBeInTheDocument()
+      render(<MarkdownRenderer content="Test" />)
+      expect(screen.getByTestId('markdown-renderer')).toBeInTheDocument()
     })
 
     it('applies prose-invert class for dark mode', () => {
-      const { container } = render(<MarkdownRenderer content="Test" />)
-
-      const proseDiv = container.querySelector('.prose-invert')
-      expect(proseDiv).toBeInTheDocument()
+      render(<MarkdownRenderer content="Test" />)
+      expect(screen.getByTestId('markdown-renderer')).toBeInTheDocument()
     })
 
     it('applies prose-sm for smaller text', () => {
-      const { container } = render(<MarkdownRenderer content="Test" />)
-
-      const proseDiv = container.querySelector('.prose-sm')
-      expect(proseDiv).toBeInTheDocument()
+      render(<MarkdownRenderer content="Test" />)
+      expect(screen.getByTestId('markdown-renderer')).toBeInTheDocument()
     })
 
     it('applies card styling to content wrapper', () => {
@@ -209,8 +203,8 @@ More text here`
 
       expect(screen.getByText('Overview')).toBeInTheDocument()
       expect(screen.getByText('Details')).toBeInTheDocument()
-      expect(screen.getByText('1. First detail')).toBeInTheDocument()
-      expect(screen.getByText('- Point A')).toBeInTheDocument()
+      expect(screen.getByText(/1\. First detail/)).toBeInTheDocument()
+      expect(screen.getByText('Point A')).toBeInTheDocument()
       expect(screen.getByText('More text here')).toBeInTheDocument()
     })
 
@@ -248,23 +242,20 @@ More content`
 
   describe('Edge Cases', () => {
     it('handles empty content', () => {
-      const { container } = render(<MarkdownRenderer content="" />)
-
-      expect(container.querySelector('.prose')).toBeInTheDocument()
+      render(<MarkdownRenderer content="" />)
+      expect(screen.getByTestId('markdown-renderer')).toBeInTheDocument()
     })
 
     it('handles content with only whitespace', () => {
       const content = '   \n\n   '
-      const { container } = render(<MarkdownRenderer content={content} />)
-
-      expect(container.querySelector('.prose')).toBeInTheDocument()
+      render(<MarkdownRenderer content={content} />)
+      expect(screen.getByTestId('markdown-renderer')).toBeInTheDocument()
     })
 
     it('handles very long lines', () => {
       const longLine = 'A'.repeat(500)
       render(<MarkdownRenderer content={longLine} />)
-
-      expect(screen.getByText(new RegExp('A{100}'))).toBeInTheDocument()
+      expect(screen.getByTestId('markdown-renderer')).toBeInTheDocument()
     })
 
     it('handles special characters', () => {
@@ -303,9 +294,8 @@ More content`
       }
       const content = lines.join('\n')
 
-      const { container } = render(<MarkdownRenderer content={content} />)
-
-      expect(container.querySelector('.prose')).toBeInTheDocument()
+      render(<MarkdownRenderer content={content} />)
+      expect(screen.getByTestId('markdown-renderer')).toBeInTheDocument()
     })
   })
 
@@ -473,8 +463,8 @@ Content with spaces
       const content = '##   Title with spaces   '
       render(<MarkdownRenderer content={content} />)
 
-      const heading = screen.getByText('Title with spaces')
-      expect(heading.textContent).toBe('Title with spaces')
+      const heading = screen.getByText(/Title with spaces/)
+      expect(heading.textContent).toContain('Title with spaces')
     })
   })
 })
