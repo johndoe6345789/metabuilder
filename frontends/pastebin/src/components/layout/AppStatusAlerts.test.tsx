@@ -50,8 +50,8 @@ describe('AppStatusAlerts', () => {
 
     test('renders two alerts in local mode', () => {
       render(<AppStatusAlerts />)
-      const alerts = screen.getAllByRole('alert')
-      expect(alerts.length).toBe(2)
+      expect(screen.getByTestId('alert-success')).toBeInTheDocument()
+      expect(screen.getByTestId('alert-error')).toBeInTheDocument()
     })
 
     test('destructive alert has correct styling', () => {
@@ -93,8 +93,8 @@ describe('AppStatusAlerts', () => {
 
     test('renders only one alert in Flask mode', () => {
       render(<AppStatusAlerts />)
-      const alerts = screen.getAllByRole('alert')
-      expect(alerts.length).toBe(1)
+      expect(screen.getByTestId('alert-success')).toBeInTheDocument()
+      expect(screen.queryByTestId('alert-error')).not.toBeInTheDocument()
     })
 
     test('success alert has correct styling', () => {

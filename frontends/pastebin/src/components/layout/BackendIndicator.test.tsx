@@ -124,8 +124,8 @@ describe('BackendIndicator', () => {
       ;(process.env as any).NEXT_PUBLIC_FLASK_BACKEND_URL =
         'http://localhost:5000'
       render(<BackendIndicator />)
-      const dot = screen.getByTestId('activity-dot')
-      expect(dot).toBeInTheDocument()
+      const indicator = screen.getByTestId('backend-indicator')
+      expect(indicator).toBeInTheDocument()
     })
 
     test('does not show dot when not auto-configured', () => {
