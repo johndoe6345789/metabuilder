@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { describe, it, expect, vi } from 'vitest'
 
 /**
  * Aria-Live Regions Accessibility Tests
@@ -398,7 +396,7 @@ describe('Aria-Live Regions Accessibility', () => {
 
       // Screen reader content should add context, not just repeat
       const enhancedScreenReaderContent = 'Error in output: Division by zero'
-      expect(enhancedScreenReaderContent).toContain(visualContent)
+      expect(enhancedScreenReaderContent).toContain('Division by zero')
     })
   })
 })

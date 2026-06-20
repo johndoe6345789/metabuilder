@@ -72,36 +72,40 @@ export default function DemoPage() {
         </div>
 
         <Card>
-          <CardHeader>
-            <h3
-              style={{
-                fontWeight: 600,
-                marginBottom: '2px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-              }}
-            >
-              <MaterialIcon
-                name="auto_awesome"
-                size={20}
+          <CardHeader
+            title={
+              <h3
                 style={{
-                  color: 'var(--mat-sys-accent, var(--mat-sys-tertiary))',
+                  fontWeight: 600,
+                  marginBottom: '2px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
                 }}
-              />
-              Interactive Code Editor
-            </h3>
-            <p
-              style={{
-                color: 'var(--mat-sys-on-surface-variant)',
-                fontSize: '0.875rem',
-              }}
-            >
-              This editor supports JSX, TSX, JavaScript, and TypeScript with
-              live preview. Try switching between Code, Split, and Preview modes
-              using the buttons above the editor.
-            </p>
-          </CardHeader>
+              >
+                <MaterialIcon
+                  name="auto_awesome"
+                  size={20}
+                  style={{
+                    color: 'var(--mat-sys-accent, var(--mat-sys-tertiary))',
+                  }}
+                />
+                Interactive Code Editor
+              </h3>
+            }
+            subheader={
+              <p
+                style={{
+                  color: 'var(--mat-sys-on-surface-variant)',
+                  fontSize: '0.875rem',
+                }}
+              >
+                This editor supports JSX, TSX, JavaScript, and TypeScript with
+                live preview. Try switching between Code, Split, and Preview
+                modes using the buttons above the editor.
+              </p>
+            }
+          />
           <CardContent>
             <SplitScreenEditor
               value={code}

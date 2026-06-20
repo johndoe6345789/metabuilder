@@ -15,130 +15,45 @@
 
 import React from 'react'
 import { render, screen, waitFor } from '@/test-utils'
-import { act } from 'react'
 import userEvent from '@testing-library/user-event'
 
-// Mock components - handle undefined/null props safely
-const MockMonacoEditor = (props: any) => {
-  if (!props) return null
-  const { value = '', onChange = () => {}, language = '', height } = props
-  return (
-    <div data-testid="monaco-editor" style={{ height }}>
-      <textarea
-        data-testid="monaco-code-input"
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        placeholder={`Code in ${language}`}
-      />
-    </div>
-  )
-}
-
-const MockReactPreview = (props: any) => {
-  if (!props) return null
-  const { code = '', language = '', functionName = '' } = props
-  return (
-    <div data-testid="react-preview">
-      React Preview: {language} - {functionName}
-    </div>
-  )
-}
-
-const MockPythonOutput = (props: any) => {
-  if (!props) return null
-  return <div data-testid="python-output">Python Output</div>
-}
-
-// Mock the component modules
-jest.mock('./MonacoEditor', () => ({
-  MonacoEditor: MockMonacoEditor,
-}))
-
-jest.mock('./ReactPreview', () => ({
-  ReactPreview: MockReactPreview,
-}))
-
-jest.mock('@/components/features/python-runner/PythonOutput', () => ({
-  PythonOutput: MockPythonOutput,
-}))
-
-// Mock next/dynamic - simplified version that works with async imports
+// Synchronous next/dynamic mock — resolves components immediately without async state
 jest.mock('next/dynamic', () => {
-  // Global cache for components across all instances
-  const componentCache = new Map<string, React.ComponentType<any>>()
-  const loadingPromises = new Map<
-    string,
-    Promise<React.ComponentType<any>>
-  >()
-
-  return (
-    importFunc: () => Promise<{ default: React.ComponentType<any> }>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _options?: any,
-  ) => {
-    const cacheKey = String(importFunc)
-
-    // Start loading immediately if not already loading
-    if (!loadingPromises.has(cacheKey)) {
-      const promise = importFunc()
-        .then((mod: any) => {
-          const component = mod.default
-          componentCache.set(cacheKey, component)
-          return component
-        })
-        .catch(() => null as any)
-      loadingPromises.set(cacheKey, promise)
-    }
-
-    // eslint-disable-next-line react/display-name
-    return (props: any) => {
-      const [Comp, setComp] =
-        React.useState<React.ComponentType<any> | null>(
-          componentCache.get(cacheKey) || null,
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const React = require('react')
+  return (importFn: any) => {
+    const fnStr = String(importFn)
+    if (fnStr.includes('MonacoEditor')) {
+      return function MockMonacoEditor({ value = '', onChange = (_: string) => {}, language = '', height = '' }: any) {
+        return React.createElement('div', { 'data-testid': 'monaco-editor', style: { height } },
+          React.createElement('textarea', {
+            'data-testid': 'monaco-code-input',
+            value,
+            onChange: (e: any) => onChange(e.target.value),
+            placeholder: `Code in ${language}`,
+          })
         )
-
-      React.useEffect(() => {
-        const cached = componentCache.get(cacheKey)
-        if (cached && !Comp) {
-          setComp(cached)
-          return
-        }
-
-        if (!Comp) {
-          const promise = loadingPromises.get(cacheKey)
-          if (promise) {
-            promise.then((component: React.ComponentType<any> | null) => {
-              if (component) {
-                componentCache.set(cacheKey, component)
-                setComp(component)
-              }
-            })
-          }
-        }
-      }, [Comp])
-
-      return Comp ? <Comp {...props} /> : null
+      }
     }
+    if (fnStr.includes('ReactPreview')) {
+      return function MockReactPreview({ language = '', functionName = '' }: any) {
+        return React.createElement('div', { 'data-testid': 'react-preview' },
+          `React Preview: ${language} - ${functionName}`)
+      }
+    }
+    if (fnStr.includes('PythonOutput')) {
+      return function MockPythonOutput() {
+        return React.createElement('div', { 'data-testid': 'python-output' }, 'Python Output')
+      }
+    }
+    return function() { return null }
   }
 })
 
 // Import after mocks are set up
 import { SplitScreenEditor } from './SplitScreenEditor'
 
-// Pre-load all dynamic imports to ensure they're available
-const preloadDynamicImports = async () => {
-  await Promise.all([
-    import('./MonacoEditor'),
-    import('./ReactPreview'),
-    import('@/components/features/python-runner/PythonOutput'),
-  ])
-}
-
 describe('SplitScreenEditor Component', () => {
-  beforeAll(async () => {
-    // Pre-load all modules
-    await preloadDynamicImports()
-  })
   const mockOnChange = jest.fn()
 
   const defaultProps = {
@@ -148,22 +63,8 @@ describe('SplitScreenEditor Component', () => {
     height: '500px',
   }
 
-  // Helper to wait for async components to load after render
   const renderAndWait = async (element: React.ReactElement) => {
-    let result: any
-    await act(async () => {
-      result = render(element)
-      // Give promises a chance to resolve
-      await new Promise(resolve => setTimeout(resolve, 0))
-    })
-    // Wait for at least the root element to be present
-    await waitFor(
-      () => {
-        screen.getByTestId('split-screen-editor')
-      },
-      { timeout: 3000 },
-    )
-    return result
+    return render(element)
   }
 
   beforeEach(() => {
@@ -171,31 +72,16 @@ describe('SplitScreenEditor Component', () => {
   })
 
   describe('Unsupported Language Handling', () => {
-    it('renders only MonacoEditor for unsupported languages', async () => {
-      await renderAndWait(<SplitScreenEditor {...defaultProps} language="Go" />)
-
-      await waitFor(
-        () => {
-          expect(screen.getByTestId('monaco-editor')).toBeInTheDocument()
-        },
-        { timeout: 3000 },
-      )
+    it('renders only MonacoEditor for unsupported languages', () => {
+      render(<SplitScreenEditor {...defaultProps} language="Go" />)
+      expect(screen.getByTestId('monaco-editor')).toBeInTheDocument()
       expect(screen.queryByTestId('react-preview')).not.toBeInTheDocument()
       expect(screen.queryByTestId('python-output')).not.toBeInTheDocument()
     })
 
-    it('does not show view mode buttons for unsupported languages', async () => {
-      await renderAndWait(<SplitScreenEditor {...defaultProps} language="Rust" />)
-
-      // Wait for the monaco editor to load
-      await waitFor(
-        () => {
-          expect(screen.getByTestId('monaco-editor')).toBeInTheDocument()
-        },
-        { timeout: 3000 },
-      )
-
-      // Then check that view mode buttons are NOT shown
+    it('does not show view mode buttons for unsupported languages', () => {
+      render(<SplitScreenEditor {...defaultProps} language="Rust" />)
+      expect(screen.getByTestId('monaco-editor')).toBeInTheDocument()
       expect(
         screen.queryByRole('button', { name: /code/i }),
       ).not.toBeInTheDocument()

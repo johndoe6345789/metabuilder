@@ -333,21 +333,21 @@ describe('CodeEditorSection', () => {
 
   describe('Edge Cases', () => {
     it('should handle empty code', () => {
-      render(<CodeEditorSection {...defaultProps} code="" />)
+      render(<CodeEditorSection {...defaultProps} code="" files={[{ name: 'index.js', content: '' }]} />)
       const textarea = screen.getByTestId('monaco-textarea')
       expect(textarea).toHaveValue('')
     })
 
     it('should handle very long code strings', () => {
       const longCode = 'const x = 1;'.repeat(1000)
-      render(<CodeEditorSection {...defaultProps} code={longCode} />)
+      render(<CodeEditorSection {...defaultProps} code={longCode} files={[{ name: 'index.js', content: longCode }]} />)
       const textarea = screen.getByTestId('monaco-textarea')
       expect(textarea).toHaveValue(longCode)
     })
 
     it('should handle code with special characters', () => {
       const specialCode = 'const regex = /[\\w-]+/g;'
-      render(<CodeEditorSection {...defaultProps} code={specialCode} />)
+      render(<CodeEditorSection {...defaultProps} code={specialCode} files={[{ name: 'index.js', content: specialCode }]} />)
       const textarea = screen.getByTestId('monaco-textarea')
       expect(textarea).toHaveValue(specialCode)
     })

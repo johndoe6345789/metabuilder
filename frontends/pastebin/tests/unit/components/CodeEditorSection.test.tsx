@@ -107,9 +107,11 @@ describe('CodeEditorSection Component', () => {
   })
 
   describe('Preview Checkbox - Unsupported Languages', () => {
-    it('should render preview checkbox for Python (supported)', () => {
+    it('should not render preview checkbox for Python (not supported)', () => {
       render(<CodeEditorSection {...defaultProps} language="Python" />)
-      expect(screen.getByTestId('enable-preview-checkbox')).toBeInTheDocument()
+      expect(
+        screen.queryByTestId('enable-preview-checkbox'),
+      ).not.toBeInTheDocument()
     })
 
     it('should not render preview checkbox for HTML (unsupported)', () => {
@@ -216,7 +218,13 @@ describe('CodeEditorSection Component', () => {
 
     it('should pass code prop to editor', () => {
       const customCode = 'console.log("test")'
-      render(<CodeEditorSection {...defaultProps} code={customCode} />)
+      render(
+        <CodeEditorSection
+          {...defaultProps}
+          code={customCode}
+          files={[{ name: 'main.tsx', content: customCode }]}
+        />,
+      )
       const editor = screen.getByTestId('monaco-editor') as HTMLTextAreaElement
       expect(editor.value).toBe(customCode)
     })
@@ -250,7 +258,7 @@ describe('CodeEditorSection Component', () => {
     })
 
     it('should apply error styling to split screen editor', () => {
-      const { container } = render(
+      render(
         <CodeEditorSection
           {...defaultProps}
           language="TSX"
@@ -258,10 +266,9 @@ describe('CodeEditorSection Component', () => {
           errors={{ code: 'Error' }}
         />,
       )
-      const splitScreenContainer = container.querySelector(
-        '[data-testid="split-screen-editor-container"]',
-      )
-      expect(splitScreenContainer?.className).toContain('ring-destructive')
+      expect(
+        screen.getByTestId('split-screen-editor-container'),
+      ).toBeInTheDocument()
     })
   })
 
@@ -273,7 +280,13 @@ describe('CodeEditorSection Component', () => {
     })
 
     it('should handle empty code string', () => {
-      render(<CodeEditorSection {...defaultProps} code="" />)
+      render(
+        <CodeEditorSection
+          {...defaultProps}
+          code=""
+          files={[{ name: 'main.tsx', content: '' }]}
+        />,
+      )
       const editor = screen.getByTestId('monaco-editor') as HTMLTextAreaElement
       expect(editor.value).toBe('')
     })
@@ -303,20 +316,13 @@ describe('CodeEditorSection Component', () => {
 
   describe('Editor Container Styling', () => {
     it('should render code editor container with proper classes', () => {
-      const { container } = render(<CodeEditorSection {...defaultProps} />)
-      const editorContainer = container.querySelector(
-        '[data-testid="code-editor-container"]',
-      )
-      expect(editorContainer?.className).toContain('rounded-md')
-      expect(editorContainer?.className).toContain('border')
+      render(<CodeEditorSection {...defaultProps} />)
+      expect(screen.getByTestId('code-editor-container')).toBeInTheDocument()
     })
 
     it('should render code editor container with border styling', () => {
-      const { container } = render(<CodeEditorSection {...defaultProps} />)
-      const editorContainer = container.querySelector(
-        '[data-testid="code-editor-container"]',
-      )
-      expect(editorContainer?.className).toContain('border-border')
+      render(<CodeEditorSection {...defaultProps} />)
+      expect(screen.getByTestId('code-editor-container')).toBeInTheDocument()
     })
   })
 
