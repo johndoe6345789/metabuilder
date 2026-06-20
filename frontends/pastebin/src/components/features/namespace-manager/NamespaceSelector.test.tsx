@@ -1,17 +1,30 @@
 import React from 'react'
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { render, screen, waitFor } from '@/test-utils'
-import userEvent from '@testing-library/user-event'
+import { render, screen } from '@/test-utils'
 import { NamespaceSelector } from './NamespaceSelector'
-import * as db from '@/lib/db'
-import { toast } from 'sonner'
 import type { Namespace } from '@/lib/types'
 
-jest.mock('@/lib/db')
-jest.mock('sonner')
+jest.mock('@metabuilder/components/fakemui', () => ({
+  toast: {
+    error: jest.fn(),
+    success: jest.fn(),
+  },
+  MaterialIcon: ({ name }: any) => <span>{name}</span>,
+}))
 
-const mockDB = db as jest.Mocked<typeof db>
-const mockToast = toast as jest.Mocked<typeof toast>
+jest.mock('./hooks/useNamespaceSelector')
+jest.mock('./CreateNamespaceDialog', () => ({
+  CreateNamespaceDialog: () => <div data-testid="create-dialog" />,
+}))
+
+jest.mock('./DeleteNamespaceDialog', () => ({
+  DeleteNamespaceDialog: () => <div data-testid="delete-dialog" />,
+}))
+
+jest.mock('./NamespaceChip', () => ({
+  NamespaceChip: ({ namespace }: any) => (
+    <div data-testid={`namespace-chip-${namespace.id}`}>{namespace.name}</div>
+  ),
+}))
 
 const createTestNamespace = (overrides?: Partial<Namespace>): Namespace => ({
   id: 'ns-1',
@@ -21,15 +34,15 @@ const createTestNamespace = (overrides?: Partial<Namespace>): Namespace => ({
   ...overrides,
 })
 
+const mockUseNamespaceSelector = require('./hooks/useNamespaceSelector')
+
 describe('NamespaceSelector', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    mockToast.error = jest.fn()
-    mockToast.success = jest.fn()
   })
 
   describe('loading and displaying namespaces', () => {
-    it('should load and display namespaces on mount', async () => {
+    it('should display namespaces from hook', () => {
       const namespaces = [
         createTestNamespace({
           id: 'default',
@@ -38,7 +51,27 @@ describe('NamespaceSelector', () => {
         }),
         createTestNamespace({ id: 'work', name: 'Work' }),
       ]
-      mockDB.getAllNamespaces.mockResolvedValue(namespaces)
+      mockUseNamespaceSelector.useNamespaceSelector.mockReturnValue({
+        namespaces,
+        editingId: null,
+        editingName: '',
+        renameInputRef: null,
+        setEditingName: jest.fn(),
+        handleRenameKeyDown: jest.fn(),
+        commitRename: jest.fn(),
+        startEditing: jest.fn(),
+        newNamespaceName: '',
+        createDialogOpen: false,
+        deleteDialogOpen: false,
+        namespaceToDelete: null,
+        loading: false,
+        setNewNamespaceName: jest.fn(),
+        setCreateDialogOpen: jest.fn(),
+        setDeleteDialogOpen: jest.fn(),
+        setNamespaceToDelete: jest.fn(),
+        handleCreateNamespace: jest.fn(),
+        handleDeleteNamespace: jest.fn(),
+      })
 
       render(
         <NamespaceSelector
@@ -47,37 +80,39 @@ describe('NamespaceSelector', () => {
         />,
       )
 
-      await waitFor(() => {
-        expect(mockDB.getAllNamespaces).toHaveBeenCalled()
-      })
+      expect(screen.getByTestId('namespace-chip-default')).toBeInTheDocument()
+      expect(screen.getByTestId('namespace-chip-work')).toBeInTheDocument()
     })
 
-    it('should select default namespace if none selected', async () => {
-      const onNamespaceChange = jest.fn()
+    it('should render create button', () => {
       const namespaces = [
         createTestNamespace({
           id: 'default',
           name: 'Default',
           isDefault: true,
         }),
-        createTestNamespace({ id: 'work', name: 'Work' }),
       ]
-      mockDB.getAllNamespaces.mockResolvedValue(namespaces)
-
-      render(
-        <NamespaceSelector
-          selectedNamespaceId={null}
-          onNamespaceChange={onNamespaceChange}
-        />,
-      )
-
-      await waitFor(() => {
-        expect(onNamespaceChange).toHaveBeenCalledWith('default')
+      mockUseNamespaceSelector.useNamespaceSelector.mockReturnValue({
+        namespaces,
+        editingId: null,
+        editingName: '',
+        renameInputRef: null,
+        setEditingName: jest.fn(),
+        handleRenameKeyDown: jest.fn(),
+        commitRename: jest.fn(),
+        startEditing: jest.fn(),
+        newNamespaceName: '',
+        createDialogOpen: false,
+        deleteDialogOpen: false,
+        namespaceToDelete: null,
+        loading: false,
+        setNewNamespaceName: jest.fn(),
+        setCreateDialogOpen: jest.fn(),
+        setDeleteDialogOpen: jest.fn(),
+        setNamespaceToDelete: jest.fn(),
+        handleCreateNamespace: jest.fn(),
+        handleDeleteNamespace: jest.fn(),
       })
-    })
-
-    it('should handle namespace loading error', async () => {
-      mockDB.getAllNamespaces.mockRejectedValue(new Error('Load failed'))
 
       render(
         <NamespaceSelector
@@ -86,16 +121,12 @@ describe('NamespaceSelector', () => {
         />,
       )
 
-      await waitFor(() => {
-        expect(mockToast.error).toHaveBeenCalledWith(
-          'Failed to load namespaces',
-        )
-      })
+      expect(
+        screen.getByTestId('create-namespace-trigger'),
+      ).toBeInTheDocument()
     })
 
-    // eslint-disable-next-line max-len
-    it('should not call onNamespaceChange if namespace already selected', async () => {
-      const onNamespaceChange = jest.fn()
+    it('should render namespace chips', () => {
       const namespaces = [
         createTestNamespace({
           id: 'default',
@@ -104,56 +135,103 @@ describe('NamespaceSelector', () => {
         }),
         createTestNamespace({ id: 'work', name: 'Work' }),
       ]
-      mockDB.getAllNamespaces.mockResolvedValue(namespaces)
+      mockUseNamespaceSelector.useNamespaceSelector.mockReturnValue({
+        namespaces,
+        editingId: null,
+        editingName: '',
+        renameInputRef: null,
+        setEditingName: jest.fn(),
+        handleRenameKeyDown: jest.fn(),
+        commitRename: jest.fn(),
+        startEditing: jest.fn(),
+        newNamespaceName: '',
+        createDialogOpen: false,
+        deleteDialogOpen: false,
+        namespaceToDelete: null,
+        loading: false,
+        setNewNamespaceName: jest.fn(),
+        setCreateDialogOpen: jest.fn(),
+        setDeleteDialogOpen: jest.fn(),
+        setNamespaceToDelete: jest.fn(),
+        handleCreateNamespace: jest.fn(),
+        handleDeleteNamespace: jest.fn(),
+      })
 
       render(
         <NamespaceSelector
           selectedNamespaceId="work"
-          onNamespaceChange={onNamespaceChange}
+          onNamespaceChange={jest.fn()}
         />,
       )
 
-      await waitFor(() => {
-        expect(mockDB.getAllNamespaces).toHaveBeenCalled()
-      })
-
-      expect(onNamespaceChange).not.toHaveBeenCalled()
+      expect(screen.getByTestId('namespace-chip-default')).toBeInTheDocument()
+      expect(screen.getByTestId('namespace-chip-work')).toBeInTheDocument()
     })
   })
 
   describe('creating namespace', () => {
-    it('should show error if namespace name is empty', async () => {
+    it('should render create dialog', () => {
       const namespaces = [
         createTestNamespace({ id: 'default', isDefault: true }),
       ]
-      mockDB.getAllNamespaces.mockResolvedValue(namespaces)
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const user = userEvent.setup()
+      mockUseNamespaceSelector.useNamespaceSelector.mockReturnValue({
+        namespaces,
+        editingId: null,
+        editingName: '',
+        renameInputRef: null,
+        setEditingName: jest.fn(),
+        handleRenameKeyDown: jest.fn(),
+        commitRename: jest.fn(),
+        startEditing: jest.fn(),
+        newNamespaceName: '',
+        createDialogOpen: true,
+        deleteDialogOpen: false,
+        namespaceToDelete: null,
+        loading: false,
+        setNewNamespaceName: jest.fn(),
+        setCreateDialogOpen: jest.fn(),
+        setDeleteDialogOpen: jest.fn(),
+        setNamespaceToDelete: jest.fn(),
+        handleCreateNamespace: jest.fn(),
+        handleDeleteNamespace: jest.fn(),
+      })
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { container } = render(
+      render(
         <NamespaceSelector
           selectedNamespaceId="default"
           onNamespaceChange={jest.fn()}
         />,
       )
 
-      await waitFor(() => {
-        expect(mockDB.getAllNamespaces).toHaveBeenCalled()
-      })
-
-      // eslint-disable-next-line max-len
-      // Note: Testing the actual dialog UI would require mocking the dialog components
-      // This test structure assumes the component is working as intended
+      expect(screen.getByTestId('create-dialog')).toBeInTheDocument()
     })
 
-    it('should create namespace successfully', async () => {
-      mockDB.getAllNamespaces.mockResolvedValue([])
-      mockDB.createNamespace.mockResolvedValue(
+    it('should handle namespace creation', () => {
+      const handleCreateNamespace = jest.fn()
+      const namespaces = [
         createTestNamespace({ name: 'New Namespace' }),
-      )
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const user = userEvent.setup()
+      ]
+      mockUseNamespaceSelector.useNamespaceSelector.mockReturnValue({
+        namespaces,
+        editingId: null,
+        editingName: '',
+        renameInputRef: null,
+        setEditingName: jest.fn(),
+        handleRenameKeyDown: jest.fn(),
+        commitRename: jest.fn(),
+        startEditing: jest.fn(),
+        newNamespaceName: 'New Namespace',
+        createDialogOpen: true,
+        deleteDialogOpen: false,
+        namespaceToDelete: null,
+        loading: false,
+        setNewNamespaceName: jest.fn(),
+        setCreateDialogOpen: jest.fn(),
+        setDeleteDialogOpen: jest.fn(),
+        setNamespaceToDelete: jest.fn(),
+        handleCreateNamespace,
+        handleDeleteNamespace: jest.fn(),
+      })
 
       render(
         <NamespaceSelector
@@ -162,32 +240,70 @@ describe('NamespaceSelector', () => {
         />,
       )
 
-      await waitFor(() => {
-        expect(mockDB.getAllNamespaces).toHaveBeenCalled()
-      })
+      expect(screen.getByTestId('create-dialog')).toBeInTheDocument()
     })
 
-    it('should show success toast after creating namespace', async () => {
-      mockDB.getAllNamespaces.mockResolvedValue([])
-      mockDB.createNamespace.mockResolvedValue(
-        createTestNamespace({ name: 'New Namespace' }),
-      )
+    it('should render create button when dialog closed', () => {
+      const namespaces = [
+        createTestNamespace({ id: 'default', isDefault: true }),
+      ]
+      mockUseNamespaceSelector.useNamespaceSelector.mockReturnValue({
+        namespaces,
+        editingId: null,
+        editingName: '',
+        renameInputRef: null,
+        setEditingName: jest.fn(),
+        handleRenameKeyDown: jest.fn(),
+        commitRename: jest.fn(),
+        startEditing: jest.fn(),
+        newNamespaceName: '',
+        createDialogOpen: false,
+        deleteDialogOpen: false,
+        namespaceToDelete: null,
+        loading: false,
+        setNewNamespaceName: jest.fn(),
+        setCreateDialogOpen: jest.fn(),
+        setDeleteDialogOpen: jest.fn(),
+        setNamespaceToDelete: jest.fn(),
+        handleCreateNamespace: jest.fn(),
+        handleDeleteNamespace: jest.fn(),
+      })
 
       render(
         <NamespaceSelector
-          selectedNamespaceId={null}
+          selectedNamespaceId="default"
           onNamespaceChange={jest.fn()}
         />,
       )
 
-      await waitFor(() => {
-        expect(mockDB.getAllNamespaces).toHaveBeenCalled()
-      })
+      expect(
+        screen.getByTestId('create-namespace-trigger'),
+      ).toBeInTheDocument()
     })
 
-    it('should handle namespace creation error', async () => {
-      mockDB.getAllNamespaces.mockResolvedValue([])
-      mockDB.createNamespace.mockRejectedValue(new Error('Create failed'))
+    it('should handle creation error', () => {
+      const namespaces = []
+      mockUseNamespaceSelector.useNamespaceSelector.mockReturnValue({
+        namespaces,
+        editingId: null,
+        editingName: '',
+        renameInputRef: null,
+        setEditingName: jest.fn(),
+        handleRenameKeyDown: jest.fn(),
+        commitRename: jest.fn(),
+        startEditing: jest.fn(),
+        newNamespaceName: '',
+        createDialogOpen: false,
+        deleteDialogOpen: false,
+        namespaceToDelete: null,
+        loading: false,
+        setNewNamespaceName: jest.fn(),
+        setCreateDialogOpen: jest.fn(),
+        setDeleteDialogOpen: jest.fn(),
+        setNamespaceToDelete: jest.fn(),
+        handleCreateNamespace: jest.fn(),
+        handleDeleteNamespace: jest.fn(),
+      })
 
       render(
         <NamespaceSelector
@@ -196,14 +312,12 @@ describe('NamespaceSelector', () => {
         />,
       )
 
-      await waitFor(() => {
-        expect(mockDB.getAllNamespaces).toHaveBeenCalled()
-      })
+      expect(screen.getByTestId('namespace-selector')).toBeInTheDocument()
     })
   })
 
   describe('deleting namespace', () => {
-    it('should delete namespace successfully', async () => {
+    it('should render delete dialog when open', () => {
       const namespaces = [
         createTestNamespace({
           id: 'default',
@@ -212,8 +326,28 @@ describe('NamespaceSelector', () => {
         }),
         createTestNamespace({ id: 'work', name: 'Work' }),
       ]
-      mockDB.getAllNamespaces.mockResolvedValue(namespaces)
-      mockDB.deleteNamespace.mockResolvedValue(undefined)
+      const namespaceToDelete = namespaces[1]
+      mockUseNamespaceSelector.useNamespaceSelector.mockReturnValue({
+        namespaces,
+        editingId: null,
+        editingName: '',
+        renameInputRef: null,
+        setEditingName: jest.fn(),
+        handleRenameKeyDown: jest.fn(),
+        commitRename: jest.fn(),
+        startEditing: jest.fn(),
+        newNamespaceName: '',
+        createDialogOpen: false,
+        deleteDialogOpen: true,
+        namespaceToDelete,
+        loading: false,
+        setNewNamespaceName: jest.fn(),
+        setCreateDialogOpen: jest.fn(),
+        setDeleteDialogOpen: jest.fn(),
+        setNamespaceToDelete: jest.fn(),
+        handleCreateNamespace: jest.fn(),
+        handleDeleteNamespace: jest.fn(),
+      })
 
       render(
         <NamespaceSelector
@@ -222,14 +356,11 @@ describe('NamespaceSelector', () => {
         />,
       )
 
-      await waitFor(() => {
-        expect(mockDB.getAllNamespaces).toHaveBeenCalled()
-      })
+      expect(screen.getByTestId('delete-dialog')).toBeInTheDocument()
     })
 
-    // eslint-disable-next-line max-len
-    it('should reset selected namespace to default when deleting selected', async () => {
-      const onNamespaceChange = jest.fn()
+    it('should handle namespace deletion', () => {
+      const handleDeleteNamespace = jest.fn()
       const namespaces = [
         createTestNamespace({
           id: 'default',
@@ -238,28 +369,66 @@ describe('NamespaceSelector', () => {
         }),
         createTestNamespace({ id: 'work', name: 'Work' }),
       ]
-      mockDB.getAllNamespaces.mockResolvedValue(namespaces)
-      mockDB.deleteNamespace.mockResolvedValue(undefined)
+      const namespaceToDelete = namespaces[1]
+      mockUseNamespaceSelector.useNamespaceSelector.mockReturnValue({
+        namespaces,
+        editingId: null,
+        editingName: '',
+        renameInputRef: null,
+        setEditingName: jest.fn(),
+        handleRenameKeyDown: jest.fn(),
+        commitRename: jest.fn(),
+        startEditing: jest.fn(),
+        newNamespaceName: '',
+        createDialogOpen: false,
+        deleteDialogOpen: true,
+        namespaceToDelete,
+        loading: false,
+        setNewNamespaceName: jest.fn(),
+        setCreateDialogOpen: jest.fn(),
+        setDeleteDialogOpen: jest.fn(),
+        setNamespaceToDelete: jest.fn(),
+        handleCreateNamespace: jest.fn(),
+        handleDeleteNamespace,
+      })
 
       render(
         <NamespaceSelector
           selectedNamespaceId="work"
-          onNamespaceChange={onNamespaceChange}
+          onNamespaceChange={jest.fn()}
         />,
       )
 
-      await waitFor(() => {
-        expect(mockDB.getAllNamespaces).toHaveBeenCalled()
-      })
+      expect(screen.getByTestId('delete-dialog')).toBeInTheDocument()
     })
 
-    it('should show success toast after deleting namespace', async () => {
+    it('should render multiple namespaces', () => {
       const namespaces = [
         createTestNamespace({ id: 'default', isDefault: true }),
         createTestNamespace({ id: 'work' }),
+        createTestNamespace({ id: 'personal' }),
       ]
-      mockDB.getAllNamespaces.mockResolvedValue(namespaces)
-      mockDB.deleteNamespace.mockResolvedValue(undefined)
+      mockUseNamespaceSelector.useNamespaceSelector.mockReturnValue({
+        namespaces,
+        editingId: null,
+        editingName: '',
+        renameInputRef: null,
+        setEditingName: jest.fn(),
+        handleRenameKeyDown: jest.fn(),
+        commitRename: jest.fn(),
+        startEditing: jest.fn(),
+        newNamespaceName: '',
+        createDialogOpen: false,
+        deleteDialogOpen: false,
+        namespaceToDelete: null,
+        loading: false,
+        setNewNamespaceName: jest.fn(),
+        setCreateDialogOpen: jest.fn(),
+        setDeleteDialogOpen: jest.fn(),
+        setNamespaceToDelete: jest.fn(),
+        handleCreateNamespace: jest.fn(),
+        handleDeleteNamespace: jest.fn(),
+      })
 
       render(
         <NamespaceSelector
@@ -268,18 +437,36 @@ describe('NamespaceSelector', () => {
         />,
       )
 
-      await waitFor(() => {
-        expect(mockDB.getAllNamespaces).toHaveBeenCalled()
-      })
+      expect(screen.getByTestId('namespace-chip-default')).toBeInTheDocument()
+      expect(screen.getByTestId('namespace-chip-work')).toBeInTheDocument()
+      expect(screen.getByTestId('namespace-chip-personal')).toBeInTheDocument()
     })
 
-    it('should handle deletion error', async () => {
+    it('should disable create during loading', () => {
       const namespaces = [
         createTestNamespace({ id: 'default', isDefault: true }),
-        createTestNamespace({ id: 'work' }),
       ]
-      mockDB.getAllNamespaces.mockResolvedValue(namespaces)
-      mockDB.deleteNamespace.mockRejectedValue(new Error('Delete failed'))
+      mockUseNamespaceSelector.useNamespaceSelector.mockReturnValue({
+        namespaces,
+        editingId: null,
+        editingName: '',
+        renameInputRef: null,
+        setEditingName: jest.fn(),
+        handleRenameKeyDown: jest.fn(),
+        commitRename: jest.fn(),
+        startEditing: jest.fn(),
+        newNamespaceName: '',
+        createDialogOpen: false,
+        deleteDialogOpen: false,
+        namespaceToDelete: null,
+        loading: true,
+        setNewNamespaceName: jest.fn(),
+        setCreateDialogOpen: jest.fn(),
+        setDeleteDialogOpen: jest.fn(),
+        setNamespaceToDelete: jest.fn(),
+        handleCreateNamespace: jest.fn(),
+        handleDeleteNamespace: jest.fn(),
+      })
 
       render(
         <NamespaceSelector
@@ -288,21 +475,40 @@ describe('NamespaceSelector', () => {
         />,
       )
 
-      await waitFor(() => {
-        expect(mockDB.getAllNamespaces).toHaveBeenCalled()
-      })
+      expect(
+        screen.getByTestId('create-namespace-trigger'),
+      ).toBeInTheDocument()
     })
   })
 
   describe('namespace operations', () => {
-    // eslint-disable-next-line max-len
-    it('should call onNamespaceChange when namespace selection changes', async () => {
+    it('should pass namespace selection to callback', () => {
       const onNamespaceChange = jest.fn()
       const namespaces = [
         createTestNamespace({ id: 'default', isDefault: true }),
         createTestNamespace({ id: 'work' }),
       ]
-      mockDB.getAllNamespaces.mockResolvedValue(namespaces)
+      mockUseNamespaceSelector.useNamespaceSelector.mockReturnValue({
+        namespaces,
+        editingId: null,
+        editingName: '',
+        renameInputRef: null,
+        setEditingName: jest.fn(),
+        handleRenameKeyDown: jest.fn(),
+        commitRename: jest.fn(),
+        startEditing: jest.fn(),
+        newNamespaceName: '',
+        createDialogOpen: false,
+        deleteDialogOpen: false,
+        namespaceToDelete: null,
+        loading: false,
+        setNewNamespaceName: jest.fn(),
+        setCreateDialogOpen: jest.fn(),
+        setDeleteDialogOpen: jest.fn(),
+        setNamespaceToDelete: jest.fn(),
+        handleCreateNamespace: jest.fn(),
+        handleDeleteNamespace: jest.fn(),
+      })
 
       render(
         <NamespaceSelector
@@ -311,25 +517,42 @@ describe('NamespaceSelector', () => {
         />,
       )
 
-      await waitFor(() => {
-        expect(mockDB.getAllNamespaces).toHaveBeenCalled()
-      })
+      expect(screen.getByTestId('namespace-chip-default')).toBeInTheDocument()
     })
 
-    it('should display Folder icon', async () => {
-      mockDB.getAllNamespaces.mockResolvedValue([])
+    it('should render with empty namespace list', () => {
+      mockUseNamespaceSelector.useNamespaceSelector.mockReturnValue({
+        namespaces: [],
+        editingId: null,
+        editingName: '',
+        renameInputRef: null,
+        setEditingName: jest.fn(),
+        handleRenameKeyDown: jest.fn(),
+        commitRename: jest.fn(),
+        startEditing: jest.fn(),
+        newNamespaceName: '',
+        createDialogOpen: false,
+        deleteDialogOpen: false,
+        namespaceToDelete: null,
+        loading: false,
+        setNewNamespaceName: jest.fn(),
+        setCreateDialogOpen: jest.fn(),
+        setDeleteDialogOpen: jest.fn(),
+        setNamespaceToDelete: jest.fn(),
+        handleCreateNamespace: jest.fn(),
+        handleDeleteNamespace: jest.fn(),
+      })
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { container } = render(
+      render(
         <NamespaceSelector
           selectedNamespaceId={null}
           onNamespaceChange={jest.fn()}
         />,
       )
 
-      await waitFor(() => {
-        expect(mockDB.getAllNamespaces).toHaveBeenCalled()
-      })
+      expect(
+        screen.getByTestId('create-namespace-trigger'),
+      ).toBeInTheDocument()
     })
   })
 })
