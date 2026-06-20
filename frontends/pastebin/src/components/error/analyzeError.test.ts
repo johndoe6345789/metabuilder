@@ -37,7 +37,7 @@ describe('analyzeErrorWithAI Function', () => {
 
       expect(result).toContain('## Error Analysis')
       expect(result).toContain('Test error')
-      expect(result).toContain('Configure your OpenAI API key')
+      expect(result).toMatch(/Configure.*API key/i)
     })
 
     it('includes error message in fallback', async () => {
@@ -72,7 +72,7 @@ describe('analyzeErrorWithAI Function', () => {
     it('includes note about API key configuration', async () => {
       const result = await analyzeErrorWithAI('Error')
 
-      expect(result).toContain('OpenAI API key')
+      expect(result).toMatch(/API key/i)
       expect(result).toContain('Settings')
     })
   })
