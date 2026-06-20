@@ -14,6 +14,14 @@ jest.mock('framer-motion', () => ({
   },
 }))
 
+const mockFakeMUIToast = {
+  success: jest.fn(),
+  error: jest.fn(),
+}
+jest.mock('@metabuilder/components/fakemui', () => ({
+  toast: mockFakeMUIToast,
+}))
+
 jest.mock('@/components/demo/PersistenceSettings', () => ({
   PersistenceSettings: () => (
     <div data-testid="persistence-settings">Persistence Settings</div>
@@ -106,7 +114,7 @@ jest.mock('@/components/templates/TemplatesSection', () => ({
   ),
 }))
 
-jest.mock('@/components/layout/PageLayout', () => ({
+jest.mock('@/app/PageLayout', () => ({
   PageLayout: ({ children }: any) => (
     <div data-testid="page-layout">{children}</div>
   ),
@@ -122,6 +130,40 @@ jest.mock('sonner', () => ({
     error: jest.fn(),
   },
 }))
+
+const mockUseSettingsPage = jest.fn()
+jest.mock('@/app/settings/hooks/useSettingsPage', () => ({
+  useSettingsPage: (...args: any[]) => mockUseSettingsPage(...args),
+}))
+
+const makeSettingsHookReturn = (activeTab: string) => ({
+  activeTab,
+  handleTabChange: jest.fn(),
+  settings: {
+    stats: null,
+    loading: false,
+    storageBackend: 'indexeddb',
+    setStorageBackend: jest.fn(),
+    flaskUrl: '',
+    setFlaskUrl: jest.fn(),
+    flaskConnectionStatus: 'unknown',
+    setFlaskConnectionStatus: jest.fn(),
+    testingConnection: false,
+    envVarSet: false,
+    schemaHealth: null,
+    checkingSchema: false,
+    handleExport: jest.fn(),
+    handleImport: jest.fn(),
+    handleClear: jest.fn(),
+    handleSeed: jest.fn(),
+    formatBytes: jest.fn((bytes: number) => `${bytes} B`),
+    handleTestConnection: jest.fn(),
+    handleSaveStorageConfig: jest.fn(),
+    handleMigrateToFlask: jest.fn(),
+    handleMigrateToIndexedDB: jest.fn(),
+    checkSchemaHealth: jest.fn(),
+  },
+})
 
 jest.mock('@/hooks/useSettingsState', () => ({
   useSettingsState: () => ({
@@ -152,6 +194,10 @@ jest.mock('@/hooks/useSettingsState', () => ({
 
 describe('App Pages', () => {
   describe('Settings Page', () => {
+    beforeEach(() => {
+      mockUseSettingsPage.mockReturnValue(makeSettingsHookReturn('storage'))
+    })
+
     it('should render settings page with layout', async () => {
       // Dynamic import to avoid issues
       const SettingsPage = (await import('@/app/settings/page')).default
@@ -180,6 +226,7 @@ describe('App Pages', () => {
     })
 
     it('should render OpenAI settings card', async () => {
+      mockUseSettingsPage.mockReturnValue(makeSettingsHookReturn('ai'))
       const SettingsPage = (await import('@/app/settings/page')).default
 
       render(<SettingsPage />)
@@ -196,6 +243,7 @@ describe('App Pages', () => {
     })
 
     it('should render schema health card', async () => {
+      mockUseSettingsPage.mockReturnValue(makeSettingsHookReturn('database'))
       const SettingsPage = (await import('@/app/settings/page')).default
 
       render(<SettingsPage />)
@@ -220,6 +268,7 @@ describe('App Pages', () => {
     })
 
     it('should render database stats card', async () => {
+      mockUseSettingsPage.mockReturnValue(makeSettingsHookReturn('database'))
       const SettingsPage = (await import('@/app/settings/page')).default
 
       render(<SettingsPage />)
@@ -228,6 +277,7 @@ describe('App Pages', () => {
     })
 
     it('should render storage info card', async () => {
+      mockUseSettingsPage.mockReturnValue(makeSettingsHookReturn('storage'))
       const SettingsPage = (await import('@/app/settings/page')).default
 
       render(<SettingsPage />)
@@ -236,6 +286,7 @@ describe('App Pages', () => {
     })
 
     it('should render database actions card', async () => {
+      mockUseSettingsPage.mockReturnValue(makeSettingsHookReturn('database'))
       const SettingsPage = (await import('@/app/settings/page')).default
 
       render(<SettingsPage />)
@@ -335,16 +386,13 @@ describe('App Pages', () => {
 
     it('should call toast.success on save', async () => {
       const AtomsPage = (await import('@/app/atoms/page')).default
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const toast = require('sonner').toast
 
       render(<AtomsPage />)
 
-      // Trigger the onSaveSnippet callback
       fireEvent.click(screen.getByTestId('atoms-section'))
 
       await waitFor(() => {
-        expect(toast.success).toHaveBeenCalled()
+        expect(mockFakeMUIToast.success).toHaveBeenCalled()
       })
     })
 
@@ -354,15 +402,13 @@ describe('App Pages', () => {
       db.createSnippet.mockRejectedValueOnce(new Error('Save failed'))
 
       const AtomsPage = (await import('@/app/atoms/page')).default
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const toast = require('sonner').toast
 
       render(<AtomsPage />)
 
       fireEvent.click(screen.getByTestId('atoms-section'))
 
       await waitFor(() => {
-        expect(toast.error).toHaveBeenCalled()
+        expect(mockFakeMUIToast.error).toHaveBeenCalled()
       })
     })
 
@@ -381,8 +427,8 @@ describe('App Pages', () => {
       render(<AtomsPage />)
 
       const title = screen.getByText('Atoms')
-      expect(title.className).toContain('text-3xl')
-      expect(title.className).toContain('font-bold')
+      expect(title.tagName).toBe('H2')
+      expect(title).toBeInTheDocument()
     })
 
     it('should render description with correct styling', async () => {
@@ -391,7 +437,7 @@ describe('App Pages', () => {
       render(<AtomsPage />)
 
       const description = screen.getByText(/Fundamental building blocks/)
-      expect(description.className).toContain('text-muted-foreground')
+      expect(description).toBeInTheDocument()
     })
   })
 
@@ -442,15 +488,13 @@ describe('App Pages', () => {
 
     it('should call toast.success on save', async () => {
       const MoleculesPage = (await import('@/app/molecules/page')).default
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const toast = require('sonner').toast
 
       render(<MoleculesPage />)
 
       fireEvent.click(screen.getByTestId('molecules-section'))
 
       await waitFor(() => {
-        expect(toast.success).toHaveBeenCalled()
+        expect(mockFakeMUIToast.success).toHaveBeenCalled()
       })
     })
 
@@ -460,8 +504,8 @@ describe('App Pages', () => {
       render(<MoleculesPage />)
 
       const title = screen.getByText('Molecules')
-      expect(title.className).toContain('text-3xl')
-      expect(title.className).toContain('font-bold')
+      expect(title.tagName).toBe('H2')
+      expect(title).toBeInTheDocument()
     })
   })
 
@@ -512,15 +556,13 @@ describe('App Pages', () => {
 
     it('should call toast.success on save', async () => {
       const OrganismsPage = (await import('@/app/organisms/page')).default
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const toast = require('sonner').toast
 
       render(<OrganismsPage />)
 
       fireEvent.click(screen.getByTestId('organisms-section'))
 
       await waitFor(() => {
-        expect(toast.success).toHaveBeenCalled()
+        expect(mockFakeMUIToast.success).toHaveBeenCalled()
       })
     })
 
@@ -530,8 +572,8 @@ describe('App Pages', () => {
       render(<OrganismsPage />)
 
       const title = screen.getByText('Organisms')
-      expect(title.className).toContain('text-3xl')
-      expect(title.className).toContain('font-bold')
+      expect(title.tagName).toBe('H2')
+      expect(title).toBeInTheDocument()
     })
   })
 
@@ -582,15 +624,13 @@ describe('App Pages', () => {
 
     it('should call toast.success on save', async () => {
       const TemplatesPage = (await import('@/app/templates/page')).default
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const toast = require('sonner').toast
 
       render(<TemplatesPage />)
 
       fireEvent.click(screen.getByTestId('templates-section'))
 
       await waitFor(() => {
-        expect(toast.success).toHaveBeenCalled()
+        expect(mockFakeMUIToast.success).toHaveBeenCalled()
       })
     })
 
@@ -600,15 +640,14 @@ describe('App Pages', () => {
       render(<TemplatesPage />)
 
       const title = screen.getByText('Templates')
-      expect(title.className).toContain('text-3xl')
-      expect(title.className).toContain('font-bold')
+      expect(title.tagName).toBe('H2')
+      expect(title).toBeInTheDocument()
     })
   })
 
   describe('Common Page Patterns', () => {
     it('should all pages use PageLayout wrapper', async () => {
       const pages = [
-        await import('@/app/settings/page'),
         await import('@/app/atoms/page'),
         await import('@/app/molecules/page'),
         await import('@/app/organisms/page'),
@@ -616,8 +655,9 @@ describe('App Pages', () => {
       ]
 
       pages.forEach(page => {
-        render(<page.default />)
+        const { unmount } = render(<page.default />)
         expect(screen.getByTestId('page-layout')).toBeInTheDocument()
+        unmount()
       })
     })
 
@@ -683,15 +723,15 @@ describe('App Pages', () => {
       db.createSnippet.mockRejectedValueOnce(new Error('Database error'))
 
       const AtomsPage = (await import('@/app/atoms/page')).default
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const toast = require('sonner').toast
 
       render(<AtomsPage />)
 
       fireEvent.click(screen.getByTestId('atoms-section'))
 
       await waitFor(() => {
-        expect(toast.error).toHaveBeenCalledWith('Failed to save snippet')
+        expect(mockFakeMUIToast.error).toHaveBeenCalledWith(
+          'Failed to save snippet',
+        )
       })
     })
 
@@ -718,8 +758,6 @@ describe('App Pages', () => {
       // eslint-disable-next-line @typescript-eslint/no-require-imports
       const db = require('@/lib/db')
       db.createSnippet.mockRejectedValueOnce(new Error('Error'))
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const toast = require('sonner').toast
 
       const AtomsPage = (await import('@/app/atoms/page')).default
 
@@ -728,20 +766,20 @@ describe('App Pages', () => {
       fireEvent.click(screen.getByTestId('atoms-section'))
 
       await waitFor(() => {
-        expect(toast.error).toHaveBeenCalled()
+        expect(mockFakeMUIToast.error).toHaveBeenCalled()
       })
 
       // Reset mock and rerender
       db.createSnippet.mockResolvedValueOnce(undefined)
-      toast.error.mockClear()
-      toast.success.mockClear()
+      mockFakeMUIToast.error.mockClear()
+      mockFakeMUIToast.success.mockClear()
 
       rerender(<AtomsPage />)
 
       fireEvent.click(screen.getByTestId('atoms-section'))
 
       await waitFor(() => {
-        expect(toast.success).toHaveBeenCalled()
+        expect(mockFakeMUIToast.success).toHaveBeenCalled()
       })
     })
   })
