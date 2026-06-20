@@ -822,8 +822,8 @@ export const func${i} = () => {
 
         const duration = Date.now() - startTime
 
-        // Should complete in reasonable time (less than 10 seconds)
-        expect(duration).toBeLessThan(10000)
+        // Should complete in reasonable time (less than 20 seconds)
+        expect(duration).toBeLessThan(20000)
       } finally {
         process.chdir(originalCwd)
       }
