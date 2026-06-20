@@ -7,6 +7,27 @@ jest.mock('@/components/layout/navigation/useNavigation', () => ({
   useNavigation: jest.fn(() => ({ menuOpen: false })),
 }))
 
+// Mock redux hooks
+jest.mock('@/store/hooks', () => ({
+  useAppSelector: jest.fn((selector) => {
+    if (selector.toString().includes('selectIsAuthenticated')) return false
+    if (selector.toString().includes('selectCurrentUser')) return null
+    return undefined
+  }),
+}))
+
+// Mock useTranslation
+jest.mock('@/hooks/useTranslation', () => ({
+  useTranslation: jest.fn(() => ({
+    page: {
+      footer: {
+        tagline: 'Save, organize, and share your code snippets',
+        techNote: 'Supports React preview and multi-language Docker execution',
+      },
+    },
+  })),
+}))
+
 // Mock components to avoid rendering complex nested components
 jest.mock('@/components/layout/navigation/NavigationSidebar', () => ({
   NavigationSidebar: () => (
@@ -24,11 +45,33 @@ jest.mock('@/components/layout/BackendIndicator', () => ({
   ),
 }))
 
-jest.mock('@/components/layout/AppStatusAlerts', () => ({
-  AppStatusAlerts: () => (
-    <div data-testid="app-status-alerts">Status Alerts</div>
-  ),
+jest.mock('@/components/layout/AlertsBell', () => ({
+  AlertsBell: () => <div data-testid="alerts-bell">Alerts</div>,
 }))
+
+jest.mock('@/components/layout/ThemeSwitcher', () => ({
+  ThemeSwitcher: () => <div data-testid="theme-switcher">Theme</div>,
+}))
+
+jest.mock('@/components/layout/LangSelector', () => ({
+  LangSelector: () => <div data-testid="lang-selector">Language</div>,
+}))
+
+jest.mock('@/components/layout/ThemeApplier', () => ({
+  ThemeApplier: () => <div data-testid="theme-applier">Theme Applier</div>,
+}))
+
+jest.mock('@/components/layout/ProfileMenu', () => ({
+  ProfileMenu: () => <div data-testid="profile-menu">Profile</div>,
+}))
+
+jest.mock('@/components/auth/AuthGuard', () => ({
+  AuthGuard: ({ children }: any) => <div>{children}</div>,
+}))
+
+jest.mock('next/link', () => {
+  return ({ children, ...props }: any) => <a {...props}>{children}</a>
+})
 
 describe('PageLayout', () => {
   beforeEach(() => {
@@ -109,14 +152,14 @@ describe('PageLayout', () => {
       expect(screen.getByTestId('backend-indicator')).toBeInTheDocument()
     })
 
-    it('should render AppStatusAlerts in main content', () => {
+    it('should render theme switcher in header', () => {
       render(
         <PageLayout>
           <div>Content</div>
         </PageLayout>,
       )
 
-      expect(screen.getByTestId('app-status-alerts')).toBeInTheDocument()
+      expect(screen.getByTestId('theme-switcher')).toBeInTheDocument()
     })
 
     it('should render footer with information text', () => {
@@ -144,7 +187,7 @@ describe('PageLayout', () => {
         </PageLayout>,
       )
 
-      const gridPattern = container.querySelector('.grid-pattern')
+      const gridPattern = container.querySelector('[aria-hidden="true"]')
       expect(gridPattern).toBeInTheDocument()
     })
   })
@@ -207,7 +250,7 @@ describe('PageLayout', () => {
         </PageLayout>,
       )
 
-      const gridPattern = container.querySelector('.grid-pattern')
+      const gridPattern = container.querySelector('[aria-hidden="true"]')
       expect(gridPattern).toHaveAttribute('aria-hidden', 'true')
     })
 

@@ -10,7 +10,7 @@ jest.mock('@/app/PageLayout', () => ({
 jest.mock('framer-motion', () => ({
   motion: {
     div: ({ children, ...props }: any) => (
-      <div data-testid="motion-div" {...props}>
+      <div data-testid={props['data-testid']} {...props}>
         {children}
       </div>
     ),
@@ -83,6 +83,31 @@ jest.mock('@/hooks/useSettingsState', () => ({
   useSettingsState: jest.fn(() => mockSettingsState),
 }))
 
+// Mock useSettingsPage hook
+jest.mock('./hooks/useSettingsPage', () => ({
+  useSettingsPage: jest.fn(() => ({
+    activeTab: 'storage',
+    handleTabChange: jest.fn(),
+    settings: mockSettingsState,
+  })),
+}))
+
+// Mock useTranslation hook
+jest.mock('@/hooks/useTranslation', () => ({
+  useTranslation: jest.fn(() => ({
+    settingsPage: {
+      heading: 'Settings',
+      subtitle: 'Manage your database and application settings',
+      tabs: {
+        profile: 'Profile',
+        ai: 'AI',
+        storage: 'Storage',
+        database: 'Database',
+      },
+    },
+  })),
+}))
+
 describe('SettingsPage', () => {
   beforeEach(() => {
     jest.clearAllMocks()
@@ -109,14 +134,11 @@ describe('SettingsPage', () => {
 
   test('renders all settings cards', () => {
     render(<SettingsPage />)
-    expect(screen.getByTestId('openai-settings')).toBeInTheDocument()
+    // Default tab is 'storage'
     expect(screen.getByTestId('persistence-settings')).toBeInTheDocument()
-    expect(screen.getByTestId('schema-health-card')).toBeInTheDocument()
     expect(screen.getByTestId('backend-auto-config')).toBeInTheDocument()
     expect(screen.getByTestId('storage-backend')).toBeInTheDocument()
-    expect(screen.getByTestId('database-stats')).toBeInTheDocument()
     expect(screen.getByTestId('storage-info')).toBeInTheDocument()
-    expect(screen.getByTestId('database-actions')).toBeInTheDocument()
   })
 
   test('heading has correct styling', () => {
@@ -133,7 +155,7 @@ describe('SettingsPage', () => {
 
   test('motion div is rendered', () => {
     render(<SettingsPage />)
-    expect(screen.getByTestId('motion-div')).toBeInTheDocument()
+    expect(screen.getByTestId('settings-page')).toBeInTheDocument()
   })
 
   test('uses settings state hook', () => {
@@ -143,7 +165,8 @@ describe('SettingsPage', () => {
 
   test('renders settings in grid layout', () => {
     render(<SettingsPage />)
-    expect(screen.getByTestId('persistence-settings')).toBeInTheDocument()
+    const grid = screen.getByRole('tabpanel')
+    expect(grid).toBeInTheDocument()
   })
 
   test('component renders without crashing', () => {
@@ -157,20 +180,9 @@ describe('SettingsPage', () => {
     expect(layout).toBeInTheDocument()
   })
 
-  test('all cards are accessible', () => {
+  test('all tabs are rendered', () => {
     render(<SettingsPage />)
-    const cards = [
-      'openai-settings',
-      'persistence-settings',
-      'schema-health-card',
-      'backend-auto-config',
-      'storage-backend',
-      'database-stats',
-      'storage-info',
-      'database-actions',
-    ]
-    cards.forEach(card => {
-      expect(screen.getByTestId(card)).toBeInTheDocument()
-    })
+    const tabs = screen.getAllByRole('tab')
+    expect(tabs.length).toBe(4)
   })
 })

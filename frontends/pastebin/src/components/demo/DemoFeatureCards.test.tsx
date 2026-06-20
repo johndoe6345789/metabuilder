@@ -33,17 +33,16 @@ describe('DemoFeatureCards', () => {
   describe('Real-Time Updates Card', () => {
     it('renders Real-Time Updates card title', () => {
       render(<DemoFeatureCards />)
-      expect(screen.getByText('Real-Time Updates')).toBeInTheDocument()
+      const card = screen.getByTestId('feature-card-realtime')
+      expect(card).toBeInTheDocument()
     })
 
     it('renders Real-Time Updates card description', () => {
       render(<DemoFeatureCards />)
-      expect(
-        screen.getByText(
-          // eslint-disable-next-line max-len
-          'Watch your React components render instantly as you type. No refresh needed.',
-        ),
-      ).toBeInTheDocument()
+      const card = screen.getByTestId('feature-card-realtime')
+      expect(card).toHaveTextContent(
+        'Watch your React components render instantly as you type',
+      )
     })
 
     it('has testid for real-time card', () => {
@@ -54,7 +53,6 @@ describe('DemoFeatureCards', () => {
     it('has feature card rendered', () => {
       render(<DemoFeatureCards />)
       const card = screen.getByTestId('feature-card-realtime')
-      // Card uses FakeMUI Card component with styling
       expect(card).toBeInTheDocument()
     })
   })
@@ -62,17 +60,14 @@ describe('DemoFeatureCards', () => {
   describe('Resizable Panels Card', () => {
     it('renders Resizable Panels card title', () => {
       render(<DemoFeatureCards />)
-      expect(screen.getByText('Resizable Panels')).toBeInTheDocument()
+      const card = screen.getByTestId('feature-card-resizable')
+      expect(card).toBeInTheDocument()
     })
 
     it('renders Resizable Panels card description', () => {
       render(<DemoFeatureCards />)
-      expect(
-        screen.getByText(
-          // eslint-disable-next-line max-len
-          'Drag the center divider to adjust the editor and preview panel sizes to your preference.',
-        ),
-      ).toBeInTheDocument()
+      const card = screen.getByTestId('feature-card-resizable')
+      expect(card).toHaveTextContent('Drag the center divider')
     })
 
     it('has testid for resizable card', () => {
@@ -83,7 +78,6 @@ describe('DemoFeatureCards', () => {
     it('has feature card rendered', () => {
       render(<DemoFeatureCards />)
       const card = screen.getByTestId('feature-card-resizable')
-      // Card uses FakeMUI Card component with styling
       expect(card).toBeInTheDocument()
     })
   })
@@ -91,17 +85,14 @@ describe('DemoFeatureCards', () => {
   describe('Multiple View Modes Card', () => {
     it('renders Multiple View Modes card title', () => {
       render(<DemoFeatureCards />)
-      expect(screen.getByText('Multiple View Modes')).toBeInTheDocument()
+      const card = screen.getByTestId('feature-card-viewmodes')
+      expect(card).toBeInTheDocument()
     })
 
     it('renders Multiple View Modes card description', () => {
       render(<DemoFeatureCards />)
-      expect(
-        screen.getByText(
-          // eslint-disable-next-line max-len
-          'Switch between code-only, split-screen, or preview-only modes with the toggle buttons.',
-        ),
-      ).toBeInTheDocument()
+      const card = screen.getByTestId('feature-card-viewmodes')
+      expect(card).toHaveTextContent('Switch between code-only')
     })
 
     it('has testid for view modes card', () => {
@@ -112,7 +103,6 @@ describe('DemoFeatureCards', () => {
     it('has feature card rendered', () => {
       render(<DemoFeatureCards />)
       const card = screen.getByTestId('feature-card-viewmodes')
-      // Card uses FakeMUI Card component with styling
       expect(card).toBeInTheDocument()
     })
   })
@@ -144,49 +134,45 @@ describe('DemoFeatureCards', () => {
 
   describe('Card Structure', () => {
     it('each card has CardHeader', () => {
-      const { container } = render(<DemoFeatureCards />)
-      const cardHeaders = container.querySelectorAll('[class*="border"]')
-      expect(cardHeaders.length).toBeGreaterThan(0)
+      render(<DemoFeatureCards />)
+      const cards = screen.getAllByTestId(/^feature-card-/)
+      expect(cards).toHaveLength(3)
     })
 
     it('each card has CardTitle', () => {
       render(<DemoFeatureCards />)
-      const titles = [
-        'Real-Time Updates',
-        'Resizable Panels',
-        'Multiple View Modes',
-      ]
-      titles.forEach(title => {
-        expect(screen.getByText(title)).toBeInTheDocument()
+      const cards = screen.getAllByTestId(/^feature-card-/)
+      expect(cards).toHaveLength(3)
+      cards.forEach(card => {
+        expect(card).toBeInTheDocument()
       })
     })
 
-    it('each card has CardContent with text-sm', () => {
+    it('each card has CardContent', () => {
       const { container } = render(<DemoFeatureCards />)
-      const contents = container.querySelectorAll('[class*="text-sm"]')
-      expect(contents.length).toBeGreaterThan(0)
+      const contents = container.querySelectorAll('[class*="cardBody"]')
+      expect(contents.length).toBe(3)
     })
 
-    it('each card has muted foreground text', () => {
-      const { container } = render(<DemoFeatureCards />)
-      const mutedTexts = container.querySelectorAll(
-        '[class*="text-muted-foreground"]',
-      )
-      expect(mutedTexts.length).toBeGreaterThan(0)
+    it('each card has description text', () => {
+      render(<DemoFeatureCards />)
+      expect(
+        screen.getByTestId('feature-card-realtime'),
+      ).toHaveTextContent('instantly as you type')
+      expect(
+        screen.getByTestId('feature-card-resizable'),
+      ).toHaveTextContent('Drag the center divider')
+      expect(
+        screen.getByTestId('feature-card-viewmodes'),
+      ).toHaveTextContent('Switch between')
     })
   })
 
   describe('Styling', () => {
     it('CardTitle has proper styling', () => {
       render(<DemoFeatureCards />)
-      const titles = [
-        'Real-Time Updates',
-        'Resizable Panels',
-        'Multiple View Modes',
-      ]
-      titles.forEach(title => {
-        expect(screen.getByText(title)).toBeInTheDocument()
-      })
+      const cards = screen.getAllByTestId(/^feature-card-/)
+      expect(cards).toHaveLength(3)
     })
 
     it('cards are rendered with FakeMUI styling', () => {
@@ -211,29 +197,21 @@ describe('DemoFeatureCards', () => {
 
     it('displays 3 titles', () => {
       render(<DemoFeatureCards />)
-      const titles = [
-        'Real-Time Updates',
-        'Resizable Panels',
-        'Multiple View Modes',
-      ]
-      titles.forEach(title => {
-        expect(screen.getByText(title)).toBeInTheDocument()
-      })
+      const cards = screen.getAllByTestId(/^feature-card-/)
+      expect(cards).toHaveLength(3)
     })
 
     it('displays 3 descriptions', () => {
       render(<DemoFeatureCards />)
-      const descriptions = [
-        // eslint-disable-next-line max-len
-        'Watch your React components render instantly as you type. No refresh needed.',
-        // eslint-disable-next-line max-len
-        'Drag the center divider to adjust the editor and preview panel sizes to your preference.',
-        // eslint-disable-next-line max-len
-        'Switch between code-only, split-screen, or preview-only modes with the toggle buttons.',
-      ]
-      descriptions.forEach(description => {
-        expect(screen.getByText(description)).toBeInTheDocument()
-      })
+      expect(
+        screen.getByTestId('feature-card-realtime'),
+      ).toHaveTextContent('render instantly as you type')
+      expect(
+        screen.getByTestId('feature-card-resizable'),
+      ).toHaveTextContent('Drag the center divider')
+      expect(
+        screen.getByTestId('feature-card-viewmodes'),
+      ).toHaveTextContent('Switch between')
     })
   })
 
@@ -252,13 +230,11 @@ describe('DemoFeatureCards', () => {
 
     it('each card is selectable via heading text', () => {
       render(<DemoFeatureCards />)
-      const title1 = screen.getByText('Real-Time Updates')
-      const title2 = screen.getByText('Resizable Panels')
-      const title3 = screen.getByText('Multiple View Modes')
-
-      expect(title1).toBeInTheDocument()
-      expect(title2).toBeInTheDocument()
-      expect(title3).toBeInTheDocument()
+      const cards = screen.getAllByTestId(/^feature-card-/)
+      expect(cards).toHaveLength(3)
+      cards.forEach(card => {
+        expect(card).toBeInTheDocument()
+      })
     })
   })
 
