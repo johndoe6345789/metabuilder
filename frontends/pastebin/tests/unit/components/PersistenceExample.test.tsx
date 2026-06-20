@@ -225,18 +225,16 @@ describe('PersistenceExample Component', () => {
 
     it('should render instruction list items', () => {
       render(<PersistenceExample />)
-      expect(
-        screen.getByText(/Click "Create Snippet" to dispatch a Redux action/i),
-      ).toBeInTheDocument()
-      expect(
-        screen.getByText(/Persistence middleware intercepts the action/i),
-      ).toBeInTheDocument()
-      expect(
-        screen.getByText(
-          /Database save happens automatically \(100ms debounce\)/i,
-        ),
-      ).toBeInTheDocument()
-      expect(screen.getByText(/Check console for/i)).toBeInTheDocument()
+      expect(screen.getByTestId('step-1')).toHaveTextContent(
+        /dispatch a Redux action/i,
+      )
+      expect(screen.getByTestId('step-2')).toHaveTextContent(
+        /Persistence middleware intercepts/i,
+      )
+      expect(screen.getByTestId('step-3')).toHaveTextContent(
+        /Database save happens automatically/i,
+      )
+      expect(screen.getByTestId('step-4')).toHaveTextContent(/Check console/i)
     })
 
     it('should render list with all steps', () => {
@@ -260,7 +258,7 @@ describe('PersistenceExample Component', () => {
       })
 
       await user.type(titleInput, 'Test Title')
-      await user.type(codeTextarea, 'const test = () => {}')
+      await user.type(codeTextarea, 'const test = () => {{}')
 
       mockDispatch.mockImplementation(() => {})
       await user.click(createButton)

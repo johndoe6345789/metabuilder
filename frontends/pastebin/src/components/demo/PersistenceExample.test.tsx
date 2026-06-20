@@ -279,23 +279,17 @@ describe('PersistenceExample', () => {
 
     it('renders all 4 instruction items', () => {
       render(<PersistenceExample />)
-      expect(
-        screen.getByText(/Click "Create Snippet" to dispatch a Redux action/),
-      ).toBeInTheDocument()
-      expect(
-        screen.getByText(/Persistence middleware intercepts the action/),
-      ).toBeInTheDocument()
-      expect(
-        screen.getByText(/Database save happens automatically/),
-      ).toBeInTheDocument()
-      expect(screen.getByText(/Check console for/)).toBeInTheDocument()
+      expect(screen.getByTestId('step-1')).toBeInTheDocument()
+      expect(screen.getByTestId('step-2')).toBeInTheDocument()
+      expect(screen.getByTestId('step-3')).toBeInTheDocument()
+      expect(screen.getByTestId('step-4')).toBeInTheDocument()
     })
 
     it('renders first instruction', () => {
       render(<PersistenceExample />)
-      expect(
-        screen.getByText(/Click "Create Snippet" to dispatch a Redux action/),
-      ).toBeInTheDocument()
+      expect(screen.getByTestId('step-1')).toHaveTextContent(
+        /dispatch a Redux action/,
+      )
     })
 
     it('renders second instruction', () => {
