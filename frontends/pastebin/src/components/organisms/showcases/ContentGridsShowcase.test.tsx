@@ -102,9 +102,10 @@ describe('ContentGridsShowcase', () => {
   })
 
   test('renders multiple project cards in grid view', () => {
-    const { container } = render(<ContentGridsShowcase />)
-    const projectCards = container.querySelectorAll('[class*="grid"]')
-    expect(projectCards.length).toBeGreaterThan(0)
+    render(<ContentGridsShowcase />)
+    // Component renders multiple projects; verified by other tests
+    const projects = screen.getAllByText(/Project /)
+    expect(projects.length).toBeGreaterThan(0)
   })
 
   test('section has proper spacing', () => {
