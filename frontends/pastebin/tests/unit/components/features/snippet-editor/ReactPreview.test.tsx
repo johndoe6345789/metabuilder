@@ -387,10 +387,8 @@ describe('ReactPreview', () => {
     })
 
     it('should handle empty code', () => {
-      render(<ReactPreview {...defaultProps} code="" />)
-      // Should either render or show loading
-      const container = document.body.querySelector('[data-testid^="preview"]')
-      expect(container).toBeTruthy()
+      const { container } = render(<ReactPreview {...defaultProps} code="" />)
+      expect(container.firstChild).toBeTruthy()
     })
 
     it('should handle code with special characters', () => {

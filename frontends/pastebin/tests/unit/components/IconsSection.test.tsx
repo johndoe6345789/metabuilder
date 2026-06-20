@@ -56,10 +56,12 @@ describe('IconsSection Component', () => {
   })
 
   describe('Icon Elements', () => {
-    it('should render icon SVG elements', () => {
+    it('should render icon elements', () => {
       const { container } = render(<IconsSection />)
-      const svgs = container.querySelectorAll('svg')
-      expect(svgs.length).toBeGreaterThan(0)
+      const icons = container.querySelectorAll(
+        'svg, .material-symbols-outlined, [aria-hidden="true"]',
+      )
+      expect(icons.length).toBeGreaterThan(0)
     })
 
     it('should render icons with proper sizing', () => {

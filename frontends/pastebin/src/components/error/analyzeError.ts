@@ -103,7 +103,7 @@ export async function analyzeErrorWithAI(
       return buildFallback(errorMessage, context, NO_KEY_MSG)
     }
 
-    return platform.apiFormat === 'anthropic'
+    return await (platform.apiFormat === 'anthropic'
       ? callAnthropic(
           platform.endpoint,
           platform.defaultModel,
@@ -115,7 +115,7 @@ export async function analyzeErrorWithAI(
           platform.defaultModel,
           localApiKey,
           prompt,
-        )
+        ))
   } catch (err) {
     console.error('Error calling AI API:', err)
     return buildFallback(

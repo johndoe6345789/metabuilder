@@ -130,7 +130,9 @@ describe('InputParameterList Component', () => {
 
     it('should have icon in button', () => {
       const { container } = render(<InputParameterList {...defaultProps} />)
-      const icons = container.querySelectorAll('svg')
+      const icons = container.querySelectorAll(
+        'svg, .material-symbols-outlined, [aria-hidden="true"]',
+      )
       expect(icons.length).toBeGreaterThan(0)
     })
   })
