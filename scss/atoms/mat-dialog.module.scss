@@ -179,7 +179,7 @@ $dialog-transition-duration: 150ms;
   margin: 0 0 1px;
   padding: 24px 24px 20px;
   color: $dialog-subhead-color;
-  font-family: var(--mat-sys-headline-small-font, inherit);
+  font-family: var(--mat-sys-headline-small-font, system-ui, -apple-system, sans-serif);
   line-height: var(--mat-sys-headline-small-line-height, 1.5rem);
   font-size: var(--mat-sys-headline-small-size, 1.5rem);
   font-weight: var(--mat-sys-headline-small-weight, 500);

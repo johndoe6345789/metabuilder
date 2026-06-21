@@ -60,9 +60,10 @@ const baseConfig: NextConfig = {
       new webpack.NormalModuleReplacementPlugin(
         /\.module\.scss$/,
         function (resource: any) {
-          if (resource.context?.includes('fakemui') ||
+          if ((resource.context?.includes('fakemui') ||
               resource.context?.includes('components/dist') ||
-              resource.context?.includes('components\\dist')) {
+              resource.context?.includes('components\\dist')) &&
+              !resource.request?.includes('mat-dialog')) {
             resource.request = require.resolve('./src/lib/empty-css-module.js')
           }
         }

@@ -38,6 +38,7 @@ import ConstraintManagerTab from '@/components/admin/ConstraintManagerTab';
 import IndexManagerTab from '@/components/admin/IndexManagerTab';
 import QueryBuilderTab from '@/components/admin/QueryBuilderTab';
 import SQLQueryTab from '@/components/admin/SQLQueryTab';
+import TableDataView from '@/components/admin/TableDataView';
 import TableManagerTab from '@/components/admin/TableManagerTab';
 import TablesTab from '@/components/admin/TablesTab';
 import { getNavItems } from '@/utils/featureConfig';
@@ -96,6 +97,14 @@ export default function DashboardContent({ section, table }: Props) {
   const tabValue = Math.max(0, navItems.findIndex(item => item.id === section));
   const selectedTable = table;
 
+  useEffect(() => {
+    const active = navItems.find(item => item.id === section);
+    const sectionLabel = active?.label ?? section;
+    document.title = selectedTable
+      ? `${selectedTable} — ${sectionLabel} | Postgres Admin`
+      : `${sectionLabel} | Postgres Admin`;
+  }, [section, selectedTable, navItems]);
+
   const navigate = useCallback((sec: string, tbl?: string) => {
     const path = tbl
       ? `/admin/dashboard/${sec}/${encodeURIComponent(tbl)}`
@@ -123,42 +132,6 @@ export default function DashboardContent({ section, table }: Props) {
   useEffect(() => {
     fetchTables();
   }, [fetchTables]);
-
-  const fetchTableData = useCallback(async (tableName: string) => {
-    setLoading(true);
-    setError('');
-    setSuccessMessage('');
-    setQueryResult(null);
-
-    try {
-      const dataResponse = await fetch(`${BASE_PATH}/api/admin/table-data`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tableName }),
-      });
-
-      if (!dataResponse.ok) {
-        const data = await dataResponse.json();
-        throw new Error(data.error || 'Query failed');
-      }
-
-      const data = await dataResponse.json();
-      setQueryResult(data);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  // Fetch table data whenever route table segment changes (handles back/forward too)
-  useEffect(() => {
-    if (table) {
-      fetchTableData(table);
-    } else {
-      setQueryResult(null);
-    }
-  }, [table, fetchTableData]);
 
   const handleTableClick = (tableName: string) => {
     navigate('tables', tableName);
@@ -454,51 +427,11 @@ export default function DashboardContent({ section, table }: Props) {
           {navItems.map((item, index) => (
             <TabPanel key={item.id} value={tabValue} index={index}>
               {item.id === 'tables' && (
-                selectedTable && queryResult && !loading ? (
-                  <Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 1.5 }}>
-                      <Typography
-                        variant="body2"
-                        sx={{ color: 'text.secondary', fontSize: '0.8125rem', cursor: 'pointer', '&:hover': { color: 'text.primary' } }}
-                        onClick={() => { setQueryResult(null); navigate('tables'); }}
-                      >
-                        Tables
-                      </Typography>
-                      <Typography sx={{ color: 'text.disabled', fontSize: '0.75rem', lineHeight: 1 }}>/</Typography>
-                      <Typography variant="body2" sx={{ fontSize: '0.8125rem', fontWeight: 600 }}>{selectedTable}</Typography>
-                    </Box>
-                    <Paper sx={{ overflow: 'auto' }}>
-                      <Box sx={{ px: 2, py: 1, borderBottom: '1px solid rgba(202,196,208,0.08)' }}>
-                        <Typography variant="caption" color="text.secondary">
-                          {queryResult.rowCount} row{queryResult.rowCount !== 1 ? 's' : ''}
-                        </Typography>
-                      </Box>
-                      <TableContainer>
-                        <Table size="small">
-                          <TableHead>
-                            <TableRow>
-                              {queryResult.fields?.map((field: any) => (
-                                <TableCell key={field.name}><strong>{field.name}</strong></TableCell>
-                              ))}
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {queryResult.rows?.map((row: any, idx: number) => (
-                              <TableRow key={idx}>
-                                {queryResult.fields?.map((field: any) => (
-                                  <TableCell key={field.name}>
-                                    {row[field.name] !== null
-                                      ? String(row[field.name])
-                                      : <Typography component="span" variant="caption" color="text.disabled">NULL</Typography>}
-                                  </TableCell>
-                                ))}
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    </Paper>
-                  </Box>
+                selectedTable ? (
+                  <TableDataView
+                    tableName={selectedTable}
+                    onBack={() => navigate('tables')}
+                  />
                 ) : (
                   <TablesTab
                     tables={tables}
@@ -518,6 +451,7 @@ export default function DashboardContent({ section, table }: Props) {
                   tables={tables}
                   onCreateTable={handleCreateTable}
                   onDropTable={handleDropTable}
+                  onTableClick={handleTableClick}
                 />
               )}
               {item.id === 'column-manager' && (

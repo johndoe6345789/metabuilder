@@ -130,6 +130,7 @@ export function ColumnDialog({
               sx={{ mt: 2, mb: 2 }}
             />
             <Select
+              native
               fullWidth
               value={columnType}
               onChange={(e) => setColumnType(e.target.value as string)}
@@ -161,6 +162,7 @@ export function ColumnDialog({
         ) : (
           <>
             <Select
+              native
               fullWidth
               value={selectedColumn}
               onChange={(e) => setSelectedColumn(e.target.value as string)}
@@ -168,7 +170,7 @@ export function ColumnDialog({
               sx={{ mt: 2, mb: 2 }}
             >
               <option value="">
-                <em>Select a column</em>
+                Select a column
               </option>
               {columns.map((col) => (
                 <option key={col.column_name} value={col.column_name}>
@@ -180,6 +182,7 @@ export function ColumnDialog({
             {mode === 'modify' && selectedColumn && (
               <>
                 <Select
+                  native
                   fullWidth
                   value={columnType}
                   onChange={(e) => setColumnType(e.target.value as string)}

@@ -1,0 +1,74 @@
+# metabuilder/base-postgres-deps
+#
+# Extends base-node-deps with the workspace re-link for the postgres dashboard.
+# Bakes in the npm install so source-only changes never trigger it again.
+#
+# Build:  docker build -f deployment/base-images/Dockerfile.node-deps-postgres \
+#                      -t metabuilder/base-postgres-deps:latest ../../
+# Rebuild only when any package.json changes.
+
+ARG BASE_REGISTRY=metabuilder
+FROM ${BASE_REGISTRY}/base-node-deps:latest
+
+# Copy all workspace package manifests (matches base-node-deps COPY set).
+# package-lock.json is required so npm respects workspace-local placements
+# (e.g. tsup in components/node_modules, not hoisted to root).
+COPY package.json package-lock.json ./
+COPY components/package.json                          ./components/
+COPY components/fakemui/package.json                  ./components/fakemui/
+COPY config/package.json                              ./config/
+COPY scss/package.json                                ./scss/
+COPY frontends/codegen/package.json                   ./frontends/codegen/
+COPY frontends/dbal/package.json                      ./frontends/dbal/
+COPY frontends/emailclient/package.json               ./frontends/emailclient/
+COPY frontends/exploded-diagrams/package.json         ./frontends/exploded-diagrams/
+COPY frontends/nextjs/package.json                    ./frontends/nextjs/
+COPY frontends/pastebin/package.json                  ./frontends/pastebin/
+COPY frontends/postgres/package.json                  ./frontends/postgres/
+COPY frontends/workflowui/package.json                ./frontends/workflowui/
+COPY hooks/package.json                               ./hooks/
+COPY interfaces/package.json                          ./interfaces/
+COPY redux/adapters/package.json                      ./redux/adapters/
+COPY redux/api-clients/package.json                   ./redux/api-clients/
+COPY redux/core/package.json                          ./redux/core/
+COPY redux/core-hooks/package.json                    ./redux/core-hooks/
+COPY redux/email/package.json                         ./redux/email/
+COPY redux/hooks/package.json                         ./redux/hooks/
+COPY redux/hooks-async/package.json                   ./redux/hooks-async/
+COPY redux/hooks-auth/package.json                    ./redux/hooks-auth/
+COPY redux/hooks-canvas/package.json                  ./redux/hooks-canvas/
+COPY redux/hooks-data/package.json                    ./redux/hooks-data/
+COPY redux/hooks-forms/package.json                   ./redux/hooks-forms/
+COPY redux/hooks-utils/package.json                   ./redux/hooks-utils/
+COPY redux/middleware/package.json                    ./redux/middleware/
+COPY redux/persist/package.json                       ./redux/persist/
+COPY redux/services/package.json                      ./redux/services/
+COPY redux/slices/package.json                        ./redux/slices/
+COPY redux/timing-utils/package.json                  ./redux/timing-utils/
+COPY storybook/package.json                           ./storybook/
+COPY translations/package.json                        ./translations/
+COPY types/package.json                               ./types/
+COPY workflow/package.json                            ./workflow/
+
+# Re-link workspaces. Probe host.docker.internal first, fall back to bridge gateway.
+RUN set -e; \
+    VERDACCIO_HOST="http://host.docker.internal:4873/"; \
+    VERDACCIO_BRIDGE="http://172.17.0.1:4873/"; \
+    REG=""; \
+    if wget -q --spider --timeout=3 "$VERDACCIO_HOST" 2>/dev/null \
+       || curl -sf --connect-timeout 3 "$VERDACCIO_HOST" >/dev/null 2>&1; then \
+      REG="$VERDACCIO_HOST"; echo "Verdaccio via host.docker.internal"; \
+    elif wget -q --spider --timeout=3 "$VERDACCIO_BRIDGE" 2>/dev/null \
+         || curl -sf --connect-timeout 3 "$VERDACCIO_BRIDGE" >/dev/null 2>&1; then \
+      REG="$VERDACCIO_BRIDGE"; echo "Verdaccio via bridge gateway"; \
+    else \
+      echo "No local registry — using public npm"; \
+    fi; \
+    if [ -n "$REG" ]; then \
+      npm install --ignore-scripts --legacy-peer-deps --registry "$REG"; \
+    else \
+      npm install --ignore-scripts --legacy-peer-deps; \
+    fi
+
+LABEL org.metabuilder.image="base-postgres-deps" \
+      org.metabuilder.description="Workspace deps re-linked for postgres dashboard"

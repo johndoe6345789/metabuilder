@@ -1,11 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import { Dialog } from '../../feedback/Dialog';
 import {
-  Dialog,
+  DialogHeader,
   DialogTitle,
   DialogContent,
   DialogActions,
+  DialogClose,
 } from '../../utils';
 import { Box } from '../../layout';
 import { Paper } from '../../surfaces';
@@ -18,7 +20,7 @@ import {
   FormControlLabel,
   IconButton,
 } from '../../inputs';
-import { Delete } from '../../icons';
+import { Delete, Close } from '../../icons';
 
 export type TableColumn = {
   name: string;
@@ -49,7 +51,7 @@ export function CreateTableDialog({
 }: CreateTableDialogProps) {
   const [tableName, setTableName] = useState('');
   const [columns, setColumns] = useState<TableColumn[]>([
-    { name: '', type: 'VARCHAR', length: 255, nullable: true, primaryKey: false },
+    { name: '', type: 'VARCHAR', length: 255, nullable: false, primaryKey: false },
   ]);
   const [loading, setLoading] = useState(false);
 
@@ -69,7 +71,7 @@ export function CreateTableDialog({
   const handleClose = () => {
     setTableName('');
     setColumns([
-      { name: '', type: 'VARCHAR', length: 255, nullable: true, primaryKey: false },
+      { name: '', type: 'VARCHAR', length: 255, nullable: false, primaryKey: false },
     ]);
     onClose();
   };
@@ -77,7 +79,7 @@ export function CreateTableDialog({
   const addColumn = () => {
     setColumns([
       ...columns,
-      { name: '', type: 'VARCHAR', length: 255, nullable: true, primaryKey: false },
+      { name: '', type: 'VARCHAR', length: 255, nullable: false, primaryKey: false },
     ]);
   };
 
@@ -98,15 +100,19 @@ export function CreateTableDialog({
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} data-testid={testId} aria-labelledby={testId ? `${testId}-title` : undefined}>
-      <DialogTitle id={testId ? `${testId}-title` : undefined}>Create New Table</DialogTitle>
+    <Dialog open={open} onClose={handleClose} testId={testId} aria-labelledby={testId ? `${testId}-title` : undefined} maxWidth="md" fullWidth>
+      <DialogHeader>
+        <DialogTitle id={testId ? `${testId}-title` : undefined}>Create New Table</DialogTitle>
+        <DialogClose onClick={handleClose}><Close /></DialogClose>
+      </DialogHeader>
       <DialogContent>
         <TextField
           fullWidth
           label="Table Name"
           value={tableName}
-          onChange={(e) => setTableName(e.target.value)}
-          sx={{ mt: 2, mb: 2 }}
+          onChange={(e) => setTableName(e.target.value.replace(/\s/g, '_'))}
+          sx={{ mb: 1 }}
+          helperText="Spaces are replaced with underscores"
         />
         <Typography variant="subtitle1" gutterBottom>
           Columns:
@@ -114,7 +120,7 @@ export function CreateTableDialog({
         {columns.map((col, index) => (
           <Box
             key={index}
-            sx={{ mb: 2, p: 2, border: '1px solid #ddd', borderRadius: 1 }}
+            sx={{ mb: 2, p: 2, border: '1px solid #ddd', borderRadius: 1, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 1 }}
           >
             <TextField
               label="Column Name"
@@ -123,6 +129,7 @@ export function CreateTableDialog({
               sx={{ mr: 1, mb: 1 }}
             />
             <Select
+              native
               value={col.type}
               onChange={(e) => updateColumn(index, 'type', e.target.value as string)}
               sx={{ mr: 1, mb: 1, minWidth: 120 }}
@@ -166,16 +173,16 @@ export function CreateTableDialog({
               label="Primary Key"
               sx={{ mr: 1 }}
             />
-            {columns.length > 1 && (
-              <IconButton
-                onClick={() => removeColumn(index)}
-                color="error"
-                size="small"
-                aria-label="Remove column"
-              >
-                <Delete />
-              </IconButton>
-            )}
+            <IconButton
+              onClick={() => removeColumn(index)}
+              color="error"
+              size="small"
+              aria-label="Remove column"
+              disabled={columns.length <= 1}
+              title={columns.length <= 1 ? 'A table needs at least one column' : 'Remove column'}
+            >
+              <Delete />
+            </IconButton>
           </Box>
         ))}
         <Button variant="outlined" onClick={addColumn}>
@@ -187,7 +194,7 @@ export function CreateTableDialog({
         <Button
           onClick={handleCreate}
           variant="contained"
-          disabled={loading || !tableName.trim()}
+          disabled={loading || !tableName.trim() || !columns.some(c => c.name.trim())}
         >
           Create Table
         </Button>

@@ -11,6 +11,8 @@ import {
   FormControl,
   InputLabel,
   IconButton,
+  Checkbox,
+  FormControlLabel,
 } from '../../inputs';
 import { Add, Delete, Play } from '../../icons';
 import { DataGrid } from '../grids';
@@ -225,6 +227,7 @@ export function QueryBuilderTab({
         <FormControl fullWidth sx={{ mb: 2 }}>
           <InputLabel>Select Table</InputLabel>
           <Select
+            native
             value={selectedTable}
             onChange={(e) => handleTableChange(e.target.value as string)}
           >
@@ -239,29 +242,42 @@ export function QueryBuilderTab({
         {selectedTable && (
           <>
             {/* Column Selection */}
-            <FormControl fullWidth sx={{ mb: 2 }}>
-              <InputLabel>Select Columns (empty = all columns)</InputLabel>
-              <Select
-                multiple
-                value={selectedColumns}
-                onChange={(e) =>
-                  setSelectedColumns(e.target.value as unknown as string[])
-                }
-              >
+            <Box sx={{ mb: 2 }}>
+              <Typography variant="subtitle2" gutterBottom>
+                Columns{selectedColumns.length > 0 ? ` (${selectedColumns.length} selected)` : ' (all)'}
+              </Typography>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                 {availableColumns.map((col) => (
-                  <option key={col} value={col}>
-                    {col}
-                  </option>
+                  <FormControlLabel
+                    key={col}
+                    control={
+                      <Checkbox
+                        checked={selectedColumns.includes(col)}
+                        onChange={(e) => {
+                          setSelectedColumns(
+                            e.target.checked
+                              ? [...selectedColumns, col]
+                              : selectedColumns.filter((c) => c !== col)
+                          );
+                        }}
+                        size="small"
+                      />
+                    }
+                    label={col}
+                    sx={{ mr: 1 }}
+                  />
                 ))}
-              </Select>
+              </Box>
               {selectedColumns.length > 0 && (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mt: 1 }}>
-                  {selectedColumns.map((value) => (
-                    <Chip key={value} label={value} size="small" />
-                  ))}
-                </Box>
+                <Button
+                  size="small"
+                  onClick={() => setSelectedColumns([])}
+                  sx={{ mt: 0.5 }}
+                >
+                  Clear selection
+                </Button>
               )}
-            </FormControl>
+            </Box>
 
             {/* WHERE Conditions */}
             <Box sx={{ mb: 2 }}>
@@ -287,6 +303,7 @@ export function QueryBuilderTab({
                   <FormControl sx={{ flex: 1 }}>
                     <InputLabel>Column</InputLabel>
                     <Select
+                      native
                       value={condition.column}
                       onChange={(e) =>
                         handleConditionChange(
@@ -307,6 +324,7 @@ export function QueryBuilderTab({
                   <FormControl sx={{ flex: 1 }}>
                     <InputLabel>Operator</InputLabel>
                     <Select
+                      native
                       value={condition.operator}
                       onChange={(e) =>
                         handleConditionChange(
@@ -352,6 +370,7 @@ export function QueryBuilderTab({
               <FormControl sx={{ flex: 1 }}>
                 <InputLabel>Order By (optional)</InputLabel>
                 <Select
+                  native
                   value={orderByColumn}
                   onChange={(e) => setOrderByColumn(e.target.value as string)}
                 >
@@ -368,6 +387,7 @@ export function QueryBuilderTab({
                 <FormControl sx={{ flex: 1 }}>
                   <InputLabel>Direction</InputLabel>
                   <Select
+                    native
                     value={orderByDirection}
                     onChange={(e) =>
                       setOrderByDirection(e.target.value as 'ASC' | 'DESC')

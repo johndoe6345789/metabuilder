@@ -1,9 +1,3 @@
-/**
- * Dialog Component
- * Material Design 3 dialog with backdrop and content panel
- * Wraps DialogOverlay and DialogPanel for consistent styling with Angular Material
- */
-
 'use client';
 
 import React, { useEffect, useCallback } from 'react';

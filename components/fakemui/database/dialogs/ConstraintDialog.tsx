@@ -1,14 +1,17 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Dialog } from '../../feedback/Dialog';
 import {
-  Dialog,
+  DialogHeader,
   DialogTitle,
   DialogContent,
   DialogActions,
+  DialogClose,
 } from '../../utils';
 import { Typography } from '../../data-display';
 import { Button, TextField, Select } from '../../inputs';
+import { Close } from '../../icons';
 
 export type ConstraintType = {
   name: string;
@@ -132,8 +135,11 @@ export function ConstraintDialog({
   const currentType = constraintTypes.find((ct) => ct.name === constraintType);
 
   return (
-    <Dialog open={open} onClose={onClose} data-testid={testId} aria-labelledby={testId ? `${testId}-title` : undefined}>
-      <DialogTitle id={testId ? `${testId}-title` : undefined}>{getTitle()}</DialogTitle>
+    <Dialog open={open} onClose={onClose} testId={testId} aria-labelledby={testId ? `${testId}-title` : undefined} maxWidth="sm" fullWidth>
+      <DialogHeader>
+        <DialogTitle id={testId ? `${testId}-title` : undefined}>{getTitle()}</DialogTitle>
+        <DialogClose onClick={onClose}><Close /></DialogClose>
+      </DialogHeader>
       <DialogContent>
         {mode === 'delete' ? (
           <Typography variant="body2" color="error" gutterBottom>

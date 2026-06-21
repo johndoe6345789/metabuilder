@@ -51,7 +51,15 @@ export default function IndexList({
           <ListItem
             key={index.index_name}
             secondaryAction={
-              !index.is_primary && (
+              index.is_primary ? (
+                <Tooltip title="Primary key indexes are managed automatically and cannot be dropped">
+                  <span>
+                    <IconButton edge="end" disabled>
+                      <DeleteIcon />
+                    </IconButton>
+                  </span>
+                </Tooltip>
+              ) : (
                 <Tooltip title="Drop Index">
                   <IconButton
                     edge="end"

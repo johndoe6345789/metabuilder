@@ -199,3 +199,115 @@ h6 {
 .MuiPaper-root {
   background-image: none;
 }
+
+/* ── MUI TextField — force dark-theme text so inputs are visible on dark background ── */
+.MuiInputBase-input {
+  color: #e6e1e5 !important;
+}
+.MuiInputBase-input::placeholder {
+  color: rgba(202, 196, 208, 0.6) !important;
+  opacity: 1 !important;
+}
+.MuiFormLabel-root,
+.MuiInputLabel-root {
+  color: rgba(202, 196, 208, 0.7) !important;
+}
+.MuiFormLabel-root.Mui-focused,
+.MuiInputLabel-root.Mui-focused {
+  color: #d0bcff !important;
+}
+.MuiSvgIcon-root {
+  color: #cac4d0;
+}
+
+/* ── Dialog overrides — restore light theme inside white modal ── */
+/* The dialog is a portal so it receives all global dark-theme rules above.
+   These overrides use [role="dialog"] (set on DialogPanel) to scope resets.
+   Selector covers both class="" (empty) and no-class FakeMUI inputs. */
+[role="dialog"] input:not([class*="Mui"]),
+[role="dialog"] input[class=""] {
+  background-color: #fff !important;
+  color: rgba(0, 0, 0, 0.87) !important;
+  border-color: rgba(0, 0, 0, 0.32) !important;
+}
+[role="dialog"] input:not([class*="Mui"]):focus {
+  border-color: #6750a4 !important;
+  box-shadow: 0 0 0 2px rgba(103, 80, 164, 0.18) !important;
+}
+[role="dialog"] label {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+[role="dialog"] select {
+  background-color: #fff !important;
+  color: rgba(0, 0, 0, 0.87) !important;
+  border-color: rgba(0, 0, 0, 0.32) !important;
+}
+[role="dialog"] button[aria-label="Close dialog"]:not([class*="Mui"]) {
+  background-color: transparent !important;
+  border-radius: 50% !important;
+  padding: 0 !important;
+  width: 40px !important;
+  height: 40px !important;
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+[role="dialog"] button[aria-label="Close dialog"]:not([class*="Mui"]):hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* ── SQL syntax highlighting editor ── */
+.sql-editor-wrap {
+  position: relative;
+}
+
+.sql-editor-wrap .sql-pre,
+.sql-editor-wrap .sql-ta {
+  margin: 0;
+  padding: 10px 12px !important;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace !important;
+  font-size: 0.8125rem !important;
+  line-height: 1.6 !important;
+  white-space: pre !important;
+  tab-size: 2;
+  box-sizing: border-box !important;
+  border-radius: 8px !important;
+  overflow: auto;
+}
+
+.sql-editor-wrap .sql-pre {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  background-color: #322f37 !important;
+  color: #cac4d0;
+  border: 1px solid rgba(202, 196, 208, 0.32) !important;
+  overflow: hidden;
+  word-break: normal;
+  z-index: 0;
+}
+
+.sql-editor-wrap .sql-ta {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100% !important;
+  background-color: transparent !important;
+  color: transparent !important;
+  caret-color: #e6e1e5 !important;
+  border-color: transparent !important;
+  resize: none !important;
+  min-height: unset !important;
+}
+
+.sql-editor-wrap .sql-ta::placeholder {
+  color: rgba(202, 196, 208, 0.45) !important;
+}
+
+.sql-editor-wrap:focus-within .sql-pre {
+  border-color: #d0bcff !important;
+  box-shadow: 0 0 0 2px rgba(208, 188, 255, 0.18) !important;
+}
+
+.sql-kw  { color: #d0bcff; font-weight: 600; }
+.sql-str { color: #a8c7a0; }
+.sql-num { color: #ffb86c; }
+.sql-cmt { color: #6272a4; font-style: italic; }

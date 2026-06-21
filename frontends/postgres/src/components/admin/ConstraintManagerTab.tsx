@@ -1,7 +1,7 @@
 'use client';
 
 import AddIcon from '@mui/icons-material/Add';
-import { Box, Button, MenuItem, Select, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { getConstraintTypes, getFeatureById } from '@/utils/featureConfig';
 import ConstraintDialog from './ConstraintDialog';
 import ConstraintTable from './ConstraintTable';
@@ -40,18 +40,18 @@ export default function ConstraintManagerTab({
         </Typography>
       )}
       <Box sx={{ mt: 2, mb: 2 }}>
-        <Select
+        <select
           value={selectedTable}
           onChange={e => setSelectedTable(e.target.value)}
-          displayEmpty fullWidth sx={{ maxWidth: 400 }}
+          style={{ maxWidth: 400, display: 'block', width: '100%' }}
         >
-          <MenuItem value=""><em>Select a table</em></MenuItem>
+          <option value="">Select a table</option>
           {tables.map(t => (
-            <MenuItem key={t.table_name} value={t.table_name}>
+            <option key={t.table_name} value={t.table_name}>
               {t.table_name}
-            </MenuItem>
+            </option>
           ))}
-        </Select>
+        </select>
       </Box>
       {selectedTable && (
         <>

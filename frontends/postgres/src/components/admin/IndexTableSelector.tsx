@@ -1,15 +1,7 @@
 'use client';
 
 import AddIcon from '@mui/icons-material/Add';
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Paper,
-  Select,
-} from '@mui/material';
+import { Box, Button, Paper } from '@mui/material';
 
 type IndexTableSelectorProps = {
   tables: Array<{ table_name: string }>;
@@ -28,23 +20,18 @@ export default function IndexTableSelector({
 }: IndexTableSelectorProps) {
   return (
     <Paper sx={{ p: 2, mt: 2 }}>
-      <FormControl fullWidth>
-        <InputLabel>Select Table</InputLabel>
-        <Select
-          value={selectedTable}
-          label="Select Table"
-          onChange={e => onTableChange(e.target.value)}
-        >
-          {tables.map(table => (
-            <MenuItem
-              key={table.table_name}
-              value={table.table_name}
-            >
-              {table.table_name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+      <select
+        value={selectedTable}
+        onChange={e => onTableChange(e.target.value)}
+        style={{ display: 'block', width: '100%', maxWidth: 400 }}
+      >
+        <option value="">Select a table</option>
+        {tables.map(table => (
+          <option key={table.table_name} value={table.table_name}>
+            {table.table_name}
+          </option>
+        ))}
+      </select>
       {selectedTable && (
         <Box sx={{ mt: 2 }}>
           <Button

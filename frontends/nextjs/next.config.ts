@@ -17,11 +17,17 @@ const nextConfig: NextConfig = {
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
 
   // Resolve SCSS @use 'cdk' from fakemui components
+  // loadPaths = Turbopack (Dart Sass modern API); includePaths = webpack fallback
   sassOptions: {
-    includePaths: [
-      path.join(monorepoRoot, 'scss'),
+    loadPaths: [
       path.join(monorepoRoot, 'scss/m3-scss'),
+      path.join(monorepoRoot, 'scss'),
     ],
+    includePaths: [
+      path.join(monorepoRoot, 'scss/m3-scss'),
+      path.join(monorepoRoot, 'scss'),
+    ],
+    silenceDeprecations: ['legacy-js-api', 'import'],
   },
   transpilePackages: ['@metabuilder/fakemui', '@metabuilder/redux-persist', '@metabuilder/service-adapters'],
   

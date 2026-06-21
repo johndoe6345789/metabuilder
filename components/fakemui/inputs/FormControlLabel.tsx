@@ -1,6 +1,7 @@
 'use client'
 
 import React, { forwardRef, cloneElement, isValidElement } from 'react'
+import { sxToStyle } from '../utils/sx'
 
 /**
  * Props for FormControlLabel component (MUI-compatible)
@@ -60,6 +61,14 @@ export const FormControlLabel = forwardRef<HTMLLabelElement, FormControlLabelPro
       </span>
     )
 
+    const baseStyle: React.CSSProperties = {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '4px',
+      cursor: disabled ? 'default' : 'pointer',
+      flexDirection: labelPlacement === 'top' || labelPlacement === 'bottom' ? 'column' : 'row',
+    }
+
     return (
       <label
         ref={ref}
@@ -69,6 +78,7 @@ export const FormControlLabel = forwardRef<HTMLLabelElement, FormControlLabelPro
           ${disabled ? 'form-control-label--disabled' : ''}
           ${className}
         `.trim().replace(/\s+/g, ' ')}
+        style={{ ...baseStyle, ...sxToStyle(sx) }}
         data-testid={testId}
         {...props}
       >

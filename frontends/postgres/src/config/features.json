@@ -1366,78 +1366,6 @@
               }
             }
           ]
-        },
-        {
-          "component": "Paper",
-          "props": {
-            "sx": {
-              "mt": 1.5
-            }
-          },
-          "children": [
-            {
-              "component": "Box",
-              "props": {
-                "sx": {
-                  "p": 1.5
-                }
-              },
-              "children": [
-                {
-                  "component": "Typography",
-                  "props": {
-                    "variant": "h6",
-                    "gutterBottom": true,
-                    "text": "Existing Tables"
-                  }
-                },
-                {
-                  "component": "List",
-                  "children": [
-                    {
-                      "component": "ListItem",
-                      "forEach": "tables",
-                      "children": [
-                        {
-                          "component": "ListItemIcon",
-                          "children": [
-                            {
-                              "component": "Icon",
-                              "props": {
-                                "name": "TableChart",
-                                "fontSize": "small"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "component": "ListItemText",
-                          "props": {
-                            "primary": "{{item.table_name}}"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "component": "ListItem",
-                      "condition": "tables.length === 0",
-                      "children": [
-                        {
-                          "component": "ListItemText",
-                          "props": {
-                            "primary": "No tables found"
-                          }
-                        }
-                      ]
-                    }
-                  ],
-                  "props": {
-                    "dense": true
-                  }
-                }
-              ]
-            }
-          ]
         }
       ]
     },
@@ -3279,7 +3207,7 @@
   "navItems": [
     {
       "id": "tables",
-      "label": "Tables",
+      "label": "Browse",
       "icon": "Storage",
       "featureId": "database-crud"
     },
@@ -3297,7 +3225,7 @@
     },
     {
       "id": "table-manager",
-      "label": "Table Manager",
+      "label": "Schema",
       "icon": "TableChart",
       "featureId": "table-management"
     },

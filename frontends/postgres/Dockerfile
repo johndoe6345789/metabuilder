@@ -1,28 +1,16 @@
-# Multi-stage build: node_modules from base image, source built fresh
+# Multi-stage build — source + build only, no npm install.
+# Deps are pre-baked into base-postgres-deps (immutable, rebuilt on package.json changes).
 # Context: monorepo root (..)
-# Requires: docker build -f deployment/base-images/Dockerfile.node-deps \
-#           -t metabuilder/base-node-deps:latest .
 
 # --- Build stage ---
 ARG BASE_REGISTRY=metabuilder
-FROM ${BASE_REGISTRY}/base-node-deps:latest AS builder
+FROM ${BASE_REGISTRY}/base-postgres-deps:latest AS builder
 
-# ── Shared packages (resolved by transpilePackages + webpack aliases) ────────
-# Each COPY targets only the source tree that postgres actually imports.
-#
-# hooks (shared React hooks)
+# Copy all source (workspace libs + app)
 COPY hooks/ ./hooks/
-
-# icons (React icon components — imported by components/fakemui)
 COPY icons/ ./icons/
-
-# scss (Material 3 SCSS, theme, atoms — loaded by sassOptions.includePaths)
 COPY scss/ ./scss/
-
-# components + FakeMUI (UI component library)
 COPY components/ ./components/
-
-# ── Redux packages (all — small TS source, avoids transitive dep breakage) ───
 COPY redux/core/ ./redux/core/
 COPY redux/slices/ ./redux/slices/
 COPY redux/hooks/ ./redux/hooks/
@@ -40,29 +28,13 @@ COPY redux/middleware/ ./redux/middleware/
 COPY redux/persist/ ./redux/persist/
 COPY redux/services/ ./redux/services/
 COPY redux/timing-utils/ ./redux/timing-utils/
-
-# types (transitive dependency via hooks)
 COPY types/ ./types/
-
-# types/project.ts imports ../interfaces/requests; redux/slices et al. also
-# resolve interfaces/translations. Mirrors passing codegen/workflowui.
 COPY interfaces/ ./interfaces/
 COPY translations/ ./translations/
-
-# workflow (DAG engine — imported by components package)
 COPY workflow/ ./workflow/
-
-# ── Postgres Dashboard (the app itself) ──────────────────────────────────────
 COPY frontends/postgres/ ./frontends/postgres/
 
-# Re-link workspaces so every copied workspace can resolve local deps.
-# The base image installed deps from manifests only; now that real workspace
-# source has been COPYed in, re-run the full workspace install so npm rebuilds
-# the complete node_modules/@metabuilder/* symlink tree (e.g. @metabuilder/types
-# for redux/slices, redux/adapters, redux/hooks-async, api-clients, persist).
-RUN npm install --ignore-scripts --legacy-peer-deps
-
-# Build workspace library packages
+# Build workspace libraries
 RUN for ws in redux/core redux/slices redux/hooks redux/adapters \
     redux/hooks-async redux/api-clients redux/persist \
     components workflow; do \

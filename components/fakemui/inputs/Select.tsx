@@ -2,6 +2,7 @@
 
 import React, { forwardRef, useState, useRef, useEffect, useId } from 'react'
 import styles from '../../../scss/atoms/mat-select.module.scss'
+import { sxToStyle } from '../utils/sx'
 
 /**
  * Select event type compatible with MUI
@@ -275,6 +276,7 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
             size === 'small' ? styles.small : '',
             className
           ].filter(Boolean).join(' ')}
+          style={sx ? sxToStyle(sx) : undefined}
           {...inputProps}
         >
           {children}

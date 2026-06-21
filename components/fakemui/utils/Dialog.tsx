@@ -162,15 +162,4 @@ export const DialogIcon: React.FC<DialogIconProps> = ({ children, className = ''
   </div>
 )
 
-/**
- * Component host class - use when passing a component into the dialog
- * to ensure proper flex layout. Apply to the host element of your component.
- *
- * Example:
- * <DialogPanel>
- *   <div className="mat-mdc-dialog-component-host">
- *     <YourComponent />
- *   </div>
- * </DialogPanel>
- */
 export const DialogComponentHostClass = 'mat-mdc-dialog-component-host'
