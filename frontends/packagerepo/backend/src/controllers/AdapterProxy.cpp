@@ -79,4 +79,39 @@ drogon::HttpResponsePtr proxyNpmDownload(const AdapterInfo& a,
     return r;
 }
 
+drogon::HttpResponsePtr proxyConan(const std::string& prefix,
+                                   const std::string& fullPath)
+{
+    if (Globals::conanUpstream.empty())
+        return nullptr;
+
+    // /conan/v2/... -> upstream /v2/...
+    std::string up = fullPath.substr(prefix.size());
+    if (up.empty() || up.front() != '/')
+        up = "/" + up;
+
+    // conan validates a remote via /v1/ping (then /v2 for revisions),
+    // expecting the capabilities header (the upstream CDN 404s it). Answer it
+    // ourselves so the remote is "valid".
+    const bool isPing = up.size() >= 5 && up.compare(up.size() - 5, 5, "/ping") == 0;
+    if (isPing) {
+        auto r = HttpResponse::newHttpResponse();
+        r->setStatusCode(k200OK);
+        r->addHeader("X-Conan-Server-Capabilities", "revisions,complex_search");
+        return r;
+    }
+
+    auto res = ProxyCache::fetch(Globals::conanUpstream, up);
+    if (!res.ok)
+        return nullptr;
+
+    // ".../files/<name>" is a binary artifact; everything else is JSON.
+    const bool isFile = up.find("/files/") != std::string::npos;
+    auto r = HttpResponse::newHttpResponse();
+    r->setContentTypeString(isFile ? "application/octet-stream"
+                                   : "application/json");
+    r->setBody(std::move(res.body));
+    return r;
+}
+
 } // namespace repo

@@ -29,4 +29,11 @@ drogon::HttpResponsePtr proxyNpmDownload(const AdapterInfo& a,
                                          const std::string& name,
                                          const std::string& ver);
 
+/// @brief Transparent conan v2 pull-through: map @p fullPath under @p prefix
+///        to the upstream (/v2/...), cache the bytes and serve. conan verifies
+///        its own file hashes, so no rewriting is needed. nullptr if disabled
+///        or upstream missing.
+drogon::HttpResponsePtr proxyConan(const std::string& prefix,
+                                   const std::string& fullPath);
+
 } // namespace repo

@@ -9,8 +9,10 @@
 
 #include "GenericAdapterCtrl.h"
 #include "AdapterHandlers.h"
+#include "AdapterProxy.h"
 #include "../services/AdapterGlobals.h"
 #include "../services/AdapterTemplate.h"
+#include "../services/Globals.h"
 
 #include <drogon/drogon.h>
 
@@ -28,6 +30,23 @@ void registerAdapterRoutes()
 
     for (size_t i = 0; i < vec.size(); ++i) {
         auto* pa = &vec[i];
+
+        // Conan v2: serve as a transparent upstream proxy (no hosted routes)
+        // when an upstream is configured. A single catch-all under the prefix
+        // covers revisions/files/packages — the declarative routes can't.
+        if (pa->name == "conan" && !Globals::conanUpstream.empty()) {
+            auto pfx = pa->prefix;
+            app().registerHandlerViaRegex(pfx + "/.*",
+                [pfx](const HttpRequestPtr& r, Cb&& cb) {
+                    std::string p = r->path();
+                    auto q = r->getQuery();
+                    if (!q.empty()) p += "?" + q;
+                    auto resp = proxyConan(pfx, p);
+                    cb(resp ? resp : HttpResponse::newNotFoundResponse());
+                }, {Get});
+            continue;
+        }
+
         if (pa->metaRegex.empty()) continue;
 
         int params = countPathParams(pa->metaRegex);

@@ -35,7 +35,7 @@ int main()
     repo::Globals::initConfig(s3Ep, s3Bk, s3Ak, jwt, db);
     // Upstream registries for pull-through proxying (empty disables it).
     repo::Globals::npmUpstream = env("NPM_UPSTREAM", "https://registry.npmjs.org");
-    repo::Globals::conanUpstream = env("CONAN_UPSTREAM", "https://center.conan.io");
+    repo::Globals::conanUpstream = env("CONAN_UPSTREAM", "https://center2.conan.io");
     repo::AdapterGlobals::init(repo::Globals::repoType);
 
     for (auto p : {fs::path("/app/schema.json"),
