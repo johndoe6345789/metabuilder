@@ -29,6 +29,14 @@ drogon::HttpResponsePtr proxyNpmDownload(const AdapterInfo& a,
                                          const std::string& name,
                                          const std::string& ver);
 
+/// @brief Transparent npm pull-through: proxy any path under the npm prefix to
+///        the upstream registry (handles scoped @scope/name and tarballs).
+///        Package metadata has its registry host rewritten to this server so
+///        tarball fetches also pull through. nullptr if disabled/unavailable.
+drogon::HttpResponsePtr proxyNpm(const std::string& prefix,
+                                 const std::string& fullPath,
+                                 const drogon::HttpRequestPtr& req);
+
 /// @brief Transparent conan v2 pull-through: map @p fullPath under @p prefix
 ///        to the upstream (/v2/...), cache the bytes and serve. conan verifies
 ///        its own file hashes, so no rewriting is needed. nullptr if disabled

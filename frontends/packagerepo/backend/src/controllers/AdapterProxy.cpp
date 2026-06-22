@@ -79,6 +79,51 @@ drogon::HttpResponsePtr proxyNpmDownload(const AdapterInfo& a,
     return r;
 }
 
+static void replaceAll(std::string& s, const std::string& from,
+                       const std::string& to)
+{
+    if (from.empty())
+        return;
+    size_t pos = 0;
+    while ((pos = s.find(from, pos)) != std::string::npos) {
+        s.replace(pos, from.size(), to);
+        pos += to.size();
+    }
+}
+
+drogon::HttpResponsePtr proxyNpm(const std::string& prefix,
+                                 const std::string& fullPath,
+                                 const HttpRequestPtr& req)
+{
+    if (Globals::npmUpstream.empty())
+        return nullptr;
+
+    std::string up = fullPath.substr(prefix.size());
+    if (up.empty())
+        up = "/";
+    else if (up.front() != '/')
+        up = "/" + up;
+
+    auto res = ProxyCache::fetch(Globals::npmUpstream, up);
+    if (!res.ok)
+        return nullptr;
+
+    auto r = HttpResponse::newHttpResponse();
+    if (up.find("/-/") != std::string::npos) {
+        // tarball / binary asset — serve bytes verbatim (shasum still matches)
+        r->setContentTypeString("application/octet-stream");
+        r->setBody(std::move(res.body));
+    } else {
+        // package metadata — repoint upstream tarball URLs at this server so
+        // the tarball fetch also pulls through here.
+        std::string body = std::move(res.body);
+        replaceAll(body, Globals::npmUpstream, baseUrl(req) + prefix);
+        r->setContentTypeString("application/json");
+        r->setBody(std::move(body));
+    }
+    return r;
+}
+
 drogon::HttpResponsePtr proxyConan(const std::string& prefix,
                                    const std::string& fullPath)
 {
