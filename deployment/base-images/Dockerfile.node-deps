@@ -69,7 +69,11 @@ RUN npm config set fetch-retries 5 \
     && VERDACCIO_LOCAL="http://localhost:4873/" \
     && LOCAL_REG="" \
     && LOCAL_REG_AUTH="" \
-    && if wget -q --spider --timeout=3 "$NEXUS_NPM" 2>/dev/null \
+    && PKGREPO_NPM="http://localhost:5002/npm" \
+    && if curl -sf --connect-timeout 3 "$PKGREPO_NPM/" >/dev/null 2>&1; then \
+         LOCAL_REG="$PKGREPO_NPM"; \
+         echo "    pkgrepo npm cache detected at $PKGREPO_NPM"; \
+       elif wget -q --spider --timeout=3 "$NEXUS_NPM" 2>/dev/null \
           || curl -sf --connect-timeout 3 "$NEXUS_NPM" >/dev/null 2>&1; then \
          LOCAL_REG="$NEXUS_NPM"; \
          LOCAL_REG_AUTH="//host.docker.internal:8091/repository/npm-hosted/:_auth=YWRtaW46bmV4dXM="; \

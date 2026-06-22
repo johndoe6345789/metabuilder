@@ -20,6 +20,15 @@ RUN for i in 1 2 3 4 5; do \
 # Detect Conan profile (must run inside the container, not from host cache)
 RUN conan profile detect --force
 
+# Route Conan through the pkgrepo proxy/cache when CONAN_REMOTE is set (empty =
+# default conancenter). Base builds run with --network=host, so a host URL like
+# http://localhost:5002/conan is reachable.
+ARG CONAN_REMOTE=""
+RUN if [ -n "$CONAN_REMOTE" ]; then \
+      conan remote add pkgrepo "$CONAN_REMOTE" --force && \
+      conan remote disable conancenter; \
+    fi
+
 # ---- Media daemon ----
 COPY services/media_daemon/build-config/conanfile.txt /deps/media-daemon/conanfile.txt
 

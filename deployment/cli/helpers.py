@@ -114,6 +114,11 @@ def build_with_retry(tag: str, dockerfile: str, context: str, max_attempts: int 
     base_registry = os.environ.get("BASE_REGISTRY")
     if base_registry:
         extra_args = ["--build-arg", f"BASE_REGISTRY={base_registry}"]
+    # Route Conan deps through the pkgrepo proxy/cache when set (the conan base
+    # Dockerfiles add it as a remote and disable conancenter).
+    conan_remote = os.environ.get("CONAN_REMOTE")
+    if conan_remote:
+        extra_args += ["--build-arg", f"CONAN_REMOTE={conan_remote}"]
 
     log_info(f"Building {tag} ...")
     for attempt in range(1, max_attempts + 1):
