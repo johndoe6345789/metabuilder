@@ -5,7 +5,7 @@
 'use client';
 
 import { useState } from 'react';
-import type { Position } from '@/../../../../../components/workflow-editor';
+import type { Position } from '@/../../../components/workflow-editor';
 
 export interface DrawingConnection {
   sourceNodeId: string;

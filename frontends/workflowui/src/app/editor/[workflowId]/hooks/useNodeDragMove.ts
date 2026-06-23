@@ -5,7 +5,7 @@
 'use client';
 
 import { useCallback, type MouseEvent } from 'react';
-import type { Workflow } from '@/../../../../../components/workflow-editor';
+import type { Workflow } from '@/../../../components/workflow-editor';
 
 interface NodeDragMoveParams {
   draggingNodeId: string | null;

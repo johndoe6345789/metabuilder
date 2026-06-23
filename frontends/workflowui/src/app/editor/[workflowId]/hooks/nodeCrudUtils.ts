@@ -1,6 +1,6 @@
 /** nodeCrudUtils - Pure workflow node mutation helpers */
 
-import type { Workflow } from '@/../../../../../components/workflow-editor';
+import type { Workflow } from '@/../../../components/workflow-editor';
 
 type SetWorkflow = React.Dispatch<
   React.SetStateAction<Workflow>

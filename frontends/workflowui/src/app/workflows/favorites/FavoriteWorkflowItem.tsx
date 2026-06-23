@@ -10,7 +10,7 @@ import {
   Card,
   CardContent,
 } from '@metabuilder/fakemui';
-import styles from '@/../../../../../scss/atoms/mat-card.module.scss';
+import styles from '@/../../../scss/atoms/mat-card.module.scss';
 import FavoriteWorkflowActions from './FavoriteWorkflowActions';
 import FavoriteWorkflowInfo from './FavoriteWorkflowInfo';
 

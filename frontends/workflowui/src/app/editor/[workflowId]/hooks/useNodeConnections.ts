@@ -8,7 +8,7 @@ import {
   type Position,
   type Workflow,
   generateConnectionId,
-} from '@/../../../../../components/workflow-editor';
+} from '@/../../../components/workflow-editor';
 import type { DrawingConnection } from './useCanvasInteraction';
 
 interface NodeConnectionsParams {

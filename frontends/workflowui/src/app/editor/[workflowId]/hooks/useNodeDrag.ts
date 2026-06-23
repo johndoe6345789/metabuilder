@@ -3,7 +3,7 @@
 'use client';
 
 import { useState, type MouseEvent } from 'react';
-import type { Workflow } from '@/../../../../../components/workflow-editor';
+import type { Workflow } from '@/../../../components/workflow-editor';
 import type { DrawingConnection } from './useCanvasInteraction';
 import { useNodeCrud } from './useNodeCrud';
 import { useNodeDragMove } from './useNodeDragMove';
