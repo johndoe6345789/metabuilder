@@ -36,7 +36,7 @@ void registerAdapterRoutes()
         // covers revisions/files/packages — the declarative routes can't.
         if (pa->name == "conan" && !Globals::conanUpstream.empty()) {
             auto pfx = pa->prefix;
-            app().registerHandlerViaRegex(pfx + "/.*",
+            app().registerHandlerViaRegex(pfx + "(?:/.*)?",
                 [pfx](const HttpRequestPtr& r, Cb&& cb) {
                     std::string p = r->path();
                     auto q = r->getQuery();
@@ -51,7 +51,7 @@ void registerAdapterRoutes()
         // can't match scoped @scope/name or tarball (/-/) paths, so proxy all.
         if (pa->name == "npm" && !Globals::npmUpstream.empty()) {
             auto pfx = pa->prefix;
-            app().registerHandlerViaRegex(pfx + "/.*",
+            app().registerHandlerViaRegex(pfx + "(?:/.*)?",
                 [pfx](const HttpRequestPtr& r, Cb&& cb) {
                     std::string p = r->path();
                     auto q = r->getQuery();
