@@ -9,7 +9,7 @@
   },
 
   "definitions": {
-    "base_build_order": ["apt", "conan-cli", "conan-media", "conan-dbal", "conan-qt6", "conan-gameengine", "android-sdk", "node-deps", "pip-deps", "devcontainer"],
+    "base_build_order": ["apt", "conan-cli", "conan-media", "conan-dbal", "conan-qt6", "conan-gameengine", "android-sdk", "node-deps", "postgres-deps", "pip-deps", "devcontainer"],
     "stack_commands": ["up", "start", "down", "stop", "build", "restart", "logs", "ps", "status", "clean"],
 
     "base_images": {
@@ -20,6 +20,7 @@
       "conan-qt6":        { "dockerfile": "Dockerfile.conan-qt6",        "tag": "metabuilder/base-conan-qt6:latest" },
       "conan-gameengine": { "dockerfile": "Dockerfile.conan-gameengine", "tag": "metabuilder/base-conan-gameengine:latest" },
       "node-deps":        { "dockerfile": "Dockerfile.node-deps",        "tag": "metabuilder/base-node-deps:latest" },
+      "postgres-deps":    { "dockerfile": "Dockerfile.node-deps-postgres", "tag": "metabuilder/base-postgres-deps:latest" },
       "pip-deps":         { "dockerfile": "Dockerfile.pip-deps",         "tag": "metabuilder/base-pip-deps:latest" },
       "android-sdk":      { "dockerfile": "Dockerfile.android-sdk",      "tag": "metabuilder/base-android-sdk:latest", "context": "base-images" },
       "devcontainer":     { "dockerfile": "Dockerfile.devcontainer",     "tag": "metabuilder/devcontainer:latest" }
@@ -31,8 +32,9 @@
         { "local": "metabuilder/base-node-deps:latest",  "name": "base-node-deps",  "size": "5.5GB" },
         { "local": "metabuilder/base-pip-deps:latest",   "name": "base-pip-deps",   "size": "1.4GB" },
         { "local": "metabuilder/base-android-sdk:latest", "name": "base-android-sdk", "size": "6.1GB" },
-        { "local": "metabuilder/base-conan-cli:latest",   "name": "base-conan-cli",   "size": "4GB" },
-        { "local": "metabuilder/base-conan-media:latest", "name": "base-conan-media", "size": "5GB" }
+        { "local": "metabuilder/base-conan-cli:latest",    "name": "base-conan-cli",    "size": "4GB" },
+        { "local": "metabuilder/base-conan-media:latest", "name": "base-conan-media",  "size": "5GB" },
+        { "local": "metabuilder/base-postgres-deps:latest", "name": "base-postgres-deps", "size": "6GB" }
       ],
       "apps": [
         { "local": "metabuilder-deploy-dbal-init:latest",          "name": "dbal-init",          "size": "12MB" },
