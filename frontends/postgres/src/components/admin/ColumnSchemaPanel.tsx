@@ -1,12 +1,12 @@
 'use client';
 
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@metabuilder/components/fakemui/Add';
+import DeleteIcon from '@metabuilder/components/fakemui/Delete';
+import EditIcon from '@metabuilder/components/fakemui/Edit';
 import {
   Box, Button, Paper, Table, TableBody,
   TableCell, TableContainer, TableHead, TableRow, Typography,
-} from '@mui/material';
+} from '@metabuilder/components/fakemui';
 
 export type ColumnInfo = {
   column_name: string;

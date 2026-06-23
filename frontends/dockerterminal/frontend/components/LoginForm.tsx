@@ -9,8 +9,8 @@ import {
   Typography,
   Box,
   Alert,
-} from '@mui/material';
-import { LockOpen } from '@mui/icons-material';
+  LockOpen,
+} from '@metabuilder/components/fakemui';
 import { useAuth } from '@/lib/auth';
 import { useRouter } from 'next/navigation';
 import TurboErrorDialog from './TurboErrorDialog';
@@ -108,7 +108,7 @@ export default function LoginForm() {
                   alignItems: 'center', justifyContent: 'center',
                 }}
               >
-                <LockOpen sx={{ fontSize: 32, color: 'secondary.main' }} />
+                <LockOpen style={{ fontSize: 32, color: 'var(--primary)' }} />
               </Box>
               <Typography variant="h1" component="h1" gutterBottom>
                 Container Shell

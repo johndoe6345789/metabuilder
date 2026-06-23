@@ -1,6 +1,6 @@
 'use client';
 
-import StorageIcon from '@mui/icons-material/Storage';
+import StorageIcon from '@metabuilder/components/fakemui/Storage';
 import {
   List,
   ListItem,
@@ -8,7 +8,7 @@ import {
   ListItemIcon,
   ListItemText,
   Paper,
-} from '@mui/material';
+} from '@metabuilder/components/fakemui';
 
 type TableRow = { table_name: string };
 
@@ -24,7 +24,14 @@ export default function ColumnTableList({
   onSelect,
 }: Props) {
   return (
-    <Paper sx={{ width: 200, flexShrink: 0, overflow: 'auto', maxHeight: '75vh' }}>
+    <Paper
+      sx={{
+        width: { xs: '100%', md: 220 },
+        flexShrink: 0,
+        overflow: 'auto',
+        maxHeight: { xs: 280, md: '75vh' },
+      }}
+    >
       <List dense disablePadding>
         {tables.map(table => (
           <ListItem key={table.table_name} disablePadding>

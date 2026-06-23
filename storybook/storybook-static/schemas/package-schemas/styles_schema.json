@@ -1,0 +1,410 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/package-styles.schema.json",
+  "title": "Package Styles",
+  "description": "Design tokens and style definitions for MetaBuilder packages",
+  "type": "object",
+  "required": ["schemaVersion"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "description": "Schema version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "default": "2.0.0"
+    },
+    "colors": {
+      "type": "object",
+      "description": "Color palette definitions",
+      "properties": {
+        "primary": {
+          "$ref": "#/definitions/color"
+        },
+        "secondary": {
+          "$ref": "#/definitions/color"
+        },
+        "success": {
+          "$ref": "#/definitions/color"
+        },
+        "error": {
+          "$ref": "#/definitions/color"
+        },
+        "warning": {
+          "$ref": "#/definitions/color"
+        },
+        "info": {
+          "$ref": "#/definitions/color"
+        },
+        "background": {
+          "$ref": "#/definitions/color"
+        },
+        "text": {
+          "$ref": "#/definitions/color"
+        }
+      },
+      "additionalProperties": {
+        "$ref": "#/definitions/color"
+      }
+    },
+    "opacity": {
+      "type": "object",
+      "description": "Opacity scale",
+      "properties": {
+        "transparent": { "type": "number", "const": 0 },
+        "low": { "type": "number", "minimum": 0, "maximum": 1 },
+        "medium": { "type": "number", "minimum": 0, "maximum": 1 },
+        "high": { "type": "number", "minimum": 0, "maximum": 1 },
+        "opaque": { "type": "number", "const": 1 }
+      },
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      }
+    },
+    "spacing": {
+      "type": "object",
+      "description": "Spacing scale definitions",
+      "properties": {
+        "xs": { "$ref": "#/definitions/size" },
+        "sm": { "$ref": "#/definitions/size" },
+        "md": { "$ref": "#/definitions/size" },
+        "lg": { "$ref": "#/definitions/size" },
+        "xl": { "$ref": "#/definitions/size" },
+        "xxl": { "$ref": "#/definitions/size" }
+      },
+      "additionalProperties": {
+        "$ref": "#/definitions/size"
+      }
+    },
+    "typography": {
+      "type": "object",
+      "description": "Typography definitions",
+      "properties": {
+        "fontFamily": {
+          "type": "string",
+          "description": "Default font family stack"
+        },
+        "fontFamilyMono": {
+          "type": "string",
+          "description": "Monospace font family stack"
+        },
+        "fontFamilyHeading": {
+          "type": "string",
+          "description": "Heading font family stack"
+        },
+        "fontSize": {
+          "type": "object",
+          "description": "Font size scale",
+          "properties": {
+            "xs": { "$ref": "#/definitions/size" },
+            "small": { "$ref": "#/definitions/size" },
+            "medium": { "$ref": "#/definitions/size" },
+            "large": { "$ref": "#/definitions/size" },
+            "xlarge": { "$ref": "#/definitions/size" },
+            "xxlarge": { "$ref": "#/definitions/size" }
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/size"
+          }
+        },
+        "fontWeight": {
+          "type": "object",
+          "description": "Font weight scale",
+          "properties": {
+            "thin": { "type": "integer", "minimum": 100, "maximum": 900 },
+            "light": { "type": "integer", "minimum": 100, "maximum": 900 },
+            "normal": { "type": "integer", "minimum": 100, "maximum": 900 },
+            "medium": { "type": "integer", "minimum": 100, "maximum": 900 },
+            "semibold": { "type": "integer", "minimum": 100, "maximum": 900 },
+            "bold": { "type": "integer", "minimum": 100, "maximum": 900 },
+            "black": { "type": "integer", "minimum": 100, "maximum": 900 }
+          },
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 900
+          }
+        },
+        "lineHeight": {
+          "type": "object",
+          "description": "Line height scale",
+          "properties": {
+            "tight": { "type": "number", "minimum": 0 },
+            "normal": { "type": "number", "minimum": 0 },
+            "relaxed": { "type": "number", "minimum": 0 },
+            "loose": { "type": "number", "minimum": 0 }
+          },
+          "additionalProperties": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "letterSpacing": {
+          "type": "object",
+          "description": "Letter spacing scale",
+          "properties": {
+            "tight": { "$ref": "#/definitions/size" },
+            "normal": { "$ref": "#/definitions/size" },
+            "wide": { "$ref": "#/definitions/size" }
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/size"
+          }
+        }
+      }
+    },
+    "borderRadius": {
+      "type": "object",
+      "description": "Border radius scale",
+      "properties": {
+        "none": { "$ref": "#/definitions/size" },
+        "small": { "$ref": "#/definitions/size" },
+        "medium": { "$ref": "#/definitions/size" },
+        "large": { "$ref": "#/definitions/size" },
+        "full": { "$ref": "#/definitions/size" }
+      },
+      "additionalProperties": {
+        "$ref": "#/definitions/size"
+      }
+    },
+    "borderWidth": {
+      "type": "object",
+      "description": "Border width scale",
+      "properties": {
+        "none": { "$ref": "#/definitions/size" },
+        "thin": { "$ref": "#/definitions/size" },
+        "medium": { "$ref": "#/definitions/size" },
+        "thick": { "$ref": "#/definitions/size" }
+      },
+      "additionalProperties": {
+        "$ref": "#/definitions/size"
+      }
+    },
+    "shadows": {
+      "type": "object",
+      "description": "Box shadow definitions",
+      "properties": {
+        "none": { "type": "string" },
+        "small": { "type": "string" },
+        "medium": { "type": "string" },
+        "large": { "type": "string" },
+        "xlarge": { "type": "string" }
+      },
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "blur": {
+      "type": "object",
+      "description": "Blur values for filters and backdrops",
+      "properties": {
+        "none": { "$ref": "#/definitions/size" },
+        "small": { "$ref": "#/definitions/size" },
+        "medium": { "$ref": "#/definitions/size" },
+        "large": { "$ref": "#/definitions/size" }
+      },
+      "additionalProperties": {
+        "$ref": "#/definitions/size"
+      }
+    },
+    "breakpoints": {
+      "type": "object",
+      "description": "Responsive breakpoints",
+      "properties": {
+        "xs": { "$ref": "#/definitions/size" },
+        "sm": { "$ref": "#/definitions/size" },
+        "md": { "$ref": "#/definitions/size" },
+        "lg": { "$ref": "#/definitions/size" },
+        "xl": { "$ref": "#/definitions/size" },
+        "xxl": { "$ref": "#/definitions/size" }
+      },
+      "additionalProperties": {
+        "$ref": "#/definitions/size"
+      }
+    },
+    "transitions": {
+      "type": "object",
+      "description": "Transition timing definitions",
+      "properties": {
+        "fast": { "type": "string", "pattern": "^\\d+m?s$" },
+        "normal": { "type": "string", "pattern": "^\\d+m?s$" },
+        "slow": { "type": "string", "pattern": "^\\d+m?s$" }
+      },
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^\\d+m?s$"
+      }
+    },
+    "animations": {
+      "type": "object",
+      "description": "Animation definitions",
+      "additionalProperties": {
+        "oneOf": [
+          { "type": "string", "description": "Animation shorthand" },
+          {
+            "type": "object",
+            "properties": {
+              "keyframes": {
+                "type": "object",
+                "description": "Keyframe definitions",
+                "additionalProperties": {
+                  "type": "object",
+                  "description": "CSS properties at this keyframe"
+                }
+              },
+              "duration": { "type": "string" },
+              "timingFunction": { "type": "string" },
+              "delay": { "type": "string" },
+              "iterationCount": { 
+                "oneOf": [
+                  { "type": "string" },
+                  { "type": "number" }
+                ]
+              },
+              "direction": { 
+                "type": "string",
+                "enum": ["normal", "reverse", "alternate", "alternate-reverse"]
+              },
+              "fillMode": {
+                "type": "string",
+                "enum": ["none", "forwards", "backwards", "both"]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "aspectRatio": {
+      "type": "object",
+      "description": "Aspect ratio tokens",
+      "properties": {
+        "square": { "type": "string", "const": "1/1" },
+        "video": { "type": "string", "const": "16/9" },
+        "wide": { "type": "string", "const": "21/9" }
+      },
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^\\d+/\\d+$"
+      }
+    },
+    "zIndex": {
+      "type": "object",
+      "description": "Z-index scale",
+      "properties": {
+        "base": { "type": "integer" },
+        "dropdown": { "type": "integer" },
+        "sticky": { "type": "integer" },
+        "fixed": { "type": "integer" },
+        "modal": { "type": "integer" },
+        "popover": { "type": "integer" },
+        "tooltip": { "type": "integer" }
+      },
+      "additionalProperties": {
+        "type": "integer"
+      }
+    },
+    "components": {
+      "type": "object",
+      "description": "Component-scoped style definitions",
+      "additionalProperties": {
+        "type": "object",
+        "description": "Component style definition",
+        "properties": {
+          "base": {
+            "$ref": "#/definitions/styleDefinition",
+            "description": "Base component styles"
+          },
+          "variants": {
+            "type": "object",
+            "description": "Style variants (size, color, etc.)",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/styleDefinition"
+              }
+            }
+          },
+          "states": {
+            "type": "object",
+            "description": "State-based styles (hover, focus, disabled)",
+            "properties": {
+              "hover": { "$ref": "#/definitions/styleDefinition" },
+              "focus": { "$ref": "#/definitions/styleDefinition" },
+              "active": { "$ref": "#/definitions/styleDefinition" },
+              "disabled": { "$ref": "#/definitions/styleDefinition" },
+              "loading": { "$ref": "#/definitions/styleDefinition" }
+            },
+            "additionalProperties": {
+              "$ref": "#/definitions/styleDefinition"
+            }
+          },
+          "responsive": {
+            "type": "object",
+            "description": "Responsive breakpoints",
+            "properties": {
+              "sm": { "$ref": "#/definitions/styleDefinition" },
+              "md": { "$ref": "#/definitions/styleDefinition" },
+              "lg": { "$ref": "#/definitions/styleDefinition" },
+              "xl": { "$ref": "#/definitions/styleDefinition" },
+              "xxl": { "$ref": "#/definitions/styleDefinition" }
+            },
+            "additionalProperties": {
+              "$ref": "#/definitions/styleDefinition"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "color": {
+      "type": "string",
+      "description": "CSS color value",
+      "pattern": "^(#[0-9A-Fa-f]{3,8}|rgb\\(|rgba\\(|hsl\\(|hsla\\(|var\\(--|[a-z]+|transparent|currentColor|inherit)"
+    },
+    "size": {
+      "type": "string",
+      "description": "CSS size value (px, rem, em, %, etc.)",
+      "pattern": "^(-?\\d+(\\.\\d+)?(px|rem|em|%|vh|vw|vmin|vmax|ch|ex)?|0|auto|inherit)$"
+    },
+    "styleDefinition": {
+      "type": "object",
+      "description": "CSS property definitions for styling",
+      "properties": {
+        "display": { "type": "string", "enum": ["flex", "inline-flex", "grid", "inline-grid", "block", "inline-block", "inline", "none"] },
+        "flexDirection": { "type": "string", "enum": ["row", "column", "row-reverse", "column-reverse"] },
+        "justifyContent": { "type": "string" },
+        "alignItems": { "type": "string" },
+        "gap": { "$ref": "#/definitions/size" },
+        "padding": { "$ref": "#/definitions/size" },
+        "margin": { "$ref": "#/definitions/size" },
+        "width": { "$ref": "#/definitions/size" },
+        "height": { "$ref": "#/definitions/size" },
+        "minWidth": { "$ref": "#/definitions/size" },
+        "minHeight": { "$ref": "#/definitions/size" },
+        "maxWidth": { "$ref": "#/definitions/size" },
+        "maxHeight": { "$ref": "#/definitions/size" },
+        "backgroundColor": { "type": "string", "description": "Color reference or hex" },
+        "color": { "type": "string", "description": "Text color reference or hex" },
+        "fontSize": { "$ref": "#/definitions/size" },
+        "fontWeight": { "type": "string", "enum": ["normal", "bold", "400", "500", "600", "700"] },
+        "lineHeight": { "type": "string" },
+        "letterSpacing": { "$ref": "#/definitions/size" },
+        "borderRadius": { "$ref": "#/definitions/size" },
+        "borderWidth": { "$ref": "#/definitions/size" },
+        "borderColor": { "type": "string" },
+        "borderStyle": { "type": "string", "enum": ["solid", "dashed", "dotted", "double"] },
+        "boxShadow": { "type": "string" },
+        "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "transform": { "type": "string" },
+        "transition": { "type": "string" },
+        "cursor": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  }
+}

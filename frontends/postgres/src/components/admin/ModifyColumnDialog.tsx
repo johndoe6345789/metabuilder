@@ -4,7 +4,7 @@ import {
   Button, Checkbox, Dialog, DialogActions, DialogContent,
   DialogTitle, FormControl, FormControlLabel, InputLabel,
   MenuItem, Select,
-} from '@mui/material';
+} from '@metabuilder/components/fakemui';
 import { useModifyColumnForm } from './hooks/useModifyColumnForm';
 
 type Column = { column_name: string };

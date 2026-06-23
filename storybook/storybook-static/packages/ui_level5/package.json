@@ -1,0 +1,76 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "ui_level5",
+  "name": "Level 5 - God Panel",
+  "version": "1.0.0",
+  "description": "God panel for tenant management, cross-tenant operations, and elevated privileges",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "icon": "static_content/icon.svg",
+  "minLevel": 5,
+  "primary": true,
+  "dependencies": {
+    "ui_permissions": "*",
+    "ui_header": "*",
+    "ui_intro": "*",
+    "schema_editor": "*",
+    "workflow_editor": "*"
+  },
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "pages": [
+      "level5"
+    ],
+    "components": [
+      "Level5Layout",
+      "TenantsPanel",
+      "GodsPanel",
+      "TransferPanel"
+    ],
+    "scripts": [
+      "layout",
+      "tenants",
+      "transfer"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "permissions",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/stories.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "static_content/icon.svg"
+      ]
+    }
+  }
+}

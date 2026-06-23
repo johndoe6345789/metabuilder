@@ -1,0 +1,283 @@
+.adminShell {
+  min-height: 100vh;
+  background-color: #1c1b1f;
+  color: #e6e1e5;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  :global(*) {
+    box-sizing: border-box;
+  }
+
+  :global(body) {
+    margin: 0;
+    padding: 0;
+  }
+
+  :global(.MuiPaper-root) {
+    background-image: none;
+  }
+
+  :global(.MuiAppBar-root) {
+    background-color: #1c1b1f;
+    background-image: none;
+    border-bottom: 1px solid rgba(202, 196, 208, 0.12);
+    box-shadow: none;
+  }
+
+  :global(.MuiDrawer-paper) {
+    background-color: #211f26;
+    background-image: none;
+    border-right: 1px solid rgba(202, 196, 208, 0.08);
+  }
+
+  :global(.MuiListItemIcon-root) {
+    color: #cac4d0;
+    min-width: 40px;
+  }
+
+  :global(.MuiButton-root) {
+    border-radius: 20px;
+    text-transform: none;
+    font-weight: 500;
+  }
+
+  :global(.MuiButton-contained) {
+    background-color: #6750a4;
+    color: #ffffff;
+  }
+
+  :global(.MuiButton-contained:hover) {
+    background-color: #7965af;
+  }
+
+  :global(.MuiList-root) {
+    padding: 4px 8px;
+  }
+
+  :global(.MuiListItemButton-root) {
+    border-radius: 28px;
+    margin: 1px 0;
+    width: 100%;
+  }
+
+  :global(.MuiListItemButton-root:hover) {
+    background-color: rgba(208, 188, 255, 0.08);
+  }
+
+  :global(.MuiListItemButton-root.Mui-selected) {
+    background-color: #4a4458;
+    color: #eaddff;
+  }
+
+  :global(.MuiListItemButton-root.Mui-selected:hover) {
+    background-color: #524f5e;
+  }
+
+  :global(.MuiDivider-root) {
+    border-color: rgba(202, 196, 208, 0.08);
+  }
+
+  :global(.MuiToolbar-root) {
+    min-height: 56px !important;
+  }
+
+  :global(.MuiTableHead-root .MuiTableCell-root) {
+    background-color: #322f37;
+    color: #cac4d0;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  :global(.MuiTableCell-root) {
+    border-bottom: 1px solid rgba(202, 196, 208, 0.08);
+    font-size: 0.8125rem;
+    color: #e6e1e5;
+  }
+
+  :global(.MuiInputBase-input) {
+    color: #e6e1e5 !important;
+  }
+
+  :global(.MuiInputBase-input::placeholder) {
+    color: rgba(202, 196, 208, 0.6) !important;
+    opacity: 1 !important;
+  }
+
+  :global(.MuiFormLabel-root),
+  :global(.MuiInputLabel-root) {
+    color: rgba(202, 196, 208, 0.7) !important;
+  }
+
+  :global(.MuiFormLabel-root.Mui-focused),
+  :global(.MuiInputLabel-root.Mui-focused) {
+    color: #d0bcff !important;
+  }
+
+  :global(.input-label),
+  :global(select),
+  :global(.native-select__input) {
+    font-family: inherit !important;
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  :global(.input-label) {
+    display: block;
+    margin-bottom: 6px;
+    color: rgba(202, 196, 208, 0.7);
+  }
+
+  :global(.input-label__asterisk) {
+    font-family: inherit !important;
+  }
+
+  :global(.MuiSelect-select) {
+    color: #e6e1e5 !important;
+  }
+
+  :global(.MuiSelect-icon) {
+    color: #cac4d0 !important;
+  }
+
+  :global(.MuiOutlinedInput-notchedOutline) {
+    border-color: rgba(202, 196, 208, 0.5) !important;
+  }
+
+  :global(.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline) {
+    border-color: rgba(208, 188, 255, 0.7) !important;
+  }
+
+  :global(.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline) {
+    border-color: #d0bcff !important;
+    border-width: 2px !important;
+  }
+
+  :global(.MuiSvgIcon-root) {
+    color: #cac4d0;
+  }
+
+  select {
+    width: 100%;
+    background-color: #322f37;
+    color: #e6e1e5;
+    border: 1px solid rgba(202, 196, 208, 0.32);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 0.875rem;
+    font-family: inherit;
+  }
+
+  select:focus {
+    outline: none;
+    border-color: #d0bcff;
+    box-shadow: 0 0 0 2px rgba(208, 188, 255, 0.18);
+  }
+
+  h5,
+  h6 {
+    color: #e6e1e5;
+    margin-top: 0;
+  }
+
+  h5 {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    margin-bottom: 10px;
+  }
+
+  h6 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  :global([class*='matList']),
+  :global([class*='mdc-list']) {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  :global([class*='mat-focus-indicator']) {
+    display: none !important;
+  }
+
+  :global([role='dialog']) input:not([class*='Mui']),
+  :global([role='dialog']) input[class=''] {
+    background-color: #fff !important;
+    color: rgba(0, 0, 0, 0.87) !important;
+    border-color: rgba(0, 0, 0, 0.32) !important;
+  }
+
+  :global([role='dialog']) input:not([class*='Mui']):focus {
+    border-color: #6750a4 !important;
+    box-shadow: 0 0 0 2px rgba(103, 80, 164, 0.18) !important;
+  }
+
+  :global([role='dialog']) label {
+    color: rgba(0, 0, 0, 0.6) !important;
+  }
+
+  :global([role='dialog']) select {
+    background-color: #fff !important;
+    color: rgba(0, 0, 0, 0.87) !important;
+    border-color: rgba(0, 0, 0, 0.32) !important;
+  }
+
+  :global([role='dialog'] button[aria-label='Close dialog']:not([class*='Mui'])) {
+    background-color: transparent !important;
+    border-radius: 50% !important;
+    padding: 0 !important;
+    width: 40px !important;
+    height: 40px !important;
+    color: rgba(0, 0, 0, 0.6) !important;
+  }
+
+  :global([role='dialog'] button[aria-label='Close dialog']:not([class*='Mui']):hover) {
+    background-color: rgba(0, 0, 0, 0.08) !important;
+  }
+
+  :global(.sql-editor-wrap),
+  .sqlEditorWrap {
+    position: relative;
+  }
+
+  :global(.sql-editor-wrap .sql-pre),
+  :global(.sql-editor-wrap .sql-ta),
+  .sqlEditorWrap :global(.sql-pre),
+  .sqlEditorWrap :global(.sql-ta) {
+    margin: 0;
+    padding: 10px 12px !important;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace !important;
+    font-size: 0.8125rem !important;
+    line-height: 1.6 !important;
+    white-space: pre !important;
+    tab-size: 2;
+    min-height: 280px;
+    width: 100%;
+    border: 0;
+    outline: 0;
+    box-sizing: border-box;
+    overflow: auto;
+    resize: vertical;
+    color: #e6e1e5;
+  }
+
+  :global(.sql-editor-wrap .sql-pre),
+  .sqlEditorWrap :global(.sql-pre) {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  :global(.sql-editor-wrap .sql-ta),
+  .sqlEditorWrap :global(.sql-ta) {
+    position: relative;
+    background: transparent;
+    color: transparent;
+    caret-color: #e6e1e5;
+  }
+}

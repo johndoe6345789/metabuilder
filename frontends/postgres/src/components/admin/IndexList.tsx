@@ -1,11 +1,11 @@
 'use client';
 
-import DeleteIcon from '@mui/icons-material/Delete';
-import SpeedIcon from '@mui/icons-material/Speed';
+import DeleteIcon from '@metabuilder/components/fakemui/Delete';
+import SpeedIcon from '@metabuilder/components/fakemui/Speed';
 import {
   Box, Chip, IconButton, List, ListItem,
   ListItemIcon, ListItemText, Paper, Tooltip, Typography,
-} from '@mui/material';
+} from '@metabuilder/components/fakemui';
 
 type IndexEntry = {
   index_name: string;

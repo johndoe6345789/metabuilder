@@ -145,6 +145,7 @@ export { PaperPlaneTilt } from './PaperPlaneTilt'
 
 // Data & Status
 export { Database } from './Database'
+export { Inventory2 } from './Inventory2'
 export { HardDrives } from './HardDrives'
 export { Info } from './Info'
 export { Warning } from './Warning'
@@ -198,6 +199,7 @@ export { CloudOff } from './CloudOff'
 
 // Developer & Tools
 export { Terminal } from './Terminal'
+export { Terminal as TerminalIcon } from './Terminal'
 export { Archive } from './Archive'
 export { Bug } from './Bug'
 export { BugReport } from './BugReport'

@@ -1,0 +1,90 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "data_table",
+  "name": "Data Table",
+  "version": "1.0.0",
+  "description": "Advanced data table components with sorting, filtering, and pagination",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "icon": "static_content/icon.svg",
+  "minLevel": 1,
+  "primary": false,
+  "dependencies": {},
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "DataGrid",
+      "DataTable"
+    ],
+    "scripts": [
+      "init",
+      "sorting",
+      "filtering",
+      "pagination",
+      "selection",
+      "export"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json",
+      "tests/components.test.json",
+      "tests/sorting.test.json",
+      "tests/pagination.test.json"
+    ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "page-config",
+      "permissions",
+      "playwright",
+      "seed",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests",
+      "workflow"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "pages": [
+        "page-config/page-config.json"
+      ],
+      "workflows": [
+        "workflow/fetch-data.jsonscript",
+        "workflow/filtering.jsonscript",
+        "workflow/pagination.jsonscript",
+        "workflow/sorting.jsonscript"
+      ],
+      "tests": [
+        "playwright/tests.json",
+        "tests/components.test.json",
+        "tests/metadata.params.json",
+        "tests/metadata.test.json",
+        "tests/pagination.test.json",
+        "tests/sorting.params.json",
+        "tests/sorting.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/config.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "seed/metadata.json",
+        "static_content/icon.svg"
+      ]
+    }
+  }
+}

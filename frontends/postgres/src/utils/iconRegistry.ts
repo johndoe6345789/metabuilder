@@ -4,14 +4,8 @@
  */
 
 import React from 'react';
-import * as Icons from '@mui/icons-material';
-import AddIcon from '@mui/icons-material/Add';
-import BoltIcon from '@mui/icons-material/Bolt';
-import DeleteIcon from '@mui/icons-material/Delete';
-import DownloadIcon from '@mui/icons-material/Download';
-import EditIcon from '@mui/icons-material/Edit';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import TableChartIcon from '@mui/icons-material/TableChart';
+import * as Icons from '@metabuilder/components/fakemui';
+import { Add as AddIcon, Build as BoltIcon, Delete as DeleteIcon, Download as DownloadIcon, Edit as EditIcon, Play as PlayArrowIcon, Table as TableChartIcon } from '@metabuilder/components/fakemui';
 
 export const iconOverrides: Record<string, React.ComponentType<any>>
   = {

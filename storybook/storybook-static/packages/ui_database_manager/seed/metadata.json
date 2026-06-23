@@ -1,0 +1,21 @@
+{
+  "packageId": "ui_database_manager",
+  "description": "Database Manager - CRUD interface for browsing and editing database entities",
+  "version": "1.0.0",
+  "features": [
+    "Entity browser with schema inspection",
+    "Table-based data viewer with sorting, filtering, and search",
+    "Record detail editor with validation",
+    "Inline editing with auto-save",
+    "Bulk operations (create, update, delete)",
+    "Advanced filtering with multiple conditions",
+    "Data export to CSV, JSON, Excel",
+    "Data import from CSV, JSON",
+    "Change history and audit logging",
+    "Relationship visualization",
+    "Admin-level database management"
+  ],
+  "seed": {
+    "schema": "page-config"
+  }
+}

@@ -42,7 +42,7 @@ describe('generateNextJSProject', () => {
   it('generates src/app/page.tsx', () => {
     const files = generateNextJSProject('app', [], [], emptyTheme)
     expect(files['src/app/page.tsx']).toBeDefined()
-    expect(files['src/app/page.tsx']).toContain('ThemeProvider')
+    expect(files['src/app/page.tsx']).toContain('app-shell')
   })
 
   it('generates next.config.js', () => {
@@ -62,9 +62,10 @@ describe('generateNextJSProject', () => {
     expect(files['README.md']).toContain('npm install')
   })
 
-  it('generates src/theme.ts with MUI theme', () => {
+  it('generates src/theme.ts with design tokens', () => {
     const files = generateNextJSProject('app', [], [], emptyTheme)
     expect(files['src/theme.ts']).toBeDefined()
-    expect(files['src/theme.ts']).toContain('createTheme')
+    expect(files['src/theme.ts']).toContain('m3-scss')
+    expect(files['src/theme.ts']).toContain('fontFamily')
   })
 })

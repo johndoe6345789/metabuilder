@@ -1,13 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  IconButton,
-  InputAdornment,
-  TextField,
-} from '@mui/material';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { IconButton, TextField, Visibility, VisibilityOff } from '@metabuilder/components/fakemui';
 
 type PasswordFieldProps = {
   value: string;
@@ -35,25 +29,16 @@ export default function PasswordField({
       value={value}
       onChange={e => onChange(e.target.value)}
       disabled={disabled}
-      slotProps={{
-        input: {
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton
-                aria-label={
-                  showPassword ? 'Hide password' : 'Show password'
-                }
-                onClick={() => setShowPassword(s => !s)}
-                onMouseDown={e => e.preventDefault()}
-                edge="end"
-                disabled={disabled}
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          ),
-        },
-      }}
+      endAdornment={(
+        <IconButton
+          aria-label={showPassword ? 'Hide password' : 'Show password'}
+          onClick={() => setShowPassword(s => !s)}
+          onMouseDown={e => e.preventDefault()}
+          disabled={disabled}
+        >
+          {showPassword ? <VisibilityOff /> : <Visibility />}
+        </IconButton>
+      )}
     />
   );
 }

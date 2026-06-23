@@ -1,0 +1,95 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "irc_webchat",
+  "name": "IRC Webchat",
+  "version": "1.0.0",
+  "description": "Classic IRC-style webchat with channels, commands, online users, and real-time messaging. Perfect for community chat rooms.",
+  "author": "MetaBuilder Team",
+  "license": "MIT",
+  "category": "social",
+  "icon": "💬",
+  "minLevel": 2,
+  "primary": true,
+  "tags": [
+    "chat",
+    "irc",
+    "messaging",
+    "realtime"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "IRCWebchat",
+      "ChannelList",
+      "MessageList",
+      "UserList",
+      "MessageInput"
+    ],
+    "scripts": [
+      "send_message",
+      "handle_command",
+      "format_time",
+      "user_join",
+      "user_leave"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "schema": {
+    "entities": [
+      "IRCChannel",
+      "IRCMessage",
+      "IRCMembership"
+    ],
+    "path": "schema/entities.yaml"
+  },
+  "files": {
+    "directories": [
+      "components",
+      "page-config",
+      "permissions",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests",
+      "workflow"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "pages": [
+        "page-config/page-config.json"
+      ],
+      "workflows": [
+        "workflow/handle-command.jsonscript",
+        "workflow/join-channel.jsonscript",
+        "workflow/list-channels.jsonscript",
+        "workflow/send-message.jsonscript"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/stories.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "static_content/icon.svg"
+      ]
+    }
+  }
+}

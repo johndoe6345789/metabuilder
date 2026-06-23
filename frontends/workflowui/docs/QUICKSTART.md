@@ -217,7 +217,7 @@ export function useMyFeature() {
 ### Add a New Component
 ```typescript
 // src/components/MyComponent/MyComponent.tsx
-import { Box, Button } from '@mui/material';
+import { Box, Button } from '@metabuilder/components/fakemui';
 import styles from './MyComponent.module.scss';
 
 export function MyComponent() {
@@ -326,4 +326,3 @@ The application is production-ready! Potential next steps:
 **Happy workflow building!** 🎉
 
 For questions or issues, check the documentation files or review the implementation status document.
-

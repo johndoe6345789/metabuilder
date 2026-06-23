@@ -1,0 +1,1373 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "user_manager",
+  "description": "User management components for viewing, editing, and managing users",
+  "components": [
+    {
+      "id": "user_management",
+      "name": "UserManagement",
+      "description": "Main user management container with search and user list",
+      "props": [
+        {
+          "name": "variant",
+          "type": "string",
+          "default": "outlined"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "default": "user-management"
+        }
+      ],
+      "state": [
+        {
+          "name": "searchQuery",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "selectedRole",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "selectedStatus",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "currentPage",
+          "type": "number",
+          "default": 1
+        },
+        {
+          "name": "totalUsers",
+          "type": "number",
+          "default": 0
+        }
+      ],
+      "handlers": {
+        "init": "list.initialize",
+        "search": "list.filterUsers",
+        "refresh": "list.refreshUsers",
+        "addUser": "actions.createUser"
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "user-management",
+          "children": [
+            {
+              "type": "Box",
+              "className": "user-management-header",
+              "children": [
+                {
+                  "type": "Flex",
+                  "justifyContent": "space-between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "h5",
+                      "fontWeight": "bold",
+                      "children": "User Management"
+                    },
+                    {
+                      "type": "Button",
+                      "variant": "contained",
+                      "color": "primary",
+                      "onClick": "addUser",
+                      "children": "Add User"
+                    }
+                  ]
+                },
+                {
+                  "type": "Grid",
+                  "container": true,
+                  "spacing": 2,
+                  "children": [
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 12,
+                      "md": 6,
+                      "children": [
+                        {
+                          "type": "TextField",
+                          "placeholder": "Search users...",
+                          "variant": "outlined",
+                          "size": "small",
+                          "fullWidth": true,
+                          "value": "{{searchQuery}}",
+                          "onChange": "search"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 12,
+                      "md": 6,
+                      "children": [
+                        {
+                          "type": "Flex",
+                          "gap": 1,
+                          "justifyContent": "flex-end",
+                          "children": [
+                            {
+                              "type": "Select",
+                              "placeholder": "Filter by role",
+                              "size": "small",
+                              "value": "{{selectedRole}}"
+                            },
+                            {
+                              "type": "Select",
+                              "placeholder": "Status",
+                              "size": "small",
+                              "value": "{{selectedStatus}}"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "className": "user-management-content",
+              "children": [
+                {
+                  "type": "ComponentRef",
+                  "ref": "user_list"
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "className": "user-management-footer",
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "body2",
+                  "color": "secondary",
+                  "children": "Total: {{totalUsers}} users"
+                },
+                {
+                  "type": "Pagination",
+                  "count": "{{Math.ceil(totalUsers / 20)}}",
+                  "page": "{{currentPage}}",
+                  "size": "small"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "user_list",
+      "name": "UserList",
+      "description": "Data table showing users with columns for username, email, role, level, and status",
+      "props": [
+        {
+          "name": "users",
+          "type": "array",
+          "required": true,
+          "default": []
+        }
+      ],
+      "handlers": {
+        "init": "list.initialize",
+        "sort": "list.sortUsers",
+        "select": "list.selectUser"
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Table",
+          "className": "user-list",
+          "stickyHeader": true,
+          "children": [
+            {
+              "type": "TableHead",
+              "children": [
+                {
+                  "type": "TableRow",
+                  "children": [
+                    {
+                      "type": "TableCell",
+                      "sortable": true,
+                      "children": "Username"
+                    },
+                    {
+                      "type": "TableCell",
+                      "sortable": true,
+                      "children": "Email"
+                    },
+                    {
+                      "type": "TableCell",
+                      "sortable": true,
+                      "children": "Role"
+                    },
+                    {
+                      "type": "TableCell",
+                      "sortable": true,
+                      "align": "center",
+                      "children": "Level"
+                    },
+                    {
+                      "type": "TableCell",
+                      "sortable": true,
+                      "align": "center",
+                      "children": "Status"
+                    },
+                    {
+                      "type": "TableCell",
+                      "align": "right",
+                      "children": "Actions"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "TableBody",
+              "children": {
+                "type": "loop",
+                "items": "{{users}}",
+                "iterator": "user",
+                "key": "{{user.id}}",
+                "template": {
+                  "type": "TableRow",
+                  "hover": true,
+                  "children": [
+                    {
+                      "type": "TableCell",
+                      "children": [
+                        {
+                          "type": "Flex",
+                          "alignItems": "center",
+                          "gap": 1.5,
+                          "children": [
+                            {
+                              "type": "Avatar",
+                              "size": "small",
+                              "src": "{{user.avatar}}"
+                            },
+                            {
+                              "type": "Text",
+                              "fontWeight": "medium",
+                              "children": "{{user.username}}"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "TableCell",
+                      "children": "{{user.email}}"
+                    },
+                    {
+                      "type": "TableCell",
+                      "children": [
+                        {
+                          "type": "Chip",
+                          "size": "small",
+                          "variant": "outlined",
+                          "label": "{{user.role}}"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "TableCell",
+                      "align": "center",
+                      "children": [
+                        {
+                          "type": "Badge",
+                          "variant": "standard",
+                          "label": "{{user.level}}"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "TableCell",
+                      "align": "center",
+                      "children": [
+                        {
+                          "type": "Chip",
+                          "size": "small",
+                          "color": "{{user.active ? 'success' : 'default'}}",
+                          "label": "{{user.active ? 'Active' : 'Inactive'}}"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "TableCell",
+                      "align": "right",
+                      "children": [
+                        {
+                          "type": "ComponentRef",
+                          "ref": "user_actions",
+                          "props": {
+                            "user": "{{user}}"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "user_actions",
+      "name": "UserActions",
+      "description": "Action buttons for user management operations",
+      "props": [
+        {
+          "name": "user",
+          "type": "object",
+          "required": true
+        }
+      ],
+      "handlers": {
+        "view": "actions.viewUser",
+        "edit": "actions.editUser",
+        "permissions": "actions.managePermissions",
+        "ban": "actions.banUser",
+        "delete": "actions.deleteUser",
+        "resetPassword": "actions.resetPassword",
+        "sendEmail": "actions.sendEmail",
+        "activate": "actions.activateUser",
+        "deactivate": "actions.deactivateUser"
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Flex",
+          "gap": 0.5,
+          "className": "user-actions",
+          "children": [
+            {
+              "type": "IconButton",
+              "size": "small",
+              "color": "default",
+              "title": "View user details",
+              "onClick": "view",
+              "children": [
+                {
+                  "type": "Icon",
+                  "name": "Visibility",
+                  "size": 18
+                }
+              ]
+            },
+            {
+              "type": "IconButton",
+              "size": "small",
+              "color": "primary",
+              "title": "Edit user",
+              "onClick": "edit",
+              "children": [
+                {
+                  "type": "Icon",
+                  "name": "Edit",
+                  "size": 18
+                }
+              ]
+            },
+            {
+              "type": "IconButton",
+              "size": "small",
+              "color": "secondary",
+              "title": "Manage permissions",
+              "onClick": "permissions",
+              "children": [
+                {
+                  "type": "Icon",
+                  "name": "Security",
+                  "size": 18
+                }
+              ]
+            },
+            {
+              "type": "IconButton",
+              "size": "small",
+              "color": "warning",
+              "title": "Ban user",
+              "onClick": "ban",
+              "children": [
+                {
+                  "type": "Icon",
+                  "name": "Block",
+                  "size": 18
+                }
+              ]
+            },
+            {
+              "type": "IconButton",
+              "size": "small",
+              "color": "error",
+              "title": "Delete user",
+              "onClick": "delete",
+              "children": [
+                {
+                  "type": "Icon",
+                  "name": "Delete",
+                  "size": 18
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+    {
+      "id": "user_list_admin",
+      "name": "UserListAdmin",
+      "description": "Admin table of users with search, filter, pagination, and action buttons",
+      "category": "admin",
+      "props": [
+        {
+          "name": "users",
+          "type": "array",
+          "required": true,
+          "description": "Array of user objects to display"
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "required": false,
+          "default": 0,
+          "description": "Current page number for pagination"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "required": false,
+          "default": 10,
+          "description": "Number of users per page"
+        },
+        {
+          "name": "searchQuery",
+          "type": "string",
+          "required": false,
+          "default": "",
+          "description": "Search query for filtering users"
+        },
+        {
+          "name": "onEdit",
+          "type": "function",
+          "required": false,
+          "description": "Callback when edit button is clicked (userId)"
+        },
+        {
+          "name": "onDelete",
+          "type": "function",
+          "required": false,
+          "description": "Callback when delete button is clicked (userId)"
+        },
+        {
+          "name": "onAdd",
+          "type": "function",
+          "required": false,
+          "description": "Callback when add user button is clicked"
+        },
+        {
+          "name": "onSearch",
+          "type": "function",
+          "required": false,
+          "description": "Callback when search query changes"
+        },
+        {
+          "name": "onPageChange",
+          "type": "function",
+          "required": false,
+          "description": "Callback when page changes"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "elevation",
+          "className": "user-list-admin",
+          "children": [
+            {
+              "type": "CardHeader",
+              "title": "User Management",
+              "action": {
+                "type": "Button",
+                "variant": "contained",
+                "color": "primary",
+                "onClick": "{{onAdd}}",
+                "children": [
+                  {
+                    "type": "Flex",
+                    "gap": 1,
+                    "alignItems": "center",
+                    "children": [
+                      {
+                        "type": "Icon",
+                        "name": "Add",
+                        "size": 20
+                      },
+                      {
+                        "type": "Typography",
+                        "children": "Add User"
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Stack",
+                  "gap": 3,
+                  "children": [
+                    {
+                      "type": "Box",
+                      "className": "search-controls",
+                      "children": [
+                        {
+                          "type": "TextField",
+                          "placeholder": "Search by username or email...",
+                          "variant": "outlined",
+                          "size": "small",
+                          "fullWidth": true,
+                          "value": "{{searchQuery}}",
+                          "onChange": "{{onSearch}}",
+                          "InputProps": {
+                            "startAdornment": {
+                              "type": "Icon",
+                              "name": "Search",
+                              "size": 20,
+                              "color": "action"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "TableContainer",
+                      "component": "Paper",
+                      "variant": "outlined",
+                      "children": [
+                        {
+                          "type": "Table",
+                          "stickyHeader": true,
+                          "children": [
+                            {
+                              "type": "TableHead",
+                              "children": [
+                                {
+                                  "type": "TableRow",
+                                  "children": [
+                                    {
+                                      "type": "TableCell",
+                                      "children": "User"
+                                    },
+                                    {
+                                      "type": "TableCell",
+                                      "children": "Email"
+                                    },
+                                    {
+                                      "type": "TableCell",
+                                      "align": "center",
+                                      "children": "Role"
+                                    },
+                                    {
+                                      "type": "TableCell",
+                                      "align": "center",
+                                      "children": "Created"
+                                    },
+                                    {
+                                      "type": "TableCell",
+                                      "align": "right",
+                                      "children": "Actions"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "TableBody",
+                              "children": {
+                                "type": "conditional",
+                                "condition": "{{users && users.length > 0}}",
+                                "then": {
+                                  "type": "loop",
+                                  "items": "{{users}}",
+                                  "iterator": "user",
+                                  "key": "{{user.id}}",
+                                  "template": {
+                                    "type": "TableRow",
+                                    "hover": true,
+                                    "children": [
+                                      {
+                                        "type": "TableCell",
+                                        "children": [
+                                          {
+                                            "type": "Flex",
+                                            "alignItems": "center",
+                                            "gap": 2,
+                                            "children": [
+                                              {
+                                                "type": "Avatar",
+                                                "alt": "{{user.username}}",
+                                                "src": "{{user.profilePicture}}",
+                                                "sx": { "width": 40, "height": 40 }
+                                              },
+                                              {
+                                                "type": "Typography",
+                                                "variant": "body1",
+                                                "fontWeight": "medium",
+                                                "children": "{{user.username}}"
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "type": "TableCell",
+                                        "children": [
+                                          {
+                                            "type": "Typography",
+                                            "variant": "body2",
+                                            "color": "textSecondary",
+                                            "children": "{{user.email}}"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "type": "TableCell",
+                                        "align": "center",
+                                        "children": [
+                                          {
+                                            "type": "Badge",
+                                            "badgeContent": "{{user.role}}",
+                                            "color": "{{user.role === 'supergod' ? 'error' : user.role === 'god' ? 'warning' : user.role === 'admin' ? 'primary' : 'default'}}",
+                                            "variant": "standard"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "type": "TableCell",
+                                        "align": "center",
+                                        "children": [
+                                          {
+                                            "type": "Typography",
+                                            "variant": "body2",
+                                            "color": "textSecondary",
+                                            "children": "{{new Date(Number(user.createdAt)).toLocaleDateString()}}"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "type": "TableCell",
+                                        "align": "right",
+                                        "children": [
+                                          {
+                                            "type": "Flex",
+                                            "gap": 1,
+                                            "justifyContent": "flex-end",
+                                            "children": [
+                                              {
+                                                "type": "IconButton",
+                                                "size": "small",
+                                                "color": "primary",
+                                                "title": "Edit user",
+                                                "onClick": "{{() => onEdit(user.id)}}",
+                                                "children": [
+                                                  {
+                                                    "type": "Icon",
+                                                    "name": "Edit",
+                                                    "size": 18
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "type": "IconButton",
+                                                "size": "small",
+                                                "color": "error",
+                                                "title": "Delete user",
+                                                "onClick": "{{() => onDelete(user.id)}}",
+                                                "children": [
+                                                  {
+                                                    "type": "Icon",
+                                                    "name": "Delete",
+                                                    "size": 18
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                },
+                                "else": {
+                                  "type": "TableRow",
+                                  "children": [
+                                    {
+                                      "type": "TableCell",
+                                      "colSpan": 5,
+                                      "align": "center",
+                                      "children": [
+                                        {
+                                          "type": "Box",
+                                          "sx": { "padding": 4 },
+                                          "children": [
+                                            {
+                                              "type": "Typography",
+                                              "variant": "body2",
+                                              "color": "textSecondary",
+                                              "children": "No users found"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Box",
+                      "className": "pagination-controls",
+                      "sx": { "display": "flex", "justifyContent": "center" },
+                      "children": [
+                        {
+                          "type": "TablePagination",
+                          "component": "div",
+                          "count": "{{users ? users.length : 0}}",
+                          "page": "{{page}}",
+                          "rowsPerPage": "{{pageSize}}",
+                          "onPageChange": "{{onPageChange}}",
+                          "rowsPerPageOptions": [10, 25, 50, 100]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "user_form",
+      "name": "UserForm",
+      "description": "Form for creating or editing a user with validation",
+      "category": "admin",
+      "props": [
+        {
+          "name": "user",
+          "type": "object",
+          "required": false,
+          "default": null,
+          "description": "User object for editing (null for creating new user)"
+        },
+        {
+          "name": "onSubmit",
+          "type": "function",
+          "required": true,
+          "description": "Callback when form is submitted with user data"
+        },
+        {
+          "name": "onCancel",
+          "type": "function",
+          "required": true,
+          "description": "Callback when cancel button is clicked"
+        },
+        {
+          "name": "isLoading",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Show loading state during submission"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "elevation",
+          "className": "user-form",
+          "children": [
+            {
+              "type": "CardHeader",
+              "title": "{{user ? 'Edit User' : 'Create New User'}}",
+              "subheader": "{{user ? 'Update user information and permissions' : 'Add a new user to the system'}}"
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Stack",
+                  "gap": 3,
+                  "children": [
+                    {
+                      "type": "Grid",
+                      "container": true,
+                      "spacing": 3,
+                      "children": [
+                        {
+                          "type": "Grid",
+                          "item": true,
+                          "xs": 12,
+                          "md": 6,
+                          "children": [
+                            {
+                              "type": "TextField",
+                              "label": "Username",
+                              "placeholder": "Enter username",
+                              "variant": "outlined",
+                              "fullWidth": true,
+                              "required": true,
+                              "value": "{{user?.username || ''}}",
+                              "helperText": "Unique username (3-50 characters, alphanumeric, -, _)",
+                              "inputProps": {
+                                "pattern": "^[a-zA-Z0-9_-]{3,50}$"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Grid",
+                          "item": true,
+                          "xs": 12,
+                          "md": 6,
+                          "children": [
+                            {
+                              "type": "TextField",
+                              "label": "Email",
+                              "type": "email",
+                              "placeholder": "user@example.com",
+                              "variant": "outlined",
+                              "fullWidth": true,
+                              "required": true,
+                              "value": "{{user?.email || ''}}",
+                              "helperText": "Valid email address"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Grid",
+                          "item": true,
+                          "xs": 12,
+                          "children": [
+                            {
+                              "type": "TextField",
+                              "label": "Bio",
+                              "placeholder": "Tell us about yourself...",
+                              "variant": "outlined",
+                              "fullWidth": true,
+                              "multiline": true,
+                              "rows": 4,
+                              "value": "{{user?.bio || ''}}",
+                              "helperText": "Optional user biography"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Grid",
+                          "item": true,
+                          "xs": 12,
+                          "md": 6,
+                          "children": [
+                            {
+                              "type": "FormControl",
+                              "fullWidth": true,
+                              "required": true,
+                              "children": [
+                                {
+                                  "type": "FormLabel",
+                                  "children": "Role"
+                                },
+                                {
+                                  "type": "Select",
+                                  "label": "Role",
+                                  "variant": "outlined",
+                                  "value": "{{user?.role || 'user'}}",
+                                  "children": [
+                                    {
+                                      "type": "MenuItem",
+                                      "value": "user",
+                                      "children": "User (Level 1)"
+                                    },
+                                    {
+                                      "type": "MenuItem",
+                                      "value": "moderator",
+                                      "children": "Moderator (Level 2)"
+                                    },
+                                    {
+                                      "type": "MenuItem",
+                                      "value": "admin",
+                                      "children": "Admin (Level 3)"
+                                    },
+                                    {
+                                      "type": "MenuItem",
+                                      "value": "god",
+                                      "children": "God (Level 4)"
+                                    },
+                                    {
+                                      "type": "MenuItem",
+                                      "value": "supergod",
+                                      "children": "Supergod (Level 5)"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "FormHelperText",
+                                  "children": "User's permission level in the system"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Grid",
+                          "item": true,
+                          "xs": 12,
+                          "md": 6,
+                          "children": [
+                            {
+                              "type": "TextField",
+                              "label": "Profile Picture URL",
+                              "placeholder": "https://example.com/avatar.jpg",
+                              "variant": "outlined",
+                              "fullWidth": true,
+                              "value": "{{user?.profilePicture || ''}}",
+                              "helperText": "Optional profile picture URL"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Divider"
+                    },
+                    {
+                      "type": "Box",
+                      "className": "form-actions",
+                      "sx": { "display": "flex", "gap": 2, "justifyContent": "flex-end" },
+                      "children": [
+                        {
+                          "type": "Button",
+                          "variant": "outlined",
+                          "color": "secondary",
+                          "onClick": "{{onCancel}}",
+                          "disabled": "{{isLoading}}",
+                          "children": "Cancel"
+                        },
+                        {
+                          "type": "Button",
+                          "variant": "contained",
+                          "color": "primary",
+                          "onClick": "{{onSubmit}}",
+                          "disabled": "{{isLoading}}",
+                          "children": [
+                            {
+                              "type": "Flex",
+                              "gap": 1,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "conditional",
+                                  "condition": "{{isLoading}}",
+                                  "then": {
+                                    "type": "CircularProgress",
+                                    "size": 20,
+                                    "color": "inherit"
+                                  }
+                                },
+                                {
+                                  "type": "Typography",
+                                  "children": "{{isLoading ? 'Saving...' : (user ? 'Update User' : 'Create User')}}"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "user_detail",
+      "name": "UserDetail",
+      "description": "Detailed view of a single user with profile information and actions",
+      "category": "admin",
+      "props": [
+        {
+          "name": "userId",
+          "type": "string",
+          "required": true,
+          "description": "ID of the user to display"
+        },
+        {
+          "name": "user",
+          "type": "object",
+          "required": true,
+          "description": "User object with full details"
+        },
+        {
+          "name": "onEdit",
+          "type": "function",
+          "required": false,
+          "description": "Callback when edit button is clicked"
+        },
+        {
+          "name": "onDelete",
+          "type": "function",
+          "required": false,
+          "description": "Callback when delete button is clicked"
+        },
+        {
+          "name": "onBack",
+          "type": "function",
+          "required": false,
+          "description": "Callback when back button is clicked"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Stack",
+          "gap": 3,
+          "className": "user-detail",
+          "children": [
+            {
+              "type": "Box",
+              "className": "navigation-breadcrumb",
+              "children": [
+                {
+                  "type": "Breadcrumbs",
+                  "children": [
+                    {
+                      "type": "Link",
+                      "onClick": "{{onBack}}",
+                      "children": "Users"
+                    },
+                    {
+                      "type": "Typography",
+                      "color": "textPrimary",
+                      "children": "{{user.username}}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Card",
+              "variant": "elevation",
+              "children": [
+                {
+                  "type": "CardHeader",
+                  "title": "User Details",
+                  "action": {
+                    "type": "Flex",
+                    "gap": 1,
+                    "children": [
+                      {
+                        "type": "Button",
+                        "variant": "outlined",
+                        "color": "primary",
+                        "startIcon": {
+                          "type": "Icon",
+                          "name": "Edit"
+                        },
+                        "onClick": "{{onEdit}}",
+                        "children": "Edit"
+                      },
+                      {
+                        "type": "Button",
+                        "variant": "outlined",
+                        "color": "error",
+                        "startIcon": {
+                          "type": "Icon",
+                          "name": "Delete"
+                        },
+                        "onClick": "{{onDelete}}",
+                        "children": "Delete"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "CardContent",
+                  "children": [
+                    {
+                      "type": "Grid",
+                      "container": true,
+                      "spacing": 4,
+                      "children": [
+                        {
+                          "type": "Grid",
+                          "item": true,
+                          "xs": 12,
+                          "md": 4,
+                          "children": [
+                            {
+                              "type": "Stack",
+                              "gap": 2,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "Avatar",
+                                  "alt": "{{user.username}}",
+                                  "src": "{{user.profilePicture}}",
+                                  "sx": { "width": 120, "height": 120 }
+                                },
+                                {
+                                  "type": "Typography",
+                                  "variant": "h5",
+                                  "fontWeight": "bold",
+                                  "children": "{{user.username}}"
+                                },
+                                {
+                                  "type": "Badge",
+                                  "badgeContent": "{{user.role.toUpperCase()}}",
+                                  "color": "{{user.role === 'supergod' ? 'error' : user.role === 'god' ? 'warning' : user.role === 'admin' ? 'primary' : 'default'}}"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Grid",
+                          "item": true,
+                          "xs": 12,
+                          "md": 8,
+                          "children": [
+                            {
+                              "type": "Stack",
+                              "gap": 3,
+                              "children": [
+                                {
+                                  "type": "Box",
+                                  "children": [
+                                    {
+                                      "type": "Typography",
+                                      "variant": "caption",
+                                      "color": "textSecondary",
+                                      "fontWeight": "bold",
+                                      "children": "EMAIL"
+                                    },
+                                    {
+                                      "type": "Typography",
+                                      "variant": "body1",
+                                      "sx": { "marginTop": 0.5 },
+                                      "children": "{{user.email}}"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "Box",
+                                  "children": [
+                                    {
+                                      "type": "Typography",
+                                      "variant": "caption",
+                                      "color": "textSecondary",
+                                      "fontWeight": "bold",
+                                      "children": "BIO"
+                                    },
+                                    {
+                                      "type": "Typography",
+                                      "variant": "body2",
+                                      "color": "{{user.bio ? 'textPrimary' : 'textSecondary'}}",
+                                      "sx": { "marginTop": 0.5 },
+                                      "children": "{{user.bio || 'No bio provided'}}"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "Divider"
+                                },
+                                {
+                                  "type": "Grid",
+                                  "container": true,
+                                  "spacing": 2,
+                                  "children": [
+                                    {
+                                      "type": "Grid",
+                                      "item": true,
+                                      "xs": 6,
+                                      "children": [
+                                        {
+                                          "type": "Box",
+                                          "children": [
+                                            {
+                                              "type": "Typography",
+                                              "variant": "caption",
+                                              "color": "textSecondary",
+                                              "fontWeight": "bold",
+                                              "children": "USER ID"
+                                            },
+                                            {
+                                              "type": "Typography",
+                                              "variant": "body2",
+                                              "sx": { "marginTop": 0.5, "fontFamily": "monospace" },
+                                              "children": "{{user.id}}"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "Grid",
+                                      "item": true,
+                                      "xs": 6,
+                                      "children": [
+                                        {
+                                          "type": "Box",
+                                          "children": [
+                                            {
+                                              "type": "Typography",
+                                              "variant": "caption",
+                                              "color": "textSecondary",
+                                              "fontWeight": "bold",
+                                              "children": "ROLE"
+                                            },
+                                            {
+                                              "type": "Chip",
+                                              "label": "{{user.role}}",
+                                              "size": "small",
+                                              "sx": { "marginTop": 0.5 }
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "Grid",
+                                      "item": true,
+                                      "xs": 6,
+                                      "children": [
+                                        {
+                                          "type": "Box",
+                                          "children": [
+                                            {
+                                              "type": "Typography",
+                                              "variant": "caption",
+                                              "color": "textSecondary",
+                                              "fontWeight": "bold",
+                                              "children": "CREATED"
+                                            },
+                                            {
+                                              "type": "Typography",
+                                              "variant": "body2",
+                                              "sx": { "marginTop": 0.5 },
+                                              "children": "{{new Date(Number(user.createdAt)).toLocaleString()}}"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "Grid",
+                                      "item": true,
+                                      "xs": 6,
+                                      "children": [
+                                        {
+                                          "type": "Box",
+                                          "children": [
+                                            {
+                                              "type": "Typography",
+                                              "variant": "caption",
+                                              "color": "textSecondary",
+                                              "fontWeight": "bold",
+                                              "children": "INSTANCE OWNER"
+                                            },
+                                            {
+                                              "type": "Chip",
+                                              "label": "{{user.isInstanceOwner ? 'Yes' : 'No'}}",
+                                              "color": "{{user.isInstanceOwner ? 'success' : 'default'}}",
+                                              "size": "small",
+                                              "sx": { "marginTop": 0.5 }
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "CardActions",
+                  "sx": { "justifyContent": "space-between", "padding": 2 },
+                  "children": [
+                    {
+                      "type": "Button",
+                      "variant": "text",
+                      "startIcon": {
+                        "type": "Icon",
+                        "name": "ArrowBack"
+                      },
+                      "onClick": "{{onBack}}",
+                      "children": "Back to List"
+                    },
+                    {
+                      "type": "Flex",
+                      "gap": 1,
+                      "children": [
+                        {
+                          "type": "Button",
+                          "variant": "outlined",
+                          "color": "primary",
+                          "onClick": "{{onEdit}}",
+                          "children": "Edit User"
+                        },
+                        {
+                          "type": "Button",
+                          "variant": "outlined",
+                          "color": "error",
+                          "onClick": "{{onDelete}}",
+                          "children": "Delete User"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "exports": {
+    "components": ["UserManagement", "UserList", "UserActions", "UserListAdmin", "UserForm", "UserDetail"]
+  }
+}

@@ -180,12 +180,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const elementProps = Component ? { ...restProps, href } : { ...restProps, type }
 
     // Size styling via CSS custom properties
-    const sizeStyle: React.CSSProperties = {}
+    const sizeStyle: React.CSSProperties & Record<string, string> = {}
     const normalizedSize = size === 'small' ? 'sm' : size === 'large' ? 'lg' : size
     if (normalizedSize === 'sm' || sm) {
-      sizeStyle['--mat-button-text-container-height' as string] = '32px'
+      sizeStyle['--mat-button-text-container-height'] = '32px'
     } else if (normalizedSize === 'lg' || lg) {
-      sizeStyle['--mat-button-text-container-height' as string] = '48px'
+      sizeStyle['--mat-button-text-container-height'] = '48px'
     }
 
     return (

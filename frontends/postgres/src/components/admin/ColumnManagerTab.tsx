@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@metabuilder/components/fakemui';
 import { getDataTypes, getFeatureById } from '@/utils/featureConfig';
 import AddColumnDialog from './AddColumnDialog';
 import ColumnSchemaPanel from './ColumnSchemaPanel';
@@ -37,19 +37,33 @@ export default function ColumnManagerTab({
         {feature?.name ?? 'Column Management'}
       </Typography>
 
-      <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
-        <ColumnTableList tables={tables} selectedTable={selectedTable}
-          onSelect={setSelectedTable} />
+      <Stack
+        spacing={2}
+        sx={{
+          flexDirection: { xs: 'column', md: 'row' },
+          alignItems: 'flex-start',
+        }}
+      >
+        <ColumnTableList
+          tables={tables}
+          selectedTable={selectedTable}
+          onSelect={setSelectedTable}
+        />
 
-        <Box sx={{ flex: 1, minWidth: 0 }}>
+        <Box sx={{ flex: 1, minWidth: 0, width: '100%' }}>
           {!selectedTable && (
-            <Typography color="text.secondary"
-              sx={{ mt: 1, fontSize: '0.875rem' }}>
+            <Typography
+              color="text.secondary"
+              sx={{ mt: 1, fontSize: '0.875rem' }}
+            >
               Select a table to manage its columns
             </Typography>
           )}
           {selectedTable && !schema && (
-            <Typography color="text.secondary" sx={{ fontSize: '0.875rem' }}>
+            <Typography
+              color="text.secondary"
+              sx={{ fontSize: '0.875rem' }}
+            >
               Loading…
             </Typography>
           )}
@@ -63,7 +77,7 @@ export default function ColumnManagerTab({
             />
           )}
         </Box>
-      </Box>
+      </Stack>
 
       <AddColumnDialog open={dialog === 'add'} tableName={selectedTable}
         dataTypes={dataTypes} onClose={() => setDialog(null)}

@@ -3,7 +3,7 @@
 import {
   Button, Dialog, DialogActions, DialogContent, DialogTitle,
   FormControl, InputLabel, MenuItem, Select, Typography,
-} from '@mui/material';
+} from '@metabuilder/components/fakemui';
 import { useDropColumnForm } from './hooks/useDropColumnForm';
 
 type Column = { column_name: string };

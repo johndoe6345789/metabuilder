@@ -4,7 +4,7 @@ import {
   Box, Button, Checkbox, Chip, FormControl,
   FormControlLabel, InputLabel, MenuItem,
   Select, TextField, Typography,
-} from '@mui/material';
+} from '@metabuilder/components/fakemui';
 import type { IndexType } from '@/utils/featureConfig';
 
 export type IndexCreateFormProps = {

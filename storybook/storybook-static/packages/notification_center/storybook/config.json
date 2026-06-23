@@ -1,0 +1,57 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": false,
+  "title": "Notification Center",
+  "description": "Notification management and display components",
+  "stories": [
+    {
+      "name": "NotificationCenter",
+      "render": "init",
+      "description": "Complete notification center with list and summary"
+    },
+    {
+      "name": "NotificationToast",
+      "render": "toast",
+      "description": "Toast notification popup",
+      "args": {
+        "type": "success",
+        "title": "Success",
+        "message": "Your changes have been saved"
+      }
+    },
+    {
+      "name": "NotificationSummary",
+      "render": "summary",
+      "description": "Notification summary card"
+    }
+  ],
+  "renders": {
+    "init": {
+      "description": "Full notification center",
+      "featured": true
+    },
+    "toast": {
+      "description": "Toast notifications"
+    },
+    "summary": {
+      "description": "Notification summary statistics"
+    },
+    "list": {
+      "description": "Notification list view"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "demo-user",
+      "username": "demo_user",
+      "level": 1
+    }
+  },
+  "scripts": {
+    "renderFunctions": ["init", "toast", "list", "summary"],
+    "ignoredScripts": ["tests"]
+  },
+  "parameters": {
+    "layout": "padded"
+  }
+}

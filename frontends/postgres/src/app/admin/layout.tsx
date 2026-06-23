@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import './admin.css';
+import styles from './admin.module.scss';
 
 export const metadata: Metadata = {
   title: 'Postgres Admin Panel',
@@ -20,9 +20,6 @@ export default function AdminLayout({
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
-        {/* UI font (Inter, from the MUI theme) + code/SQL font (JetBrains Mono,
-            from admin.css). Neither was loaded, so text fell back to system
-            fonts on the admin dashboard / query-builder. */}
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
@@ -32,7 +29,7 @@ export default function AdminLayout({
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         />
       </head>
-      <body>{children}</body>
+      <body className={styles.adminShell}>{children}</body>
     </html>
   );
 }

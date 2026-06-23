@@ -1,0 +1,77 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "component_editor",
+  "name": "Component Editor",
+  "version": "1.0.0",
+  "description": "Visual component hierarchy editor for managing dynamic component trees and configurations",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "tools",
+  "icon": "static_content/icon.svg",
+  "minLevel": 4,
+  "primary": false,
+  "keywords": [
+    "components",
+    "hierarchy",
+    "editor",
+    "tree",
+    "configuration",
+    "visual"
+  ],
+  "dependencies": {
+    "data_table": "*",
+    "ui_permissions": "*"
+  },
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "ComponentHierarchyEditor",
+      "ComponentCatalog",
+      "ComponentTree",
+      "ComponentConfig",
+      "ComponentPreview"
+    ],
+    "scripts": [
+      "components"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "permissions",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/config.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "static_content/icon.svg"
+      ]
+    }
+  }
+}

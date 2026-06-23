@@ -1,7 +1,7 @@
 'use client';
 
-import { SvgIconProps } from '@mui/material';
-import * as Icons from '@mui/icons-material';
+import type { IconProps as SvgIconProps } from '@metabuilder/components/fakemui';
+import * as Icons from '@metabuilder/components/fakemui';
 
 export type IconProps = SvgIconProps & {
   name: keyof typeof Icons;
@@ -9,13 +9,13 @@ export type IconProps = SvgIconProps & {
 
 /**
  * Atomic Icon component
- * Renders Material-UI icons by name from features.json
+ * Renders fakemui icons by name from features.json
  */
 export default function Icon({ name, ...props }: IconProps) {
   const IconComponent = Icons[name];
 
   if (!IconComponent) {
-    console.warn(`Icon "${name}" not found in Material Icons`);
+    console.warn(`Icon "${name}" not found in fakemui icons`);
     return null;
   }
 

@@ -20,6 +20,7 @@ dist/
 dist-ssr/
 *-dist/
 build/
+CMakeUserPresets.json
 .next/
 out/
 next-env.d.ts

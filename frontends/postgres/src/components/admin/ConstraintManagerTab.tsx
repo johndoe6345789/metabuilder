@@ -1,11 +1,12 @@
 'use client';
 
-import AddIcon from '@mui/icons-material/Add';
-import { Box, Button, Typography } from '@mui/material';
+import AddIcon from '@metabuilder/components/fakemui/Add';
+import { Box, Button, Stack, Typography } from '@metabuilder/components/fakemui';
 import { getConstraintTypes, getFeatureById } from '@/utils/featureConfig';
 import ConstraintDialog from './ConstraintDialog';
 import ConstraintTable from './ConstraintTable';
 import { useConstraintManager } from './hooks/useConstraintManager';
+import TablePicker from './TablePicker';
 
 type ConstraintManagerTabProps = {
   tables: Array<{ table_name: string }>;
@@ -39,40 +40,34 @@ export default function ConstraintManagerTab({
           {feature.description}
         </Typography>
       )}
-      <Box sx={{ mt: 2, mb: 2 }}>
-        <select
+      <Stack spacing={2} sx={{ mt: 2, mb: 2, maxWidth: 560, width: '100%' }}>
+        <TablePicker
+          label="Select Table"
           value={selectedTable}
-          onChange={e => setSelectedTable(e.target.value)}
-          style={{ maxWidth: 400, display: 'block', width: '100%' }}
-        >
-          <option value="">Select a table</option>
-          {tables.map(t => (
-            <option key={t.table_name} value={t.table_name}>
-              {t.table_name}
-            </option>
-          ))}
-        </select>
-      </Box>
-      {selectedTable && (
-        <>
-          <Box sx={{ mt: 2, mb: 2 }}>
-            {canAdd && (
-              <Button
-                variant="contained"
-                startIcon={<AddIcon />}
-                onClick={openAddDialog}
-              >
-                Add Constraint
-              </Button>
-            )}
-          </Box>
-          <ConstraintTable
-            constraints={constraints}
-            canDelete={canDelete}
-            onDeleteClick={openDeleteDialog}
-          />
-        </>
-      )}
+          onChange={setSelectedTable}
+          options={tables}
+        />
+        {selectedTable && (
+          <>
+            <Box>
+              {canAdd && (
+                <Button
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                  onClick={openAddDialog}
+                >
+                  Add Constraint
+                </Button>
+              )}
+            </Box>
+            <ConstraintTable
+              constraints={constraints}
+              canDelete={canDelete}
+              onDeleteClick={openDeleteDialog}
+            />
+          </>
+        )}
+      </Stack>
       <ConstraintDialog
         open={dialogState.open}
         mode={dialogState.mode}

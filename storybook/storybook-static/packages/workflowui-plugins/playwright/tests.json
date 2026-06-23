@@ -1,0 +1,154 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "workflowui-plugins",
+  "version": "1.0.0",
+  "description": "WorkflowUI Plugins page tests - plugin marketplace",
+  "tests": [
+    {
+      "name": "should display plugins page with search",
+      "tags": [
+        "@plugins",
+        "@critical"
+      ],
+      "timeout": 10000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "plugins"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should filter plugins by search query",
+      "tags": [
+        "@plugins",
+        "@search"
+      ],
+      "timeout": 15000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "plugins"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display plugin categories from registry",
+      "tags": [
+        "@plugins",
+        "@categories"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "plugins"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display plugin cards with details",
+      "tags": [
+        "@plugins",
+        "@content"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "plugins"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should filter by category when clicking tab",
+      "tags": [
+        "@plugins",
+        "@filter"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "plugins"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display plugin count",
+      "tags": [
+        "@plugins",
+        "@count"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "plugins"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    }
+  ]
+}

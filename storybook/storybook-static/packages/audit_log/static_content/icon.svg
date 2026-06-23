@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Document with list and clock -->
+  <rect x="18" y="12" width="28" height="40" rx="2" fill="none"/>
+  <path d="M24 20 L40 20 M24 26 L38 26 M24 32 L36 32 M24 38 L34 38" stroke-width="1.5"/>
+  <circle cx="40" cy="40" r="8" fill="white" stroke-width="2"/>
+  <path d="M40 36 L40 40 L43 42" stroke-width="1.5"/>
+</svg>

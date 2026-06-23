@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import {
   Button, Checkbox, Dialog, DialogActions, DialogContent,
   DialogTitle, FormControlLabel, TextField,
-} from '@mui/material';
+} from '@metabuilder/components/fakemui';
 import type { TdvColumn, TdvSchema } from './hooks/useTableDataView';
 
 const NUM_TYPES = new Set([

@@ -6,7 +6,7 @@ import {
   Button,
   CircularProgress,
   TextField,
-} from '@mui/material';
+} from '@metabuilder/components/fakemui';
 import PasswordField from './PasswordField';
 
 type LoginFormProps = {

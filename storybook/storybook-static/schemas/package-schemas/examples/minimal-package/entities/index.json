@@ -1,0 +1,6 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/entities.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "minimal-example",
+  "entities": []
+}

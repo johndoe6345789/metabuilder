@@ -11,7 +11,6 @@ import DropTableDialog from './DropTableDialog';
 import { useTableManager } from './hooks/useTableManager';
 import {
   Box,
-  InputAdornment,
   List,
   ListItemButton,
   ListItemIcon,
@@ -19,9 +18,10 @@ import {
   Paper,
   TextField,
   Typography,
-} from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import TableChartIcon from '@mui/icons-material/TableChart';
+} from '@metabuilder/components/fakemui';
+import InputAdornment from '@metabuilder/components/fakemui/inputs/InputAdornment';
+import SearchIcon from '@metabuilder/components/fakemui/Search';
+import TableChartIcon from '@metabuilder/components/fakemui/TableChart';
 
 type TableManagerTabProps = {
   tables: Array<{ table_name: string }>;

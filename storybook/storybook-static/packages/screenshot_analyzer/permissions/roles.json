@@ -1,0 +1,62 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "screenshot_analyzer",
+  "description": "Screenshot analyzer access permissions",
+  "permissions": [
+    {
+      "id": "screenshot.upload",
+      "name": "Upload Screenshots",
+      "description": "Upload screenshots for analysis",
+      "resource": "screenshot",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "screenshot.analyze",
+      "name": "Analyze Screenshots",
+      "description": "Analyze screenshots and page content",
+      "resource": "screenshot",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "screenshot.capture",
+      "name": "Capture Screenshots",
+      "description": "Capture screenshots of the current page",
+      "resource": "screenshot",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "screenshot.download",
+      "name": "Download Screenshots",
+      "description": "Download captured screenshots",
+      "resource": "screenshot",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "screenshot.view_report",
+      "name": "View Analysis Reports",
+      "description": "View screenshot analysis reports",
+      "resource": "screenshot",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 5
+    }
+  ],
+  "resources": [
+    {
+      "id": "screenshot",
+      "name": "Screenshot",
+      "type": "custom",
+      "description": "Screenshot capture and analysis resources",
+      "actions": ["create", "execute", "read"]
+    }
+  ]
+}

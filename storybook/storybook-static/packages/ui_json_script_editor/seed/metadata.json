@@ -1,0 +1,19 @@
+{
+  "packageId": "ui_json_script_editor",
+  "description": "JSON Script Editor - Code editor with visual builder for JSON Script v2.2.0 automation",
+  "version": "1.0.0",
+  "features": [
+    "Monaco editor integration with JSON Script syntax",
+    "Visual JSON script builder (no-code node UI)",
+    "Real-time validation and error reporting",
+    "Script execution with live feedback and debugging",
+    "Test script runner with sample data",
+    "Script library and reusable components",
+    "Version history and rollback",
+    "Multi-tenant script isolation",
+    "God/Supergod admin tools"
+  ],
+  "seed": {
+    "schema": "page-config"
+  }
+}

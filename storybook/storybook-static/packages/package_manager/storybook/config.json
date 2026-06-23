@@ -1,0 +1,126 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Package Manager Components",
+  "description": "Package browsing, installation, and management",
+  "stories": [
+    {
+      "name": "PackageBrowser",
+      "render": "browser",
+      "description": "Grid view of available packages",
+      "args": {
+        "packages": [
+          {
+            "packageId": "dashboard",
+            "name": "Dashboard",
+            "version": "1.0.0",
+            "description": "Dashboard layouts and stat cards",
+            "category": "ui",
+            "installed": true,
+            "enabled": true
+          },
+          {
+            "packageId": "data_table",
+            "name": "Data Table",
+            "version": "1.0.0",
+            "description": "Advanced data table with sorting and filtering",
+            "category": "ui",
+            "installed": true,
+            "enabled": true
+          },
+          {
+            "packageId": "workflow_editor",
+            "name": "Workflow Editor",
+            "version": "1.0.0",
+            "description": "Visual workflow editor",
+            "category": "tools",
+            "installed": false,
+            "enabled": false
+          }
+        ],
+        "viewMode": "grid"
+      }
+    },
+    {
+      "name": "PackageCard",
+      "render": "card",
+      "description": "Single package card",
+      "args": {
+        "package": {
+          "packageId": "dashboard",
+          "name": "Dashboard",
+          "version": "1.0.0",
+          "description": "Dashboard layouts, stat cards, and widgets",
+          "category": "ui",
+          "installed": true,
+          "enabled": true
+        }
+      }
+    },
+    {
+      "name": "PackageDetails",
+      "render": "details",
+      "description": "Package details dialog",
+      "args": {
+        "package": {
+          "packageId": "dashboard",
+          "name": "Dashboard",
+          "version": "1.0.0",
+          "description": "Dashboard layouts, stat cards, and widgets for building admin interfaces",
+          "author": "MetaBuilder",
+          "license": "MIT",
+          "category": "ui",
+          "minLevel": 2,
+          "installed": true,
+          "enabled": true,
+          "dependencies": {
+            "data_table": "*",
+            "ui_permissions": "*"
+          },
+          "exports": {
+            "components": ["StatCard", "DashboardGrid", "Widget"]
+          }
+        }
+      }
+    },
+    {
+      "name": "DependencyViewer",
+      "render": "dependencies",
+      "description": "Dependency chips display",
+      "args": {
+        "dependencies": {
+          "data_table": "*",
+          "ui_permissions": "*",
+          "form_builder": "^1.0.0"
+        }
+      }
+    }
+  ],
+  "renders": {
+    "browser": {
+      "description": "Package browser grid",
+      "featured": true
+    },
+    "card": {
+      "description": "Single package card"
+    },
+    "details": {
+      "description": "Package details dialog"
+    },
+    "dependencies": {
+      "description": "Dependency visualization"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "admin-user",
+      "username": "admin",
+      "level": 4,
+      "email": "admin@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  }
+}

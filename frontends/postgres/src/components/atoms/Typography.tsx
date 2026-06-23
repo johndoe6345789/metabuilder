@@ -1,6 +1,6 @@
 'use client';
 
-import { Typography as MuiTypography, TypographyProps as MuiTypographyProps } from '@mui/material';
+import { Typography as MuiTypography, type TypographyProps as MuiTypographyProps } from '@metabuilder/components/fakemui';
 
 export type TypographyProps = Omit<MuiTypographyProps, 'children'> & {
   text?: string;

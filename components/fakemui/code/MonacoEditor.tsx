@@ -137,7 +137,7 @@ export function MonacoEditor({
           height={height}
           language={monacoLanguage}
           value={value}
-          onChange={(newValue) => onChange(newValue || '')}
+          onChange={(newValue: string | undefined) => onChange(newValue || '')}
           theme={theme}
           beforeMount={handleBeforeMount}
           options={{

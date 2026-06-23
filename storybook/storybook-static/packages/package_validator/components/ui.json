@@ -1,0 +1,332 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "package_validator",
+  "description": "Package Validator UI components for displaying validation results",
+  "components": [
+    {
+      "id": "validation_result_card",
+      "name": "ValidationResultCard",
+      "description": "Displays validation result summary with pass/fail status",
+      "props": [
+        {
+          "name": "valid",
+          "type": "boolean",
+          "required": true,
+          "description": "Whether validation passed"
+        },
+        {
+          "name": "errorCount",
+          "type": "number",
+          "required": true,
+          "description": "Number of errors found"
+        },
+        {
+          "name": "warningCount",
+          "type": "number",
+          "required": false,
+          "default": 0,
+          "description": "Number of warnings found"
+        },
+        {
+          "name": "packageId",
+          "type": "string",
+          "required": true,
+          "description": "Package being validated"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "validation-result-card",
+          "children": [
+            {
+              "type": "Box",
+              "className": "validation-status-icon",
+              "children": [
+                {
+                  "type": "Icon",
+                  "name": "{{valid ? 'CheckCircle' : 'Error'}}",
+                  "color": "{{valid ? 'success' : 'error'}}",
+                  "size": 48
+                }
+              ]
+            },
+            {
+              "type": "Stack",
+              "gap": 1,
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "h6",
+                  "fontWeight": "bold",
+                  "children": "{{packageId}}"
+                },
+                {
+                  "type": "Text",
+                  "variant": "body1",
+                  "color": "{{valid ? 'success' : 'error'}}",
+                  "children": "{{valid ? 'Validation Passed' : 'Validation Failed'}}"
+                },
+                {
+                  "type": "Flex",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "caption",
+                      "color": "error",
+                      "children": "{{errorCount}} error(s)"
+                    },
+                    {
+                      "type": "Text",
+                      "variant": "caption",
+                      "color": "warning",
+                      "children": "{{warningCount}} warning(s)"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "validation_error_list",
+      "name": "ValidationErrorList",
+      "description": "Displays list of validation errors with file locations",
+      "props": [
+        {
+          "name": "errors",
+          "type": "array",
+          "required": true,
+          "description": "Array of ValidationError objects"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "default": "Errors",
+          "description": "List title"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "validation-error-list",
+          "children": [
+            {
+              "type": "Text",
+              "variant": "subtitle1",
+              "fontWeight": "bold",
+              "color": "error",
+              "children": "{{title}}"
+            },
+            {
+              "type": "List",
+              "children": {
+                "type": "loop",
+                "items": "{{errors}}",
+                "render": {
+                  "type": "ListItem",
+                  "children": [
+                    {
+                      "type": "ListItemIcon",
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "name": "ErrorOutline",
+                          "color": "error",
+                          "size": 20
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ListItemText",
+                      "primary": "{{item.message}}",
+                      "secondary": "{{item.file ? item.file + (item.line ? ':' + item.line : '') : ''}}"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "validation_warning_list",
+      "name": "ValidationWarningList",
+      "description": "Displays list of validation warnings",
+      "props": [
+        {
+          "name": "warnings",
+          "type": "array",
+          "required": true,
+          "description": "Array of ValidationWarning objects"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "default": "Warnings",
+          "description": "List title"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "validation-warning-list",
+          "children": [
+            {
+              "type": "Text",
+              "variant": "subtitle1",
+              "fontWeight": "bold",
+              "color": "warning",
+              "children": "{{title}}"
+            },
+            {
+              "type": "List",
+              "children": {
+                "type": "loop",
+                "items": "{{warnings}}",
+                "render": {
+                  "type": "ListItem",
+                  "children": [
+                    {
+                      "type": "ListItemIcon",
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "name": "Warning",
+                          "color": "warning",
+                          "size": 20
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ListItemText",
+                      "primary": "{{item.message}}",
+                      "secondary": "{{item.file || ''}}"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "package_validator_panel",
+      "name": "PackageValidatorPanel",
+      "description": "Full validation panel with input and results display",
+      "props": [
+        {
+          "name": "onValidate",
+          "type": "function",
+          "required": true,
+          "description": "Callback when validate button is clicked"
+        },
+        {
+          "name": "results",
+          "type": "object",
+          "required": false,
+          "description": "ValidationResult object"
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether validation is in progress"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Paper",
+          "elevation": 2,
+          "className": "package-validator-panel",
+          "children": [
+            {
+              "type": "Box",
+              "sx": { "p": 3 },
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "h5",
+                  "fontWeight": "bold",
+                  "children": "Package Validator"
+                },
+                {
+                  "type": "Text",
+                  "variant": "body2",
+                  "color": "secondary",
+                  "sx": { "mb": 2 },
+                  "children": "Validate package structure, metadata, scripts, and components"
+                },
+                {
+                  "type": "TextField",
+                  "id": "package-path-input",
+                  "label": "Package Path",
+                  "placeholder": "packages/my_package",
+                  "fullWidth": true,
+                  "sx": { "mb": 2 }
+                },
+                {
+                  "type": "Button",
+                  "variant": "contained",
+                  "color": "primary",
+                  "onClick": "{{onValidate}}",
+                  "disabled": "{{loading}}",
+                  "children": "{{loading ? 'Validating...' : 'Validate Package'}}"
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "condition": "{{results}}",
+              "then": {
+                "type": "Box",
+                "sx": { "p": 3, "borderTop": 1, "borderColor": "divider" },
+                "children": [
+                  {
+                    "type": "ValidationResultCard",
+                    "valid": "{{results.valid}}",
+                    "errorCount": "{{results.errors.length}}",
+                    "warningCount": "{{results.warnings.length}}",
+                    "packageId": "{{results.packageId || 'Unknown'}}"
+                  },
+                  {
+                    "type": "conditional",
+                    "condition": "{{results.errors.length > 0}}",
+                    "then": {
+                      "type": "ValidationErrorList",
+                      "errors": "{{results.errors}}",
+                      "sx": { "mt": 2 }
+                    }
+                  },
+                  {
+                    "type": "conditional",
+                    "condition": "{{results.warnings.length > 0}}",
+                    "then": {
+                      "type": "ValidationWarningList",
+                      "warnings": "{{results.warnings}}",
+                      "sx": { "mt": 2 }
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,188 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/api.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "complete-example",
+  "description": "REST API routes for user management",
+  "basePath": "/api/v1",
+  "version": "v1",
+  "auth": {
+    "type": "bearer",
+    "required": true
+  },
+  "rateLimit": {
+    "enabled": true,
+    "max": 100,
+    "windowMs": 60000,
+    "message": "Too many requests"
+  },
+  "cors": {
+    "enabled": true,
+    "origins": ["https://example.com"],
+    "methods": ["GET", "POST", "PUT", "DELETE"],
+    "credentials": true
+  },
+  "routes": [
+    {
+      "id": "get_users",
+      "path": "/users",
+      "method": "GET",
+      "handler": "getUsers",
+      "description": "List all users",
+      "auth": {
+        "type": "bearer",
+        "required": true,
+        "roles": ["admin", "moderator"]
+      },
+      "query": [
+        {
+          "name": "page",
+          "type": "number",
+          "required": false,
+          "default": 1,
+          "description": "Page number"
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "required": false,
+          "default": 20,
+          "min": 1,
+          "max": 100,
+          "description": "Items per page"
+        },
+        {
+          "name": "role",
+          "type": "string",
+          "required": false,
+          "enum": ["user", "admin", "moderator"],
+          "description": "Filter by role"
+        }
+      ],
+      "response": {
+        "200": {
+          "description": "List of users",
+          "schema": "User[]"
+        },
+        "401": {
+          "description": "Unauthorized"
+        },
+        "403": {
+          "description": "Forbidden"
+        }
+      }
+    },
+    {
+      "id": "get_user",
+      "path": "/users/:id",
+      "method": "GET",
+      "handler": "getUser",
+      "description": "Get user by ID",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "required": true,
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+          "description": "User UUID"
+        }
+      ],
+      "response": {
+        "200": {
+          "description": "User found",
+          "schema": "User"
+        },
+        "404": {
+          "description": "User not found"
+        }
+      }
+    },
+    {
+      "id": "create_user",
+      "path": "/users",
+      "method": "POST",
+      "handler": "createUser",
+      "description": "Create a new user",
+      "auth": {
+        "required": true,
+        "roles": ["admin"]
+      },
+      "body": {
+        "required": true,
+        "schema": "CreateUserInput",
+        "validate": true
+      },
+      "response": {
+        "201": {
+          "description": "User created",
+          "schema": "User"
+        },
+        "400": {
+          "description": "Invalid input"
+        },
+        "409": {
+          "description": "Email already exists"
+        }
+      }
+    },
+    {
+      "id": "update_user",
+      "path": "/users/:id",
+      "method": "PUT",
+      "handler": "updateUser",
+      "description": "Update user",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "body": {
+        "required": true,
+        "schema": "Partial<User>",
+        "validate": true
+      },
+      "response": {
+        "200": {
+          "description": "User updated",
+          "schema": "User"
+        },
+        "404": {
+          "description": "User not found"
+        }
+      }
+    },
+    {
+      "id": "delete_user",
+      "path": "/users/:id",
+      "method": "DELETE",
+      "handler": "deleteUser",
+      "description": "Delete user (soft delete)",
+      "auth": {
+        "required": true,
+        "roles": ["admin"]
+      },
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "response": {
+        "204": {
+          "description": "User deleted"
+        },
+        "404": {
+          "description": "User not found"
+        }
+      }
+    }
+  ],
+  "middleware": ["cors", "helmet", "rateLimit", "auth"],
+  "errorHandlers": {
+    "ValidationError": "handleValidationError",
+    "UnauthorizedError": "handleUnauthorizedError",
+    "NotFoundError": "handleNotFoundError"
+  }
+}

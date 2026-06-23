@@ -1,0 +1,57 @@
+[
+  {
+    "id": "page_dashboard_home",
+    "path": "/dashboard",
+    "title": "Dashboard",
+    "packageId": "dashboard",
+    "component": "dashboard_home",
+    "level": 1,
+    "requiresAuth": true,
+    "isPublished": true,
+    "sortOrder": 0
+  },
+  {
+    "id": "page_user_profile",
+    "path": "/profile",
+    "title": "User Profile",
+    "packageId": "dashboard",
+    "component": "user_profile",
+    "level": 1,
+    "requiresAuth": true,
+    "isPublished": true,
+    "sortOrder": 50
+  },
+  {
+    "id": "page_user_stats",
+    "path": "/stats",
+    "title": "User Statistics",
+    "packageId": "dashboard",
+    "component": "user_statistics",
+    "level": 1,
+    "requiresAuth": true,
+    "isPublished": true,
+    "sortOrder": 51
+  },
+  {
+    "id": "page_user_activity",
+    "path": "/activity",
+    "title": "User Activity",
+    "packageId": "dashboard",
+    "component": "user_activity_feed",
+    "level": 1,
+    "requiresAuth": true,
+    "isPublished": true,
+    "sortOrder": 52
+  },
+  {
+    "id": "page_dashboard_analytics",
+    "path": "/admin/analytics",
+    "title": "Tenant Analytics",
+    "packageId": "dashboard",
+    "component": "analytics_dashboard",
+    "level": 3,
+    "requiresAuth": true,
+    "isPublished": true,
+    "sortOrder": 53
+  }
+]

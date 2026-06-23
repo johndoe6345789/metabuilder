@@ -1,0 +1,457 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/tests.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "complete-example",
+  "description": "Comprehensive user management tests",
+
+  "imports": [
+    {
+      "from": "test-helpers",
+      "import": ["createMockUser", "createMockDatabase"]
+    },
+    {
+      "from": "assertions",
+      "import": ["assertValidEmail", "assertStrongPassword"]
+    }
+  ],
+
+  "setup": {
+    "beforeAll": [
+      {
+        "type": "database",
+        "name": "Initialize test database",
+        "config": {
+          "action": "reset",
+          "seedData": true
+        }
+      }
+    ],
+    "beforeEach": [
+      {
+        "type": "cleanup",
+        "name": "Clear test user data",
+        "config": {
+          "tables": ["users", "sessions"]
+        }
+      }
+    ],
+    "afterAll": [
+      {
+        "type": "cleanup",
+        "name": "Teardown test database",
+        "config": {
+          "action": "disconnect"
+        }
+      }
+    ]
+  },
+
+  "testSuites": [
+    {
+      "id": "email-validation-suite",
+      "name": "Email Validation Tests",
+      "description": "Tests for email validation function with various formats",
+      "tags": ["validation", "email", "unit"],
+      "timeout": 5000,
+
+      "tests": [
+        {
+          "id": "email-valid-formats",
+          "name": "should accept valid email formats",
+          "description": "Tests that valid email addresses pass validation",
+          "parameterized": true,
+          "parameters": [
+            {
+              "case": "standard email",
+              "input": "user@example.com",
+              "expected": true
+            },
+            {
+              "case": "email with plus sign",
+              "input": "user+tag@example.com",
+              "expected": true
+            },
+            {
+              "case": "email with subdomain",
+              "input": "user@mail.example.com",
+              "expected": true
+            },
+            {
+              "case": "email with dots",
+              "input": "first.last@example.com",
+              "expected": true
+            },
+            {
+              "case": "email with numbers",
+              "input": "user123@example456.com",
+              "expected": true
+            }
+          ],
+          "act": {
+            "type": "function_call",
+            "target": "validateEmail",
+            "input": "{{input}}"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "equals",
+                "actual": "result",
+                "expected": "{{expected}}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "email-invalid-formats",
+          "name": "should reject invalid email formats",
+          "parameterized": true,
+          "parameters": [
+            {
+              "case": "missing @ symbol",
+              "input": "userexample.com",
+              "expected": false
+            },
+            {
+              "case": "missing domain",
+              "input": "user@",
+              "expected": false
+            },
+            {
+              "case": "missing local part",
+              "input": "@example.com",
+              "expected": false
+            },
+            {
+              "case": "spaces in email",
+              "input": "user name@example.com",
+              "expected": false
+            },
+            {
+              "case": "multiple @ symbols",
+              "input": "user@@example.com",
+              "expected": false
+            },
+            {
+              "case": "empty string",
+              "input": "",
+              "expected": false
+            }
+          ],
+          "act": {
+            "type": "function_call",
+            "target": "validateEmail",
+            "input": "{{input}}"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "equals",
+                "actual": "result",
+                "expected": "{{expected}}"
+              }
+            ]
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "user-creation-suite",
+      "name": "User Creation Tests",
+      "description": "Tests for creating new users with validation",
+      "tags": ["user", "creation", "integration"],
+      "timeout": 10000,
+
+      "setup": {
+        "beforeEach": [
+          {
+            "type": "mock",
+            "name": "Mock email service",
+            "config": {
+              "target": "emailService.send",
+              "returnValue": { "success": true }
+            }
+          }
+        ]
+      },
+
+      "tests": [
+        {
+          "id": "create-user-success",
+          "name": "should create user with valid data",
+          "tags": ["happy-path"],
+          "arrange": {
+            "given": "valid user registration data",
+            "fixtures": {
+              "userData": {
+                "username": "newuser",
+                "email": "newuser@example.com",
+                "password": "SecurePass123!",
+                "age": 25
+              }
+            }
+          },
+          "act": {
+            "when": "creating a new user",
+            "type": "function_call",
+            "target": "createUser",
+            "input": "{{userData}}"
+          },
+          "assert": {
+            "then": "user should be created successfully",
+            "expectations": [
+              {
+                "type": "hasProperty",
+                "actual": "result",
+                "expected": "userId",
+                "description": "Result should have userId"
+              },
+              {
+                "type": "equals",
+                "actual": "result.username",
+                "expected": "newuser"
+              },
+              {
+                "type": "equals",
+                "actual": "result.email",
+                "expected": "newuser@example.com"
+              },
+              {
+                "type": "notUndefined",
+                "actual": "result.createdAt",
+                "description": "Should have creation timestamp"
+              }
+            ]
+          }
+        },
+        {
+          "id": "create-user-duplicate-email",
+          "name": "should fail when email already exists",
+          "tags": ["validation", "error-handling"],
+          "arrange": {
+            "given": "an existing user with the same email",
+            "setup": [
+              {
+                "type": "fixture",
+                "name": "Create existing user",
+                "config": {
+                  "action": "createUser",
+                  "data": {
+                    "username": "existing",
+                    "email": "duplicate@example.com",
+                    "password": "Pass1234!"
+                  }
+                }
+              }
+            ],
+            "fixtures": {
+              "newUserData": {
+                "username": "different",
+                "email": "duplicate@example.com",
+                "password": "AnotherPass123!"
+              }
+            }
+          },
+          "act": {
+            "when": "attempting to create user with duplicate email",
+            "type": "function_call",
+            "target": "createUser",
+            "input": "{{newUserData}}"
+          },
+          "assert": {
+            "then": "should throw duplicate email error",
+            "expectations": [
+              {
+                "type": "throws",
+                "expected": "Email already exists",
+                "description": "Should throw error for duplicate email"
+              }
+            ]
+          }
+        },
+        {
+          "id": "create-user-validation-errors",
+          "name": "should validate all user fields",
+          "parameterized": true,
+          "parameters": [
+            {
+              "case": "username too short",
+              "input": {
+                "username": "ab",
+                "email": "test@example.com",
+                "password": "Pass1234!"
+              },
+              "shouldThrow": true,
+              "expectedError": "Username must be at least 3 characters"
+            },
+            {
+              "case": "invalid email format",
+              "input": {
+                "username": "validuser",
+                "email": "not-an-email",
+                "password": "Pass1234!"
+              },
+              "shouldThrow": true,
+              "expectedError": "Invalid email format"
+            },
+            {
+              "case": "weak password",
+              "input": {
+                "username": "validuser",
+                "email": "user@example.com",
+                "password": "weak"
+              },
+              "shouldThrow": true,
+              "expectedError": "Password does not meet security requirements"
+            },
+            {
+              "case": "age too young",
+              "input": {
+                "username": "younguser",
+                "email": "young@example.com",
+                "password": "Pass1234!",
+                "age": 10
+              },
+              "shouldThrow": true,
+              "expectedError": "Must be at least 13 years old"
+            }
+          ],
+          "act": {
+            "type": "function_call",
+            "target": "createUser",
+            "input": "{{input}}"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "throws",
+                "expected": "{{expectedError}}"
+              }
+            ]
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "user-authentication-suite",
+      "name": "User Authentication Tests",
+      "description": "Tests for user login and session management",
+      "tags": ["auth", "security", "integration"],
+      "timeout": 15000,
+
+      "setup": {
+        "beforeAll": [
+          {
+            "type": "fixture",
+            "name": "Create test user",
+            "config": {
+              "action": "createUser",
+              "data": {
+                "username": "testuser",
+                "email": "test@example.com",
+                "password": "TestPass123!"
+              },
+              "saveAs": "testUser"
+            }
+          }
+        ]
+      },
+
+      "tests": [
+        {
+          "id": "login-success",
+          "name": "should login with correct credentials",
+          "arrange": {
+            "given": "a user with valid credentials",
+            "fixtures": {
+              "credentials": {
+                "email": "test@example.com",
+                "password": "TestPass123!"
+              }
+            }
+          },
+          "act": {
+            "when": "logging in with correct credentials",
+            "type": "function_call",
+            "target": "loginUser",
+            "input": "{{credentials}}"
+          },
+          "assert": {
+            "then": "should return session token",
+            "expectations": [
+              {
+                "type": "hasProperty",
+                "actual": "result",
+                "expected": "sessionToken"
+              },
+              {
+                "type": "hasProperty",
+                "actual": "result",
+                "expected": "userId"
+              },
+              {
+                "type": "matches",
+                "actual": "result.sessionToken",
+                "expected": "^[a-zA-Z0-9-_]+$",
+                "description": "Session token should be alphanumeric"
+              }
+            ]
+          }
+        },
+        {
+          "id": "login-wrong-password",
+          "name": "should fail with incorrect password",
+          "retry": 0,
+          "arrange": {
+            "fixtures": {
+              "credentials": {
+                "email": "test@example.com",
+                "password": "WrongPassword123!"
+              }
+            }
+          },
+          "act": {
+            "type": "function_call",
+            "target": "loginUser",
+            "input": "{{credentials}}"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "throws",
+                "expected": "Invalid credentials"
+              }
+            ]
+          }
+        },
+        {
+          "id": "login-nonexistent-user",
+          "name": "should fail for non-existent user",
+          "arrange": {
+            "fixtures": {
+              "credentials": {
+                "email": "nonexistent@example.com",
+                "password": "SomePassword123!"
+              }
+            }
+          },
+          "act": {
+            "type": "function_call",
+            "target": "loginUser",
+            "input": "{{credentials}}"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "throws",
+                "expected": "Invalid credentials"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

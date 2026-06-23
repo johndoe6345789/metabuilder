@@ -113,7 +113,7 @@ export interface UseEventListenerReturn {
 interface ListenerEntry {
   target: EventTarget
   event: string
-  handler: EventHandler
+  handler: EventHandler<Event>
   options: EventListenerOptions
 }
 
@@ -146,7 +146,7 @@ export function useEventListener(): UseEventListenerReturn {
       const entry: ListenerEntry = {
         target,
         event,
-        handler,
+        handler: handler as EventHandler<Event>,
         options: normalizedOptions,
       }
       listenersRef.current.push(entry)

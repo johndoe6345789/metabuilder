@@ -1,6 +1,7 @@
 import React from 'react'
 import classNames from 'classnames'
 import styles from '../../../scss/atoms/mat-divider.module.scss'
+import { sxToStyle } from '../utils/sx'
 
 export type DividerVariant = 'fullBleed' | 'inset' | 'insetStart' | 'insetEnd' | 'insetBoth' | 'middle'
 export type DividerTextAlign = 'start' | 'center' | 'end'
@@ -26,6 +27,7 @@ export interface DividerProps extends React.HTMLAttributes<HTMLHRElement> {
   textAlign?: DividerTextAlign
   /** Test ID for automated testing */
   testId?: string
+  sx?: Record<string, unknown>
 }
 
 export const Divider: React.FC<DividerProps> = ({
@@ -40,6 +42,8 @@ export const Divider: React.FC<DividerProps> = ({
   textAlign = 'center',
   testId,
   className,
+  sx,
+  style,
   ...props
 }) => {
   // If there are children, render as a div with text
@@ -54,6 +58,7 @@ export const Divider: React.FC<DividerProps> = ({
           },
           className
         )}
+        style={{ ...sxToStyle(sx), ...style }}
         role="separator"
         data-testid={testId}
         {...(props as React.HTMLAttributes<HTMLDivElement>)}
@@ -88,6 +93,7 @@ export const Divider: React.FC<DividerProps> = ({
         },
         className
       )}
+      style={{ ...sxToStyle(sx), ...style }}
       {...props}
     />
   )

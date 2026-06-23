@@ -12,8 +12,9 @@ import {
   Typography,
   IconButton,
   Paper,
-} from '@mui/material';
-import { Close, Send } from '@mui/icons-material';
+  Close,
+  Send,
+} from '@metabuilder/components/fakemui';
 import { apiClient } from '@/lib/api';
 
 interface TerminalModalProps {

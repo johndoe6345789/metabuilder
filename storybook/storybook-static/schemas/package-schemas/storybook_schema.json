@@ -1,0 +1,365 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "title": "Package Storybook Configuration",
+  "description": "Storybook configuration for MetaBuilder packages - defines stories, controls, and rendering options",
+  "type": "object",
+  "required": ["$schema"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "featured": {
+      "type": "boolean",
+      "description": "Whether this package should be featured/highlighted in Storybook",
+      "default": false
+    },
+    "excludeFromDiscovery": {
+      "type": "boolean",
+      "description": "Exclude this package from auto-discovery",
+      "default": false
+    },
+    "category": {
+      "type": "string",
+      "description": "Override category for Storybook organization"
+    },
+    "title": {
+      "type": "string",
+      "description": "Display title in Storybook (defaults to package name)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Extended description shown in Storybook docs"
+    },
+    "stories": {
+      "type": "array",
+      "description": "Story definitions",
+      "items": {
+        "$ref": "#/definitions/story"
+      }
+    },
+    "renders": {
+      "type": "object",
+      "description": "Map of render function names to their metadata",
+      "additionalProperties": {
+        "$ref": "#/definitions/renderMetadata"
+      }
+    },
+    "defaultContext": {
+      "$ref": "#/definitions/storybookContext",
+      "description": "Default context for this package's stories"
+    },
+    "contextVariants": {
+      "type": "array",
+      "description": "Package-specific context variants",
+      "items": {
+        "$ref": "#/definitions/contextVariant"
+      }
+    },
+    "scripts": {
+      "type": "object",
+      "description": "Script rendering configuration",
+      "properties": {
+        "renderFunctions": {
+          "type": "array",
+          "description": "Function names that produce renderable output",
+          "items": { "type": "string" },
+          "examples": [["render", "main", "layout", "form", "page", "view"]]
+        },
+        "ignoredScripts": {
+          "type": "array",
+          "description": "Script names to exclude from Storybook",
+          "items": { "type": "string" },
+          "examples": [["test", "utils", "init", "validate", "actions"]]
+        }
+      }
+    },
+    "argTypes": {
+      "type": "object",
+      "description": "Global Storybook argTypes for all stories in package",
+      "additionalProperties": {
+        "$ref": "#/definitions/control"
+      }
+    },
+    "parameters": {
+      "type": "object",
+      "description": "Storybook parameters (backgrounds, viewport, etc.)",
+      "properties": {
+        "backgrounds": {
+          "type": "object",
+          "properties": {
+            "default": { "type": "string" },
+            "values": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "value": { "type": "string" }
+                },
+                "required": ["name", "value"]
+              }
+            }
+          }
+        },
+        "viewport": {
+          "type": "object",
+          "properties": {
+            "defaultViewport": { "type": "string" },
+            "viewports": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "styles": {
+                    "type": "object",
+                    "properties": {
+                      "width": { "type": "string" },
+                      "height": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "layout": {
+          "type": "string",
+          "enum": ["centered", "fullscreen", "padded"],
+          "description": "Story layout mode"
+        },
+        "docs": {
+          "type": "object",
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Documentation description"
+            },
+            "page": {
+              "type": "string",
+              "description": "Custom docs page reference"
+            },
+            "source": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["code", "dynamic", "auto"]
+                },
+                "language": { "type": "string" },
+                "code": { "type": "string" }
+              }
+            },
+            "canvas": {
+              "type": "object",
+              "properties": {
+                "sourceState": {
+                  "type": "string",
+                  "enum": ["shown", "hidden", "none"]
+                }
+              }
+            }
+          }
+        },
+        "actions": {
+          "type": "object",
+          "properties": {
+            "argTypesRegex": {
+              "type": "string",
+              "description": "Regex pattern to auto-detect action handlers"
+            },
+            "handles": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "definitions": {
+    "story": {
+      "type": "object",
+      "required": ["name"],
+      "description": "A single story definition",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Story display name"
+        },
+        "type": {
+          "type": "string",
+          "description": "Story type",
+          "enum": ["function", "component", "script", "render"]
+        },
+        "render": {
+          "type": "string",
+          "description": "Render function or script name to execute"
+        },
+        "function": {
+          "type": "string",
+          "description": "Function name (for function stories)"
+        },
+        "component": {
+          "type": "string",
+          "description": "Component name (for component stories)"
+        },
+        "script": {
+          "type": "string",
+          "description": "Script file path (for script stories)"
+        },
+        "description": {
+          "type": "string",
+          "description": "Story description for documentation"
+        },
+        "args": {
+          "oneOf": [
+            {
+              "type": "array",
+              "description": "Ordered function arguments"
+            },
+            {
+              "type": "object",
+              "description": "Named function arguments"
+            }
+          ]
+        },
+        "props": {
+          "type": "object",
+          "description": "Component props"
+        },
+        "context": {
+          "$ref": "#/definitions/storybookContext",
+          "description": "Custom context for this story"
+        },
+        "argTypes": {
+          "type": "object",
+          "description": "Storybook argTypes for this story",
+          "additionalProperties": {
+            "$ref": "#/definitions/control"
+          }
+        },
+        "argControls": {
+          "type": "object",
+          "description": "Storybook controls for arguments (alias for argTypes)",
+          "additionalProperties": {
+            "$ref": "#/definitions/control"
+          }
+        },
+        "propControls": {
+          "type": "object",
+          "description": "Storybook controls for props",
+          "additionalProperties": {
+            "$ref": "#/definitions/control"
+          }
+        },
+        "parameters": {
+          "type": "object",
+          "description": "Story-specific Storybook parameters",
+          "additionalProperties": true
+        },
+        "decorators": {
+          "type": "array",
+          "description": "Decorator function references",
+          "items": { "type": "string" }
+        },
+        "tags": {
+          "type": "array",
+          "description": "Story tags for filtering (e.g., 'autodocs', 'skip-snapshot')",
+          "items": { "type": "string" }
+        },
+        "play": {
+          "type": "string",
+          "description": "Reference to play function for interaction tests"
+        }
+      }
+    },
+    "renderMetadata": {
+      "type": "object",
+      "description": "Metadata for a render function in Storybook",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of what the render produces"
+        },
+        "featured": {
+          "type": "boolean",
+          "description": "Highlight this render in the package's stories",
+          "default": false
+        },
+        "args": {
+          "type": "object",
+          "description": "Default arguments for this render function",
+          "additionalProperties": true
+        },
+        "argTypes": {
+          "type": "object",
+          "description": "Storybook controls for render function arguments",
+          "additionalProperties": {
+            "$ref": "#/definitions/control"
+          }
+        },
+        "context": {
+          "$ref": "#/definitions/storybookContext",
+          "description": "Default context for this render"
+        }
+      }
+    },
+    "storybookContext": {
+      "$ref": "storybook-common-definitions.json#/definitions/storybookContext"
+    },
+    "contextVariant": {
+      "$ref": "storybook-common-definitions.json#/definitions/contextVariant"
+    },
+    "control": {
+      "$ref": "storybook-common-definitions.json#/definitions/control"
+    }
+  },
+  "examples": [
+    {
+      "featured": true,
+      "title": "Dashboard Components",
+      "description": "Dashboard layouts, stat cards, and widgets for displaying metrics",
+      "stories": [
+        {
+          "name": "StatsCard",
+          "render": "stats",
+          "description": "Single stat card with trend indicator"
+        },
+        {
+          "name": "DashboardLayout",
+          "render": "layout",
+          "description": "Full dashboard grid layout"
+        }
+      ],
+      "renders": {
+        "stats.card": {
+          "description": "Single stat card with trend indicator",
+          "featured": true
+        },
+        "layout.standard": {
+          "description": "Standard dashboard layout"
+        }
+      },
+      "contextVariants": [
+        {
+          "name": "Admin View",
+          "context": { "user": { "level": 4 }, "nerdMode": false }
+        },
+        {
+          "name": "Debug Mode",
+          "context": { "user": { "level": 4 }, "nerdMode": true }
+        }
+      ],
+      "parameters": {
+        "layout": "fullscreen",
+        "backgrounds": {
+          "default": "light"
+        }
+      }
+    }
+  ]
+}

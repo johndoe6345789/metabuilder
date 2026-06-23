@@ -1,0 +1,244 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/assets.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "complete-example",
+  "description": "Static assets for complete example package",
+  "basePath": "/assets",
+  "cdn": {
+    "enabled": true,
+    "provider": "cloudflare",
+    "baseUrl": "https://cdn.example.com/complete-example"
+  },
+  "images": [
+    {
+      "id": "logo",
+      "name": "Company Logo",
+      "path": "/images/logo.svg",
+      "alt": "Company Logo",
+      "format": "svg",
+      "width": 200,
+      "height": 50,
+      "priority": "high",
+      "category": "logo",
+      "tags": ["brand", "header"]
+    },
+    {
+      "id": "user_avatar_default",
+      "name": "Default User Avatar",
+      "path": "/images/avatar-default.png",
+      "alt": "Default user avatar",
+      "format": "png",
+      "width": 200,
+      "height": 200,
+      "variants": [
+        {
+          "width": 48,
+          "height": 48,
+          "path": "/images/avatar-default-48.png",
+          "format": "png",
+          "descriptor": "48w"
+        },
+        {
+          "width": 96,
+          "height": 96,
+          "path": "/images/avatar-default-96.png",
+          "format": "webp",
+          "descriptor": "96w"
+        },
+        {
+          "width": 200,
+          "height": 200,
+          "path": "/images/avatar-default-200.webp",
+          "format": "webp",
+          "descriptor": "200w"
+        }
+      ],
+      "lazy": true,
+      "category": "avatar"
+    },
+    {
+      "id": "hero_banner",
+      "name": "Hero Banner",
+      "path": "/images/hero.jpg",
+      "alt": "Welcome banner",
+      "format": "jpeg",
+      "width": 1920,
+      "height": 600,
+      "variants": [
+        {
+          "width": 768,
+          "path": "/images/hero-768.webp",
+          "format": "webp",
+          "descriptor": "768w"
+        },
+        {
+          "width": 1280,
+          "path": "/images/hero-1280.webp",
+          "format": "webp",
+          "descriptor": "1280w"
+        },
+        {
+          "width": 1920,
+          "path": "/images/hero-1920.webp",
+          "format": "webp",
+          "descriptor": "1920w"
+        }
+      ],
+      "priority": "high",
+      "lazy": false,
+      "category": "hero",
+      "metadata": {
+        "photographer": "John Doe",
+        "license": "CC BY 4.0",
+        "source": "https://unsplash.com/photos/example"
+      }
+    }
+  ],
+  "fonts": [
+    {
+      "id": "primary_font",
+      "family": "Inter",
+      "category": "sans-serif",
+      "files": [
+        {
+          "path": "/fonts/inter-regular.woff2",
+          "format": "woff2",
+          "weight": 400,
+          "style": "normal"
+        },
+        {
+          "path": "/fonts/inter-medium.woff2",
+          "format": "woff2",
+          "weight": 500,
+          "style": "normal"
+        },
+        {
+          "path": "/fonts/inter-semibold.woff2",
+          "format": "woff2",
+          "weight": 600,
+          "style": "normal"
+        },
+        {
+          "path": "/fonts/inter-bold.woff2",
+          "format": "woff2",
+          "weight": 700,
+          "style": "normal"
+        }
+      ],
+      "fallback": ["system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+      "display": "swap",
+      "preload": true
+    },
+    {
+      "id": "monospace_font",
+      "family": "Fira Code",
+      "category": "monospace",
+      "files": [
+        {
+          "path": "/fonts/fira-code-regular.woff2",
+          "format": "woff2",
+          "weight": 400,
+          "style": "normal"
+        },
+        {
+          "path": "/fonts/fira-code-bold.woff2",
+          "format": "woff2",
+          "weight": 700,
+          "style": "normal"
+        }
+      ],
+      "fallback": ["Courier New", "monospace"],
+      "display": "swap",
+      "preload": false
+    }
+  ],
+  "icons": [
+    {
+      "id": "icon_user",
+      "name": "User Icon",
+      "path": "/icons/user.svg",
+      "format": "svg",
+      "size": 24,
+      "category": "ui",
+      "viewBox": "0 0 24 24",
+      "fill": "currentColor"
+    },
+    {
+      "id": "icon_settings",
+      "name": "Settings Icon",
+      "path": "/icons/settings.svg",
+      "format": "svg",
+      "size": 24,
+      "category": "ui",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "favicon",
+      "name": "Favicon",
+      "path": "/favicon.ico",
+      "format": "ico",
+      "sizes": [
+        {
+          "size": 16,
+          "path": "/favicon-16x16.png"
+        },
+        {
+          "size": 32,
+          "path": "/favicon-32x32.png"
+        },
+        {
+          "size": 192,
+          "path": "/android-chrome-192x192.png"
+        },
+        {
+          "size": 512,
+          "path": "/android-chrome-512x512.png"
+        }
+      ],
+      "category": "brand"
+    }
+  ],
+  "files": [
+    {
+      "id": "user_guide",
+      "name": "User Guide",
+      "path": "/docs/user-guide.pdf",
+      "mimeType": "application/pdf",
+      "size": 1048576,
+      "description": "Complete user guide and documentation",
+      "downloadable": true,
+      "version": "1.0.0",
+      "checksum": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "terms_of_service",
+      "name": "Terms of Service",
+      "path": "/legal/terms.pdf",
+      "mimeType": "application/pdf",
+      "size": 524288,
+      "downloadable": true,
+      "version": "2.0.0"
+    }
+  ],
+  "optimization": {
+    "images": {
+      "compress": true,
+      "quality": 85,
+      "formats": ["webp", "avif", "original"],
+      "responsive": true,
+      "breakpoints": [640, 768, 1024, 1280, 1920]
+    },
+    "fonts": {
+      "subset": true,
+      "formats": ["woff2", "woff"]
+    }
+  },
+  "caching": {
+    "strategy": "cache-first",
+    "maxAge": 31536000,
+    "immutable": true,
+    "versioning": "hash"
+  }
+}

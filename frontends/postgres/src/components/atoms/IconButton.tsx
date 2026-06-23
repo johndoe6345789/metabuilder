@@ -1,7 +1,7 @@
 'use client';
 
-import { IconButton as MuiIconButton, IconButtonProps as MuiIconButtonProps } from '@mui/material';
-import * as Icons from '@mui/icons-material';
+import { IconButton as MuiIconButton, type IconButtonProps as MuiIconButtonProps } from '@metabuilder/components/fakemui';
+import * as Icons from '@metabuilder/components/fakemui';
 
 export type IconButtonProps = Omit<MuiIconButtonProps, 'children'> & {
   icon: keyof typeof Icons;

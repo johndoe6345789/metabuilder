@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Paper, Typography } from '@mui/material';
+import { Box, Paper, Typography } from '@metabuilder/components/fakemui';
 import type { IndexType } from '@/utils/featureConfig';
 import IndexCreateForm from './IndexCreateForm';
 

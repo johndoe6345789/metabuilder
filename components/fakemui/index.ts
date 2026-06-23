@@ -53,6 +53,7 @@ export {
   ColorPicker,
   FileUpload,
 } from './inputs'
+export { InputAdornment } from './inputs/InputAdornment'
 
 export type { RadioProps, RadioColor, RadioSize } from './inputs'
 export type { SelectChangeEvent } from './inputs/Select'
@@ -246,6 +247,7 @@ export {
   Iframe,
   classNames,
 } from './utils'
+export { useTheme } from './utils/useTheme'
 
 // =============================================================================
 // ATOM COMPONENTS

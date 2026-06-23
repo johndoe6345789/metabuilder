@@ -1,6 +1,6 @@
 'use client';
 
-import { Paper, Typography } from '@mui/material';
+import { Paper, Typography } from '@metabuilder/components/fakemui';
 import { getFeatureById, getIndexTypes } from '@/utils/featureConfig';
 import ConfirmDialog from './ConfirmDialog';
 import IndexCreateDialog from './IndexCreateDialog';

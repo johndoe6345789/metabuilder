@@ -1,0 +1,224 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Stats Grid Components",
+  "description": "Configurable statistics grid display for dashboards and monitoring",
+  "stories": [
+    {
+      "name": "StatsGrid_Default",
+      "render": "stats_grid",
+      "description": "Default stats grid with multiple stat cards",
+      "args": {
+        "title": "System Overview",
+        "description": "Real-time system metrics",
+        "stats": [
+          {
+            "label": "Total Users",
+            "value": "12,345",
+            "icon": "People",
+            "color": "primary",
+            "trend": {
+              "direction": "up",
+              "percentage": 12.5,
+              "period": "last month"
+            }
+          },
+          {
+            "label": "Active Sessions",
+            "value": "1,234",
+            "icon": "DeviceHub",
+            "color": "success",
+            "trend": {
+              "direction": "up",
+              "percentage": 8.3,
+              "period": "last week"
+            }
+          },
+          {
+            "label": "Error Rate",
+            "value": "0.23%",
+            "icon": "Warning",
+            "color": "error",
+            "trend": {
+              "direction": "down",
+              "percentage": 15.2,
+              "period": "last day"
+            }
+          },
+          {
+            "label": "Response Time",
+            "value": "142ms",
+            "icon": "Speed",
+            "color": "info",
+            "trend": {
+              "direction": "flat",
+              "percentage": 0,
+              "period": "last hour"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "StatCard_WithTrend",
+      "render": "stat_card",
+      "description": "Single stat card with trend indicator",
+      "args": {
+        "label": "Total Revenue",
+        "value": "$45,678",
+        "icon": "AttachMoney",
+        "color": "success",
+        "trend": {
+          "direction": "up",
+          "percentage": 23.5,
+          "value": "$8,742",
+          "period": "last month"
+        }
+      }
+    },
+    {
+      "name": "StatCard_WithTarget",
+      "render": "stat_card",
+      "description": "Stat card with target progress",
+      "args": {
+        "label": "Monthly Goal",
+        "value": "847",
+        "icon": "Flag",
+        "color": "primary",
+        "target": {
+          "value": "1,000",
+          "progress": 84.7
+        },
+        "trend": {
+          "direction": "up",
+          "percentage": 15.2,
+          "period": "last month"
+        }
+      }
+    },
+    {
+      "name": "StatCard_Small",
+      "render": "stat_card_small",
+      "description": "Compact stat card for dense displays",
+      "args": {
+        "label": "CPU Usage",
+        "value": "67%",
+        "icon": "Memory",
+        "color": "warning",
+        "trend": {
+          "direction": "up",
+          "percentage": 5.3
+        }
+      }
+    },
+    {
+      "name": "StatCard_Large",
+      "render": "stat_card_large",
+      "description": "Large featured stat card",
+      "args": {
+        "label": "Total Sales",
+        "value": "$1.2M",
+        "icon": "TrendingUp",
+        "color": "success",
+        "showSparkline": true,
+        "trend": {
+          "direction": "up",
+          "percentage": 32.8,
+          "period": "last quarter"
+        },
+        "target": {
+          "value": "$1.5M"
+        },
+        "range": {
+          "start": "Jan 1",
+          "end": "Dec 31"
+        }
+      }
+    },
+    {
+      "name": "StatsGrid_Empty",
+      "render": "stats_grid",
+      "description": "Stats grid with no data",
+      "args": {
+        "title": "No Data Available",
+        "stats": [],
+        "emptyMessage": "No statistics to display. Check back later."
+      }
+    }
+  ],
+  "renders": {
+    "stats_grid": {
+      "description": "Full stats grid with multiple cards",
+      "featured": true
+    },
+    "stat_card": {
+      "description": "Standard stat card component",
+      "featured": true
+    },
+    "stat_card_small": {
+      "description": "Compact stat card variant"
+    },
+    "stat_card_large": {
+      "description": "Large featured stat card"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "demo-user",
+      "username": "demo_user",
+      "level": 2,
+      "email": "demo@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Standard User",
+      "description": "Can view stats grids",
+      "context": {
+        "user": {
+          "username": "user",
+          "level": 2
+        }
+      }
+    },
+    {
+      "name": "Admin",
+      "description": "Can view and configure stats grids",
+      "context": {
+        "user": {
+          "username": "admin",
+          "level": 3
+        }
+      }
+    },
+    {
+      "name": "God",
+      "description": "Full access to stats grid management",
+      "context": {
+        "user": {
+          "username": "god",
+          "level": 4
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["stats_grid", "stat_card", "stat_card_small", "stat_card_large"],
+    "ignoredScripts": ["tests"]
+  },
+  "parameters": {
+    "layout": "padded",
+    "backgrounds": {
+      "default": "dark",
+      "values": [
+        { "name": "light", "value": "#f5f5f5" },
+        { "name": "dark", "value": "#1a1a1a" },
+        { "name": "dashboard", "value": "#0f172a" }
+      ]
+    }
+  }
+}

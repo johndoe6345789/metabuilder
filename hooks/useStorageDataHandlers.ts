@@ -19,8 +19,8 @@ const noopToast: ToastNotifier = {
 }
 
 type DataHandlers = {
-  exportData: () => Promise<unknown>
-  importData: (data: unknown) => Promise<void>
+  exportData: () => Promise<Record<string, unknown>>
+  importData: (data: Record<string, unknown>) => Promise<void>
   exportFilename: () => string
   importAccept: string
   /** Optional toast notifier - if not provided, notifications are silently ignored */
@@ -54,8 +54,8 @@ export const useStorageDataHandlers = ({
     createJsonFileInput(importAccept, async (file) => {
       setIsImporting(true)
       try {
-        const text = await file.text()
-        const data = JSON.parse(text)
+      const text = await file.text()
+        const data = JSON.parse(text) as Record<string, unknown>
         await importData(data)
         toast.success(storageSettingsCopy.toasts.success.import)
       } catch (error) {

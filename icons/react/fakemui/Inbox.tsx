@@ -1,5 +1,5 @@
 import React from 'react'
-import type { IconProps } from './types'
+import type { IconProps, IconWeight } from './types'
 
 export const Inbox: React.FC<IconProps> = ({
   size = 24,
@@ -8,11 +8,13 @@ export const Inbox: React.FC<IconProps> = ({
   className = '',
   ...props
 }) => {
-  const strokeWidths = {
+  const strokeWidths: Record<IconWeight, number> = {
     thin: 1,
     light: 1.5,
     regular: 2,
     bold: 2.5,
+    duotone: 2,
+    fill: 2,
   }
 
   return (

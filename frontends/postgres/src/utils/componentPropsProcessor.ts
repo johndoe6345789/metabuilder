@@ -7,7 +7,7 @@ import React from 'react';
 import type { RenderContext } from './componentTreeHelpers';
 import { interpolateValue } from './componentTreeHelpers';
 import { iconOverrides, resolveIcon } from './componentRegistry';
-import * as Icons from '@mui/icons-material';
+import * as Icons from '@metabuilder/components/fakemui';
 
 const EVENT_PROPS = new Set([
   'onClick',

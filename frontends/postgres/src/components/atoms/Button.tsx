@@ -1,7 +1,7 @@
 'use client';
 
-import { Button as MuiButton, ButtonProps as MuiButtonProps } from '@mui/material';
-import * as Icons from '@mui/icons-material';
+import { Button as MuiButton, type ButtonProps as MuiButtonProps } from '@metabuilder/components/fakemui';
+import * as Icons from '@metabuilder/components/fakemui';
 
 export type ButtonProps = Omit<MuiButtonProps, 'startIcon' | 'endIcon'> & {
   text?: string;

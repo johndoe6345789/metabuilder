@@ -1,0 +1,6 @@
+{
+  "entity": "page-config",
+  "packageId": "database_manager",
+  "description": "Page routes for database_manager",
+  "version": "1.0.0"
+}

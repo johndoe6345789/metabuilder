@@ -1,0 +1,62 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "route_manager",
+  "description": "Route manager access permissions",
+  "permissions": [
+    {
+      "id": "routes.view",
+      "name": "View Routes",
+      "description": "View configured routes",
+      "resource": "routes",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "routes.create",
+      "name": "Create Routes",
+      "description": "Create new route configurations",
+      "resource": "routes",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "routes.update",
+      "name": "Update Routes",
+      "description": "Update existing routes",
+      "resource": "routes",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "routes.delete",
+      "name": "Delete Routes",
+      "description": "Delete route configurations",
+      "resource": "routes",
+      "action": "delete",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "routes.toggle",
+      "name": "Toggle Routes",
+      "description": "Enable or disable routes",
+      "resource": "routes",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 4
+    }
+  ],
+  "resources": [
+    {
+      "id": "routes",
+      "name": "Routes",
+      "type": "system",
+      "description": "Page route configurations",
+      "actions": ["read", "create", "update", "delete", "manage"]
+    }
+  ]
+}

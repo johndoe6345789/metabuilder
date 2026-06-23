@@ -105,28 +105,27 @@ Scripts are defined in JSON format and executed in a controlled environment with
 
 - ❌ **NEVER import from `@radix-ui/*`** - These dependencies have been removed
 - ❌ **NEVER use Tailwind utility classes** in `className` props
-- ✅ **ALWAYS use Material-UI** (`@mui/material`) for UI components
-- ✅ **Use MUI's `sx` prop** for inline styles with theme access
-- ✅ **Create `.module.scss` files** for component-specific custom styles
-- ✅ **Use `@mui/icons-material`** for icons, not lucide-react or heroicons
+- ✅ **ALWAYS use FakeMUI** (`@metabuilder/fakemui`) for UI components
+- ✅ **Use SCSS modules** for component-specific custom styles
+- ✅ **Use Material Symbols / FakeMUI icons** instead of the legacy MUI icon package
 
 ```tsx
 // ❌ Wrong: Using Radix UI or Tailwind
 import { Dialog } from '@radix-ui/react-dialog'
 <button className="bg-blue-500 text-white px-4 py-2">Click</button>
 
-// ✅ Right: Using Material-UI
-import { Dialog, Button } from '@mui/material'
+// ✅ Right: Using FakeMUI
+import { Dialog, Button } from '@metabuilder/components/fakemui'
 <Button variant="contained" color="primary">Click</Button>
-<Box sx={{ display: 'flex', gap: 2, p: 3 }}>Content</Box>
+<Box className={styles.container}>Content</Box>
 ```
 
 **Component Mapping:**
-- Radix Dialog → MUI Dialog
-- Radix Select → MUI Select
-- Radix Checkbox → MUI Checkbox
-- Radix Switch → MUI Switch
-- Tailwind classes → MUI `sx` prop or SCSS modules
+- Radix Dialog → FakeMUI Dialog
+- Radix Select → FakeMUI Select
+- Radix Checkbox → FakeMUI Checkbox
+- Radix Switch → FakeMUI Switch
+- Tailwind classes → SCSS modules or fakeMUI props
 
 **See:** `UI_STANDARDS.md` and `docs/UI_MIGRATION.md` for complete reference
 

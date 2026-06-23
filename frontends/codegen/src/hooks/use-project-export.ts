@@ -16,7 +16,7 @@ import {
 import {
   generateNextJSProject,
   generatePrismaSchema,
-  generateMUITheme,
+  generateTheme,
   generatePlaywrightTests,
   generateStorybookStories,
   generateUnitTests,
@@ -42,7 +42,7 @@ export function useProjectExport(
     const projectFiles = generateNextJSProject(nextjsConfig.appName, models, components, theme)
     
     const prismaSchema = generatePrismaSchema(models)
-    const themeCode = generateMUITheme(theme)
+    const themeCode = generateTheme(theme)
     const playwrightTestCode = generatePlaywrightTests(playwrightTests)
     const storybookFiles = generateStorybookStories(storybookStories)
     const unitTestFiles = generateUnitTests(unitTests)

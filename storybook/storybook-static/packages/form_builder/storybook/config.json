@@ -1,0 +1,61 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": false,
+  "title": "Form Builder",
+  "description": "Reusable form fields with built-in validation",
+  "stories": [
+    {
+      "name": "FormFields",
+      "render": "fields",
+      "description": "Various form field types with validation",
+      "type": "component"
+    },
+    {
+      "name": "ContactForm",
+      "render": "contact_form",
+      "description": "Complete contact form example",
+      "type": "component"
+    },
+    {
+      "name": "EmailField",
+      "render": "fields",
+      "description": "Email input with validation"
+    },
+    {
+      "name": "PasswordField",
+      "render": "fields",
+      "description": "Password field with show/hide toggle"
+    },
+    {
+      "name": "SearchBar",
+      "render": "fields",
+      "description": "Search input with clear button"
+    }
+  ],
+  "renders": {
+    "fields": {
+      "description": "Form field components showcase"
+    },
+    "contact_form": {
+      "description": "Contact form with validation",
+      "featured": true
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "demo-user",
+      "username": "demo_user",
+      "level": 1
+    }
+  },
+  "scripts": {
+    "renderFunctions": ["fields", "validate", "contact_form"],
+    "ignoredScripts": ["tests"]
+  },
+  "parameters": {
+    "layout": "padded",
+    "backgrounds": {
+      "default": "light"
+    }
+  }
+}

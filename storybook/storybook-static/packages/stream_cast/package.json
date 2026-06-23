@@ -1,0 +1,90 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "stream_cast",
+  "name": "Stream Cast",
+  "version": "1.0.0",
+  "description": "Live streaming control room with schedules, scenes, and audience pulse",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "media",
+  "minLevel": 2,
+  "primary": true,
+  "icon": "static_content/icon.svg",
+  "dependencies": {
+    "ui_permissions": "*",
+    "dashboard": "*"
+  },
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "ControlRoom",
+      "SceneManager",
+      "StreamSchedule",
+      "StreamPlayer",
+      "AudiencePulse"
+    ],
+    "scripts": [
+      "control_room",
+      "scene_manager",
+      "stream_schedule"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "schema": {
+    "entities": [
+      "StreamChannel",
+      "StreamSchedule",
+      "StreamScene"
+    ],
+    "path": "schema/entities.yaml"
+  },
+  "files": {
+    "directories": [
+      "components",
+      "page-config",
+      "permissions",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests",
+      "workflow"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "pages": [
+        "page-config/page-config.json"
+      ],
+      "workflows": [
+        "workflow/scene-transition.jsonscript",
+        "workflow/stream-subscribe.jsonscript",
+        "workflow/stream-unsubscribe.jsonscript",
+        "workflow/viewer-count-update.jsonscript"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/stories.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "static_content/icon.svg"
+      ]
+    }
+  }
+}

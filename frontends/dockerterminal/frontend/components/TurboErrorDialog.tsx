@@ -7,7 +7,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
-} from '@mui/material';
+} from '@metabuilder/components/fakemui';
 
 interface Props {
   open: boolean;

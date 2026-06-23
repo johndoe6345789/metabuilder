@@ -1,8 +1,3 @@
-import React from 'react'
-import { Icon, IconProps } from './Icon'
+import { createMaterialIcon } from './createMaterialIcon'
 
-export const NavigateBefore = (props: IconProps) => (
-  <Icon {...props}>
-    <polyline points="160 48 80 128 160 208" />
-  </Icon>
-)
+export const NavigateBefore = createMaterialIcon('navigate_before')

@@ -265,7 +265,7 @@ Pre-commit: `npm run build && npm run typecheck && npm run lint && npm run test:
 ### UI/Styling
 - **workflowui + new projects**: FakeMUI only (`@metabuilder/fakemui`)
 - **Legacy projects**: Radix UI + Tailwind acceptable
-- **Never**: Direct @mui/material imports in workflowui
+- **Never**: Direct MUI imports in workflowui or new Fakemui-based apps
 
 ### WorkflowUI Components
 - Atomic components <100 LOC, SCSS modules, no sx prop
@@ -295,7 +295,7 @@ Multi-version peer deps. React 18/19, TypeScript 5.9.3, Next.js 14-16, @reduxjs/
 - TypeScript: `@metabuilder/workflow: ^3.0.0`
 
 ### Known Issues
-- postgres dashboard uses @mui/material directly (should migrate to FakeMUI)
+- postgres dashboard should stay on FakeMUI-only components
 - 7 moderate npm vulnerabilities (lodash in @prisma/dev, LOW production risk)
 - eslint/vite version conflicts in some workspaces (partially fixed)
 

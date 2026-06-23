@@ -1,0 +1,12 @@
+{
+  "packageId": "data_table",
+  "name": "Data Table",
+  "version": "0.1.0",
+  "description": "Package data_table",
+  "author": "MetaBuilder Team",
+  "category": "ui",
+  "exports": {
+    "components": []
+  },
+  "dependencies": []
+}

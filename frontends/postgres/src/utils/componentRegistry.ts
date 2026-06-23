@@ -47,7 +47,7 @@ import {
   Toolbar,
   Tooltip,
   Typography,
-} from '@mui/material';
+} from '@metabuilder/components/fakemui';
 import React from 'react';
 
 export const componentRegistry: Record<

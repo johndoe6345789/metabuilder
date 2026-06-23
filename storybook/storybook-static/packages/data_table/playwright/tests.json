@@ -1,0 +1,200 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "pagination",
+  "version": "1.0.0",
+  "description": "Pagination components E2E tests - tests on workflows page which has paginated lists",
+  "tests": [
+    {
+      "name": "should render workflows list page",
+      "tags": [
+        "@pagination",
+        "@ui"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should navigate between pages",
+      "tags": [
+        "@pagination",
+        "@interaction"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should show workflow filters",
+      "tags": [
+        "@pagination",
+        "@state"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display search on workflows page",
+      "tags": [
+        "@pagination",
+        "@search"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should show items on workflows list",
+      "tags": [
+        "@pagination",
+        "@selector"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display page content",
+      "tags": [
+        "@pagination",
+        "@info"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display no items found when no data",
+      "tags": [
+        "@pagination",
+        "@empty-state"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should navigate to favorites workflow page",
+      "tags": [
+        "@pagination",
+        "@navigation"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "workflows/favorites"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 'use client';
 
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from '@metabuilder/components/fakemui/Delete';
 import {
   Button,
   Paper,
@@ -10,7 +10,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from '@mui/material';
+} from '@metabuilder/components/fakemui';
 
 type Constraint = {
   constraint_name: string;

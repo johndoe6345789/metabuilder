@@ -1,0 +1,70 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "workflow_editor",
+  "name": "Workflow Editor",
+  "version": "1.0.0",
+  "description": "Workflow editor and execution monitoring components",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "editors",
+  "icon": "static_content/icon.svg",
+  "minLevel": 5,
+  "primary": true,
+  "dependencies": {},
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "WorkflowEditor",
+      "WorkflowRunCard",
+      "WorkflowRunStatus"
+    ],
+    "scripts": [
+      "editor",
+      "status",
+      "run"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "entities",
+      "jobs",
+      "permissions",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/config.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "entities/schema.json",
+        "jobs/tasks.json",
+        "static_content/icon.svg"
+      ]
+    }
+  }
+}

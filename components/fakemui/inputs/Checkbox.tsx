@@ -7,7 +7,7 @@ import styles from '../../../scss/atoms/mat-checkbox.module.scss'
 const s = (key: string): string => styles[key] || key
 
 export type CheckboxColor = 'primary' | 'secondary' | 'error' | 'success' | 'warning'
-export type CheckboxSize = 'sm' | 'md' | 'lg'
+export type CheckboxSize = 'small' | 'medium' | 'large' | 'sm' | 'md' | 'lg'
 
 export interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'size'> {
   label?: React.ReactNode
@@ -56,8 +56,8 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       s('matCheckbox'),
       {
         [s('mat-mdc-checkbox-disabled')]: disabled,
-        [s('sizeSm')]: size === 'sm',
-        [s('sizeLg')]: size === 'lg',
+        [s('sizeSm')]: size === 'sm' || size === 'small',
+        [s('sizeLg')]: size === 'lg' || size === 'large',
         [s('colorSecondary')]: color === 'secondary',
         [s('colorError')]: color === 'error' || error,
         [s('colorSuccess')]: color === 'success',

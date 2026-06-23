@@ -4,21 +4,21 @@
       "id": "file-blog-1",
       "name": "page.tsx",
       "path": "/src/app/page.tsx",
-      "content": "'use client'\n\nimport { BlogGrid } from '@/components/BlogGrid'\nimport { FeaturedPost } from '@/components/FeaturedPost'\nimport { Container, Box } from '@mui/material'\n\nexport default function Home() {\n  return (\n    <Box>\n      <Container maxWidth=\"lg\" sx={{ py: 6 }}>\n        <FeaturedPost />\n        <BlogGrid />\n      </Container>\n    </Box>\n  )\n}",
+      "content": "'use client'\n\nimport { BlogGrid } from '@/components/BlogGrid'\nimport { FeaturedPost } from '@/components/FeaturedPost'\nimport { Container, Box } from '@metabuilder/fakemui'\n\nexport default function Home() {\n  return (\n    <Box>\n      <Container maxWidth=\"lg\" sx={{ py: 6 }}>\n        <FeaturedPost />\n        <BlogGrid />\n      </Container>\n    </Box>\n  )\n}",
       "language": "typescript"
     },
     {
       "id": "file-blog-2",
       "name": "post.tsx",
       "path": "/src/app/post/[slug]/page.tsx",
-      "content": "'use client'\n\nimport { PostContent } from '@/components/PostContent'\nimport { PostMeta } from '@/components/PostMeta'\nimport { RelatedPosts } from '@/components/RelatedPosts'\nimport { Container, Box } from '@mui/material'\n\nexport default function PostPage({ params }: { params: { slug: string } }) {\n  return (\n    <Container maxWidth=\"md\" sx={{ py: 6 }}>\n      <PostMeta />\n      <PostContent />\n      <Box sx={{ mt: 8 }}>\n        <RelatedPosts />\n      </Box>\n    </Container>\n  )\n}",
+      "content": "'use client'\n\nimport { PostContent } from '@/components/PostContent'\nimport { PostMeta } from '@/components/PostMeta'\nimport { RelatedPosts } from '@/components/RelatedPosts'\nimport { Container, Box } from '@metabuilder/fakemui'\n\nexport default function PostPage({ params }: { params: { slug: string } }) {\n  return (\n    <Container maxWidth=\"md\" sx={{ py: 6 }}>\n      <PostMeta />\n      <PostContent />\n      <Box sx={{ mt: 8 }}>\n        <RelatedPosts />\n      </Box>\n    </Container>\n  )\n}",
       "language": "typescript"
     },
     {
       "id": "file-blog-3",
       "name": "author.tsx",
       "path": "/src/app/author/[id]/page.tsx",
-      "content": "'use client'\n\nimport { AuthorProfile } from '@/components/AuthorProfile'\nimport { AuthorPosts } from '@/components/AuthorPosts'\nimport { Container } from '@mui/material'\n\nexport default function AuthorPage({ params }: { params: { id: string } }) {\n  return (\n    <Container maxWidth=\"lg\" sx={{ py: 6 }}>\n      <AuthorProfile authorId={params.id} />\n      <AuthorPosts authorId={params.id} />\n    </Container>\n  )\n}",
+      "content": "'use client'\n\nimport { AuthorProfile } from '@/components/AuthorProfile'\nimport { AuthorPosts } from '@/components/AuthorPosts'\nimport { Container } from '@metabuilder/fakemui'\n\nexport default function AuthorPage({ params }: { params: { id: string } }) {\n  return (\n    <Container maxWidth=\"lg\" sx={{ py: 6 }}>\n      <AuthorProfile authorId={params.id} />\n      <AuthorPosts authorId={params.id} />\n    </Container>\n  )\n}",
       "language": "typescript"
     }
   ],

@@ -38,6 +38,10 @@
       "import": "./fakemui/index.ts",
       "types": "./fakemui/index.ts"
     },
+    "./fakemui/*": {
+      "import": "./fakemui/*",
+      "types": "./fakemui/*"
+    },
     "./loading": {
       "import": "./vanilla/loading/index.tsx",
       "types": "./vanilla/loading/index.tsx"

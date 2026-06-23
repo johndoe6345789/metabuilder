@@ -1,16 +1,16 @@
 'use client';
 
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import AddIcon from '@metabuilder/components/fakemui/Add';
+import DeleteIcon from '@metabuilder/components/fakemui/Delete';
+import EditIcon from '@metabuilder/components/fakemui/Edit';
+import NavigateBeforeIcon from '@metabuilder/components/fakemui/NavigateBefore';
+import NavigateNextIcon from '@metabuilder/components/fakemui/NavigateNext';
 import {
   Alert, Box, Button, CircularProgress,
   Dialog, DialogActions, DialogContent, DialogTitle,
   IconButton, Paper, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, Tooltip, Typography,
-} from '@mui/material';
+} from '@metabuilder/components/fakemui';
 import { BASE_PATH } from '@/lib/app-config';
 import RowFormDialog from './RowFormDialog';
 import { useTableDataView } from './hooks/useTableDataView';

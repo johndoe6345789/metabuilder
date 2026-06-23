@@ -1,102 +1,54 @@
 import { ThemeConfig } from '@/types/project'
 
-export function generateMUITheme(theme: ThemeConfig): string {
-  if (!theme.variants || theme.variants.length === 0) {
-    return `import { createTheme } from '@mui/material/styles';
-
-export const theme = createTheme({
-  palette: {
-    mode: 'light',
-  },
-});`
-  }
-
+export function generateTheme(theme: ThemeConfig): string {
   const lightVariant = theme.variants.find((v) => v.id === 'light') || theme.variants[0]
   const darkVariant = theme.variants.find((v) => v.id === 'dark')
 
-  let themeCode = `import { createTheme } from '@mui/material/styles';
-
-export const lightTheme = createTheme({
-  palette: {
-    mode: 'light',
-    primary: {
-      main: '${lightVariant.colors.primaryColor}',
-    },
-    secondary: {
-      main: '${lightVariant.colors.secondaryColor}',
-    },
-    error: {
-      main: '${lightVariant.colors.errorColor}',
-    },
-    warning: {
-      main: '${lightVariant.colors.warningColor}',
-    },
-    success: {
-      main: '${lightVariant.colors.successColor}',
-    },
-    background: {
-      default: '${lightVariant.colors.background}',
-      paper: '${lightVariant.colors.surface}',
-    },
-    text: {
-      primary: '${lightVariant.colors.text}',
-      secondary: '${lightVariant.colors.textSecondary}',
-    },
-  },
-  typography: {
-    fontFamily: '${theme.fontFamily}',
-    fontSize: ${theme.fontSize.medium},
-  },
-  spacing: ${theme.spacing},
-  shape: {
-    borderRadius: ${theme.borderRadius},
-  },
-});
-`
-
-  if (darkVariant) {
-    themeCode += `
-export const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: {
-      main: '${darkVariant.colors.primaryColor}',
-    },
-    secondary: {
-      main: '${darkVariant.colors.secondaryColor}',
-    },
-    error: {
-      main: '${darkVariant.colors.errorColor}',
-    },
-    warning: {
-      main: '${darkVariant.colors.warningColor}',
-    },
-    success: {
-      main: '${darkVariant.colors.successColor}',
-    },
-    background: {
-      default: '${darkVariant.colors.background}',
-      paper: '${darkVariant.colors.surface}',
-    },
-    text: {
-      primary: '${darkVariant.colors.text}',
-      secondary: '${darkVariant.colors.textSecondary}',
-    },
-  },
-  typography: {
-    fontFamily: '${theme.fontFamily}',
-    fontSize: ${theme.fontSize.medium},
-  },
-  spacing: ${theme.spacing},
-  shape: {
-    borderRadius: ${theme.borderRadius},
-  },
-});
-
-export const theme = lightTheme;`
-  } else {
-    themeCode += `\nexport const theme = lightTheme;`
+  const baseTheme = {
+    name: 'm3-scss',
+    fontFamily: theme.fontFamily,
+    fontSize: theme.fontSize.medium,
+    spacing: theme.spacing,
+    borderRadius: theme.borderRadius,
   }
 
-  return themeCode
+  if (!lightVariant) {
+    return `export const theme = ${JSON.stringify(baseTheme, null, 2)} as const`
+  }
+
+  const themeCode = {
+    ...baseTheme,
+    light: {
+      primary: lightVariant.colors.primaryColor,
+      secondary: lightVariant.colors.secondaryColor,
+      error: lightVariant.colors.errorColor,
+      warning: lightVariant.colors.warningColor,
+      success: lightVariant.colors.successColor,
+      background: lightVariant.colors.background,
+      surface: lightVariant.colors.surface,
+      text: lightVariant.colors.text,
+      textSecondary: lightVariant.colors.textSecondary,
+      border: lightVariant.colors.border,
+    },
+    ...(darkVariant
+      ? {
+          dark: {
+            primary: darkVariant.colors.primaryColor,
+            secondary: darkVariant.colors.secondaryColor,
+            error: darkVariant.colors.errorColor,
+            warning: darkVariant.colors.warningColor,
+            success: darkVariant.colors.successColor,
+            background: darkVariant.colors.background,
+            surface: darkVariant.colors.surface,
+            text: darkVariant.colors.text,
+            textSecondary: darkVariant.colors.textSecondary,
+            border: darkVariant.colors.border,
+          },
+        }
+      : {}),
+  }
+
+  return `export const theme = ${JSON.stringify(themeCode, null, 2)} as const`
 }
+
+export const generateMUITheme = generateTheme

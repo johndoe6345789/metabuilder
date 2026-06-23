@@ -1,11 +1,9 @@
 'use client';
 
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {
   Box, Container, Paper, Typography,
-} from '@mui/material';
-import { ThemeProvider } from '@mui/material/styles';
-import { theme } from '@/utils/theme';
+} from '@metabuilder/components/fakemui';
+import LockOutlined from '@metabuilder/components/fakemui/LockOutlined';
 import LoginForm from './LoginForm';
 import TurboErrorDialog from './TurboErrorDialog';
 import { useAdminLogin } from './hooks/useAdminLogin';
@@ -18,7 +16,7 @@ export default function AdminLoginPage() {
   } = useAdminLogin();
 
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <TurboErrorDialog
         open={!!turboError}
         message={turboError ?? ''}
@@ -47,7 +45,7 @@ export default function AdminLoginPage() {
                 mb: 2,
               }}
             >
-              <LockOutlinedIcon
+              <LockOutlined
                 sx={{ color: 'white', fontSize: 32 }}
               />
             </Box>
@@ -78,6 +76,6 @@ export default function AdminLoginPage() {
           </Paper>
         </Container>
       </Box>
-    </ThemeProvider>
+    </>
   );
 }

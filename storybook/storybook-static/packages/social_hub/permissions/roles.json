@@ -1,0 +1,69 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "social_hub",
+  "description": "Social hub access and moderation permissions",
+  "permissions": [
+    {
+      "id": "social.feed.view",
+      "name": "View Social Feed",
+      "description": "View social feed",
+      "resource": "social_feed",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "social.post.create",
+      "name": "Create Posts",
+      "description": "Create social posts",
+      "resource": "social_post",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "social.post.edit",
+      "name": "Edit Posts",
+      "description": "Edit own posts",
+      "resource": "social_post",
+      "action": "update",
+      "scope": "own",
+      "minLevel": 2
+    },
+    {
+      "id": "social.post.delete",
+      "name": "Delete Posts",
+      "description": "Delete own posts",
+      "resource": "social_post",
+      "action": "delete",
+      "scope": "own",
+      "minLevel": 2
+    },
+    {
+      "id": "social.moderate",
+      "name": "Moderate Content",
+      "description": "Moderate social content",
+      "resource": "social_feed",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 3
+    }
+  ],
+  "resources": [
+    {
+      "id": "social_feed",
+      "name": "Social Feed",
+      "type": "component",
+      "description": "Social feed resources",
+      "actions": ["read", "manage"]
+    },
+    {
+      "id": "social_post",
+      "name": "Social Post",
+      "type": "entity",
+      "description": "Individual social post resources",
+      "actions": ["create", "read", "update", "delete"]
+    }
+  ]
+}

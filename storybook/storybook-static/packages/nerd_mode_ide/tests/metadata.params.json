@@ -1,0 +1,22 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/test-parameters.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "nerd_mode_ide",
+  "description": "Parameterized test data for nerd mode IDE tests",
+
+  "parameters": {
+    "sampleFiles": [
+      { "path": "/index.ts", "language": "typescript" },
+      { "path": "/styles.css", "language": "css" },
+      { "path": "/data.json", "language": "json" },
+      { "path": "/script.script", "language": "script" },
+      { "path": "/README.md", "language": "markdown" }
+    ],
+    "gitOperations": [
+      { "operation": "commit", "requiresMessage": true },
+      { "operation": "push", "requiresRemote": true },
+      { "operation": "pull", "requiresRemote": true }
+    ],
+    "consoleLogTypes": ["info", "warn", "error", "debug"]
+  }
+}

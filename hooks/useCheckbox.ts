@@ -77,8 +77,8 @@ interface UseCheckboxSingleHandlers {
 interface UseCheckboxMultiHandlers<T extends Record<string, boolean>> {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void
   setValues: (values: T) => void
-  isChecked: (field: keyof T) => boolean
-  toggle: (field: keyof T) => void
+  isChecked: (field: string) => boolean
+  toggle: (field: string) => void
   toggleAll: (checked: boolean) => void
   uncheckAll: () => void
   checkAll: () => void
@@ -296,7 +296,7 @@ export function useCheckbox<T extends boolean | Record<string, boolean>>(
     /**
      * Check if a specific checkbox is checked
      */
-    const isChecked = useCallback((field: keyof typeof values): boolean => {
+    const isChecked = useCallback((field: string): boolean => {
       return values[field as string] ?? false
     }, [values])
 
@@ -304,7 +304,7 @@ export function useCheckbox<T extends boolean | Record<string, boolean>>(
      * Toggle a specific checkbox
      */
     const toggle = useCallback(
-      (field: keyof typeof values) => {
+      (field: string) => {
         const newValues = {
           ...values,
           [field]: !values[field as string],

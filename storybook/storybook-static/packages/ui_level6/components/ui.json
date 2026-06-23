@@ -1,0 +1,816 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "ui_level6",
+  "description": "Supergod panel UI components for tenant management and system administration",
+  "components": [
+    {
+      "id": "supergod_sidebar",
+      "name": "SupergodSidebar",
+      "description": "Sidebar navigation for Supergod panel",
+      "props": [
+        {
+          "name": "activeSection",
+          "type": "string",
+          "required": false,
+          "default": "tenants",
+          "description": "Currently active navigation section"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "supergod-sidebar",
+          "sx": {
+            "width": 280,
+            "backgroundColor": "background.paper",
+            "borderRight": "1px solid",
+            "borderColor": "divider"
+          },
+          "children": [
+            {
+              "type": "List",
+              "children": [
+                {
+                  "type": "ListItem",
+                  "button": true,
+                  "selected": "{{activeSection === 'tenants'}}",
+                  "children": [
+                    {
+                      "type": "ListItemIcon",
+                      "children": [{ "type": "Icon", "name": "Business" }]
+                    },
+                    {
+                      "type": "ListItemText",
+                      "primary": "Tenant Management"
+                    }
+                  ]
+                },
+                {
+                  "type": "ListItem",
+                  "button": true,
+                  "selected": "{{activeSection === 'transfer'}}",
+                  "children": [
+                    {
+                      "type": "ListItemIcon",
+                      "children": [{ "type": "Icon", "name": "SwapHoriz" }]
+                    },
+                    {
+                      "type": "ListItemText",
+                      "primary": "Power Transfer"
+                    }
+                  ]
+                },
+                {
+                  "type": "ListItem",
+                  "button": true,
+                  "selected": "{{activeSection === 'system'}}",
+                  "children": [
+                    {
+                      "type": "ListItemIcon",
+                      "children": [{ "type": "Icon", "name": "Settings" }]
+                    },
+                    {
+                      "type": "ListItemText",
+                      "primary": "System Admin"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "supergod_toolbar",
+      "name": "SupergodToolbar",
+      "description": "Top toolbar for Supergod panel",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "default": "Supergod Panel",
+          "description": "Toolbar title"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "AppBar",
+          "position": "static",
+          "color": "error",
+          "children": [
+            {
+              "type": "Toolbar",
+              "children": [
+                {
+                  "type": "Icon",
+                  "name": "Shield",
+                  "sx": { "mr": 2 }
+                },
+                {
+                  "type": "Typography",
+                  "variant": "h6",
+                  "children": "{{title}}"
+                },
+                {
+                  "type": "Box",
+                  "sx": { "flexGrow": 1 }
+                },
+                {
+                  "type": "Chip",
+                  "label": "Level 6",
+                  "color": "warning",
+                  "size": "small"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "supergod_content",
+      "name": "SupergodContent",
+      "description": "Main content area wrapper for Supergod panel",
+      "props": [
+        {
+          "name": "children",
+          "type": "any",
+          "required": true,
+          "description": "Content to render"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "supergod-content",
+          "sx": {
+            "flexGrow": 1,
+            "p": 3,
+            "backgroundColor": "background.default"
+          },
+          "children": "{{children}}"
+        }
+      }
+    },
+    {
+      "id": "tenant_list",
+      "name": "TenantList",
+      "description": "List view of all tenants",
+      "props": [
+        {
+          "name": "tenants",
+          "type": "array",
+          "required": true,
+          "description": "Array of tenant objects"
+        },
+        {
+          "name": "onSelect",
+          "type": "function",
+          "required": false,
+          "description": "Callback when tenant is selected"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Paper",
+          "className": "tenant-list",
+          "sx": { "p": 2 },
+          "children": [
+            {
+              "type": "Typography",
+              "variant": "h6",
+              "sx": { "mb": 2 },
+              "children": "Tenants"
+            },
+            {
+              "type": "List",
+              "children": {
+                "type": "map",
+                "items": "{{tenants}}",
+                "render": {
+                  "type": "ListItem",
+                  "button": true,
+                  "onClick": "{{() => onSelect(item)}}",
+                  "children": [
+                    {
+                      "type": "ListItemAvatar",
+                      "children": [
+                        {
+                          "type": "Avatar",
+                          "sx": { "bgcolor": "primary.main" },
+                          "children": "{{item.name[0]}}"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ListItemText",
+                      "primary": "{{item.name}}",
+                      "secondary": "{{item.id}}"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "tenant_card",
+      "name": "TenantCard",
+      "description": "Card displaying tenant details",
+      "props": [
+        {
+          "name": "tenant",
+          "type": "object",
+          "required": true,
+          "description": "Tenant object with id, name, etc."
+        },
+        {
+          "name": "onEdit",
+          "type": "function",
+          "required": false
+        },
+        {
+          "name": "onDelete",
+          "type": "function",
+          "required": false
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "className": "tenant-card",
+          "variant": "outlined",
+          "children": [
+            {
+              "type": "CardHeader",
+              "avatar": {
+                "type": "Avatar",
+                "sx": { "bgcolor": "primary.main" },
+                "children": "{{tenant.name[0]}}"
+              },
+              "title": "{{tenant.name}}",
+              "subheader": "{{tenant.id}}"
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Typography",
+                  "variant": "body2",
+                  "color": "text.secondary",
+                  "children": "Created: {{tenant.createdAt}}"
+                }
+              ]
+            },
+            {
+              "type": "CardActions",
+              "children": [
+                {
+                  "type": "Button",
+                  "size": "small",
+                  "onClick": "{{onEdit}}",
+                  "children": "Edit"
+                },
+                {
+                  "type": "Button",
+                  "size": "small",
+                  "color": "error",
+                  "onClick": "{{onDelete}}",
+                  "children": "Delete"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "create_tenant_form",
+      "name": "CreateTenantForm",
+      "description": "Form for creating a new tenant",
+      "props": [
+        {
+          "name": "onSubmit",
+          "type": "function",
+          "required": true,
+          "description": "Callback when form is submitted"
+        },
+        {
+          "name": "onCancel",
+          "type": "function",
+          "required": false
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Paper",
+          "className": "create-tenant-form",
+          "sx": { "p": 3 },
+          "children": [
+            {
+              "type": "Typography",
+              "variant": "h6",
+              "sx": { "mb": 2 },
+              "children": "Create New Tenant"
+            },
+            {
+              "type": "Stack",
+              "spacing": 2,
+              "children": [
+                {
+                  "type": "TextField",
+                  "label": "Tenant Name",
+                  "name": "name",
+                  "required": true,
+                  "fullWidth": true
+                },
+                {
+                  "type": "TextField",
+                  "label": "Admin Email",
+                  "name": "adminEmail",
+                  "type": "email",
+                  "required": true,
+                  "fullWidth": true
+                },
+                {
+                  "type": "Box",
+                  "sx": { "display": "flex", "gap": 2, "justifyContent": "flex-end" },
+                  "children": [
+                    {
+                      "type": "Button",
+                      "variant": "outlined",
+                      "onClick": "{{onCancel}}",
+                      "children": "Cancel"
+                    },
+                    {
+                      "type": "Button",
+                      "variant": "contained",
+                      "type": "submit",
+                      "children": "Create Tenant"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "transfer_form",
+      "name": "TransferForm",
+      "description": "Form for transferring ownership between users",
+      "props": [
+        {
+          "name": "fromUser",
+          "type": "object",
+          "required": true,
+          "description": "User transferring ownership"
+        },
+        {
+          "name": "toUser",
+          "type": "object",
+          "required": false,
+          "description": "User receiving ownership"
+        },
+        {
+          "name": "onSubmit",
+          "type": "function",
+          "required": true
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Paper",
+          "className": "transfer-form",
+          "sx": { "p": 3 },
+          "children": [
+            {
+              "type": "Typography",
+              "variant": "h6",
+              "sx": { "mb": 2 },
+              "children": "Transfer Ownership"
+            },
+            {
+              "type": "Alert",
+              "severity": "warning",
+              "sx": { "mb": 2 },
+              "children": "This action is irreversible. Make sure you want to transfer ownership."
+            },
+            {
+              "type": "Stack",
+              "spacing": 2,
+              "children": [
+                {
+                  "type": "TextField",
+                  "label": "From User",
+                  "value": "{{fromUser.username}}",
+                  "disabled": true,
+                  "fullWidth": true
+                },
+                {
+                  "type": "TextField",
+                  "label": "To User ID",
+                  "name": "toUserId",
+                  "required": true,
+                  "fullWidth": true
+                },
+                {
+                  "type": "Button",
+                  "variant": "contained",
+                  "color": "warning",
+                  "onClick": "{{onSubmit}}",
+                  "children": "Transfer Ownership"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "transfer_history",
+      "name": "TransferHistory",
+      "description": "Table showing ownership transfer history",
+      "props": [
+        {
+          "name": "transfers",
+          "type": "array",
+          "required": true,
+          "description": "Array of transfer records"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Paper",
+          "className": "transfer-history",
+          "sx": { "p": 2 },
+          "children": [
+            {
+              "type": "Typography",
+              "variant": "h6",
+              "sx": { "mb": 2 },
+              "children": "Transfer History"
+            },
+            {
+              "type": "Table",
+              "children": [
+                {
+                  "type": "TableHead",
+                  "children": [
+                    {
+                      "type": "TableRow",
+                      "children": [
+                        { "type": "TableCell", "children": "Date" },
+                        { "type": "TableCell", "children": "From" },
+                        { "type": "TableCell", "children": "To" },
+                        { "type": "TableCell", "children": "Status" }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "TableBody",
+                  "children": {
+                    "type": "map",
+                    "items": "{{transfers}}",
+                    "render": {
+                      "type": "TableRow",
+                      "children": [
+                        { "type": "TableCell", "children": "{{item.date}}" },
+                        { "type": "TableCell", "children": "{{item.fromUser}}" },
+                        { "type": "TableCell", "children": "{{item.toUser}}" },
+                        {
+                          "type": "TableCell",
+                          "children": [
+                            {
+                              "type": "Chip",
+                              "label": "{{item.status}}",
+                              "color": "{{item.status === 'completed' ? 'success' : 'warning'}}",
+                              "size": "small"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "system_stats",
+      "name": "SystemStats",
+      "description": "Display system statistics",
+      "props": [
+        {
+          "name": "stats",
+          "type": "object",
+          "required": true,
+          "description": "System statistics object"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Grid",
+          "container": true,
+          "spacing": 2,
+          "className": "system-stats",
+          "children": [
+            {
+              "type": "Grid",
+              "item": true,
+              "xs": 12,
+              "md": 3,
+              "children": [
+                {
+                  "type": "Card",
+                  "children": [
+                    {
+                      "type": "CardContent",
+                      "children": [
+                        { "type": "Typography", "variant": "caption", "color": "text.secondary", "children": "Total Tenants" },
+                        { "type": "Typography", "variant": "h4", "children": "{{stats.totalTenants}}" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Grid",
+              "item": true,
+              "xs": 12,
+              "md": 3,
+              "children": [
+                {
+                  "type": "Card",
+                  "children": [
+                    {
+                      "type": "CardContent",
+                      "children": [
+                        { "type": "Typography", "variant": "caption", "color": "text.secondary", "children": "Total Users" },
+                        { "type": "Typography", "variant": "h4", "children": "{{stats.totalUsers}}" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Grid",
+              "item": true,
+              "xs": 12,
+              "md": 3,
+              "children": [
+                {
+                  "type": "Card",
+                  "children": [
+                    {
+                      "type": "CardContent",
+                      "children": [
+                        { "type": "Typography", "variant": "caption", "color": "text.secondary", "children": "Active Sessions" },
+                        { "type": "Typography", "variant": "h4", "children": "{{stats.activeSessions}}" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Grid",
+              "item": true,
+              "xs": 12,
+              "md": 3,
+              "children": [
+                {
+                  "type": "Card",
+                  "children": [
+                    {
+                      "type": "CardContent",
+                      "children": [
+                        { "type": "Typography", "variant": "caption", "color": "text.secondary", "children": "System Uptime" },
+                        { "type": "Typography", "variant": "h4", "children": "{{stats.uptime}}" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "system_health",
+      "name": "SystemHealth",
+      "description": "System health status display",
+      "props": [
+        {
+          "name": "health",
+          "type": "object",
+          "required": true,
+          "description": "Health status object"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Paper",
+          "className": "system-health",
+          "sx": { "p": 2 },
+          "children": [
+            {
+              "type": "Typography",
+              "variant": "h6",
+              "sx": { "mb": 2 },
+              "children": "System Health"
+            },
+            {
+              "type": "Stack",
+              "spacing": 1,
+              "children": [
+                {
+                  "type": "Box",
+                  "sx": { "display": "flex", "alignItems": "center", "gap": 1 },
+                  "children": [
+                    {
+                      "type": "Icon",
+                      "name": "{{health.database ? 'CheckCircle' : 'Error'}}",
+                      "color": "{{health.database ? 'success' : 'error'}}"
+                    },
+                    { "type": "Typography", "children": "Database" }
+                  ]
+                },
+                {
+                  "type": "Box",
+                  "sx": { "display": "flex", "alignItems": "center", "gap": 1 },
+                  "children": [
+                    {
+                      "type": "Icon",
+                      "name": "{{health.cache ? 'CheckCircle' : 'Error'}}",
+                      "color": "{{health.cache ? 'success' : 'error'}}"
+                    },
+                    { "type": "Typography", "children": "Cache" }
+                  ]
+                },
+                {
+                  "type": "Box",
+                  "sx": { "display": "flex", "alignItems": "center", "gap": 1 },
+                  "children": [
+                    {
+                      "type": "Icon",
+                      "name": "{{health.storage ? 'CheckCircle' : 'Error'}}",
+                      "color": "{{health.storage ? 'success' : 'error'}}"
+                    },
+                    { "type": "Typography", "children": "Storage" }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "system_logs",
+      "name": "SystemLogs",
+      "description": "System log viewer",
+      "props": [
+        {
+          "name": "logs",
+          "type": "array",
+          "required": true,
+          "description": "Array of log entries"
+        },
+        {
+          "name": "maxHeight",
+          "type": "number",
+          "default": 400
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Paper",
+          "className": "system-logs",
+          "sx": { "p": 2 },
+          "children": [
+            {
+              "type": "Typography",
+              "variant": "h6",
+              "sx": { "mb": 2 },
+              "children": "System Logs"
+            },
+            {
+              "type": "Box",
+              "sx": {
+                "maxHeight": "{{maxHeight}}",
+                "overflow": "auto",
+                "backgroundColor": "grey.900",
+                "color": "grey.100",
+                "p": 2,
+                "borderRadius": 1,
+                "fontFamily": "monospace"
+              },
+              "children": {
+                "type": "map",
+                "items": "{{logs}}",
+                "render": {
+                  "type": "Typography",
+                  "variant": "body2",
+                  "sx": { "fontFamily": "monospace" },
+                  "children": "[{{item.timestamp}}] {{item.level}}: {{item.message}}"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "maintenance_mode",
+      "name": "MaintenanceMode",
+      "description": "Maintenance mode toggle and status",
+      "props": [
+        {
+          "name": "enabled",
+          "type": "boolean",
+          "required": true,
+          "description": "Whether maintenance mode is enabled"
+        },
+        {
+          "name": "onToggle",
+          "type": "function",
+          "required": true,
+          "description": "Callback when toggle is clicked"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Paper",
+          "className": "maintenance-mode",
+          "sx": { "p": 2 },
+          "children": [
+            {
+              "type": "Box",
+              "sx": { "display": "flex", "alignItems": "center", "justifyContent": "space-between" },
+              "children": [
+                {
+                  "type": "Box",
+                  "children": [
+                    {
+                      "type": "Typography",
+                      "variant": "h6",
+                      "children": "Maintenance Mode"
+                    },
+                    {
+                      "type": "Typography",
+                      "variant": "body2",
+                      "color": "text.secondary",
+                      "children": "When enabled, only Supergod users can access the system"
+                    }
+                  ]
+                },
+                {
+                  "type": "Switch",
+                  "checked": "{{enabled}}",
+                  "onChange": "{{onToggle}}",
+                  "color": "warning"
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "condition": "{{enabled}}",
+              "then": {
+                "type": "Alert",
+                "severity": "warning",
+                "sx": { "mt": 2 },
+                "children": "Maintenance mode is currently ENABLED. Regular users cannot access the system."
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

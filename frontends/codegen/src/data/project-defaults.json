@@ -47,7 +47,7 @@
       "id": "file-1",
       "name": "page.tsx",
       "path": "/src/app/page.tsx",
-      "content": "'use client'\n\nimport { ThemeProvider } from '@mui/material/styles'\nimport CssBaseline from '@mui/material/CssBaseline'\nimport { theme } from '@/theme'\nimport { Box, Typography, Button } from '@mui/material'\n\nexport default function Home() {\n  return (\n    <ThemeProvider theme={theme}>\n      <CssBaseline />\n      <Box sx={{ p: 4 }}>\n        <Typography variant=\"h3\" gutterBottom>\n          Welcome to Your App\n        </Typography>\n        <Button variant=\"contained\" color=\"primary\">\n          Get Started\n        </Button>\n      </Box>\n    </ThemeProvider>\n  )\n}",
+      "content": "'use client'\n\nexport default function Home() {\n  return (\n    <main className=\"app-shell\">\n      <section className=\"hero\">\n        <p className=\"hero__eyebrow\">Generated starter</p>\n        <h1 className=\"hero__title\">Build your app with SCSS and design tokens.</h1>\n        <p>\n          This starter keeps the runtime lean: no MUI dependency, no Emotion, just\n          Next.js, Prisma, and a token-driven SCSS layer.\n        </p>\n        <div className=\"hero__actions\">\n          <button className=\"button button--primary\" type=\"button\">\n            Get Started\n          </button>\n          <button className=\"button button--secondary\" type=\"button\">\n            View Docs\n          </button>\n        </div>\n      </section>\n    </main>\n  )\n}",
       "language": "typescript"
     },
     {

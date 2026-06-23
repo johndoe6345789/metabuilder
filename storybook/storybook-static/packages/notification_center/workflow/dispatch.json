@@ -1,0 +1,389 @@
+{
+  "name": "Dispatch Notification",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_context",
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.tenantId }}",
+        "operation": "validate",
+        "validator": "required"
+      }
+    },
+    {
+      "id": "validate_input",
+      "name": "Validate Input",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $json }}",
+        "operation": "validate",
+        "rules": {
+          "userId": "required|string",
+          "type": "required|string",
+          "title": "required|string|maxLength:200",
+          "message": "required|string|maxLength:1000",
+          "channels": "required|array"
+        }
+      }
+    },
+    {
+      "id": "fetch_user_preferences",
+      "name": "Fetch User Preferences",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "filter": {
+          "userId": "{{ $json.userId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_read",
+        "entity": "NotificationPreference"
+      }
+    },
+    {
+      "id": "create_notification_record",
+      "name": "Create Notification Record",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "data": {
+          "tenantId": "{{ $context.tenantId }}",
+          "userId": "{{ $json.userId }}",
+          "type": "{{ $json.type }}",
+          "title": "{{ $json.title }}",
+          "message": "{{ $json.message }}",
+          "isRead": false,
+          "metadata": "{{ $json.metadata || {} }}",
+          "createdAt": "{{ new Date().toISOString() }}",
+          "expiresAt": "{{ new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() }}"
+        },
+        "operation": "database_create",
+        "entity": "Notification"
+      }
+    },
+    {
+      "id": "dispatch_in_app",
+      "name": "Dispatch In App",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "condition": "{{ $json.channels.includes('in_app') && $steps.fetch_user_preferences.output.enableInApp !== false }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "emit_in_app_notification",
+      "name": "Emit In App Notification",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "data": {
+          "notificationId": "{{ $steps.create_notification_record.output.id }}",
+          "title": "{{ $json.title }}",
+          "message": "{{ $json.message }}",
+          "type": "{{ $json.type }}"
+        },
+        "action": "emit_event",
+        "event": "notification_received",
+        "channel": "{{ 'user:' + $json.userId }}"
+      }
+    },
+    {
+      "id": "check_email_rate_limit",
+      "name": "Check Email Rate Limit",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
+      "parameters": {
+        "condition": "{{ $json.channels.includes('email') && $steps.fetch_user_preferences.output.enableEmail !== false }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "apply_email_rate_limit",
+      "name": "Apply Email Rate Limit",
+      "type": "metabuilder.rateLimit",
+      "typeVersion": 1,
+      "position": [
+        400,
+        500
+      ],
+      "parameters": {
+        "operation": "rate_limit",
+        "key": "{{ 'email:' + $json.userId }}",
+        "limit": 10,
+        "window": 3600000
+      }
+    },
+    {
+      "id": "fetch_user_email",
+      "name": "Fetch User Email",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        700,
+        500
+      ],
+      "parameters": {
+        "filter": {
+          "id": "{{ $json.userId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_read",
+        "entity": "User"
+      }
+    },
+    {
+      "id": "send_email",
+      "name": "Send Email via SMTP Relay",
+      "type": "smtp-relay-send",
+      "typeVersion": 1,
+      "position": [
+        100,
+        700
+      ],
+      "parameters": {
+        "to": "{{ $steps.fetch_user_email.output.email }}",
+        "subject": "{{ $json.title }}",
+        "body": "{{ $json.message }}",
+        "template": "{{ $json.emailTemplate }}",
+        "from": "{{ $env.SMTP_FROM_ADDRESS || 'noreply@metabuilder.local' }}",
+        "retryAttempts": 3
+      }
+    },
+    {
+      "id": "dispatch_push",
+      "name": "Dispatch Push",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        400,
+        700
+      ],
+      "parameters": {
+        "condition": "{{ $json.channels.includes('push') && $steps.fetch_user_preferences.output.enablePush !== false }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "send_push_notification",
+      "name": "Send Push Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        700,
+        700
+      ],
+      "parameters": {
+        "operation": "http_request",
+        "url": "https://fcm.googleapis.com/fcm/send",
+        "method": "POST",
+        "headers": {
+          "Authorization": "{{ 'Bearer ' + $env.FCM_KEY }}"
+        },
+        "body": {
+          "to": "{{ $steps.fetch_user_email.output.fcmToken }}",
+          "notification": {
+            "title": "{{ $json.title }}",
+            "body": "{{ $json.message }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "return_success",
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        100,
+        900
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 202,
+        "body": {
+          "notificationId": "{{ $steps.create_notification_record.output.id }}",
+          "message": "Notification dispatched successfully"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "validate_context": {
+      "main": [
+        [
+          {
+            "node": "validate_input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_input": {
+      "main": [
+        [
+          {
+            "node": "fetch_user_preferences",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_user_preferences": {
+      "main": [
+        [
+          {
+            "node": "create_notification_record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_notification_record": {
+      "main": [
+        [
+          {
+            "node": "dispatch_in_app",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "dispatch_in_app": {
+      "main": [
+        [
+          {
+            "node": "emit_in_app_notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "emit_in_app_notification": {
+      "main": [
+        [
+          {
+            "node": "check_email_rate_limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_email_rate_limit": {
+      "main": [
+        [
+          {
+            "node": "apply_email_rate_limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "apply_email_rate_limit": {
+      "main": [
+        [
+          {
+            "node": "fetch_user_email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_user_email": {
+      "main": [
+        [
+          {
+            "node": "send_email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "send_email": {
+      "main": [
+        [
+          {
+            "node": "dispatch_push",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "dispatch_push": {
+      "main": [
+        [
+          {
+            "node": "send_push_notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "send_push_notification": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_dispatch",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

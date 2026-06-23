@@ -1,0 +1,521 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/tests.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "test-examples",
+  "description": "Edge case tests using parameterized test patterns",
+
+  "testSuites": [
+    {
+      "id": "null-safety-tests",
+      "name": "Null Safety Tests",
+      "description": "Verify proper handling of null and undefined values",
+      "tags": ["edge-cases", "null-safety"],
+      "timeout": 5000,
+
+      "tests": [
+        {
+          "id": "test-null-handling",
+          "name": "should handle null values correctly",
+          "parameterized": true,
+          "parameters": [
+            {
+              "case": "null input with default",
+              "input": null,
+              "expectedResult": "default",
+              "defaultValue": "fallback"
+            },
+            {
+              "case": "null input throws",
+              "input": null,
+              "expectedResult": "throw",
+              "shouldThrow": true,
+              "expectedError": "Value cannot be null"
+            },
+            {
+              "case": "null input returns null",
+              "input": null,
+              "expectedResult": "null",
+              "expected": null
+            }
+          ],
+          "act": {
+            "type": "function_call",
+            "target": "processValue",
+            "input": {
+              "value": "{{input}}",
+              "default": "{{defaultValue}}"
+            }
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "equals",
+                "actual": "result",
+                "expected": "{{expected}}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test-undefined-handling",
+          "name": "should handle undefined values correctly",
+          "parameterized": true,
+          "parameters": [
+            {
+              "case": "undefined becomes default",
+              "input": undefined,
+              "expected": "default-value"
+            },
+            {
+              "case": "undefined optional param",
+              "input": undefined,
+              "expected": null
+            }
+          ],
+          "act": {
+            "type": "function_call",
+            "target": "handleOptional",
+            "input": "{{input}}"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "equals",
+                "actual": "result",
+                "expected": "{{expected}}"
+              }
+            ]
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "boundary-value-tests",
+      "name": "Boundary Value Tests",
+      "description": "Test minimum, maximum, and boundary conditions",
+      "tags": ["edge-cases", "boundaries"],
+
+      "tests": [
+        {
+          "id": "test-numeric-boundaries",
+          "name": "should validate numeric boundaries",
+          "parameterized": true,
+          "parameters": [
+            {
+              "case": "below minimum",
+              "value": -1,
+              "min": 0,
+              "max": 100,
+              "shouldBeValid": false,
+              "boundaryType": "below-min"
+            },
+            {
+              "case": "at minimum",
+              "value": 0,
+              "min": 0,
+              "max": 100,
+              "shouldBeValid": true,
+              "boundaryType": "at-min"
+            },
+            {
+              "case": "normal value",
+              "value": 50,
+              "min": 0,
+              "max": 100,
+              "shouldBeValid": true,
+              "boundaryType": "normal"
+            },
+            {
+              "case": "at maximum",
+              "value": 100,
+              "min": 0,
+              "max": 100,
+              "shouldBeValid": true,
+              "boundaryType": "at-max"
+            },
+            {
+              "case": "above maximum",
+              "value": 101,
+              "min": 0,
+              "max": 100,
+              "shouldBeValid": false,
+              "boundaryType": "above-max"
+            }
+          ],
+          "act": {
+            "type": "function_call",
+            "target": "isInRange",
+            "input": {
+              "value": "{{value}}",
+              "min": "{{min}}",
+              "max": "{{max}}"
+            }
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "equals",
+                "actual": "result",
+                "expected": "{{shouldBeValid}}",
+                "description": "Boundary type: {{boundaryType}}"
+              }
+            ]
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "empty-collection-tests",
+      "name": "Empty Collection Tests",
+      "description": "Test handling of empty strings, arrays, and objects",
+      "tags": ["edge-cases", "empty"],
+
+      "tests": [
+        {
+          "id": "test-empty-string",
+          "name": "should handle empty strings",
+          "parameterized": true,
+          "parameters": [
+            {
+              "case": "empty string rejected",
+              "value": "",
+              "collectionType": "string",
+              "expectedBehavior": "reject"
+            },
+            {
+              "case": "empty string with default",
+              "value": "",
+              "collectionType": "string",
+              "expectedBehavior": "default",
+              "expected": "default-value"
+            },
+            {
+              "case": "whitespace string",
+              "value": "   ",
+              "collectionType": "string",
+              "expectedBehavior": "reject"
+            }
+          ],
+          "act": {
+            "type": "function_call",
+            "target": "processString",
+            "input": "{{value}}"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "custom",
+                "description": "Behavior: {{expectedBehavior}}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test-empty-array",
+          "name": "should handle empty arrays",
+          "parameterized": true,
+          "parameters": [
+            {
+              "case": "empty array accepted",
+              "value": [],
+              "collectionType": "array",
+              "expectedBehavior": "accept",
+              "expected": []
+            },
+            {
+              "case": "empty array throws",
+              "value": [],
+              "collectionType": "array",
+              "expectedBehavior": "throw",
+              "shouldThrow": true,
+              "expectedError": "Array cannot be empty"
+            }
+          ],
+          "act": {
+            "type": "function_call",
+            "target": "processArray",
+            "input": "{{value}}"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "deepEquals",
+                "actual": "result",
+                "expected": "{{expected}}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test-empty-object",
+          "name": "should handle empty objects",
+          "parameterized": true,
+          "parameters": [
+            {
+              "case": "empty object",
+              "value": {},
+              "collectionType": "object",
+              "expectedBehavior": "accept",
+              "expected": {}
+            }
+          ],
+          "act": {
+            "type": "function_call",
+            "target": "processObject",
+            "input": "{{value}}"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "deepEquals",
+                "actual": "result",
+                "expected": "{{expected}}"
+              }
+            ]
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "special-character-tests",
+      "name": "Special Character Tests",
+      "description": "Test handling of Unicode, emoji, and special characters",
+      "tags": ["edge-cases", "unicode", "security"],
+
+      "tests": [
+        {
+          "id": "test-unicode-handling",
+          "name": "should handle Unicode correctly",
+          "parameterized": true,
+          "parameters": [
+            {
+              "case": "emoji in string",
+              "input": "Hello 👋 World 🌍",
+              "characterType": "emoji",
+              "shouldSanitize": false,
+              "expectedOutput": "Hello 👋 World 🌍"
+            },
+            {
+              "case": "RTL text",
+              "input": "مرحبا بك",
+              "characterType": "rtl-text",
+              "shouldSanitize": false,
+              "expectedOutput": "مرحبا بك"
+            },
+            {
+              "case": "Chinese characters",
+              "input": "你好世界",
+              "characterType": "unicode",
+              "shouldSanitize": false,
+              "expectedOutput": "你好世界"
+            },
+            {
+              "case": "zero-width characters",
+              "input": "test\u200Bstring",
+              "characterType": "zero-width",
+              "shouldSanitize": true,
+              "expectedOutput": "teststring"
+            }
+          ],
+          "act": {
+            "type": "function_call",
+            "target": "processText",
+            "input": {
+              "text": "{{input}}",
+              "sanitize": "{{shouldSanitize}}"
+            }
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "equals",
+                "actual": "result",
+                "expected": "{{expectedOutput}}",
+                "description": "Character type: {{characterType}}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test-security-characters",
+          "name": "should sanitize security risks",
+          "parameterized": true,
+          "parameters": [
+            {
+              "case": "XSS attempt",
+              "input": "<script>alert('xss')</script>",
+              "characterType": "xss-attempt",
+              "shouldSanitize": true,
+              "expectedOutput": ""
+            },
+            {
+              "case": "SQL injection",
+              "input": "'; DROP TABLE users; --",
+              "characterType": "sql-injection",
+              "shouldSanitize": true,
+              "expectedOutput": "'; DROP TABLE users; --"
+            },
+            {
+              "case": "HTML entities",
+              "input": "&lt;div&gt;test&lt;/div&gt;",
+              "characterType": "html-entities",
+              "shouldSanitize": false,
+              "expectedOutput": "<div>test</div>"
+            }
+          ],
+          "act": {
+            "type": "function_call",
+            "target": "sanitizeInput",
+            "input": "{{input}}"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "equals",
+                "actual": "result",
+                "expected": "{{expectedOutput}}",
+                "description": "Should handle {{characterType}}"
+              }
+            ]
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "numeric-overflow-tests",
+      "name": "Numeric Overflow Tests",
+      "description": "Test overflow, underflow, and special numeric values",
+      "tags": ["edge-cases", "numeric"],
+
+      "tests": [
+        {
+          "id": "test-special-numbers",
+          "name": "should handle special numeric values",
+          "parameterized": true,
+          "parameters": [
+            {
+              "case": "Infinity",
+              "value": Infinity,
+              "testType": "infinity",
+              "shouldThrow": true,
+              "expectedError": "Infinite values not allowed"
+            },
+            {
+              "case": "Negative Infinity",
+              "value": -Infinity,
+              "testType": "negative-infinity",
+              "shouldThrow": true,
+              "expectedError": "Infinite values not allowed"
+            },
+            {
+              "case": "NaN",
+              "value": NaN,
+              "testType": "nan",
+              "shouldThrow": true,
+              "expectedError": "Not a valid number"
+            },
+            {
+              "case": "Max safe integer",
+              "value": 9007199254740991,
+              "testType": "max-safe-integer",
+              "expected": 9007199254740991
+            },
+            {
+              "case": "Min safe integer",
+              "value": -9007199254740991,
+              "testType": "min-safe-integer",
+              "expected": -9007199254740991
+            }
+          ],
+          "act": {
+            "type": "function_call",
+            "target": "processNumber",
+            "input": "{{value}}"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "equals",
+                "actual": "result",
+                "expected": "{{expected}}",
+                "description": "Test type: {{testType}}"
+              }
+            ]
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "malformed-data-tests",
+      "name": "Malformed Data Tests",
+      "description": "Test handling of invalid and malformed data",
+      "tags": ["edge-cases", "validation"],
+
+      "tests": [
+        {
+          "id": "test-malformed-structures",
+          "name": "should reject malformed data",
+          "parameterized": true,
+          "parameters": [
+            {
+              "case": "missing required field",
+              "data": { "name": "Test" },
+              "malformationType": "missing-required-field",
+              "shouldThrow": true,
+              "expectedError": "Missing required field: id"
+            },
+            {
+              "case": "wrong type",
+              "data": { "id": "not-a-number", "name": "Test" },
+              "malformationType": "wrong-type",
+              "shouldThrow": true,
+              "expectedError": "id must be a number"
+            },
+            {
+              "case": "extra fields",
+              "data": { "id": 1, "name": "Test", "extra": "field" },
+              "malformationType": "extra-fields",
+              "shouldThrow": false,
+              "expected": { "id": 1, "name": "Test" }
+            },
+            {
+              "case": "deeply nested",
+              "data": {
+                "level1": {
+                  "level2": {
+                    "level3": {
+                      "level4": {
+                        "level5": "too deep"
+                      }
+                    }
+                  }
+                }
+              },
+              "malformationType": "deep-nesting",
+              "shouldThrow": true,
+              "expectedError": "Nesting too deep"
+            }
+          ],
+          "act": {
+            "type": "function_call",
+            "target": "validateData",
+            "input": "{{data}}"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "custom",
+                "description": "Malformation: {{malformationType}}"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

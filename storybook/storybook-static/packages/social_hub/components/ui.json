@@ -1,0 +1,354 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "social_hub",
+  "description": "Social hub components including hero section, feed, composer, and stats",
+  "components": [
+    {
+      "id": "social_hub_root",
+      "name": "SocialHubRoot",
+      "description": "Root container for the social hub with all sections",
+      "props": [
+        {
+          "name": "children",
+          "type": "any",
+          "required": false
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Stack",
+          "spacing": 3,
+          "className": "social-hub-root",
+          "children": "{{children}}"
+        }
+      }
+    },
+    {
+      "id": "social_hub_hero",
+      "name": "SocialHubHero",
+      "description": "Hero section with title and subtitle",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "default": "Social Hub"
+        },
+        {
+          "name": "subtitle",
+          "type": "string",
+          "required": false,
+          "default": "A modern feed for creator updates, curated stories, and live moments."
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "social-hub-hero",
+          "children": [
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Typography",
+                  "variant": "h4",
+                  "fontWeight": "bold",
+                  "gutterBottom": true,
+                  "children": "{{title}}"
+                },
+                {
+                  "type": "Typography",
+                  "variant": "body1",
+                  "color": "text.secondary",
+                  "children": "{{subtitle}}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "social_hub_stat_card",
+      "name": "SocialHubStatCard",
+      "description": "Single statistic card for social metrics",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "description": "Stat label text"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": true,
+          "description": "Stat value to display"
+        },
+        {
+          "name": "icon",
+          "type": "string",
+          "required": false,
+          "description": "Optional icon name"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "social-hub-stat-card",
+          "children": [
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Typography",
+                  "variant": "caption",
+                  "color": "text.secondary",
+                  "children": "{{label}}"
+                },
+                {
+                  "type": "Typography",
+                  "variant": "h5",
+                  "fontWeight": "semibold",
+                  "children": "{{value}}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "social_hub_stats",
+      "name": "SocialHubStats",
+      "description": "Grid of social statistics",
+      "props": [
+        {
+          "name": "stats",
+          "type": "array",
+          "required": true,
+          "description": "Array of stat objects with label and value"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Grid",
+          "container": true,
+          "spacing": 2,
+          "className": "social-hub-stats-grid",
+          "children": {
+            "type": "map",
+            "items": "{{stats}}",
+            "template": {
+              "type": "Grid",
+              "item": true,
+              "xs": 12,
+              "sm": 4,
+              "children": [
+                {
+                  "type": "SocialHubStatCard",
+                  "label": "{{item.label}}",
+                  "value": "{{item.value}}"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "social_hub_composer",
+      "name": "SocialHubComposer",
+      "description": "Post composer with textarea and action buttons",
+      "props": [
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "default": "What are you building today?"
+        },
+        {
+          "name": "onPublish",
+          "type": "function",
+          "required": false,
+          "description": "Callback when publish button is clicked"
+        },
+        {
+          "name": "onMediaAdd",
+          "type": "function",
+          "required": false,
+          "description": "Callback when add media button is clicked"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "social-hub-composer",
+          "children": [
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Stack",
+                  "spacing": 2,
+                  "children": [
+                    {
+                      "type": "Typography",
+                      "variant": "subtitle2",
+                      "children": "Share a quick update"
+                    },
+                    {
+                      "type": "TextField",
+                      "multiline": true,
+                      "rows": 3,
+                      "fullWidth": true,
+                      "placeholder": "{{placeholder}}",
+                      "variant": "outlined"
+                    },
+                    {
+                      "type": "Stack",
+                      "direction": "row",
+                      "spacing": 1,
+                      "children": [
+                        {
+                          "type": "Button",
+                          "variant": "contained",
+                          "color": "primary",
+                          "onClick": "{{onPublish}}",
+                          "children": "Publish"
+                        },
+                        {
+                          "type": "Button",
+                          "variant": "outlined",
+                          "onClick": "{{onMediaAdd}}",
+                          "children": "Add media"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "social_hub_post",
+      "name": "SocialHubPost",
+      "description": "Single post card with title, body, and badge",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "description": "Post title"
+        },
+        {
+          "name": "body",
+          "type": "string",
+          "required": true,
+          "description": "Post content"
+        },
+        {
+          "name": "badge",
+          "type": "string",
+          "required": false,
+          "description": "Badge label"
+        },
+        {
+          "name": "badgeVariant",
+          "type": "string",
+          "required": false,
+          "default": "default",
+          "description": "Badge color variant"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "social-hub-post",
+          "children": [
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Stack",
+                  "spacing": 1,
+                  "children": [
+                    {
+                      "type": "Typography",
+                      "variant": "h6",
+                      "fontWeight": "semibold",
+                      "children": "{{title}}"
+                    },
+                    {
+                      "type": "Typography",
+                      "variant": "body2",
+                      "color": "text.secondary",
+                      "children": "{{body}}"
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{badge}}",
+                      "then": {
+                        "type": "Chip",
+                        "label": "{{badge}}",
+                        "size": "small",
+                        "color": "{{badgeVariant === 'secondary' ? 'secondary' : 'primary'}}",
+                        "variant": "outlined"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "social_hub_feed",
+      "name": "SocialHubFeed",
+      "description": "Feed container for multiple posts",
+      "props": [
+        {
+          "name": "posts",
+          "type": "array",
+          "required": true,
+          "description": "Array of post objects"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Stack",
+          "spacing": 2,
+          "className": "social-hub-feed",
+          "children": {
+            "type": "map",
+            "items": "{{posts}}",
+            "template": {
+              "type": "SocialHubPost",
+              "title": "{{item.title}}",
+              "body": "{{item.body}}",
+              "badge": "{{item.badge}}",
+              "badgeVariant": "{{item.badgeVariant}}"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

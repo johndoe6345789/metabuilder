@@ -1,0 +1,26 @@
+{
+  "entityType": "component",
+  "description": "UI Home package components",
+  "components": [
+    {
+      "id": "comp_home_button",
+      "name": "Home Page Button"
+    },
+    {
+      "id": "comp_home_card",
+      "name": "Feature Card"
+    },
+    {
+      "id": "comp_home_hero",
+      "name": "Hero Section"
+    },
+    {
+      "id": "comp_home_form",
+      "name": "Contact Form"
+    },
+    {
+      "id": "comp_home_grid",
+      "name": "Feature Grid"
+    }
+  ]
+}

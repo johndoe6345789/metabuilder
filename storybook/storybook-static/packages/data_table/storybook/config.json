@@ -1,0 +1,48 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": false,
+  "title": "Data Table",
+  "description": "Advanced data table with sorting, filtering, and pagination",
+  "stories": [
+    {
+      "name": "DataGrid",
+      "render": "component",
+      "description": "Full-featured data grid",
+      "args": {
+        "sortable": true,
+        "filterable": true,
+        "pagination": true,
+        "selection": true,
+        "exportable": true
+      }
+    },
+    {
+      "name": "SimpleTable",
+      "render": "component",
+      "description": "Basic table without features",
+      "args": {
+        "sortable": false,
+        "filterable": false,
+        "pagination": false
+      }
+    }
+  ],
+  "renders": {
+    "component": {
+      "description": "Data grid component showcase",
+      "featured": true
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "level": 1
+    }
+  },
+  "scripts": {
+    "renderFunctions": ["component"],
+    "ignoredScripts": ["tests"]
+  },
+  "parameters": {
+    "layout": "fullscreen"
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/events.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "complete-example",
+  "description": "Event handlers for complete example package",
+  "events": [
+    {
+      "id": "user_created",
+      "name": "user.created",
+      "version": "1.0.0",
+      "description": "Fired when a new user is created",
+      "channel": "users",
+      "payload": "User",
+      "metadata": {
+        "timestamp": true,
+        "correlationId": true,
+        "userId": true
+      },
+      "priority": "normal",
+      "retention": {
+        "enabled": true,
+        "ttl": 2592000
+      }
+    },
+    {
+      "id": "user_updated",
+      "name": "user.updated",
+      "version": "1.0.0",
+      "description": "Fired when a user is updated",
+      "channel": "users",
+      "payload": "User",
+      "priority": "normal"
+    },
+    {
+      "id": "user_deleted",
+      "name": "user.deleted",
+      "version": "1.0.0",
+      "description": "Fired when a user is deleted",
+      "channel": "users",
+      "payload": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "email": { "type": "string" }
+        },
+        "required": ["id", "email"]
+      },
+      "priority": "high"
+    }
+  ],
+  "subscribers": [
+    {
+      "id": "send_welcome_email",
+      "name": "Send Welcome Email",
+      "description": "Send welcome email when user is created",
+      "events": ["user.created"],
+      "handler": "handlers.sendWelcomeEmail",
+      "async": true,
+      "retry": {
+        "enabled": true,
+        "maxAttempts": 3,
+        "backoff": "exponential"
+      }
+    },
+    {
+      "id": "log_user_changes",
+      "name": "Log User Changes",
+      "description": "Log all user-related events",
+      "events": ["user.*"],
+      "handler": "handlers.logUserEvent",
+      "async": true
+    }
+  ],
+  "channels": [
+    {
+      "name": "users",
+      "description": "User-related events channel",
+      "type": "topic",
+      "persistent": true
+    }
+  ]
+}

@@ -1,7 +1,8 @@
 'use client';
 
-import AddIcon from '@mui/icons-material/Add';
-import { Box, Button, Paper } from '@mui/material';
+import AddIcon from '@metabuilder/components/fakemui/Add';
+import { Box, Button, Paper } from '@metabuilder/components/fakemui';
+import TablePicker from './TablePicker';
 
 type IndexTableSelectorProps = {
   tables: Array<{ table_name: string }>;
@@ -19,19 +20,13 @@ export default function IndexTableSelector({
   onCreateClick,
 }: IndexTableSelectorProps) {
   return (
-    <Paper sx={{ p: 2, mt: 2 }}>
-      <select
+    <Paper sx={{ p: 2, mt: 2, maxWidth: 560, width: '100%' }}>
+      <TablePicker
+        label="Select Table"
         value={selectedTable}
-        onChange={e => onTableChange(e.target.value)}
-        style={{ display: 'block', width: '100%', maxWidth: 400 }}
-      >
-        <option value="">Select a table</option>
-        {tables.map(table => (
-          <option key={table.table_name} value={table.table_name}>
-            {table.table_name}
-          </option>
-        ))}
-      </select>
+        onChange={onTableChange}
+        options={tables}
+      />
       {selectedTable && (
         <Box sx={{ mt: 2 }}>
           <Button

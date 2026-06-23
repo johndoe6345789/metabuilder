@@ -40,10 +40,6 @@ const nextConfig: NextConfig = {
     },
     // Optimize package imports - reduces bundle size significantly
     optimizePackageImports: [
-      '@mui/material',
-      '@mui/icons-material',
-      '@mui/x-data-grid',
-      '@mui/x-date-pickers',
       'recharts',
       'd3',
       'lodash-es',

@@ -6,7 +6,7 @@ import type { FormField } from '@/utils/featureConfig';
 import {
   Checkbox, FormControl, FormControlLabel,
   FormHelperText, InputLabel, MenuItem, Select, TextField,
-} from '@mui/material';
+} from '@metabuilder/components/fakemui';
 
 export type FieldProps = {
   field: FormField;

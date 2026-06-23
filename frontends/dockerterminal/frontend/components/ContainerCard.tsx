@@ -9,8 +9,8 @@ import {
   Box,
   Chip,
   Divider,
-} from '@mui/material';
-import { Terminal, PlayArrow, Inventory2 } from '@mui/icons-material';
+} from '@metabuilder/components/fakemui';
+import { TerminalIcon, PlayArrow, Inventory2 } from '@metabuilder/components/fakemui';
 import { Container } from '@/lib/api';
 
 interface ContainerCardProps {
@@ -53,7 +53,7 @@ export default function ContainerCard({ container, onOpenShell }: ContainerCardP
                 flexShrink: 0,
               }}
             >
-              <Inventory2 sx={{ color: 'secondary.main', fontSize: 20 }} />
+              <Inventory2 style={{ color: 'var(--primary)', fontSize: 20 }} />
             </Box>
             <Box sx={{ minWidth: 0, flex: 1 }}>
               <Typography
@@ -87,7 +87,7 @@ export default function ContainerCard({ container, onOpenShell }: ContainerCardP
             label={container.status}
             color={statusColors[container.status as keyof typeof statusColors] || 'default'}
             size="small"
-            icon={container.status === 'running' ? <PlayArrow sx={{ fontSize: 12 }} /> : undefined}
+            icon={container.status === 'running' ? <PlayArrow style={{ fontSize: 12 }} /> : undefined}
             sx={{
               fontFamily: '"JetBrains Mono", monospace',
               textTransform: 'capitalize',
@@ -146,7 +146,7 @@ export default function ContainerCard({ container, onOpenShell }: ContainerCardP
           color="primary"
           onClick={onOpenShell}
           disabled={container.status !== 'running'}
-          startIcon={<Terminal />}
+          startIcon={<TerminalIcon />}
           sx={{
             fontWeight: 500,
             '&:hover': {

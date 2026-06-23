@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Test tube/beaker -->
+  <path d="M24 12 L24 32 C24 40 28 44 32 44 C36 44 40 40 40 32 L40 12 Z" fill="none"/>
+  <path d="M22 12 L42 12" stroke-width="2.5"/>
+  <circle cx="32" cy="30" r="3" fill="currentColor"/>
+  <circle cx="28" cy="36" r="2" fill="currentColor"/>
+  <circle cx="36" cy="34" r="2" fill="currentColor"/>
+</svg>

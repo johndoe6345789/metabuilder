@@ -29,7 +29,7 @@ export const ComposeWindow = ({
     feature: 'email', component: 'compose',
     identifier: customTestId || 'compose'
   })
-  const trapRef = useFocusTrap(true)
+  const { focusTrapRef } = useFocusTrap(true)
   const handleSend = () => {
     if (to.length > 0 && subject && body)
       onSend?.({ to, cc, bcc, subject, body })
@@ -46,7 +46,7 @@ export const ComposeWindow = ({
   }, [handleKeyDown])
 
   return (
-    <Card ref={trapRef} className="compose-window"
+    <Card ref={focusTrapRef} className="compose-window"
       role="dialog" aria-modal={true}
       aria-labelledby="compose-dialog-title"
       {...accessible} {...props}>

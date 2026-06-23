@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Bell with notification dot -->
+  <path d="M32 16 C26 16 22 20 22 26 L22 34 C22 38 18 40 16 42 L48 42 C46 40 42 38 42 34 L42 26 C42 20 38 16 32 16 Z" fill="none"/>
+  <path d="M28 46 C28 48 30 50 32 50 C34 50 36 48 36 46" fill="none"/>
+  <path d="M32 16 L32 12" stroke-width="2"/>
+  <circle cx="44" cy="20" r="5" fill="red" stroke="white" stroke-width="1.5"/>
+</svg>

@@ -1,0 +1,153 @@
+{
+  "name": "Send IRC Message",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_context",
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.user.id }}",
+        "operation": "validate",
+        "validator": "required"
+      }
+    },
+    {
+      "id": "apply_slowmode",
+      "name": "Apply Slowmode",
+      "type": "metabuilder.rateLimit",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "operation": "rate_limit",
+        "key": "{{ 'irc:' + $context.user.id + ':' + $json.channelId }}",
+        "limit": 1,
+        "window": 2000
+      }
+    },
+    {
+      "id": "validate_input",
+      "name": "Validate Input",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $json }}",
+        "operation": "validate",
+        "rules": {
+          "message": "required|string|minLength:1|maxLength:500"
+        }
+      }
+    },
+    {
+      "id": "create_message",
+      "name": "Create Message",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "data": {
+          "channelId": "{{ $json.channelId }}",
+          "userId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}",
+          "message": "{{ $json.message }}",
+          "createdAt": "{{ new Date().toISOString() }}"
+        },
+        "operation": "database_create",
+        "entity": "IRCMessage"
+      }
+    },
+    {
+      "id": "emit_message",
+      "name": "Emit Message",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "data": {
+          "messageId": "{{ $steps.create_message.output.id }}",
+          "userId": "{{ $context.user.id }}",
+          "message": "{{ $json.message }}"
+        },
+        "action": "emit_event",
+        "event": "message_sent",
+        "channel": "{{ 'irc:' + $json.channelId }}"
+      }
+    }
+  ],
+  "connections": {
+    "validate_context": {
+      "main": [
+        [
+          {
+            "node": "apply_slowmode",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "apply_slowmode": {
+      "main": [
+        [
+          {
+            "node": "validate_input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_input": {
+      "main": [
+        [
+          {
+            "node": "create_message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_message": {
+      "main": [
+        [
+          {
+            "node": "emit_message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_send_message",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

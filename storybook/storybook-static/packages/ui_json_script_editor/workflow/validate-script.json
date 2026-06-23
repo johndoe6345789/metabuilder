@@ -1,0 +1,167 @@
+{
+  "name": "Validate JSON Script",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_input",
+      "name": "Validate Input",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $json }}",
+        "operation": "validate",
+        "rules": {
+          "script": "required|string"
+        }
+      }
+    },
+    {
+      "id": "parse_json",
+      "name": "Parse Json",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $json.script }}",
+        "output": "{{ JSON.parse($json.script) }}",
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "validate_version",
+      "name": "Validate Version",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "condition": "{{ $steps.parse_json.output.version === '2.2.0' }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "validate_nodes",
+      "name": "Validate Nodes",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "condition": "{{ Array.isArray($steps.parse_json.output.nodes) && $steps.parse_json.output.nodes.length > 0 }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "validate_node_structure",
+      "name": "Validate Node Structure",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "output": "{{ $steps.parse_json.output.nodes.every(node => node.id && node.type) }}",
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "return_valid",
+      "name": "Return Valid",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 200,
+        "body": {
+          "valid": true,
+          "message": "Script is valid"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "validate_input": {
+      "main": [
+        [
+          {
+            "node": "parse_json",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "parse_json": {
+      "main": [
+        [
+          {
+            "node": "validate_version",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_version": {
+      "main": [
+        [
+          {
+            "node": "validate_nodes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_nodes": {
+      "main": [
+        [
+          {
+            "node": "validate_node_structure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_node_structure": {
+      "main": [
+        [
+          {
+            "node": "return_valid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_validate_script",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

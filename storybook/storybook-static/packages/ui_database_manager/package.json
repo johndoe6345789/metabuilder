@@ -1,0 +1,53 @@
+{
+  "name": "@metabuilder/ui_database_manager",
+  "version": "1.0.0",
+  "description": "Database CRUD manager with data browsing, editing, and bulk operations",
+  "type": "module",
+  "keywords": [
+    "metabuilder",
+    "admin",
+    "database",
+    "crud",
+    "data-management",
+    "browser",
+    "editor"
+  ],
+  "packageId": "ui_database_manager",
+  "permissions": {
+    "minLevel": 3,
+    "description": "Admin level - browse and edit database entities"
+  },
+  "features": {
+    "entity_browser": true,
+    "data_viewer": true,
+    "record_editor": true,
+    "bulk_operations": true,
+    "advanced_filtering": true,
+    "sorting_and_pagination": true,
+    "search": true,
+    "export_import": true,
+    "audit_logging": true
+  },
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "files": {
+    "directories": [
+      "component",
+      "page-config",
+      "seed",
+      "workflow"
+    ],
+    "byType": {
+      "config": [
+        "package.json"
+      ],
+      "other": [
+        "seed/component.json",
+        "seed/metadata.json",
+        "seed/page-config.json"
+      ]
+    }
+  }
+}

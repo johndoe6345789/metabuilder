@@ -1,0 +1,207 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/components.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "advanced-features",
+  "description": "Advanced UI components with state management",
+  "components": [
+    {
+      "id": "order_dashboard",
+      "name": "OrderDashboard",
+      "type": "container",
+      "description": "Order management dashboard with real-time updates",
+      "props": {
+        "userId": {
+          "type": "string",
+          "required": false,
+          "description": "Filter by user ID"
+        },
+        "status": {
+          "type": "OrderStatus",
+          "required": false,
+          "description": "Filter by order status"
+        },
+        "onOrderSelect": {
+          "type": "function",
+          "signature": "(orderId: string) => void",
+          "required": false
+        }
+      },
+      "state": {
+        "orders": {
+          "type": "AsyncOperation<PaginatedResponse<Order>>",
+          "default": { "status": "idle", "data": null }
+        },
+        "selectedOrder": {
+          "type": "string | null",
+          "default": null
+        },
+        "filters": {
+          "type": "OrderFilters",
+          "default": {}
+        }
+      },
+      "hooks": {
+        "onMount": "loadOrders",
+        "onUnmount": "cleanup"
+      },
+      "children": [
+        {
+          "component": "FilterBar",
+          "props": {
+            "filters": "state.filters",
+            "onChange": "handleFilterChange"
+          }
+        },
+        {
+          "component": "OrderTable",
+          "props": {
+            "orders": "state.orders.data?.data",
+            "loading": "state.orders.status === 'loading'",
+            "onRowClick": "handleOrderSelect"
+          }
+        },
+        {
+          "component": "Pagination",
+          "props": {
+            "pagination": "state.orders.data?.pagination",
+            "onChange": "handlePageChange"
+          }
+        }
+      ]
+    },
+    {
+      "id": "order_table",
+      "name": "OrderTable",
+      "type": "presentation",
+      "description": "Sortable, filterable order table",
+      "props": {
+        "orders": {
+          "type": "Order[]",
+          "required": true
+        },
+        "loading": {
+          "type": "boolean",
+          "required": false,
+          "default": false
+        },
+        "sortBy": {
+          "type": "OrderKeys",
+          "required": false
+        },
+        "sortDirection": {
+          "type": "'asc' | 'desc'",
+          "required": false,
+          "default": "desc"
+        },
+        "onRowClick": {
+          "type": "function",
+          "signature": "(order: Order) => void",
+          "required": false
+        },
+        "onSort": {
+          "type": "function",
+          "signature": "(field: OrderKeys, direction: 'asc' | 'desc') => void",
+          "required": false
+        }
+      },
+      "columns": [
+        {
+          "field": "orderNumber",
+          "header": "Order #",
+          "sortable": true,
+          "width": "150px"
+        },
+        {
+          "field": "customer.name",
+          "header": "Customer",
+          "sortable": true
+        },
+        {
+          "field": "status",
+          "header": "Status",
+          "sortable": true,
+          "render": "components.StatusBadge"
+        },
+        {
+          "field": "totalAmount",
+          "header": "Total",
+          "sortable": true,
+          "render": "components.CurrencyFormatter"
+        },
+        {
+          "field": "createdAt",
+          "header": "Date",
+          "sortable": true,
+          "render": "components.DateFormatter"
+        }
+      ]
+    },
+    {
+      "id": "order_form",
+      "name": "OrderForm",
+      "type": "form",
+      "description": "Multi-step order creation form",
+      "props": {
+        "initialValues": {
+          "type": "Partial<Order>",
+          "required": false
+        },
+        "onSubmit": {
+          "type": "function",
+          "signature": "(order: CreateOrderRequest) => Promise<void>",
+          "required": true
+        },
+        "onCancel": {
+          "type": "function",
+          "signature": "() => void",
+          "required": false
+        }
+      },
+      "state": {
+        "currentStep": {
+          "type": "number",
+          "default": 1
+        },
+        "formData": {
+          "type": "Partial<CreateOrderRequest>",
+          "default": {}
+        },
+        "validationErrors": {
+          "type": "Record<string, string>",
+          "default": {}
+        }
+      },
+      "steps": [
+        {
+          "id": "customer_info",
+          "title": "Customer Information",
+          "fields": ["customerId", "email", "phone"],
+          "validation": "validateCustomerInfo"
+        },
+        {
+          "id": "items",
+          "title": "Order Items",
+          "fields": ["items"],
+          "validation": "validateOrderItems"
+        },
+        {
+          "id": "shipping",
+          "title": "Shipping Details",
+          "fields": ["shippingAddress", "shippingMethod"],
+          "validation": "validateShippingInfo"
+        },
+        {
+          "id": "payment",
+          "title": "Payment",
+          "fields": ["paymentMethod", "billingAddress"],
+          "validation": "validatePaymentInfo"
+        },
+        {
+          "id": "review",
+          "title": "Review & Submit",
+          "readOnly": true
+        }
+      ]
+    }
+  ]
+}

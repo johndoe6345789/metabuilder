@@ -1,0 +1,171 @@
+{
+  "id": "fetch_inbox",
+  "name": "Fetch Inbox",
+  "version": "2.2.0",
+  "description": "Fetch new messages from IMAP server for an email account",
+  "packageId": "email_client",
+  "startNode": "validate-account",
+  "nodes": [
+    {
+      "id": "validate-account",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ $json.accountId && $json.accountId.length > 0 }}",
+      "description": "Validate that account ID is provided",
+      "onSuccess": {
+        "nextNode": "get-account-config"
+      },
+      "onError": {
+        "nextNode": "error-no-account"
+      }
+    },
+    {
+      "id": "get-account-config",
+      "type": "action",
+      "action": "workflow.plugins.ts",
+      "plugin": "dbal.read",
+      "description": "Retrieve email account configuration from database",
+      "params": {
+        "entity": "EmailClient",
+        "id": "{{ $json.accountId }}"
+      },
+      "nextNode": "validate-account-enabled"
+    },
+    {
+      "id": "validate-account-enabled",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ $json.isEnabled === true }}",
+      "description": "Check if account is enabled for syncing",
+      "onSuccess": {
+        "nextNode": "get-inbox-folder"
+      },
+      "onError": {
+        "nextNode": "error-account-disabled"
+      }
+    },
+    {
+      "id": "get-inbox-folder",
+      "type": "action",
+      "action": "workflow.plugins.ts",
+      "plugin": "dbal.query",
+      "description": "Find the inbox folder for this account",
+      "params": {
+        "entity": "EmailFolder",
+        "filter": {
+          "emailClientId": "{{ $json.accountId }}",
+          "type": "inbox"
+        },
+        "limit": 1
+      },
+      "nextNode": "fetch-from-imap"
+    },
+    {
+      "id": "fetch-from-imap",
+      "type": "action",
+      "action": "workflow.plugins.python",
+      "plugin": "email.imap.fetch",
+      "description": "Fetch new messages from IMAP server",
+      "params": {
+        "hostname": "{{ $json.hostname }}",
+        "port": "{{ $json.port }}",
+        "username": "{{ $json.username }}",
+        "credentialId": "{{ $json.credentialId }}",
+        "folder": "INBOX",
+        "syncToken": "{{ $json.syncToken || null }}",
+        "limit": "{{ $json.limit || 50 }}"
+      },
+      "nextNode": "process-messages"
+    },
+    {
+      "id": "process-messages",
+      "type": "operation",
+      "op": "forEach",
+      "array": "{{ $json.messages }}",
+      "description": "Process each fetched message",
+      "mapItem": {
+        "id": "store-message",
+        "type": "action",
+        "action": "workflow.plugins.ts",
+        "plugin": "dbal.create",
+        "params": {
+          "entity": "EmailMessage",
+          "data": {
+            "emailClientId": "{{ $parentJson.accountId }}",
+            "folderId": "{{ $parentJson.inboxFolderId }}",
+            "messageId": "{{ $item.messageId }}",
+            "imapUid": "{{ $item.imapUid }}",
+            "from": "{{ $item.from }}",
+            "to": "{{ $item.to }}",
+            "cc": "{{ $item.cc }}",
+            "bcc": "{{ $item.bcc }}",
+            "subject": "{{ $item.subject }}",
+            "textBody": "{{ $item.textBody }}",
+            "htmlBody": "{{ $item.htmlBody }}",
+            "headers": "{{ $item.headers }}",
+            "receivedAt": "{{ $item.receivedAt }}",
+            "isRead": "{{ $item.isRead || false }}",
+            "attachmentCount": "{{ $item.attachmentCount || 0 }}"
+          }
+        }
+      },
+      "nextNode": "update-sync-status"
+    },
+    {
+      "id": "update-sync-status",
+      "type": "action",
+      "action": "workflow.plugins.ts",
+      "plugin": "dbal.update",
+      "description": "Update account sync status",
+      "params": {
+        "entity": "EmailClient",
+        "id": "{{ $json.accountId }}",
+        "data": {
+          "lastSyncAt": "{{ Date.now() }}",
+          "isSyncing": false,
+          "syncToken": "{{ $json.newSyncToken }}"
+        }
+      },
+      "nextNode": "update-folder-counts"
+    },
+    {
+      "id": "update-folder-counts",
+      "type": "action",
+      "action": "workflow.plugins.python",
+      "plugin": "email.folder.sync_counts",
+      "description": "Update folder unread and total message counts",
+      "params": {
+        "accountId": "{{ $json.accountId }}"
+      },
+      "nextNode": "success-fetch"
+    },
+    {
+      "id": "success-fetch",
+      "type": "output",
+      "output": {
+        "status": "success",
+        "message": "Inbox synced successfully",
+        "messageCount": "{{ $json.messages.length || 0 }}",
+        "timestamp": "{{ Date.now() }}"
+      }
+    },
+    {
+      "id": "error-no-account",
+      "type": "output",
+      "output": {
+        "status": "error",
+        "message": "No account ID specified",
+        "error": "INVALID_ACCOUNT_ID"
+      }
+    },
+    {
+      "id": "error-account-disabled",
+      "type": "output",
+      "output": {
+        "status": "error",
+        "message": "Email account is disabled",
+        "error": "ACCOUNT_DISABLED"
+      }
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/test-parameters.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "data_table",
+  "description": "Test parameters for sorting functionality",
+
+  "parameters": [
+    {
+      "id": "sorting-test-params",
+      "name": "Sorting Test Parameters",
+      "description": "Various sorting scenarios",
+      "tags": ["sorting", "parameterized"],
+      "params": {
+        "data": {
+          "type": "array",
+          "description": "Input data array"
+        },
+        "column": {
+          "type": "string",
+          "description": "Column to sort by"
+        },
+        "direction": {
+          "type": "string",
+          "enum": ["asc", "desc"],
+          "description": "Sort direction"
+        },
+        "expected": {
+          "type": "array",
+          "description": "Expected sorted order (array of IDs)"
+        }
+      }
+    }
+  ]
+}

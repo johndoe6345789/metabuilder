@@ -4,7 +4,7 @@
  */
 
 import type { FormField } from '@/utils/featureConfig';
-import { Box, Grid } from '@mui/material';
+import { Box, Grid } from '@metabuilder/components/fakemui';
 import React from 'react';
 import { DynamicFormField } from './DynamicFormField';
 

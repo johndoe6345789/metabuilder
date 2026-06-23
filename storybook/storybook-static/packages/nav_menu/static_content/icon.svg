@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Hamburger menu -->
+  <path d="M16 22 L48 22 M16 32 L48 32 M16 42 L48 42" stroke-width="3" stroke-linecap="round"/>
+</svg>

@@ -70,7 +70,7 @@ if (isValidType(response)) {
 'use client'; // Only if component uses client-side features
 
 import { useState } from 'react'; // React imports first
-import { Button } from '@mui/material'; // Third-party imports
+import { Button } from '@metabuilder/components/fakemui'; // Third-party imports
 import { getFeatures } from '@/utils/featureConfig'; // Local imports
 
 type ComponentProps = {
@@ -461,11 +461,11 @@ const derivedData = useMemo(() => {
 ### Optimize Bundle Size
 ```typescript
 // ✅ Good - Named imports
-import { Button, TextField } from '@mui/material';
+import { Button, TextField } from '@metabuilder/components/fakemui';
 
 // ❌ Bad - Default imports (larger bundle)
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
+import Button from '@metabuilder/components/fakemui/Button';
+import TextField from '@metabuilder/components/fakemui/inputs/TextField';
 ```
 
 ## Security Best Practices
