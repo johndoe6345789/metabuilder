@@ -2,6 +2,7 @@
 
 import { Box, Stack, Typography } from '@metabuilder/components/fakemui';
 import { getDataTypes, getFeatureById } from '@/utils/featureConfig';
+import styles from './column-manager-tab.module.scss';
 import AddColumnDialog from './AddColumnDialog';
 import ColumnSchemaPanel from './ColumnSchemaPanel';
 import ColumnTableList from './ColumnTableList';
@@ -39,10 +40,7 @@ export default function ColumnManagerTab({
 
       <Stack
         spacing={2}
-        sx={{
-          flexDirection: { xs: 'column', md: 'row' },
-          alignItems: 'flex-start',
-        }}
+        className={styles.stack}
       >
         <ColumnTableList
           tables={tables}
@@ -50,11 +48,11 @@ export default function ColumnManagerTab({
           onSelect={setSelectedTable}
         />
 
-        <Box sx={{ flex: 1, minWidth: 0, width: '100%' }}>
+        <Box className={styles.content}>
           {!selectedTable && (
             <Typography
               color="text.secondary"
-              sx={{ mt: 1, fontSize: '0.875rem' }}
+              className={styles.hint}
             >
               Select a table to manage its columns
             </Typography>
@@ -62,7 +60,7 @@ export default function ColumnManagerTab({
           {selectedTable && !schema && (
             <Typography
               color="text.secondary"
-              sx={{ fontSize: '0.875rem' }}
+              className={styles.hint}
             >
               Loading…
             </Typography>

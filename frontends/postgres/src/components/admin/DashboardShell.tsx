@@ -15,6 +15,7 @@ import {
 } from '@metabuilder/components/fakemui';
 import useTheme from '@metabuilder/components/fakemui/utils/useTheme';
 import type { ReactNode } from 'react';
+import styles from './dashboard-shell.module.scss';
 import AdminDrawerContent, { type AdminNavItem } from './AdminDrawerContent';
 
 type Props = {
@@ -61,19 +62,19 @@ export default function DashboardShell({
   );
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+    <Box className={styles.root}>
       <AppBar position="fixed" sx={{ zIndex: theme => theme.zIndex.drawer + 1 }}>
         <Toolbar>
           <IconButton
             color="inherit"
             edge="start"
             onClick={onMobileOpen}
-            sx={{ mr: 1, display: { md: 'none' } }}
+            className={styles.hamburger}
           >
             <MenuIcon />
           </IconButton>
-          <StorageIcon sx={{ mr: 2 }} />
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+          <StorageIcon className={styles.barIcon} />
+          <Typography variant="h6" noWrap component="div" className={styles.title}>
             Postgres Admin
           </Typography>
           <Button color="inherit" onClick={onLogout} startIcon={<LogoutIcon />}>
@@ -87,6 +88,7 @@ export default function DashboardShell({
         open={isDesktop || mobileOpen}
         onClose={onMobileClose}
         ModalProps={{ keepMounted: true }}
+        className={styles.drawer}
         sx={{
           width: DRAWER_WIDTH,
           flexShrink: 0,
@@ -103,14 +105,7 @@ export default function DashboardShell({
 
       <Box
         component="main"
-        sx={{
-          flexGrow: 1,
-          minWidth: 0,
-          bgcolor: 'background.default',
-          pt: 2,
-          px: { xs: 1.5, sm: 2, md: 3 },
-          pb: 2,
-        }}
+        className={styles.main}
       >
         <Toolbar />
         {children}
