@@ -7,16 +7,23 @@ import {
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from '@/utils/theme';
 import LoginForm from './LoginForm';
+import TurboErrorDialog from './TurboErrorDialog';
 import { useAdminLogin } from './hooks/useAdminLogin';
 
 export default function AdminLoginPage() {
   const {
     username, setUsername, password, setPassword,
-    error, loading, handleSubmit,
+    error, loading, handleSubmit, handleTurboLogin,
+    turboError, clearTurboError,
   } = useAdminLogin();
 
   return (
     <ThemeProvider theme={theme}>
+      <TurboErrorDialog
+        open={!!turboError}
+        message={turboError ?? ''}
+        onClose={clearTurboError}
+      />
       <Box
         sx={{
           minHeight: '100vh', display: 'flex',
@@ -66,6 +73,7 @@ export default function AdminLoginPage() {
               onUsernameChange={setUsername}
               onPasswordChange={setPassword}
               onSubmit={handleSubmit}
+              onTurboLogin={handleTurboLogin}
             />
           </Paper>
         </Container>

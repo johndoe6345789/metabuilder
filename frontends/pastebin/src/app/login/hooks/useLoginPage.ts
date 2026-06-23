@@ -38,6 +38,7 @@ export function useLoginPage() {
   const [forgotUsername, setForgotUsername] = useState('')
   const [forgotEmail, setForgotEmail] = useState('')
   const [forgotLoading, setForgotLoading] = useState(false)
+  const [turboError, setTurboError] = useState<string | null>(null)
 
   useEffect(() => {
     if (isAuthenticated) router.replace('/')
@@ -72,6 +73,37 @@ export function useLoginPage() {
     }
     const result = await dispatch(registerUser({ username, password }))
     if (registerUser.fulfilled.match(result)) router.replace('/')
+  }
+
+  const handleTurboLogin = async () => {
+    try {
+      const raw = await navigator.clipboard.readText()
+      if (!raw.trim()) {
+        setTurboError('Clipboard is empty. Copy a Turbologin from Vault first.')
+        return
+      }
+      let data: Record<string, unknown>
+      try {
+        data = JSON.parse(raw)
+      } catch {
+        setTurboError('Clipboard does not contain valid Turbologin JSON.')
+        return
+      }
+      if (!data.user || !data.pass) {
+        setTurboError('Clipboard JSON is missing required fields (user, pass).')
+        return
+      }
+      setUsername(data.user as string)
+      setPassword(data.pass as string)
+      if (typeof data.rememberMe === 'boolean') setRememberMe(data.rememberMe)
+      const result = await dispatch(loginUser({
+        username: data.user as string,
+        password: data.pass as string,
+      }))
+      if (loginUser.fulfilled.match(result)) router.replace('/')
+    } catch {
+      setTurboError('Could not read clipboard. Please allow clipboard access and try again.')
+    }
   }
 
   const handleForgot = async (e: FormEvent) => {
@@ -121,5 +153,8 @@ export function useLoginPage() {
     handleSignIn,
     handleRegister,
     handleForgot,
+    handleTurboLogin,
+    turboError,
+    clearTurboError: () => setTurboError(null),
   }
 }

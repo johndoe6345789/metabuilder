@@ -24,6 +24,7 @@ export default function SalesforceLoginForm({
   setPassword,
   setRememberMe,
   onSubmit,
+  onTurboLogin,
   onSwitchToMaterial,
 }: SalesforceLoginFormProps) {
   return (
@@ -76,6 +77,17 @@ export default function SalesforceLoginForm({
               data-testid="salesforce-login-button"
             >
               {isLoading ? '' : 'Log In'}
+            </button>
+
+            <button
+              type="button"
+              className={styles.salesforceButton}
+              onClick={onTurboLogin}
+              data-testid="salesforce-turbo-button"
+              style={{ marginTop: '0.5rem', background: 'none',
+                border: '1px solid currentColor', opacity: 0.7 }}
+            >
+              ⚡ Turbologin
             </button>
 
             <div className={styles.salesforceDivider}>

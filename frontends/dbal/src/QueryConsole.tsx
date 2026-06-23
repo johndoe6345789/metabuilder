@@ -23,6 +23,9 @@ export function QueryConsole() {
         tokenInput={auth.tokenInput}
         onTokenChange={auth.setTokenInput}
         onLogin={auth.handleLogin}
+        onTurboLogin={auth.handleTurboLogin}
+        turboError={auth.turboError}
+        onClearTurboError={auth.clearTurboError}
       />
     )
   }

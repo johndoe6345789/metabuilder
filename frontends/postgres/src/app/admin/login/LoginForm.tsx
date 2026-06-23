@@ -17,6 +17,7 @@ type LoginFormProps = {
   onUsernameChange: (v: string) => void;
   onPasswordChange: (v: string) => void;
   onSubmit: (e: React.FormEvent) => void;
+  onTurboLogin: () => void;
 };
 
 export default function LoginForm({
@@ -27,6 +28,7 @@ export default function LoginForm({
   onUsernameChange,
   onPasswordChange,
   onSubmit,
+  onTurboLogin,
 }: LoginFormProps) {
   return (
     <>
@@ -65,6 +67,16 @@ export default function LoginForm({
           disabled={loading}
         >
           {loading ? <CircularProgress size={24} /> : 'Sign In'}
+        </Button>
+        <Button
+          type="button"
+          fullWidth
+          variant="outlined"
+          sx={{ mb: 2, py: 1.5 }}
+          onClick={onTurboLogin}
+          disabled={loading}
+        >
+          ⚡ Turbologin
         </Button>
       </Box>
     </>

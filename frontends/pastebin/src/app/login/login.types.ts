@@ -17,6 +17,7 @@ export interface SignInFormProps {
   onTogglePass: () => void
   onRememberChange: (v: boolean) => void
   onSubmit: (e: FormEvent) => void
+  onTurboLogin: () => void
   onForgotOpen: () => void
   onForgotClose: () => void
   onForgotSubmit: (e: FormEvent) => void

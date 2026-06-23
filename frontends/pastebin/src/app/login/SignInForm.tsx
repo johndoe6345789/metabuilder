@@ -19,6 +19,7 @@ export function SignInForm({
   onTogglePass,
   onRememberChange,
   onSubmit,
+  onTurboLogin,
   onForgotOpen,
   onForgotClose,
   onForgotSubmit,
@@ -100,6 +101,15 @@ export function SignInForm({
           disabled={loading}
         >
           {loading ? 'Signing in…' : 'Log In'}
+        </button>
+
+        <button
+          type="button"
+          className={styles.textBtn}
+          data-testid="login-turbo"
+          onClick={onTurboLogin}
+        >
+          ⚡ Turbologin
         </button>
       </form>
 

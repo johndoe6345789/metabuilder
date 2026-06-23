@@ -5,12 +5,20 @@ import { useLoginPage } from './hooks/useLoginPage'
 import { LoginBrandPanel } from './LoginBrandPanel'
 import { SignInForm } from './SignInForm'
 import { RegisterForm } from './RegisterForm'
+import { TurboErrorDialog } from './TurboErrorDialog'
 import styles from './login.module.scss'
 
 export default function LoginPage() {
   const vm = useLoginPage()
 
+
   return (
+    <>
+    <TurboErrorDialog
+      open={!!vm.turboError}
+      message={vm.turboError ?? ''}
+      onClose={vm.clearTurboError}
+    />
     <div className={styles.page} data-testid="login-page">
       <ThemeApplier />
       <div className={styles.container} data-testid="login-container">
@@ -35,6 +43,7 @@ export default function LoginPage() {
                 onTogglePass={() => vm.setShowPass(p => !p)}
                 onRememberChange={vm.setRememberMe}
                 onSubmit={vm.handleSignIn}
+                onTurboLogin={vm.handleTurboLogin}
                 onForgotOpen={() => vm.setForgot('open')}
                 onForgotClose={() => vm.setForgot('closed')}
                 onForgotSubmit={vm.handleForgot}
@@ -64,5 +73,6 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+    </>
   )
 }

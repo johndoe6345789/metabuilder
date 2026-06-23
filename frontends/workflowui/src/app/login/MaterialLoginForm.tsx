@@ -22,6 +22,7 @@ interface MaterialLoginFormProps {
   setEmail: (v: string) => void;
   setPassword: (v: string) => void;
   onSubmit: (e: React.FormEvent) => void;
+  onTurboLogin: () => void;
   onSwitchToSalesforce: () => void;
 }
 
@@ -34,6 +35,7 @@ export default function MaterialLoginForm({
   setEmail,
   setPassword,
   onSubmit,
+  onTurboLogin,
   onSwitchToSalesforce,
 }: MaterialLoginFormProps) {
   return (
@@ -75,6 +77,16 @@ export default function MaterialLoginForm({
           data-testid="login-button"
         >
           {isLoading ? 'Signing in...' : 'Sign In'}
+        </Button>
+
+        <Button
+          type="button"
+          variant="outlined"
+          fullWidth
+          onClick={onTurboLogin}
+          data-testid="turbo-login-button"
+        >
+          ⚡ Turbologin
         </Button>
 
         <Box sx={{ textAlign: 'center', mt: 2 }}>

@@ -13,5 +13,6 @@ export interface SalesforceLoginFormProps {
   setPassword: (v: string) => void;
   setRememberMe: (v: boolean) => void;
   onSubmit: (e: React.FormEvent) => void;
+  onTurboLogin: () => void;
   onSwitchToMaterial: () => void;
 }
