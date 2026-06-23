@@ -159,4 +159,84 @@ drogon::HttpResponsePtr proxyConan(const std::string& prefix,
     return r;
 }
 
+static bool endsWith(const std::string& s, const std::string& suf)
+{
+    return s.size() >= suf.size()
+           && s.compare(s.size() - suf.size(), suf.size(), suf) == 0;
+}
+
+static std::string guessType(const std::string& path)
+{
+    if (endsWith(path, ".json")) return "application/json";
+    if (endsWith(path, ".xml") || endsWith(path, ".pom"))
+        return "application/xml";
+    if (endsWith(path, "/") || endsWith(path, ".html")) return "text/html";
+    return "application/octet-stream";
+}
+
+drogon::HttpResponsePtr proxyGeneric(const std::string& prefix,
+                                     const std::string& fullPath,
+                                     const std::string& upstream)
+{
+    if (upstream.empty())
+        return nullptr;
+
+    std::string up = fullPath.substr(prefix.size());
+    if (up.empty() || up.front() != '/')
+        up = "/" + up;
+
+    auto res = ProxyCache::fetch(upstream, up);
+    if (!res.ok)
+        return nullptr;
+
+    auto r = HttpResponse::newHttpResponse();
+    r->setContentTypeString(guessType(up));
+    r->setBody(std::move(res.body));
+    return r;
+}
+
+drogon::HttpResponsePtr proxyPypi(const std::string& prefix,
+                                  const std::string& fullPath,
+                                  const HttpRequestPtr& req)
+{
+    auto it = Globals::upstreams.find("pypi");
+    if (it == Globals::upstreams.end() || it->second.empty())
+        return nullptr;
+
+    std::string up = fullPath.substr(prefix.size());
+    if (up.empty() || up.front() != '/')
+        up = "/" + up;
+
+    // The Simple index links to a separate file host; proxy those too so the
+    // whole download path stays on this server (and caches to S3).
+    static const std::string FILES = "https://files.pythonhosted.org";
+
+    // {prefix}/files/<path> -> files.pythonhosted.org/<path> (wheel / sdist)
+    if (up.rfind("/files/", 0) == 0) {
+        auto res = ProxyCache::fetch(FILES, up.substr(6)); // drop "/files"
+        if (!res.ok)
+            return nullptr;
+        auto r = HttpResponse::newHttpResponse();
+        r->setContentTypeString("application/octet-stream");
+        r->setBody(std::move(res.body));
+        return r;
+    }
+
+    // Simple index (HTML or JSON): rewrite the file host back to us.
+    auto res = ProxyCache::fetch(it->second, up);
+    if (!res.ok)
+        return nullptr;
+
+    std::string body = std::move(res.body);
+    replaceAll(body, FILES, baseUrl(req) + prefix + "/files");
+
+    auto r = HttpResponse::newHttpResponse();
+    const bool isJson = !body.empty() && (body.front() == '{'
+                                          || body.front() == '[');
+    r->setContentTypeString(isJson ? "application/vnd.pypi.simple.v1+json"
+                                   : "text/html");
+    r->setBody(std::move(body));
+    return r;
+}
+
 } // namespace repo

@@ -62,6 +62,29 @@ void registerAdapterRoutes()
             continue;
         }
 
+        // Any other ecosystem with a configured upstream: transparent
+        // pull-through (pypi rewrites its file-host URLs; the rest are
+        // path-based and need none). Caches every fetch to S3.
+        {
+            auto upIt = Globals::upstreams.find(pa->name);
+            if (upIt != Globals::upstreams.end() && !upIt->second.empty()) {
+                auto pfx = pa->prefix;
+                auto nm = pa->name;
+                app().registerHandlerViaRegex(pfx + "(?:/.*)?",
+                    [pfx, nm](const HttpRequestPtr& r, Cb&& cb) {
+                        std::string p = r->path();
+                        auto q = r->getQuery();
+                        if (!q.empty()) p += "?" + q;
+                        HttpResponsePtr resp = (nm == "pypi")
+                            ? proxyPypi(pfx, p, r)
+                            : proxyGeneric(pfx, p, Globals::upstreams[nm]);
+                        cb(resp ? resp
+                                : HttpResponse::newNotFoundResponse());
+                    }, {Get});
+                continue;
+            }
+        }
+
         if (pa->metaRegex.empty()) continue;
 
         int params = countPathParams(pa->metaRegex);

@@ -11,6 +11,7 @@
 #include "S3BlobStore.h"
 
 #include <filesystem>
+#include <map>
 #include <memory>
 #include <string>
 
@@ -27,6 +28,10 @@ struct Globals {
     // Upstream registries for pull-through proxying (empty = disabled).
     static inline std::string npmUpstream;   // e.g. https://registry.npmjs.org
     static inline std::string conanUpstream; // e.g. https://center.conan.io
+
+    // Generic upstreams for the remaining ecosystems, keyed by adapter name
+    // (pypi, cargo, maven, nuget, go, rubygems). Empty/absent = disabled.
+    static inline std::map<std::string, std::string> upstreams;
 
     // Stored for deferred S3 init
     static inline std::string s3Ep_;

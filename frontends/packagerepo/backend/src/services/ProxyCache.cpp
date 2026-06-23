@@ -22,13 +22,29 @@ static ProxyResult httpGet(const std::string& base, const std::string& path)
     auto prom = std::make_shared<std::promise<ProxyResult>>();
     auto fut = prom->get_future();
 
-    drogon::app().getLoop()->queueInLoop([base, path, prom]() mutable {
-        auto client = drogon::HttpClient::newHttpClient(base);
+    // Drogon's HttpClient uses only scheme://host:port from `base`; any path
+    // component (e.g. https://repo1.maven.org/maven2) is otherwise dropped, so
+    // fold it into the request path.
+    std::string origin = base;
+    std::string basePath;
+    auto hostStart = base.find("://");
+    hostStart = hostStart == std::string::npos ? 0 : hostStart + 3;
+    auto slash = base.find('/', hostStart);
+    if (slash != std::string::npos) {
+        origin = base.substr(0, slash);
+        basePath = base.substr(slash);
+        while (!basePath.empty() && basePath.back() == '/')
+            basePath.pop_back();
+    }
+    const std::string reqPath = basePath + path;
+
+    drogon::app().getLoop()->queueInLoop([origin, reqPath, prom]() mutable {
+        auto client = drogon::HttpClient::newHttpClient(origin);
         auto req = drogon::HttpRequest::newHttpRequest();
-        req->setPath(path);
+        req->setPath(reqPath);
         req->setMethod(drogon::Get);
-        client->sendRequest(req, [prom, base](drogon::ReqResult r,
-                                              const drogon::HttpResponsePtr& resp) {
+        client->sendRequest(req, [prom](drogon::ReqResult r,
+                                        const drogon::HttpResponsePtr& resp) {
             ProxyResult out;
             if (r == drogon::ReqResult::Ok && resp) {
                 int code = resp->getStatusCode();

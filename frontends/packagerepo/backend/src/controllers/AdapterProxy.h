@@ -44,4 +44,20 @@ drogon::HttpResponsePtr proxyNpm(const std::string& prefix,
 drogon::HttpResponsePtr proxyConan(const std::string& prefix,
                                    const std::string& fullPath);
 
+/// @brief Generic transparent pull-through for path-based ecosystems (maven,
+///        go, rubygems, cargo, nuget): map @p fullPath under @p prefix onto
+///        @p upstream, cache the bytes in S3 and serve. No URL rewriting (these
+///        clients build paths themselves). nullptr if not found.
+drogon::HttpResponsePtr proxyGeneric(const std::string& prefix,
+                                     const std::string& fullPath,
+                                     const std::string& upstream);
+
+/// @brief PyPI pull-through. Serves the Simple index from pypi.org with the
+///        files.pythonhosted.org file URLs rewritten to {prefix}/files/... so
+///        wheel/sdist downloads also pull through here (and cache to S3).
+///        Paths under {prefix}/files/ are proxied to files.pythonhosted.org.
+drogon::HttpResponsePtr proxyPypi(const std::string& prefix,
+                                  const std::string& fullPath,
+                                  const drogon::HttpRequestPtr& req);
+
 } // namespace repo

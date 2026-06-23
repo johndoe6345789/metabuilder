@@ -36,6 +36,18 @@ int main()
     // Upstream registries for pull-through proxying (empty disables it).
     repo::Globals::npmUpstream = env("NPM_UPSTREAM", "https://registry.npmjs.org");
     repo::Globals::conanUpstream = env("CONAN_UPSTREAM", "https://center2.conan.io");
+    // Generic pull-through upstreams for the remaining ecosystems. Each fetches
+    // from the public index, caches the bytes in S3 and serves from our URL.
+    repo::Globals::upstreams["pypi"] = env("PYPI_UPSTREAM", "https://pypi.org");
+    repo::Globals::upstreams["maven"] =
+        env("MAVEN_UPSTREAM", "https://repo1.maven.org/maven2");
+    repo::Globals::upstreams["go"] = env("GO_UPSTREAM", "https://proxy.golang.org");
+    repo::Globals::upstreams["cargo"] =
+        env("CARGO_UPSTREAM", "https://index.crates.io");
+    repo::Globals::upstreams["nuget"] =
+        env("NUGET_UPSTREAM", "https://api.nuget.org");
+    repo::Globals::upstreams["rubygems"] =
+        env("RUBYGEMS_UPSTREAM", "https://rubygems.org");
     repo::AdapterGlobals::init(repo::Globals::repoType);
 
     for (auto p : {fs::path("/app/schema.json"),
