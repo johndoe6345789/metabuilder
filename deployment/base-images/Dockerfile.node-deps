@@ -69,7 +69,7 @@ RUN npm config set fetch-retries 5 \
     && VERDACCIO_LOCAL="http://localhost:4873/" \
     && LOCAL_REG="" \
     && LOCAL_REG_AUTH="" \
-    && PKGREPO_NPM="http://localhost:5002/npm" \
+    && PKGREPO_NPM="http://172.17.0.1:5002/npm" \
     && if curl -sf --connect-timeout 3 "$PKGREPO_NPM/" >/dev/null 2>&1; then \
          LOCAL_REG="$PKGREPO_NPM"; \
          echo "    pkgrepo npm cache detected at $PKGREPO_NPM"; \
