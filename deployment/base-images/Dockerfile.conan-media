@@ -24,9 +24,11 @@ RUN conan profile detect --force
 # default conancenter). Base builds run with --network=host, so a host URL like
 # http://localhost:5002/conan is reachable.
 ARG CONAN_REMOTE=""
+# Add pkgrepo as the first remote so downloads are served from the local
+# pull-through cache, but keep conancenter enabled so Conan can enumerate
+# version ranges that pkgrepo's proxy doesn't support.
 RUN if [ -n "$CONAN_REMOTE" ]; then \
-      conan remote add pkgrepo "$CONAN_REMOTE" --force && \
-      conan remote disable conancenter; \
+      conan remote add pkgrepo "$CONAN_REMOTE" --insert 0 --force; \
     fi
 
 # ---- Media daemon ----
