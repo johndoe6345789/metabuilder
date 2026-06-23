@@ -72,7 +72,10 @@ done
 RUN cd frontends/workflowui && npx next build --turbopack
 
 # --- Runtime stage ---
-FROM node:24-alpine
+# Pinned to alpine3.21 (Python 3.12) on purpose: node:24-alpine moved to
+# alpine3.24 / Python 3.14, for which pydantic-core has no musl wheel and its
+# pinned pyo3 won't compile -> pip install fails. 3.12 installs from a wheel.
+FROM node:24-alpine3.21
 WORKDIR /app
 
 # Install Python for Flask backend
