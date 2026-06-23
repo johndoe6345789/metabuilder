@@ -40,13 +40,13 @@ export default function AdminLoginPage() {
             <Box
               sx={{
                 width: 56, height: 56, borderRadius: '50%',
-                bgcolor: '#4f378b', display: 'flex',
+                bgcolor: '#6750a4', display: 'flex',
                 alignItems: 'center', justifyContent: 'center',
                 mb: 2,
               }}
             >
               <LockOutlined
-                sx={{ color: 'white', fontSize: 32 }}
+                sx={{ color: '#ffffff', fontSize: '2rem' }}
               />
             </Box>
             <Typography

@@ -105,7 +105,7 @@ export default function TableManagerTab({
                 sx={{ borderRadius: 1, px: 1, py: 0.5 }}
                 disabled={!onTableClick}
               >
-                <ListItemIcon sx={{ minWidth: 32 }}>
+                <ListItemIcon sx={{ minWidth: 40 }}>
                   <TableChartIcon fontSize="small" />
                 </ListItemIcon>
                 <ListItemText

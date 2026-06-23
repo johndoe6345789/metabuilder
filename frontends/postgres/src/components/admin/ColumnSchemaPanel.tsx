@@ -67,7 +67,7 @@ export default function ColumnSchemaPanel({
             <TableBody>
               {columns.map(col => (
                 <TableRow key={col.column_name}>
-                  <TableCell sx={{ fontFamily: 'monospace', fontSize: '0.8125rem' }}>
+                  <TableCell sx={{ fontFamily: "'JetBrains Mono', 'Fira Code', 'Consolas', monospace", fontSize: '0.8125rem' }}>
                     {col.column_name}
                   </TableCell>
                   <TableCell sx={{ color: 'text.secondary', fontSize: '0.8125rem' }}>

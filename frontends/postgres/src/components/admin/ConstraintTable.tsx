@@ -33,14 +33,14 @@ export default function ConstraintTable({
   return (
     <Paper sx={{ mt: 2 }}>
       <TableContainer>
-        <Table>
+        <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell>Constraint Name</TableCell>
-              <TableCell>Type</TableCell>
-              <TableCell>Column</TableCell>
-              <TableCell>Expression</TableCell>
-              <TableCell align="right">Actions</TableCell>
+              <TableCell><strong>Constraint Name</strong></TableCell>
+              <TableCell><strong>Type</strong></TableCell>
+              <TableCell><strong>Column</strong></TableCell>
+              <TableCell><strong>Expression</strong></TableCell>
+              <TableCell align="right"><strong>Actions</strong></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

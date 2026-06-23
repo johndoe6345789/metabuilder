@@ -1,6 +1,6 @@
 'use client';
 
-import { Paper, Typography } from '@metabuilder/components/fakemui';
+import { Alert, Paper, Typography } from '@metabuilder/components/fakemui';
 import { getFeatureById, getIndexTypes } from '@/utils/featureConfig';
 import ConfirmDialog from './ConfirmDialog';
 import IndexCreateDialog from './IndexCreateDialog';
@@ -38,14 +38,10 @@ export default function IndexManagerTab({
         </Typography>
       )}
       {success && (
-        <Paper sx={{ p: 2, mt: 2, bgcolor: 'success.light' }}>
-          <Typography color="success.dark">{success}</Typography>
-        </Paper>
+        <Alert severity="success" sx={{ mt: 2 }}>{success}</Alert>
       )}
       {error && (
-        <Paper sx={{ p: 2, mt: 2, bgcolor: 'error.light' }}>
-          <Typography color="error">{error}</Typography>
-        </Paper>
+        <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>
       )}
       <IndexTableSelector
         tables={tables}

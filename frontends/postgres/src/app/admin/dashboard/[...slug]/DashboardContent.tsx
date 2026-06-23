@@ -401,8 +401,8 @@ export default function DashboardContent({ section, table }: Props) {
             </Box>
           )}
 
-          {/* SQL query results — only when not in table drill-down */}
-          {queryResult && !loading && !selectedTable && (
+          {/* SQL query results — only on query tab, not in table drill-down */}
+          {queryResult && !loading && section === 'query' && !selectedTable && (
             <Paper sx={{ mt: 2, overflow: 'auto' }}>
               <Box sx={{ px: 2, py: 1, borderBottom: '1px solid rgba(202,196,208,0.08)' }}>
                 <Typography variant="caption" color="text.secondary">

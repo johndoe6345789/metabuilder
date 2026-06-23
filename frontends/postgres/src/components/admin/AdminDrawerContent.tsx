@@ -55,7 +55,7 @@ export default function AdminDrawerContent({
 }: Props) {
   return (
     <>
-      <Box sx={{ px: 2, py: 1.25 }}>
+      <Box sx={{ px: 2, py: 1.5 }}>
         <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', lineHeight: 1.4 }}>
           Browse
         </Typography>
@@ -81,7 +81,7 @@ export default function AdminDrawerContent({
         <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', lineHeight: 1.6 }}>
           PostgreSQL Admin
         </Typography>
-        <Typography variant="caption" sx={{ color: 'text.disabled', fontFamily: 'monospace' }}>
+        <Typography variant="caption" sx={{ color: 'text.disabled', fontFamily: "'JetBrains Mono', 'Fira Code', 'Consolas', monospace" }}>
           v{version}
         </Typography>
       </Box>

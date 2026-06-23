@@ -1,6 +1,8 @@
 'use client';
 
-import { Box, Paper, Typography } from '@metabuilder/components/fakemui';
+import {
+  Dialog, DialogContent, DialogTitle,
+} from '@metabuilder/components/fakemui';
 import type { IndexType } from '@/utils/featureConfig';
 import IndexCreateForm from './IndexCreateForm';
 
@@ -38,34 +40,9 @@ export default function IndexCreateDialog({
   onCancel,
 }: IndexCreateDialogProps) {
   return (
-    <>
-      <Box
-        sx={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          bgcolor: 'rgba(0, 0, 0, 0.5)',
-          zIndex: 1299,
-        }}
-        onClick={onCancel}
-      />
-      <Paper
-        sx={{
-          position: 'fixed',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          p: 3,
-          zIndex: 1300,
-          minWidth: 400,
-          maxWidth: 600,
-        }}
-      >
-        <Typography variant="h6" gutterBottom>
-          Create Index on {selectedTable}
-        </Typography>
+    <Dialog open onClose={onCancel} maxWidth="sm" fullWidth>
+      <DialogTitle>Create Index on {selectedTable}</DialogTitle>
+      <DialogContent sx={{ pt: '16px !important' }}>
         <IndexCreateForm
           indexName={indexName}
           onIndexNameChange={onIndexNameChange}
@@ -81,7 +58,7 @@ export default function IndexCreateDialog({
           onCreate={onCreate}
           onCancel={onCancel}
         />
-      </Paper>
-    </>
+      </DialogContent>
+    </Dialog>
   );
 }
