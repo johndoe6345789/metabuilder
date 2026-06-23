@@ -119,6 +119,11 @@ def build_with_retry(tag: str, dockerfile: str, context: str, max_attempts: int 
     conan_remote = os.environ.get("CONAN_REMOTE")
     if conan_remote:
         extra_args += ["--build-arg", f"CONAN_REMOTE={conan_remote}"]
+    # Route pip deps through the pkgrepo pypi cache when set (pip-deps base adds
+    # it as --index-url + --trusted-host).
+    pip_index_url = os.environ.get("PIP_INDEX_URL")
+    if pip_index_url:
+        extra_args += ["--build-arg", f"PIP_INDEX_URL={pip_index_url}"]
 
     log_info(f"Building {tag} ...")
     for attempt in range(1, max_attempts + 1):
