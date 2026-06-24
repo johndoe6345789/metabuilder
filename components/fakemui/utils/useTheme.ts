@@ -91,39 +91,59 @@ function parseFontSize(fallback: number) {
   return Number.isFinite(parsed) ? parsed : fallback
 }
 
+let cachedSignature = ''
+let cachedSnapshot = baseTheme
+
 function getThemeSnapshot() {
   const mode = getMode()
+  const fontSize = parseFontSize(baseTheme.typography.fontSize)
+  const primary = readCssVar('--mat-sys-primary', baseTheme.palette.primary.main)
+  const secondary = readCssVar('--mat-sys-secondary', baseTheme.palette.secondary.main)
+  const error = readCssVar('--mat-sys-error', baseTheme.palette.error.main)
+  const surface = readCssVar('--mat-sys-surface', baseTheme.palette.background.default)
+  const surfaceContainer = readCssVar('--mat-sys-surface-container', baseTheme.palette.background.paper)
+  const onSurface = readCssVar('--mat-sys-on-surface', baseTheme.palette.text.primary)
+  const onSurfaceVariant = readCssVar('--mat-sys-on-surface-variant', baseTheme.palette.text.secondary)
+  const disabled = readCssVar('--color-text-disabled', baseTheme.palette.text.disabled)
+  const divider = readCssVar('--mat-sys-outline-variant', baseTheme.palette.divider)
+  const signature = [
+    mode,
+    fontSize,
+    primary,
+    secondary,
+    error,
+    surface,
+    surfaceContainer,
+    onSurface,
+    onSurfaceVariant,
+    disabled,
+    divider,
+  ].join('|')
 
-  return {
+  if (signature === cachedSignature) {
+    return cachedSnapshot
+  }
+
+  cachedSignature = signature
+  cachedSnapshot = {
     ...baseTheme,
     palette: {
       ...baseTheme.palette,
       mode,
-      primary: {
-        main: readCssVar('--mat-sys-primary', baseTheme.palette.primary.main),
-      },
-      secondary: {
-        main: readCssVar('--mat-sys-secondary', baseTheme.palette.secondary.main),
-      },
-      error: {
-        main: readCssVar('--mat-sys-error', baseTheme.palette.error.main),
-      },
-      background: {
-        default: readCssVar('--mat-sys-surface', baseTheme.palette.background.default),
-        paper: readCssVar('--mat-sys-surface-container', baseTheme.palette.background.paper),
-      },
-      text: {
-        primary: readCssVar('--mat-sys-on-surface', baseTheme.palette.text.primary),
-        secondary: readCssVar('--mat-sys-on-surface-variant', baseTheme.palette.text.secondary),
-        disabled: readCssVar('--color-text-disabled', baseTheme.palette.text.disabled),
-      },
-      divider: readCssVar('--mat-sys-outline-variant', baseTheme.palette.divider),
+      primary: { main: primary },
+      secondary: { main: secondary },
+      error: { main: error },
+      background: { default: surface, paper: surfaceContainer },
+      text: { primary: onSurface, secondary: onSurfaceVariant, disabled },
+      divider,
     },
     typography: {
       ...baseTheme.typography,
-      fontSize: parseFontSize(baseTheme.typography.fontSize),
+      fontSize,
     },
   }
+
+  return cachedSnapshot
 }
 
 function subscribe(callback: () => void) {
