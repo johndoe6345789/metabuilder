@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { UserProfile } from '@clerk/nextjs';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import publicStyles from '@/styles/public.module.scss';
 import { getI18nPath } from '@/utils/Helpers';
 
 type IUserProfilePageProps = {
@@ -24,7 +25,7 @@ export default async function UserProfilePage(props: IUserProfilePageProps) {
   setRequestLocale(locale);
 
   return (
-    <div className="my-6 -ml-16">
+    <div className={publicStyles.userProfileShell}>
       <UserProfile
         path={getI18nPath('/dashboard/user-profile', locale)}
       />

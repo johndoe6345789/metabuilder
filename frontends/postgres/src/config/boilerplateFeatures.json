@@ -1,7 +1,7 @@
 [
   "🚀 Next.js with App Router support",
   "🔥 TypeScript for type checking",
-  "💎 Tailwind CSS integration",
+  "💎 SCSS styling integration",
   "📦 ORM with DrizzleORM (PostgreSQL, SQLite, MySQL support)",
   "💽 Dev database with PGlite and production with Neon (PostgreSQL)",
   "🔴 Form handling (React Hook Form) and validation (Zod)",

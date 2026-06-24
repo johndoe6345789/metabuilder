@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import '@/styles/admin-global.scss';
 import styles from './admin.module.scss';
 
 export const metadata: Metadata = {

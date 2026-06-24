@@ -27,7 +27,7 @@
 .main {
   flex-grow: 1;
   min-width: 0;
-  background-color: #1c1b1f;
+  background-color: var(--mat-sys-surface);
   padding: 16px 12px;
 
   @media (min-width: 600px) {

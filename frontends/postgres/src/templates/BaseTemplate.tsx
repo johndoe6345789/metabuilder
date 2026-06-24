@@ -1,4 +1,6 @@
 import { useTranslations } from 'next-intl';
+import { StyledLink } from '@/components/StyledLink';
+import publicStyles from '@/styles/public.module.scss';
 import { AppConfig } from '@/utils/AppConfig';
 
 export const BaseTemplate = (props: {
@@ -9,25 +11,25 @@ export const BaseTemplate = (props: {
   const t = useTranslations('BaseTemplate');
 
   return (
-    <div className="w-full px-1 text-gray-700 antialiased">
-      <div className="mx-auto max-w-screen-md">
-        <header className="border-b border-gray-300">
-          <div className="pt-16 pb-8">
-            <h1 className="text-3xl font-bold text-gray-900">
+    <div className={publicStyles.basePageRoot}>
+      <div className={publicStyles.basePageInner}>
+        <header className={publicStyles.baseHeader}>
+          <div className={publicStyles.baseHero}>
+            <h1 className={publicStyles.baseTitle}>
               {AppConfig.name}
             </h1>
-            <h2 className="text-xl">{t('description')}</h2>
+            <h2 className={publicStyles.baseSubtitle}>{t('description')}</h2>
           </div>
 
-          <div className="flex justify-between">
+          <div className={publicStyles.baseNavRow}>
             <nav aria-label="Main navigation">
-              <ul className="flex flex-wrap gap-x-5 text-xl">
+              <ul className={publicStyles.baseNavList}>
                 {props.leftNav}
               </ul>
             </nav>
 
             <nav>
-              <ul className="flex flex-wrap gap-x-5 text-xl">
+              <ul className={publicStyles.baseNavList}>
                 {props.rightNav}
               </ul>
             </nav>
@@ -36,16 +38,17 @@ export const BaseTemplate = (props: {
 
         <main>{props.children}</main>
 
-        <footer className="border-t border-gray-300 py-8 text-center text-sm">
+        <footer className={publicStyles.baseFooter}>
           {`© Copyright ${new Date().getFullYear()} ${AppConfig.name}. `}
           {t.rich('made_with', {
             author: () => (
-              <a
+              <StyledLink
                 href="https://nextjs-boilerplate.com"
-                className="text-blue-700 hover:border-b-2 hover:border-blue-700"
+                target="_blank"
+                rel="noreferrer"
               >
                 Next.js Boilerplate
-              </a>
+              </StyledLink>
             ),
           })}
           {/*

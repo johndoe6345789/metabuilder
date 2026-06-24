@@ -48,7 +48,8 @@ describe('styles config', () => {
     expect(typeof styles.containers.contentPadding).toBe('string');
   });
 
-  it('links.primary should include text-blue-700', () => {
-    expect(styles.links.primary).toContain('text-blue-700');
+  it('links.primary should not expose Tailwind utility classes', () => {
+    expect(styles.links.primary).not.toContain('text-blue-700');
+    expect(styles.links.primary).not.toContain('hover:border-b-2');
   });
 });

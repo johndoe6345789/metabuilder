@@ -38,7 +38,15 @@
       "import": "./fakemui/index.ts",
       "types": "./fakemui/index.ts"
     },
+    "./m3scss": {
+      "import": "./fakemui/index.ts",
+      "types": "./fakemui/index.ts"
+    },
     "./fakemui/*": {
+      "import": "./fakemui/*",
+      "types": "./fakemui/*"
+    },
+    "./m3scss/*": {
       "import": "./fakemui/*",
       "types": "./fakemui/*"
     },
@@ -67,6 +75,10 @@
       "types": "./vanilla/access-denied/index.tsx"
     },
     "./fakemui/database": {
+      "import": "./fakemui/database/index.ts",
+      "types": "./fakemui/database/index.ts"
+    },
+    "./m3scss/database": {
       "import": "./fakemui/database/index.ts",
       "types": "./fakemui/database/index.ts"
     },

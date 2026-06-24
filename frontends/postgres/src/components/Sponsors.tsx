@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import sponsorsGrid from '@/config/sponsorsGrid.json';
+import publicStyles from '@/styles/public.module.scss';
 
 type SponsorEntry = {
   href: string;
@@ -11,7 +12,7 @@ type SponsorEntry = {
 
 function SponsorCell({ sponsor }: { sponsor: SponsorEntry }) {
   return (
-    <td className="border-2 border-gray-300 p-3">
+    <td className={publicStyles.sponsorCell}>
       <a href={sponsor.href} target="_blank" rel="noopener">
         <Image
           src={sponsor.src}
@@ -25,10 +26,10 @@ function SponsorCell({ sponsor }: { sponsor: SponsorEntry }) {
 }
 
 export const Sponsors = () => (
-  <table className="border-collapse">
+  <table className={publicStyles.sponsorsTable}>
     <tbody>
       {sponsorsGrid.rows.map((row, rowIdx) => (
-        <tr key={rowIdx} className="h-56">
+        <tr key={rowIdx} className={publicStyles.sponsorRow}>
           {row.map((sponsor, colIdx) => (
             <SponsorCell
               key={colIdx}

@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { SponsorSection } from '@/components/SponsorSection';
 import { sponsors } from '@/config/sponsors';
 import { routing } from '@/libs/I18nRouting';
+import publicStyles from '@/styles/public.module.scss';
 
 type IPortfolioDetailProps = {
   params: Promise<{ slug: string; locale: string }>;
@@ -42,7 +43,7 @@ export default async function PortfolioDetail(props: IPortfolioDetailProps) {
 
   return (
     <>
-      <h1 className="capitalize">{t('header', { slug })}</h1>
+      <h1 className={publicStyles.capitalize}>{t('header', { slug })}</h1>
       <p>{t('content')}</p>
 
       <SponsorSection sponsors={sponsors['portfolio-slug']} namespace="PortfolioSlug" />

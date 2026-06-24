@@ -3,18 +3,18 @@
 }
 
 .label {
-  color: #cac4d0;
+  color: var(--mat-sys-on-surface-variant);
   display: block;
   line-height: 1.4;
 }
 
 .labelWide {
-  color: #cac4d0;
+  color: var(--mat-sys-on-surface-variant);
   display: block;
   line-height: 1.6;
 }
 
 .version {
-  color: rgba(202, 196, 208, 0.38);
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
   font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
 }

@@ -1,10 +1,9 @@
-// FakeMUI Theme - Material Design 3 System CSS Variables
-// =====================================================
+// Material 3 SCSS Theme - System CSS Variables
+// ============================================
 // This file generates all --mat-sys-* CSS custom properties from the official
 // Google Material Design 3 token system (from scss/m3-scss/).
 //
-// Usage: Import this file once at the root of your application
-// @use 'fakemui/scss/theme';
+// Usage: Import this file once at the root of your application.
 
 @use 'sass:map';
 @use 'm3-scss/material/core/tokens/m3/md-sys-color' as color;
@@ -14,12 +13,6 @@
 @use 'm3-scss/material/core/tokens/m3/md-sys-typescale' as typescale;
 @use 'm3-scss/material/core/theming/palettes' as palettes;
 @use 'm3-scss/material/core/style/elevation' as elevation-utils;
-
-// Angular Material M3 Component Styles (Global)
-// Some Angular Material SCSS has element selectors that CSS modules doesn't allow.
-// These must be loaded globally so React components inherit the styles.
-@use 'm3-scss/material/list/list.module';
-@use 'm3-scss/material/menu/menu.module';
 
 // ============================================
 // Configuration (customizable via @use with())
@@ -32,8 +25,8 @@ $tertiary-palette: palettes.$cyan-palette !default;
 
 // Typography configuration
 $typography-config: (
-  plain: ('Inter', sans-serif),
-  brand: ('Bricolage Grotesque', sans-serif),
+  plain: ('Roboto', sans-serif),
+  brand: ('Roboto', sans-serif),
   bold: 700,
   medium: 500,
   regular: 400,

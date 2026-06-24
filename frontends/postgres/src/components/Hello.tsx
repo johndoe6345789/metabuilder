@@ -1,6 +1,7 @@
 import { currentUser } from '@clerk/nextjs/server';
 import { getTranslations } from 'next-intl/server';
 import { Sponsors } from './Sponsors';
+import { StyledLink } from './StyledLink';
 
 export const Hello = async () => {
   const t = await getTranslations('Dashboard');
@@ -15,12 +16,13 @@ export const Hello = async () => {
       <p>
         {t.rich('alternative_message', {
           url: () => (
-            <a
-              className="text-blue-700 hover:border-b-2 hover:border-blue-700"
+            <StyledLink
               href="https://nextjs-boilerplate.com/pro-saas-starter-kit"
+              target="_blank"
+              rel="noreferrer"
             >
               Next.js Boilerplate Pro
-            </a>
+            </StyledLink>
           ),
         })}
       </p>

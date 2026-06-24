@@ -6,13 +6,13 @@ test.describe('I18n', () => {
       await page.goto('/');
 
       await expect(
-        page.getByRole('heading', { name: 'Boilerplate Code for Your Next.js Project with Tailwind CSS' }),
+        page.getByRole('heading', { name: 'Boilerplate Code for Your Next.js Project with SCSS' }),
       ).toBeVisible();
 
       await page.getByLabel('lang-switcher').selectOption('fr');
 
       await expect(
-        page.getByRole('heading', { name: 'Code de démarrage pour Next.js avec Tailwind CSS' }),
+        page.getByRole('heading', { name: 'Code de démarrage pour Next.js avec SCSS' }),
       ).toBeVisible();
     });
 

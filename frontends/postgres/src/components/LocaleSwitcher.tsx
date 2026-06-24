@@ -5,6 +5,7 @@ import { useLocale } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { usePathname } from '@/libs/I18nNavigation';
 import { routing } from '@/libs/I18nRouting';
+import publicStyles from '@/styles/public.module.scss';
 
 export const LocaleSwitcher = () => {
   const router = useRouter();
@@ -20,7 +21,7 @@ export const LocaleSwitcher = () => {
     <select
       defaultValue={locale}
       onChange={handleChange}
-      className="border border-gray-300 font-medium focus:outline-hidden focus-visible:ring-3"
+      className={publicStyles.localeSwitcher}
       aria-label="lang-switcher"
     >
       {routing.locales.map(elt => (
