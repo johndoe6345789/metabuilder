@@ -27,6 +27,7 @@ import TablesTab from '@/components/admin/TablesTab';
 import { getNavItems } from '@/utils/featureConfig';
 import { BASE_PATH } from '@/lib/app-config';
 import pkg from '../../../../../package.json';
+import styles from './dashboard-content.module.scss';
 
 type TabPanelProps = {
   children?: React.ReactNode;
@@ -331,7 +332,7 @@ export default function DashboardContent({ section, table }: Props) {
         onMobileClose={() => setMobileOpen(false)}
         version={pkg.version}
       >
-        <Box>
+        <Box className={styles.page}>
           {navItems.map((item, index) => (
             <TabPanel key={item.id} value={tabValue} index={index}>
               {item.id === 'tables' && (
