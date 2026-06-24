@@ -44,7 +44,7 @@ export default function DashboardShell({
   version,
 }: Props) {
   const theme = useTheme();
-  const isDesktop = useMediaQuery(theme.breakpoints.up('md'), { noSsr: true });
+  const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
 
   const drawerContent = (
     <>

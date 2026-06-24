@@ -53,17 +53,7 @@ export type UseMediaQueryReturn<T extends UseMediaQueryInput> = T extends string
 export function useMediaQuery<T extends UseMediaQueryInput>(query: T): UseMediaQueryReturn<T> {
   // Handle single string query
   if (typeof query === 'string') {
-    const [matches, setMatches] = useState<boolean>(() => {
-      // SSR-safe check
-      if (typeof window === 'undefined') {
-        return false
-      }
-      try {
-        return window.matchMedia(query).matches
-      } catch {
-        return false
-      }
-    })
+    const [matches, setMatches] = useState<boolean>(false)
 
     useEffect(() => {
       if (typeof window === 'undefined') return
@@ -101,22 +91,9 @@ export function useMediaQuery<T extends UseMediaQueryInput>(query: T): UseMediaQ
   // Handle multiple queries as object
   const [queryMatches, setQueryMatches] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {}
-    if (typeof window === 'undefined') {
-      Object.keys(query).forEach((key) => {
-        initial[key] = false
-      })
-      return initial
-    }
-
-    try {
-      Object.entries(query).forEach(([key, mediaQuery]) => {
-        initial[key] = window.matchMedia(mediaQuery).matches
-      })
-    } catch {
-      Object.keys(query).forEach((key) => {
-        initial[key] = false
-      })
-    }
+    Object.keys(query).forEach((key) => {
+      initial[key] = false
+    })
 
     return initial
   })

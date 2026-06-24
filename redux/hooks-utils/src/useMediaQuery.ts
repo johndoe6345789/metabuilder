@@ -19,10 +19,7 @@ export interface UseMediaQueryReturn {
  * const { matches: isMobile } = useMediaQuery('(max-width: 768px)');
  */
 export function useMediaQuery(query: UseMediaQueryInput): UseMediaQueryReturn {
-  const [matches, setMatches] = useState(() => {
-    if (typeof window === 'undefined') return false
-    return window.matchMedia(query).matches
-  })
+  const [matches, setMatches] = useState(false)
 
   useEffect(() => {
     if (typeof window === 'undefined') return
