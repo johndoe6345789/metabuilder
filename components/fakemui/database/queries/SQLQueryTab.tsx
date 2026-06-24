@@ -6,6 +6,7 @@ import { Paper } from '../../surfaces';
 import { Typography } from '../../data-display';
 import { Button } from '../../inputs';
 import { CircularProgress } from '../../feedback';
+import styles from './SQLQueryTab.module.scss';
 
 export type SQLQueryTabProps = {
   onExecuteQuery: (query: string) => Promise<void>;
@@ -80,14 +81,21 @@ export function SQLQueryTab({
   };
 
   return (
-    <Box data-testid={testId}>
+    <Box data-testid={testId} className={styles.root}>
       <Typography variant="h5" gutterBottom>{title}</Typography>
       {description && (
-        <Typography variant="body2" color="text.secondary" gutterBottom>{description}</Typography>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          gutterBottom
+          className={styles.description}
+        >
+          {description}
+        </Typography>
       )}
-      <Paper sx={{ p: 2, mt: 1 }}>
-        <Box sx={{ mb: 2 }}>
-          <label style={{ display: 'block', marginBottom: 6, fontSize: '0.75rem', fontWeight: 500 }}>
+      <Paper className={styles.card}>
+        <Box className={styles.editorBlock}>
+          <label className={styles.editorLabel}>
             SQL Query (SELECT only)
           </label>
           <div className="sql-editor-wrap">
@@ -110,12 +118,12 @@ export function SQLQueryTab({
             />
           </div>
         </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Box className={styles.actions}>
           <Button variant="contained" onClick={handleExecute} disabled={loading || !queryText.trim()}>
             {loading ? <CircularProgress size={24} /> : 'Execute Query'}
           </Button>
           {!queryText.trim() && !loading && (
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" color="text.secondary" className={styles.hint}>
               Type a query above to execute
             </Typography>
           )}

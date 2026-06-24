@@ -16,6 +16,7 @@ import {
 } from '../../inputs';
 import { Add, Delete, Play } from '../../icons';
 import { DataGrid } from '../grids';
+import styles from './QueryBuilderTab.module.scss';
 
 export type QueryOperator = {
   value: string;
@@ -213,18 +214,23 @@ export function QueryBuilderTab({
   };
 
   return (
-    <div data-testid={testId}>
+    <div data-testid={testId} className={styles.root}>
       <Typography variant="h5" gutterBottom>
         Query Builder
       </Typography>
-      <Typography variant="body2" color="text.secondary" gutterBottom>
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        gutterBottom
+        className={styles.intro}
+      >
         Build SELECT queries visually with table/column selection, filters, and
         sorting
       </Typography>
 
-      <Paper sx={{ p: 2, mt: 2 }}>
+      <Paper className={styles.sectionCard}>
         {/* Table Selection */}
-        <FormControl fullWidth sx={{ mb: 2 }}>
+        <FormControl fullWidth className={styles.section}>
           <InputLabel>Select Table</InputLabel>
           <Select
             native
@@ -242,11 +248,11 @@ export function QueryBuilderTab({
         {selectedTable && (
           <>
             {/* Column Selection */}
-            <Box sx={{ mb: 2 }}>
+            <Box className={styles.section}>
               <Typography variant="subtitle2" gutterBottom>
                 Columns{selectedColumns.length > 0 ? ` (${selectedColumns.length} selected)` : ' (all)'}
               </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+              <Box className={styles.columnList}>
                 {availableColumns.map((col) => (
                   <FormControlLabel
                     key={col}
@@ -280,15 +286,8 @@ export function QueryBuilderTab({
             </Box>
 
             {/* WHERE Conditions */}
-            <Box sx={{ mb: 2 }}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  mb: 1,
-                }}
-              >
+            <Box className={styles.section}>
+              <Box className={styles.conditionHeader}>
                 <Typography variant="subtitle1">WHERE Conditions</Typography>
                 <Button size="small" onClick={handleAddCondition}>
                   <Add /> Add Condition
@@ -298,7 +297,13 @@ export function QueryBuilderTab({
               {whereConditions.map((condition, index) => (
                 <Box
                   key={index}
-                  sx={{ display: 'flex', gap: 1, mb: 1, alignItems: 'center' }}
+                  className={[
+                    styles.conditionRow,
+                    condition.operator === 'IS NULL' ||
+                    condition.operator === 'IS NOT NULL'
+                      ? styles.conditionRowCompact
+                      : '',
+                  ].filter(Boolean).join(' ')}
                 >
                   <FormControl sx={{ flex: 1 }}>
                     <InputLabel>Column</InputLabel>
@@ -366,7 +371,7 @@ export function QueryBuilderTab({
             </Box>
 
             {/* ORDER BY */}
-            <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+            <Box className={styles.row}>
               <FormControl sx={{ flex: 1 }}>
                 <InputLabel>Order By (optional)</InputLabel>
                 <Select
@@ -401,7 +406,7 @@ export function QueryBuilderTab({
             </Box>
 
             {/* LIMIT and OFFSET */}
-            <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+            <Box className={styles.row}>
               <TextField
                 sx={{ flex: 1 }}
                 label="Limit (optional)"
@@ -419,7 +424,7 @@ export function QueryBuilderTab({
             </Box>
 
             {/* Action Buttons */}
-            <Box sx={{ display: 'flex', gap: 1 }}>
+            <Box className={styles.actions}>
               <Button
                 variant="contained"
                 onClick={handleExecuteQuery}
@@ -437,27 +442,18 @@ export function QueryBuilderTab({
 
       {/* Error Display */}
       {error && (
-        <Paper sx={{ p: 2, mt: 2, bgcolor: 'error.light' }}>
+        <Paper className={styles.errorCard}>
           <Typography color="error">{error}</Typography>
         </Paper>
       )}
 
       {/* Generated Query Display */}
       {generatedQuery && (
-        <Paper sx={{ p: 2, mt: 2 }}>
+        <Paper className={styles.generatedQuery}>
           <Typography variant="subtitle2" gutterBottom>
             Generated SQL:
           </Typography>
-          <Box
-            component="pre"
-            sx={{
-              p: 1,
-              bgcolor: 'grey.100',
-              borderRadius: 1,
-              overflow: 'auto',
-              fontSize: '0.875rem',
-            }}
-          >
+          <Box component="pre" className={styles.generatedQueryCode}>
             {generatedQuery}
           </Box>
         </Paper>
@@ -465,7 +461,7 @@ export function QueryBuilderTab({
 
       {/* Results Display */}
       {result && result.rows && (
-        <Paper sx={{ p: 2, mt: 2 }}>
+        <Paper className={styles.resultsCard}>
           <Typography variant="h6" gutterBottom>
             Results ({result.rowCount} rows)
           </Typography>

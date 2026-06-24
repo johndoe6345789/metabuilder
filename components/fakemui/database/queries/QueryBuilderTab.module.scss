@@ -1,0 +1,106 @@
+.root {
+  color: var(--mat-sys-on-surface);
+}
+
+.intro {
+  max-width: 72ch;
+}
+
+.sectionCard {
+  margin-top: 16px;
+  padding: 16px;
+}
+
+.section {
+  margin-bottom: 16px;
+}
+
+.columnList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.conditionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+
+  @media (max-width: 599px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.conditionRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: start;
+
+  @media (min-width: 900px) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) auto;
+  }
+}
+
+.conditionRowCompact {
+  @media (min-width: 900px) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  }
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+
+  @media (min-width: 900px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  @media (max-width: 599px) {
+    flex-direction: column;
+  }
+}
+
+.generatedQuery {
+  margin-top: 16px;
+  padding: 16px;
+}
+
+.generatedQueryCode {
+  margin: 0;
+  padding: 12px;
+  background-color: var(--mat-sys-surface-container-high);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 8px;
+  color: var(--mat-sys-on-surface);
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.errorCard {
+  margin-top: 16px;
+  padding: 16px;
+  background-color: color-mix(in srgb, var(--mat-sys-error) 16%, var(--mat-sys-surface));
+  border: 1px solid color-mix(in srgb, var(--mat-sys-error) 40%, transparent);
+}
+
+.resultsCard {
+  margin-top: 16px;
+  padding: 16px;
+}

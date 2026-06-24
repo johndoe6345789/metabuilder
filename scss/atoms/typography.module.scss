@@ -119,6 +119,18 @@
   color: inherit;
 }
 
+.typographyTextPrimary {
+  color: var(--mat-sys-on-surface);
+}
+
+.typographyTextSecondary {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.typographyTextDisabled {
+  color: var(--mat-sys-outline);
+}
+
 // Alignment
 .typographyCenter {
   text-align: center;

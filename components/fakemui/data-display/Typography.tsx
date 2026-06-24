@@ -40,6 +40,9 @@ const colorClassMap: Record<string, string | undefined> = {
   secondary: styles.typographySecondary,
   error: styles.typographyError,
   inherit: styles.typographyInherit,
+  'text.primary': styles.typographyTextPrimary,
+  'text.secondary': styles.typographyTextSecondary,
+  'text.disabled': styles.typographyTextDisabled,
 }
 
 // Map align prop to CSS module class names
