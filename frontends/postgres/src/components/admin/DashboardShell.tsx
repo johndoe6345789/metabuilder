@@ -67,7 +67,6 @@ export default function DashboardShell({
         <Toolbar>
           <IconButton
             color="inherit"
-            edge="start"
             onClick={onMobileOpen}
             className={styles.hamburger}
             aria-label="Open navigation drawer"
