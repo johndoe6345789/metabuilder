@@ -14,6 +14,7 @@ import {
 } from '@metabuilder/components/m3';
 import type { ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
+import { useDrawer } from '@/hooks';
 import styles from './dashboard-shell.module.scss';
 import AdminDrawerContent, { type AdminNavItem } from './AdminDrawerContent';
 import ThemeToggle from './ThemeToggle';
@@ -43,6 +44,20 @@ export default function DashboardShell({
   version,
 }: Props) {
   const t = useTranslations('Admin');
+  const { desktopOpen, toggleDesktop } = useDrawer();
+
+  const handleMenuClick = () => {
+    // Wide screens: collapse/expand the permanent drawer.
+    // Narrow screens: toggle the temporary drawer open/closed.
+    if (typeof window !== 'undefined' && window.innerWidth >= 900) {
+      toggleDesktop();
+    } else if (mobileOpen) {
+      onMobileClose();
+    } else {
+      onMobileOpen();
+    }
+  };
+
   const drawerContent = (
     <>
       <Toolbar />
@@ -64,8 +79,8 @@ export default function DashboardShell({
         <Toolbar>
           <IconButton
             color="inherit"
-            onClick={onMobileOpen}
-            className={styles.hamburger}
+            onClick={handleMenuClick}
+            className={styles.menuButton}
             aria-label={t('openNav')}
           >
             <MenuIcon />
@@ -85,7 +100,9 @@ export default function DashboardShell({
       <Drawer
         variant="permanent"
         open
-        className={`${styles.drawer} ${styles.desktopDrawer}`}
+        className={`${styles.drawer} ${styles.desktopDrawer} ${
+          desktopOpen ? '' : styles.drawerCollapsed
+        }`}
       >
         {drawerContent}
       </Drawer>

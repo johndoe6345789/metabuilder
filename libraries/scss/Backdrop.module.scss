@@ -7,7 +7,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--mat-sys-scrim);
+  // M3 scrim is applied at 32% — the raw token is opaque black, so tint it.
+  background-color: color-mix(in srgb, var(--mat-sys-scrim) 32%, transparent);
   -webkit-tap-highlight-color: transparent;
   z-index: var(--z-modal, 1200);
   animation: backdropFadeIn var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-standard);

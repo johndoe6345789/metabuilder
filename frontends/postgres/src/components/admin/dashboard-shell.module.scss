@@ -3,7 +3,9 @@
   min-height: 100vh;
 }
 
-.hamburger {
+// Always-visible menu button: collapses the permanent drawer on desktop,
+// toggles the temporary drawer on mobile.
+.menuButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -36,10 +38,6 @@
     outline: 2px solid var(--mat-sys-primary);
     outline-offset: 2px;
   }
-
-  @media (min-width: 900px) {
-    display: none !important;
-  }
 }
 
 .barIcon {
@@ -60,6 +58,14 @@
 
   @media (min-width: 900px) {
     display: flex;
+  }
+}
+
+// Collapsed permanent drawer (menu button toggled it off on desktop). Main
+// content reflows to full width because .root is a flex row.
+.drawerCollapsed {
+  @media (min-width: 900px) {
+    display: none;
   }
 }
 
