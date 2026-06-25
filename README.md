@@ -14,7 +14,7 @@ MetaBuilder is a monorepo that covers an unusually wide surface area — not by 
 
 | Domain | What's Built |
 |--------|-------------|
-| **Game Engine** | SDL3/bgfx C++ engine — Quake 3 playable (BSP, physics, weapons, bots, HUD) |
+| **Game Engine** | SDL3 GPU C++ engine — Quake 3 playable (BSP, physics, weapons, bots, HUD) |
 | **Platform** | Multi-tenant Next.js + C++ DBAL REST API, 8 database backends |
 | **Component Library** | M3 — 241-component Material Design 3 clone (`@metabuilder/m3`) |
 | **Workflow Engine** | Multi-language DAG execution (TS/Python/C++/Rust/Go/Mojo) |
@@ -30,7 +30,7 @@ MetaBuilder is a monorepo that covers an unusually wide surface area — not by 
 
 ## Headline Achievement: Quake 3 on a Custom Engine
 
-The game engine (`frontends/gameengine/`) is a C++ engine built on SDL3/bgfx where **every game system is a composable JSON workflow step** — the same engine that drives the UI platform also drives the game.
+The game engine (`frontends/gameengine/`) is a C++ engine built on SDL3 GPU where **every game system is a composable JSON workflow step** — the same engine that drives the UI platform also drives the game.
 
 ```bash
 cd frontends/gameengine
@@ -40,7 +40,7 @@ cmake --build _build/Release --target sdl3_app
 
 | Subsystem | Implementation |
 |-----------|---------------|
-| Rendering | bgfx (Vulkan/Metal/DX12), deferred pipeline, shadow maps, TAA, SSAO, Bloom |
+| Rendering | SDL3 GPU (Vulkan/Metal/DX12), deferred pipeline, shadow maps, TAA, SSAO, Bloom |
 | BSP loading | Full Quake 3 BSP: lightmap atlas, portal rendering, collision trees |
 | Physics | AABB collision, gravity, jump, friction — pmove implementation |
 | Audio | 3D positional audio (OpenAL + Opus codec) |
@@ -109,7 +109,7 @@ metabuilder/
 │   ├── qml/                # Qt6 QML components
 │   └── sparkos/            # Minimal Linux distro (C++/Qt6)
 ├── frontends/              # 16 application frontends
-│   ├── gameengine/         # SDL3/bgfx C++ game engine (Quake 3 ✅)
+│   ├── gameengine/         # SDL3 GPU C++ game engine (Quake 3 ✅)
 │   ├── pastebin/           # Code snippet sharing (Next.js + Flask + DBAL)
 │   ├── codegen/            # CodeForge IDE (React + Monaco)
 │   ├── workflowui/         # Visual workflow editor (n8n-style)
@@ -157,7 +157,7 @@ metabuilder/
 
 | Frontend | Stack | Status | Description |
 |----------|-------|--------|-------------|
-| `gameengine` | C++20, SDL3, bgfx | Production | Custom game engine — Quake 3 fully playable. 212 JSON workflow steps. See section below. |
+| `gameengine` | C++20, SDL3 GPU | Production | Custom game engine — Quake 3 fully playable. 212 JSON workflow steps. See section below. |
 | `cli` | C++, Lua runtime | Functional | Command-line interface targeting MetaBuilder services via HTTP. Lua scripting for package execution. Conan + CMake. |
 | `qt6` | Qt6, QML | Functional | Desktop app — Qt Quick replica of the MetaBuilder landing page. Platform-native look via QML. |
 

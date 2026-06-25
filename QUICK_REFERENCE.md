@@ -46,7 +46,7 @@ cmake --build _build/Release --target sdl3_app
 | `quake3_screenshot` | Automated screenshot capture for Q3 |
 | `seed` | Default demo (entities, audio, graphics) |
 | `standalone_cubes` | Cube rendering demo |
-| `bootstrap_mac` | macOS bootstrap (SDL3 + bgfx init) |
+| `bootstrap_mac` | macOS bootstrap (SDL3 GPU init) |
 | `bootstrap_linux` | Linux bootstrap |
 | `bootstrap_windows` | Windows bootstrap |
 | `engine_tester` | Test runner for engine validation |
@@ -60,7 +60,7 @@ cmake --build _build/Release --target sdl3_app
 ## Workflow Steps: 212 Registered
 
 ### Graphics (10)
-- `graphics.bgfx.init_viewport`, `graphics.bgfx.init_renderer`, `graphics.bgfx.init`
+- `graphics.gpu.init_viewport`, `graphics.gpu.init_renderer`, `graphics.gpu.init`
 - `graphics.shader.load`, `graphics.shader.compile`, `graphics.pipeline.create`
 - `graphics.buffer.create_vertex`, `graphics.buffer.create_index`
 - `graphics.frame.begin`, `graphics.frame.end`
@@ -140,7 +140,7 @@ cmake --build _build/Release --target sdl3_app
 JSON workflow (q3_game.json)
   └── workflow steps (212 registered)
         └── C++ implementations (~50-100 LOC each, testable in isolation)
-              └── SDL3 / bgfx / Bullet3 / OpenAL
+              └── SDL3 GPU / OpenAL
 ```
 
 **Key files**:

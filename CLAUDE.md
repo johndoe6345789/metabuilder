@@ -60,7 +60,7 @@ cd docs && python3 docs.py list --category guides
 | `libraries/pcbgenerator/` | PCB design automation (Python) |
 | `libraries/qml/` | Qt6 QML components |
 | `libraries/sparkos/` | Minimal Linux distro (C++/Qt6) |
-| `frontends/gameengine/` | SDL3/bgfx C++ game engine — Quake 3 playable, **212 workflow steps** |
+| `frontends/gameengine/` | SDL3 GPU C++ game engine — Quake 3 playable, **212 workflow steps** |
 | `frontends/pastebin/` | Code snippet sharing (Next.js + Flask + DBAL) |
 | `frontends/codegen/` | CodeForge IDE (React + Monaco) |
 | `frontends/workflowui/` | Visual workflow editor (n8n-style, 152+ plugin nodes) |
@@ -178,7 +178,7 @@ Multi-language: executors (TS, Python, C++), plugins (7 runtimes: TS, Python, C+
 
 ### Game Engine (`frontends/gameengine/`)
 
-SDL3/bgfx C++ engine — **Quake 3 fully playable** (BSP, lightmaps, pmove, weapons, bots, HUD, menus). 212 registered workflow steps covering rendering (deferred, TAA, SSAO, Bloom), Q3 gameplay (42 steps), physics (AABB, gravity, friction), audio (3D positional, Opus), scene, camera, input, math, logic. 12 game packages including `quake3`, `quake3_screenshot`, `materialx`. CLI: `--bootstrap bootstrap_linux --game quake3`.
+SDL3 GPU C++ engine — **Quake 3 fully playable** (BSP, lightmaps, pmove, weapons, bots, HUD, menus). 212 registered workflow steps covering rendering (deferred, TAA, SSAO, Bloom), Q3 gameplay (42 steps), physics (AABB, gravity, friction), audio (3D positional, Opus), scene, camera, input, math, logic. 12 game packages including `quake3`, `quake3_screenshot`, `materialx`. CLI: `--bootstrap bootstrap_linux --game quake3`.
 
 ### CodeForge IDE (`frontends/codegen/`)
 
