@@ -284,7 +284,7 @@ Pre-commit: `npm run build && npm run typecheck && npm run lint && npm run test:
 - **No `sx` prop on new code**: the `sxToStyle` shim exists for compatibility only; new components use SCSS modules directly
 
 ### WorkflowUI Components
-- Atomic components <100 LOC, SCSS modules, no sx prop
+- Atomic components ≤80 LOC (hard limit, no margin above 80), SCSS modules, no sx prop
 - Categories: layout/, cards/, forms/, navigation/, feedback/
 - Import pattern: `@/components/{domain}/{Component}`
 
