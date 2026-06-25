@@ -348,14 +348,17 @@ The original Spark-based version is preserved in `/old` directory for reference:
 
 ### Quick Stats
 
-- **Entity Schemas:** 39 JSON entity definitions (was YAML, migrated Mar 2026)
-- **DB Backends:** 14 (memory, sqlite, postgres, mysql, mariadb, cockroachdb, mongodb, redis, elasticsearch, cassandra, surrealdb, supabase, prisma)
-- **Built-in Packages:** 62+ packages ready to use
-- **Standalone Projects:** 15 integrated into monorepo
-- **Technology Stack:** Next.js 16, React 19, TypeScript 5.9, Flask, Drogon C++
-- **Services:** Next.js frontend, Flask auth, DBAL C++ daemon, PostgreSQL, Nginx
-- **Workflow Steps:** 7 (dbal.uuid, dbal.timestamp, dbal.entity.create/get/list, dbal.var.set, dbal.log)
-- **Languages:** TypeScript, Python, C++, Kotlin, Mojo, Go, Rust
+- **Entity Schemas:** 40 JSON entity definitions (core, CodeForge, pastebin, packages, gaming, e-commerce, workspace, video, music)
+- **DB Backends:** 8 adapters (sqlite, sql/postgres/mysql/mariadb/cockroachdb, mongodb, redis, elasticsearch, cassandra, surrealdb, supabase)
+- **Built-in Packages:** 84 packages (including 17 WorkflowUI suite packages)
+- **Frontends:** 16 apps (game engine, pastebin, codegen, workflowui, postgres, emailclient, packagerepo, nextjs, cli, qt6, dockerterminal, storybook, exploded-diagrams, caproverforge, repoforge, dbal)
+- **Libraries:** 16 shared libraries (dbal, workflow, m3-components, hooks, redux, schemas, icons, types, interfaces, scss, translations, mojo, cadquerywrapper, pcbgenerator, qml, sparkos)
+- **M3 Components:** 241 files across 19 categories (`@metabuilder/m3`)
+- **React Hooks:** 100+ (`@metabuilder/hooks`)
+- **Workflow Steps (game engine):** 212 registered (graphics, rendering, Q3 gameplay, physics, audio, scene, camera, input, math, logic, collections, control flow)
+- **Game Engine:** Quake 3 fully playable (BSP, pmove, weapons, bots, HUD)
+- **Technology Stack:** Next.js 16, React 19, TypeScript 5.9, Flask, Drogon C++, SDL3, bgfx
+- **Languages:** TypeScript, C++, Python, Kotlin, Mojo, Go, Rust
 
 ### What's Working Today
 
