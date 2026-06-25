@@ -60,6 +60,10 @@ RUN sed -i '/@esbuild-kit:registry/d; /localhost:4873/d' .npmrc
 # the build instead of being silently swallowed.
 RUN npm install --ignore-scripts --legacy-peer-deps
 
+# @vitejs/plugin-react imports this at config-load time; install it explicitly
+# here so stale dependency-layer cache cannot leave Storybook without it.
+RUN npm install @rolldown/pluginutils@^1.0.1 --ignore-scripts --legacy-peer-deps
+
 # Build only core workspace libs needed by storybook components
 RUN for ws in libraries/redux/core libraries/redux/slices \
     libraries/redux/hooks libraries/redux/adapters \
