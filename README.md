@@ -2,7 +2,7 @@
 
 A universal platform monorepo. One codebase. Every domain.
 
-**Scale**: 27,826+ files | 16 frontends | 16 libraries | 84 packages  
+**Scale**: 27,826+ files | ~540K LOC | 16 frontends | 16 libraries | 84 packages  
 **Philosophy**: 95% JSON config, 5% TypeScript/C++ infrastructure  
 **Status**: Production-ready — Quake 3 fully playable on custom engine ✅
 
