@@ -2,7 +2,7 @@
 @use './utilities' as *;
 @use './animations';
 @use './material-ui-custom';
-@use '../../../../scss/global/index';
+@use '../../../../libraries/scss/global/index';
 
 .mui-enhanced {
   font-family: $font-family-sans;
