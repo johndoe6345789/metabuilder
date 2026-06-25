@@ -219,46 +219,165 @@ After schema changes: `python3 libraries/dbal/shared/tools/codegen/gen_types.py`
 
 ---
 
-## M3 Component Library
+## M3 — Material Design 3, Built From Scratch
 
 `libraries/components/m3/` — `@metabuilder/m3`
 
-241 TypeScript components across 19 categories. Zero MUI dependencies. Full SCSS modules.
+M3 is **not** a wrapper around MUI or any other third-party component library. It is a full Material Design 3 implementation written from scratch in React + SCSS modules.
+
+### Why not MUI?
+
+MUI couples components to its own theming runtime (Emotion, `sx` prop, `ThemeProvider`, CSS-in-JS). That means:
+- Every component carries the Emotion runtime (~10 KB gzip)
+- Styling goes through a JS runtime at render time, not statically at build time
+- Overriding anything deeply requires fighting the `sx` cascade or `styled()` wrappers
+- You can't easily swap the component library without rewriting all style overrides
+
+M3 takes the opposite approach:
+
+```tsx
+// MUI: styling goes through JS runtime
+<Button sx={{ borderRadius: 2, px: 3 }}>Save</Button>
+
+// M3: plain CSS class, resolved at build time
+<Button className={styles.saveAction}>Save</Button>
+```
+
+**M3 dependencies**: `classnames`, `clsx` — that's it. No MUI, no Emotion, no Radix, no Tailwind runtime.
+
+### What's Included
+
+241 components across 19 tree-shakeable categories:
 
 | Category | Components |
 |----------|-----------|
-| atoms | Avatar, Badge, Button, Chip, Divider, Icon, Typography |
-| inputs | Checkbox, DatePicker, RadioGroup, Select, Slider, Switch, TextField |
-| buttons | ButtonGroup, FAB, IconButton, ToggleButton |
-| data-display | Accordion, DataGrid, List, Table, Tabs, Timeline, Tooltip, Tree |
-| surfaces | Card, Dialog, Drawer, Paper, Popover |
-| navigation | AppBar, Breadcrumb, BottomNav, NavRail, Pagination, Stepper |
-| feedback | Alert, LinearProgress, Skeleton, Snackbar, Spinner |
-| layout | Box, Container, Grid, Stack |
-| database | DataTable, QueryBuilder, EntityForm, SchemaViewer |
-| email | 25+ email-specific (ThreadList, ComposeEditor, AttachmentViewer…) |
-| canvas | CanvasControls, CanvasGrid, InfiniteCanvas, MiniMap |
-| code | CodeEditor, CodeHighlight, DiffViewer, Terminal |
-| workflows | WorkflowCard, WorkflowEditor, WorkflowNode |
-| settings | SettingsPanel, ThemeEditor, KeybindingEditor |
-| theming | ThemeProvider, ColorSwatch, TokenEditor |
+| `inputs` | TextField, Select, Checkbox, Radio, Switch, Slider, DatePicker, TimePicker, FileUpload, ColorPicker, Autocomplete, Rating |
+| `atoms` | AutoGrid, Heading, Label, Panel, Section, StatBadge, Text, Title |
+| `data-display` | Avatar, Badge, Chip, Divider, List, Markdown, Table, Tooltip, TreeView, Typography |
+| `surfaces` | Card, Dialog, Drawer, Paper (via layout) |
+| `navigation` | AppBar, Breadcrumbs, BottomNavigation, Menu, Pagination, ProjectSidebar, SpeedDial, Stepper, Tabs |
+| `feedback` | Alert, Backdrop, Dialog, ErrorDisplay, LoadingContent, Progress, Skeleton, Snackbar, Spinner, Toast |
+| `layout` | Box, Container, Grid, Stack |
+| `database` | DataTable, QueryBuilder, EntityForm, SchemaViewer |
+| `email` | 25+ (ThreadList, ComposeEditor, AttachmentViewer, MailSidebar…) |
+| `canvas` | InfiniteCanvas, CanvasGrid, CanvasControls, MiniMap |
+| `code` | CodeEditor, CodeHighlight, DiffViewer |
+| `terminal` | Terminal emulator components |
+| `workflows` | WorkflowCard, WorkflowEditor, WorkflowNode |
+| `settings` | SettingsPanel, ThemeEditor, KeybindingEditor |
+| `theming` | ThemeProvider, ColorSwatch, TokenEditor |
+| `help` | HelpPanel, Shortcut, KeyCombo |
+
+Import from any sub-path:
+```ts
+import { Button, TextField, Snackbar } from '@metabuilder/m3'
+import { DataTable, QueryBuilder }     from '@metabuilder/m3/database'
+import { InfiniteCanvas }              from '@metabuilder/m3/canvas'
+import { ThreadList, ComposeEditor }   from '@metabuilder/m3/email'
+```
+
+Peer dependencies: React 18 or 19. Nothing else.
 
 ---
 
-## DBAL Backends (8)
+## DBAL — C++ Data Layer
 
-| Adapter | Backend |
-|---------|---------|
-| `sqlite` | SQLite3 (dev/embedded) |
-| `sql` | PostgreSQL, MySQL, MariaDB, CockroachDB |
-| `mongodb` | MongoDB |
-| `redis` | Redis (cache layer) |
-| `elasticsearch` | Elasticsearch (search layer) |
-| `cassandra` | Cassandra |
-| `surrealdb` | SurrealDB |
-| `supabase` | Supabase REST |
+`libraries/dbal/` — a production C++ REST API daemon built on the Drogon HTTP framework. It is the single data access point for the entire platform.
 
-Switch adapter at runtime: `DATABASE_URL=sqlite://:memory: DBAL_ADAPTER=sqlite`
+### What It Is
+
+The DBAL (Database Abstraction Layer) daemon is a C++ binary that:
+- Exposes a RESTful HTTP API for all entity operations
+- Enforces multi-tenant isolation (`tenantId` on every query, no exceptions)
+- Validates every write against JSON entity schemas
+- Authenticates requests via JWT (issued by Flask, validated in C++)
+- Enforces rate limits per IP via configurable sliding-window buckets
+- Fires event-driven workflows asynchronously after CRUD operations
+- Auto-seeds the database from declarative JSON files on startup
+
+### Endpoints
+
+```
+GET    /{tenant}/{package}/{entity}          # list (filter, sort, paginate)
+POST   /{tenant}/{package}/{entity}          # create
+GET    /{tenant}/{package}/{entity}/{id}     # get by ID
+PUT    /{tenant}/{package}/{entity}/{id}     # update
+DELETE /{tenant}/{package}/{entity}/{id}     # delete
+POST   /{tenant}/{package}/{entity}/batch    # bulk operations
+GET    /health                               # health check
+GET    /version                              # build info
+GET    /schema/{tenant}/{package}            # introspect entity schemas
+```
+
+### Database Adapters (8)
+
+| Adapter | Backend | Notes |
+|---------|---------|-------|
+| `sqlite` | SQLite3 | Dev/embedded — prepared statements, connection pool |
+| `sql` | PostgreSQL, MySQL, MariaDB, CockroachDB | Jinja2 SQL templates (Inja), connection pooling, transactions |
+| `mongodb` | MongoDB | mongo-cxx-driver, JSON↔BSON conversion |
+| `redis` | Redis | Cache layer — read-through, write-through, cache-aside patterns |
+| `elasticsearch` | Elasticsearch | Search layer — full-text indexing, analytics |
+| `cassandra` | Cassandra | Wide-column store |
+| `surrealdb` | SurrealDB | Multi-model (docs, graphs, KV) |
+| `supabase` | Supabase REST | PostgreSQL + REST + Realtime |
+
+Switch adapter at runtime — no rebuild required:
+```bash
+DATABASE_URL=sqlite://:memory: DBAL_ADAPTER=sqlite          # SQLite in-memory
+DATABASE_URL=postgres://user:pass@host/db DBAL_ADAPTER=sql  # PostgreSQL
+DATABASE_URL=redis://localhost:6379/0?ttl=300 DBAL_ADAPTER=redis  # Redis cache
+```
+
+### Event-Driven Workflows
+
+After any CRUD operation, the DBAL can fire a workflow asynchronously in a detached thread. The workflow engine (`WfEngine`) maps event names to JSON workflow files and executes them against a fresh `dbal::Client` instance — isolated from the HTTP request that triggered them.
+
+```
+POST /pastebin/pastebin/User
+  └── handleCreate() → entity stored → dispatchAsync("pastebin.User.created")
+        └── detached std::thread
+              └── WfExecutor: on_user_created.json (15 nodes)
+                    ├── dbal.uuid × 7       → generate IDs
+                    ├── dbal.timestamp      → current time
+                    ├── dbal.entity.create  → Namespace "Default"
+                    ├── dbal.entity.create  → Namespace "Examples"
+                    └── dbal.entity.create × 5 → seed snippets
+```
+
+The 7 built-in workflow step types:
+
+| Step | What It Does |
+|------|-------------|
+| `dbal.uuid` | Generate UUID v4, store to context via `outputs` |
+| `dbal.timestamp` | Current timestamp (ms) |
+| `dbal.entity.create` | `client.createEntity(entity, data)` |
+| `dbal.entity.get` | `client.getEntity(entity, id)` |
+| `dbal.entity.list` | `client.listEntities(entity, options)` |
+| `dbal.var.set` | Set context variable |
+| `dbal.log` | `spdlog::info(message)` |
+
+Context variable resolution: `"${var_name}"`, `"${event.userId}"`, `"prefix-${var}-suffix"`
+
+### Rate Limiting
+
+Three configurable buckets — all enforced in C++, no middleware layer:
+
+| Bucket | Default | Env Var |
+|--------|---------|---------|
+| Read operations | 1000 req/min | `DBAL_READ_RATE_LIMIT` |
+| Mutations (create/update/delete) | 50 req/min | `DBAL_MUTATION_RATE_LIMIT` |
+| Admin operations | 10 req/min | `DBAL_ADMIN_RATE_LIMIT` |
+
+Keys off `X-Forwarded-For` (original client IP when behind nginx) or peer address.
+
+### JWT Authentication
+
+Configured via `DBAL_AUTH_CONFIG=/app/schemas/auth/auth.json`. Defines which endpoints require auth and what roles can access them. JWT tokens are issued by the Flask backend and validated in C++ — no round-trip to Flask on each request.
+
+### Auto-Seeding
+
+With `DBAL_SEED_ON_STARTUP=true`, the daemon loads all JSON files from `libraries/dbal/shared/seeds/database/` at startup. Seed operations are idempotent — existing records are skipped.
 
 ---
 
