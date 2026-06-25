@@ -67,10 +67,8 @@ const baseConfig: NextConfig = {
     const webpack = require('webpack')
     config.resolve.alias = {
       ...(config.resolve.alias || {}),
-      '@metabuilder/components/m3': path.join(monorepoRoot, 'libraries/components/m3/index.ts'),
-      '@metabuilder/components/m3/': path.join(monorepoRoot, 'libraries/components/m3/'),
-      '@metabuilder/m3': path.join(monorepoRoot, 'libraries/components/m3/index.ts'),
-      '@metabuilder/m3/': path.join(monorepoRoot, 'libraries/components/m3/'),
+      '@metabuilder/components/m3': path.join(monorepoRoot, 'libraries/components/m3'),
+      '@metabuilder/m3': path.join(monorepoRoot, 'libraries/components/m3'),
     }
     config.plugins.push(
       new webpack.NormalModuleReplacementPlugin(
