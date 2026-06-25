@@ -13,6 +13,15 @@
       "description": "Main project dashboard with metrics and overview"
     },
     {
+      "name": "SiteGenerator",
+      "path": "@/components/SiteGenerator",
+      "export": "SiteGenerator",
+      "type": "feature",
+      "preload": false,
+      "category": "ai",
+      "description": "AI-powered site generator: describe a site, download the code as a ZIP"
+    },
+    {
       "name": "MetabuilderWidgetFileExplorer",
       "path": "@/lib/json-ui/json-components",
       "export": "MetabuilderWidgetFileExplorer",

@@ -25,7 +25,7 @@ const alpha = (color: string, opacity: number): string => {
 }
 
 /**
- * Component style overrides for fakemui theming
+ * Component style overrides for m3 theming
  * This replaces MUI's ThemeOptions['components'] structure
  */
 export interface ComponentOverrides {

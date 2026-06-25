@@ -1,0 +1,242 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "workflowui-runtime-alerts",
+  "version": "1.0.0",
+  "description": "Runtime initialization failure alerts and notification bell tests",
+  "tests": [
+    {
+      "name": "Python runtime failure alert shows on dashboard",
+      "tags": [
+        "@alerts",
+        "@runtime-failures",
+        "@python"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "testId": "header-actions",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "C++ runtime failure alert shows on dashboard",
+      "tags": [
+        "@alerts",
+        "@runtime-failures",
+        "@cpp"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TypeScript runtime working shows healthy state",
+      "tags": [
+        "@alerts",
+        "@runtime-success",
+        "@typescript"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "testId": "header-actions",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "multiple runtime failures visible on dashboard",
+      "tags": [
+        "@alerts",
+        "@runtime-failures",
+        "@multiple"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "runtime failure alert is visible on page",
+      "tags": [
+        "@alerts",
+        "@interaction",
+        "@dismiss"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "runtime failure in workflow execution shows on editor page",
+      "tags": [
+        "@alerts",
+        "@execution",
+        "@inline-errors"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "editor/py-fail-workflow"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "runtime recovery notification visible",
+      "tags": [
+        "@alerts",
+        "@recovery",
+        "@success"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "notification bell visible in header",
+      "tags": [
+        "@alerts",
+        "@badge",
+        "@count"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "testId": "header-actions",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "notification panel accessible from header",
+      "tags": [
+        "@alerts",
+        "@ui",
+        "@details"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    }
+  ]
+}

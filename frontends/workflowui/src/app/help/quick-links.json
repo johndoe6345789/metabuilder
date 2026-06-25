@@ -1,0 +1,6 @@
+[
+  { "title": "Documentation", "href": "/docs", "icon": "CodeIcon" },
+  { "title": "Video Tutorials", "href": "/tutorials", "icon": "PlayIcon" },
+  { "title": "API Reference", "href": "/api-docs", "icon": "AccountTreeIcon" },
+  { "title": "Community Forum", "href": "/community", "icon": "HelpIcon" }
+]

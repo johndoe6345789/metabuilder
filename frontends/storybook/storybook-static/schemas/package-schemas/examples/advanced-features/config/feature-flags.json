@@ -1,0 +1,218 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/config.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "advanced-features",
+  "description": "Advanced configuration with feature flags and environment management",
+  "environments": ["development", "test", "staging", "production"],
+  "variables": [
+    {
+      "name": "DATABASE_URL",
+      "type": "url",
+      "description": "PostgreSQL connection URL",
+      "required": true,
+      "sensitive": true,
+      "environment": ["development", "test", "staging", "production"]
+    },
+    {
+      "name": "REDIS_URL",
+      "type": "url",
+      "description": "Redis connection URL for caching",
+      "required": true,
+      "sensitive": true,
+      "default": "redis://localhost:6379"
+    },
+    {
+      "name": "KAFKA_HOST",
+      "type": "string",
+      "description": "Kafka broker hostname",
+      "required": true,
+      "default": "localhost"
+    },
+    {
+      "name": "KAFKA_PORT",
+      "type": "number",
+      "description": "Kafka broker port",
+      "required": false,
+      "default": 9092,
+      "min": 1,
+      "max": 65535
+    },
+    {
+      "name": "MAX_CONCURRENT_ORDERS",
+      "type": "number",
+      "description": "Maximum concurrent order processing",
+      "required": false,
+      "default": 100,
+      "min": 1,
+      "max": 1000
+    },
+    {
+      "name": "ORDER_TIMEOUT_MS",
+      "type": "number",
+      "description": "Order processing timeout in milliseconds",
+      "required": false,
+      "default": 30000,
+      "min": 1000
+    }
+  ],
+  "featureFlags": [
+    {
+      "name": "event-sourcing",
+      "description": "Enable event sourcing for orders",
+      "enabled": false,
+      "environments": {
+        "development": {
+          "enabled": true
+        },
+        "staging": {
+          "enabled": true,
+          "rollout": {
+            "percentage": 50
+          }
+        },
+        "production": {
+          "enabled": false
+        }
+      },
+      "owner": "platform-team",
+      "tags": ["experimental", "orders"]
+    },
+    {
+      "name": "real-time-inventory",
+      "description": "Real-time inventory updates via websockets",
+      "enabled": false,
+      "environments": {
+        "development": {
+          "enabled": true
+        },
+        "production": {
+          "enabled": true,
+          "rollout": {
+            "percentage": 25,
+            "groups": ["premium-sellers"]
+          }
+        }
+      },
+      "dependencies": ["websocket-support"],
+      "owner": "inventory-team"
+    },
+    {
+      "name": "ai-fraud-detection",
+      "description": "ML-based fraud detection for payments",
+      "enabled": false,
+      "rules": [
+        {
+          "condition": "order.totalAmount > 1000",
+          "enabled": true,
+          "description": "Enable for high-value orders"
+        }
+      ],
+      "variants": [
+        {
+          "name": "model-v1",
+          "weight": 50,
+          "config": {
+            "model": "fraud-detection-v1",
+            "threshold": 0.7
+          }
+        },
+        {
+          "name": "model-v2",
+          "weight": 50,
+          "config": {
+            "model": "fraud-detection-v2",
+            "threshold": 0.8
+          }
+        }
+      ],
+      "owner": "security-team",
+      "tags": ["ml", "security"]
+    },
+    {
+      "name": "advanced-analytics",
+      "description": "Advanced analytics dashboard",
+      "enabled": false,
+      "environments": {
+        "production": {
+          "enabled": true,
+          "rollout": {
+            "users": ["admin-user-1", "admin-user-2"]
+          }
+        }
+      }
+    }
+  ],
+  "secrets": [
+    {
+      "name": "JWT_SECRET",
+      "description": "JWT signing secret",
+      "provider": "aws-secrets-manager",
+      "path": "prod/api/jwt-secret",
+      "required": true,
+      "rotation": {
+        "enabled": true,
+        "interval": 7776000
+      }
+    },
+    {
+      "name": "STRIPE_SECRET_KEY",
+      "description": "Stripe API secret key",
+      "provider": "aws-secrets-manager",
+      "path": "prod/payments/stripe-secret",
+      "required": true,
+      "accessControl": {
+        "roles": ["admin", "payment-processor"],
+        "environments": ["production"]
+      }
+    },
+    {
+      "name": "ENCRYPTION_KEY",
+      "description": "Data encryption key",
+      "provider": "aws-secrets-manager",
+      "path": "prod/security/encryption-key",
+      "required": true,
+      "encryption": {
+        "algorithm": "aes-256-gcm",
+        "keyId": "aws-kms-key-id"
+      }
+    }
+  ],
+  "providers": [
+    {
+      "name": "environment",
+      "type": "env",
+      "priority": 100,
+      "enabled": true
+    },
+    {
+      "name": "config-file",
+      "type": "file",
+      "priority": 50,
+      "enabled": true,
+      "options": {
+        "path": "./config/config.json",
+        "format": "json",
+        "watch": true
+      }
+    },
+    {
+      "name": "remote-config",
+      "type": "remote",
+      "priority": 25,
+      "enabled": true,
+      "options": {
+        "url": "${CONFIG_SERVICE_URL}/config",
+        "pollInterval": 300,
+        "cache": true,
+        "cacheTTL": 600
+      }
+    }
+  ],
+  "validation": {
+    "strict": true,
+    "onError": "throw",
+    "validateOnLoad": true,
+    "coerceTypes": true,
+    "removeUnknown": false
+  }
+}

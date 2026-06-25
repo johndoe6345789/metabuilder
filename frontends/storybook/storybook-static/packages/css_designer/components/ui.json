@@ -1,0 +1,524 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "css_designer",
+  "description": "CSS Designer components for visual style editing",
+  "components": [
+    {
+      "id": "css_designer",
+      "name": "CSSDesigner",
+      "description": "Main CSS designer layout with sidebar navigation",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "default": "CSS Designer",
+          "description": "Title displayed in header"
+        },
+        {
+          "name": "layout",
+          "type": "string",
+          "required": false,
+          "default": "sidebar",
+          "description": "Layout variant"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "css-designer-layout",
+          "children": [
+            {
+              "type": "Stack",
+              "className": "css-designer-sidebar",
+              "gap": 2,
+              "children": [
+                { "ref": "ColorPaletteEditor" },
+                { "ref": "FontSelector" },
+                { "ref": "SpacingEditor" },
+                { "ref": "BorderEditor" },
+                { "ref": "ShadowEditor" }
+              ]
+            },
+            {
+              "type": "Box",
+              "className": "css-designer-preview",
+              "children": [
+                { "ref": "StylePreview" }
+              ]
+            }
+          ]
+        }
+      },
+      "scripts": {
+        "onInit": "init.script",
+        "onSave": "export/to_scss.script"
+      }
+    },
+    {
+      "id": "color_palette_editor",
+      "name": "ColorPaletteEditor",
+      "description": "Color palette editor with color pickers",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "default": "Color Palette",
+          "description": "Section title"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "className": "css-property-group",
+          "children": [
+            {
+              "type": "Box",
+              "className": "css-property-group-header",
+              "children": [
+                {
+                  "type": "Icon",
+                  "name": "Palette",
+                  "className": "css-property-group-icon"
+                },
+                {
+                  "type": "Text",
+                  "variant": "subtitle1",
+                  "fontWeight": "600",
+                  "children": "{{title}}"
+                }
+              ]
+            },
+            {
+              "type": "Stack",
+              "className": "css-property-group-content",
+              "gap": 2,
+              "children": [
+                {
+                  "type": "ColorPicker",
+                  "props": { "id": "primary", "label": "Primary Color", "defaultValue": "#1976d2" }
+                },
+                {
+                  "type": "ColorPicker",
+                  "props": { "id": "secondary", "label": "Secondary Color", "defaultValue": "#9c27b0" }
+                },
+                {
+                  "type": "ColorPicker",
+                  "props": { "id": "background", "label": "Background", "defaultValue": "#ffffff" }
+                },
+                {
+                  "type": "ColorPicker",
+                  "props": { "id": "surface", "label": "Surface", "defaultValue": "#f5f5f5" }
+                },
+                {
+                  "type": "ColorPicker",
+                  "props": { "id": "text_primary", "label": "Text Primary", "defaultValue": "#212121" }
+                },
+                {
+                  "type": "ColorPicker",
+                  "props": { "id": "text_secondary", "label": "Text Secondary", "defaultValue": "#757575" }
+                },
+                {
+                  "type": "ColorPicker",
+                  "props": { "id": "error", "label": "Error", "defaultValue": "#f44336" }
+                },
+                {
+                  "type": "ColorPicker",
+                  "props": { "id": "warning", "label": "Warning", "defaultValue": "#ff9800" }
+                },
+                {
+                  "type": "ColorPicker",
+                  "props": { "id": "success", "label": "Success", "defaultValue": "#4caf50" }
+                },
+                {
+                  "type": "ColorPicker",
+                  "props": { "id": "info", "label": "Info", "defaultValue": "#2196f3" }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "scripts": {
+        "onColorChange": "colors/color_picker.script"
+      }
+    },
+    {
+      "id": "font_selector",
+      "name": "FontSelector",
+      "description": "Typography settings editor",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "default": "Typography",
+          "description": "Section title"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "className": "css-property-group",
+          "children": [
+            {
+              "type": "Box",
+              "className": "css-property-group-header",
+              "children": [
+                {
+                  "type": "Icon",
+                  "name": "TextFields",
+                  "className": "css-property-group-icon"
+                },
+                {
+                  "type": "Text",
+                  "variant": "subtitle1",
+                  "fontWeight": "600",
+                  "children": "{{title}}"
+                }
+              ]
+            },
+            {
+              "type": "Stack",
+              "className": "css-property-group-content",
+              "gap": 2,
+              "children": [
+                {
+                  "type": "Select",
+                  "props": {
+                    "id": "fontFamily",
+                    "label": "Font Family",
+                    "options": [
+                      { "value": "IBM Plex Sans", "label": "IBM Plex Sans (Default)" },
+                      { "value": "Inter", "label": "Inter" },
+                      { "value": "Roboto", "label": "Roboto" },
+                      { "value": "Open Sans", "label": "Open Sans" },
+                      { "value": "system-ui", "label": "System UI" }
+                    ]
+                  }
+                },
+                {
+                  "type": "Select",
+                  "props": {
+                    "id": "headingFont",
+                    "label": "Heading Font",
+                    "options": [
+                      { "value": "Space Grotesk", "label": "Space Grotesk (Default)" },
+                      { "value": "Poppins", "label": "Poppins" },
+                      { "value": "Montserrat", "label": "Montserrat" }
+                    ]
+                  }
+                },
+                {
+                  "type": "Select",
+                  "props": {
+                    "id": "codeFont",
+                    "label": "Code Font",
+                    "options": [
+                      { "value": "JetBrains Mono", "label": "JetBrains Mono (Default)" },
+                      { "value": "Fira Code", "label": "Fira Code" },
+                      { "value": "Source Code Pro", "label": "Source Code Pro" }
+                    ]
+                  }
+                },
+                {
+                  "type": "Slider",
+                  "props": {
+                    "id": "baseFontSize",
+                    "label": "Base Font Size",
+                    "min": 12,
+                    "max": 20,
+                    "defaultValue": 16,
+                    "unit": "px"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "scripts": {
+        "onFontChange": "fonts/font_selector.script"
+      }
+    },
+    {
+      "id": "spacing_editor",
+      "name": "SpacingEditor",
+      "description": "Spacing and layout settings",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "default": "Spacing",
+          "description": "Section title"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "className": "css-property-group",
+          "children": [
+            {
+              "type": "Box",
+              "className": "css-property-group-header",
+              "children": [
+                {
+                  "type": "Icon",
+                  "name": "Grid",
+                  "className": "css-property-group-icon"
+                },
+                {
+                  "type": "Text",
+                  "variant": "subtitle1",
+                  "fontWeight": "600",
+                  "children": "{{title}}"
+                }
+              ]
+            },
+            {
+              "type": "Stack",
+              "className": "css-property-group-content",
+              "gap": 2,
+              "children": [
+                {
+                  "type": "Slider",
+                  "props": { "id": "spacingUnit", "label": "Base Unit", "min": 4, "max": 16, "defaultValue": 8, "unit": "px" }
+                },
+                {
+                  "type": "Slider",
+                  "props": { "id": "borderRadius", "label": "Border Radius", "min": 0, "max": 24, "defaultValue": 4, "unit": "px" }
+                },
+                {
+                  "type": "Slider",
+                  "props": { "id": "containerWidth", "label": "Container Width", "min": 900, "max": 1400, "defaultValue": 1200, "unit": "px" }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "scripts": {
+        "onSpacingChange": "spacing/spacing_editor.script"
+      }
+    },
+    {
+      "id": "border_editor",
+      "name": "BorderEditor",
+      "description": "Border styling settings",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "default": "Borders",
+          "description": "Section title"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "className": "css-property-group",
+          "children": [
+            {
+              "type": "Box",
+              "className": "css-property-group-header",
+              "children": [
+                {
+                  "type": "Icon",
+                  "name": "CropFree",
+                  "className": "css-property-group-icon"
+                },
+                {
+                  "type": "Text",
+                  "variant": "subtitle1",
+                  "fontWeight": "600",
+                  "children": "{{title}}"
+                }
+              ]
+            },
+            {
+              "type": "Stack",
+              "className": "css-property-group-content",
+              "gap": 2,
+              "children": [
+                {
+                  "type": "Slider",
+                  "props": { "id": "borderWidth", "label": "Border Width", "min": 0, "max": 4, "defaultValue": 1, "unit": "px" }
+                },
+                {
+                  "type": "ColorPicker",
+                  "props": { "id": "borderColor", "label": "Border Color", "defaultValue": "#e0e0e0" }
+                },
+                {
+                  "type": "Select",
+                  "props": {
+                    "id": "borderStyle",
+                    "label": "Border Style",
+                    "options": [
+                      { "value": "solid", "label": "Solid" },
+                      { "value": "dashed", "label": "Dashed" },
+                      { "value": "dotted", "label": "Dotted" }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "scripts": {
+        "onBorderChange": "borders/border_editor.script"
+      }
+    },
+    {
+      "id": "shadow_editor",
+      "name": "ShadowEditor",
+      "description": "Shadow styling settings",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "default": "Shadows",
+          "description": "Section title"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "className": "css-property-group",
+          "children": [
+            {
+              "type": "Box",
+              "className": "css-property-group-header",
+              "children": [
+                {
+                  "type": "Icon",
+                  "name": "Layers",
+                  "className": "css-property-group-icon"
+                },
+                {
+                  "type": "Text",
+                  "variant": "subtitle1",
+                  "fontWeight": "600",
+                  "children": "{{title}}"
+                }
+              ]
+            },
+            {
+              "type": "Stack",
+              "className": "css-property-group-content",
+              "gap": 2,
+              "children": [
+                {
+                  "type": "Slider",
+                  "props": { "id": "shadowBlur", "label": "Blur Radius", "min": 0, "max": 24, "defaultValue": 4, "unit": "px" }
+                },
+                {
+                  "type": "Slider",
+                  "props": { "id": "shadowSpread", "label": "Spread", "min": 0, "max": 12, "defaultValue": 0, "unit": "px" }
+                },
+                {
+                  "type": "Slider",
+                  "props": { "id": "shadowOpacity", "label": "Opacity", "min": 0, "max": 100, "defaultValue": 15, "unit": "%" }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "scripts": {
+        "onShadowChange": "shadows/shadow_editor.script"
+      }
+    },
+    {
+      "id": "style_preview",
+      "name": "StylePreview",
+      "description": "Live preview of styled components",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "default": "Preview",
+          "description": "Preview panel title"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "className": "css-style-preview",
+          "children": [
+            {
+              "type": "Box",
+              "className": "css-style-preview-header",
+              "children": [
+                {
+                  "type": "Icon",
+                  "name": "Eye",
+                  "className": "css-property-group-icon"
+                },
+                {
+                  "type": "Text",
+                  "variant": "subtitle1",
+                  "fontWeight": "600",
+                  "children": "{{title}}"
+                }
+              ]
+            },
+            {
+              "type": "Stack",
+              "className": "css-style-preview-content",
+              "gap": 3,
+              "children": [
+                {
+                  "type": "Card",
+                  "className": "preview-section",
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "h4",
+                      "children": "Heading Preview"
+                    },
+                    {
+                      "type": "Text",
+                      "variant": "body1",
+                      "children": "This is body text to preview your typography settings."
+                    },
+                    {
+                      "type": "Flex",
+                      "gap": 2,
+                      "sx": { "mt": 2 },
+                      "children": [
+                        {
+                          "type": "Button",
+                          "variant": "contained",
+                          "children": "Primary Button"
+                        },
+                        {
+                          "type": "Button",
+                          "variant": "outlined",
+                          "children": "Secondary Button"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

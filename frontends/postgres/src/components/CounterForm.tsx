@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { CounterValidation } from '@/validations/CounterValidation';
 import { BASE_PATH } from '@/lib/app-config';
+import publicStyles from '@/styles/public.module.scss';
 
 export const CounterForm = () => {
   const t = useTranslations('CounterForm');
@@ -34,26 +35,26 @@ export const CounterForm = () => {
     <form onSubmit={handleIncrement}>
       <p>{t('presentation')}</p>
       <div>
-        <label className="text-sm font-bold text-gray-700" htmlFor="increment">
+        <label className={publicStyles.counterLabel} htmlFor="increment">
           {t('label_increment')}
           <input
             id="increment"
             type="number"
-            className="ml-2 w-32 appearance-none rounded-sm border border-gray-200 px-2 py-1 text-sm leading-tight text-gray-700 focus:ring-3 focus:ring-blue-300/50 focus:outline-hidden"
+            className={publicStyles.counterInput}
             {...form.register('increment', { valueAsNumber: true })}
           />
         </label>
 
         {form.formState.errors.increment && (
-          <div className="my-2 text-xs text-red-500 italic">
+          <div className={publicStyles.counterError}>
             {t('error_increment_range')}
           </div>
         )}
       </div>
 
-      <div className="mt-2">
+      <div className={publicStyles.counterActions}>
         <button
-          className="rounded-sm bg-blue-500 px-5 py-1 font-bold text-white hover:bg-blue-600 focus:ring-3 focus:ring-blue-300/50 focus:outline-hidden disabled:pointer-events-none disabled:opacity-50"
+          className={publicStyles.counterButton}
           type="submit"
           disabled={form.formState.isSubmitting}
         >

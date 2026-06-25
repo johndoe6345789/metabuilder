@@ -8,8 +8,35 @@ export default defineConfig({
   plugins: [react(), tsconfigPaths()],
   test: {
     coverage: {
+      provider: 'istanbul',
+      reporter: ['text', 'json', 'html', 'json-summary'],
       include: ['src/**/*'],
-      exclude: ['src/**/*.stories.{js,jsx,ts,tsx}'],
+      exclude: [
+        'src/**/*.stories.{js,jsx,ts,tsx}',
+        'src/**/*.test.{js,ts,tsx}',
+        'src/**/page.tsx',
+        'src/**/layout.tsx',
+        'src/**/route.ts',
+        'src/app/**',
+        'src/libs/**',
+        'src/proxy.ts',
+        'src/instrumentation*.ts',
+        'src/**/*.json',
+        'src/types/**',
+        'src/models/**',
+        'src/components/analytics/**',
+        'src/components/examples/**',
+        'src/config/sponsors.ts',
+        'src/utils/auth.ts',
+        'src/utils/db.ts',
+        'src/utils/DBConnection.ts',
+      ],
+      thresholds: {
+        lines: 80,
+        functions: 80,
+        branches: 80,
+        statements: 80,
+      },
     },
     projects: [
       {
@@ -19,6 +46,19 @@ export default defineConfig({
           include: ['src/**/*.test.{js,ts}'],
           exclude: ['src/hooks/**/*.test.ts'],
           environment: 'node',
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: 'jsdom',
+          include: ['**/*.test.tsx', 'src/hooks/**/*.test.ts'],
+          exclude: [
+            '**/node_modules/**',
+            '**/BaseTemplate.test.tsx',
+          ],
+          environment: 'jsdom',
+          setupFiles: [],
         },
       },
       {

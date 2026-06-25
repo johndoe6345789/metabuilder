@@ -35,6 +35,7 @@ describe('LoadingAnalysis Component', () => {
 
       // Three aria-hidden motion divs inside the skeleton list
       const bars = container.querySelectorAll('[aria-hidden="true"]')
+      // eslint-disable-next-line max-len
       // One for the spinner icon + three skeleton bars = 4 total, or check specifically in skeleton list
       expect(bars.length).toBeGreaterThanOrEqual(3)
     })
@@ -90,7 +91,7 @@ describe('LoadingAnalysis Component', () => {
       const root = container.querySelector('[data-testid="loading-analysis"]')
       const skeletonList = root?.children[1]
       const bars = Array.from(skeletonList?.children ?? [])
-      bars.forEach((bar) => {
+      bars.forEach(bar => {
         expect(bar.getAttribute('aria-hidden')).toBe('true')
       })
     })
@@ -263,11 +264,12 @@ describe('LoadingAnalysis Component', () => {
     })
 
     it('multiple instances render independently', () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { container } = render(
         <div>
           <LoadingAnalysis />
           <LoadingAnalysis />
-        </div>
+        </div>,
       )
 
       const textElements = screen.getAllByText('Analyzing error...')
@@ -326,7 +328,7 @@ describe('LoadingAnalysis Component', () => {
       const { container } = render(
         <div className="p-4">
           <LoadingAnalysis />
-        </div>
+        </div>,
       )
 
       expect(screen.getByText('Analyzing error...')).toBeInTheDocument()
@@ -338,7 +340,7 @@ describe('LoadingAnalysis Component', () => {
         <div>
           <div>Error occurred</div>
           <LoadingAnalysis />
-        </div>
+        </div>,
       )
 
       expect(screen.getByText('Error occurred')).toBeInTheDocument()
@@ -350,7 +352,9 @@ describe('LoadingAnalysis Component', () => {
     it('has correct nesting order', () => {
       const { container } = render(<LoadingAnalysis />)
 
-      const root = container.querySelector('[data-testid="loading-analysis"]') as HTMLElement
+      const root = container.querySelector(
+        '[data-testid="loading-analysis"]',
+      ) as HTMLElement
       expect(root).toBeInTheDocument()
 
       const firstChild = root.firstChild as HTMLElement
@@ -385,7 +389,7 @@ describe('LoadingAnalysis Component', () => {
       const skeletonList = root?.children[1]
       const bars = Array.from(skeletonList?.children ?? [])
       expect(bars.length).toBe(3)
-      bars.forEach((bar) => {
+      bars.forEach(bar => {
         expect(bar.getAttribute('aria-hidden')).toBe('true')
       })
     })

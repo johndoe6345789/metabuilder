@@ -1,14 +1,14 @@
-import { Dialog } from '@metabuilder/fakemui/feedback'
+import { Dialog } from '@metabuilder/m3/feedback'
 import {
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogContentText,
   DialogActions,
-} from '@metabuilder/fakemui/utils'
-import { Button } from '@metabuilder/fakemui/inputs'
-import { Input } from '@metabuilder/fakemui/inputs'
-import { Label } from '@metabuilder/fakemui/atoms'
+} from '@metabuilder/m3/utils'
+import { Button } from '@metabuilder/m3/inputs'
+import { Input } from '@metabuilder/m3/inputs'
+import { Label } from '@metabuilder/m3/atoms'
 import projectSettingsCopy from '@/data/project-settings.json'
 
 interface ScriptDialogProps {

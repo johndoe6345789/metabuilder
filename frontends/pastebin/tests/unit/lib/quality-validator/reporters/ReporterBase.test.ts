@@ -15,7 +15,7 @@
  * 10. Edge cases and boundary conditions
  */
 
-import { ReporterBase } from '../../../../../src/lib/quality-validator/reporters/ReporterBase';
+import { ReporterBase } from '../../../../../src/lib/quality-validator/reporters/ReporterBase'
 import {
   ScoringResult,
   Finding,
@@ -24,26 +24,30 @@ import {
   OverallScore,
   ComponentScores,
   Configuration,
-} from '../../../../../src/lib/quality-validator/types/index';
-import { createDefaultConfig, createMockFinding } from '../../../../../tests/test-utils';
+} from '../../../../../src/lib/quality-validator/types/index'
+import {
+  createDefaultConfig,
+  createMockFinding,
+} from '../../../../../tests/test-utils'
 
 /**
  * Concrete implementation of ReporterBase for testing
  */
 class TestReporter extends ReporterBase {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   generate(result: ScoringResult): string {
-    return 'Test Report';
+    return 'Test Report'
   }
 }
 
 describe('ReporterBase - Comprehensive Tests', () => {
-  let reporter: TestReporter;
-  let mockConfig: Configuration;
+  let reporter: TestReporter
+  let mockConfig: Configuration
 
   beforeEach(() => {
-    reporter = new TestReporter();
-    mockConfig = createDefaultConfig();
-  });
+    reporter = new TestReporter()
+    mockConfig = createDefaultConfig()
+  })
 
   // ============================================================================
   // 1. METADATA FORMATTING
@@ -59,10 +63,10 @@ describe('ReporterBase - Comprehensive Tests', () => {
         projectPath: '/home/user/project',
         nodeVersion: 'v18.0.0',
         configUsed: mockConfig,
-      };
+      }
 
       // Act
-      const formatted = (reporter as any).formatMetadata(metadata);
+      const formatted = (reporter as any).formatMetadata(metadata)
 
       // Assert
       expect(formatted).toEqual({
@@ -72,12 +76,12 @@ describe('ReporterBase - Comprehensive Tests', () => {
         projectPath: '/home/user/project',
         nodeVersion: 'v18.0.0',
         projectName: 'test-project',
-      });
-    });
+      })
+    })
 
     it('should use default project name when not provided', () => {
       // Arrange
-      const configWithoutName = { ...mockConfig, projectName: undefined };
+      const configWithoutName = { ...mockConfig, projectName: undefined }
       const metadata: ResultMetadata = {
         timestamp: '2024-01-21T10:30:00.000Z',
         toolVersion: '1.0.0',
@@ -85,14 +89,14 @@ describe('ReporterBase - Comprehensive Tests', () => {
         projectPath: '/path',
         nodeVersion: 'v18.0.0',
         configUsed: configWithoutName as any,
-      };
+      }
 
       // Act
-      const formatted = (reporter as any).formatMetadata(metadata);
+      const formatted = (reporter as any).formatMetadata(metadata)
 
       // Assert
-      expect(formatted.projectName).toBe('snippet-pastebin');
-    });
+      expect(formatted.projectName).toBe('snippet-pastebin')
+    })
 
     it('should preserve all metadata values exactly', () => {
       // Arrange
@@ -103,17 +107,19 @@ describe('ReporterBase - Comprehensive Tests', () => {
         projectPath: '/very/long/project/path/with/many/segments',
         nodeVersion: 'v20.5.1',
         configUsed: mockConfig,
-      };
+      }
 
       // Act
-      const formatted = (reporter as any).formatMetadata(metadata);
+      const formatted = (reporter as any).formatMetadata(metadata)
 
       // Assert
-      expect(formatted.timestamp).toBe(metadata.timestamp);
-      expect(formatted.analysisTime).toBe(5000);
-      expect(formatted.projectPath).toBe('/very/long/project/path/with/many/segments');
-    });
-  });
+      expect(formatted.timestamp).toBe(metadata.timestamp)
+      expect(formatted.analysisTime).toBe(5000)
+      expect(formatted.projectPath).toBe(
+        '/very/long/project/path/with/many/segments',
+      )
+    })
+  })
 
   // ============================================================================
   // 2. OVERALL SCORE FORMATTING
@@ -128,10 +134,10 @@ describe('ReporterBase - Comprehensive Tests', () => {
         status: 'pass',
         summary: 'Good quality',
         passesThresholds: true,
-      };
+      }
 
       // Act
-      const formatted = (reporter as any).formatOverallScore(overall);
+      const formatted = (reporter as any).formatOverallScore(overall)
 
       // Assert
       expect(formatted).toEqual({
@@ -140,8 +146,8 @@ describe('ReporterBase - Comprehensive Tests', () => {
         status: 'pass',
         summary: 'Good quality',
         passesThresholds: true,
-      });
-    });
+      })
+    })
 
     it('should handle perfect score', () => {
       // Arrange
@@ -151,14 +157,14 @@ describe('ReporterBase - Comprehensive Tests', () => {
         status: 'pass',
         summary: 'Perfect',
         passesThresholds: true,
-      };
+      }
 
       // Act
-      const formatted = (reporter as any).formatOverallScore(overall);
+      const formatted = (reporter as any).formatOverallScore(overall)
 
       // Assert
-      expect(formatted.score).toBe('100.0');
-    });
+      expect(formatted.score).toBe('100.0')
+    })
 
     it('should handle zero score', () => {
       // Arrange
@@ -168,18 +174,24 @@ describe('ReporterBase - Comprehensive Tests', () => {
         status: 'fail',
         summary: 'Critical',
         passesThresholds: false,
-      };
+      }
 
       // Act
-      const formatted = (reporter as any).formatOverallScore(overall);
+      const formatted = (reporter as any).formatOverallScore(overall)
 
       // Assert
-      expect(formatted.score).toBe('0.0');
-    });
+      expect(formatted.score).toBe('0.0')
+    })
 
     it('should handle all grade values', () => {
       // Arrange
-      const grades: Array<'A' | 'B' | 'C' | 'D' | 'F'> = ['A', 'B', 'C', 'D', 'F'];
+      const grades: ('A' | 'B' | 'C' | 'D' | 'F')[] = [
+        'A',
+        'B',
+        'C',
+        'D',
+        'F',
+      ]
 
       // Act & Assert
       for (const grade of grades) {
@@ -189,13 +201,13 @@ describe('ReporterBase - Comprehensive Tests', () => {
           status: 'pass',
           summary: `Grade ${grade}`,
           passesThresholds: true,
-        };
+        }
 
-        const formatted = (reporter as any).formatOverallScore(overall);
-        expect(formatted.grade).toBe(grade);
+        const formatted = (reporter as any).formatOverallScore(overall)
+        expect(formatted.grade).toBe(grade)
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // 3. COMPONENT SCORES FORMATTING
@@ -209,33 +221,33 @@ describe('ReporterBase - Comprehensive Tests', () => {
         testCoverage: { score: 88.2, weight: 0.35, weightedScore: 30.87 },
         architecture: { score: 79.1, weight: 0.2, weightedScore: 15.82 },
         security: { score: 92.0, weight: 0.15, weightedScore: 13.8 },
-      };
+      }
 
       // Act
-      const formatted = (reporter as any).formatComponentScores(componentScores);
+      const formatted = (reporter as any).formatComponentScores(componentScores)
 
       // Assert
       expect(formatted.codeQuality).toEqual({
         score: '82.5',
         weight: '30',
         weightedScore: '24.8',
-      });
+      })
       expect(formatted.testCoverage).toEqual({
         score: '88.2',
         weight: '35',
         weightedScore: '30.9',
-      });
+      })
       expect(formatted.architecture).toEqual({
         score: '79.1',
         weight: '20',
         weightedScore: '15.8',
-      });
+      })
       expect(formatted.security).toEqual({
         score: '92.0',
         weight: '15',
         weightedScore: '13.8',
-      });
-    });
+      })
+    })
 
     it('should convert weight decimal to percentage', () => {
       // Arrange
@@ -244,17 +256,17 @@ describe('ReporterBase - Comprehensive Tests', () => {
         testCoverage: { score: 80, weight: 0.25, weightedScore: 20 },
         architecture: { score: 80, weight: 0.25, weightedScore: 20 },
         security: { score: 80, weight: 0.25, weightedScore: 20 },
-      };
+      }
 
       // Act
-      const formatted = (reporter as any).formatComponentScores(componentScores);
+      const formatted = (reporter as any).formatComponentScores(componentScores)
 
       // Assert
-      expect(formatted.codeQuality.weight).toBe('25');
-      expect(formatted.testCoverage.weight).toBe('25');
-      expect(formatted.architecture.weight).toBe('25');
-      expect(formatted.security.weight).toBe('25');
-    });
+      expect(formatted.codeQuality.weight).toBe('25')
+      expect(formatted.testCoverage.weight).toBe('25')
+      expect(formatted.architecture.weight).toBe('25')
+      expect(formatted.security.weight).toBe('25')
+    })
 
     it('should handle extreme score values', () => {
       // Arrange
@@ -263,18 +275,18 @@ describe('ReporterBase - Comprehensive Tests', () => {
         testCoverage: { score: 100, weight: 0.35, weightedScore: 35 },
         architecture: { score: 0, weight: 0.2, weightedScore: 0 },
         security: { score: 100, weight: 0.15, weightedScore: 15 },
-      };
+      }
 
       // Act
-      const formatted = (reporter as any).formatComponentScores(componentScores);
+      const formatted = (reporter as any).formatComponentScores(componentScores)
 
       // Assert
-      expect(formatted.codeQuality.score).toBe('0.0');
-      expect(formatted.testCoverage.score).toBe('100.0');
-      expect(formatted.architecture.weightedScore).toBe('0.0');
-      expect(formatted.security.weightedScore).toBe('15.0');
-    });
-  });
+      expect(formatted.codeQuality.score).toBe('0.0')
+      expect(formatted.testCoverage.score).toBe('100.0')
+      expect(formatted.architecture.weightedScore).toBe('0.0')
+      expect(formatted.security.weightedScore).toBe('15.0')
+    })
+  })
 
   // ============================================================================
   // 4. FINDINGS GROUPING AND STATISTICS
@@ -289,48 +301,51 @@ describe('ReporterBase - Comprehensive Tests', () => {
         createMockFinding({ severity: 'high', title: 'High 1' }),
         createMockFinding({ severity: 'medium', title: 'Medium 1' }),
         createMockFinding({ severity: 'low', title: 'Low 1' }),
-      ];
+      ]
 
       // Act
-      const grouped = (reporter as any).groupFindingsByCategory(findings);
+      const grouped = (reporter as any).groupFindingsByCategory(findings)
 
       // Assert
-      expect(grouped.critical).toBeDefined();
-      expect(grouped.critical.count).toBe(2);
-      expect(grouped.critical.findings).toHaveLength(2);
-      expect(grouped.high.count).toBe(1);
-      expect(grouped.medium.count).toBe(1);
-      expect(grouped.low.count).toBe(1);
-    });
+      expect(grouped.critical).toBeDefined()
+      expect(grouped.critical.count).toBe(2)
+      expect(grouped.critical.findings).toHaveLength(2)
+      expect(grouped.high.count).toBe(1)
+      expect(grouped.medium.count).toBe(1)
+      expect(grouped.low.count).toBe(1)
+    })
 
     it('should handle empty findings array', () => {
       // Arrange
-      const findings: Finding[] = [];
+      const findings: Finding[] = []
 
       // Act
-      const grouped = (reporter as any).groupFindingsByCategory(findings);
+      const grouped = (reporter as any).groupFindingsByCategory(findings)
 
       // Assert
-      expect(typeof grouped).toBe('object');
-    });
+      expect(typeof grouped).toBe('object')
+    })
 
     it('should handle findings with all severities', () => {
       // Arrange
-      const severities = ['critical', 'high', 'medium', 'low', 'info'];
-      const findings = severities.map((severity) =>
-        createMockFinding({ severity: severity as any, title: `${severity} issue` })
-      );
+      const severities = ['critical', 'high', 'medium', 'low', 'info']
+      const findings = severities.map(severity =>
+        createMockFinding({
+          severity: severity as any,
+          title: `${severity} issue`,
+        }),
+      )
 
       // Act
-      const grouped = (reporter as any).groupFindingsByCategory(findings);
+      const grouped = (reporter as any).groupFindingsByCategory(findings)
 
       // Assert
       for (const severity of severities) {
-        expect(grouped[severity]).toBeDefined();
-        expect(grouped[severity].count).toBe(1);
+        expect(grouped[severity]).toBeDefined()
+        expect(grouped[severity].count).toBe(1)
       }
-    });
-  });
+    })
+  })
 
   describe('findingStatistics()', () => {
     it('should calculate finding statistics correctly', () => {
@@ -344,70 +359,70 @@ describe('ReporterBase - Comprehensive Tests', () => {
         createMockFinding({ severity: 'medium' }),
         createMockFinding({ severity: 'low' }),
         createMockFinding({ severity: 'info' }),
-      ];
+      ]
 
       // Act
-      const stats = (reporter as any).findingStatistics(findings);
+      const stats = (reporter as any).findingStatistics(findings)
 
       // Assert
-      expect(stats.total).toBe(8);
-      expect(stats.critical).toBe(2);
-      expect(stats.high).toBe(3);
-      expect(stats.medium).toBe(1);
-      expect(stats.low).toBe(1);
-      expect(stats.info).toBe(1);
-    });
+      expect(stats.total).toBe(8)
+      expect(stats.critical).toBe(2)
+      expect(stats.high).toBe(3)
+      expect(stats.medium).toBe(1)
+      expect(stats.low).toBe(1)
+      expect(stats.info).toBe(1)
+    })
 
     it('should initialize all severity counts to zero', () => {
       // Arrange
-      const findings: Finding[] = [];
+      const findings: Finding[] = []
 
       // Act
-      const stats = (reporter as any).findingStatistics(findings);
+      const stats = (reporter as any).findingStatistics(findings)
 
       // Assert
-      expect(stats.total).toBe(0);
-      expect(stats.critical).toBe(0);
-      expect(stats.high).toBe(0);
-      expect(stats.medium).toBe(0);
-      expect(stats.low).toBe(0);
-      expect(stats.info).toBe(0);
-    });
+      expect(stats.total).toBe(0)
+      expect(stats.critical).toBe(0)
+      expect(stats.high).toBe(0)
+      expect(stats.medium).toBe(0)
+      expect(stats.low).toBe(0)
+      expect(stats.info).toBe(0)
+    })
 
     it('should handle findings with unknown severity', () => {
       // Arrange
       const findings: Finding[] = [
         createMockFinding({ severity: 'critical' }),
         { ...createMockFinding(), severity: 'unknown' as any },
-      ];
+      ]
 
       // Act
-      const stats = (reporter as any).findingStatistics(findings);
+      const stats = (reporter as any).findingStatistics(findings)
 
       // Assert
-      expect(stats.total).toBe(2);
-      expect(stats.critical).toBe(1);
-    });
+      expect(stats.total).toBe(2)
+      expect(stats.critical).toBe(1)
+    })
 
     it('should handle large number of findings', () => {
       // Arrange
       const findings = Array.from({ length: 1000 }).map((_, i) => {
-        const severities = ['critical', 'high', 'medium', 'low', 'info'];
-        return createMockFinding({ severity: severities[i % 5] as any });
-      });
+        const severities = ['critical', 'high', 'medium', 'low', 'info']
+        return createMockFinding({ severity: severities[i % 5] as any })
+      })
 
       // Act
-      const stats = (reporter as any).findingStatistics(findings);
+      const stats = (reporter as any).findingStatistics(findings)
 
       // Assert
-      expect(stats.total).toBe(1000);
-      expect(stats.critical).toBe(200);
-      expect(stats.high).toBe(200);
-      expect(stats.medium).toBe(200);
-      expect(stats.low).toBe(200);
-      expect(stats.info).toBe(200);
-    });
-  });
+      expect(stats.total).toBe(1000)
+      expect(stats.critical).toBe(200)
+      expect(stats.high).toBe(200)
+      expect(stats.medium).toBe(200)
+      expect(stats.low).toBe(200)
+      expect(stats.info).toBe(200)
+    })
+  })
 
   // ============================================================================
   // 5. RECOMMENDATIONS PROCESSING
@@ -417,71 +432,134 @@ describe('ReporterBase - Comprehensive Tests', () => {
     it('should calculate recommendation statistics', () => {
       // Arrange
       const recommendations: Recommendation[] = [
-        { priority: 'critical', category: 'security', issue: 'Issue 1', remediation: 'Fix 1', estimatedEffort: 'low', expectedImpact: 'High' },
-        { priority: 'critical', category: 'security', issue: 'Issue 2', remediation: 'Fix 2', estimatedEffort: 'low', expectedImpact: 'High' },
-        { priority: 'high', category: 'codeQuality', issue: 'Issue 3', remediation: 'Fix 3', estimatedEffort: 'medium', expectedImpact: 'Medium' },
-        { priority: 'medium', category: 'testCoverage', issue: 'Issue 4', remediation: 'Fix 4', estimatedEffort: 'high', expectedImpact: 'Low' },
-      ];
+        {
+          priority: 'critical',
+          category: 'security',
+          issue: 'Issue 1',
+          remediation: 'Fix 1',
+          estimatedEffort: 'low',
+          expectedImpact: 'High',
+        },
+        {
+          priority: 'critical',
+          category: 'security',
+          issue: 'Issue 2',
+          remediation: 'Fix 2',
+          estimatedEffort: 'low',
+          expectedImpact: 'High',
+        },
+        {
+          priority: 'high',
+          category: 'codeQuality',
+          issue: 'Issue 3',
+          remediation: 'Fix 3',
+          estimatedEffort: 'medium',
+          expectedImpact: 'Medium',
+        },
+        {
+          priority: 'medium',
+          category: 'testCoverage',
+          issue: 'Issue 4',
+          remediation: 'Fix 4',
+          estimatedEffort: 'high',
+          expectedImpact: 'Low',
+        },
+      ]
 
       // Act
-      const stats = (reporter as any).recommendationStatistics(recommendations);
+      const stats = (reporter as any).recommendationStatistics(recommendations)
 
       // Assert
-      expect(stats.total).toBe(4);
-      expect(stats.critical).toBe(2);
-      expect(stats.high).toBe(1);
-      expect(stats.medium).toBe(1);
-      expect(stats.low).toBe(0);
-    });
+      expect(stats.total).toBe(4)
+      expect(stats.critical).toBe(2)
+      expect(stats.high).toBe(1)
+      expect(stats.medium).toBe(1)
+      expect(stats.low).toBe(0)
+    })
 
     it('should initialize all priority counts', () => {
       // Arrange
-      const recommendations: Recommendation[] = [];
+      const recommendations: Recommendation[] = []
 
       // Act
-      const stats = (reporter as any).recommendationStatistics(recommendations);
+      const stats = (reporter as any).recommendationStatistics(recommendations)
 
       // Assert
-      expect(stats.total).toBe(0);
-      expect(stats.critical).toBe(0);
-      expect(stats.high).toBe(0);
-      expect(stats.medium).toBe(0);
-      expect(stats.low).toBe(0);
-    });
-  });
+      expect(stats.total).toBe(0)
+      expect(stats.critical).toBe(0)
+      expect(stats.high).toBe(0)
+      expect(stats.medium).toBe(0)
+      expect(stats.low).toBe(0)
+    })
+  })
 
   describe('getTopRecommendations()', () => {
     it('should return top N recommendations sorted by priority', () => {
       // Arrange
       const recommendations: Recommendation[] = [
-        { priority: 'medium', category: 'codeQuality', issue: 'Issue 1', remediation: 'Fix', estimatedEffort: 'high', expectedImpact: 'Low' },
-        { priority: 'critical', category: 'security', issue: 'Issue 2', remediation: 'Fix', estimatedEffort: 'low', expectedImpact: 'High' },
-        { priority: 'high', category: 'testCoverage', issue: 'Issue 3', remediation: 'Fix', estimatedEffort: 'medium', expectedImpact: 'High' },
-        { priority: 'low', category: 'architecture', issue: 'Issue 4', remediation: 'Fix', estimatedEffort: 'high', expectedImpact: 'Low' },
-      ];
+        {
+          priority: 'medium',
+          category: 'codeQuality',
+          issue: 'Issue 1',
+          remediation: 'Fix',
+          estimatedEffort: 'high',
+          expectedImpact: 'Low',
+        },
+        {
+          priority: 'critical',
+          category: 'security',
+          issue: 'Issue 2',
+          remediation: 'Fix',
+          estimatedEffort: 'low',
+          expectedImpact: 'High',
+        },
+        {
+          priority: 'high',
+          category: 'testCoverage',
+          issue: 'Issue 3',
+          remediation: 'Fix',
+          estimatedEffort: 'medium',
+          expectedImpact: 'High',
+        },
+        {
+          priority: 'low',
+          category: 'architecture',
+          issue: 'Issue 4',
+          remediation: 'Fix',
+          estimatedEffort: 'high',
+          expectedImpact: 'Low',
+        },
+      ]
 
       // Act
-      const top = (reporter as any).getTopRecommendations(recommendations, 3);
+      const top = (reporter as any).getTopRecommendations(recommendations, 3)
 
       // Assert
-      expect(top).toHaveLength(3);
-      expect(top[0].priority).toBe('critical');
-      expect(top[1].priority).toBe('high');
-      expect(top[2].priority).toBe('medium');
-    });
+      expect(top).toHaveLength(3)
+      expect(top[0].priority).toBe('critical')
+      expect(top[1].priority).toBe('high')
+      expect(top[2].priority).toBe('medium')
+    })
 
     it('should return fewer items if fewer than limit available', () => {
       // Arrange
       const recommendations: Recommendation[] = [
-        { priority: 'high', category: 'codeQuality', issue: 'Issue 1', remediation: 'Fix', estimatedEffort: 'medium', expectedImpact: 'High' },
-      ];
+        {
+          priority: 'high',
+          category: 'codeQuality',
+          issue: 'Issue 1',
+          remediation: 'Fix',
+          estimatedEffort: 'medium',
+          expectedImpact: 'High',
+        },
+      ]
 
       // Act
-      const top = (reporter as any).getTopRecommendations(recommendations, 5);
+      const top = (reporter as any).getTopRecommendations(recommendations, 5)
 
       // Assert
-      expect(top).toHaveLength(1);
-    });
+      expect(top).toHaveLength(1)
+    })
 
     it('should use default limit of 5', () => {
       // Arrange
@@ -492,30 +570,44 @@ describe('ReporterBase - Comprehensive Tests', () => {
         remediation: 'Fix',
         estimatedEffort: 'low' as const,
         expectedImpact: 'Low',
-      }));
+      }))
 
       // Act
-      const top = (reporter as any).getTopRecommendations(recommendations);
+      const top = (reporter as any).getTopRecommendations(recommendations)
 
       // Assert
-      expect(top).toHaveLength(5);
-    });
+      expect(top).toHaveLength(5)
+    })
 
     it('should handle recommendations with undefined priority', () => {
       // Arrange
       const recommendations: Recommendation[] = [
-        { priority: 'critical', category: 'security', issue: 'Issue 1', remediation: 'Fix', estimatedEffort: 'low', expectedImpact: 'High' },
-        { priority: undefined as any, category: 'codeQuality', issue: 'Issue 2', remediation: 'Fix', estimatedEffort: 'medium', expectedImpact: 'Medium' },
-      ];
+        {
+          priority: 'critical',
+          category: 'security',
+          issue: 'Issue 1',
+          remediation: 'Fix',
+          estimatedEffort: 'low',
+          expectedImpact: 'High',
+        },
+        {
+          priority: undefined as any,
+          category: 'codeQuality',
+          issue: 'Issue 2',
+          remediation: 'Fix',
+          estimatedEffort: 'medium',
+          expectedImpact: 'Medium',
+        },
+      ]
 
       // Act
-      const top = (reporter as any).getTopRecommendations(recommendations, 2);
+      const top = (reporter as any).getTopRecommendations(recommendations, 2)
 
       // Assert
-      expect(top).toHaveLength(2);
-      expect(top[0].priority).toBe('critical');
-    });
-  });
+      expect(top).toHaveLength(2)
+      expect(top[0].priority).toBe('critical')
+    })
+  })
 
   describe('getTopFindings()', () => {
     it('should return top findings sorted by severity', () => {
@@ -525,30 +617,30 @@ describe('ReporterBase - Comprehensive Tests', () => {
         createMockFinding({ severity: 'critical', title: 'Critical 1' }),
         createMockFinding({ severity: 'medium', title: 'Medium 1' }),
         createMockFinding({ severity: 'high', title: 'High 1' }),
-      ];
+      ]
 
       // Act
-      const top = (reporter as any).getTopFindings(findings, 2);
+      const top = (reporter as any).getTopFindings(findings, 2)
 
       // Assert
-      expect(top).toHaveLength(2);
-      expect(top[0].severity).toBe('critical');
-      expect(top[1].severity).toBe('high');
-    });
+      expect(top).toHaveLength(2)
+      expect(top[0].severity).toBe('critical')
+      expect(top[1].severity).toBe('high')
+    })
 
     it('should use default limit of 10', () => {
       // Arrange
       const findings = Array.from({ length: 20 }).map((_, i) =>
-        createMockFinding({ severity: 'low', title: `Finding ${i}` })
-      );
+        createMockFinding({ severity: 'low', title: `Finding ${i}` }),
+      )
 
       // Act
-      const top = (reporter as any).getTopFindings(findings);
+      const top = (reporter as any).getTopFindings(findings)
 
       // Assert
-      expect(top).toHaveLength(10);
-    });
-  });
+      expect(top).toHaveLength(10)
+    })
+  })
 
   // ============================================================================
   // 6. CSV FIELD ESCAPING
@@ -557,116 +649,116 @@ describe('ReporterBase - Comprehensive Tests', () => {
   describe('escapeCsvField()', () => {
     it('should escape quotes in CSV field', () => {
       // Arrange
-      const field = 'Field with "quotes"';
+      const field = 'Field with "quotes"'
 
       // Act
-      const escaped = (reporter as any).escapeCsvField(field);
+      const escaped = (reporter as any).escapeCsvField(field)
 
       // Assert
-      expect(escaped).toBe('"Field with ""quotes"""');
-    });
+      expect(escaped).toBe('"Field with ""quotes"""')
+    })
 
     it('should wrap field in quotes', () => {
       // Arrange
-      const field = 'SimpleField';
+      const field = 'SimpleField'
 
       // Act
-      const escaped = (reporter as any).escapeCsvField(field);
+      const escaped = (reporter as any).escapeCsvField(field)
 
       // Assert
-      expect(escaped).toBe('"SimpleField"');
-    });
+      expect(escaped).toBe('"SimpleField"')
+    })
 
     it('should handle field with commas', () => {
       // Arrange
-      const field = 'Field,with,commas';
+      const field = 'Field,with,commas'
 
       // Act
-      const escaped = (reporter as any).escapeCsvField(field);
+      const escaped = (reporter as any).escapeCsvField(field)
 
       // Assert
-      expect(escaped).toBe('"Field,with,commas"');
-    });
+      expect(escaped).toBe('"Field,with,commas"')
+    })
 
     it('should handle empty string', () => {
       // Arrange
-      const field = '';
+      const field = ''
 
       // Act
-      const escaped = (reporter as any).escapeCsvField(field);
+      const escaped = (reporter as any).escapeCsvField(field)
 
       // Assert
-      expect(escaped).toBe('');
-    });
+      expect(escaped).toBe('')
+    })
 
     it('should handle multiple consecutive quotes', () => {
       // Arrange
-      const field = 'Field""with""quotes';
+      const field = 'Field""with""quotes'
 
       // Act
-      const escaped = (reporter as any).escapeCsvField(field);
+      const escaped = (reporter as any).escapeCsvField(field)
 
       // Assert
-      expect(escaped).toBe('"Field""""with""""quotes"');
-    });
+      expect(escaped).toBe('"Field""""with""""quotes"')
+    })
 
     it('should handle field with newlines', () => {
       // Arrange
-      const field = 'Field\nwith\nnewlines';
+      const field = 'Field\nwith\nnewlines'
 
       // Act
-      const escaped = (reporter as any).escapeCsvField(field);
+      const escaped = (reporter as any).escapeCsvField(field)
 
       // Assert
-      expect(escaped).toBe('"Field\nwith\nnewlines"');
-    });
-  });
+      expect(escaped).toBe('"Field\nwith\nnewlines"')
+    })
+  })
 
   describe('buildCsvLine()', () => {
     it('should build CSV line from string values', () => {
       // Arrange
-      const values = ['name', 'category', 'status'];
+      const values = ['name', 'category', 'status']
 
       // Act
-      const line = (reporter as any).buildCsvLine(values);
+      const line = (reporter as any).buildCsvLine(values)
 
       // Assert
-      expect(line).toBe('"name","category","status"');
-    });
+      expect(line).toBe('"name","category","status"')
+    })
 
     it('should build CSV line from mixed values', () => {
       // Arrange
-      const values = ['name', 85, 'description'];
+      const values = ['name', 85, 'description']
 
       // Act
-      const line = (reporter as any).buildCsvLine(values);
+      const line = (reporter as any).buildCsvLine(values)
 
       // Assert
-      expect(line).toBe('"name",85,"description"');
-    });
+      expect(line).toBe('"name",85,"description"')
+    })
 
     it('should handle empty array', () => {
       // Arrange
-      const values: (string | number)[] = [];
+      const values: (string | number)[] = []
 
       // Act
-      const line = (reporter as any).buildCsvLine(values);
+      const line = (reporter as any).buildCsvLine(values)
 
       // Assert
-      expect(line).toBe('');
-    });
+      expect(line).toBe('')
+    })
 
     it('should escape special characters in fields', () => {
       // Arrange
-      const values = ['Field with "quotes"', 'Field,with,commas'];
+      const values = ['Field with "quotes"', 'Field,with,commas']
 
       // Act
-      const line = (reporter as any).buildCsvLine(values);
+      const line = (reporter as any).buildCsvLine(values)
 
       // Assert
-      expect(line).toBe('"Field with ""quotes""","Field,with,commas"');
-    });
-  });
+      expect(line).toBe('"Field with ""quotes""","Field,with,commas"')
+    })
+  })
 
   // ============================================================================
   // 7. DURATION FORMATTING
@@ -675,70 +767,70 @@ describe('ReporterBase - Comprehensive Tests', () => {
   describe('formatDuration()', () => {
     it('should format milliseconds under 1000ms', () => {
       // Arrange
-      const ms = 250;
+      const ms = 250
 
       // Act
-      const formatted = (reporter as any).formatDuration(ms);
+      const formatted = (reporter as any).formatDuration(ms)
 
       // Assert
-      expect(formatted).toBe('250ms');
-    });
+      expect(formatted).toBe('250ms')
+    })
 
     it('should format seconds >= 1000ms', () => {
       // Arrange
-      const ms = 1500;
+      const ms = 1500
 
       // Act
-      const formatted = (reporter as any).formatDuration(ms);
+      const formatted = (reporter as any).formatDuration(ms)
 
       // Assert
-      expect(formatted).toBe('1.5s');
-    });
+      expect(formatted).toBe('1.5s')
+    })
 
     it('should format 0ms', () => {
       // Arrange
-      const ms = 0;
+      const ms = 0
 
       // Act
-      const formatted = (reporter as any).formatDuration(ms);
+      const formatted = (reporter as any).formatDuration(ms)
 
       // Assert
-      expect(formatted).toBe('0ms');
-    });
+      expect(formatted).toBe('0ms')
+    })
 
     it('should format large durations', () => {
       // Arrange
-      const ms = 120000;
+      const ms = 120000
 
       // Act
-      const formatted = (reporter as any).formatDuration(ms);
+      const formatted = (reporter as any).formatDuration(ms)
 
       // Assert
-      expect(formatted).toBe('120.0s');
-    });
+      expect(formatted).toBe('120.0s')
+    })
 
     it('should round small milliseconds', () => {
       // Arrange
-      const ms = 999;
+      const ms = 999
 
       // Act
-      const formatted = (reporter as any).formatDuration(ms);
+      const formatted = (reporter as any).formatDuration(ms)
 
       // Assert
-      expect(formatted).toBe('999ms');
-    });
+      expect(formatted).toBe('999ms')
+    })
 
     it('should format exactly 1000ms', () => {
       // Arrange
-      const ms = 1000;
+      const ms = 1000
 
       // Act
-      const formatted = (reporter as any).formatDuration(ms);
+      const formatted = (reporter as any).formatDuration(ms)
 
       // Assert
-      expect(formatted).toBe('1.0s');
-    });
-  });
+      expect(formatted).toBe('1.0s')
+    })
+  })
 
   // ============================================================================
   // 8. COLOR AND ICON MAPPING
@@ -747,127 +839,127 @@ describe('ReporterBase - Comprehensive Tests', () => {
   describe('getColorForValue()', () => {
     it('should return green for values >= goodThreshold', () => {
       // Arrange
-      const value = 85;
+      const value = 85
 
       // Act
-      const color = (reporter as any).getColorForValue(value, 80, 60);
+      const color = (reporter as any).getColorForValue(value, 80, 60)
 
       // Assert
-      expect(color).toBe('green');
-    });
+      expect(color).toBe('green')
+    })
 
     it('should return yellow for values between thresholds', () => {
       // Arrange
-      const value = 70;
+      const value = 70
 
       // Act
-      const color = (reporter as any).getColorForValue(value, 80, 60);
+      const color = (reporter as any).getColorForValue(value, 80, 60)
 
       // Assert
-      expect(color).toBe('yellow');
-    });
+      expect(color).toBe('yellow')
+    })
 
     it('should return red for values < warningThreshold', () => {
       // Arrange
-      const value = 50;
+      const value = 50
 
       // Act
-      const color = (reporter as any).getColorForValue(value, 80, 60);
+      const color = (reporter as any).getColorForValue(value, 80, 60)
 
       // Assert
-      expect(color).toBe('red');
-    });
+      expect(color).toBe('red')
+    })
 
     it('should use default thresholds', () => {
       // Arrange
-      const value = 85;
+      const value = 85
 
       // Act
-      const color = (reporter as any).getColorForValue(value);
+      const color = (reporter as any).getColorForValue(value)
 
       // Assert
-      expect(color).toBe('green');
-    });
+      expect(color).toBe('green')
+    })
 
     it('should handle boundary values', () => {
       // Arrange
-      const goodColor = (reporter as any).getColorForValue(80, 80, 60);
-      const warningColor = (reporter as any).getColorForValue(60, 80, 60);
+      const goodColor = (reporter as any).getColorForValue(80, 80, 60)
+      const warningColor = (reporter as any).getColorForValue(60, 80, 60)
 
       // Assert
-      expect(goodColor).toBe('green');
-      expect(warningColor).toBe('yellow');
-    });
-  });
+      expect(goodColor).toBe('green')
+      expect(warningColor).toBe('yellow')
+    })
+  })
 
   describe('getColorForSeverity()', () => {
     it('should map critical and high to red', () => {
       // Arrange
-      const criticalColor = (reporter as any).getColorForSeverity('critical');
-      const highColor = (reporter as any).getColorForSeverity('high');
+      const criticalColor = (reporter as any).getColorForSeverity('critical')
+      const highColor = (reporter as any).getColorForSeverity('high')
 
       // Assert
-      expect(criticalColor).toBe('red');
-      expect(highColor).toBe('red');
-    });
+      expect(criticalColor).toBe('red')
+      expect(highColor).toBe('red')
+    })
 
     it('should map medium to yellow', () => {
       // Arrange
-      const mediumColor = (reporter as any).getColorForSeverity('medium');
+      const mediumColor = (reporter as any).getColorForSeverity('medium')
 
       // Assert
-      expect(mediumColor).toBe('yellow');
-    });
+      expect(mediumColor).toBe('yellow')
+    })
 
     it('should map low to blue', () => {
       // Arrange
-      const lowColor = (reporter as any).getColorForSeverity('low');
+      const lowColor = (reporter as any).getColorForSeverity('low')
 
       // Assert
-      expect(lowColor).toBe('blue');
-    });
+      expect(lowColor).toBe('blue')
+    })
 
     it('should map info to cyan', () => {
       // Arrange
-      const infoColor = (reporter as any).getColorForSeverity('info');
+      const infoColor = (reporter as any).getColorForSeverity('info')
 
       // Assert
-      expect(infoColor).toBe('cyan');
-    });
+      expect(infoColor).toBe('cyan')
+    })
 
     it('should return white for unknown severity', () => {
       // Arrange
-      const unknownColor = (reporter as any).getColorForSeverity('unknown');
+      const unknownColor = (reporter as any).getColorForSeverity('unknown')
 
       // Assert
-      expect(unknownColor).toBe('white');
-    });
-  });
+      expect(unknownColor).toBe('white')
+    })
+  })
 
   describe('getStatusIcon()', () => {
     it('should return checkmark for pass', () => {
       // Arrange
-      const icon = (reporter as any).getStatusIcon('pass');
+      const icon = (reporter as any).getStatusIcon('pass')
 
       // Assert
-      expect(icon).toBe('✓');
-    });
+      expect(icon).toBe('✓')
+    })
 
     it('should return X for fail', () => {
       // Arrange
-      const icon = (reporter as any).getStatusIcon('fail');
+      const icon = (reporter as any).getStatusIcon('fail')
 
       // Assert
-      expect(icon).toBe('✗');
-    });
+      expect(icon).toBe('✗')
+    })
 
     it('should return warning symbol for warning', () => {
       // Arrange
-      const icon = (reporter as any).getStatusIcon('warning');
+      const icon = (reporter as any).getStatusIcon('warning')
 
       // Assert
-      expect(icon).toBe('⚠');
-    });
+      expect(icon).toBe('⚠')
+    })
 
     it('should return appropriate icons for severity levels', () => {
       // Arrange
@@ -877,53 +969,53 @@ describe('ReporterBase - Comprehensive Tests', () => {
         medium: '⚠',
         low: '•',
         info: 'i',
-      };
+      }
 
       // Act & Assert
       for (const [severity, expectedIcon] of Object.entries(severityIcons)) {
-        const icon = (reporter as any).getStatusIcon(severity);
-        expect(icon).toBe(expectedIcon);
+        const icon = (reporter as any).getStatusIcon(severity)
+        expect(icon).toBe(expectedIcon)
       }
-    });
+    })
 
     it('should return ? for unknown status', () => {
       // Arrange
-      const icon = (reporter as any).getStatusIcon('unknown');
+      const icon = (reporter as any).getStatusIcon('unknown')
 
       // Assert
-      expect(icon).toBe('?');
-    });
-  });
+      expect(icon).toBe('?')
+    })
+  })
 
   describe('getGradeColor()', () => {
     it('should return green for A and B grades', () => {
       // Arrange
-      const gradeA = (reporter as any).getGradeColor('A');
-      const gradeB = (reporter as any).getGradeColor('B');
+      const gradeA = (reporter as any).getGradeColor('A')
+      const gradeB = (reporter as any).getGradeColor('B')
 
       // Assert
-      expect(gradeA).toBe('green');
-      expect(gradeB).toBe('green');
-    });
+      expect(gradeA).toBe('green')
+      expect(gradeB).toBe('green')
+    })
 
     it('should return yellow for C and D grades', () => {
       // Arrange
-      const gradeC = (reporter as any).getGradeColor('C');
-      const gradeD = (reporter as any).getGradeColor('D');
+      const gradeC = (reporter as any).getGradeColor('C')
+      const gradeD = (reporter as any).getGradeColor('D')
 
       // Assert
-      expect(gradeC).toBe('yellow');
-      expect(gradeD).toBe('yellow');
-    });
+      expect(gradeC).toBe('yellow')
+      expect(gradeD).toBe('yellow')
+    })
 
     it('should return red for F grade', () => {
       // Arrange
-      const gradeF = (reporter as any).getGradeColor('F');
+      const gradeF = (reporter as any).getGradeColor('F')
 
       // Assert
-      expect(gradeF).toBe('red');
-    });
-  });
+      expect(gradeF).toBe('red')
+    })
+  })
 
   // ============================================================================
   // 9. PERCENTAGE CALCULATIONS
@@ -932,110 +1024,110 @@ describe('ReporterBase - Comprehensive Tests', () => {
   describe('calculatePercentChange()', () => {
     it('should calculate positive change', () => {
       // Arrange
-      const current = 90;
-      const previous = 85;
+      const current = 90
+      const previous = 85
 
       // Act
-      const change = (reporter as any).calculatePercentChange(current, previous);
+      const change = (reporter as any).calculatePercentChange(current, previous)
 
       // Assert
-      expect(change).toBeCloseTo(5.88, 1);
-    });
+      expect(change).toBeCloseTo(5.88, 1)
+    })
 
     it('should calculate negative change', () => {
       // Arrange
-      const current = 80;
-      const previous = 85;
+      const current = 80
+      const previous = 85
 
       // Act
-      const change = (reporter as any).calculatePercentChange(current, previous);
+      const change = (reporter as any).calculatePercentChange(current, previous)
 
       // Assert
-      expect(change).toBeCloseTo(-5.88, 1);
-    });
+      expect(change).toBeCloseTo(-5.88, 1)
+    })
 
     it('should handle zero previous value', () => {
       // Arrange
-      const current = 50;
-      const previous = 0;
+      const current = 50
+      const previous = 0
 
       // Act
-      const change = (reporter as any).calculatePercentChange(current, previous);
+      const change = (reporter as any).calculatePercentChange(current, previous)
 
       // Assert
-      expect(change).toBe(100);
-    });
+      expect(change).toBe(100)
+    })
 
     it('should handle both values zero', () => {
       // Arrange
-      const current = 0;
-      const previous = 0;
+      const current = 0
+      const previous = 0
 
       // Act
-      const change = (reporter as any).calculatePercentChange(current, previous);
+      const change = (reporter as any).calculatePercentChange(current, previous)
 
       // Assert
-      expect(change).toBe(0);
-    });
+      expect(change).toBe(0)
+    })
 
     it('should handle no change', () => {
       // Arrange
-      const current = 85;
-      const previous = 85;
+      const current = 85
+      const previous = 85
 
       // Act
-      const change = (reporter as any).calculatePercentChange(current, previous);
+      const change = (reporter as any).calculatePercentChange(current, previous)
 
       // Assert
-      expect(change).toBe(0);
-    });
-  });
+      expect(change).toBe(0)
+    })
+  })
 
   describe('formatPercentage()', () => {
     it('should format percentage with default precision', () => {
       // Arrange
-      const value = 85.567;
+      const value = 85.567
 
       // Act
-      const formatted = (reporter as any).formatPercentage(value);
+      const formatted = (reporter as any).formatPercentage(value)
 
       // Assert
-      expect(formatted).toBe('85.6%');
-    });
+      expect(formatted).toBe('85.6%')
+    })
 
     it('should format percentage with custom precision', () => {
       // Arrange
-      const value = 85.567;
+      const value = 85.567
 
       // Act
-      const formatted = (reporter as any).formatPercentage(value, 2);
+      const formatted = (reporter as any).formatPercentage(value, 2)
 
       // Assert
-      expect(formatted).toBe('85.57%');
-    });
+      expect(formatted).toBe('85.57%')
+    })
 
     it('should format 0 precision', () => {
       // Arrange
-      const value = 85.9;
+      const value = 85.9
 
       // Act
-      const formatted = (reporter as any).formatPercentage(value, 0);
+      const formatted = (reporter as any).formatPercentage(value, 0)
 
       // Assert
-      expect(formatted).toBe('86%');
-    });
+      expect(formatted).toBe('86%')
+    })
 
     it('should include percentage symbol', () => {
       // Arrange
-      const value = 100;
+      const value = 100
 
       // Act
-      const formatted = (reporter as any).formatPercentage(value);
+      const formatted = (reporter as any).formatPercentage(value)
 
       // Assert
-      expect(formatted).toMatch(/%$/);
-    });
-  });
+      expect(formatted).toMatch(/%$/)
+    })
+  })
 
   // ============================================================================
   // 10. METRIC NAME FORMATTING
@@ -1044,59 +1136,59 @@ describe('ReporterBase - Comprehensive Tests', () => {
   describe('formatMetricName()', () => {
     it('should convert camelCase to Title Case', () => {
       // Arrange
-      const metricName = 'cyclomatic';
+      const metricName = 'cyclomatic'
 
       // Act
-      const formatted = (reporter as any).formatMetricName(metricName);
+      const formatted = (reporter as any).formatMetricName(metricName)
 
       // Assert
-      expect(formatted).toBe('Cyclomatic');
-    });
+      expect(formatted).toBe('Cyclomatic')
+    })
 
     it('should handle multi-word camelCase', () => {
       // Arrange
-      const metricName = 'averageComplexity';
+      const metricName = 'averageComplexity'
 
       // Act
-      const formatted = (reporter as any).formatMetricName(metricName);
+      const formatted = (reporter as any).formatMetricName(metricName)
 
       // Assert
-      expect(formatted).toBe('Average Complexity');
-    });
+      expect(formatted).toBe('Average Complexity')
+    })
 
     it('should capitalize first letter', () => {
       // Arrange
-      const metricName = 'duplicatedLines';
+      const metricName = 'duplicatedLines'
 
       // Act
-      const formatted = (reporter as any).formatMetricName(metricName);
+      const formatted = (reporter as any).formatMetricName(metricName)
 
       // Assert
-      expect(formatted).toBe('Duplicated Lines');
-    });
+      expect(formatted).toBe('Duplicated Lines')
+    })
 
     it('should handle all caps acronyms', () => {
       // Arrange
-      const metricName = 'LOCPerFunction';
+      const metricName = 'LOCPerFunction'
 
       // Act
-      const formatted = (reporter as any).formatMetricName(metricName);
+      const formatted = (reporter as any).formatMetricName(metricName)
 
       // Assert
-      expect(formatted).toBe('L O C Per Function');
-    });
+      expect(formatted).toBe('L O C Per Function')
+    })
 
     it('should handle single word lowercase', () => {
       // Arrange
-      const metricName = 'coverage';
+      const metricName = 'coverage'
 
       // Act
-      const formatted = (reporter as any).formatMetricName(metricName);
+      const formatted = (reporter as any).formatMetricName(metricName)
 
       // Assert
-      expect(formatted).toBe('Coverage');
-    });
-  });
+      expect(formatted).toBe('Coverage')
+    })
+  })
 
   // ============================================================================
   // 11. FORMAT FINDINGS FOR DISPLAY
@@ -1112,32 +1204,32 @@ describe('ReporterBase - Comprehensive Tests', () => {
         createMockFinding({ severity: 'critical', title: 'C4' }),
         createMockFinding({ severity: 'high', title: 'H1' }),
         createMockFinding({ severity: 'high', title: 'H2' }),
-      ];
+      ]
 
       // Act
-      const formatted = (reporter as any).formatFindingsForDisplay(findings, 2);
+      const formatted = (reporter as any).formatFindingsForDisplay(findings, 2)
 
       // Assert
-      expect(formatted.critical.count).toBe(4);
-      expect(formatted.critical.displayed).toHaveLength(2);
-      expect(formatted.critical.remaining).toBe(2);
-      expect(formatted.high.count).toBe(2);
-      expect(formatted.high.displayed).toHaveLength(2);
-      expect(formatted.high.remaining).toBe(0);
-    });
+      expect(formatted.critical.count).toBe(4)
+      expect(formatted.critical.displayed).toHaveLength(2)
+      expect(formatted.critical.remaining).toBe(2)
+      expect(formatted.high.count).toBe(2)
+      expect(formatted.high.displayed).toHaveLength(2)
+      expect(formatted.high.remaining).toBe(0)
+    })
 
     it('should skip empty severity groups', () => {
       // Arrange
-      const findings: Finding[] = [createMockFinding({ severity: 'critical' })];
+      const findings: Finding[] = [createMockFinding({ severity: 'critical' })]
 
       // Act
-      const formatted = (reporter as any).formatFindingsForDisplay(findings, 3);
+      const formatted = (reporter as any).formatFindingsForDisplay(findings, 3)
 
       // Assert
-      expect(formatted.critical).toBeDefined();
-      expect(formatted.high).toBeUndefined();
-    });
-  });
+      expect(formatted.critical).toBeDefined()
+      expect(formatted.high).toBeUndefined()
+    })
+  })
 
   // ============================================================================
   // 12. TIMESTAMP METHOD
@@ -1146,18 +1238,18 @@ describe('ReporterBase - Comprehensive Tests', () => {
   describe('getTimestamp()', () => {
     it('should return ISO format timestamp', () => {
       // Act
-      const timestamp = (reporter as any).getTimestamp();
+      const timestamp = (reporter as any).getTimestamp()
 
       // Assert
-      expect(timestamp).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
-    });
+      expect(timestamp).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
+    })
 
     it('should be valid ISO date', () => {
       // Act
-      const timestamp = (reporter as any).getTimestamp();
+      const timestamp = (reporter as any).getTimestamp()
 
       // Assert
-      expect(() => new Date(timestamp)).not.toThrow();
-    });
-  });
-});
+      expect(() => new Date(timestamp)).not.toThrow()
+    })
+  })
+})

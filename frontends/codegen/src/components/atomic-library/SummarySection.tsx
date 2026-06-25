@@ -1,5 +1,5 @@
 import { Heading, InfoPanel, Section, Separator, Text } from '@/components/atoms'
-import { CheckCircle } from '@metabuilder/fakemui/icons'
+import { CheckCircle } from '@metabuilder/m3/icons'
 
 type SummarySectionContent = (typeof import('@/data/atomic-library-showcase.json'))['sections']['summary']
 

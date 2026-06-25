@@ -1,0 +1,152 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Quick Guide Components",
+  "description": "Quick guide builder with steps and media management",
+  "stories": [
+    {
+      "name": "QuickGuideBuilder",
+      "render": "init",
+      "description": "Complete quick guide builder with steps editor and media pane",
+      "args": {
+        "steps": [
+          {
+            "id": "step_1",
+            "title": "Getting Started",
+            "description": "Open the application and navigate to the dashboard.",
+            "duration": "30s",
+            "mediaUrl": ""
+          },
+          {
+            "id": "step_2",
+            "title": "Configure Settings",
+            "description": "Click on the settings icon and adjust your preferences.",
+            "duration": "1-2 min",
+            "mediaUrl": ""
+          }
+        ],
+        "thumbnailUrl": "",
+        "videoUrl": ""
+      }
+    },
+    {
+      "name": "StepsEditor",
+      "render": "steps",
+      "description": "Steps editor component for managing guide steps",
+      "type": "function",
+      "args": {
+        "steps": []
+      }
+    },
+    {
+      "name": "MediaPane",
+      "render": "media",
+      "description": "Media pane for thumbnail and video management",
+      "type": "function",
+      "args": {
+        "thumbnailUrl": "",
+        "videoUrl": ""
+      }
+    },
+    {
+      "name": "StepsEditorWithData",
+      "render": "steps",
+      "description": "Steps editor with pre-populated steps",
+      "args": {
+        "steps": [
+          {
+            "id": "step_demo_1",
+            "title": "Install Dependencies",
+            "description": "Run npm install to set up the project dependencies.",
+            "duration": "2-3 min",
+            "mediaUrl": ""
+          },
+          {
+            "id": "step_demo_2",
+            "title": "Start Development Server",
+            "description": "Execute npm run dev to start the local development server.",
+            "duration": "30s",
+            "mediaUrl": ""
+          },
+          {
+            "id": "step_demo_3",
+            "title": "Open Browser",
+            "description": "Navigate to http://localhost:3000 in your browser.",
+            "duration": "10s",
+            "mediaUrl": ""
+          }
+        ]
+      }
+    }
+  ],
+  "renders": {
+    "init": {
+      "description": "Full quick guide builder interface",
+      "featured": true
+    },
+    "steps": {
+      "description": "Steps editor component"
+    },
+    "media": {
+      "description": "Media management pane"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "demo-user",
+      "username": "demo_user",
+      "level": 3,
+      "email": "demo@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Viewer",
+      "description": "Can view quick guides only",
+      "context": {
+        "user": {
+          "username": "viewer",
+          "level": 2
+        }
+      }
+    },
+    {
+      "name": "Editor",
+      "description": "Can view and edit quick guides",
+      "context": {
+        "user": {
+          "username": "editor",
+          "level": 3
+        }
+      }
+    },
+    {
+      "name": "Admin",
+      "description": "Full access to quick guides",
+      "context": {
+        "user": {
+          "username": "admin",
+          "level": 4
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["init", "steps", "media"],
+    "ignoredScripts": ["tests"]
+  },
+  "parameters": {
+    "layout": "padded",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#f5f5f5" },
+        { "name": "dark", "value": "#1a1a1a" }
+      ]
+    }
+  }
+}

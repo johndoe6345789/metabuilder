@@ -33,7 +33,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from '@/fakemui'
+} from '@/m3'
 
 /** Lazy-load the existing WorkflowBuilder if available */
 const WorkflowBuilderLazy = typeof window !== 'undefined'

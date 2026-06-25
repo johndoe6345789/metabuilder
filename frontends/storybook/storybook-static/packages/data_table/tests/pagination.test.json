@@ -1,0 +1,61 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/tests.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "data_table",
+  "description": "Pagination functionality tests",
+
+  "testSuites": [
+    {
+      "id": "pagination-tests",
+      "name": "Pagination Tests",
+      "description": "Test page navigation and data slicing",
+      "tags": ["pagination", "functionality"],
+
+      "tests": [
+        {
+          "id": "test-page-size",
+          "name": "should respect page size setting",
+          "parameterized": true,
+          "parameters": [
+            {
+              "case": "10 items per page",
+              "input": { "totalItems": 25, "pageSize": 10, "page": 1 },
+              "expected": { "itemsOnPage": 10, "totalPages": 3 }
+            },
+            {
+              "case": "5 items per page",
+              "input": { "totalItems": 25, "pageSize": 5, "page": 1 },
+              "expected": { "itemsOnPage": 5, "totalPages": 5 }
+            },
+            {
+              "case": "last page partial",
+              "input": { "totalItems": 25, "pageSize": 10, "page": 3 },
+              "expected": { "itemsOnPage": 5, "totalPages": 3 }
+            }
+          ],
+          "act": {
+            "type": "function_call",
+            "target": "pagination.changePage",
+            "input": "{{input}}"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "equals",
+                "actual": "result.itemsOnPage",
+                "expected": "{{expected.itemsOnPage}}",
+                "description": "Should show correct number of items"
+              },
+              {
+                "type": "equals",
+                "actual": "result.totalPages",
+                "expected": "{{expected.totalPages}}",
+                "description": "Should calculate correct total pages"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 /**
  * Theme Module - Central export for all theme functionality
  * 
- * This module provides CSS custom property-based theming for fakemui compatibility.
+ * This module provides CSS custom property-based theming for m3 compatibility.
  * Themes are exported as objects containing CSS variable definitions.
  */
 

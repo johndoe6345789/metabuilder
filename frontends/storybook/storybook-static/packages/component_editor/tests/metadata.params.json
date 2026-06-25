@@ -1,0 +1,91 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/test-parameters.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "component_editor",
+  "description": "Parameterized test data for component editor tests",
+
+  "parameters": {
+    "sampleTrees": [
+      {
+        "id": "simple",
+        "name": "Simple Tree",
+        "tree": {
+          "id": "root",
+          "type": "Box",
+          "props": {},
+          "children": [
+            {
+              "id": "child1",
+              "type": "Typography",
+              "props": { "variant": "h5" },
+              "children": []
+            }
+          ]
+        }
+      },
+      {
+        "id": "nested",
+        "name": "Nested Tree",
+        "tree": {
+          "id": "root",
+          "type": "Box",
+          "props": {},
+          "children": [
+            {
+              "id": "level1",
+              "type": "Paper",
+              "props": {},
+              "children": [
+                {
+                  "id": "level2",
+                  "type": "Stack",
+                  "props": {},
+                  "children": [
+                    {
+                      "id": "level3",
+                      "type": "Button",
+                      "props": {},
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "componentCatalog": [
+      {
+        "name": "Layout",
+        "components": ["Box", "Grid", "Stack", "Container"]
+      },
+      {
+        "name": "Surfaces",
+        "components": ["Paper", "Card", "Accordion"]
+      },
+      {
+        "name": "Inputs",
+        "components": ["TextField", "Button", "Checkbox", "Select"]
+      },
+      {
+        "name": "Display",
+        "components": ["Typography", "Icon", "Avatar", "Chip"]
+      }
+    ],
+    "moveOperations": [
+      {
+        "fromId": "child1",
+        "toParentId": "root",
+        "position": 0,
+        "expectedSuccess": true
+      },
+      {
+        "fromId": "nonexistent",
+        "toParentId": "root",
+        "position": 0,
+        "expectedSuccess": false
+      }
+    ]
+  }
+}

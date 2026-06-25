@@ -1,6 +1,6 @@
-import { CheckCircle } from '@metabuilder/fakemui/icons'
-import { Card, CardContent, CardHeader, CardTitle } from '@metabuilder/fakemui/surfaces'
-import { TabPanel } from '@metabuilder/fakemui/navigation'
+import { CheckCircle } from '@metabuilder/m3/icons'
+import { Card, CardContent, CardHeader, CardTitle } from '@metabuilder/m3/surfaces'
+import { TabPanel } from '@metabuilder/m3/navigation'
 import { type ChipsTabData } from './types'
 
 type ChipsTabProps = {

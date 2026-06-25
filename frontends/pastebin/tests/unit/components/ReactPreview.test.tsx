@@ -5,6 +5,7 @@ import { InputParameter } from '@/lib/types'
 
 // Mock dependencies
 jest.mock('@/lib/react-transform', () => ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   transformReactCode: jest.fn((code, functionName) => {
     if (code.includes('ERROR')) throw new Error('Transform error')
     return () => <div data-testid="mock-component">Rendered Component</div>
@@ -12,7 +13,7 @@ jest.mock('@/lib/react-transform', () => ({
 }))
 
 jest.mock('@/lib/parse-parameters', () => ({
-  parseInputParameters: jest.fn((params) => ({ parsedParams: params })),
+  parseInputParameters: jest.fn(params => ({ parsedParams: params })),
 }))
 
 jest.mock('@/components/error/AIErrorHelper', () => ({
@@ -44,7 +45,9 @@ describe('ReactPreview Component', () => {
       it(`should process ${lang} language`, () => {
         render(<ReactPreview {...defaultProps} language={lang} />)
         // Should not show unsupported message
-        expect(screen.queryByText(/Preview not available/i)).not.toBeInTheDocument()
+        expect(
+          screen.queryByText(/Preview not available/i),
+        ).not.toBeInTheDocument()
       })
     })
   })
@@ -56,7 +59,9 @@ describe('ReactPreview Component', () => {
       it(`should show message for ${lang} language`, () => {
         render(<ReactPreview {...defaultProps} language={lang} />)
         expect(screen.getByTestId('preview-unsupported')).toBeInTheDocument()
-        expect(screen.getByText(`Preview not available for ${lang}`)).toBeInTheDocument()
+        expect(
+          screen.getByText(`Preview not available for ${lang}`),
+        ).toBeInTheDocument()
       })
     })
   })
@@ -69,23 +74,32 @@ describe('ReactPreview Component', () => {
 
     it('should show language name in message', () => {
       render(<ReactPreview {...defaultProps} language="Python" />)
-      expect(screen.getByText('Preview not available for Python')).toBeInTheDocument()
+      expect(
+        screen.getByText('Preview not available for Python'),
+      ).toBeInTheDocument()
     })
 
     it('should display help text for supported languages', () => {
       render(<ReactPreview {...defaultProps} language="Python" />)
-      expect(screen.getByText(/Use JSX, TSX, JavaScript, or TypeScript/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/Use JSX, TSX, JavaScript, or TypeScript/i),
+      ).toBeInTheDocument()
     })
 
     it('should have correct role and aria-label', () => {
       render(<ReactPreview {...defaultProps} language="Python" />)
       const preview = screen.getByTestId('preview-unsupported')
       expect(preview).toHaveAttribute('role', 'status')
-      expect(preview).toHaveAttribute('aria-label', 'Preview not available for this language')
+      expect(preview).toHaveAttribute(
+        'aria-label',
+        'Preview not available for this language',
+      )
     })
 
     it('should render icon for unsupported languages', () => {
-      const { container } = render(<ReactPreview {...defaultProps} language="Python" />)
+      const { container } = render(
+        <ReactPreview {...defaultProps} language="Python" />,
+      )
       const icons = container.querySelectorAll('svg')
       expect(icons.length).toBeGreaterThan(0)
     })
@@ -93,63 +107,34 @@ describe('ReactPreview Component', () => {
 
   describe('Error Handling', () => {
     it('should display error message when transformation fails', () => {
-      render(
-        <ReactPreview
-          {...defaultProps}
-          code="ERROR in code"
-        />
-      )
+      render(<ReactPreview {...defaultProps} code="ERROR in code" />)
       expect(screen.getByTestId('preview-error')).toBeInTheDocument()
     })
 
     it('should show error alert', () => {
-      render(
-        <ReactPreview
-          {...defaultProps}
-          code="ERROR"
-        />
-      )
+      render(<ReactPreview {...defaultProps} code="ERROR" />)
       expect(screen.getByTestId('preview-error-alert')).toBeInTheDocument()
     })
 
     it('should display error message text', () => {
-      render(
-        <ReactPreview
-          {...defaultProps}
-          code="ERROR"
-        />
-      )
+      render(<ReactPreview {...defaultProps} code="ERROR" />)
       expect(screen.getByTestId('preview-error-message')).toBeInTheDocument()
     })
 
     it('should have correct role for error container', () => {
-      render(
-        <ReactPreview
-          {...defaultProps}
-          code="ERROR"
-        />
-      )
+      render(<ReactPreview {...defaultProps} code="ERROR" />)
       const errorContainer = screen.getByTestId('preview-error')
       expect(errorContainer).toHaveAttribute('role', 'alert')
     })
 
     it('should render AIErrorHelper for error context', () => {
-      render(
-        <ReactPreview
-          {...defaultProps}
-          code="ERROR"
-        />
-      )
+      render(<ReactPreview {...defaultProps} code="ERROR" />)
       expect(screen.getByTestId('ai-error-helper')).toBeInTheDocument()
     })
 
     it('should pass language context to AIErrorHelper', () => {
       render(
-        <ReactPreview
-          {...defaultProps}
-          code="ERROR"
-          language="TypeScript"
-        />
+        <ReactPreview {...defaultProps} code="ERROR" language="TypeScript" />,
       )
       const errorHelper = screen.getByTestId('ai-error-helper')
       expect(errorHelper).toBeInTheDocument()
@@ -186,23 +171,13 @@ describe('ReactPreview Component', () => {
 
     it('should handle optional functionName prop', () => {
       expect(() => {
-        render(
-          <ReactPreview
-            {...defaultProps}
-            functionName={undefined}
-          />
-        )
+        render(<ReactPreview {...defaultProps} functionName={undefined} />)
       }).not.toThrow()
     })
 
     it('should handle optional inputParameters prop', () => {
       expect(() => {
-        render(
-          <ReactPreview
-            {...defaultProps}
-            inputParameters={undefined}
-          />
-        )
+        render(<ReactPreview {...defaultProps} inputParameters={undefined} />)
       }).not.toThrow()
     })
   })
@@ -248,12 +223,7 @@ describe('ReactPreview Component', () => {
     })
 
     it('should have aria-labels for error states', () => {
-      render(
-        <ReactPreview
-          {...defaultProps}
-          code="ERROR"
-        />
-      )
+      render(<ReactPreview {...defaultProps} code="ERROR" />)
       const errorContainer = screen.getByTestId('preview-error')
       expect(errorContainer).toHaveAttribute('role', 'alert')
     })
@@ -267,7 +237,9 @@ describe('ReactPreview Component', () => {
     })
 
     it('should have correct background class', () => {
-      const { container } = render(<ReactPreview {...defaultProps} language="Python" />)
+      const { container } = render(
+        <ReactPreview {...defaultProps} language="Python" />,
+      )
       const preview = container.querySelector('[class*="bg-muted"]')
       expect(preview).toBeInTheDocument()
     })
@@ -300,7 +272,7 @@ describe('ReactPreview Component', () => {
           {...defaultProps}
           language="JSX"
           code="const App = () => <div>JSX</div>"
-        />
+        />,
       )
       expect(document.body).toBeInTheDocument()
     })
@@ -311,7 +283,7 @@ describe('ReactPreview Component', () => {
           {...defaultProps}
           language="TypeScript"
           code="const App: React.FC = () => <div>TS</div>"
-        />
+        />,
       )
       expect(document.body).toBeInTheDocument()
     })
@@ -322,7 +294,7 @@ describe('ReactPreview Component', () => {
           {...defaultProps}
           language="JavaScript"
           code="const App = () => React.createElement('div', null, 'JS')"
-        />
+        />,
       )
       expect(document.body).toBeInTheDocument()
     })
@@ -330,35 +302,28 @@ describe('ReactPreview Component', () => {
 
   describe('Error Message Display', () => {
     it('should display error details in message', () => {
-      render(
-        <ReactPreview
-          {...defaultProps}
-          code="ERROR"
-        />
-      )
+      render(<ReactPreview {...defaultProps} code="ERROR" />)
       const errorMsg = screen.getByTestId('preview-error-message')
       expect(errorMsg).toBeInTheDocument()
     })
 
     it('should have monospace font for error messages', () => {
       const { container } = render(
-        <ReactPreview
-          {...defaultProps}
-          code="ERROR"
-        />
+        <ReactPreview {...defaultProps} code="ERROR" />,
       )
-      const errorMsg = container.querySelector('[data-testid="preview-error-message"]')
+      const errorMsg = container.querySelector(
+        '[data-testid="preview-error-message"]',
+      )
       expect(errorMsg?.className).toContain('font-mono')
     })
 
     it('should wrap error text for readability', () => {
       const { container } = render(
-        <ReactPreview
-          {...defaultProps}
-          code="ERROR"
-        />
+        <ReactPreview {...defaultProps} code="ERROR" />,
       )
-      const errorMsg = container.querySelector('[data-testid="preview-error-message"]')
+      const errorMsg = container.querySelector(
+        '[data-testid="preview-error-message"]',
+      )
       expect(errorMsg?.className).toContain('whitespace-pre-wrap')
     })
   })
@@ -377,9 +342,14 @@ describe('ReactPreview Component', () => {
             language="JSX"
             functionName="Component"
             inputParameters={[
-              { name: 'name', type: 'string', defaultValue: 'World', description: '' },
+              {
+                name: 'name',
+                type: 'string',
+                defaultValue: 'World',
+                description: '',
+              },
             ]}
-          />
+          />,
         )
       }).not.toThrow()
     })
@@ -388,7 +358,12 @@ describe('ReactPreview Component', () => {
   describe('Props Combinations', () => {
     it('should handle all props together', () => {
       const params: InputParameter[] = [
-        { name: 'count', type: 'number', defaultValue: '0', description: 'Counter' },
+        {
+          name: 'count',
+          type: 'number',
+          defaultValue: '0',
+          description: 'Counter',
+        },
       ]
       expect(() => {
         render(
@@ -397,7 +372,7 @@ describe('ReactPreview Component', () => {
             language="TSX"
             functionName="Comp"
             inputParameters={params}
-          />
+          />,
         )
       }).not.toThrow()
     })
@@ -405,10 +380,7 @@ describe('ReactPreview Component', () => {
     it('should work with minimal props', () => {
       expect(() => {
         render(
-          <ReactPreview
-            code="const A = () => <div>A</div>"
-            language="JSX"
-          />
+          <ReactPreview code="const A = () => <div>A</div>" language="JSX" />,
         )
       }).not.toThrow()
     })
@@ -417,12 +389,7 @@ describe('ReactPreview Component', () => {
   describe('Error States', () => {
     it('should handle transformation errors gracefully', () => {
       expect(() => {
-        render(
-          <ReactPreview
-            {...defaultProps}
-            code="ERROR"
-          />
-        )
+        render(<ReactPreview {...defaultProps} code="ERROR" />)
       }).not.toThrow()
     })
 
@@ -435,17 +402,23 @@ describe('ReactPreview Component', () => {
   describe('Text Content Display', () => {
     it('should display unsupported message for Python', () => {
       render(<ReactPreview {...defaultProps} language="Python" />)
-      expect(screen.getByText('Preview not available for Python')).toBeInTheDocument()
+      expect(
+        screen.getByText('Preview not available for Python'),
+      ).toBeInTheDocument()
     })
 
     it('should display supported languages list', () => {
       render(<ReactPreview {...defaultProps} language="Python" />)
-      expect(screen.getByText(/Use JSX, TSX, JavaScript, or TypeScript/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/Use JSX, TSX, JavaScript, or TypeScript/i),
+      ).toBeInTheDocument()
     })
 
     it('should show help text for unsupported languages', () => {
       render(<ReactPreview {...defaultProps} language="HTML" />)
-      expect(screen.getByText(/Use JSX, TSX, JavaScript, or TypeScript/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/Use JSX, TSX, JavaScript, or TypeScript/i),
+      ).toBeInTheDocument()
     })
   })
 })

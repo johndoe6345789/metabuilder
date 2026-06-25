@@ -1,0 +1,147 @@
+{
+  "id": "send_email",
+  "name": "Send Email",
+  "version": "2.2.0",
+  "description": "Compose and send an email message via SMTP",
+  "packageId": "email_client",
+  "startNode": "validate-recipients",
+  "nodes": [
+    {
+      "id": "validate-recipients",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ $json.to && $json.to.length > 0 }}",
+      "description": "Validate that recipients are provided",
+      "onSuccess": {
+        "nextNode": "validate-subject"
+      },
+      "onError": {
+        "nextNode": "error-no-recipients"
+      }
+    },
+    {
+      "id": "validate-subject",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ $json.subject && $json.subject.length > 0 }}",
+      "description": "Validate that subject is provided",
+      "onSuccess": {
+        "nextNode": "validate-body"
+      },
+      "onError": {
+        "nextNode": "error-no-subject"
+      }
+    },
+    {
+      "id": "validate-body",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ $json.body && $json.body.length > 0 }}",
+      "description": "Validate that message body is provided",
+      "onSuccess": {
+        "nextNode": "prepare-message"
+      },
+      "onError": {
+        "nextNode": "error-no-body"
+      }
+    },
+    {
+      "id": "prepare-message",
+      "type": "operation",
+      "op": "transform",
+      "mapping": {
+        "to": "{{ $json.to }}",
+        "cc": "{{ $json.cc || [] }}",
+        "bcc": "{{ $json.bcc || [] }}",
+        "subject": "{{ $json.subject }}",
+        "body": "{{ $json.body }}",
+        "htmlBody": "{{ $json.htmlBody || null }}",
+        "from": "{{ $json.from }}",
+        "replyTo": "{{ $json.replyTo || null }}",
+        "attachments": "{{ $json.attachments || [] }}",
+        "timestamp": "{{ Date.now() }}"
+      },
+      "description": "Prepare email message structure",
+      "nextNode": "send-via-smtp"
+    },
+    {
+      "id": "send-via-smtp",
+      "type": "action",
+      "action": "workflow.plugins.python",
+      "plugin": "email.smtp.send",
+      "description": "Send email via SMTP server",
+      "params": {
+        "accountId": "{{ $json.accountId }}",
+        "to": "{{ $json.to }}",
+        "cc": "{{ $json.cc }}",
+        "bcc": "{{ $json.bcc }}",
+        "subject": "{{ $json.subject }}",
+        "textBody": "{{ $json.body }}",
+        "htmlBody": "{{ $json.htmlBody }}",
+        "attachments": "{{ $json.attachments }}"
+      },
+      "nextNode": "store-sent-message"
+    },
+    {
+      "id": "store-sent-message",
+      "type": "action",
+      "action": "workflow.plugins.ts",
+      "plugin": "dbal.create",
+      "description": "Store sent message in database",
+      "params": {
+        "entity": "EmailMessage",
+        "data": {
+          "emailClientId": "{{ $json.accountId }}",
+          "folderId": "{{ $json.sentFolderId }}",
+          "from": "{{ $json.from }}",
+          "to": "{{ $json.to }}",
+          "cc": "{{ $json.cc }}",
+          "bcc": "{{ $json.bcc }}",
+          "subject": "{{ $json.subject }}",
+          "textBody": "{{ $json.body }}",
+          "htmlBody": "{{ $json.htmlBody }}",
+          "isSent": true,
+          "isRead": true,
+          "receivedAt": "{{ Date.now() }}"
+        }
+      },
+      "nextNode": "success-send"
+    },
+    {
+      "id": "success-send",
+      "type": "output",
+      "output": {
+        "status": "success",
+        "message": "Email sent successfully",
+        "timestamp": "{{ Date.now() }}"
+      }
+    },
+    {
+      "id": "error-no-recipients",
+      "type": "output",
+      "output": {
+        "status": "error",
+        "message": "No recipients specified",
+        "error": "INVALID_RECIPIENTS"
+      }
+    },
+    {
+      "id": "error-no-subject",
+      "type": "output",
+      "output": {
+        "status": "error",
+        "message": "Email subject is required",
+        "error": "INVALID_SUBJECT"
+      }
+    },
+    {
+      "id": "error-no-body",
+      "type": "output",
+      "output": {
+        "status": "error",
+        "message": "Email body is required",
+        "error": "INVALID_BODY"
+      }
+    }
+  ]
+}

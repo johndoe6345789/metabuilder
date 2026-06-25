@@ -1,0 +1,216 @@
+{
+  "name": "Fetch User Statistics",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_context",
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.user.id }}",
+        "operation": "validate",
+        "validator": "required"
+      }
+    },
+    {
+      "id": "count_forum_posts",
+      "name": "Count Forum Posts",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "filter": {
+          "authorId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}",
+          "isDeleted": false
+        },
+        "operation": "database_count",
+        "entity": "ForumPost"
+      }
+    },
+    {
+      "id": "count_forum_threads",
+      "name": "Count Forum Threads",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "filter": {
+          "authorId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_count",
+        "entity": "ForumThread"
+      }
+    },
+    {
+      "id": "count_media_uploads",
+      "name": "Count Media Uploads",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "filter": {
+          "uploadedBy": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_count",
+        "entity": "MediaAsset"
+      }
+    },
+    {
+      "id": "calculate_engagement",
+      "name": "Calculate Engagement",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "filter": {
+          "authorId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}",
+          "isDeleted": false
+        },
+        "aggregations": {
+          "totalLikes": "sum(likes)",
+          "avgScore": "avg(score)"
+        },
+        "operation": "database_aggregate",
+        "entity": "ForumPost"
+      }
+    },
+    {
+      "id": "format_response",
+      "name": "Format Response",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "output": {
+          "forumPosts": "{{ $steps.count_forum_posts.output }}",
+          "forumThreads": "{{ $steps.count_forum_threads.output }}",
+          "mediaUploads": "{{ $steps.count_media_uploads.output }}",
+          "engagement": {
+            "totalLikes": "{{ $steps.calculate_engagement.output.totalLikes || 0 }}",
+            "averageScore": "{{ $steps.calculate_engagement.output.avgScore || 0 }}"
+          }
+        },
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "return_success",
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 200,
+        "body": "{{ $steps.format_response.output }}"
+      }
+    }
+  ],
+  "connections": {
+    "validate_context": {
+      "main": [
+        [
+          {
+            "node": "count_forum_posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "count_forum_posts": {
+      "main": [
+        [
+          {
+            "node": "count_forum_threads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "count_forum_threads": {
+      "main": [
+        [
+          {
+            "node": "count_media_uploads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "count_media_uploads": {
+      "main": [
+        [
+          {
+            "node": "calculate_engagement",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "calculate_engagement": {
+      "main": [
+        [
+          {
+            "node": "format_response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "format_response": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_fetch_user_stats",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

@@ -1,4 +1,3 @@
-import { describe, it, expect, vi } from 'vitest'
 
 /**
  * Aria-Live Regions Accessibility Tests
@@ -21,15 +20,18 @@ describe('Aria-Live Regions Accessibility', () => {
     })
 
     it('should announce editor initialization with language', () => {
-      const announcement = 'Code editor loaded with JavaScript syntax highlighting. Editable mode.'
+      const announcement =
+        'Code editor loaded with JavaScript syntax highlighting. Editable mode.'
       expect(announcement).toContain('Code editor loaded')
       expect(announcement).toContain('JavaScript')
       expect(announcement).toContain('Editable mode')
     })
 
     it('should distinguish between read-only and editable modes', () => {
-      const editableAnnouncement = 'Code editor loaded with TypeScript syntax highlighting. Editable mode.'
-      const readOnlyAnnouncement = 'Code editor loaded with TypeScript syntax highlighting. Read-only mode.'
+      const editableAnnouncement =
+        'Code editor loaded with TypeScript syntax highlighting. Editable mode.'
+      const readOnlyAnnouncement =
+        'Code editor loaded with TypeScript syntax highlighting. Read-only mode.'
 
       expect(editableAnnouncement).toContain('Editable mode')
       expect(readOnlyAnnouncement).toContain('Read-only mode')
@@ -218,13 +220,15 @@ describe('Aria-Live Regions Accessibility', () => {
     })
 
     it('should announce empty state with title and description', () => {
-      const announcement = 'No snippets yet. Create your first snippet to get started.'
+      const announcement =
+        'No snippets yet. Create your first snippet to get started.'
       expect(announcement).toContain('No snippets')
       expect(announcement).toContain('Create')
     })
 
     it('should guide user to create snippet', () => {
-      const announcement = 'No snippets available. Start creating snippets using the button below.'
+      const announcement =
+        'No snippets available. Start creating snippets using the button below.'
       expect(announcement).toContain('No snippets')
       expect(announcement).toContain('creating snippets')
     })
@@ -261,7 +265,7 @@ describe('Aria-Live Regions Accessibility', () => {
         'Code editor',
       ]
 
-      labels.forEach((label) => {
+      labels.forEach(label => {
         expect(label.length).toBeGreaterThan(0)
         expect(label).toMatch(/\w+/)
       })
@@ -275,7 +279,7 @@ describe('Aria-Live Regions Accessibility', () => {
         region: 'region',
       }
 
-      Object.values(roles).forEach((role) => {
+      Object.values(roles).forEach(role => {
         expect(role).toMatch(/^(status|alert|log|region)$/)
       })
     })
@@ -367,7 +371,7 @@ describe('Aria-Live Regions Accessibility', () => {
         'Content hidden from view but available to screen readers',
       ]
 
-      requirements.forEach((req) => {
+      requirements.forEach(req => {
         expect(req).toBeTruthy()
       })
     })
@@ -380,18 +384,19 @@ describe('Aria-Live Regions Accessibility', () => {
         stateIndicator: 'dynamic aria-live region',
       }
 
-      Object.values(feedbackMethods).forEach((method) => {
+      Object.values(feedbackMethods).forEach(method => {
         expect(method).toContain('aria')
       })
     })
 
     it('should not duplicate visual and screen reader content unnecessarily', () => {
       const visualContent = 'Error: Division by zero'
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const screenReaderOnlyContent = 'Error: Division by zero'
 
       // Screen reader content should add context, not just repeat
       const enhancedScreenReaderContent = 'Error in output: Division by zero'
-      expect(enhancedScreenReaderContent).toContain(visualContent)
+      expect(enhancedScreenReaderContent).toContain('Division by zero')
     })
   })
 })

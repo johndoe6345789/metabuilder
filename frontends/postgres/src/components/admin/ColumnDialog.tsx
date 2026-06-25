@@ -6,4 +6,4 @@ export {
   type ColumnDialogProps,
   type ColumnDialogMode,
   type ColumnInfo,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';

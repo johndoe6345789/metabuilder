@@ -1,4 +1,5 @@
 import React from 'react'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { PythonTerminal } from './PythonTerminal'
@@ -25,13 +26,22 @@ jest.mock('@/hooks/useTranslation', () => ({
 // Mock framer-motion so motion.* components render as plain HTML elements
 jest.mock('framer-motion', () => {
   const makeMotion = (tag: string) =>
-    React.forwardRef(({ children, ...props }: React.HTMLAttributes<HTMLElement> & { ref?: React.Ref<unknown> }, ref) =>
-      React.createElement(tag, { ...props, ref }, children)
+    React.forwardRef(
+      (
+        {
+          children,
+          ...props
+        }: React.HTMLAttributes<HTMLElement> & { ref?: React.Ref<unknown> },
+        ref,
+      ) => React.createElement(tag, { ...props, ref }, children),
     )
   return {
-    motion: new Proxy({}, {
-      get: (_target, tag: string) => makeMotion(tag),
-    }),
+    motion: new Proxy(
+      {},
+      {
+        get: (_target, tag: string) => makeMotion(tag),
+      },
+    ),
     AnimatePresence: ({ children }: { children: React.ReactNode }) =>
       React.createElement(React.Fragment, null, children),
   }
@@ -40,7 +50,10 @@ jest.mock('framer-motion', () => {
 // Mock scrollIntoView
 Element.prototype.scrollIntoView = jest.fn()
 
-const mockUsePythonTerminal = usePythonTerminalModule.usePythonTerminal as jest.MockedFunction<typeof usePythonTerminalModule.usePythonTerminal>
+const mockUsePythonTerminal =
+  usePythonTerminalModule.usePythonTerminal as jest.MockedFunction<
+    typeof usePythonTerminalModule.usePythonTerminal
+  >
 
 const defaultMockReturn = {
   lines: [],
@@ -89,7 +102,9 @@ describe('PythonTerminal', () => {
 
     it('should display empty state when no lines', () => {
       render(<PythonTerminal code="print('hello')" />)
-      expect(screen.getByText('Click "Run" to execute the Python code')).toBeInTheDocument()
+      expect(
+        screen.getByText('Click "Run" to execute the Python code'),
+      ).toBeInTheDocument()
     })
 
     it('should display lines when they exist', () => {
@@ -140,6 +155,7 @@ describe('PythonTerminal', () => {
       expect(runButton).toBeDisabled()
     })
 
+    // eslint-disable-next-line max-len
     it('should call handleRun with code when run button is clicked', async () => {
       const handleRun = jest.fn()
       mockUsePythonTerminal.mockReturnValue({
@@ -175,7 +191,9 @@ describe('PythonTerminal', () => {
       })
 
       render(<PythonTerminal code="print('hello')" />)
-      expect(screen.queryByTestId('terminal-input-form')).not.toBeInTheDocument()
+      expect(
+        screen.queryByTestId('terminal-input-form'),
+      ).not.toBeInTheDocument()
     })
 
     it('should pass inputValue to TerminalInput', () => {
@@ -208,7 +226,9 @@ describe('PythonTerminal', () => {
     })
 
     it('should call handleInputSubmit when form is submitted', async () => {
-      const handleInputSubmit = jest.fn(async (e: React.FormEvent) => e.preventDefault())
+      const handleInputSubmit = jest.fn(async (e: React.FormEvent) =>
+        e.preventDefault(),
+      )
       mockUsePythonTerminal.mockReturnValue({
         ...defaultMockReturn,
         waitingForInput: true,
@@ -218,6 +238,7 @@ describe('PythonTerminal', () => {
       const user = userEvent.setup()
       render(<PythonTerminal code="input('Enter: ')" />)
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const form = screen.getByTestId('terminal-input-form')
       await user.type(screen.getByTestId('terminal-input'), 'test')
       await user.keyboard('{Enter}')
@@ -251,8 +272,11 @@ describe('PythonTerminal', () => {
       })
 
       render(<PythonTerminal code="print('hello')" />)
+      // eslint-disable-next-line max-len
       // When running and no lines, should show running state instead of empty message
-      expect(screen.queryByText('Click "Run" to execute the Python code')).not.toBeInTheDocument()
+      expect(
+        screen.queryByText('Click "Run" to execute the Python code'),
+      ).not.toBeInTheDocument()
     })
   })
 
@@ -286,6 +310,7 @@ describe('PythonTerminal', () => {
         handleRun,
       })
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const user = userEvent.setup()
       render(<PythonTerminal code={longCode} />)
 
@@ -337,7 +362,9 @@ describe('PythonTerminal', () => {
 
       rerender(<PythonTerminal code="print('hello')" />)
       // Should only be called once more
-      expect(mockUsePythonTerminal.mock.calls.length).toBeLessThanOrEqual(callCount + 1)
+      expect(mockUsePythonTerminal.mock.calls.length).toBeLessThanOrEqual(
+        callCount + 1,
+      )
     })
   })
 

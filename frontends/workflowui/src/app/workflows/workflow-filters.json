@@ -1,0 +1,18 @@
+{
+  "statuses": [
+    { "value": "all", "label": "All Status" },
+    { "value": "active", "label": "Active" },
+    { "value": "draft", "label": "Draft" },
+    { "value": "paused", "label": "Paused" },
+    { "value": "published", "label": "Published" }
+  ],
+  "categories": [
+    { "value": "all", "label": "All Categories" },
+    { "value": "automation", "label": "Automation" },
+    { "value": "integration", "label": "Integration" },
+    { "value": "data_processing", "label": "Data Processing" },
+    { "value": "validation", "label": "Validation" },
+    { "value": "utilities", "label": "Utilities" },
+    { "value": "custom", "label": "Custom" }
+  ]
+}

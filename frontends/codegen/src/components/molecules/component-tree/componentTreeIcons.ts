@@ -1,4 +1,4 @@
-import { Tree } from '@metabuilder/fakemui/icons'
+import { Tree } from '@metabuilder/m3/icons'
 
 export const componentTreeIcons = {
   tree: Tree,

@@ -1,0 +1,160 @@
+{
+  "name": "Format Audit Log Entry",
+  "active": false,
+  "nodes": [
+    {
+      "id": "extract_log_id",
+      "name": "Extract Log Id",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $json }}",
+        "output": "{{ $json.id }}",
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "fetch_user_details",
+      "name": "Fetch User Details",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "filter": {
+          "id": "{{ $json.userId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "output": "user",
+        "operation": "database_read",
+        "entity": "User"
+      }
+    },
+    {
+      "id": "format_timestamp",
+      "name": "Format Timestamp",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $json.timestamp }}",
+        "output": {
+          "iso": "{{ new Date($json.timestamp).toISOString() }}",
+          "formatted": "{{ new Date($json.timestamp).toLocaleString('en-US') }}",
+          "relative": "{{ Math.floor((Date.now() - new Date($json.timestamp).getTime()) / 1000) }} seconds ago"
+        },
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "format_entry",
+      "name": "Format Entry",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "output": {
+          "id": "{{ $json.id }}",
+          "user": {
+            "id": "{{ $steps.fetch_user_details.output.id }}",
+            "email": "{{ $steps.fetch_user_details.output.email }}",
+            "displayName": "{{ $steps.fetch_user_details.output.displayName }}"
+          },
+          "action": "{{ $json.action }}",
+          "entity": "{{ $json.entity }}",
+          "entityId": "{{ $json.entityId }}",
+          "changes": "{{ $json.changes }}",
+          "timestamp": "{{ $steps.format_timestamp.output }}",
+          "ipAddress": "{{ $json.ipAddress }}",
+          "userAgent": "{{ $json.userAgent }}"
+        },
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "return_formatted",
+      "name": "Return Formatted",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "data": "{{ $steps.format_entry.output }}",
+        "action": "emit_event",
+        "event": "audit_formatted"
+      }
+    }
+  ],
+  "connections": {
+    "extract_log_id": {
+      "main": [
+        [
+          {
+            "node": "fetch_user_details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_user_details": {
+      "main": [
+        [
+          {
+            "node": "format_timestamp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "format_timestamp": {
+      "main": [
+        [
+          {
+            "node": "format_entry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "format_entry": {
+      "main": [
+        [
+          {
+            "node": "return_formatted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_formatting",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

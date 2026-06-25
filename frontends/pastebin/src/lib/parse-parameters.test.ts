@@ -262,9 +262,17 @@ describe('parseInputParameters', () => {
   describe('multiple parameters', () => {
     test('parses multiple different types together', () => {
       const params: InputParameter[] = [
-        { name: 'name', type: 'string', defaultValue: '"John"' } as InputParameter,
+        {
+          name: 'name',
+          type: 'string',
+          defaultValue: '"John"',
+        } as InputParameter,
         { name: 'age', type: 'number', defaultValue: '30' } as InputParameter,
-        { name: 'active', type: 'boolean', defaultValue: 'true' } as InputParameter,
+        {
+          name: 'active',
+          type: 'boolean',
+          defaultValue: 'true',
+        } as InputParameter,
       ]
       const result = parseInputParameters(params)
       expect(result).toEqual({
@@ -276,8 +284,16 @@ describe('parseInputParameters', () => {
 
     test('preserves parameter names correctly', () => {
       const params: InputParameter[] = [
-        { name: 'firstName', type: 'string', defaultValue: '"Alice"' } as InputParameter,
-        { name: 'lastName', type: 'string', defaultValue: '"Smith"' } as InputParameter,
+        {
+          name: 'firstName',
+          type: 'string',
+          defaultValue: '"Alice"',
+        } as InputParameter,
+        {
+          name: 'lastName',
+          type: 'string',
+          defaultValue: '"Smith"',
+        } as InputParameter,
       ]
       const result = parseInputParameters(params)
       expect(Object.keys(result)).toContain('firstName')
@@ -290,7 +306,11 @@ describe('parseInputParameters', () => {
       const consoleSpy = jest.spyOn(console, 'warn').mockImplementation()
       const params: InputParameter[] = [
         { name: 'valid', type: 'number', defaultValue: '42' } as InputParameter,
-        { name: 'invalid', type: 'number', defaultValue: 'not-a-number' } as InputParameter,
+        {
+          name: 'invalid',
+          type: 'number',
+          defaultValue: 'not-a-number',
+        } as InputParameter,
       ]
       const result = parseInputParameters(params)
       expect(result.valid).toBe(42)
@@ -310,7 +330,7 @@ describe('parseInputParameters', () => {
       parseInputParameters(params)
       expect(consoleSpy).toHaveBeenCalledWith(
         expect.stringContaining('Failed to parse parameter broken:'),
-        expect.any(Error)
+        expect.any(Error),
       )
       consoleSpy.mockRestore()
     })

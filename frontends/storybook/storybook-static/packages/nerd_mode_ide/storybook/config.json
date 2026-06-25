@@ -1,0 +1,85 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Nerd Mode IDE",
+  "description": "Full-featured in-browser development environment",
+  "stories": [
+    {
+      "name": "NerdModeIDE",
+      "render": "ide",
+      "description": "Complete IDE interface",
+      "args": {
+        "fileTree": [
+          {
+            "name": "src",
+            "path": "/src",
+            "type": "folder",
+            "children": [
+              { "name": "index.ts", "path": "/src/index.ts", "type": "file" },
+              { "name": "utils.ts", "path": "/src/utils.ts", "type": "file" }
+            ]
+          },
+          {
+            "name": "package.json",
+            "path": "/package.json",
+            "type": "file"
+          }
+        ],
+        "currentFile": {
+          "path": "/src/index.ts",
+          "name": "index.ts",
+          "language": "typescript",
+          "content": "export function hello() {\n  console.log('Hello, World!');\n}"
+        }
+      }
+    },
+    {
+      "name": "FileExplorer",
+      "render": "explorer",
+      "description": "File tree explorer",
+      "args": {
+        "files": [
+          { "name": "components", "path": "/components", "type": "folder" },
+          { "name": "lib", "path": "/lib", "type": "folder" },
+          { "name": "README.md", "path": "/README.md", "type": "file" }
+        ]
+      }
+    },
+    {
+      "name": "ConsolePanel",
+      "render": "console",
+      "description": "Console output panel",
+      "args": {
+        "logs": [
+          { "type": "info", "message": "Server started on port 3000" },
+          { "type": "warn", "message": "Deprecation warning: use X instead of Y" },
+          { "type": "error", "message": "Error: Failed to connect" }
+        ]
+      }
+    }
+  ],
+  "renders": {
+    "ide": {
+      "description": "Full IDE",
+      "featured": true
+    },
+    "explorer": {
+      "description": "File explorer"
+    },
+    "console": {
+      "description": "Console panel"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "admin-user",
+      "username": "admin",
+      "level": 4,
+      "email": "admin@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  }
+}

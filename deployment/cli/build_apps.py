@@ -1,6 +1,7 @@
 """Build application Docker images via docker compose."""
 
 import argparse
+import os
 import time
 from cli.helpers import (
     BASE_DIR, PROJECT_ROOT, GREEN, YELLOW, NC,
@@ -29,7 +30,7 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
         log_ok(f"Base image {node_tag} exists")
 
     # Warn about optional bases
-    optional = ["apt", "conan-deps", "pip-deps", "android-sdk"]
+    optional = ["apt", "conan-cli", "conan-media", "conan-dbal", "conan-qt6", "conan-gameengine", "pip-deps", "android-sdk"]
     missing = [base_images[k]["tag"] for k in optional if not docker_image_exists(base_images[k]["tag"])]
     if missing:
         log_warn("Optional base images not built (C++ daemons, dev container):")
@@ -47,7 +48,7 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
     if not args.force:
         needs_build, needs_names = [], []
         for t, svc in zip(targets, services):
-            img = f"deployment-{svc}"
+            img = f"metabuilder-deploy-{svc}"
             if docker_image_exists(img):
                 log_ok(f"Skipping {t} — image {img} already exists (use --force to rebuild)")
             else:
@@ -74,11 +75,18 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
         if attempt > 1:
             log_warn(f"Build attempt {attempt}/{max_attempts}...")
 
+        # When BASE_REGISTRY is set (CI on a host whose Docker builders do not
+        # use the local image store), pass it through so app Dockerfiles
+        # resolve `FROM ${BASE_REGISTRY}/base-*:latest` from the registry
+        # (Nexus). Unset -> Dockerfile ARG default ("metabuilder").
+        br = os.environ.get("BASE_REGISTRY")
+        br_args = ["--build-arg", f"BASE_REGISTRY={br}"] if br else []
+
         if args.sequential:
             all_ok = True
             for svc in services:
                 log_info(f"Building {svc}...")
-                result = run_proc(docker_compose("build", svc))
+                result = run_proc(docker_compose("build", *br_args, svc))
                 if result.returncode != 0:
                     log_err(f"Failed: {svc}")
                     all_ok = False
@@ -89,7 +97,7 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
                 break
         else:
             log_info("Parallel build (uses more RAM)...")
-            result = run_proc(docker_compose("build", "--parallel", *services))
+            result = run_proc(docker_compose("build", "--parallel", *br_args, *services))
             if result.returncode == 0:
                 build_ok = True
                 break

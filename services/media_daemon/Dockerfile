@@ -1,12 +1,19 @@
 # Multi-stage build for Media Daemon
-# Uses metabuilder/base-conan-deps — all apt packages and Conan C++ packages
-# pre-installed. Build = compile only, zero downloads.
+# Uses metabuilder/base-conan-media - apt packages and the media-daemon Conan
+# C++ packages pre-installed. Build = compile only, zero downloads.
 #
 # Prerequisites: run python3 deployment/deployment.py build base first.
 
 # Stage 1: Build environment
 ARG BASE_REGISTRY=metabuilder
-FROM ${BASE_REGISTRY}/base-conan-deps:latest AS builder
+FROM ${BASE_REGISTRY}/base-conan-media:latest AS builder
+
+# Ensure conancenter is available for version-range resolution. The base
+# image may have disabled it when built with pkgrepo-only; re-enabling here
+# lets Conan enumerate versions (openssl/[>=1.1 <4] etc.) without touching
+# the Conan package cache that the base pre-populated.
+RUN conan remote enable conancenter 2>/dev/null || \
+    conan remote add conancenter https://center.conan.io/v2/ --force || true
 
 # Copy source code
 WORKDIR /app

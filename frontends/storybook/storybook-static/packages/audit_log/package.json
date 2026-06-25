@@ -1,0 +1,82 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "audit_log",
+  "name": "Audit Log",
+  "version": "1.0.0",
+  "description": "Security audit log viewer and stats dashboard",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "admin",
+  "icon": "static_content/icon.svg",
+  "minLevel": 3,
+  "primary": true,
+  "dependencies": {},
+  "devDependencies": {
+    "testing": "*",
+    "package_validator": "*"
+  },
+  "exports": {
+    "components": [
+      "AuditLogViewer",
+      "AuditStatsCard",
+      "LogTable",
+      "LogFilters"
+    ],
+    "scripts": [
+      "init",
+      "stats",
+      "filters",
+      "formatting"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "entities",
+      "page-config",
+      "permissions",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests",
+      "workflow"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "pages": [
+        "page-config/page-config.json"
+      ],
+      "workflows": [
+        "workflow/filters.jsonscript",
+        "workflow/formatting.jsonscript",
+        "workflow/init.jsonscript",
+        "workflow/stats.jsonscript"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/config.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "entities/schema.json",
+        "static_content/icon.svg"
+      ]
+    }
+  }
+}

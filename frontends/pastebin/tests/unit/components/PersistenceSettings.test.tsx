@@ -16,7 +16,9 @@ describe('PersistenceSettings Component', () => {
 
     it('should display the description', () => {
       render(<PersistenceSettings />)
-      expect(screen.getByText(/Automatic IndexedDB persistence/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/Automatic IndexedDB persistence/i),
+      ).toBeInTheDocument()
     })
 
     it('should render an icon in the header', () => {

@@ -1,8 +1,8 @@
-import { Badge } from '@metabuilder/fakemui/data-display'
-import { Button } from '@metabuilder/fakemui/inputs'
-import { Card, CardContent } from '@metabuilder/fakemui/surfaces'
+import { Badge } from '@metabuilder/m3/data-display'
+import { Button } from '@metabuilder/m3/inputs'
+import { Card, CardContent } from '@metabuilder/m3/surfaces'
 import { NpmPackage } from '@/types/project'
-import { Package, Trash } from '@metabuilder/fakemui/icons'
+import { Package, Trash } from '@metabuilder/m3/icons'
 
 interface PackageListSectionProps {
   title: string

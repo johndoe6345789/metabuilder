@@ -1,9 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import uiReducer, {
-  openViewer,
-  closeViewer,
-  setSearchQuery,
-} from './uiSlice'
+import uiReducer, { openViewer, closeViewer, setSearchQuery } from './uiSlice'
 import { Snippet } from '@/lib/types'
 
 const mockSnippet: Snippet = {

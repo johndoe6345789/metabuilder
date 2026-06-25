@@ -1,0 +1,147 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/entities.schema.json",
+  "schemaVersion": "2.0.0",
+  "entities": [
+    {
+      "name": "Workflow",
+      "version": "1.0",
+      "description": "Workflow definition with nodes and edges",
+      "primaryKey": "id",
+      "timestamps": true,
+      "softDelete": false,
+      "fields": {
+        "id": {
+          "type": "uuid",
+          "generated": true,
+          "description": "Unique workflow identifier"
+        },
+        "tenantId": {
+          "type": "string",
+          "required": true,
+          "index": true
+        },
+        "name": {
+          "type": "string",
+          "required": true,
+          "maxLength": 200
+        },
+        "description": {
+          "type": "text",
+          "nullable": true
+        },
+        "definition": {
+          "type": "text",
+          "required": true,
+          "description": "JSON workflow definition with nodes and edges"
+        },
+        "status": {
+          "type": "enum",
+          "enum": ["draft", "active", "archived"],
+          "default": "draft"
+        },
+        "createdBy": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "indexes": [
+        {
+          "fields": ["tenantId"],
+          "name": "idx_workflow_tenant"
+        },
+        {
+          "fields": ["status"],
+          "name": "idx_workflow_status"
+        }
+      ],
+      "acl": {
+        "create": ["admin"],
+        "read": ["admin"],
+        "update": ["admin"],
+        "delete": ["admin"]
+      }
+    },
+    {
+      "name": "WorkflowRun",
+      "version": "1.0",
+      "description": "Workflow execution instance",
+      "primaryKey": "id",
+      "timestamps": true,
+      "softDelete": false,
+      "fields": {
+        "id": {
+          "type": "uuid",
+          "generated": true
+        },
+        "workflowId": {
+          "type": "uuid",
+          "required": true,
+          "index": true
+        },
+        "tenantId": {
+          "type": "string",
+          "required": true,
+          "index": true
+        },
+        "status": {
+          "type": "enum",
+          "enum": ["pending", "running", "success", "failed", "cancelled"],
+          "default": "pending",
+          "index": true
+        },
+        "startTime": {
+          "type": "datetime",
+          "nullable": true
+        },
+        "endTime": {
+          "type": "datetime",
+          "nullable": true
+        },
+        "progress": {
+          "type": "integer",
+          "default": 0,
+          "description": "Progress percentage 0-100"
+        },
+        "result": {
+          "type": "text",
+          "nullable": true,
+          "description": "JSON execution result"
+        },
+        "error": {
+          "type": "text",
+          "nullable": true,
+          "description": "Error message if failed"
+        }
+      },
+      "indexes": [
+        {
+          "fields": ["workflowId"],
+          "name": "idx_run_workflow"
+        },
+        {
+          "fields": ["status"],
+          "name": "idx_run_status"
+        },
+        {
+          "fields": ["startTime"],
+          "name": "idx_run_start"
+        }
+      ],
+      "relations": [
+        {
+          "name": "workflow",
+          "type": "belongsTo",
+          "entity": "Workflow",
+          "field": "workflowId",
+          "onDelete": "Cascade"
+        }
+      ],
+      "acl": {
+        "create": ["admin"],
+        "read": ["admin"],
+        "update": ["admin"],
+        "delete": ["admin"]
+      }
+    }
+  ]
+}

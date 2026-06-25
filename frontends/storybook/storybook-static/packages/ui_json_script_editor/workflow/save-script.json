@@ -1,0 +1,125 @@
+{
+  "name": "Save JSON Script",
+  "active": false,
+  "nodes": [
+    {
+      "id": "check_permission",
+      "name": "Check Permission",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "condition": "{{ $context.user.level >= 3 }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "validate_input",
+      "name": "Validate Input",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $json }}",
+        "operation": "validate",
+        "rules": {
+          "name": "required|string",
+          "script": "required|string"
+        }
+      }
+    },
+    {
+      "id": "create_script",
+      "name": "Create Script",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "data": {
+          "tenantId": "{{ $context.tenantId }}",
+          "createdBy": "{{ $context.user.id }}",
+          "name": "{{ $json.name }}",
+          "description": "{{ $json.description }}",
+          "script": "{{ $json.script }}",
+          "createdAt": "{{ new Date().toISOString() }}"
+        },
+        "operation": "database_create",
+        "entity": "JSONScript"
+      }
+    },
+    {
+      "id": "return_success",
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 201,
+        "body": {
+          "id": "{{ $steps.create_script.output.id }}",
+          "message": "Script saved"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "check_permission": {
+      "main": [
+        [
+          {
+            "node": "validate_input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_input": {
+      "main": [
+        [
+          {
+            "node": "create_script",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_script": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_save_script",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

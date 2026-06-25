@@ -4,19 +4,38 @@
  * Refactored to use ReporterBase for shared functionality
  */
 
-import { ScoringResult } from '../types/index.js';
-import { ReporterBase } from './ReporterBase.js';
-import { generateOpeningTags, generateClosingTags } from './html/HtmlHeader.js';
-import { generateOverallSection, generateComponentScoresSection, generateSummaryStatistics } from './html/HtmlScoreSection.js';
-import { generateFindingsSection, generateRecommendationsSection, generateFindingsSummaryTable } from './html/HtmlDetailsSection.js';
-import { generateMetricsSection, generateWeightVisualization } from './html/HtmlMetricsSection.js';
-import { generateFooter, generateMetadataSection, generateScript, generateResourcesSection, generateLegendSection } from './html/HtmlFooter.js';
+import { ScoringResult } from '../types/index.js'
+import { ReporterBase } from './ReporterBase.js'
+import { generateOpeningTags, generateClosingTags } from './html/HtmlHeader.js'
+import {
+  generateOverallSection,
+  generateComponentScoresSection,
+  generateSummaryStatistics,
+} from './html/HtmlScoreSection.js'
+import {
+  generateFindingsSection,
+  generateRecommendationsSection,
+  generateFindingsSummaryTable,
+} from './html/HtmlDetailsSection.js'
+import {
+  generateMetricsSection,
+  generateWeightVisualization,
+} from './html/HtmlMetricsSection.js'
+import {
+  generateFooter,
+  generateMetadataSection,
+  generateScript,
+  generateResourcesSection,
+  generateLegendSection,
+} from './html/HtmlFooter.js'
 
 /**
  * HTML Reporter - Orchestrates all HTML generation modules
  *
  * @description
- * Extends ReporterBase and coordinates specialized modules to generate complete HTML reports:
+ // eslint-disable-next-line max-len
+ * Extends ReporterBase and coordinates specialized modules to generate complete
+ * HTML reports:
  * - HtmlHeader: Document structure and meta tags
  * - HtmlScoreSection: Overall score and component visualization
  * - HtmlDetailsSection: Findings and recommendations
@@ -24,13 +43,17 @@ import { generateFooter, generateMetadataSection, generateScript, generateResour
  * - HtmlFooter: Metadata and resources
  * - HtmlStyleSheet: Embedded CSS
  *
- * Leverages ReporterBase shared utilities for metadata handling, formatting, and aggregation
+ // eslint-disable-next-line max-len
+ // eslint-disable-next-line max-len
+ * Leverages ReporterBase shared utilities for metadata handling, formatting,
+ * and aggregation
  */
 export class HtmlReporter extends ReporterBase {
   /**
    * Generate complete HTML report from scoring result
    *
-   * @param {ScoringResult} result - Complete scoring result with all analysis data
+   * @param {ScoringResult} result - Complete scoring result with all
+   *   analysis data
    * @returns {string} Complete HTML document as string
    *
    * @description
@@ -46,7 +69,8 @@ export class HtmlReporter extends ReporterBase {
    * 9. Resources and legend
    */
   generate(result: ScoringResult): string {
-    const projectName = result.metadata.configUsed.projectName || 'snippet-pastebin';
+    const projectName =
+      result.metadata.configUsed.projectName || 'snippet-pastebin'
 
     // Build main sections
     const html = [
@@ -74,7 +98,7 @@ export class HtmlReporter extends ReporterBase {
       generateMetadataSection(
         result.metadata.timestamp,
         result.metadata.projectPath,
-        result.metadata.nodeVersion
+        result.metadata.nodeVersion,
       ),
       generateResourcesSection(),
       generateLegendSection(),
@@ -87,9 +111,9 @@ export class HtmlReporter extends ReporterBase {
 
       // Add script
       `<script>${generateScript()}</script>`,
-    ];
+    ]
 
-    return html.join('\n');
+    return html.join('\n')
   }
 }
 
@@ -100,23 +124,28 @@ export class HtmlReporter extends ReporterBase {
  * @returns {string} HTML trend section
  */
 function generateTrendSection(result: ScoringResult): string {
-  if (!result.trend) return '';
+  if (!result.trend) return ''
 
-  const { trend } = result;
-  const change = trend.previousScore ? trend.currentScore - trend.previousScore : 0;
-  const changeStr = change >= 0 ? `+${change.toFixed(1)}` : `${change.toFixed(1)}`;
-  const changeClass = change >= 0 ? 'positive' : 'negative';
+  const { trend } = result
+  const change = trend.previousScore
+    ? trend.currentScore - trend.previousScore
+    : 0
+  const changeStr =
+    change >= 0 ? `+${change.toFixed(1)}` : `${change.toFixed(1)}`
+  const changeClass = change >= 0 ? 'positive' : 'negative'
 
   return `<section class="section">
     <h2>Trend Analysis</h2>
     <div class="card trend-card">
       <p>Current Score: <strong>${trend.currentScore.toFixed(1)}%</strong></p>
-      <p>Previous Score: <strong>${trend.previousScore?.toFixed(1) || 'N/A'}%</strong></p>
+      <p>Previous Score:
+        <strong>${trend.previousScore?.toFixed(1) || 'N/A'}%</strong>
+      </p>
       <p>Change: <span class="${changeClass}">${changeStr}%</span></p>
       <p>Direction: <strong>${trend.direction || 'stable'}</strong></p>
       ${trend.lastFiveScores ? generateScoreHistory(trend.lastFiveScores) : ''}
     </div>
-  </section>`;
+  </section>`
 }
 
 /**
@@ -128,8 +157,8 @@ function generateTrendSection(result: ScoringResult): string {
 function generateScoreHistory(scores: number[]): string {
   return `
     <h4>Recent Scores</h4>
-    <p>${scores.map((s) => `${s.toFixed(1)}%`).join(' → ')}</p>
-  `;
+    <p>${scores.map(s => `${s.toFixed(1)}%`).join(' → ')}</p>
+  `
 }
 
-export const htmlReporter = new HtmlReporter();
+export const htmlReporter = new HtmlReporter()

@@ -1,0 +1,303 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/entities.schema.json",
+  "title": "Entity Schema Definition",
+  "description": "Database entity definitions for MetaBuilder packages",
+  "type": "object",
+  "required": ["schemaVersion", "entities"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "description": "Schema version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "default": "2.0.0"
+    },
+    "entities": {
+      "type": "array",
+      "description": "Array of entity definitions",
+      "items": {
+        "$ref": "#/definitions/entity"
+      }
+    }
+  },
+  "definitions": {
+    "entity": {
+      "type": "object",
+      "required": ["name", "version", "fields"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Entity name in PascalCase",
+          "pattern": "^[A-Z][a-zA-Z0-9]*$"
+        },
+        "version": {
+          "type": "string",
+          "description": "Entity schema version",
+          "pattern": "^\\d+\\.\\d+$"
+        },
+        "description": {
+          "type": "string",
+          "description": "Entity description"
+        },
+        "checksum": {
+          "type": ["string", "null"],
+          "description": "Entity checksum for migration tracking"
+        },
+        "tableName": {
+          "type": "string",
+          "description": "Custom table name (defaults to snake_case of entity name)"
+        },
+        "softDelete": {
+          "type": "boolean",
+          "description": "Enable soft delete functionality",
+          "default": false
+        },
+        "timestamps": {
+          "type": "boolean",
+          "description": "Automatically add createdAt and updatedAt fields",
+          "default": true
+        },
+        "fields": {
+          "type": "object",
+          "description": "Entity field definitions",
+          "additionalProperties": {
+            "$ref": "#/definitions/field"
+          },
+          "minProperties": 1
+        },
+        "primaryKey": {
+          "oneOf": [
+            { "type": "string", "description": "Single primary key field name" },
+            { 
+              "type": "array", 
+              "description": "Composite primary key field names",
+              "items": { "type": "string" },
+              "minItems": 2
+            }
+          ]
+        },
+        "indexes": {
+          "type": "array",
+          "description": "Index definitions",
+          "items": {
+            "$ref": "#/definitions/index"
+          }
+        },
+        "relations": {
+          "type": "array",
+          "description": "Relationship definitions",
+          "items": {
+            "$ref": "#/definitions/relation"
+          }
+        },
+        "acl": {
+          "type": "object",
+          "description": "Access control rules",
+          "properties": {
+            "create": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Roles allowed to create"
+            },
+            "read": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Roles allowed to read"
+            },
+            "update": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Roles allowed to update"
+            },
+            "delete": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Roles allowed to delete"
+            },
+            "rowLevel": {
+              "type": "string",
+              "description": "Row-level security expression"
+            }
+          }
+        }
+      }
+    },
+    "field": {
+      "type": "object",
+      "required": ["type"],
+      "not": {
+        "required": ["primary"],
+        "description": "DEPRECATED: field.primary is no longer supported. Use entity.primaryKey instead."
+      },
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "string",
+            "int",
+            "bigint",
+            "float",
+            "double",
+            "decimal",
+            "boolean",
+            "json",
+            "date",
+            "datetime",
+            "timestamp",
+            "cuid",
+            "uuid",
+            "text",
+            "blob",
+            "enum"
+          ],
+          "description": "Field data type"
+        },
+        "generated": {
+          "type": "boolean",
+          "description": "Whether this field is auto-generated"
+        },
+        "autoIncrement": {
+          "type": "boolean",
+          "description": "Auto-increment for integer fields",
+          "default": false
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Whether this field is required"
+        },
+        "nullable": {
+          "type": "boolean",
+          "description": "Whether this field can be null"
+        },
+        "unique": {
+          "type": "boolean",
+          "description": "Whether this field must be unique"
+        },
+        "index": {
+          "type": "boolean",
+          "description": "Whether to create an index on this field"
+        },
+        "default": {
+          "description": "Default value for this field"
+        },
+        "maxLength": {
+          "type": "integer",
+          "description": "Maximum length for string fields"
+        },
+        "minLength": {
+          "type": "integer",
+          "description": "Minimum length for string fields"
+        },
+        "min": {
+          "type": "number",
+          "description": "Minimum value for numeric fields"
+        },
+        "max": {
+          "type": "number",
+          "description": "Maximum value for numeric fields"
+        },
+        "precision": {
+          "type": "integer",
+          "description": "Total number of digits for decimal types",
+          "minimum": 1,
+          "maximum": 65
+        },
+        "scale": {
+          "type": "integer",
+          "description": "Number of digits after decimal point",
+          "minimum": 0,
+          "maximum": 30
+        },
+        "enum": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Allowed enum values"
+        },
+        "pattern": {
+          "type": "string",
+          "description": "Regex pattern for validation"
+        },
+        "description": {
+          "type": "string",
+          "description": "Field description"
+        },
+        "comment": {
+          "type": "string",
+          "description": "Database-level comment"
+        }
+      }
+    },
+    "index": {
+      "type": "object",
+      "required": ["fields"],
+      "properties": {
+        "fields": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Fields to include in this index",
+          "minItems": 1
+        },
+        "unique": {
+          "type": "boolean",
+          "description": "Whether this is a unique index"
+        },
+        "name": {
+          "type": "string",
+          "description": "Index name"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["btree", "hash", "gist", "gin", "fulltext"],
+          "description": "Index type"
+        }
+      }
+    },
+    "relation": {
+      "type": "object",
+      "required": ["name", "type", "entity"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Relation name"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["belongsTo", "hasMany", "hasOne", "manyToMany"],
+          "description": "Relationship type"
+        },
+        "entity": {
+          "type": "string",
+          "description": "Related entity name"
+        },
+        "field": {
+          "type": "string",
+          "description": "Foreign key field (for belongsTo)"
+        },
+        "foreignKey": {
+          "type": "string",
+          "description": "Foreign key field on related entity (for hasMany/hasOne)"
+        },
+        "through": {
+          "type": "string",
+          "description": "Junction table (for manyToMany)"
+        },
+        "onDelete": {
+          "type": "string",
+          "enum": ["Cascade", "SetNull", "Restrict", "NoAction", "SetDefault"],
+          "description": "Action on delete",
+          "default": "NoAction"
+        },
+        "onUpdate": {
+          "type": "string",
+          "enum": ["Cascade", "SetNull", "Restrict", "NoAction", "SetDefault"],
+          "description": "Action on update",
+          "default": "NoAction"
+        }
+      }
+    }
+  }
+}

@@ -40,7 +40,7 @@ describe('PaginationControls', () => {
       />
     )
 
-    // Check that the current page button exists (fakemui uses "Go to page X" aria-label)
+    // Check that the current page button exists (m3 uses "Go to page X" aria-label)
     const currentPageButton = screen.getByRole('button', { name: `Go to page ${expectedPage}`, current: 'page' })
     expect(currentPageButton).toBeDefined()
   })
@@ -56,7 +56,7 @@ describe('PaginationControls', () => {
       />
     )
 
-    // Click page 2 (fakemui uses "Go to page X" aria-label)
+    // Click page 2 (m3 uses "Go to page X" aria-label)
     const page2Button = screen.getByRole('button', { name: 'Go to page 2' })
     fireEvent.click(page2Button)
 

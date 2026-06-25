@@ -16,6 +16,7 @@ from functools import wraps
 import jwt
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
+import socket as _socket
 import docker as _docker_lib
 import requests as _http
 
@@ -607,6 +608,305 @@ def _reap_sessions() -> None:
             s.kill()
             _sessions.pop(sid, None)
 
+# ---------------------------------------------------------------------------
+# DAP (Debug Adapter Protocol) debug sessions
+# ---------------------------------------------------------------------------
+
+_DAP_PORT           = 5678
+_DEBUG_SESSION_TTL  = 300   # 5 minutes
+_DEBUG_SESSIONS: dict = {}
+_OWN_CID: list = [None, False]   # [id_or_None, resolved]
+
+
+def _own_container_id() -> str | None:
+    """Return the backend's container ID (cached after first call)."""
+    if _OWN_CID[1]:
+        return _OWN_CID[0]
+    cid = None
+    # /proc/1/cpuset contains /docker/<full-id> when containerised
+    try:
+        with open('/proc/1/cpuset') as f:
+            line = f.read().strip()
+        if '/docker/' in line:
+            cid = line.split('/docker/')[-1]
+    except Exception:
+        pass
+    if not cid:
+        try:
+            with open('/etc/hostname') as f:
+                cid = f.read().strip() or None
+        except Exception:
+            pass
+    _OWN_CID[0] = cid
+    _OWN_CID[1] = True
+    return cid
+
+
+# Language → DAP adapter config.
+# 'setup'   shell command to install the adapter (run once per container)
+# 'dap'     shell command to start the adapter (must listen on 0.0.0.0:{port})
+# 'launch'  callable returning the DAP launch arguments for this language
+_DEBUG_RUNNERS: dict = {
+    'python': {
+        'image':  lambda: os.environ.get('PYTHON_DEBUG_IMAGE', 'python:3.11-slim'),
+        'setup':  'pip install debugpy -q 2>/dev/null',
+        'dap':    'python -m debugpy --listen 0.0.0.0:{port} --wait-for-client /workspace/{entry}',
+        # debugpy started with `--listen … --wait-for-client <script>` is a DAP
+        # *server* that already holds the debuggee process — the client must
+        # ATTACH, not launch (a launch would tell it to spawn the program a
+        # second time and breakpoints would never bind). The script path is
+        # fixed by the command line, so no 'program' is needed here.
+        'launch': lambda entry: {
+            'type': 'python', 'request': 'attach',
+            'justMyCode': False,
+            # Without redirectOutput debugpy writes the debuggee's stdout/stderr
+            # straight to the container pipe and emits NO DAP 'output' events,
+            # so print() output never reaches the UI while stepping. Capture it.
+            'redirectOutput': True,
+            'pathMappings': [
+                {'localRoot': '/workspace', 'remoteRoot': '/workspace'},
+            ],
+        },
+    },
+    'javascript': {
+        'image':  lambda: os.environ.get('NODE_DEBUG_IMAGE', 'node:20-slim'),
+        'dap':    'node /opt/js-debug/js-debug/src/dapDebugServer.js {port} 0.0.0.0',
+        'launch': lambda entry: {
+            'type': 'pwa-node', 'request': 'launch',
+            'program': f'/workspace/{entry}', 'cwd': '/workspace',
+        },
+    },
+    'typescript': {
+        'image':  lambda: os.environ.get('NODE_DEBUG_IMAGE', 'node:20-slim'),
+        'dap':    'node /opt/js-debug/js-debug/src/dapDebugServer.js {port} 0.0.0.0',
+        'launch': lambda entry: {
+            'type': 'pwa-node', 'request': 'launch',
+            'program': f'/workspace/{entry}',
+            'runtimeExecutable': 'tsx', 'cwd': '/workspace',
+        },
+    },
+    'go': {
+        'image':  lambda: os.environ.get('GO_DEBUG_IMAGE', 'golang:1.22-alpine'),
+        'setup':  'go install github.com/go-delve/delve/cmd/dlv@latest 2>/dev/null',
+        'dap':    '$(go env GOPATH)/bin/dlv dap --listen=0.0.0.0:{port} --headless=true --log=false',
+        'launch': lambda entry: {
+            'request': 'launch', 'mode': 'debug', 'program': '/workspace',
+        },
+    },
+    'cpp-cmake': {
+        'image':  lambda: os.environ.get('CPP_DEBUG_IMAGE', 'cpp-debug:latest'),
+        'dap': (
+            "g++ -g -O0 -o /workspace/__prog__"
+            " $(find /workspace -name '*.cpp' | sort | tr '\\n' ' ')"
+            " 2>&1 | head -30"
+            " && ( /opt/codelldb/extension/adapter/codelldb"
+            " --port 15678 --multi-session &"
+            " sleep 1"
+            " && socat TCP-LISTEN:{port},bind=0.0.0.0,reuseaddr,fork"
+            " TCP:127.0.0.1:15678 )"
+        ),
+        'launch': lambda entry: {
+            'request': 'launch',
+            'program': '/workspace/__prog__',
+            'args': [],
+            'cwd': '/workspace',
+            'stopAtEntry': False,
+        },
+    },
+}
+
+
+class DebugSession:
+    """One DAP debug session backed by a throwaway Docker container.
+
+    Uses an internal (no-internet) Docker bridge network so the backend
+    can reach the container's DAP port without exposing it to the host.
+    """
+
+    def __init__(self, session_id: str):
+        self.session_id  = session_id
+        self.messages: list = []   # incoming DAP messages buffered for polling
+        self.done: bool  = False
+        self.created_at  = time.time()
+        self._container  = None
+        self._network    = None
+        self._sock       = None
+        self._lock       = threading.Lock()
+
+    # ------------------------------------------------------------------
+    # Lifecycle
+    # ------------------------------------------------------------------
+
+    def start(self, language: str, files: list, entry_point: str) -> None:
+        runner   = _DEBUG_RUNNERS[language]
+        own_id   = _own_container_id()
+        net_name = f'dap-{self.session_id[:8]}'
+
+        # Isolated bridge — internal=True means no NAT/masquerade → no internet
+        self._network = _docker().networks.create(
+            net_name, driver='bridge', internal=True,
+        )
+        if own_id:
+            try:
+                self._network.connect(own_id)
+            except Exception as exc:
+                print(f'[debug] backend→net attach failed ({exc})', flush=True)
+
+        setup   = runner.get('setup', '')
+        dap_cmd = runner['dap'].format(port=_DAP_PORT, entry=entry_point)
+        full_cmd = _SETUP_FILES_SH
+        if setup:
+            full_cmd += f' && ( {setup} || true )'
+        full_cmd += ' && ' + dap_cmd
+
+        _ensure_image(runner['image']())
+        self._container = _docker().containers.create(
+            image=runner['image'](),
+            command=['sh', '-c', full_cmd],
+            stdin_open=False, tty=False,
+            working_dir='/workspace',
+            environment=_make_container_env(files),
+            mem_limit='512m',
+            nano_cpus=int(1.0e9),
+            pids_limit=512,
+            network=net_name,
+        )
+        self._container.start()
+        self._container.reload()
+
+        nets         = self._container.attrs['NetworkSettings']['Networks']
+        container_ip = nets[net_name]['IPAddress']
+
+        # debugpy runs with `--wait-for-client` and treats the FIRST TCP
+        # connection to the DAP port as the debug client. A throwaway readiness
+        # probe (connect then close) would consume that one client slot, leaving
+        # the real session socket with no handshake — the program would never
+        # start and no output/stops would ever come back. So DO NOT pre-probe:
+        # connect the real session socket directly, retrying until the adapter
+        # is listening. The first socket that connects IS the debug client.
+        deadline = time.time() + 90
+        last_err = None
+        self._sock = None
+        while time.time() < deadline:
+            try:
+                sock = _socket.socket(_socket.AF_INET, _socket.SOCK_STREAM)
+                sock.settimeout(10)
+                sock.connect((container_ip, _DAP_PORT))
+                sock.settimeout(None)   # blocking reads for the session
+                self._sock = sock
+                break
+            except (ConnectionRefusedError, _socket.timeout, OSError) as exc:
+                last_err = exc
+                time.sleep(0.3)
+        if self._sock is None:
+            raise TimeoutError(
+                f'{container_ip}:{_DAP_PORT} DAP adapter not ready after 90s '
+                f'({last_err})'
+            )
+        threading.Thread(target=self._read_loop, daemon=True).start()
+
+    # ------------------------------------------------------------------
+    # DAP framing reader (Content-Length: N\r\n\r\n{json})
+    # ------------------------------------------------------------------
+
+    def _read_loop(self) -> None:
+        buf = b''
+        while True:
+            try:
+                chunk = self._sock.recv(4096)
+            except OSError:
+                break
+            if not chunk:
+                break
+            buf += chunk
+            while True:
+                sep = buf.find(b'\r\n\r\n')
+                if sep == -1:
+                    break
+                content_length = None
+                for line in buf[:sep].split(b'\r\n'):
+                    if line.lower().startswith(b'content-length:'):
+                        content_length = int(line.split(b':', 1)[1].strip())
+                        break
+                if content_length is None:
+                    buf = buf[sep + 4:]
+                    continue
+                body_start = sep + 4
+                if len(buf) < body_start + content_length:
+                    break
+                body = buf[body_start: body_start + content_length]
+                buf  = buf[body_start + content_length:]
+                try:
+                    msg = json.loads(body.decode('utf-8'))
+                    with self._lock:
+                        self.messages.append(msg)
+                except json.JSONDecodeError:
+                    pass
+        self.done = True
+        self._cleanup()
+
+    # ------------------------------------------------------------------
+    # DAP send
+    # ------------------------------------------------------------------
+
+    def send(self, msg: dict) -> bool:
+        if self.done or not self._sock:
+            return False
+        body  = json.dumps(msg).encode('utf-8')
+        frame = f'Content-Length: {len(body)}\r\n\r\n'.encode() + body
+        try:
+            self._sock.sendall(frame)
+            return True
+        except OSError:
+            return False
+
+    # ------------------------------------------------------------------
+    # Teardown
+    # ------------------------------------------------------------------
+
+    def _cleanup(self) -> None:
+        for fn in [
+            lambda: self._sock and self._sock.close(),
+            lambda: self._container and self._container.remove(force=True),
+        ]:
+            try:
+                fn()
+            except Exception:
+                pass
+        self._sock = self._container = None
+
+        # Detach EVERY endpoint before removing the network. Disconnecting only
+        # by our cached own-id leaked networks whenever that id didn't match the
+        # endpoint Docker recorded (cgroup v2 hostnames), because remove() then
+        # failed with "network has active endpoints".
+        if self._network:
+            try:
+                self._network.reload()
+                for cid in list(self._network.attrs.get('Containers', {})):
+                    try:
+                        self._network.disconnect(cid, force=True)
+                    except Exception:
+                        pass
+            except Exception:
+                pass
+            try:
+                self._network.remove()
+            except Exception:
+                pass
+        self._network = None
+
+    def kill(self) -> None:
+        self.done = True
+        self._cleanup()
+
+
+def _reap_debug_sessions() -> None:
+    now = time.time()
+    for sid, s in list(_DEBUG_SESSIONS.items()):
+        if s.done or (now - s.created_at > _DEBUG_SESSION_TTL):
+            s.kill()
+            _DEBUG_SESSIONS.pop(sid, None)
+
 def get_db():
     conn = sqlite3.connect(DATABASE_PATH)
     conn.row_factory = sqlite3.Row
@@ -764,6 +1064,74 @@ def health():
     return jsonify({'status': 'healthy', 'timestamp': datetime.utcnow().isoformat()})
 
 
+def _seed_new_user(user_id: str, now: int) -> None:
+    """Create Default + Examples namespaces and 5 starter snippets for a new user."""
+    ns_default_id = str(uuid.uuid4())
+    ns_examples_id = str(uuid.uuid4())
+
+    dbal_request('POST', f'/{DBAL_TENANT_ID}/pastebin/Namespace', {
+        'id': ns_default_id, 'name': 'Default', 'isDefault': True,
+        'createdAt': now, 'userId': user_id, 'tenantId': DBAL_TENANT_ID,
+    })
+    dbal_request('POST', f'/{DBAL_TENANT_ID}/pastebin/Namespace', {
+        'id': ns_examples_id, 'name': 'Examples', 'isDefault': False,
+        'createdAt': now, 'userId': user_id, 'tenantId': DBAL_TENANT_ID,
+    })
+
+    seeds = [
+        {
+            'title': 'Hello, Python!',
+            'description': 'A simple Python function — run it with the Python runner.',
+            'language': 'python', 'category': 'example',
+            'functionName': 'greet', 'entryPoint': 'greet',
+            'code': 'def greet(name: str = "World") -> str:\n    """Return a personalised greeting."""\n    return f"Hello, {name}!"\n\nprint(greet())\n',
+            'inputParameters': '[{"name":"name","type":"string","default":"World","label":"Your name"}]',
+            'hasPreview': False, 'isTemplate': False,
+        },
+        {
+            'title': 'Fibonacci',
+            'description': 'Classic recursive Fibonacci — supports up to n=30.',
+            'language': 'python', 'category': 'example',
+            'functionName': 'fibonacci', 'entryPoint': 'fibonacci',
+            'code': 'def fibonacci(n: int = 10) -> list[int]:\n    """Return the first n Fibonacci numbers."""\n    seq = [0, 1]\n    for _ in range(n - 2):\n        seq.append(seq[-1] + seq[-2])\n    return seq[:n]\n\nprint(fibonacci())\n',
+            'inputParameters': '[{"name":"n","type":"number","default":10,"label":"n"}]',
+            'hasPreview': False, 'isTemplate': False,
+        },
+        {
+            'title': 'TypeScript — Binary Search',
+            'description': 'O(log n) binary search on a sorted array. Returns the index or -1.',
+            'language': 'typescript', 'category': 'example',
+            'code': 'function binarySearch(arr: number[], target: number): number {\n  let lo = 0, hi = arr.length - 1;\n  while (lo <= hi) {\n    const mid = (lo + hi) >>> 1;\n    if (arr[mid] === target) return mid;\n    if (arr[mid] < target) lo = mid + 1;\n    else hi = mid - 1;\n  }\n  return -1;\n}\n\nconst sorted = [1, 3, 5, 7, 9, 11, 13];\nconsole.log(binarySearch(sorted, 7));  // 3\nconsole.log(binarySearch(sorted, 6));  // -1\n',
+            'hasPreview': False, 'isTemplate': False,
+        },
+        {
+            'title': 'React Counter',
+            'description': 'A minimal stateful counter — toggle Preview to see it live.',
+            'language': 'tsx', 'category': 'example',
+            'code': 'import { useState } from "react";\n\nexport default function Counter() {\n  const [count, setCount] = useState(0);\n  return (\n    <div style={{ fontFamily: "sans-serif", textAlign: "center", padding: 32 }}>\n      <h2>Count: {count}</h2>\n      <button onClick={() => setCount(prev => prev - 1)}>-</button>\n      {" "}\n      <button onClick={() => setCount(prev => prev + 1)}>+</button>\n      <br />\n      <button style={{ marginTop: 12 }} onClick={() => setCount(0)}>Reset</button>\n    </div>\n  );\n}\n',
+            'hasPreview': True, 'isTemplate': False,
+        },
+        {
+            'title': 'React Dark Card',
+            'description': 'A styled dark-theme card — good starting point for UI snippets.',
+            'language': 'tsx', 'category': 'example',
+            'code': 'export default function DarkCard({ title = "Card Title", body = "Card body text goes here." }) {\n  return (\n    <div style={{\n      background: "#1e1e2e", color: "#cdd6f4",\n      borderRadius: 12, padding: "24px 28px",\n      maxWidth: 360, fontFamily: "sans-serif",\n      boxShadow: "0 4px 24px rgba(0,0,0,0.4)"\n    }}>\n      <h3 style={{ margin: "0 0 8px", color: "#89b4fa" }}>{title}</h3>\n      <p style={{ margin: 0, lineHeight: 1.6 }}>{body}</p>\n    </div>\n  );\n}\n',
+            'hasPreview': True, 'isTemplate': True,
+        },
+    ]
+
+    for seed in seeds:
+        dbal_request('POST', f'/{DBAL_TENANT_ID}/pastebin/Snippet', {
+            'id': str(uuid.uuid4()),
+            'namespaceId': ns_examples_id,
+            'userId': user_id,
+            'tenantId': DBAL_TENANT_ID,
+            'createdAt': now,
+            'updatedAt': now,
+            **seed,
+        })
+
+
 # ---------------------------------------------------------------------------
 # Auth endpoints
 # ---------------------------------------------------------------------------
@@ -803,8 +1171,8 @@ def register():
         'tenantId': DBAL_TENANT_ID,
     })
 
-    # Namespaces + seed snippets are created by the DBAL workflow engine
-    # (pastebin.User.created event → on_user_created.json workflow)
+    # Seed Default + Examples namespaces and starter snippets (mirrors on_user_created.json)
+    _seed_new_user(user_id, now)
 
     token = jwt.encode(
         {'sub': user_id, 'username': username, 'exp': int(time.time()) + 7 * 86400},
@@ -1677,6 +2045,79 @@ def send_interactive_input(session_id):
     value = data.get('value', '')
     if not session.send_input(value):
         return jsonify({'error': 'Session is not waiting for input'}), 409
+    return jsonify({'ok': True})
+
+
+# ---------------------------------------------------------------------------
+# DAP debug endpoints
+# ---------------------------------------------------------------------------
+
+@app.route('/api/debug', methods=['POST'])
+@auth_required
+def start_debug_session():
+    """Launch a throwaway container running a DAP adapter.
+
+    Returns {session_id, launch_args} on success. The client sends the DAP
+    'initialize' request immediately after, then polls /api/debug/<id>/poll
+    for incoming messages.
+    """
+    _reap_debug_sessions()
+    data = request.get_json(force=True, silent=True) or {}
+    language, files, entry_point = _parse_run_request(data)
+    if not files:
+        return jsonify({'error': 'No files provided'}), 400
+    if language not in _DEBUG_RUNNERS:
+        supported = list(_DEBUG_RUNNERS)
+        return jsonify({'error': f'Debug not supported for {language!r}. Supported: {supported}'}), 400
+
+    session_id = str(uuid.uuid4())
+    session    = DebugSession(session_id)
+    _DEBUG_SESSIONS[session_id] = session
+    try:
+        session.start(language, files, entry_point)
+        launch_args = _DEBUG_RUNNERS[language]['launch'](entry_point)
+        return jsonify({'session_id': session_id, 'launch_args': launch_args}), 201
+    except Exception as exc:
+        session.kill()
+        _DEBUG_SESSIONS.pop(session_id, None)
+        return jsonify({'error': str(exc)}), 500
+
+
+@app.route('/api/debug/<session_id>/dap', methods=['POST'])
+@auth_required
+def send_dap_message(session_id):
+    """Forward a DAP request message to the adapter."""
+    session = _DEBUG_SESSIONS.get(session_id)
+    if not session:
+        return jsonify({'error': 'Session not found'}), 404
+    msg = request.get_json(force=True, silent=True)
+    if not isinstance(msg, dict):
+        return jsonify({'error': 'Invalid JSON'}), 400
+    if not session.send(msg):
+        return jsonify({'error': 'Session is closed'}), 409
+    return jsonify({'ok': True})
+
+
+@app.route('/api/debug/<session_id>/poll', methods=['GET'])
+@auth_required
+def poll_debug_session(session_id):
+    """Return buffered DAP messages since `offset` and the done flag."""
+    session = _DEBUG_SESSIONS.get(session_id)
+    if not session:
+        return jsonify({'error': 'Session not found'}), 404
+    offset = int(request.args.get('offset', 0))
+    with session._lock:
+        msgs = list(session.messages[offset:])
+    return jsonify({'messages': msgs, 'done': session.done})
+
+
+@app.route('/api/debug/<session_id>', methods=['DELETE'])
+@auth_required
+def stop_debug_session(session_id):
+    """Terminate the debug session and remove its container."""
+    session = _DEBUG_SESSIONS.pop(session_id, None)
+    if session:
+        session.kill()
     return jsonify({'ok': True})
 
 

@@ -1,0 +1,85 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "irc_webchat",
+  "description": "IRC Webchat access permissions",
+  "permissions": [
+    {
+      "id": "irc.channel.view",
+      "name": "View IRC Channels",
+      "description": "View IRC channels",
+      "resource": "irc_channel",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "irc.channel.join",
+      "name": "Join IRC Channels",
+      "description": "Join IRC channels",
+      "resource": "irc_channel",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "irc.message.send",
+      "name": "Send IRC Messages",
+      "description": "Send IRC messages",
+      "resource": "irc_message",
+      "action": "create",
+      "scope": "channel",
+      "minLevel": 2
+    },
+    {
+      "id": "irc.channel.create",
+      "name": "Create IRC Channels",
+      "description": "Create IRC channels",
+      "resource": "irc_channel",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "irc.channel.moderate",
+      "name": "Moderate IRC Channels",
+      "description": "Moderate IRC channels (kick, ban, mute users)",
+      "resource": "irc_channel",
+      "action": "manage",
+      "scope": "channel",
+      "minLevel": 3
+    },
+    {
+      "id": "irc.channel.delete",
+      "name": "Delete IRC Channels",
+      "description": "Delete IRC channels",
+      "resource": "irc_channel",
+      "action": "delete",
+      "scope": "global",
+      "minLevel": 4
+    }
+  ],
+  "resources": [
+    {
+      "id": "irc_channel",
+      "name": "IRC Channel",
+      "type": "custom",
+      "description": "IRC chat channel",
+      "actions": ["read", "execute", "create", "manage", "delete"]
+    },
+    {
+      "id": "irc_message",
+      "name": "IRC Message",
+      "type": "custom",
+      "description": "IRC chat message",
+      "actions": ["read", "create", "delete"]
+    },
+    {
+      "id": "irc_membership",
+      "name": "IRC Membership",
+      "type": "custom",
+      "description": "IRC channel membership",
+      "actions": ["read", "create", "delete"]
+    }
+  ]
+}

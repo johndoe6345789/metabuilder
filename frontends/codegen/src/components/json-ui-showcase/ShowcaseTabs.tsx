@@ -1,8 +1,8 @@
-import { Tabs, Tab, TabPanel } from '@metabuilder/fakemui/navigation'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@metabuilder/fakemui/surfaces'
-import { Button } from '@metabuilder/fakemui/inputs'
+import { Tabs, Tab, TabPanel } from '@metabuilder/m3/navigation'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@metabuilder/m3/surfaces'
+import { Button } from '@metabuilder/m3/inputs'
 import { JSONUIPage } from '@/components/JSONUIPage'
-import { Eye, Code } from '@metabuilder/fakemui/icons'
+import { Eye, Code } from '@metabuilder/m3/icons'
 import { ShowcaseExample, ShowcaseTabsCopy } from './types'
 
 interface ShowcaseTabsProps {

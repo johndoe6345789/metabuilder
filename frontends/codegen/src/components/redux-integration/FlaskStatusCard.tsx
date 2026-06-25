@@ -1,8 +1,8 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@metabuilder/fakemui/surfaces'
-import { Button } from '@metabuilder/fakemui/inputs'
-import { Badge } from '@metabuilder/fakemui/data-display'
-import { Separator } from '@metabuilder/fakemui/data-display'
-import { ArrowsClockwise, CheckCircle, CloudArrowUp, XCircle } from '@metabuilder/fakemui/icons'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@metabuilder/m3/surfaces'
+import { Button } from '@metabuilder/m3/inputs'
+import { Badge } from '@metabuilder/m3/data-display'
+import { Separator } from '@metabuilder/m3/data-display'
+import { ArrowsClockwise, CheckCircle, CloudArrowUp, XCircle } from '@metabuilder/m3/icons'
 import reduxIntegrationCopy from '@/data/redux-integration-demo.json'
 import type { DBALConfigResponse } from '@/store/middleware/dbalSync'
 

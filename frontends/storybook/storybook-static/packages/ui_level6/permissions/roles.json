@@ -1,0 +1,92 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "ui_level6",
+  "description": "Supergod panel access permissions",
+  "permissions": [
+    {
+      "id": "level6.panel.view",
+      "name": "View Supergod Panel",
+      "description": "View Supergod panel",
+      "resource": "level6",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 6
+    },
+    {
+      "id": "level6.tenants.create",
+      "name": "Create Tenants",
+      "description": "Create tenants",
+      "resource": "tenants",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 6
+    },
+    {
+      "id": "level6.tenants.manage",
+      "name": "Manage Tenants",
+      "description": "Manage tenants",
+      "resource": "tenants",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 6
+    },
+    {
+      "id": "level6.tenants.delete",
+      "name": "Delete Tenants",
+      "description": "Delete tenants",
+      "resource": "tenants",
+      "action": "delete",
+      "scope": "global",
+      "minLevel": 6
+    },
+    {
+      "id": "level6.ownership.transfer",
+      "name": "Transfer Ownership",
+      "description": "Transfer ownership",
+      "resource": "ownership",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 6
+    },
+    {
+      "id": "level6.system.admin",
+      "name": "System Administration",
+      "description": "System administration",
+      "resource": "system",
+      "action": "admin",
+      "scope": "global",
+      "minLevel": 6
+    }
+  ],
+  "resources": [
+    {
+      "id": "level6",
+      "name": "Level 6 Panel",
+      "type": "component",
+      "description": "Supergod panel resources",
+      "actions": ["read"]
+    },
+    {
+      "id": "tenants",
+      "name": "Tenants",
+      "type": "entity",
+      "description": "Tenant management resources",
+      "actions": ["create", "read", "update", "delete"]
+    },
+    {
+      "id": "ownership",
+      "name": "Ownership",
+      "type": "custom",
+      "description": "Ownership transfer resources",
+      "actions": ["manage"]
+    },
+    {
+      "id": "system",
+      "name": "System",
+      "type": "custom",
+      "description": "System administration resources",
+      "actions": ["admin", "read"]
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+# metabuilder/base-conan-dbal
+#
+# Conan C++ packages for the DBAL daemon only (drogon, sqlite3, postgres,
+# mongo, redis, cassandra adapters, gtest, boost, fmt, spdlog, ...). Split
+# out of the former monolithic base-conan-deps. Consumed by the devcontainer
+# and direct DBAL C++ builds; not on the app image pipeline path.
+#
+# Build:  docker build -f Dockerfile.conan-dbal -t metabuilder/base-conan-dbal:latest ../../
+
+ARG BASE_REGISTRY=metabuilder
+FROM ${BASE_REGISTRY}/base-apt:latest
+
+# Install Conan 2 with retry
+RUN for i in 1 2 3 4 5; do \
+      pip3 install --break-system-packages conan==2.* \
+      && break \
+      || (echo "pip install failed (attempt $i/5), retrying in $((i*10))s..." && sleep $((i*10))); \
+    done
+
+# Detect Conan profile (must run inside the container, not from host cache)
+RUN conan profile detect --force
+
+# Route Conan through the pkgrepo proxy/cache when CONAN_REMOTE is set (empty =
+# default conancenter). Base builds run with --network=host, so a host URL like
+# http://localhost:5002/conan is reachable.
+ARG CONAN_REMOTE=""
+RUN if [ -n "$CONAN_REMOTE" ]; then \
+      conan remote add pkgrepo "$CONAN_REMOTE" --force && \
+      conan remote disable conancenter; \
+    fi
+
+# ---- DBAL daemon ----
+COPY libraries/dbal/production/build-config/conanfile.py /deps/dbal/conanfile.py
+
+RUN mkdir -p /tmp/dbal-build && \
+    for i in 1 2 3 4 5; do \
+      conan install /deps/dbal/ \
+        --output-folder=/tmp/dbal-build \
+        --build=missing \
+        -s build_type=Release \
+        -c tools.system.package_manager:mode=install \
+      && break \
+      || (echo "conan install (dbal) failed attempt $i/5, retrying in $((i*10))s..." && sleep $((i*10))); \
+    done
+
+# Keep only the Conan package cache in /root/.conan2
+RUN rm -rf /tmp/dbal-build
+
+LABEL org.metabuilder.image="base-conan-dbal" \
+      org.metabuilder.description="Pre-built Conan C++ packages (DBAL daemon)"

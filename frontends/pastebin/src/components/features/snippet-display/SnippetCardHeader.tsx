@@ -1,4 +1,4 @@
-import { Chip, Checkbox } from '@metabuilder/components/fakemui'
+import { Chip, Checkbox } from '@metabuilder/components/m3'
 import { Snippet } from '@/lib/types'
 import { LANGUAGE_COLORS } from '@/lib/config'
 import styles from './snippet-card-header.module.scss'
@@ -16,7 +16,7 @@ export function SnippetCardHeader({
   description,
   selectionMode,
   isSelected,
-  onToggleSelect
+  onToggleSelect,
 }: SnippetCardHeaderProps) {
   return (
     <div className={styles.header}>
@@ -24,8 +24,11 @@ export function SnippetCardHeader({
         {selectionMode && (
           <Checkbox
             checked={isSelected}
-            onChange={(e) => { e.stopPropagation(); onToggleSelect() }}
-            onClick={(e) => e.stopPropagation()}
+            onChange={e => {
+              e.stopPropagation()
+              onToggleSelect()
+            }}
+            onClick={e => e.stopPropagation()}
             className={styles.checkboxWrapper}
             data-testid={`snippet-select-checkbox-${snippet.id}`}
             aria-label={`Select snippet: ${snippet.title}`}
@@ -50,6 +53,7 @@ export function SnippetCardHeader({
       </div>
       <Chip
         label={snippet.language}
+        // eslint-disable-next-line max-len
         className={`${styles.chip} ${LANGUAGE_COLORS[snippet.language] || LANGUAGE_COLORS['Other']}`}
         data-testid={`snippet-language-badge-${snippet.id}`}
         aria-label={`Language: ${snippet.language}`}

@@ -16,7 +16,7 @@ import {
   Switch,
   Divider,
   Chip,
-} from '@/fakemui'
+} from '@/m3'
 
 function SettingsContent() {
   const auth = useAuthContext()

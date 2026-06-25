@@ -1,9 +1,9 @@
 # Build the metabuilder-cli C++ binary
 # Context: monorepo root (..)
-# Requires: metabuilder/base-conan-deps:latest base image
+# Requires: metabuilder/base-conan-cli:latest base image
 
 ARG BASE_REGISTRY=metabuilder
-FROM ${BASE_REGISTRY}/base-conan-deps:latest AS builder
+FROM ${BASE_REGISTRY}/base-conan-cli:latest AS builder
 
 # Copy CLI source
 COPY frontends/cli/ /app/cli/

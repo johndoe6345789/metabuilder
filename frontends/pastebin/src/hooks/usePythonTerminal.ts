@@ -1,5 +1,6 @@
-import { useState, useRef } from 'react'
-import { startInteractiveSession, pollSession, sendSessionInput } from '@/lib/flask-runner'
+import { useState } from 'react'
+import { startInteractiveSession, sendSessionInput } from '@/lib/flask-runner'
+import { useSessionPoller } from './useSessionPoller'
 
 interface TerminalLine {
   type: 'output' | 'error' | 'input-prompt' | 'input-value'
@@ -10,10 +11,14 @@ interface TerminalLine {
 // Maps backend line types to the terminal line types the UI expects
 function mapType(backendType: string): TerminalLine['type'] {
   switch (backendType) {
-    case 'err':         return 'error'
-    case 'prompt':      return 'input-prompt'
-    case 'input-echo':  return 'input-value'
-    default:            return 'output'
+    case 'err':
+      return 'error'
+    case 'prompt':
+      return 'input-prompt'
+    case 'input-echo':
+      return 'input-value'
+    default:
+      return 'output'
   }
 }
 
@@ -25,60 +30,39 @@ export function usePythonTerminal() {
   const [inputValue, setInputValue] = useState('')
   const [waitingForInput, setWaitingForInput] = useState(false)
 
-  const sessionIdRef = useRef<string | null>(null)
-  const offsetRef = useRef(0)
-  const pollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
   function addLine(type: TerminalLine['type'], content: string) {
-    setLines((prev) => [...prev, { type, content, id: `${Date.now()}-${Math.random()}` }])
+    setLines(prev => [
+      ...prev,
+      { type, content, id: `${Date.now()}-${Math.random()}` },
+    ])
   }
 
-  function stopPolling() {
-    if (pollTimerRef.current) {
-      clearTimeout(pollTimerRef.current)
-      pollTimerRef.current = null
-    }
-  }
-
-  async function poll() {
-    const sid = sessionIdRef.current
-    if (!sid) return
-
-    try {
-      const result = await pollSession(sid, offsetRef.current)
-      offsetRef.current += result.output.length
-
+  const { sessionIdRef, begin, stop } = useSessionPoller(
+    result => {
       for (const line of result.output) {
         addLine(mapType(line.type), line.text)
       }
-
       setWaitingForInput(result.waiting_for_input)
-
-      if (result.done) {
-        setIsRunning(false)
-        stopPolling()
-        return
-      }
-    } catch {
-      // transient network error — keep polling
-    }
-
-    pollTimerRef.current = setTimeout(poll, POLL_INTERVAL_MS)
-  }
+      if (result.done) setIsRunning(false)
+    },
+    () => {},
+    POLL_INTERVAL_MS,
+  )
 
   const handleRun = async (code: string) => {
-    stopPolling()
+    stop()
     setLines([])
     setWaitingForInput(false)
     setInputValue('')
-    offsetRef.current = 0
     sessionIdRef.current = null
     setIsRunning(true)
 
     try {
-      const sid = await startInteractiveSession({ language: 'python', files: [{ name: 'main.py', content: code }] })
-      sessionIdRef.current = sid
-      pollTimerRef.current = setTimeout(poll, POLL_INTERVAL_MS)
+      const sid = await startInteractiveSession({
+        language: 'python',
+        files: [{ name: 'main.py', content: code }],
+      })
+      begin(sid)
     } catch (err) {
       addLine('error', err instanceof Error ? err.message : String(err))
       setIsRunning(false)

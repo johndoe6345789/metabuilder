@@ -1,0 +1,21 @@
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+
+  @media (min-width: 900px) {
+    flex-direction: row;
+  }
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+}
+
+.hint {
+  margin-top: 8px;
+  font-size: 0.875rem;
+}

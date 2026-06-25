@@ -1,0 +1,97 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Codegen Studio",
+  "description": "Generate Next.js, React, CLI starters, and MetaBuilder packages from configurable templates",
+  "stories": [
+    {
+      "name": "CodegenStudio",
+      "render": "init",
+      "description": "Main Codegen Studio interface with template selection and generation",
+      "args": {
+        "projectName": "my-app",
+        "runtime": "web"
+      }
+    },
+    {
+      "name": "TemplateSelector",
+      "render": "blueprint",
+      "description": "Template selection and project configuration form",
+      "args": {
+        "project_name": "nebula-launch",
+        "runtime": "web",
+        "description": "A modern web application starter"
+      }
+    },
+    {
+      "name": "PackageGenerator",
+      "render": "generator",
+      "description": "Package generation with progress tracking",
+      "type": "function",
+      "args": {
+        "packageId": "my_package",
+        "category": "ui"
+      }
+    }
+  ],
+  "renders": {
+    "init": {
+      "description": "Initialize and render main Codegen Studio view",
+      "featured": true
+    },
+    "blueprint": {
+      "description": "Build and render project blueprint form"
+    },
+    "generator": {
+      "description": "Package generation interface with validation"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "god-user",
+      "username": "god_user",
+      "level": 5,
+      "email": "god@example.com"
+    },
+    "tenant": {
+      "id": "dev-tenant",
+      "name": "Development Organization"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "God User",
+      "description": "Full access to all Codegen Studio features",
+      "context": {
+        "user": {
+          "username": "god",
+          "level": 5
+        }
+      }
+    },
+    {
+      "name": "Supergod User",
+      "description": "Complete system access including advanced templates",
+      "context": {
+        "user": {
+          "username": "supergod",
+          "level": 6
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["init", "blueprint", "generator"],
+    "ignoredScripts": ["tests", "types", "permissions", "db", "zip_plan"]
+  },
+  "parameters": {
+    "layout": "padded",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#f8fafc" },
+        { "name": "dark", "value": "#0f172a" }
+      ]
+    }
+  }
+}

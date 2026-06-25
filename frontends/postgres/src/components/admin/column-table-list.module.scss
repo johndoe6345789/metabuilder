@@ -1,0 +1,23 @@
+.paper {
+  width: 100%;
+  overflow: auto;
+  max-height: 280px;
+
+  @media (min-width: 900px) {
+    width: 220px;
+    flex-shrink: 0;
+    max-height: 75vh;
+  }
+}
+
+.icon {
+  min-width: 32px !important;
+}
+
+.iconSmall {
+  font-size: 16px !important;
+}
+
+.itemText :global(.MuiListItemText-primary) {
+  font-size: 0.8125rem;
+}

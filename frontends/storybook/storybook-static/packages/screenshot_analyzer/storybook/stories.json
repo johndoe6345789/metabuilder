@@ -1,0 +1,119 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Screenshot Analyzer",
+  "description": "Capture and analyze pages with local analysis",
+  "stories": [
+    {
+      "name": "ScreenshotAnalyzer",
+      "render": "init",
+      "description": "Main screenshot analyzer component",
+      "type": "function"
+    },
+    {
+      "name": "UploadSection",
+      "render": "capture",
+      "description": "Screenshot capture controls",
+      "args": {
+        "screenshotData": null,
+        "isCapturing": false,
+        "isAnalyzing": false
+      }
+    },
+    {
+      "name": "UploadSectionWithScreenshot",
+      "render": "capture",
+      "description": "Upload section with captured screenshot",
+      "args": {
+        "screenshotData": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+        "isCapturing": false,
+        "isAnalyzing": false
+      }
+    },
+    {
+      "name": "ResultPanel",
+      "render": "analyze",
+      "description": "Analysis results display",
+      "args": {
+        "analysisReport": "## Page Analysis\n\n### Structure\n- **Headings**: 5\n- **Paragraphs**: 12\n- **Links**: 23\n\n### Recommendations\n- Add alt text to images\n- Improve heading hierarchy"
+      }
+    },
+    {
+      "name": "PageInfo",
+      "render": "page_info",
+      "description": "Page information display",
+      "args": {
+        "pageTitle": "Example Page",
+        "pageUrl": "https://example.com/page",
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+      }
+    }
+  ],
+  "renders": {
+    "init": {
+      "description": "Main screenshot analyzer component",
+      "featured": true
+    },
+    "capture": {
+      "description": "Screenshot capture controls"
+    },
+    "analyze": {
+      "description": "Analysis results and reports"
+    },
+    "page_info": {
+      "description": "Page information display"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "demo-user",
+      "username": "demo_user",
+      "level": 5,
+      "email": "demo@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "God User",
+      "description": "Full access to screenshot analyzer",
+      "context": {
+        "user": {
+          "username": "god_user",
+          "level": 5
+        }
+      }
+    },
+    {
+      "name": "Supergod User",
+      "description": "Maximum access level",
+      "context": {
+        "user": {
+          "username": "supergod",
+          "level": 6
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["init", "capture", "analyze", "page_info"],
+    "ignoredScripts": ["tests"]
+  },
+  "parameters": {
+    "layout": "padded",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#f5f5f5" },
+        { "name": "dark", "value": "#1a1a1a" }
+      ]
+    }
+  }
+}

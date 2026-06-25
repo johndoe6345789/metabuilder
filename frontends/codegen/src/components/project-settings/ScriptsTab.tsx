@@ -1,8 +1,8 @@
-import { Button } from '@metabuilder/fakemui/inputs'
-import { Card, CardContent } from '@metabuilder/fakemui/surfaces'
+import { Button } from '@metabuilder/m3/inputs'
+import { Card, CardContent } from '@metabuilder/m3/surfaces'
 import { NpmSettings } from '@/types/project'
 import projectSettingsCopy from '@/data/project-settings.json'
-import { Code, Plus, Trash } from '@metabuilder/fakemui/icons'
+import { Code, Plus, Trash } from '@metabuilder/m3/icons'
 
 interface ScriptsTabProps {
   npmSettings: NpmSettings

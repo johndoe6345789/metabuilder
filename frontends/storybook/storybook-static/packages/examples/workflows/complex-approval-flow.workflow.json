@@ -1,0 +1,633 @@
+{
+  "id": "wf-001-approval-flow",
+  "name": "Complex Approval Workflow with Notifications",
+  "description": "Multi-stage approval workflow with parallel validations, conditional routing, and retry logic",
+  "version": "3.0.0",
+  "tenantId": "acme-corp",
+  "createdBy": "user-123",
+  "createdAt": "2026-01-21T10:00:00Z",
+  "updatedAt": "2026-01-21T10:00:00Z",
+  "active": true,
+  "locked": false,
+  "tags": ["approval", "workflow", "multi-stage"],
+  "category": "approval",
+  "settings": {
+    "timezone": "America/New_York",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveExecutionData": "all",
+    "maxConcurrentExecutions": 5,
+    "debugMode": false,
+    "enableNotifications": true,
+    "notificationChannels": ["email", "webhook"]
+  },
+  "nodes": [
+    {
+      "id": "trigger-webhook",
+      "name": "Approval Request Received",
+      "type": "trigger",
+      "typeVersion": 1,
+      "nodeType": "webhook-trigger",
+      "position": [50, 150],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "/workflows/approvals"
+      },
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "maxConnections": -1
+        }
+      ],
+      "disabled": false,
+      "skipOnFail": false,
+      "alwaysOutputData": true,
+      "maxTries": 1,
+      "waitBetweenTries": 0,
+      "continueOnError": false,
+      "onError": "stopWorkflow",
+      "notes": "Receives approval requests from external system",
+      "notesInFlow": true,
+      "color": "#3498db",
+      "metadata": {}
+    },
+    {
+      "id": "validate-request",
+      "name": "Validate Request Data",
+      "type": "operation",
+      "typeVersion": 1,
+      "nodeType": "dbal-read",
+      "position": [250, 150],
+      "parameters": {
+        "entity": "ApprovalRequest",
+        "operation": "validate",
+        "rules": {
+          "requestId": "required|uuid",
+          "amount": "required|number|min:1|max:1000000",
+          "requesterEmail": "required|email"
+        }
+      },
+      "inputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "maxConnections": -1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "maxConnections": -1,
+          "label": "Valid"
+        },
+        {
+          "name": "error",
+          "type": "error",
+          "maxConnections": -1,
+          "label": "Invalid"
+        }
+      ],
+      "disabled": false,
+      "skipOnFail": false,
+      "alwaysOutputData": false,
+      "maxTries": 1,
+      "waitBetweenTries": 0,
+      "continueOnError": false,
+      "onError": "continueErrorOutput",
+      "metadata": {}
+    },
+    {
+      "id": "parallel-checks",
+      "name": "Run Parallel Validations",
+      "type": "parallel",
+      "typeVersion": 1,
+      "nodeType": "parallel",
+      "position": [450, 150],
+      "parameters": {
+        "tasks": [
+          {
+            "nodeId": "check-budget",
+            "type": "main"
+          },
+          {
+            "nodeId": "check-user-permissions",
+            "type": "main"
+          },
+          {
+            "nodeId": "check-fraud-rules",
+            "type": "main"
+          }
+        ]
+      },
+      "inputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "maxConnections": -1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "maxConnections": -1
+        }
+      ],
+      "disabled": false,
+      "skipOnFail": false,
+      "alwaysOutputData": false,
+      "maxTries": 1,
+      "waitBetweenTries": 0,
+      "continueOnError": false,
+      "onError": "stopWorkflow",
+      "metadata": {}
+    },
+    {
+      "id": "check-budget",
+      "name": "Check Available Budget",
+      "type": "operation",
+      "typeVersion": 1,
+      "nodeType": "dbal-read",
+      "position": [450, 50],
+      "parameters": {
+        "entity": "BudgetAllocation",
+        "operation": "read",
+        "filter": {
+          "departmentId": "{{ $json.departmentId }}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "maxConnections": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "maxConnections": -1
+        }
+      ],
+      "disabled": false,
+      "skipOnFail": false,
+      "alwaysOutputData": false,
+      "retryPolicy": {
+        "enabled": true,
+        "maxAttempts": 3,
+        "backoffType": "exponential",
+        "initialDelay": 1000,
+        "maxDelay": 30000,
+        "retryableErrors": ["TIMEOUT", "TEMPORARY_FAILURE"],
+        "retryableStatusCodes": [408, 429, 500, 502, 503]
+      },
+      "maxTries": 3,
+      "waitBetweenTries": 1000,
+      "continueOnError": false,
+      "onError": "continueErrorOutput",
+      "notes": "Checks if department has sufficient budget",
+      "notesInFlow": false,
+      "metadata": {}
+    },
+    {
+      "id": "check-user-permissions",
+      "name": "Verify User Permissions",
+      "type": "operation",
+      "typeVersion": 1,
+      "nodeType": "dbal-read",
+      "position": [450, 150],
+      "parameters": {
+        "entity": "UserRole",
+        "operation": "read",
+        "filter": {
+          "userId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "maxConnections": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "maxConnections": -1
+        }
+      ],
+      "disabled": false,
+      "skipOnFail": false,
+      "alwaysOutputData": false,
+      "maxTries": 1,
+      "waitBetweenTries": 0,
+      "continueOnError": false,
+      "onError": "continueErrorOutput",
+      "metadata": {}
+    },
+    {
+      "id": "check-fraud-rules",
+      "name": "Run Fraud Detection",
+      "type": "operation",
+      "typeVersion": 1,
+      "nodeType": "http-request",
+      "position": [450, 250],
+      "parameters": {
+        "url": "{{ $env.FRAUD_API_URL }}/check",
+        "method": "POST",
+        "body": {
+          "amount": "{{ $json.amount }}",
+          "requesterEmail": "{{ $json.requesterEmail }}",
+          "metadata": "{{ $json }}"
+        },
+        "headers": {
+          "Authorization": "Bearer {{ $env.FRAUD_API_KEY }}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "maxConnections": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "maxConnections": -1
+        },
+        {
+          "name": "error",
+          "type": "error",
+          "maxConnections": -1
+        }
+      ],
+      "credentials": {
+        "api": {
+          "id": "cred-fraud-api",
+          "name": "Fraud API Key"
+        }
+      },
+      "disabled": false,
+      "skipOnFail": false,
+      "alwaysOutputData": false,
+      "timeout": 30,
+      "maxTries": 2,
+      "waitBetweenTries": 2000,
+      "continueOnError": false,
+      "onError": "continueErrorOutput",
+      "metadata": {}
+    },
+    {
+      "id": "all-checks-passed",
+      "name": "All Validations Passed?",
+      "type": "logic",
+      "typeVersion": 1,
+      "nodeType": "condition",
+      "position": [650, 150],
+      "parameters": {
+        "condition": "{{ $steps['check-budget'].success && $steps['check-user-permissions'].success && $steps['check-fraud-rules'].success }}"
+      },
+      "inputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "maxConnections": -1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "main",
+          "type": "success",
+          "index": 0,
+          "label": "Yes"
+        },
+        {
+          "name": "main",
+          "type": "condition",
+          "index": 1,
+          "label": "No"
+        }
+      ],
+      "disabled": false,
+      "skipOnFail": false,
+      "alwaysOutputData": false,
+      "continueOnError": false,
+      "onError": "stopWorkflow",
+      "metadata": {}
+    },
+    {
+      "id": "send-for-approval",
+      "name": "Create Approval Record",
+      "type": "operation",
+      "typeVersion": 1,
+      "nodeType": "dbal-write",
+      "position": [850, 50],
+      "parameters": {
+        "entity": "Approval",
+        "operation": "create",
+        "data": {
+          "requestId": "{{ $json.requestId }}",
+          "amount": "{{ $json.amount }}",
+          "requesterEmail": "{{ $json.requesterEmail }}",
+          "status": "pending",
+          "createdAt": "{{ $now }}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "maxConnections": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "maxConnections": -1
+        }
+      ],
+      "disabled": false,
+      "skipOnFail": false,
+      "alwaysOutputData": false,
+      "maxTries": 1,
+      "waitBetweenTries": 0,
+      "continueOnError": false,
+      "onError": "stopWorkflow",
+      "metadata": {}
+    },
+    {
+      "id": "notify-approvers",
+      "name": "Send Approval Notification",
+      "type": "action",
+      "typeVersion": 1,
+      "nodeType": "email-send",
+      "position": [850, 150],
+      "parameters": {
+        "to": "{{ $env.APPROVER_EMAIL }}",
+        "subject": "New Approval Request: ${{ $json.amount }}",
+        "template": "approval-notification",
+        "data": {
+          "requestId": "{{ $json.requestId }}",
+          "amount": "{{ $json.amount }}",
+          "requester": "{{ $json.requesterEmail }}",
+          "approvalLink": "{{ $env.APP_URL }}/approvals/{{ $steps['send-for-approval'].output.id }}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "maxConnections": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "maxConnections": -1
+        }
+      ],
+      "disabled": false,
+      "skipOnFail": false,
+      "alwaysOutputData": false,
+      "maxTries": 2,
+      "waitBetweenTries": 3000,
+      "continueOnError": true,
+      "onError": "continueRegularOutput",
+      "metadata": {}
+    },
+    {
+      "id": "send-error-notification",
+      "name": "Notify on Validation Failure",
+      "type": "action",
+      "typeVersion": 1,
+      "nodeType": "email-send",
+      "position": [850, 250],
+      "parameters": {
+        "to": "{{ $json.requesterEmail }}",
+        "subject": "Approval Request Failed Validation",
+        "template": "approval-failure",
+        "data": {
+          "requestId": "{{ $json.requestId }}",
+          "reason": "{{ $steps['all-checks-passed'].error.message }}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "maxConnections": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "maxConnections": -1
+        }
+      ],
+      "disabled": false,
+      "skipOnFail": false,
+      "alwaysOutputData": false,
+      "continueOnError": true,
+      "onError": "continueRegularOutput",
+      "metadata": {}
+    },
+    {
+      "id": "return-result",
+      "name": "Return Result",
+      "type": "action",
+      "typeVersion": 1,
+      "nodeType": "webhook-response",
+      "position": [1050, 150],
+      "parameters": {
+        "statusCode": 200,
+        "body": {
+          "success": true,
+          "approvalId": "{{ $steps['send-for-approval'].output.id }}",
+          "message": "Approval request created successfully"
+        }
+      },
+      "inputs": [
+        {
+          "name": "main",
+          "type": "main",
+          "maxConnections": -1
+        }
+      ],
+      "outputs": [],
+      "disabled": false,
+      "skipOnFail": false,
+      "alwaysOutputData": false,
+      "continueOnError": false,
+      "onError": "stopWorkflow",
+      "metadata": {}
+    }
+  ],
+  "connections": {
+    "trigger-webhook": {
+      "main": {
+        "0": [
+          {
+            "node": "validate-request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "validate-request": {
+      "main": {
+        "0": [
+          {
+            "node": "parallel-checks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      },
+      "error": {
+        "0": [
+          {
+            "node": "send-error-notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "parallel-checks": {
+      "main": {
+        "0": [
+          {
+            "node": "all-checks-passed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "all-checks-passed": {
+      "main": {
+        "0": [
+          {
+            "node": "send-for-approval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      },
+      "error": {
+        "0": [
+          {
+            "node": "send-error-notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "send-for-approval": {
+      "main": {
+        "0": [
+          {
+            "node": "notify-approvers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "notify-approvers": {
+      "main": {
+        "0": [
+          {
+            "node": "return-result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    }
+  },
+  "triggers": [
+    {
+      "nodeId": "trigger-webhook",
+      "kind": "webhook",
+      "enabled": true,
+      "webhookId": "wh-001",
+      "webhookMethods": ["POST"],
+      "metadata": {
+        "description": "Approval request webhook"
+      }
+    }
+  ],
+  "variables": {
+    "approverEmail": {
+      "name": "approverEmail",
+      "type": "string",
+      "description": "Email of approval authority",
+      "required": true,
+      "scope": "workflow"
+    },
+    "fraudThreshold": {
+      "name": "fraudThreshold",
+      "type": "number",
+      "description": "Fraud risk score threshold",
+      "defaultValue": 0.8,
+      "scope": "workflow"
+    }
+  },
+  "errorHandling": {
+    "default": "stopWorkflow",
+    "errorLogger": "send-error-notification",
+    "errorNotification": true,
+    "notifyChannels": ["email"]
+  },
+  "retryPolicy": {
+    "enabled": true,
+    "maxAttempts": 3,
+    "backoffType": "exponential",
+    "initialDelay": 1000,
+    "maxDelay": 30000,
+    "retryableErrors": ["TIMEOUT", "TEMPORARY_FAILURE"],
+    "retryableStatusCodes": [408, 429, 500, 502, 503, 504]
+  },
+  "rateLimiting": {
+    "enabled": true,
+    "requestsPerWindow": 100,
+    "windowSeconds": 60,
+    "key": "tenant",
+    "onLimitExceeded": "queue"
+  },
+  "credentials": [],
+  "metadata": {
+    "category": "business-process",
+    "department": "finance",
+    "sla": "4-hours",
+    "owner": "finance-team"
+  },
+  "executionLimits": {
+    "maxExecutionTime": 3600,
+    "maxMemoryMb": 512,
+    "maxDataSizeMb": 50,
+    "maxArrayItems": 10000
+  },
+  "multiTenancy": {
+    "enforced": true,
+    "tenantIdField": "tenantId",
+    "restrictNodeTypes": ["raw-sql", "eval", "shell-exec"],
+    "allowCrossTenantAccess": false,
+    "auditLogging": true
+  },
+  "versionHistory": []
+}

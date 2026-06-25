@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Root component box -->
+  <rect x="22" y="6" width="20" height="12" rx="2" fill="none"/>
+  
+  <!-- Connection lines -->
+  <path d="M32 18 L32 24 M32 24 L16 24 L16 30 M32 24 L48 24 L48 30" stroke-width="1.5"/>
+  
+  <!-- Left child component -->
+  <rect x="6" y="30" width="20" height="12" rx="2" fill="none"/>
+  
+  <!-- Right child component -->
+  <rect x="38" y="30" width="20" height="12" rx="2" fill="none"/>
+  
+  <!-- Sub-children connections -->
+  <path d="M16 42 L16 48 M16 48 L10 48 L10 52 M16 48 L22 48 L22 52" stroke-width="1.5"/>
+  
+  <!-- Grandchildren components -->
+  <rect x="4" y="52" width="12" height="8" rx="1" fill="none"/>
+  <rect x="18" y="52" width="12" height="8" rx="1" fill="none"/>
+  
+  <!-- Add button indicator -->
+  <circle cx="48" cy="50" r="6" fill="none"/>
+  <path d="M48 47 L48 53 M45 50 L51 50" stroke-width="1.5"/>
+</svg>

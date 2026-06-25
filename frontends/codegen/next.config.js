@@ -9,6 +9,7 @@ const nextConfig = {
   basePath: '/codegen',
   output: 'standalone',
   reactStrictMode: true,
+  allowedDevOrigins: ['metabuilder.wardcrew.com', 'wardcrew.com'],
   typescript: {
     // Pre-existing type errors from Vite migration — Vite used tsc --noCheck
     ignoreBuildErrors: true,
@@ -16,7 +17,7 @@ const nextConfig = {
   // Transpile local monorepo packages (builds from source)
   transpilePackages: [
     // Root shared packages
-    '@metabuilder/fakemui',
+    '@metabuilder/m3',
     '@metabuilder/components',
     '@metabuilder/hooks',
     '@metabuilder/types',
@@ -48,25 +49,25 @@ const nextConfig = {
     resolveAlias: {
       '@': './frontends/codegen/src',
       // FakeMUI — root + subpath exports
-      '@metabuilder/fakemui': './components/fakemui',
-      '@metabuilder/fakemui/scss': './components/fakemui/scss/index.scss',
-      '@metabuilder/fakemui/icons': './components/fakemui/icons/index.ts',
-      '@metabuilder/fakemui/hooks': './components/fakemui/hooks.ts',
-      '@metabuilder/fakemui/atoms': './components/fakemui/atoms/index.js',
-      '@metabuilder/fakemui/layout': './components/fakemui/layout/index.ts',
-      '@metabuilder/fakemui/data-display': './components/fakemui/data-display/index.ts',
-      '@metabuilder/fakemui/inputs': './components/fakemui/inputs/index.ts',
-      '@metabuilder/fakemui/surfaces': './components/fakemui/surfaces/index.ts',
-      '@metabuilder/fakemui/feedback': './components/fakemui/feedback/index.ts',
-      '@metabuilder/fakemui/navigation': './components/fakemui/navigation/index.ts',
-      '@metabuilder/fakemui/utils': './components/fakemui/utils/index.js',
+      '@metabuilder/m3': './components/m3',
+      '@metabuilder/m3/scss': './components/m3/scss/index.scss',
+      '@metabuilder/m3/icons': './components/m3/icons/index.ts',
+      '@metabuilder/m3/hooks': './components/m3/hooks.ts',
+      '@metabuilder/m3/atoms': './components/m3/atoms/index.js',
+      '@metabuilder/m3/layout': './components/m3/layout/index.ts',
+      '@metabuilder/m3/data-display': './components/m3/data-display/index.ts',
+      '@metabuilder/m3/inputs': './components/m3/inputs/index.ts',
+      '@metabuilder/m3/surfaces': './components/m3/surfaces/index.ts',
+      '@metabuilder/m3/feedback': './components/m3/feedback/index.ts',
+      '@metabuilder/m3/navigation': './components/m3/navigation/index.ts',
+      '@metabuilder/m3/utils': './components/m3/utils/index.js',
       // Components — resolve to source (bypasses broken dist SCSS imports)
       '@metabuilder/components': './components/index.tsx',
       '@metabuilder/components/cards': './components/cards/index.ts',
       '@metabuilder/components/layout': './components/layout/index.ts',
       '@metabuilder/components/navigation': './components/navigation/index.ts',
-      '@metabuilder/components/fakemui': './components/fakemui',
-      '@metabuilder/components/fakemui/database': './components/fakemui/database',
+      '@metabuilder/components/m3': './components/m3',
+      '@metabuilder/components/m3/database': './components/m3/database',
       // Root shared packages
       '@metabuilder/hooks': './hooks',
       '@metabuilder/hooks/useFileTree': './hooks/useFileTree',
@@ -77,8 +78,8 @@ const nextConfig = {
       '@metabuilder/interfaces/templates': './interfaces/templates.ts',
       '@metabuilder/interfaces/workspace': './interfaces/workspace.ts',
       // Utils — maps to FakeMUI utils
-      '@metabuilder/utils': './components/fakemui/utils',
-      '@metabuilder/utils/accessibility': './components/fakemui/utils/accessibility',
+      '@metabuilder/utils': './components/m3/utils',
+      '@metabuilder/utils/accessibility': './components/m3/utils/accessibility',
       // SCSS — shared styles from monorepo root
       '@metabuilder/scss': './scss',
       '@metabuilder/scss/atoms/layout.module.scss': './scss/atoms/layout.module.scss',

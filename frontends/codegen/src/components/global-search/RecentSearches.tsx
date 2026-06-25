@@ -1,7 +1,7 @@
-import { ClockCounterClockwise, X } from '@metabuilder/fakemui/icons'
-import { Chip } from '@metabuilder/fakemui/data-display'
-import { Button } from '@metabuilder/fakemui/inputs'
-import { Separator } from '@metabuilder/fakemui/data-display'
+import { ClockCounterClockwise, X } from '@metabuilder/m3/icons'
+import { Chip } from '@metabuilder/m3/data-display'
+import { Button } from '@metabuilder/m3/inputs'
+import { Separator } from '@metabuilder/m3/data-display'
 import type { SearchHistoryItem, SearchResult } from './types'
 
 interface RecentSearchesProps {

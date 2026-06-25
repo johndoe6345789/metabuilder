@@ -1,0 +1,93 @@
+{
+  "name": "Unsubscribe from Stream",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_context",
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.user.id }}",
+        "operation": "validate",
+        "validator": "required"
+      }
+    },
+    {
+      "id": "delete_subscription",
+      "name": "Delete Subscription",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "filter": {
+          "channelId": "{{ $json.channelId }}",
+          "userId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_delete",
+        "entity": "StreamSubscription"
+      }
+    },
+    {
+      "id": "return_success",
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 200,
+        "body": {
+          "message": "Unsubscribed successfully"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "validate_context": {
+      "main": [
+        [
+          {
+            "node": "delete_subscription",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "delete_subscription": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_stream_unsubscribe",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

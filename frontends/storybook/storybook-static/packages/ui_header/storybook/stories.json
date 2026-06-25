@@ -1,0 +1,111 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": false,
+  "title": "Header Components",
+  "description": "Application and landing page header navigation components",
+  "stories": [
+    {
+      "name": "AppHeader",
+      "render": "header",
+      "description": "Main application header with navigation and user menu",
+      "args": {
+        "user": {
+          "id": "demo-user",
+          "username": "demo_user",
+          "avatarUrl": "/avatars/demo.png"
+        }
+      }
+    },
+    {
+      "name": "AppHeaderLoggedOut",
+      "render": "header",
+      "description": "Application header for logged out users",
+      "args": {
+        "user": null
+      }
+    },
+    {
+      "name": "LandingNav",
+      "render": "landing",
+      "description": "Landing page navigation with brand and CTA buttons",
+      "args": {
+        "menuOpen": false
+      }
+    },
+    {
+      "name": "LandingNavMobileOpen",
+      "render": "landing",
+      "description": "Landing navigation with mobile menu expanded",
+      "args": {
+        "menuOpen": true
+      }
+    }
+  ],
+  "renders": {
+    "header": {
+      "description": "Main application header component",
+      "featured": true
+    },
+    "landing": {
+      "description": "Landing page navigation component"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "demo-user",
+      "username": "demo_user",
+      "level": 2,
+      "email": "demo@example.com",
+      "avatarUrl": "/avatars/demo.png"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Guest",
+      "description": "Not logged in",
+      "context": {
+        "user": null
+      }
+    },
+    {
+      "name": "Standard User",
+      "description": "Logged in user level 2",
+      "context": {
+        "user": {
+          "username": "user",
+          "level": 2,
+          "avatarUrl": "/avatars/user.png"
+        }
+      }
+    },
+    {
+      "name": "Admin",
+      "description": "Admin user level 3",
+      "context": {
+        "user": {
+          "username": "admin",
+          "level": 3,
+          "avatarUrl": "/avatars/admin.png"
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["header", "landing", "render"],
+    "ignoredScripts": ["init", "tests"]
+  },
+  "parameters": {
+    "layout": "fullscreen",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#ffffff" },
+        { "name": "dark", "value": "#1a1a1a" }
+      ]
+    }
+  }
+}

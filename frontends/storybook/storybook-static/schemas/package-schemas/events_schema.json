@@ -1,0 +1,453 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/events.schema.json",
+  "title": "Events Schema",
+  "description": "Event definitions for event-driven architecture in MetaBuilder packages",
+  "type": "object",
+  "required": ["schemaVersion", "package"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "description": "Schema version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "default": "2.0.0"
+    },
+    "package": {
+      "type": "string",
+      "description": "Package identifier"
+    },
+    "description": {
+      "type": "string",
+      "description": "Event module description"
+    },
+    "events": {
+      "type": "array",
+      "description": "Event definitions",
+      "items": {
+        "$ref": "#/definitions/event"
+      }
+    },
+    "subscribers": {
+      "type": "array",
+      "description": "Event subscriber definitions",
+      "items": {
+        "$ref": "#/definitions/subscriber"
+      }
+    },
+    "channels": {
+      "type": "array",
+      "description": "Event channel/topic definitions",
+      "items": {
+        "$ref": "#/definitions/channel"
+      }
+    },
+    "config": {
+      "$ref": "#/definitions/eventConfig"
+    }
+  },
+  "definitions": {
+    "event": {
+      "type": "object",
+      "required": ["name", "version"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique event identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Event name (dot-notation recommended: domain.action)",
+          "examples": ["user.created", "order.completed", "payment.failed"]
+        },
+        "version": {
+          "type": "string",
+          "description": "Event schema version",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "description": {
+          "type": "string",
+          "description": "Event description"
+        },
+        "channel": {
+          "type": "string",
+          "description": "Default channel/topic for this event"
+        },
+        "payload": {
+          "oneOf": [
+            { "type": "string", "description": "Reference to type definition" },
+            { 
+              "type": "object",
+              "description": "Inline payload schema",
+              "properties": {
+                "type": { "type": "string" },
+                "properties": { "type": "object" },
+                "required": { "type": "array", "items": { "type": "string" } }
+              }
+            }
+          ]
+        },
+        "metadata": {
+          "type": "object",
+          "description": "Standard metadata fields",
+          "properties": {
+            "timestamp": {
+              "type": "boolean",
+              "description": "Include timestamp",
+              "default": true
+            },
+            "correlationId": {
+              "type": "boolean",
+              "description": "Include correlation ID for tracing",
+              "default": true
+            },
+            "causationId": {
+              "type": "boolean",
+              "description": "Include causation ID (what caused this event)",
+              "default": false
+            },
+            "userId": {
+              "type": "boolean",
+              "description": "Include user ID who triggered the event",
+              "default": false
+            },
+            "custom": {
+              "type": "object",
+              "description": "Custom metadata fields",
+              "additionalProperties": true
+            }
+          }
+        },
+        "priority": {
+          "type": "string",
+          "description": "Event priority",
+          "enum": ["low", "normal", "high", "critical"],
+          "default": "normal"
+        },
+        "retention": {
+          "type": "object",
+          "description": "Event retention policy",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Store events for replay",
+              "default": false
+            },
+            "ttl": {
+              "type": "integer",
+              "description": "Retention period in seconds"
+            },
+            "maxEvents": {
+              "type": "integer",
+              "description": "Maximum events to retain"
+            }
+          }
+        },
+        "validation": {
+          "type": "object",
+          "description": "Event validation settings",
+          "properties": {
+            "strict": {
+              "type": "boolean",
+              "description": "Strict validation (reject invalid events)",
+              "default": true
+            },
+            "validator": {
+              "type": "string",
+              "description": "Custom validator function reference"
+            }
+          }
+        },
+        "deprecated": {
+          "oneOf": [
+            { "type": "boolean" },
+            {
+              "type": "object",
+              "properties": {
+                "version": { "type": "string" },
+                "reason": { "type": "string" },
+                "replacedBy": { "type": "string", "description": "Replacement event name" }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "subscriber": {
+      "type": "object",
+      "required": ["id", "events", "handler"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique subscriber identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Subscriber name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Subscriber description"
+        },
+        "events": {
+          "type": "array",
+          "description": "Event names to subscribe to (supports wildcards)",
+          "items": { "type": "string" },
+          "examples": [["user.created"], ["order.*"], ["*.failed"]]
+        },
+        "channels": {
+          "type": "array",
+          "description": "Specific channels to subscribe to",
+          "items": { "type": "string" }
+        },
+        "handler": {
+          "type": "string",
+          "description": "Handler function reference"
+        },
+        "filter": {
+          "type": "string",
+          "description": "Filter function reference to conditionally handle events"
+        },
+        "async": {
+          "type": "boolean",
+          "description": "Whether handler is async",
+          "default": true
+        },
+        "priority": {
+          "type": "integer",
+          "description": "Subscriber priority (higher = earlier execution)",
+          "default": 0
+        },
+        "retry": {
+          "$ref": "#/definitions/retryConfig"
+        },
+        "timeout": {
+          "type": "integer",
+          "description": "Handler timeout in milliseconds"
+        },
+        "deadLetterQueue": {
+          "type": "object",
+          "description": "Dead letter queue configuration",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "channel": {
+              "type": "string",
+              "description": "DLQ channel name"
+            },
+            "maxRetries": {
+              "type": "integer",
+              "description": "Max retries before DLQ",
+              "default": 3
+            }
+          }
+        },
+        "concurrency": {
+          "type": "integer",
+          "description": "Max concurrent event processing",
+          "minimum": 1,
+          "default": 1
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable/disable subscriber",
+          "default": true
+        }
+      }
+    },
+    "channel": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Channel/topic name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Channel description"
+        },
+        "type": {
+          "type": "string",
+          "description": "Channel type",
+          "enum": ["topic", "queue", "stream", "fanout"],
+          "default": "topic"
+        },
+        "persistent": {
+          "type": "boolean",
+          "description": "Persist messages",
+          "default": false
+        },
+        "partitions": {
+          "type": "integer",
+          "description": "Number of partitions (for scalability)",
+          "minimum": 1,
+          "default": 1
+        },
+        "retention": {
+          "type": "object",
+          "properties": {
+            "ttl": {
+              "type": "integer",
+              "description": "Message retention in seconds"
+            },
+            "maxSize": {
+              "type": "integer",
+              "description": "Max channel size in bytes"
+            }
+          }
+        },
+        "acl": {
+          "type": "object",
+          "description": "Access control for channel",
+          "properties": {
+            "publish": {
+              "type": "array",
+              "description": "Roles allowed to publish",
+              "items": { "type": "string" }
+            },
+            "subscribe": {
+              "type": "array",
+              "description": "Roles allowed to subscribe",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "retryConfig": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable retry logic",
+          "default": true
+        },
+        "maxAttempts": {
+          "type": "integer",
+          "description": "Maximum retry attempts",
+          "minimum": 0,
+          "default": 3
+        },
+        "backoff": {
+          "type": "string",
+          "description": "Backoff strategy",
+          "enum": ["none", "linear", "exponential", "custom"],
+          "default": "exponential"
+        },
+        "initialDelay": {
+          "type": "integer",
+          "description": "Initial retry delay in milliseconds",
+          "default": 1000
+        },
+        "maxDelay": {
+          "type": "integer",
+          "description": "Maximum retry delay in milliseconds",
+          "default": 60000
+        },
+        "multiplier": {
+          "type": "number",
+          "description": "Backoff multiplier (for exponential)",
+          "minimum": 1,
+          "default": 2
+        },
+        "retryOn": {
+          "type": "array",
+          "description": "Error types/codes to retry on",
+          "items": { "type": "string" }
+        },
+        "customStrategy": {
+          "type": "string",
+          "description": "Custom retry strategy function reference"
+        }
+      }
+    },
+    "eventConfig": {
+      "type": "object",
+      "description": "Global event system configuration",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable event system",
+          "default": true
+        },
+        "engine": {
+          "type": "string",
+          "description": "Event engine/broker",
+          "enum": ["memory", "redis", "rabbitmq", "kafka", "nats", "custom"],
+          "default": "memory"
+        },
+        "connection": {
+          "type": "object",
+          "description": "Connection configuration for external brokers",
+          "properties": {
+            "host": { "type": "string" },
+            "port": { "type": "integer" },
+            "username": { "type": "string" },
+            "password": { "type": "string" },
+            "tls": { "type": "boolean" },
+            "options": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        },
+        "serialization": {
+          "type": "string",
+          "description": "Event serialization format",
+          "enum": ["json", "msgpack", "protobuf", "avro"],
+          "default": "json"
+        },
+        "compression": {
+          "type": "string",
+          "description": "Event compression",
+          "enum": ["none", "gzip", "snappy", "lz4"],
+          "default": "none"
+        },
+        "monitoring": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "metrics": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["throughput", "latency", "errors", "retries", "dlq"]
+              }
+            }
+          }
+        },
+        "replay": {
+          "type": "object",
+          "description": "Event replay/sourcing configuration",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "storage": {
+              "type": "string",
+              "description": "Event store backend"
+            }
+          }
+        },
+        "defaultRetry": {
+          "$ref": "#/definitions/retryConfig"
+        },
+        "globalTimeout": {
+          "type": "integer",
+          "description": "Global event handler timeout in milliseconds",
+          "default": 30000
+        }
+      }
+    }
+  }
+}

@@ -150,6 +150,7 @@ describe('snippetsSlice', () => {
     describe('selectAllSnippets', () => {
       it('should select all snippet ids', async () => {
         const { getState, dispatch } = store
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.getAllSnippets.mockResolvedValue(mockSnippets)
 
@@ -169,6 +170,7 @@ describe('snippetsSlice', () => {
   describe('async thunks', () => {
     describe('fetchAllSnippets', () => {
       it('should fetch all snippets successfully', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.getAllSnippets.mockResolvedValue(mockSnippets)
 
@@ -181,6 +183,7 @@ describe('snippetsSlice', () => {
       })
 
       it('should handle fetch error', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         const error = new Error('Fetch failed')
         mockDb.getAllSnippets.mockRejectedValue(error)
@@ -192,7 +195,9 @@ describe('snippetsSlice', () => {
         expect(state.error).toBeTruthy()
       })
 
+      // eslint-disable-next-line max-len
       it('should use default error message when error message is undefined', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.getAllSnippets.mockRejectedValue({})
 
@@ -203,10 +208,9 @@ describe('snippetsSlice', () => {
       })
 
       it('should set loading to true initially', () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
-        mockDb.getAllSnippets.mockImplementation(
-          () => new Promise(() => {})
-        )
+        mockDb.getAllSnippets.mockImplementation(() => new Promise(() => {}))
 
         store.dispatch(fetchAllSnippets())
         expect(store.getState().snippets.loading).toBe(true)
@@ -215,6 +219,7 @@ describe('snippetsSlice', () => {
 
     describe('fetchSnippetsByNamespace', () => {
       it('should fetch snippets by namespace successfully', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.getSnippetsByNamespace.mockResolvedValue([mockSnippets[0]])
 
@@ -226,10 +231,9 @@ describe('snippetsSlice', () => {
       })
 
       it('should handle fetch by namespace error', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
-        mockDb.getSnippetsByNamespace.mockRejectedValue(
-          new Error('Failed')
-        )
+        mockDb.getSnippetsByNamespace.mockRejectedValue(new Error('Failed'))
 
         await store.dispatch(fetchSnippetsByNamespace('ns1'))
 
@@ -237,7 +241,9 @@ describe('snippetsSlice', () => {
         expect(state.error).toBeTruthy()
       })
 
+      // eslint-disable-next-line max-len
       it('should use default error message for namespace fetch when error message is undefined', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.getSnippetsByNamespace.mockRejectedValue({})
 
@@ -250,6 +256,7 @@ describe('snippetsSlice', () => {
 
     describe('createSnippet', () => {
       it('should create a new snippet', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.createSnippet.mockImplementation(async (s: Snippet) => s)
 
@@ -274,6 +281,7 @@ describe('snippetsSlice', () => {
       })
 
       it('should add new snippet at the beginning', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.getAllSnippets.mockResolvedValue(mockSnippets)
         mockDb.createSnippet.mockImplementation(async (s: Snippet) => s)
@@ -304,6 +312,7 @@ describe('snippetsSlice', () => {
 
     describe('updateSnippet', () => {
       it('should update an existing snippet', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.getAllSnippets.mockResolvedValue(mockSnippets)
         mockDb.updateSnippet.mockResolvedValue(undefined)
@@ -323,6 +332,7 @@ describe('snippetsSlice', () => {
       })
 
       it('should handle update of non-existent snippet', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.updateSnippet.mockResolvedValue(undefined)
 
@@ -341,6 +351,7 @@ describe('snippetsSlice', () => {
 
     describe('deleteSnippet', () => {
       it('should delete a snippet', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.getAllSnippets.mockResolvedValue(mockSnippets)
         mockDb.deleteSnippet.mockResolvedValue(undefined)
@@ -356,6 +367,7 @@ describe('snippetsSlice', () => {
       })
 
       it('should handle deleting non-existent snippet', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.getAllSnippets.mockResolvedValue(mockSnippets)
         mockDb.deleteSnippet.mockResolvedValue(undefined)
@@ -370,6 +382,7 @@ describe('snippetsSlice', () => {
 
     describe('moveSnippet', () => {
       it('should move a snippet to a new namespace', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.getAllSnippets.mockResolvedValue(mockSnippets)
         mockDb.moveSnippetToNamespace.mockResolvedValue(undefined)
@@ -378,10 +391,11 @@ describe('snippetsSlice', () => {
         expect(store.getState().snippets.items.length).toBe(2)
 
         await store.dispatch(
-          moveSnippet({ snippetId: '1', targetNamespaceId: 'ns2' })
+          moveSnippet({ snippetId: '1', targetNamespaceId: 'ns2' }),
         )
 
         const state = store.getState().snippets
+        // eslint-disable-next-line max-len
         // moveSnippet.fulfilled updates namespaceId in-place; it does NOT remove the snippet
         expect(state.items.length).toBe(2)
         const moved = state.items.find(s => s.id === '1')
@@ -391,6 +405,7 @@ describe('snippetsSlice', () => {
 
     describe('bulkMoveSnippets', () => {
       it('should bulk move multiple snippets', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.getAllSnippets.mockResolvedValue(mockSnippets)
         mockDb.bulkMoveSnippets.mockResolvedValue(undefined)
@@ -404,16 +419,18 @@ describe('snippetsSlice', () => {
           bulkMoveSnippets({
             snippetIds: ['1', '2'],
             targetNamespaceId: 'ns2',
-          })
+          }),
         )
 
         const state = store.getState().snippets
-        expect(state.items.length).toBe(0)
+        // bulkMove updates namespaceId in place; items are not removed.
+        expect(state.items.every(s => s.namespaceId === 'ns2')).toBe(true)
         expect(state.selectedIds).toEqual([])
         expect(state.selectionMode).toBe(false)
       })
 
       it('should handle bulk move with empty snippets list', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.bulkMoveSnippets.mockResolvedValue(undefined)
 
@@ -421,7 +438,7 @@ describe('snippetsSlice', () => {
           bulkMoveSnippets({
             snippetIds: ['1', '2'],
             targetNamespaceId: 'ns2',
-          })
+          }),
         )
 
         const state = store.getState().snippets

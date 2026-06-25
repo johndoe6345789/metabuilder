@@ -5,6 +5,7 @@ import { CounterForm } from '@/components/CounterForm';
 import { CurrentCount } from '@/components/CurrentCount';
 import { SponsorSection } from '@/components/SponsorSection';
 import { sponsors } from '@/config/sponsors';
+import { styles } from '@/config/styles';
 
 export async function generateMetadata(props: {
   params: Promise<{ locale: string }>;
@@ -28,7 +29,7 @@ export default function Counter() {
     <>
       <CounterForm />
 
-      <div className="mt-3">
+      <div className={styles.spacing.marginTop3}>
         <CurrentCount />
       </div>
 

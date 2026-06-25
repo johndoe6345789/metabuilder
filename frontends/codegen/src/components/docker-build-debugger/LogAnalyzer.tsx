@@ -1,7 +1,7 @@
-import { Button } from '@metabuilder/fakemui/inputs'
-import { Textarea } from '@metabuilder/fakemui/inputs'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@metabuilder/fakemui/surfaces'
-import { Sparkle, Terminal } from '@metabuilder/fakemui/icons'
+import { Button } from '@metabuilder/m3/inputs'
+import { Textarea } from '@metabuilder/m3/inputs'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@metabuilder/m3/surfaces'
+import { Sparkle, Terminal } from '@metabuilder/m3/icons'
 
 type LogAnalyzerText = {
   title: string

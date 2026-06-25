@@ -1,0 +1,28 @@
+{
+  "themes": [
+    { "value": "light", "label": "Light" },
+    { "value": "dark", "label": "Dark" },
+    { "value": "system", "label": "System Default" }
+  ],
+  "languages": [
+    { "value": "en", "label": "English" },
+    { "value": "es", "label": "Español" },
+    { "value": "fr", "label": "Français" },
+    { "value": "de", "label": "Deutsch" },
+    { "value": "ja", "label": "日本語" }
+  ],
+  "executors": [
+    { "value": "typescript", "label": "TypeScript" },
+    { "value": "python", "label": "Python" },
+    { "value": "go", "label": "Go" },
+    { "value": "rust", "label": "Rust" },
+    { "value": "mojo", "label": "Mojo" }
+  ],
+  "tabs": [
+    { "label": "Preferences", "id": 0 },
+    { "label": "Account", "id": 1 },
+    { "label": "Workflows", "id": 2 },
+    { "label": "Database", "id": 3 },
+    { "label": "Danger Zone", "id": 4 }
+  ]
+}

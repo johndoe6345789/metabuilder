@@ -1,0 +1,498 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "title": "Permissions Schema",
+  "description": "Role-Based Access Control (RBAC) and permission definitions for MetaBuilder packages",
+  "type": "object",
+  "required": ["schemaVersion", "package"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "description": "Schema version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "default": "2.0.0"
+    },
+    "package": {
+      "type": "string",
+      "description": "Package identifier"
+    },
+    "description": {
+      "type": "string",
+      "description": "Permissions module description"
+    },
+    "roles": {
+      "type": "array",
+      "description": "Role definitions",
+      "items": {
+        "$ref": "#/definitions/role"
+      }
+    },
+    "permissions": {
+      "type": "array",
+      "description": "Permission definitions",
+      "items": {
+        "$ref": "#/definitions/permission"
+      }
+    },
+    "resources": {
+      "type": "array",
+      "description": "Protected resource definitions",
+      "items": {
+        "$ref": "#/definitions/resource"
+      }
+    },
+    "policies": {
+      "type": "array",
+      "description": "Access policy definitions",
+      "items": {
+        "$ref": "#/definitions/policy"
+      }
+    },
+    "config": {
+      "$ref": "#/definitions/permissionsConfig"
+    }
+  },
+  "definitions": {
+    "role": {
+      "type": "object",
+      "required": ["id", "name"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique role identifier",
+          "pattern": "^[a-z][a-z0-9_-]*$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Role display name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Role description"
+        },
+        "level": {
+          "type": "integer",
+          "description": "Role level/hierarchy (higher = more privileged)",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "permissions": {
+          "type": "array",
+          "description": "Permissions granted to this role",
+          "items": { "type": "string" }
+        },
+        "inherits": {
+          "type": "array",
+          "description": "Roles this role inherits from",
+          "items": { "type": "string" }
+        },
+        "default": {
+          "type": "boolean",
+          "description": "Whether this is a default role for new users",
+          "default": false
+        },
+        "system": {
+          "type": "boolean",
+          "description": "Whether this is a system role (cannot be deleted)",
+          "default": false
+        },
+        "metadata": {
+          "type": "object",
+          "description": "Additional role metadata",
+          "additionalProperties": true
+        }
+      }
+    },
+    "permission": {
+      "type": "object",
+      "required": ["id", "name", "resource", "action"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique permission identifier",
+          "pattern": "^[a-z][a-z0-9_.-]*$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Permission display name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Permission description"
+        },
+        "resource": {
+          "type": "string",
+          "description": "Resource this permission applies to"
+        },
+        "action": {
+          "type": "string",
+          "description": "Action allowed by this permission",
+          "enum": ["create", "read", "update", "delete", "execute", "manage", "admin", "*"]
+        },
+        "scope": {
+          "type": "string",
+          "description": "Permission scope",
+          "enum": ["global", "organization", "team", "user", "custom"],
+          "default": "global"
+        },
+        "conditions": {
+          "type": "array",
+          "description": "Conditional requirements for this permission",
+          "items": {
+            "$ref": "#/definitions/condition"
+          }
+        },
+        "effect": {
+          "type": "string",
+          "description": "Permission effect",
+          "enum": ["allow", "deny"],
+          "default": "allow"
+        },
+        "priority": {
+          "type": "integer",
+          "description": "Permission priority (higher = takes precedence)",
+          "default": 0
+        },
+        "deprecated": {
+          "oneOf": [
+            { "type": "boolean" },
+            {
+              "type": "object",
+              "properties": {
+                "since": { "type": "string" },
+                "reason": { "type": "string" },
+                "replacement": { "type": "string" }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "resource": {
+      "type": "object",
+      "required": ["id", "name", "type"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique resource identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Resource name"
+        },
+        "type": {
+          "type": "string",
+          "description": "Resource type",
+          "enum": ["entity", "api", "component", "function", "file", "custom"]
+        },
+        "description": {
+          "type": "string",
+          "description": "Resource description"
+        },
+        "actions": {
+          "type": "array",
+          "description": "Available actions for this resource",
+          "items": {
+            "type": "string",
+            "enum": ["create", "read", "update", "delete", "execute", "manage", "admin", "*"]
+          },
+          "default": ["create", "read", "update", "delete"]
+        },
+        "ownership": {
+          "type": "object",
+          "description": "Resource ownership configuration",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable ownership checks",
+              "default": false
+            },
+            "field": {
+              "type": "string",
+              "description": "Field containing owner ID",
+              "default": "userId"
+            },
+            "allowedActions": {
+              "type": "array",
+              "description": "Actions owners can perform",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "attributes": {
+          "type": "array",
+          "description": "Resource attributes for ABAC",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "type": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "hierarchical": {
+          "type": "boolean",
+          "description": "Whether resource has parent-child relationships",
+          "default": false
+        },
+        "parentField": {
+          "type": "string",
+          "description": "Field containing parent resource ID"
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "required": ["id", "name", "effect", "rules"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique policy identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Policy name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Policy description"
+        },
+        "effect": {
+          "type": "string",
+          "description": "Policy effect",
+          "enum": ["allow", "deny"],
+          "default": "allow"
+        },
+        "priority": {
+          "type": "integer",
+          "description": "Policy priority (higher = evaluated first)",
+          "default": 0
+        },
+        "rules": {
+          "type": "array",
+          "description": "Policy rules",
+          "items": {
+            "$ref": "#/definitions/policyRule"
+          }
+        },
+        "subjects": {
+          "type": "object",
+          "description": "Who this policy applies to",
+          "properties": {
+            "users": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "roles": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "groups": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "conditions": {
+          "type": "array",
+          "description": "Conditions that must be met",
+          "items": {
+            "$ref": "#/definitions/condition"
+          }
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable/disable policy",
+          "default": true
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Policy start date"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Policy end date"
+        }
+      }
+    },
+    "policyRule": {
+      "type": "object",
+      "required": ["resources", "actions"],
+      "properties": {
+        "resources": {
+          "type": "array",
+          "description": "Resource IDs or patterns (supports wildcards)",
+          "items": { "type": "string" },
+          "examples": [["users.*"], ["documents/123"], ["api/v1/*"]]
+        },
+        "actions": {
+          "type": "array",
+          "description": "Actions allowed/denied",
+          "items": { "type": "string" },
+          "examples": [["read", "update"], ["*"]]
+        },
+        "conditions": {
+          "type": "array",
+          "description": "Additional conditions",
+          "items": {
+            "$ref": "#/definitions/condition"
+          }
+        }
+      }
+    },
+    "condition": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Condition type",
+          "enum": ["attribute", "time", "ip", "custom", "ownership", "role", "permission"]
+        },
+        "operator": {
+          "type": "string",
+          "description": "Comparison operator",
+          "enum": ["equals", "notEquals", "in", "notIn", "contains", "startsWith", "endsWith", "greaterThan", "lessThan", "greaterOrEqual", "lessOrEqual", "matches"]
+        },
+        "attribute": {
+          "type": "string",
+          "description": "Attribute to check (for ABAC)"
+        },
+        "value": {
+          "description": "Value to compare against"
+        },
+        "expression": {
+          "type": "string",
+          "description": "Custom expression or function reference"
+        },
+        "timeRange": {
+          "type": "object",
+          "description": "Time range for time-based conditions",
+          "properties": {
+            "start": { "type": "string", "format": "time" },
+            "end": { "type": "string", "format": "time" },
+            "timezone": { "type": "string" },
+            "days": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+              }
+            }
+          }
+        },
+        "ipRanges": {
+          "type": "array",
+          "description": "IP ranges for IP-based conditions",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "permissionsConfig": {
+      "type": "object",
+      "description": "Global permissions configuration",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable permission system",
+          "default": true
+        },
+        "model": {
+          "type": "string",
+          "description": "Access control model",
+          "enum": ["RBAC", "ABAC", "hybrid"],
+          "default": "RBAC"
+        },
+        "defaultDeny": {
+          "type": "boolean",
+          "description": "Default deny policy (deny unless explicitly allowed)",
+          "default": true
+        },
+        "caching": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "ttl": {
+              "type": "integer",
+              "description": "Cache TTL in seconds",
+              "default": 300
+            }
+          }
+        },
+        "audit": {
+          "type": "object",
+          "description": "Audit logging configuration",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "logDenials": {
+              "type": "boolean",
+              "description": "Log permission denials",
+              "default": true
+            },
+            "logGrants": {
+              "type": "boolean",
+              "description": "Log permission grants",
+              "default": false
+            },
+            "handler": {
+              "type": "string",
+              "description": "Audit handler function reference"
+            }
+          }
+        },
+        "superAdmin": {
+          "type": "object",
+          "description": "Super admin configuration",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "roleId": {
+              "type": "string",
+              "description": "Super admin role ID",
+              "default": "super-admin"
+            },
+            "bypassAll": {
+              "type": "boolean",
+              "description": "Bypass all permission checks",
+              "default": true
+            }
+          }
+        },
+        "delegation": {
+          "type": "object",
+          "description": "Permission delegation settings",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "maxDepth": {
+              "type": "integer",
+              "description": "Max delegation depth",
+              "default": 1
+            },
+            "requireApproval": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        }
+      }
+    }
+  }
+}

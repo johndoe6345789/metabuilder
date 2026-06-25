@@ -1,6 +1,6 @@
-import { Badge } from '@metabuilder/fakemui/data-display'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@metabuilder/fakemui/surfaces'
-import { Database } from '@metabuilder/fakemui/icons'
+import { Badge } from '@metabuilder/m3/data-display'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@metabuilder/m3/surfaces'
+import { Database } from '@metabuilder/m3/icons'
 import reduxIntegrationCopy from '@/data/redux-integration-demo.json'
 import { ComponentTree } from '@/store/slices/componentTreesSlice'
 

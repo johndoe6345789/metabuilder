@@ -1,0 +1,65 @@
+[
+  {
+    "id": "page_workflow_editor_home",
+    "packageId": "ui_workflow_editor",
+    "path": "/admin/workflows",
+    "title": "Workflow Editor",
+    "description": "Visual workflow automation builder with node-based UI",
+    "component": "WorkflowEditorLayout",
+    "level": 3,
+    "requiresAuth": true,
+    "isPublished": true,
+    "icon": "Workflow",
+    "breadcrumbs": [
+      { "label": "Admin", "href": "/admin" },
+      { "label": "Workflows", "href": "/admin/workflows" }
+    ],
+    "layout": {
+      "type": "TwoColumn",
+      "leftPanel": {
+        "width": 300,
+        "title": "Workflows",
+        "component": "WorkflowLibrary"
+      },
+      "rightPanel": {
+        "title": "Builder",
+        "flex": 1,
+        "component": "WorkflowCanvas"
+      }
+    }
+  },
+  {
+    "id": "page_workflow_editor_templates",
+    "packageId": "ui_workflow_editor",
+    "path": "/admin/workflows/templates",
+    "title": "Workflow Templates",
+    "description": "Pre-built workflow templates for common automation tasks",
+    "component": "WorkflowTemplateGallery",
+    "level": 3,
+    "requiresAuth": true,
+    "isPublished": true,
+    "icon": "Gallery",
+    "breadcrumbs": [
+      { "label": "Admin", "href": "/admin" },
+      { "label": "Workflows", "href": "/admin/workflows" },
+      { "label": "Templates", "href": "/admin/workflows/templates" }
+    ]
+  },
+  {
+    "id": "page_workflow_editor_execution",
+    "packageId": "ui_workflow_editor",
+    "path": "/admin/workflows/execution",
+    "title": "Execution History",
+    "description": "Monitor workflow execution history, logs, and results",
+    "component": "ExecutionHistoryViewer",
+    "level": 3,
+    "requiresAuth": true,
+    "isPublished": true,
+    "icon": "History",
+    "breadcrumbs": [
+      { "label": "Admin", "href": "/admin" },
+      { "label": "Workflows", "href": "/admin/workflows" },
+      { "label": "Execution", "href": "/admin/workflows/execution" }
+    ]
+  }
+]

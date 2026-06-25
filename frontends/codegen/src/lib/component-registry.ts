@@ -35,6 +35,10 @@ const tsxDynamicMap: Record<string, any> = {
     () => import('@/components/ProjectDashboard').then(mod => ({ default: (mod as any).default ?? (mod as any).ProjectDashboard ?? Object.values(mod).find(v => typeof v === 'function') })),
     { ssr: true }
   ),
+  SiteGenerator: dynamic(
+    () => import('@/components/SiteGenerator').then(mod => ({ default: (mod as any).SiteGenerator ?? mod.default })),
+    { ssr: false }
+  ),
 }
 
 function resolveComponent(componentConfig: ComponentConfig) {

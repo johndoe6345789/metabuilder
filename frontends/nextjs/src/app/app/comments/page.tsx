@@ -17,7 +17,7 @@ import {
   Avatar,
   Divider,
   Chip,
-} from '@/fakemui'
+} from '@/m3'
 
 interface Comment {
   id: string

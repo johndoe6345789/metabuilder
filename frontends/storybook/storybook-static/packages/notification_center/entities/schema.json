@@ -1,0 +1,115 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/entities.schema.json",
+  "schemaVersion": "2.0.0",
+  "entities": [
+    {
+      "name": "Notification",
+      "version": "1.0",
+      "description": "User notification for alerts, messages, and system events",
+      "primaryKey": "id",
+      "timestamps": false,
+      "softDelete": false,
+      "fields": {
+        "id": {
+          "type": "string",
+          "generated": true,
+          "description": "Unique identifier (CUID)"
+        },
+        "tenantId": {
+          "type": "string",
+          "required": true,
+          "index": true,
+          "description": "Tenant identifier"
+        },
+        "userId": {
+          "type": "string",
+          "required": true,
+          "index": true,
+          "description": "User who receives this notification"
+        },
+        "type": {
+          "type": "enum",
+          "required": true,
+          "enum": ["info", "warning", "success", "error", "mention", "reply", "follow", "like", "system"],
+          "description": "Notification type/severity"
+        },
+        "title": {
+          "type": "string",
+          "required": true,
+          "maxLength": 200,
+          "description": "Notification title"
+        },
+        "message": {
+          "type": "string",
+          "required": true,
+          "description": "Notification message body"
+        },
+        "icon": {
+          "type": "string",
+          "nullable": true,
+          "description": "Icon name for display"
+        },
+        "read": {
+          "type": "boolean",
+          "default": false,
+          "index": true,
+          "description": "Whether notification has been read"
+        },
+        "data": {
+          "type": "text",
+          "nullable": true,
+          "description": "JSON: action URLs, entity references, etc."
+        },
+        "createdAt": {
+          "type": "bigint",
+          "required": true,
+          "index": true,
+          "description": "Creation timestamp in milliseconds"
+        },
+        "expiresAt": {
+          "type": "bigint",
+          "nullable": true,
+          "index": true,
+          "description": "Expiration timestamp in milliseconds"
+        }
+      },
+      "indexes": [
+        {
+          "fields": ["tenantId"],
+          "name": "idx_notification_tenant"
+        },
+        {
+          "fields": ["userId", "read"],
+          "name": "idx_notification_user_read"
+        },
+        {
+          "fields": ["createdAt"],
+          "name": "idx_notification_created"
+        }
+      ],
+      "relations": [
+        {
+          "name": "tenant",
+          "type": "belongsTo",
+          "entity": "Tenant",
+          "field": "tenantId",
+          "onDelete": "Cascade"
+        },
+        {
+          "name": "user",
+          "type": "belongsTo",
+          "entity": "User",
+          "field": "userId",
+          "onDelete": "Cascade"
+        }
+      ],
+      "acl": {
+        "create": ["system", "admin"],
+        "read": ["self"],
+        "update": ["self"],
+        "delete": ["self"],
+        "rowLevel": "userId = currentUser.id"
+      }
+    }
+  ]
+}

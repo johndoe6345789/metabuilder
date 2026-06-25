@@ -1,0 +1,417 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "ui_level2",
+  "description": "User dashboard components including profile, comments, and chat panels",
+  "components": [
+    {
+      "id": "level2_layout",
+      "name": "Level2Layout",
+      "description": "Main layout container for Level 2 user dashboard",
+      "props": [
+        {
+          "name": "user",
+          "type": "object",
+          "required": true,
+          "description": "User context with username and profile data"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "min-h-screen bg-background",
+          "children": [
+            {
+              "type": "AppHeader",
+              "children": [
+                {
+                  "type": "Toolbar",
+                  "children": [
+                    {
+                      "type": "Typography",
+                      "variant": "h6",
+                      "children": "Level 2 - User Dashboard"
+                    },
+                    {
+                      "type": "Badge",
+                      "children": "User"
+                    },
+                    {
+                      "type": "Box",
+                      "sx": { "flexGrow": 1 }
+                    },
+                    {
+                      "type": "Typography",
+                      "variant": "body2",
+                      "children": "{{user.username}}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Container",
+              "maxWidth": "xl",
+              "sx": { "py": 4 },
+              "children": [
+                {
+                  "type": "Stack",
+                  "spacing": 4,
+                  "children": [
+                    {
+                      "type": "Stack",
+                      "spacing": 1,
+                      "children": [
+                        {
+                          "type": "Typography",
+                          "variant": "overline",
+                          "children": "Level 2"
+                        },
+                        {
+                          "type": "Typography",
+                          "variant": "h2",
+                          "children": "Your Dashboard"
+                        },
+                        {
+                          "type": "Typography",
+                          "variant": "body1",
+                          "color": "text.secondary",
+                          "children": "Manage your profile, comments, and chat."
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Card",
+                      "children": [
+                        {
+                          "type": "Tabs",
+                          "defaultValue": "profile",
+                          "children": [
+                            {
+                              "type": "Tab",
+                              "value": "profile",
+                              "label": "Profile"
+                            },
+                            {
+                              "type": "Tab",
+                              "value": "comments",
+                              "label": "Comments"
+                            },
+                            {
+                              "type": "Tab",
+                              "value": "chat",
+                              "label": "Chat"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "profile_panel",
+      "name": "ProfilePanel",
+      "description": "User profile view and edit panel",
+      "props": [
+        {
+          "name": "user",
+          "type": "object",
+          "required": true,
+          "description": "User profile data"
+        },
+        {
+          "name": "onSave",
+          "type": "function",
+          "required": false,
+          "description": "Callback when profile is saved"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "children": [
+            {
+              "type": "CardHeader",
+              "title": "Your Profile",
+              "subheader": "View and update your personal information."
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Stack",
+                  "spacing": 3,
+                  "children": [
+                    {
+                      "type": "Box",
+                      "sx": { "display": "flex", "alignItems": "center", "gap": 2 },
+                      "children": [
+                        {
+                          "type": "Avatar",
+                          "src": "{{user.avatar}}",
+                          "alt": "{{user.username}}",
+                          "sx": { "width": 64, "height": 64 }
+                        },
+                        {
+                          "type": "Stack",
+                          "children": [
+                            {
+                              "type": "Typography",
+                              "variant": "h6",
+                              "children": "{{user.username}}"
+                            },
+                            {
+                              "type": "Typography",
+                              "variant": "body2",
+                              "color": "text.secondary",
+                              "children": "{{user.email}}"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Divider"
+                    },
+                    {
+                      "type": "Grid",
+                      "container": true,
+                      "spacing": 2,
+                      "children": [
+                        {
+                          "type": "Grid",
+                          "item": true,
+                          "xs": 12,
+                          "md": 6,
+                          "children": [
+                            {
+                              "type": "TextField",
+                              "label": "Display Name",
+                              "fullWidth": true,
+                              "defaultValue": "{{user.displayName}}"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Grid",
+                          "item": true,
+                          "xs": 12,
+                          "md": 6,
+                          "children": [
+                            {
+                              "type": "TextField",
+                              "label": "Email",
+                              "fullWidth": true,
+                              "defaultValue": "{{user.email}}",
+                              "disabled": true
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Button",
+                      "variant": "contained",
+                      "children": "Save Changes"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "comments_panel",
+      "name": "CommentsPanel",
+      "description": "User comments list and management panel",
+      "props": [
+        {
+          "name": "comments",
+          "type": "array",
+          "required": false,
+          "default": [],
+          "description": "List of user comments"
+        },
+        {
+          "name": "onEdit",
+          "type": "function",
+          "required": false,
+          "description": "Callback when editing a comment"
+        },
+        {
+          "name": "onDelete",
+          "type": "function",
+          "required": false,
+          "description": "Callback when deleting a comment"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "children": [
+            {
+              "type": "CardHeader",
+              "title": "Your Comments",
+              "subheader": "View and manage comments you've posted."
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "List",
+                  "children": [
+                    {
+                      "type": "ListItem",
+                      "secondaryAction": {
+                        "type": "Stack",
+                        "direction": "row",
+                        "children": [
+                          {
+                            "type": "IconButton",
+                            "size": "small",
+                            "children": [{ "type": "Icon", "name": "Edit" }]
+                          },
+                          {
+                            "type": "IconButton",
+                            "size": "small",
+                            "children": [{ "type": "Icon", "name": "Delete" }]
+                          }
+                        ]
+                      },
+                      "children": [
+                        {
+                          "type": "ListItemText",
+                          "primary": "Great article on automation scripting!",
+                          "secondary": "Posted 2 days ago on 'Getting Started with Automation Scripts'"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ListItem",
+                      "secondaryAction": {
+                        "type": "Stack",
+                        "direction": "row",
+                        "children": [
+                          {
+                            "type": "IconButton",
+                            "size": "small",
+                            "children": [{ "type": "Icon", "name": "Edit" }]
+                          },
+                          {
+                            "type": "IconButton",
+                            "size": "small",
+                            "children": [{ "type": "Icon", "name": "Delete" }]
+                          }
+                        ]
+                      },
+                      "children": [
+                        {
+                          "type": "ListItemText",
+                          "primary": "Thanks for the help!",
+                          "secondary": "Posted 1 week ago on 'Component Rendering'"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "chat_panel",
+      "name": "ChatPanel",
+      "description": "Real-time chat panel for user communication",
+      "props": [
+        {
+          "name": "messages",
+          "type": "array",
+          "required": false,
+          "default": [],
+          "description": "List of chat messages"
+        },
+        {
+          "name": "onSend",
+          "type": "function",
+          "required": false,
+          "description": "Callback when sending a message"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "children": [
+            {
+              "type": "CardHeader",
+              "title": "Chat",
+              "subheader": "Connect with other users in real-time."
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Stack",
+                  "spacing": 2,
+                  "children": [
+                    {
+                      "type": "Box",
+                      "sx": {
+                        "height": 256,
+                        "border": 1,
+                        "borderColor": "divider",
+                        "borderRadius": 1,
+                        "p": 2,
+                        "overflow": "auto",
+                        "bgcolor": "background.default"
+                      },
+                      "children": [
+                        {
+                          "type": "Typography",
+                          "variant": "body2",
+                          "color": "text.secondary",
+                          "sx": { "textAlign": "center" },
+                          "children": "Welcome to the chat room!"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Box",
+                      "sx": { "display": "flex", "gap": 1 },
+                      "children": [
+                        {
+                          "type": "TextField",
+                          "placeholder": "Type a message...",
+                          "fullWidth": true,
+                          "size": "small"
+                        },
+                        {
+                          "type": "Button",
+                          "variant": "contained",
+                          "children": "Send"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

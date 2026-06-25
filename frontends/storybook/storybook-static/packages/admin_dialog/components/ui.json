@@ -1,0 +1,348 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "admin_dialog",
+  "description": "Administrative dialog components for confirmations and actions",
+  "components": [
+    {
+      "id": "admin_confirm_dialog",
+      "name": "AdminConfirmDialog",
+      "description": "Standard confirmation dialog for administrative actions",
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": true,
+          "default": false
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "default": "Confirm Action"
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "required": true,
+          "default": "Are you sure you want to proceed?"
+        },
+        {
+          "name": "confirmText",
+          "type": "string",
+          "default": "Confirm"
+        },
+        {
+          "name": "cancelText",
+          "type": "string",
+          "default": "Cancel"
+        },
+        {
+          "name": "variant",
+          "type": "string",
+          "default": "warning",
+          "enum": ["default", "warning", "danger", "success"]
+        }
+      ],
+      "handlers": {
+        "onConfirm": "dialog.handleConfirm",
+        "onCancel": "dialog.handleCancel",
+        "onClose": "dialog.handleClose"
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Dialog",
+          "open": "{{open}}",
+          "maxWidth": "sm",
+          "onClose": "onClose",
+          "PaperProps": {
+            "className": "admin-dialog admin-dialog-{{variant}}"
+          },
+          "children": [
+            {
+              "type": "DialogTitle",
+              "sx": {
+                "fontWeight": 600,
+                "pb": 1
+              },
+              "children": "{{title}}"
+            },
+            {
+              "type": "DialogContent",
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "body1",
+                  "color": "textSecondary",
+                  "children": "{{message}}"
+                }
+              ]
+            },
+            {
+              "type": "DialogActions",
+              "sx": {
+                "px": 3,
+                "py": 2,
+                "gap": 1
+              },
+              "children": [
+                {
+                  "type": "Button",
+                  "variant": "outlined",
+                  "color": "secondary",
+                  "onClick": "onCancel",
+                  "children": "{{cancelText}}"
+                },
+                {
+                  "type": "Button",
+                  "variant": "contained",
+                  "color": "{{variant === 'danger' ? 'error' : variant === 'success' ? 'success' : 'warning'}}",
+                  "onClick": "onConfirm",
+                  "children": "{{confirmText}}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "admin_delete_dialog",
+      "name": "AdminDeleteDialog",
+      "description": "Specialized dialog for destructive delete actions with confirmation input",
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": true,
+          "default": false
+        },
+        {
+          "name": "itemName",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "itemType",
+          "type": "string",
+          "required": true,
+          "default": "item"
+        },
+        {
+          "name": "itemId",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "confirmationText",
+          "type": "string",
+          "default": "DELETE"
+        }
+      ],
+      "state": [
+        {
+          "name": "confirmInput",
+          "type": "string",
+          "default": ""
+        }
+      ],
+      "handlers": {
+        "onDelete": "dialog.handleDelete",
+        "onCancel": "dialog.handleCancel",
+        "onClose": "dialog.handleClose",
+        "onInputChange": "dialog.handleConfirmInputChange"
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Dialog",
+          "open": "{{open}}",
+          "maxWidth": "sm",
+          "onClose": "onClose",
+          "PaperProps": {
+            "className": "admin-dialog admin-dialog-danger"
+          },
+          "children": [
+            {
+              "type": "DialogTitle",
+              "sx": {
+                "display": "flex",
+                "alignItems": "center",
+                "gap": 1,
+                "color": "error.main"
+              },
+              "children": [
+                {
+                  "type": "Icon",
+                  "name": "Warning",
+                  "color": "error"
+                },
+                "Confirm Delete"
+              ]
+            },
+            {
+              "type": "DialogContent",
+              "dividers": true,
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "body1",
+                  "sx": { "mb": 2 },
+                  "children": "You are about to permanently delete:"
+                },
+                {
+                  "type": "Box",
+                  "sx": {
+                    "p": 2,
+                    "bgcolor": "error.light",
+                    "borderRadius": 1,
+                    "mb": 2
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "h6",
+                      "sx": { "fontWeight": 600, "mb": 0.5 },
+                      "children": "{{itemName}}"
+                    },
+                    {
+                      "type": "Text",
+                      "variant": "body2",
+                      "color": "error.dark",
+                      "sx": { "fontWeight": 500 },
+                      "children": "This action cannot be undone!"
+                    }
+                  ]
+                },
+                {
+                  "type": "TextField",
+                  "fullWidth": true,
+                  "label": "Type '{{confirmationText}}' to confirm",
+                  "placeholder": "{{confirmationText}}",
+                  "value": "{{confirmInput}}",
+                  "onChange": "onInputChange",
+                  "required": true,
+                  "sx": { "mt": 1 }
+                }
+              ]
+            },
+            {
+              "type": "DialogActions",
+              "sx": {
+                "px": 3,
+                "py": 2,
+                "gap": 1
+              },
+              "children": [
+                {
+                  "type": "Button",
+                  "variant": "outlined",
+                  "color": "secondary",
+                  "onClick": "onCancel",
+                  "children": "Cancel"
+                },
+                {
+                  "type": "Button",
+                  "variant": "contained",
+                  "color": "error",
+                  "onClick": "onDelete",
+                  "disabled": "{{confirmInput !== confirmationText}}",
+                  "children": "Delete Permanently"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "admin_action_dialog",
+      "name": "AdminActionDialog",
+      "description": "Multi-purpose dialog for admin actions with custom action buttons",
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": true,
+          "default": false
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "default": "Admin Action"
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "required": true,
+          "default": "Select an action to perform"
+        },
+        {
+          "name": "actions",
+          "type": "array",
+          "required": true,
+          "description": "Array of action button definitions"
+        }
+      ],
+      "handlers": {
+        "onAction": "dialog.handleAction",
+        "onClose": "dialog.handleClose"
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Dialog",
+          "open": "{{open}}",
+          "maxWidth": "sm",
+          "fullWidth": true,
+          "onClose": "onClose",
+          "children": [
+            {
+              "type": "DialogTitle",
+              "children": "{{title}}"
+            },
+            {
+              "type": "DialogContent",
+              "dividers": true,
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "body1",
+                  "color": "textSecondary",
+                  "children": "{{message}}"
+                }
+              ]
+            },
+            {
+              "type": "DialogActions",
+              "sx": {
+                "px": 3,
+                "py": 2,
+                "gap": 1,
+                "flexWrap": "wrap"
+              },
+              "children": [
+                {
+                  "type": "iterator",
+                  "items": "{{actions}}",
+                  "render": {
+                    "type": "Button",
+                    "variant": "{{item.variant === 'primary' ? 'contained' : item.variant === 'danger' ? 'contained' : 'outlined'}}",
+                    "color": "{{item.variant === 'danger' ? 'error' : item.variant === 'primary' ? 'primary' : 'secondary'}}",
+                    "onClick": "{{() => onAction(item)}}",
+                    "children": "{{item.text}}"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "exports": {
+    "components": ["AdminConfirmDialog", "AdminDeleteDialog", "AdminActionDialog"]
+  }
+}

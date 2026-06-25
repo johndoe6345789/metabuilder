@@ -1,172 +1,146 @@
 /**
- * Note: FakeMUI components, icons, and styles are mocked via Jest config
-
-Tests for Recent Workflows Page
+ * Tests for Recent Workflows Page
  */
 
 import React from 'react'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
+
+// Mock @metabuilder/hooks to avoid ESM/nanoid import errors
+jest.mock('@metabuilder/hooks', () => ({
+  useWorkflows: jest.fn(() => ({
+    workflows: [
+      {
+        id: 'wf-1',
+        name: 'API Integration',
+        description: 'REST API workflow',
+        status: 'active',
+        version: '1.0.0',
+        updatedAt: Date.now() - 60000,
+        nodes: [{ id: 'n1' }, { id: 'n2' }],
+      },
+      {
+        id: 'wf-2',
+        name: 'Slack Notifier',
+        description: 'Sends Slack notifications',
+        status: 'active',
+        version: '1.0.0',
+        updatedAt: Date.now() - 120000,
+        nodes: [{ id: 'n3' }],
+      },
+    ],
+    isLoading: false,
+    listWorkflows: jest.fn(),
+    createWorkflow: jest.fn(),
+    updateWorkflow: jest.fn(),
+    deleteWorkflow: jest.fn(),
+  })),
+}))
+
+jest.mock('next/link', () => ({ children, href }: any) => <a href={href}>{children}</a>)
+
 import RecentWorkflowsPage from '../page'
 
-
-
-
-
 describe('RecentWorkflowsPage', () => {
-  it('should render the recent workflows page', () => {
+  it('should render the recent workflows page container', () => {
     render(<RecentWorkflowsPage />)
     expect(screen.getByTestId('recent-page')).toBeInTheDocument()
   })
 
-  it('should render the page header', () => {
+  it('should render "Recent Workflows" title', () => {
     render(<RecentWorkflowsPage />)
-    expect(screen.getByTestId('recent-header')).toBeInTheDocument()
     expect(screen.getByText('Recent Workflows')).toBeInTheDocument()
   })
 
-  describe('Workflow Cards', () => {
-    it('should render workflow cards sorted by recent activity', () => {
-      render(<RecentWorkflowsPage />)
-
-      expect(screen.getByTestId('workflow-api-integration')).toBeInTheDocument()
-      expect(screen.getByTestId('workflow-slack-notifier')).toBeInTheDocument()
-    })
-
-    it('should display workflow information', () => {
-      render(<RecentWorkflowsPage />)
-
-      expect(screen.getByText('API Integration')).toBeInTheDocument()
-      expect(screen.getByText(/REST API workflow/i)).toBeInTheDocument()
-    })
-
-    it('should show last accessed timestamp', () => {
-      render(<RecentWorkflowsPage />)
-
-      expect(screen.getByText(/Last accessed:/i)).toBeInTheDocument()
-    })
-
-    it('should show execution count', () => {
-      render(<RecentWorkflowsPage />)
-
-      expect(screen.getByText(/executions/i)).toBeInTheDocument()
-    })
-
-    it('should show language tags', () => {
-      render(<RecentWorkflowsPage />)
-
-      expect(screen.getByTestId('lang-typescript')).toBeInTheDocument()
-      expect(screen.getByTestId('lang-python')).toBeInTheDocument()
-    })
+  it('should render the subtitle', () => {
+    render(<RecentWorkflowsPage />)
+    expect(screen.getByText('Your recently updated workflows')).toBeInTheDocument()
   })
 
-  describe('Workflow Actions', () => {
-    it('should have run button for each workflow', () => {
+  describe('Workflow List', () => {
+    it('should render workflow names', () => {
       render(<RecentWorkflowsPage />)
-
-      const runButtons = screen.getAllByTestId(/run-workflow-/)
-      expect(runButtons.length).toBeGreaterThan(0)
+      expect(screen.getByText('API Integration')).toBeInTheDocument()
+      expect(screen.getByText('Slack Notifier')).toBeInTheDocument()
     })
 
-    it('should have edit button for each workflow', () => {
+    it('should render workflow descriptions', () => {
       render(<RecentWorkflowsPage />)
+      expect(screen.getByText('REST API workflow')).toBeInTheDocument()
+      expect(screen.getByText('Sends Slack notifications')).toBeInTheDocument()
+    })
 
-      const editButtons = screen.getAllByTestId(/edit-workflow-/)
+    it('should render Edit buttons for workflows', () => {
+      render(<RecentWorkflowsPage />)
+      const editButtons = screen.getAllByText('Edit')
       expect(editButtons.length).toBeGreaterThan(0)
     })
 
-    it('should have favorite toggle for each workflow', () => {
+    it('should render edit links to editor', () => {
       render(<RecentWorkflowsPage />)
-
-      const favoriteButtons = screen.getAllByTestId(/favorite-workflow-/)
-      expect(favoriteButtons.length).toBeGreaterThan(0)
-    })
-
-    it('should toggle favorite when star button clicked', () => {
-      render(<RecentWorkflowsPage />)
-
-      const favoriteBtn = screen.getByTestId('favorite-workflow-api-integration')
-      fireEvent.click(favoriteBtn)
-
-      // In a real implementation, this would update the favorite state
-    })
-
-    it('should navigate to workflow editor on edit', () => {
-      render(<RecentWorkflowsPage />)
-
-      const editBtn = screen.getByTestId('edit-workflow-api-integration')
-      expect(editBtn).toBeInTheDocument()
-      // In a real implementation, this would trigger navigation
+      const editLinks = screen.getAllByRole('link')
+      const editorLinks = editLinks.filter((link) =>
+        link.getAttribute('href')?.startsWith('/editor/')
+      )
+      expect(editorLinks.length).toBeGreaterThan(0)
     })
   })
 
-  describe('Time-based Grouping', () => {
-    it('should group workflows by time period', () => {
+  describe('Metadata', () => {
+    it('should render time ago text for workflows', () => {
       render(<RecentWorkflowsPage />)
+      // formatTimeAgo converts timestamp, recent timestamps show "X minutes ago"
+      const timeTexts = screen.getAllByText(/ago|Just now/i)
+      expect(timeTexts.length).toBeGreaterThan(0)
+    })
 
-      // Check for time-based section headers
-      expect(screen.getByText(/Today/i)).toBeInTheDocument()
-      expect(screen.getByText(/Yesterday/i)).toBeInTheDocument()
-      expect(screen.getByText(/This Week/i)).toBeInTheDocument()
+    it('should render node count for each workflow', () => {
+      render(<RecentWorkflowsPage />)
+      // RecentWorkflowMeta shows node count
+      expect(screen.getByText(/2 nodes/i)).toBeInTheDocument()
+    })
+
+    it('should render version numbers', () => {
+      render(<RecentWorkflowsPage />)
+      const versionTexts = screen.getAllByText(/v1\.0\.0/)
+      expect(versionTexts.length).toBeGreaterThan(0)
     })
   })
 
-  describe('Workflow Status', () => {
-    it('should show success status for completed workflows', () => {
+  describe('Loading State', () => {
+    it('should not render the page container when loading with no workflows', () => {
+      const { useWorkflows } = require('@metabuilder/hooks')
+      useWorkflows.mockReturnValueOnce({
+        workflows: [],
+        isLoading: true,
+        listWorkflows: jest.fn(),
+      })
       render(<RecentWorkflowsPage />)
-
-      const successChips = screen.getAllByText('Success')
-      expect(successChips.length).toBeGreaterThan(0)
-    })
-
-    it('should show running status for active workflows', () => {
-      render(<RecentWorkflowsPage />)
-
-      const runningChips = screen.getAllByText('Running')
-      expect(runningChips.length).toBeGreaterThan(0)
-    })
-
-    it('should show error status for failed workflows', () => {
-      render(<RecentWorkflowsPage />)
-
-      const errorChips = screen.getAllByText('Error')
-      expect(errorChips.length).toBeGreaterThan(0)
+      // In loading+empty state, the recent-page testid is not shown (loading spinner shown instead)
+      expect(screen.queryByTestId('recent-page')).not.toBeInTheDocument()
     })
   })
 
   describe('Empty State', () => {
-    it('should handle empty recent workflows list', () => {
-      // This would require mocking the workflow data to be empty
-      // For now, we verify the component renders without errors
+    it('should render empty state message when no workflows', () => {
+      const { useWorkflows } = require('@metabuilder/hooks')
+      useWorkflows.mockReturnValueOnce({
+        workflows: [],
+        isLoading: false,
+        listWorkflows: jest.fn(),
+      })
       render(<RecentWorkflowsPage />)
-      expect(screen.getByTestId('recent-page')).toBeInTheDocument()
-    })
-  })
-
-  describe('Accessibility', () => {
-    it('should have proper test IDs for all workflow cards', () => {
-      render(<RecentWorkflowsPage />)
-
-      expect(screen.getByTestId('workflow-api-integration')).toBeInTheDocument()
-      expect(screen.getByTestId('workflow-slack-notifier')).toBeInTheDocument()
+      expect(screen.getByText('No recent workflows')).toBeInTheDocument()
     })
 
-    it('should have proper test IDs for action buttons', () => {
+    it('should show helpful message in empty state', () => {
+      const { useWorkflows } = require('@metabuilder/hooks')
+      useWorkflows.mockReturnValueOnce({
+        workflows: [],
+        isLoading: false,
+        listWorkflows: jest.fn(),
+      })
       render(<RecentWorkflowsPage />)
-
-      expect(screen.getByTestId('run-workflow-api-integration')).toBeInTheDocument()
-      expect(screen.getByTestId('edit-workflow-api-integration')).toBeInTheDocument()
-      expect(screen.getByTestId('favorite-workflow-api-integration')).toBeInTheDocument()
-    })
-  })
-
-  describe('Sorting and Ordering', () => {
-    it('should display workflows in chronological order', () => {
-      render(<RecentWorkflowsPage />)
-
-      // Verify that most recent workflows appear first
-      const workflowCards = screen.getAllByTestId(/^workflow-/)
-      expect(workflowCards.length).toBeGreaterThan(0)
-      // In a real implementation, we would verify the order
+      expect(screen.getByText('Create or edit a workflow to see it here')).toBeInTheDocument()
     })
   })
 })

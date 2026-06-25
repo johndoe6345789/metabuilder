@@ -20,7 +20,7 @@ import {
   Chip,
   Avatar,
   IconButton,
-} from '@/fakemui'
+} from '@/m3'
 import { getLevelLabel, getLevelColor } from '@/lib/packages/navigation'
 
 export interface AppBarProps {

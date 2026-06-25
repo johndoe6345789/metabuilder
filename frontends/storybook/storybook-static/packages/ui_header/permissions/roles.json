@@ -1,0 +1,53 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "ui_header",
+  "description": "Header access permissions",
+  "permissions": [
+    {
+      "id": "header.view",
+      "name": "View Header",
+      "description": "View application header",
+      "resource": "header",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 1
+    },
+    {
+      "id": "header.user.menu",
+      "name": "Access User Menu",
+      "description": "Access user dropdown menu in header",
+      "resource": "header",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "header.admin.access",
+      "name": "Access Admin Link",
+      "description": "See and access admin link in header navigation",
+      "resource": "header",
+      "action": "admin",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "header.theme.toggle",
+      "name": "Toggle Theme",
+      "description": "Toggle light/dark theme from header",
+      "resource": "header",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 1
+    }
+  ],
+  "resources": [
+    {
+      "id": "header",
+      "name": "Header",
+      "type": "component",
+      "description": "Application header resources",
+      "actions": ["read", "execute", "admin", "manage"]
+    }
+  ]
+}

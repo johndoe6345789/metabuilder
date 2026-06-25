@@ -1,0 +1,160 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": false,
+  "title": "Admin Dialogs",
+  "description": "Administrative dialogs for confirmations, deletions, and multi-action workflows",
+  "stories": [
+    {
+      "name": "AdminConfirmDialog - Warning",
+      "component": "AdminConfirmDialog",
+      "description": "Warning confirmation dialog",
+      "args": {
+        "open": true,
+        "title": "Confirm User Suspension",
+        "message": "Are you sure you want to suspend this user account? They will not be able to log in until reactivated.",
+        "variant": "warning",
+        "confirmText": "Suspend User",
+        "cancelText": "Cancel"
+      }
+    },
+    {
+      "name": "AdminConfirmDialog - Danger",
+      "component": "AdminConfirmDialog",
+      "description": "Danger confirmation dialog",
+      "args": {
+        "open": true,
+        "title": "Confirm Account Termination",
+        "message": "This will permanently terminate the account and all associated data. This action cannot be undone.",
+        "variant": "danger",
+        "confirmText": "Terminate Account",
+        "cancelText": "Cancel"
+      }
+    },
+    {
+      "name": "AdminConfirmDialog - Success",
+      "component": "AdminConfirmDialog",
+      "description": "Success/approval confirmation dialog",
+      "args": {
+        "open": true,
+        "title": "Approve Application",
+        "message": "Are you sure you want to approve this application and grant access?",
+        "variant": "success",
+        "confirmText": "Approve",
+        "cancelText": "Cancel"
+      }
+    },
+    {
+      "name": "AdminDeleteDialog - User",
+      "component": "AdminDeleteDialog",
+      "description": "Delete confirmation with text input for user",
+      "args": {
+        "open": true,
+        "itemName": "john.doe@example.com",
+        "itemType": "user",
+        "itemId": "user-12345",
+        "confirmationText": "DELETE"
+      }
+    },
+    {
+      "name": "AdminDeleteDialog - Package",
+      "component": "AdminDeleteDialog",
+      "description": "Delete confirmation for package",
+      "args": {
+        "open": true,
+        "itemName": "legacy_auth_system",
+        "itemType": "package",
+        "itemId": "pkg-98765",
+        "confirmationText": "DELETE"
+      }
+    },
+    {
+      "name": "AdminActionDialog - Moderation",
+      "component": "AdminActionDialog",
+      "description": "Multi-action dialog for content moderation",
+      "args": {
+        "open": true,
+        "title": "Moderate Content",
+        "message": "Select an action to perform on this flagged content:",
+        "actions": [
+          {
+            "text": "Approve",
+            "variant": "primary",
+            "action": "approve"
+          },
+          {
+            "text": "Remove",
+            "variant": "danger",
+            "action": "remove"
+          },
+          {
+            "text": "Review Later",
+            "variant": "secondary",
+            "action": "defer"
+          },
+          {
+            "text": "Request Changes",
+            "variant": "default",
+            "action": "request_changes"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AdminActionDialog - User Review",
+      "component": "AdminActionDialog",
+      "description": "Multi-action dialog for user account review",
+      "args": {
+        "open": true,
+        "title": "Review User Account",
+        "message": "This account has been flagged for review. Choose an action:",
+        "actions": [
+          {
+            "text": "Clear Flag",
+            "variant": "primary",
+            "action": "clear"
+          },
+          {
+            "text": "Suspend",
+            "variant": "danger",
+            "action": "suspend"
+          },
+          {
+            "text": "Warn User",
+            "variant": "default",
+            "action": "warn"
+          }
+        ]
+      }
+    }
+  ],
+  "defaultContext": {
+    "user": {
+      "id": "admin-user",
+      "username": "admin",
+      "level": 5
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Super Admin",
+      "description": "Full administrative access",
+      "context": {
+        "user": {
+          "level": 5
+        }
+      }
+    },
+    {
+      "name": "Admin",
+      "description": "Standard admin access",
+      "context": {
+        "user": {
+          "level": 4
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "layout": "centered"
+  }
+}

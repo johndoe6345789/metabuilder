@@ -1,0 +1,108 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PageConfig Seed Data",
+  "description": "Validation schema for page-config seed data files",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "Unique identifier for this page configuration",
+        "pattern": "^page_"
+      },
+      "path": {
+        "type": "string",
+        "description": "URL path for this page (must be unique)",
+        "pattern": "^/"
+      },
+      "title": {
+        "type": "string",
+        "description": "Display title for this page",
+        "minLength": 1,
+        "maxLength": 255
+      },
+      "description": {
+        "type": ["string", "null"],
+        "description": "Description of the page",
+        "maxLength": 500
+      },
+      "component": {
+        "type": ["string", "null"],
+        "description": "Component name to render"
+      },
+      "componentTree": {
+        "type": ["object", "string"],
+        "description": "Component tree configuration (JSON or stringified JSON)",
+        "default": {}
+      },
+      "level": {
+        "type": "integer",
+        "description": "Access level required (0=public, 1=user, 2=moderator, 3=admin, 4=god, 5=supergod)",
+        "minimum": 0,
+        "maximum": 5,
+        "default": 0
+      },
+      "requiresAuth": {
+        "type": "boolean",
+        "description": "Whether page requires authentication",
+        "default": false
+      },
+      "isPublished": {
+        "type": "boolean",
+        "description": "Whether page is published/visible",
+        "default": true
+      },
+      "icon": {
+        "type": ["string", "null"],
+        "description": "Icon for this page (emoji or icon name)"
+      },
+      "packageId": {
+        "type": ["string", "null"],
+        "description": "Package that defined this page"
+      },
+      "tenantId": {
+        "type": ["string", "null"],
+        "description": "Tenant ID (null = system-wide)"
+      },
+      "parentPath": {
+        "type": ["string", "null"],
+        "description": "Parent page path for hierarchy"
+      },
+      "sortOrder": {
+        "type": "integer",
+        "description": "Sort order for navigation",
+        "default": 0
+      },
+      "params": {
+        "type": ["object", "string", "null"],
+        "description": "URL parameters (JSON or stringified JSON)"
+      },
+      "meta": {
+        "type": ["object", "string", "null"],
+        "description": "Additional metadata (JSON or stringified JSON)"
+      },
+      "requiredRole": {
+        "type": ["string", "null"],
+        "description": "Specific role required to access"
+      }
+    },
+    "required": ["id", "path", "title", "component"],
+    "additionalProperties": false
+  },
+  "minItems": 1,
+  "examples": [
+    [
+      {
+        "id": "page_ui_home_root",
+        "path": "/",
+        "title": "MetaBuilder Home",
+        "component": "home_page",
+        "level": 0,
+        "requiresAuth": false,
+        "isPublished": true,
+        "description": "Landing page"
+      }
+    ]
+  ]
+}

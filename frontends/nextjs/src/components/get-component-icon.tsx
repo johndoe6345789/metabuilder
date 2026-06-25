@@ -23,7 +23,7 @@ import {
   ViewColumn,
   ViewStream,
   WarningAmber,
-} from '@/fakemui/icons'
+} from '@/m3/icons'
 
 const iconMap: Record<string, ComponentType<IconProps>> = {
   Article,

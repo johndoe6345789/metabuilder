@@ -17,8 +17,10 @@ jest.mock('@/hooks/useTranslation', () => ({
 jest.mock('framer-motion', () => ({
   motion: {
     form: React.forwardRef(
-      ({ children, ...props }: React.ComponentPropsWithRef<'form'>, ref: React.Ref<HTMLFormElement>) =>
-        React.createElement('form', { ...props, ref }, children)
+      (
+        { children, ...props }: React.ComponentPropsWithRef<'form'>,
+        ref: React.Ref<HTMLFormElement>,
+      ) => React.createElement('form', { ...props, ref }, children),
     ),
   },
   AnimatePresence: ({ children }: { children: React.ReactNode }) =>
@@ -40,7 +42,9 @@ describe('TerminalInput', () => {
   describe('Rendering', () => {
     it('should not render when waitingForInput is false', () => {
       render(<TerminalInput {...defaultProps} />)
-      expect(screen.queryByTestId('terminal-input-form')).not.toBeInTheDocument()
+      expect(
+        screen.queryByTestId('terminal-input-form'),
+      ).not.toBeInTheDocument()
     })
 
     it('should render form when waitingForInput is true', () => {
@@ -71,7 +75,13 @@ describe('TerminalInput', () => {
     })
 
     it('should display the inputValue in the input field', () => {
-      render(<TerminalInput {...defaultProps} waitingForInput={true} inputValue="test value" />)
+      render(
+        <TerminalInput
+          {...defaultProps}
+          waitingForInput={true}
+          inputValue="test value"
+        />,
+      )
       const input = screen.getByTestId('terminal-input') as HTMLInputElement
       expect(input.value).toBe('test value')
     })
@@ -87,7 +97,7 @@ describe('TerminalInput', () => {
           {...defaultProps}
           waitingForInput={true}
           onInputChange={onInputChange}
-        />
+        />,
       )
 
       await user.type(screen.getByTestId('terminal-input'), 'hello')
@@ -104,7 +114,7 @@ describe('TerminalInput', () => {
           waitingForInput={true}
           onInputChange={onInputChange}
           inputValue=""
-        />
+        />,
       )
 
       const input = screen.getByTestId('terminal-input')
@@ -121,7 +131,7 @@ describe('TerminalInput', () => {
           {...defaultProps}
           waitingForInput={true}
           onInputChange={onInputChange}
-        />
+        />,
       )
 
       const input = screen.getByTestId('terminal-input')
@@ -140,7 +150,7 @@ describe('TerminalInput', () => {
           {...defaultProps}
           waitingForInput={true}
           onInputChange={onInputChange}
-        />
+        />,
       )
 
       await user.type(screen.getByTestId('terminal-input'), '!@#$%')
@@ -157,7 +167,7 @@ describe('TerminalInput', () => {
           waitingForInput={true}
           onInputChange={onInputChange}
           inputValue="test"
-        />
+        />,
       )
 
       const input = screen.getByTestId('terminal-input')
@@ -168,7 +178,7 @@ describe('TerminalInput', () => {
 
   describe('Form Submission', () => {
     it('should call onSubmit when form is submitted', async () => {
-      const onSubmit = jest.fn((e) => e.preventDefault())
+      const onSubmit = jest.fn(e => e.preventDefault())
       const user = userEvent.setup()
 
       render(
@@ -176,7 +186,7 @@ describe('TerminalInput', () => {
           {...defaultProps}
           waitingForInput={true}
           onSubmit={onSubmit}
-        />
+        />,
       )
 
       const input = screen.getByTestId('terminal-input')
@@ -195,7 +205,7 @@ describe('TerminalInput', () => {
           {...defaultProps}
           waitingForInput={true}
           onSubmit={onSubmit}
-        />
+        />,
       )
 
       await user.type(screen.getByTestId('terminal-input'), 'test')
@@ -205,7 +215,7 @@ describe('TerminalInput', () => {
     })
 
     it('should submit form with Enter key', async () => {
-      const onSubmit = jest.fn((e) => e.preventDefault())
+      const onSubmit = jest.fn(e => e.preventDefault())
       const user = userEvent.setup()
 
       render(
@@ -213,7 +223,7 @@ describe('TerminalInput', () => {
           {...defaultProps}
           waitingForInput={true}
           onSubmit={onSubmit}
-        />
+        />,
       )
 
       const input = screen.getByTestId('terminal-input')
@@ -225,6 +235,7 @@ describe('TerminalInput', () => {
 
     it('should preserve input value in controlled component', async () => {
       const onInputChange = jest.fn()
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const user = userEvent.setup()
 
       const { rerender } = render(
@@ -233,7 +244,7 @@ describe('TerminalInput', () => {
           waitingForInput={true}
           inputValue="initial"
           onInputChange={onInputChange}
-        />
+        />,
       )
 
       rerender(
@@ -242,7 +253,7 @@ describe('TerminalInput', () => {
           waitingForInput={true}
           inputValue="initial"
           onInputChange={onInputChange}
-        />
+        />,
       )
 
       const input = screen.getByTestId('terminal-input') as HTMLInputElement
@@ -265,9 +276,10 @@ describe('TerminalInput', () => {
   })
 
   describe('Focus Management', () => {
+    // eslint-disable-next-line max-len
     it('should auto-focus input when waitingForInput becomes true', async () => {
       const { rerender } = render(
-        <TerminalInput {...defaultProps} waitingForInput={false} />
+        <TerminalInput {...defaultProps} waitingForInput={false} />,
       )
 
       rerender(<TerminalInput {...defaultProps} waitingForInput={true} />)
@@ -327,6 +339,7 @@ describe('TerminalInput', () => {
   })
 
   describe('Styling and Classes', () => {
+    // eslint-disable-next-line max-len
     it('should have correct form styling (inline styles apply flex layout)', () => {
       render(<TerminalInput {...defaultProps} waitingForInput={true} />)
       const form = screen.getByTestId('terminal-input-form')
@@ -334,6 +347,7 @@ describe('TerminalInput', () => {
       expect(form).toBeInTheDocument()
     })
 
+    // eslint-disable-next-line max-len
     it('should have correct input styling (inline styles apply monospace)', () => {
       render(<TerminalInput {...defaultProps} waitingForInput={true} />)
       const input = screen.getByTestId('terminal-input')
@@ -357,26 +371,40 @@ describe('TerminalInput', () => {
 
   describe('State Transitions', () => {
     it('should show/hide input based on waitingForInput', () => {
-      const { rerender } = render(<TerminalInput {...defaultProps} waitingForInput={false} />)
-      expect(screen.queryByTestId('terminal-input-form')).not.toBeInTheDocument()
+      const { rerender } = render(
+        <TerminalInput {...defaultProps} waitingForInput={false} />,
+      )
+      expect(
+        screen.queryByTestId('terminal-input-form'),
+      ).not.toBeInTheDocument()
 
       rerender(<TerminalInput {...defaultProps} waitingForInput={true} />)
       expect(screen.getByTestId('terminal-input-form')).toBeInTheDocument()
 
       rerender(<TerminalInput {...defaultProps} waitingForInput={false} />)
-      expect(screen.queryByTestId('terminal-input-form')).not.toBeInTheDocument()
+      expect(
+        screen.queryByTestId('terminal-input-form'),
+      ).not.toBeInTheDocument()
     })
 
     it('should update input value when prop changes', () => {
       const { rerender } = render(
-        <TerminalInput {...defaultProps} waitingForInput={true} inputValue="initial" />
+        <TerminalInput
+          {...defaultProps}
+          waitingForInput={true}
+          inputValue="initial"
+        />,
       )
 
       let input = screen.getByTestId('terminal-input') as HTMLInputElement
       expect(input.value).toBe('initial')
 
       rerender(
-        <TerminalInput {...defaultProps} waitingForInput={true} inputValue="updated" />
+        <TerminalInput
+          {...defaultProps}
+          waitingForInput={true}
+          inputValue="updated"
+        />,
       )
 
       input = screen.getByTestId('terminal-input') as HTMLInputElement
@@ -395,6 +423,7 @@ describe('TerminalInput', () => {
   describe('Edge Cases', () => {
     it('should handle very long input text', async () => {
       const onInputChange = jest.fn()
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const user = userEvent.setup()
       const longValue = 'a'.repeat(1000)
 
@@ -404,7 +433,7 @@ describe('TerminalInput', () => {
           waitingForInput={true}
           onInputChange={onInputChange}
           inputValue={longValue}
-        />
+        />,
       )
 
       const input = screen.getByTestId('terminal-input') as HTMLInputElement
@@ -412,26 +441,38 @@ describe('TerminalInput', () => {
     })
 
     it('should handle empty string input', () => {
-      render(<TerminalInput {...defaultProps} waitingForInput={true} inputValue="" />)
+      render(
+        <TerminalInput
+          {...defaultProps}
+          waitingForInput={true}
+          inputValue=""
+        />,
+      )
       const input = screen.getByTestId('terminal-input') as HTMLInputElement
       expect(input.value).toBe('')
     })
 
     it('should handle rapid state changes', () => {
       const { rerender } = render(
-        <TerminalInput {...defaultProps} waitingForInput={true} />
+        <TerminalInput {...defaultProps} waitingForInput={true} />,
       )
 
       rerender(<TerminalInput {...defaultProps} waitingForInput={false} />)
       rerender(<TerminalInput {...defaultProps} waitingForInput={true} />)
       rerender(<TerminalInput {...defaultProps} waitingForInput={false} />)
 
-      expect(screen.queryByTestId('terminal-input-form')).not.toBeInTheDocument()
+      expect(
+        screen.queryByTestId('terminal-input-form'),
+      ).not.toBeInTheDocument()
     })
 
     it('should handle rapid input value updates', () => {
       const { rerender } = render(
-        <TerminalInput {...defaultProps} waitingForInput={true} inputValue="a" />
+        <TerminalInput
+          {...defaultProps}
+          waitingForInput={true}
+          inputValue="a"
+        />,
       )
 
       for (let i = 0; i < 100; i++) {
@@ -441,7 +482,7 @@ describe('TerminalInput', () => {
             {...defaultProps}
             waitingForInput={true}
             inputValue={newValue}
-          />
+          />,
         )
       }
 
@@ -460,7 +501,7 @@ describe('TerminalInput', () => {
           {...defaultProps}
           waitingForInput={true}
           onInputChange={onInputChange}
-        />
+        />,
       )
 
       const input = screen.getByTestId('terminal-input')
@@ -479,7 +520,7 @@ describe('TerminalInput', () => {
           waitingForInput={true}
           inputValue="initial content"
           onInputChange={onInputChange}
-        />
+        />,
       )
 
       const input = screen.getByTestId('terminal-input')

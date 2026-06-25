@@ -1,0 +1,236 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "title": "Package Playwright Test Configuration",
+  "description": "JSON-driven Playwright E2E test configuration.\n\nNo code lives in JSON — complex operations are referenced by hook name and\nexecuted in typed TypeScript (tests/e2e/hooks.ts).\n\nCRITICAL — URL rules:\n  - baseURL is 'http://localhost/pastebin/' (trailing slash)\n  - navigate urls must be RELATIVE WITHOUT leading slash: 'settings' not '/settings'\n\nHook system:\n  action:\"hook\"       → SetupHook (side effects, e.g. clearStorage)\n  action:\"evalExpect\" → EvalHook result asserted immediately\n  action:\"store\"      → EvalHook result saved to named variable\n  action:\"screenshot\" with clipFrom:\"varName\" → use stored BoundingBox as clip region",
+  "type": "object",
+  "required": ["tests"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "package":     { "type": "string", "pattern": "^[a-z0-9_-]+$" },
+    "version":     { "type": "string", "default": "1.0.0" },
+    "description": { "type": "string" },
+    "suite":       { "type": "string", "description": "Display name for the test group (used as describe block name)" }
+  },
+  "definitions": {
+    "test": {
+      "type": "object",
+      "required": ["name", "steps"],
+      "properties": {
+        "name":        { "type": "string", "minLength": 1 },
+        "description": { "type": "string" },
+        "skip":        { "type": "boolean", "default": false },
+        "only":        { "type": "boolean", "default": false },
+        "timeout":     { "type": "number", "minimum": 0 },
+        "tags":        { "type": "array", "items": { "type": "string" } },
+        "steps":       { "type": "array", "items": { "$ref": "#/definitions/step" }, "minItems": 1 },
+        "beforeEach":  { "type": "array", "items": { "$ref": "#/definitions/step" } },
+        "afterEach":   { "type": "array", "items": { "$ref": "#/definitions/step" } },
+        "parameterize": {
+          "type": "object",
+          "required": ["data"],
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": { "type": "object", "additionalProperties": { "type": "string" } },
+              "minItems": 1
+            }
+          }
+        }
+      }
+    },
+    "step": {
+      "type": "object",
+      "required": ["action"],
+      "description": "A single test step. Locator priority: testId > role+text > label > placeholder > text > selector",
+      "properties": {
+        "description": { "type": "string" },
+        "action": {
+          "type": "string",
+          "enum": [
+            "navigate",
+            "click", "dblclick", "tap",
+            "fill", "type", "pageType", "select", "check", "uncheck",
+            "hover", "focus", "blur",
+            "press", "keyboard",
+            "scroll",
+            "wait", "waitForSelector", "waitForHidden", "waitForURL", "waitForNavigation", "waitForLoadState",
+            "setViewport",
+            "screenshot",
+            "hook", "evalExpect", "store",
+            "expect",
+            "reload", "goBack", "goForward",
+            "apiRequest",
+            "evaluate"
+          ],
+          "description": "Action type. Prefer hook/evalExpect/store over evaluate."
+        },
+
+        "skipIf": {
+          "type": "object",
+          "required": ["selector", "state"],
+          "description": "Skip this step if the condition is met (checked with 2s timeout).",
+          "properties": {
+            "selector": { "type": "string" },
+            "state":    { "type": "string", "enum": ["hidden", "visible", "enabled", "disabled"] }
+          },
+          "additionalProperties": false
+        },
+
+        "name": {
+          "type": "string",
+          "description": "Hook name for hook / evalExpect / store actions.",
+          "examples": [
+            "clearStorage", "clearIndexedDB",
+            "trackConsoleErrors", "assertNoConsoleErrors",
+            "watchNetworkErrors", "assertNoNetworkErrors",
+            "getComputedStyle", "getScrollInfo", "getBoundingBox",
+            "checkNoOverlap", "getTouchTargetViolations",
+            "matchesPattern", "hasHorizontalScroll",
+            "getElementText", "getElementCount"
+          ]
+        },
+        "args": {
+          "type": "object",
+          "description": "Arguments passed to the hook function.",
+          "additionalProperties": true
+        },
+        "as": {
+          "type": "string",
+          "description": "Variable name to store the hook result under (store action only)."
+        },
+        "clipFrom": {
+          "type": "string",
+          "description": "Variable name (from a store:getBoundingBox step) to use as screenshot clip region."
+        },
+
+        "url":        { "type": "string", "description": "Relative URL without leading slash: 'settings' not '/settings'." },
+        "urlPattern": { "type": "string" },
+        "waitUntil":  { "type": "string", "enum": ["load", "domcontentloaded", "networkidle", "commit"] },
+        "state": {
+          "type": "string",
+          "enum": ["load", "domcontentloaded", "networkidle", "attached", "detached", "visible", "hidden"]
+        },
+        "width":  { "type": "number", "minimum": 1, "description": "Viewport width in px (setViewport action)." },
+        "height": { "type": "number", "minimum": 1, "description": "Viewport height in px (setViewport action)." },
+
+        "testId":       { "type": "string", "description": "data-testid — preferred locator strategy." },
+        "role":         { "type": "string", "description": "ARIA role for getByRole." },
+        "text":         { "type": "string", "description": "Text for getByText or getByRole name filter." },
+        "label":        { "type": "string" },
+        "placeholder":  { "type": "string" },
+        "alt":          { "type": "string" },
+        "title":        { "type": "string" },
+        "selector":     { "type": "string", "description": "CSS selector — last resort locator." },
+        "nth":          { "type": "number", "minimum": 0 },
+
+        "value":      { "description": "Value for fill / select." },
+        "key":        { "type": "string", "description": "Key for press, e.g. 'Enter', 'Escape'." },
+        "keys":       { "oneOf": [{ "type": "string" }, { "type": "array", "items": { "type": "string" } }] },
+        "timeout":    { "type": "number", "minimum": 0 },
+        "delay":      { "type": "number", "minimum": 0 },
+        "x":          { "type": "number" },
+        "y":          { "type": "number" },
+        "filename":   { "type": "string", "description": "Output path for screenshot." },
+        "fullPage":   { "type": "boolean", "default": false },
+        "method":     { "type": "string", "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"] },
+        "body":       { "description": "Request body for apiRequest POST/PUT/PATCH." },
+        "script":     { "type": "string", "description": "JS string for legacy evaluate action. Avoid in new tests — use hook instead." },
+
+        "assertion": { "$ref": "#/definitions/assertion" }
+      }
+    },
+
+    "assertion": {
+      "type": "object",
+      "required": ["matcher"],
+      "properties": {
+        "matcher": {
+          "type": "string",
+          "description": "Playwright or value assertion matcher.",
+          "enum": [
+            "toBeVisible", "toBeHidden", "toBeEnabled", "toBeDisabled",
+            "toBeChecked", "toBeEditable", "toBeEmpty",
+            "toContainText", "toHaveText", "toHaveValue",
+            "toHaveCount", "toHaveAttribute", "toHaveClass", "toHaveCSS",
+            "toHaveURL", "toHaveTitle",
+            "toBeInViewport", "toHaveScreenshot",
+            "toBeTruthy", "toBeFalsy", "toBeNull",
+            "toEqual", "toContain", "toHaveLength", "toMatch",
+            "custom"
+          ]
+        },
+        "not":       { "type": "boolean", "default": false },
+        "expected":  { "description": "Expected value (toEqual / toContainText / toHaveText / toHaveURL / toHaveTitle)." },
+        "text":      { "description": "Alias for expected (toContainText / toHaveText)." },
+        "value":     { "description": "Expected value (toHaveValue / toHaveAttribute / toHaveCSS)." },
+        "name":      { "type": "string", "description": "Attribute name (toHaveAttribute)." },
+        "property":  { "type": "string", "description": "CSS property (toHaveCSS)." },
+        "className": { "description": "Class name or regex (toHaveClass)." },
+        "count":     { "type": "number", "description": "Expected count (toHaveCount / toHaveLength)." },
+        "url":       { "type": "string", "description": "Expected URL (toHaveURL)." },
+        "title":     { "type": "string", "description": "Expected title (toHaveTitle)." },
+        "pattern":   { "type": "string", "description": "Regex pattern string (toMatch)." },
+        "script":    { "type": "string", "description": "Legacy JS for custom assertion. Use evalExpect instead." },
+        "timeout":   { "type": "number", "minimum": 0 }
+      }
+    }
+  },
+
+  "examples": [
+    {
+      "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+      "package": "pastebin",
+      "suite": "Home Page",
+      "tests": [
+        {
+          "name": "no hydration errors on home page",
+          "tags": ["@smoke"],
+          "steps": [
+            { "action": "navigate", "url": "" },
+            { "action": "hook", "name": "trackConsoleErrors" },
+            { "action": "waitForSelector", "selector": "[data-testid='snippet-manager-redux'],[data-testid='snippet-manager-loading']", "timeout": 10000 },
+            { "action": "hook", "name": "assertNoConsoleErrors" }
+          ]
+        },
+        {
+          "name": "no horizontal overflow on mobile",
+          "steps": [
+            { "action": "setViewport", "width": 375, "height": 812 },
+            { "action": "navigate", "url": "" },
+            { "action": "waitForLoadState", "state": "networkidle" },
+            { "action": "evalExpect", "name": "hasHorizontalScroll", "args": { "selector": "body" }, "assertion": { "matcher": "toBeFalsy" } }
+          ]
+        },
+        {
+          "name": "snippet dialog screenshot with clip",
+          "steps": [
+            { "action": "navigate", "url": "" },
+            { "action": "waitForSelector", "selector": "[data-testid='snippet-manager-redux']", "timeout": 10000 },
+            { "action": "click", "selector": "[data-testid='new-snippet-btn'],[data-testid='empty-state-create-menu']" },
+            { "action": "waitForSelector", "selector": "[data-testid='snippet-dialog']", "timeout": 5000 },
+            { "action": "store", "name": "getBoundingBox", "args": { "testId": "snippet-dialog" }, "as": "dialogBox" },
+            { "action": "screenshot", "filename": "screenshots/dialog.png", "clipFrom": "dialogBox" }
+          ]
+        },
+        {
+          "name": "touch targets meet minimum size",
+          "steps": [
+            { "action": "setViewport", "width": 390, "height": 844 },
+            { "action": "navigate", "url": "" },
+            { "action": "waitForLoadState" },
+            { "action": "evalExpect", "name": "getTouchTargetViolations", "args": { "selector": "button", "minSize": 44 }, "assertion": { "matcher": "toHaveLength", "count": 0 } }
+          ]
+        },
+        {
+          "name": "button has pointer cursor",
+          "steps": [
+            { "action": "navigate", "url": "" },
+            { "action": "waitForSelector", "selector": "button", "timeout": 5000 },
+            { "action": "evalExpect", "name": "getComputedStyle", "args": { "selector": "button", "property": "cursor" }, "assertion": { "matcher": "toEqual", "expected": "pointer" } }
+          ]
+        }
+      ]
+    }
+  ]
+}

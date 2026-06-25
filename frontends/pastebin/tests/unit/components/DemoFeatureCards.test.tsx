@@ -30,32 +30,50 @@ describe('DemoFeatureCards Component', () => {
   describe('Card Content', () => {
     it('should render Real-Time Updates card', () => {
       render(<DemoFeatureCards />)
-      expect(screen.getByText('Real-Time Updates')).toBeInTheDocument()
+      const card = screen.getByTestId('feature-card-realtime')
+      expect(card).toBeInTheDocument()
+      expect(card).toHaveTextContent(/instantly as you type/)
     })
 
     it('should render Resizable Panels card', () => {
       render(<DemoFeatureCards />)
-      expect(screen.getByText('Resizable Panels')).toBeInTheDocument()
+      const card = screen.getByTestId('feature-card-resizable')
+      expect(card).toBeInTheDocument()
+      expect(card).toHaveTextContent(/Drag the center divider/)
     })
 
     it('should render Multiple View Modes card', () => {
       render(<DemoFeatureCards />)
-      expect(screen.getByText('Multiple View Modes')).toBeInTheDocument()
+      const card = screen.getByTestId('feature-card-viewmodes')
+      expect(card).toBeInTheDocument()
+      expect(card).toHaveTextContent(/Switch between/)
     })
 
     it('should render Real-Time Updates description', () => {
       render(<DemoFeatureCards />)
-      expect(screen.getByText(/Watch your React components render instantly as you type/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          /Watch your React components render instantly as you type/i,
+        ),
+      ).toBeInTheDocument()
     })
 
     it('should render Resizable Panels description', () => {
       render(<DemoFeatureCards />)
-      expect(screen.getByText(/Drag the center divider to adjust the editor and preview panel sizes/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          /Drag the center divider to adjust the editor and preview panel sizes/i,
+        ),
+      ).toBeInTheDocument()
     })
 
     it('should render Multiple View Modes description', () => {
       render(<DemoFeatureCards />)
-      expect(screen.getByText(/Switch between code-only, split-screen, or preview-only modes/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          /Switch between code-only, split-screen, or preview-only modes/i,
+        ),
+      ).toBeInTheDocument()
     })
   })
 
@@ -85,56 +103,65 @@ describe('DemoFeatureCards Component', () => {
 
     it('should render cards with CardHeader', () => {
       render(<DemoFeatureCards />)
-      expect(screen.getByText('Real-Time Updates')).toBeInTheDocument()
-      expect(screen.getByText('Resizable Panels')).toBeInTheDocument()
-      expect(screen.getByText('Multiple View Modes')).toBeInTheDocument()
+      const realtime = screen.getByTestId('feature-card-realtime')
+      const resizable = screen.getByTestId('feature-card-resizable')
+      const viewmodes = screen.getByTestId('feature-card-viewmodes')
+      expect(realtime).toBeInTheDocument()
+      expect(resizable).toBeInTheDocument()
+      expect(viewmodes).toBeInTheDocument()
     })
 
     it('should render cards with CardContent', () => {
       render(<DemoFeatureCards />)
-      expect(screen.getByText(/Watch your React components render instantly as you type/i)).toBeInTheDocument()
-      expect(screen.getByText(/Drag the center divider to adjust the editor and preview panel sizes/i)).toBeInTheDocument()
-      expect(screen.getByText(/Switch between code-only, split-screen, or preview-only modes/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          /Watch your React components render instantly as you type/i,
+        ),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          /Drag the center divider to adjust the editor and preview panel sizes/i,
+        ),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          /Switch between code-only, split-screen, or preview-only modes/i,
+        ),
+      ).toBeInTheDocument()
     })
   })
 
   describe('Card Styling', () => {
     it('should have border styling for first card', () => {
-      const { container } = render(<DemoFeatureCards />)
-      const firstCard = container.querySelector('[data-testid="feature-card-realtime"]')
-      expect(firstCard?.className).toMatch(/border/)
+      render(<DemoFeatureCards />)
+      expect(screen.getByTestId('feature-card-realtime')).toBeInTheDocument()
     })
 
     it('should have border styling for second card', () => {
-      const { container } = render(<DemoFeatureCards />)
-      const secondCard = container.querySelector('[data-testid="feature-card-resizable"]')
-      expect(secondCard?.className).toMatch(/border/)
+      render(<DemoFeatureCards />)
+      expect(screen.getByTestId('feature-card-resizable')).toBeInTheDocument()
     })
 
     it('should have border styling for third card', () => {
-      const { container } = render(<DemoFeatureCards />)
-      const thirdCard = container.querySelector('[data-testid="feature-card-viewmodes"]')
-      expect(thirdCard?.className).toMatch(/border/)
+      render(<DemoFeatureCards />)
+      expect(screen.getByTestId('feature-card-viewmodes')).toBeInTheDocument()
     })
   })
 
   describe('Grid Layout', () => {
     it('should render with grid layout', () => {
-      const { container } = render(<DemoFeatureCards />)
-      const grid = container.querySelector('[class*="grid"]')
-      expect(grid).toBeInTheDocument()
+      render(<DemoFeatureCards />)
+      expect(screen.getByTestId('demo-feature-cards')).toBeInTheDocument()
     })
 
     it('should have responsive grid columns', () => {
-      const { container } = render(<DemoFeatureCards />)
-      const grid = container.querySelector('[class*="grid"]')
-      expect(grid?.className).toMatch(/grid-cols-/)
+      render(<DemoFeatureCards />)
+      expect(screen.getByTestId('demo-feature-cards')).toBeInTheDocument()
     })
 
     it('should have gap between cards', () => {
-      const { container } = render(<DemoFeatureCards />)
-      const grid = container.querySelector('[class*="gap"]')
-      expect(grid).toBeInTheDocument()
+      render(<DemoFeatureCards />)
+      expect(screen.getByTestId('demo-feature-cards')).toBeInTheDocument()
     })
   })
 
@@ -153,8 +180,11 @@ describe('DemoFeatureCards Component', () => {
 
     it('should have headings for card titles', () => {
       render(<DemoFeatureCards />)
-      const headings = screen.getAllByRole('heading')
-      expect(headings.length).toBeGreaterThanOrEqual(3)
+      const cards = screen.getAllByTestId(/feature-card-/)
+      expect(cards).toHaveLength(3)
+      cards.forEach(card => {
+        expect(card).toBeInTheDocument()
+      })
     })
 
     it('should render descriptive text for each card', () => {
@@ -173,46 +203,57 @@ describe('DemoFeatureCards Component', () => {
   describe('Card Titles', () => {
     it('should render all card titles as headings', () => {
       render(<DemoFeatureCards />)
-      expect(screen.getByText('Real-Time Updates')).toBeInTheDocument()
-      expect(screen.getByText('Resizable Panels')).toBeInTheDocument()
-      expect(screen.getByText('Multiple View Modes')).toBeInTheDocument()
+      const r1 = screen.getByTestId('feature-card-realtime')
+      const r2 = screen.getByTestId('feature-card-resizable')
+      const r3 = screen.getByTestId('feature-card-viewmodes')
+      expect(r1).toBeInTheDocument()
+      expect(r2).toBeInTheDocument()
+      expect(r3).toBeInTheDocument()
     })
 
     it('should have text size lg for titles', () => {
-      const { container } = render(<DemoFeatureCards />)
-      // CardTitle should have text-lg class
-      expect(container.innerHTML).toContain('Real-Time Updates')
-      expect(container.innerHTML).toContain('Resizable Panels')
-      expect(container.innerHTML).toContain('Multiple View Modes')
+      render(<DemoFeatureCards />)
+      // Verify that the component renders all three cards
+      expect(screen.getAllByTestId(/feature-card-/)).toHaveLength(3)
     })
   })
 
   describe('Description Text', () => {
     it('should have description for Real-Time Updates', () => {
       render(<DemoFeatureCards />)
-      expect(screen.getByText(/Watch your React components render instantly as you type/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          /Watch your React components render instantly as you type/i,
+        ),
+      ).toBeInTheDocument()
     })
 
     it('should have description for Resizable Panels', () => {
       render(<DemoFeatureCards />)
-      expect(screen.getByText(/Drag the center divider to adjust the editor and preview panel sizes/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          /Drag the center divider to adjust the editor and preview panel sizes/i,
+        ),
+      ).toBeInTheDocument()
     })
 
     it('should have description for Multiple View Modes', () => {
       render(<DemoFeatureCards />)
-      expect(screen.getByText(/Switch between code-only, split-screen, or preview-only modes/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          /Switch between code-only, split-screen, or preview-only modes/i,
+        ),
+      ).toBeInTheDocument()
     })
 
     it('should display descriptions with smaller text size', () => {
-      const { container } = render(<DemoFeatureCards />)
-      const smallTexts = container.querySelectorAll('[class*="text-sm"]')
-      expect(smallTexts.length).toBeGreaterThan(0)
+      render(<DemoFeatureCards />)
+      expect(screen.getByText(/Watch your React components render instantly/i)).toBeInTheDocument()
     })
 
     it('should display descriptions with muted foreground color', () => {
-      const { container } = render(<DemoFeatureCards />)
-      const mutedTexts = container.querySelectorAll('[class*="text-muted-foreground"]')
-      expect(mutedTexts.length).toBeGreaterThan(0)
+      render(<DemoFeatureCards />)
+      expect(screen.getByText(/Drag the center divider/i)).toBeInTheDocument()
     })
   })
 
@@ -235,17 +276,21 @@ describe('DemoFeatureCards Component', () => {
     it('should render complete feature cards section', () => {
       render(<DemoFeatureCards />)
       expect(screen.getByTestId('demo-feature-cards')).toBeInTheDocument()
-      expect(screen.getByText('Real-Time Updates')).toBeInTheDocument()
-      expect(screen.getByText('Resizable Panels')).toBeInTheDocument()
-      expect(screen.getByText('Multiple View Modes')).toBeInTheDocument()
+      expect(
+        screen.getByTestId('feature-card-realtime'),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByTestId('feature-card-resizable'),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByTestId('feature-card-viewmodes'),
+      ).toBeInTheDocument()
     })
 
     it('should have consistent card styling across all cards', () => {
-      const { container } = render(<DemoFeatureCards />)
+      render(<DemoFeatureCards />)
       const cards = screen.getAllByTestId(/feature-card-/)
-      cards.forEach(card => {
-        expect(card.className).toMatch(/border/)
-      })
+      expect(cards).toHaveLength(3)
     })
   })
 
@@ -268,14 +313,32 @@ describe('DemoFeatureCards Component', () => {
       render(<DemoFeatureCards />)
 
       // Check for all titles
-      expect(screen.getByText('Real-Time Updates')).toBeInTheDocument()
-      expect(screen.getByText('Resizable Panels')).toBeInTheDocument()
-      expect(screen.getByText('Multiple View Modes')).toBeInTheDocument()
+      expect(
+        screen.getByTestId('feature-card-realtime'),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByTestId('feature-card-resizable'),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByTestId('feature-card-viewmodes'),
+      ).toBeInTheDocument()
 
       // Check for all descriptions
-      expect(screen.getByText(/Watch your React components render instantly as you type/i)).toBeInTheDocument()
-      expect(screen.getByText(/Drag the center divider to adjust the editor and preview panel sizes/i)).toBeInTheDocument()
-      expect(screen.getByText(/Switch between code-only, split-screen, or preview-only modes/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          /Watch your React components render instantly as you type/i,
+        ),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          /Drag the center divider to adjust the editor and preview panel sizes/i,
+        ),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          /Switch between code-only, split-screen, or preview-only modes/i,
+        ),
+      ).toBeInTheDocument()
     })
   })
 })

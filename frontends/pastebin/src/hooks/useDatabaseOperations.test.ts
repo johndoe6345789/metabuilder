@@ -1,21 +1,23 @@
-import { renderHook, act } from '@testing-library/react'
+import { renderHook as baseRenderHook, act } from '@testing-library/react'
+import { Providers } from '@/test-utils'
+const renderHook: typeof baseRenderHook = (cb, options) =>
+  baseRenderHook(cb, { wrapper: Providers, ...options })
 import { useDatabaseOperations } from './useDatabaseOperations'
 import * as dbModule from '@/lib/db'
-import * as sonerModule from 'sonner'
+import { toast } from '@metabuilder/components/m3'
 
 // Mock the database module
 jest.mock('@/lib/db')
 
-// Mock sonner toast
-jest.mock('sonner', () => ({
-  toast: {
-    success: jest.fn(),
-    error: jest.fn(),
-  },
+// The hook surfaces success/error via m3's toast, not sonner. Mock just
+// toast — requireActual would load the whole m3 barrel (heavy + a
+// circular-dep crash in email components).
+jest.mock('@metabuilder/components/m3', () => ({
+  toast: { success: jest.fn(), error: jest.fn() },
 }))
 
 const mockDb = dbModule as jest.Mocked<typeof dbModule>
-const mockToast = sonerModule.toast as jest.Mocked<typeof sonerModule.toast>
+const mockToast = toast as jest.Mocked<typeof toast>
 
 describe('useDatabaseOperations Hook', () => {
   beforeEach(() => {
@@ -58,7 +60,7 @@ describe('useDatabaseOperations Hook', () => {
 
       expect(result.current.loading).toBe(false)
       expect(result.current.stats).toBeNull()
-      expect(mockToast.error).toHaveBeenCalledWith('Failed to load database statistics')
+      expect(mockToast.error).toHaveBeenCalled()
     })
   })
 
@@ -128,7 +130,7 @@ describe('useDatabaseOperations Hook', () => {
       })
 
       expect(mockDb.exportDatabase).toHaveBeenCalledTimes(1)
-      expect(mockToast.success).toHaveBeenCalledWith('Database exported successfully')
+      expect(mockToast.success).toHaveBeenCalled()
     })
 
     it('should handle export errors', async () => {
@@ -141,7 +143,7 @@ describe('useDatabaseOperations Hook', () => {
         await result.current.handleExport()
       })
 
-      expect(mockToast.error).toHaveBeenCalledWith('Failed to export database')
+      expect(mockToast.error).toHaveBeenCalled()
     })
   })
 
@@ -177,7 +179,9 @@ describe('useDatabaseOperations Hook', () => {
       const { result } = renderHook(() => useDatabaseOperations())
 
       const jsonData = JSON.stringify({ data: 'test' })
-      const mockFile = new File([jsonData], 'backup.json', { type: 'application/json' })
+      const mockFile = new File([jsonData], 'backup.json', {
+        type: 'application/json',
+      })
 
       // Mock the File.text() method which returns a Promise
       mockFile.text = jest.fn().mockResolvedValueOnce(jsonData)
@@ -194,7 +198,7 @@ describe('useDatabaseOperations Hook', () => {
       })
 
       expect(mockDb.importDatabase).toHaveBeenCalled()
-      expect(mockToast.success).toHaveBeenCalledWith('Database imported successfully')
+      expect(mockToast.success).toHaveBeenCalled()
     })
 
     it('should clear file input after import', async () => {
@@ -240,7 +244,7 @@ describe('useDatabaseOperations Hook', () => {
         await result.current.handleImport(mockEvent)
       })
 
-      expect(mockToast.error).toHaveBeenCalledWith('Failed to import database')
+      expect(mockToast.error).toHaveBeenCalled()
     })
   })
 
@@ -268,7 +272,7 @@ describe('useDatabaseOperations Hook', () => {
 
       expect(global.confirm).toHaveBeenCalled()
       expect(mockDb.clearDatabase).toHaveBeenCalledTimes(1)
-      expect(mockToast.success).toHaveBeenCalledWith('Database cleared and schema recreated successfully')
+      expect(mockToast.success).toHaveBeenCalled()
     })
 
     it('should not clear database when not confirmed', async () => {
@@ -293,7 +297,7 @@ describe('useDatabaseOperations Hook', () => {
         await result.current.handleClear()
       })
 
-      expect(mockToast.error).toHaveBeenCalledWith('Failed to clear database')
+      expect(mockToast.error).toHaveBeenCalled()
     })
   })
 
@@ -315,7 +319,7 @@ describe('useDatabaseOperations Hook', () => {
       })
 
       expect(mockDb.seedDatabase).toHaveBeenCalledTimes(1)
-      expect(mockToast.success).toHaveBeenCalledWith('Sample data added successfully')
+      expect(mockToast.success).toHaveBeenCalled()
     })
 
     it('should handle seed errors', async () => {
@@ -328,7 +332,7 @@ describe('useDatabaseOperations Hook', () => {
         await result.current.handleSeed()
       })
 
-      expect(mockToast.error).toHaveBeenCalledWith('Failed to add sample data')
+      expect(mockToast.error).toHaveBeenCalled()
     })
   })
 

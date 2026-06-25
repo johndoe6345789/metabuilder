@@ -9,7 +9,7 @@
 import React from 'react'
 import type { JSONComponent } from './types'
 import type { JsonValue } from '@/types/utility-types'
-import { FAKEMUI_REGISTRY } from '@/lib/fakemui-registry'
+import { FAKEMUI_REGISTRY } from '@/lib/m3-registry'
 
 export interface RenderContext {
   props: Record<string, JsonValue>

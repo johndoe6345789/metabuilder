@@ -1,0 +1,172 @@
+{
+  "name": "Import JSON Script",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_context",
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.tenantId }}",
+        "operation": "validate",
+        "validator": "required"
+      }
+    },
+    {
+      "id": "check_permission",
+      "name": "Check Permission",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "condition": "{{ $context.user.level >= 3 }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "parse_script",
+      "name": "Parse Script",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $json.fileContent }}",
+        "output": "{{ JSON.parse($json.fileContent) }}",
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "validate_format",
+      "name": "Validate Format",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "condition": "{{ $steps.parse_script.output.version === '2.2.0' }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "create_script",
+      "name": "Create Script",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "data": {
+          "tenantId": "{{ $context.tenantId }}",
+          "createdBy": "{{ $context.user.id }}",
+          "name": "{{ $json.name || 'Imported Script' }}",
+          "script": "{{ JSON.stringify($steps.parse_script.output) }}",
+          "createdAt": "{{ new Date().toISOString() }}"
+        },
+        "operation": "database_create",
+        "entity": "JSONScript"
+      }
+    },
+    {
+      "id": "return_success",
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 201,
+        "body": {
+          "id": "{{ $steps.create_script.output.id }}",
+          "message": "Script imported"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "validate_context": {
+      "main": [
+        [
+          {
+            "node": "check_permission",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_permission": {
+      "main": [
+        [
+          {
+            "node": "parse_script",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "parse_script": {
+      "main": [
+        [
+          {
+            "node": "validate_format",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_format": {
+      "main": [
+        [
+          {
+            "node": "create_script",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_script": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_import_script",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

@@ -1,5 +1,5 @@
 import { ActionButton, Button, ButtonGroup, Flex, Heading, IconButton, Section, Separator, Stack, Text } from '@/components/atoms'
-import { Download, Heart, Plus, Star, Trash } from '@metabuilder/fakemui/icons'
+import { Download, Heart, Plus, Star, Trash } from '@metabuilder/m3/icons'
 
 const iconMap = {
   download: <Download />,

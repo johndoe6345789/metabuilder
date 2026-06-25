@@ -1,0 +1,203 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/storybook-common-definitions.schema.json",
+  "title": "Storybook Common Definitions",
+  "description": "Shared definitions for Storybook integration across MetaBuilder schemas",
+  "definitions": {
+    "control": {
+      "type": "object",
+      "description": "Storybook control definition for interactive args",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "number",
+            "range",
+            "string",
+            "text",
+            "boolean",
+            "select",
+            "multi-select",
+            "radio",
+            "inline-radio",
+            "check",
+            "inline-check",
+            "object",
+            "array",
+            "color",
+            "date",
+            "file"
+          ],
+          "description": "Control type determining the UI element"
+        },
+        "name": {
+          "type": "string",
+          "description": "Display name for the control"
+        },
+        "description": {
+          "type": "string",
+          "description": "Help text shown for this control"
+        },
+        "defaultValue": {
+          "description": "Default value for the control"
+        },
+        "min": {
+          "type": "number",
+          "description": "Minimum value (for number/range)"
+        },
+        "max": {
+          "type": "number",
+          "description": "Maximum value (for number/range)"
+        },
+        "step": {
+          "type": "number",
+          "description": "Step increment (for number/range)"
+        },
+        "options": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Simple string options"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": { "type": "string" },
+                  "value": {}
+                },
+                "required": ["label", "value"]
+              },
+              "description": "Labeled options with arbitrary values"
+            }
+          ],
+          "description": "Options (for select/radio/check controls)"
+        },
+        "labels": {
+          "type": "object",
+          "description": "Custom labels for option values",
+          "additionalProperties": { "type": "string" }
+        },
+        "accept": {
+          "type": "string",
+          "description": "Accepted file types (for file control)",
+          "examples": [".png,.jpg", "image/*", "application/json"]
+        },
+        "presetColors": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Preset color swatches (for color control)"
+        },
+        "if": {
+          "type": "object",
+          "description": "Conditional visibility based on other arg values",
+          "properties": {
+            "arg": { "type": "string" },
+            "eq": {},
+            "neq": {},
+            "truthy": { "type": "boolean" },
+            "exists": { "type": "boolean" }
+          }
+        },
+        "mapping": {
+          "type": "object",
+          "description": "Map option values to different actual values",
+          "additionalProperties": true
+        },
+        "control": {
+          "oneOf": [
+            { "type": "boolean", "const": false },
+            { "type": "string" },
+            { "type": "object" }
+          ],
+          "description": "Set to false to disable control, or override control type"
+        },
+        "table": {
+          "type": "object",
+          "description": "Table category grouping for the Controls panel",
+          "properties": {
+            "category": { "type": "string" },
+            "subcategory": { "type": "string" },
+            "type": {
+              "type": "object",
+              "properties": {
+                "summary": { "type": "string" },
+                "detail": { "type": "string" }
+              }
+            },
+            "defaultValue": {
+              "type": "object",
+              "properties": {
+                "summary": { "type": "string" },
+                "detail": { "type": "string" }
+              }
+            },
+            "disable": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "storybookContext": {
+      "type": "object",
+      "description": "Context passed to render functions in Storybook",
+      "properties": {
+        "user": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "string" },
+            "username": { "type": "string" },
+            "level": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 6,
+              "description": "Permission level: 0=Public, 1=User, 2=Moderator, 3=Admin, 4=God, 5=Supergod, 6=System"
+            },
+            "email": { "type": "string", "format": "email" }
+          }
+        },
+        "tenant": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "string" },
+            "name": { "type": "string" }
+          }
+        },
+        "nerdMode": {
+          "type": "boolean",
+          "description": "Enable developer/debug mode"
+        },
+        "theme": {
+          "type": "string",
+          "enum": ["light", "dark"],
+          "description": "Current theme"
+        },
+        "locale": {
+          "type": "string",
+          "description": "Locale/language code (e.g., 'en-US')"
+        }
+      },
+      "additionalProperties": true
+    },
+    "contextVariant": {
+      "type": "object",
+      "required": ["name", "context"],
+      "description": "A named context variant for testing different scenarios",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Variant display name"
+        },
+        "description": {
+          "type": "string",
+          "description": "What this variant tests"
+        },
+        "context": {
+          "$ref": "#/definitions/storybookContext",
+          "description": "Context overrides for this variant"
+        }
+      }
+    }
+  }
+}

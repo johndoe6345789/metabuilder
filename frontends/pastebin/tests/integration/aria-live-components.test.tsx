@@ -1,6 +1,10 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { render, screen, waitFor } from '@testing-library/react'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import userEvent from '@testing-library/user-event'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { act } from 'react'
 
 /**
@@ -23,7 +27,8 @@ describe('Aria-Live Regions Integration Tests', () => {
             aria-atomic="true"
             data-testid="monaco-editor-status"
           >
-            Code editor loaded with JavaScript syntax highlighting. Editable mode.
+            Code editor loaded with JavaScript syntax highlighting. Editable
+            mode.
           </div>
           <div>Editor content</div>
         </div>
@@ -40,18 +45,20 @@ describe('Aria-Live Regions Integration Tests', () => {
     it('should announce language change in editor', () => {
       const languages = ['JavaScript', 'TypeScript', 'Python']
       const announcements = languages.map(
-        (lang) => `Code editor loaded with ${lang} syntax highlighting.`
+        lang => `Code editor loaded with ${lang} syntax highlighting.`,
       )
 
-      announcements.forEach((announcement) => {
+      announcements.forEach(announcement => {
         expect(announcement).toContain('Code editor loaded')
         expect(announcement).toMatch(/JavaScript|TypeScript|Python/)
       })
     })
 
     it('should distinguish editor modes in announcement', () => {
-      const readOnlyAnnouncement = 'Code editor loaded with JavaScript syntax highlighting. Read-only mode.'
-      const editableAnnouncement = 'Code editor loaded with JavaScript syntax highlighting. Editable mode.'
+      const readOnlyAnnouncement =
+        'Code editor loaded with JavaScript syntax highlighting. Read-only mode.'
+      const editableAnnouncement =
+        'Code editor loaded with JavaScript syntax highlighting. Editable mode.'
 
       expect(readOnlyAnnouncement).toContain('Read-only mode')
       expect(editableAnnouncement).toContain('Editable mode')
@@ -84,7 +91,9 @@ describe('Aria-Live Regions Integration Tests', () => {
         </div>
       )
 
-      const { rerender } = render(<MockTerminal isRunning={false} hasErrors={false} />)
+      const { rerender } = render(
+        <MockTerminal isRunning={false} hasErrors={false} />,
+      )
 
       const statusRegion = screen.getByTestId('terminal-status')
       expect(statusRegion).toHaveAttribute('aria-live', 'polite')
@@ -160,7 +169,9 @@ describe('Aria-Live Regions Integration Tests', () => {
     })
 
     it('should announce errors immediately with assertive aria-live', () => {
-      const MockErrorAlert = ({ lastError = undefined as string | undefined }) => (
+      const MockErrorAlert = ({
+        lastError = undefined as string | undefined,
+      }) => (
         <>
           {lastError && (
             <div
@@ -177,7 +188,9 @@ describe('Aria-Live Regions Integration Tests', () => {
       )
 
       const { rerender } = render(<MockErrorAlert lastError={undefined} />)
-      expect(screen.queryByTestId('terminal-error-alert')).not.toBeInTheDocument()
+      expect(
+        screen.queryByTestId('terminal-error-alert'),
+      ).not.toBeInTheDocument()
 
       rerender(<MockErrorAlert lastError="Division by zero" />)
       const errorAlert = screen.getByTestId('terminal-error-alert')
@@ -277,10 +290,16 @@ describe('Aria-Live Regions Integration Tests', () => {
 
       const { rerender } = render(<MockAddButton paramCount={0} />)
       const button = screen.getByTestId('add-param-button')
-      expect(button).toHaveAttribute('aria-label', 'Add new parameter. Current parameters: 0')
+      expect(button).toHaveAttribute(
+        'aria-label',
+        'Add new parameter. Current parameters: 0',
+      )
 
       rerender(<MockAddButton paramCount={3} />)
-      expect(button).toHaveAttribute('aria-label', 'Add new parameter. Current parameters: 3')
+      expect(button).toHaveAttribute(
+        'aria-label',
+        'Add new parameter. Current parameters: 3',
+      )
     })
 
     it('should have aria-live="polite" for parameter list region', () => {
@@ -303,7 +322,9 @@ describe('Aria-Live Regions Integration Tests', () => {
       )
 
       const { rerender } = render(<MockParameterList hasParams={false} />)
-      expect(screen.queryByText('Parameters configured')).not.toBeInTheDocument()
+      expect(
+        screen.queryByText('Parameters configured'),
+      ).not.toBeInTheDocument()
 
       rerender(<MockParameterList hasParams={true} />)
       const statusRegion = screen.getByText('Parameters configured')

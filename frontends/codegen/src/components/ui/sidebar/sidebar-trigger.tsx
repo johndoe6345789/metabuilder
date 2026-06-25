@@ -1,7 +1,7 @@
 "use client"
 
 import { ComponentProps } from "react"
-import { Sidebar as PanelLeftIcon } from "@metabuilder/fakemui/icons"
+import { Sidebar as PanelLeftIcon } from "@metabuilder/m3/icons"
 
 import sidebarConfig from "@/data/sidebar-config.json"
 import { cn } from "@/lib/utils"

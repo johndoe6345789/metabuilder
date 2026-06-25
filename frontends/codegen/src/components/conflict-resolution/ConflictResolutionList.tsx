@@ -6,9 +6,9 @@ import type {
 
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { MetabuilderWidgetConflictCard as ConflictCard } from '@/lib/json-ui/json-components'
-import { Button } from '@metabuilder/fakemui/inputs'
+import { Button } from '@metabuilder/m3/inputs'
 import { AnimatePresence, motion } from 'framer-motion'
-import { CheckCircle, XCircle, ArrowsClockwise } from '@metabuilder/fakemui/icons'
+import { CheckCircle, XCircle, ArrowsClockwise } from '@metabuilder/m3/icons'
 
 interface ConflictResolutionListProps {
   copy: ConflictResolutionCopy

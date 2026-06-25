@@ -16,52 +16,67 @@
  * - Performance with large files
  */
 
-import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
-import { RulesEngine, type RulesExecutionResult, type CustomRule } from '../../../../../src/lib/quality-validator/rules/RulesEngine';
-import { tmpdir } from 'os';
-import { join } from 'path';
-import { writeFileSync, mkdirSync, rmSync, readFileSync } from 'fs';
+import { describe, it, expect, beforeEach, afterEach } from '@jest/globals'
+import {
+  RulesEngine,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  type RulesExecutionResult,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  type CustomRule,
+} from '../../../../../src/lib/quality-validator/rules/RulesEngine'
+import { tmpdir } from 'os'
+import { join } from 'path'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { writeFileSync, mkdirSync, rmSync, readFileSync } from 'fs'
 
 // Test utilities
 const createTempDir = (): string => {
-  const dir = join(tmpdir(), `rules-engine-test-${Date.now()}-${Math.random().toString(36).slice(2)}`);
-  mkdirSync(dir, { recursive: true });
-  return dir;
-};
+  const dir = join(
+    tmpdir(),
+    `rules-engine-test-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+  )
+  mkdirSync(dir, { recursive: true })
+  return dir
+}
 
 const cleanupTempDir = (dir: string): void => {
   try {
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true })
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     // Ignore cleanup errors
   }
-};
+}
 
-const createTestFile = (dir: string, filename: string, content: string): string => {
-  const filepath = join(dir, filename);
-  writeFileSync(filepath, content, 'utf-8');
-  return filepath;
-};
+const createTestFile = (
+  dir: string,
+  filename: string,
+  content: string,
+): string => {
+  const filepath = join(dir, filename)
+  writeFileSync(filepath, content, 'utf-8')
+  return filepath
+}
 
 // ============================================================================
 // PATTERN RULES TESTS
 // ============================================================================
 
 describe('RulesEngine - Pattern Rules', () => {
-  let engine: RulesEngine;
-  let tmpDir: string;
+  let engine: RulesEngine
+  let tmpDir: string
 
   beforeEach(() => {
-    tmpDir = createTempDir();
+    tmpDir = createTempDir()
     engine = new RulesEngine({
       enabled: true,
       rulesFilePath: join(tmpDir, 'custom-rules.json'),
-    });
-  });
+    })
+  })
 
   afterEach(() => {
-    cleanupTempDir(tmpDir);
-  });
+    cleanupTempDir(tmpDir)
+  })
 
   describe('Basic Pattern Matching', () => {
     it('should detect simple console.log patterns', async () => {
@@ -76,10 +91,10 @@ describe('RulesEngine - Pattern Rules', () => {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       const testFile = createTestFile(
         tmpDir,
@@ -89,17 +104,17 @@ function debugLog() {
   console.log('Debug message');
   return true;
 }
-`
-      );
+`,
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.totalViolations).toBe(1);
-      expect(result.violations[0].severity).toBe('warning');
-      expect(result.violations[0].line).toBe(3);
-      expect(result.violations[0].column).toBeGreaterThan(0);
-      expect(result.violations[0].evidence).toContain('console.log');
-    });
+      expect(result.totalViolations).toBe(1)
+      expect(result.violations[0].severity).toBe('warning')
+      expect(result.violations[0].line).toBe(3)
+      expect(result.violations[0].column).toBeGreaterThan(0)
+      expect(result.violations[0].evidence).toContain('console.log')
+    })
 
     it('should detect multiple violations on same line', async () => {
       const rulesConfig = {
@@ -113,21 +128,21 @@ function debugLog() {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       const testFile = createTestFile(
         tmpDir,
         'test.ts',
-        `var x = 1, y = 2, z = 3;`
-      );
+        `var x = 1, y = 2, z = 3;`,
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.totalViolations).toBeGreaterThanOrEqual(1);
-    });
+      expect(result.totalViolations).toBeGreaterThanOrEqual(1)
+    })
 
     it('should handle complex regex patterns', async () => {
       const rulesConfig = {
@@ -141,10 +156,10 @@ function debugLog() {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       const testFile = createTestFile(
         tmpDir,
@@ -152,15 +167,15 @@ function debugLog() {
         `
 const result = eval('1 + 1');
 const fn = Function('return 42');
-`
-      );
+`,
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.totalViolations).toBeGreaterThanOrEqual(2);
-      expect(result.violationsBySeverity.critical).toBeGreaterThanOrEqual(1);
-      expect(result.violations.every(v => v.severity === 'critical')).toBe(true);
-    });
+      expect(result.totalViolations).toBeGreaterThanOrEqual(2)
+      expect(result.violationsBySeverity.critical).toBeGreaterThanOrEqual(1)
+      expect(result.violations.every(v => v.severity === 'critical')).toBe(true)
+    })
 
     it('should track line and column numbers accurately', async () => {
       const rulesConfig = {
@@ -174,10 +189,10 @@ const fn = Function('return 42');
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       const testFile = createTestFile(
         tmpDir,
@@ -187,16 +202,16 @@ const fn = Function('return 42');
 // TODO: implement feature
 const x = 5;
 // TODO: optimize performance
-`
-      );
+`,
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.totalViolations).toBe(2);
-      expect(result.violations[0].line).toBe(3);
-      expect(result.violations[1].line).toBe(5);
-    });
-  });
+      expect(result.totalViolations).toBe(2)
+      expect(result.violations[0].line).toBe(3)
+      expect(result.violations[1].line).toBe(5)
+    })
+  })
 
   describe('Exclude Patterns', () => {
     it('should skip matches that match exclude patterns', async () => {
@@ -212,10 +227,10 @@ const x = 5;
             excludePatterns: ['// console\\.log'],
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       const testFile = createTestFile(
         tmpDir,
@@ -225,15 +240,17 @@ const x = 5;
 console.log('Should be caught');
 // Another console.log in comment
 console.log('Also should be caught');
-`
-      );
+`,
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
       // Should find 2 violations (not 4), as lines with "// console.log" are excluded
-      expect(result.totalViolations).toBe(2);
-      expect(result.violations.every(v => !(v.evidence ?? '').includes('//'))).toBe(true);
-    });
+      expect(result.totalViolations).toBe(2)
+      expect(
+        result.violations.every(v => !(v.evidence ?? '').includes('//')),
+      ).toBe(true)
+    })
 
     it('should handle multiple exclude patterns', async () => {
       const rulesConfig = {
@@ -248,10 +265,10 @@ console.log('Also should be caught');
             excludePatterns: ['// DANGEROUS', '/\\* DANGEROUS'],
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       const testFile = createTestFile(
         tmpDir,
@@ -261,17 +278,17 @@ console.log('Also should be caught');
 DANGEROUS(); // this line is excluded
 /* DANGEROUS - also excluded
 DANGEROUS(); // active call
-`
-      );
+`,
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
       // Should only find the DANGEROUS call on line with "// this line is excluded"
       // and "DANGEROUS();" at the end
       // Lines with "// DANGEROUS" or "/* DANGEROUS" are excluded
-      expect(result.totalViolations).toBeGreaterThanOrEqual(1);
-    });
-  });
+      expect(result.totalViolations).toBeGreaterThanOrEqual(1)
+    })
+  })
 
   describe('File Extension Filtering', () => {
     it('should only check specified file extensions', async () => {
@@ -287,22 +304,22 @@ DANGEROUS(); // active call
             fileExtensions: ['.ts', '.tsx'],
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
-      const tsFile = createTestFile(tmpDir, 'file.ts', 'TODO: implement');
-      const jsFile = createTestFile(tmpDir, 'file.js', 'TODO: implement');
-      const txtFile = createTestFile(tmpDir, 'file.txt', 'TODO: implement');
+      const tsFile = createTestFile(tmpDir, 'file.ts', 'TODO: implement')
+      const jsFile = createTestFile(tmpDir, 'file.js', 'TODO: implement')
+      const txtFile = createTestFile(tmpDir, 'file.txt', 'TODO: implement')
 
-      const result = await engine.executeRules([tsFile, jsFile, txtFile]);
+      const result = await engine.executeRules([tsFile, jsFile, txtFile])
 
       // Should only find violation in .ts file
-      expect(result.violations.filter(v => v.file === tsFile).length).toBe(1);
-      expect(result.violations.filter(v => v.file === jsFile).length).toBe(0);
-      expect(result.violations.filter(v => v.file === txtFile).length).toBe(0);
-    });
+      expect(result.violations.filter(v => v.file === tsFile).length).toBe(1)
+      expect(result.violations.filter(v => v.file === jsFile).length).toBe(0)
+      expect(result.violations.filter(v => v.file === txtFile).length).toBe(0)
+    })
 
     it('should default to .ts, .tsx, .js, .jsx if not specified', async () => {
       const rulesConfig = {
@@ -316,22 +333,22 @@ DANGEROUS(); // active call
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
-      const tsFile = createTestFile(tmpDir, 'file.ts', 'TEST: abc');
-      const jsxFile = createTestFile(tmpDir, 'file.jsx', 'TEST: abc');
-      const txtFile = createTestFile(tmpDir, 'file.txt', 'TEST: abc');
+      const tsFile = createTestFile(tmpDir, 'file.ts', 'TEST: abc')
+      const jsxFile = createTestFile(tmpDir, 'file.jsx', 'TEST: abc')
+      const txtFile = createTestFile(tmpDir, 'file.txt', 'TEST: abc')
 
-      const result = await engine.executeRules([tsFile, jsxFile, txtFile]);
+      const result = await engine.executeRules([tsFile, jsxFile, txtFile])
 
-      expect(result.violations.filter(v => v.file === tsFile).length).toBe(1);
-      expect(result.violations.filter(v => v.file === jsxFile).length).toBe(1);
-      expect(result.violations.filter(v => v.file === txtFile).length).toBe(0);
-    });
-  });
+      expect(result.violations.filter(v => v.file === tsFile).length).toBe(1)
+      expect(result.violations.filter(v => v.file === jsxFile).length).toBe(1)
+      expect(result.violations.filter(v => v.file === txtFile).length).toBe(0)
+    })
+  })
 
   describe('Regex Error Handling', () => {
     it('should handle invalid regex patterns gracefully during execution', async () => {
@@ -348,20 +365,20 @@ DANGEROUS(); // active call
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      const loaded = await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      const loaded = await engine.loadRules()
 
       // Should load successfully
-      expect(loaded).toBe(true);
+      expect(loaded).toBe(true)
 
-      const testFile = createTestFile(tmpDir, 'test.ts', 'console.log("test");');
-      const result = await engine.executeRules([testFile]);
+      const testFile = createTestFile(tmpDir, 'test.ts', 'console.log("test");')
+      const result = await engine.executeRules([testFile])
 
-      expect(result.violations.length).toBeGreaterThanOrEqual(1);
-    });
-  });
+      expect(result.violations.length).toBeGreaterThanOrEqual(1)
+    })
+  })
 
   describe('Case Sensitivity', () => {
     it('should perform case-sensitive matching by default', async () => {
@@ -376,10 +393,10 @@ DANGEROUS(); // active call
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       const testFile = createTestFile(
         tmpDir,
@@ -387,36 +404,36 @@ DANGEROUS(); // active call
         `
 // IMPORT required
 const x = 1;
-`
-      );
+`,
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
       // Should match "IMPORT" in comment
-      expect(result.totalViolations).toBeGreaterThanOrEqual(1);
-    });
-  });
-});
+      expect(result.totalViolations).toBeGreaterThanOrEqual(1)
+    })
+  })
+})
 
 // ============================================================================
 // COMPLEXITY RULES TESTS
 // ============================================================================
 
 describe('RulesEngine - Complexity Rules', () => {
-  let engine: RulesEngine;
-  let tmpDir: string;
+  let engine: RulesEngine
+  let tmpDir: string
 
   beforeEach(() => {
-    tmpDir = createTempDir();
+    tmpDir = createTempDir()
     engine = new RulesEngine({
       enabled: true,
       rulesFilePath: join(tmpDir, 'custom-rules.json'),
-    });
-  });
+    })
+  })
 
   afterEach(() => {
-    cleanupTempDir(tmpDir);
-  });
+    cleanupTempDir(tmpDir)
+  })
 
   describe('Lines Complexity', () => {
     it('should detect files exceeding line threshold', async () => {
@@ -432,10 +449,10 @@ describe('RulesEngine - Complexity Rules', () => {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       const testFile = createTestFile(
         tmpDir,
@@ -446,15 +463,15 @@ const c = 3;
 const d = 4;
 const e = 5;
 const f = 6;
-`
-      );
+`,
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.totalViolations).toBe(1);
-      expect(result.violations[0].severity).toBe('warning');
-      expect(result.violations[0].evidence).toContain('lines');
-    });
+      expect(result.totalViolations).toBe(1)
+      expect(result.violations[0].severity).toBe('warning')
+      expect(result.violations[0].evidence).toContain('lines')
+    })
 
     it('should pass files under line threshold', async () => {
       const rulesConfig = {
@@ -469,24 +486,24 @@ const f = 6;
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       const testFile = createTestFile(
         tmpDir,
         'test.ts',
         `const x = 1;
 const y = 2;
-`
-      );
+`,
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.totalViolations).toBe(0);
-    });
-  });
+      expect(result.totalViolations).toBe(0)
+    })
+  })
 
   describe('Parameters Complexity', () => {
     it('should detect functions with too many parameters', async () => {
@@ -502,10 +519,10 @@ const y = 2;
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       const testFile = createTestFile(
         tmpDir,
@@ -515,14 +532,14 @@ function simple(a, b) { return a + b; }
 function moderate(a, b, c) { return a + b + c; }
 function complex(a, b, c, d, e) { return a + b + c + d + e; }
 const arrow = (x, y, z, w) => x + y + z + w;
-`
-      );
+`,
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.totalViolations).toBeGreaterThanOrEqual(1);
-      expect(result.violations.some(v => v.message.includes('5'))).toBe(true);
-    });
+      expect(result.totalViolations).toBeGreaterThanOrEqual(1)
+      expect(result.violations.some(v => v.message.includes('5'))).toBe(true)
+    })
 
     it('should track max parameters found in file', async () => {
       const rulesConfig = {
@@ -537,10 +554,10 @@ const arrow = (x, y, z, w) => x + y + z + w;
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       const testFile = createTestFile(
         tmpDir,
@@ -549,15 +566,17 @@ const arrow = (x, y, z, w) => x + y + z + w;
 function f1(a) {}
 function f2(a, b, c) {}
 function f3(a, b) {}
-`
-      );
+`,
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.violationsBySeverity.critical).toBeGreaterThanOrEqual(1);
-      expect(result.violations.some(v => ( v.evidence ?? '').includes('3'))).toBe(true);
-    });
-  });
+      expect(result.violationsBySeverity.critical).toBeGreaterThanOrEqual(1)
+      expect(
+        result.violations.some(v => (v.evidence ?? '').includes('3')),
+      ).toBe(true)
+    })
+  })
 
   describe('Nesting Complexity', () => {
     it('should detect excessive nesting depth', async () => {
@@ -573,10 +592,10 @@ function f3(a, b) {}
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       const testFile = createTestFile(
         tmpDir,
@@ -589,14 +608,14 @@ if (true) {
     }
   }
 }
-`
-      );
+`,
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.totalViolations).toBe(1);
-      expect(result.violations[0].severity).toBe('warning');
-    });
+      expect(result.totalViolations).toBe(1)
+      expect(result.violations[0].severity).toBe('warning')
+    })
 
     it('should handle mixed bracket types in nesting', async () => {
       const rulesConfig = {
@@ -611,10 +630,10 @@ if (true) {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       const testFile = createTestFile(
         tmpDir,
@@ -627,14 +646,14 @@ const obj = {
     }
   ]
 };
-`
-      );
+`,
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.totalViolations).toBe(1);
-    });
-  });
+      expect(result.totalViolations).toBe(1)
+    })
+  })
 
   describe('Cyclomatic Complexity', () => {
     it('should detect high cyclomatic complexity', async () => {
@@ -650,10 +669,10 @@ const obj = {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       const testFile = createTestFile(
         tmpDir,
@@ -669,14 +688,14 @@ function complexDecision(a, b, c) {
   }
   return false;
 }
-`
-      );
+`,
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.totalViolations).toBeGreaterThanOrEqual(1);
-      expect(result.violationsBySeverity.critical).toBeGreaterThanOrEqual(1);
-    });
+      expect(result.totalViolations).toBeGreaterThanOrEqual(1)
+      expect(result.violationsBySeverity.critical).toBeGreaterThanOrEqual(1)
+    })
 
     it('should execute cyclomatic complexity analysis', async () => {
       const rulesConfig = {
@@ -691,10 +710,10 @@ function complexDecision(a, b, c) {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       const testFile = createTestFile(
         tmpDir,
@@ -706,16 +725,16 @@ function simple(a) {
   }
   return false;
 }
-`
-      );
+`,
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
       // With high threshold, should have no violations
       // Just verify the rule executes without error
-      expect(result.rulesApplied).toBeGreaterThanOrEqual(1);
-      expect(result.violations.length).toBe(0);
-    });
+      expect(result.rulesApplied).toBeGreaterThanOrEqual(1)
+      expect(result.violations.length).toBe(0)
+    })
 
     it('should handle various control flow keywords', async () => {
       const rulesConfig = {
@@ -730,10 +749,10 @@ function simple(a) {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       const testFile = createTestFile(
         tmpDir,
@@ -753,35 +772,35 @@ try {
 } catch (e) {
   // error handling
 }
-`
-      );
+`,
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.totalViolations).toBeGreaterThanOrEqual(1);
-    });
-  });
-});
+      expect(result.totalViolations).toBeGreaterThanOrEqual(1)
+    })
+  })
+})
 
 // ============================================================================
 // NAMING RULES TESTS
 // ============================================================================
 
 describe('RulesEngine - Naming Rules', () => {
-  let engine: RulesEngine;
-  let tmpDir: string;
+  let engine: RulesEngine
+  let tmpDir: string
 
   beforeEach(() => {
-    tmpDir = createTempDir();
+    tmpDir = createTempDir()
     engine = new RulesEngine({
       enabled: true,
       rulesFilePath: join(tmpDir, 'custom-rules.json'),
-    });
-  });
+    })
+  })
 
   afterEach(() => {
-    cleanupTempDir(tmpDir);
-  });
+    cleanupTempDir(tmpDir)
+  })
 
   describe('Function Naming', () => {
     it('should validate function names are camelCase', async () => {
@@ -797,10 +816,10 @@ describe('RulesEngine - Naming Rules', () => {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       const testFile = createTestFile(
         tmpDir,
@@ -811,16 +830,24 @@ function MyFunction() {}
 function MY_FUNCTION() {}
 const validArrow = () => {};
 const InvalidArrow = () => {};
-`
-      );
+`,
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.totalViolations).toBeGreaterThanOrEqual(2);
-      expect(result.violations.some(v => ( v.evidence ?? '').includes('MyFunction'))).toBe(true);
-      expect(result.violations.some(v => ( v.evidence ?? '').includes('MY_FUNCTION'))).toBe(true);
-      expect(result.violations.some(v => ( v.evidence ?? '').includes('InvalidArrow'))).toBe(true);
-    });
+      expect(result.totalViolations).toBeGreaterThanOrEqual(2)
+      expect(
+        result.violations.some(v => (v.evidence ?? '').includes('MyFunction')),
+      ).toBe(true)
+      expect(
+        result.violations.some(v => (v.evidence ?? '').includes('MY_FUNCTION')),
+      ).toBe(true)
+      expect(
+        result.violations.some(v =>
+          (v.evidence ?? '').includes('InvalidArrow'),
+        ),
+      ).toBe(true)
+    })
 
     it('should detect both declaration and arrow function violations', async () => {
       const rulesConfig = {
@@ -835,10 +862,10 @@ const InvalidArrow = () => {};
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       const testFile = createTestFile(
         tmpDir,
@@ -848,14 +875,14 @@ function ValidName() {}
 const InvalidName = () => {};
 const valid = () => {};
 function invalid_with_underscore() {}
-`
-      );
+`,
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.totalViolations).toBeGreaterThanOrEqual(3);
-    });
-  });
+      expect(result.totalViolations).toBeGreaterThanOrEqual(3)
+    })
+  })
 
   describe('Variable Naming', () => {
     it('should validate variable names', async () => {
@@ -871,10 +898,10 @@ function invalid_with_underscore() {}
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       const testFile = createTestFile(
         tmpDir,
@@ -884,13 +911,13 @@ const ValidVar = 5;
 let invalidName = 10;
 var _PrivateVar = 20;
 const good = true;
-`
-      );
+`,
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.totalViolations).toBeGreaterThanOrEqual(2);
-    });
+      expect(result.totalViolations).toBeGreaterThanOrEqual(2)
+    })
 
     it('should detect const, let, and var declarations', async () => {
       const rulesConfig = {
@@ -905,10 +932,10 @@ const good = true;
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       const testFile = createTestFile(
         tmpDir,
@@ -918,14 +945,14 @@ const MyConst = 1;
 let MyLet = 2;
 var MyVar = 3;
 const valid_name = 4;
-`
-      );
+`,
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.totalViolations).toBeGreaterThanOrEqual(3);
-    });
-  });
+      expect(result.totalViolations).toBeGreaterThanOrEqual(3)
+    })
+  })
 
   describe('Class Naming', () => {
     it('should validate class names are PascalCase', async () => {
@@ -941,10 +968,10 @@ const valid_name = 4;
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       const testFile = createTestFile(
         tmpDir,
@@ -955,14 +982,14 @@ class myClass {}
 class MYCLASS {}
 class _BadClass {}
 class ValidClass {}
-`
-      );
+`,
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.totalViolations).toBeGreaterThanOrEqual(2);
-    });
-  });
+      expect(result.totalViolations).toBeGreaterThanOrEqual(2)
+    })
+  })
 
   describe('Constant Naming', () => {
     it('should only validate constants that match extraction pattern', async () => {
@@ -980,10 +1007,10 @@ class ValidClass {}
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       const testFile = createTestFile(
         tmpDir,
@@ -993,16 +1020,16 @@ const API_KEY = 'secret';
 const MAX_RETRIES = 3;
 const _PRIVATE_CONST = 5;
 const VALID_CONST = 10;
-`
-      );
+`,
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
       // The regex only extracts constants that start with [A-Z_]
       // and _PRIVATE_CONST doesn't match the pattern '^[A-Z][A-Z0-9_]*$'
-      expect(result.totalViolations).toBeGreaterThanOrEqual(1);
-    });
-  });
+      expect(result.totalViolations).toBeGreaterThanOrEqual(1)
+    })
+  })
 
   describe('Interface Naming', () => {
     it('should validate interface names', async () => {
@@ -1018,10 +1045,10 @@ const VALID_CONST = 10;
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       const testFile = createTestFile(
         tmpDir,
@@ -1031,14 +1058,14 @@ interface User {}
 interface IUser {}
 interface iUser {}
 interface IValidUser {}
-`
-      );
+`,
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.totalViolations).toBeGreaterThanOrEqual(2);
-    });
-  });
+      expect(result.totalViolations).toBeGreaterThanOrEqual(2)
+    })
+  })
 
   describe('Exclude Patterns in Naming', () => {
     it('should skip names matching exclude patterns', async () => {
@@ -1055,10 +1082,10 @@ interface IValidUser {}
             excludePatterns: ['_'],
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       const testFile = createTestFile(
         tmpDir,
@@ -1067,36 +1094,36 @@ interface IValidUser {}
 function _privateFunction() {}
 function ValidFunction() {}
 function _AnotherPrivate() {}
-`
-      );
+`,
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
       // Should find violations only for ValidFunction and _AnotherPrivate
-      expect(result.totalViolations).toBeGreaterThanOrEqual(1);
-    });
-  });
-});
+      expect(result.totalViolations).toBeGreaterThanOrEqual(1)
+    })
+  })
+})
 
 // ============================================================================
 // STRUCTURE RULES TESTS
 // ============================================================================
 
 describe('RulesEngine - Structure Rules', () => {
-  let engine: RulesEngine;
-  let tmpDir: string;
+  let engine: RulesEngine
+  let tmpDir: string
 
   beforeEach(() => {
-    tmpDir = createTempDir();
+    tmpDir = createTempDir()
     engine = new RulesEngine({
       enabled: true,
       rulesFilePath: join(tmpDir, 'custom-rules.json'),
-    });
-  });
+    })
+  })
 
   afterEach(() => {
-    cleanupTempDir(tmpDir);
-  });
+    cleanupTempDir(tmpDir)
+  })
 
   describe('File Size Checking', () => {
     it('should detect files exceeding size threshold', async () => {
@@ -1112,19 +1139,23 @@ describe('RulesEngine - Structure Rules', () => {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
-      const testFile = createTestFile(tmpDir, 'large.ts', 'This is a test file with enough content to exceed the threshold');
+      const testFile = createTestFile(
+        tmpDir,
+        'large.ts',
+        'This is a test file with enough content to exceed the threshold',
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.totalViolations).toBe(1);
-      expect(result.violations[0].severity).toBe('warning');
-      expect(result.violations[0].message).toContain('KB');
-    });
+      expect(result.totalViolations).toBe(1)
+      expect(result.violations[0].severity).toBe('warning')
+      expect(result.violations[0].message).toContain('KB')
+    })
 
     it('should pass files under size threshold', async () => {
       const rulesConfig = {
@@ -1139,17 +1170,17 @@ describe('RulesEngine - Structure Rules', () => {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
-      const testFile = createTestFile(tmpDir, 'small.ts', 'const x = 1;');
+      const testFile = createTestFile(tmpDir, 'small.ts', 'const x = 1;')
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.totalViolations).toBe(0);
-    });
+      expect(result.totalViolations).toBe(0)
+    })
 
     it('should format file sizes correctly in violation messages', async () => {
       const rulesConfig = {
@@ -1164,40 +1195,40 @@ describe('RulesEngine - Structure Rules', () => {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
-      const testFile = createTestFile(tmpDir, 'test.ts', 'const x = 1;');
+      const testFile = createTestFile(tmpDir, 'test.ts', 'const x = 1;')
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.totalViolations).toBe(1);
-      expect(result.violations[0].message).toMatch(/\d+\.\d+KB/);
-    });
-  });
-});
+      expect(result.totalViolations).toBe(1)
+      expect(result.violations[0].message).toMatch(/\d+\.\d+KB/)
+    })
+  })
+})
 
 // ============================================================================
 // RULE LOADING AND VALIDATION TESTS
 // ============================================================================
 
 describe('RulesEngine - Rule Loading and Validation', () => {
-  let engine: RulesEngine;
-  let tmpDir: string;
+  let engine: RulesEngine
+  let tmpDir: string
 
   beforeEach(() => {
-    tmpDir = createTempDir();
+    tmpDir = createTempDir()
     engine = new RulesEngine({
       enabled: true,
       rulesFilePath: join(tmpDir, 'custom-rules.json'),
-    });
-  });
+    })
+  })
 
   afterEach(() => {
-    cleanupTempDir(tmpDir);
-  });
+    cleanupTempDir(tmpDir)
+  })
 
   describe('Rule File Loading', () => {
     it('should load valid rules from file', async () => {
@@ -1212,48 +1243,51 @@ describe('RulesEngine - Rule Loading and Validation', () => {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      const loaded = await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      const loaded = await engine.loadRules()
 
-      expect(loaded).toBe(true);
-      expect(engine.getRules().length).toBe(1);
-    });
+      expect(loaded).toBe(true)
+      expect(engine.getRules().length).toBe(1)
+    })
 
     it('should return false for disabled engine', async () => {
       const disabledEngine = new RulesEngine({
         enabled: false,
         rulesFilePath: join(tmpDir, 'custom-rules.json'),
-      });
+      })
 
-      const loaded = await disabledEngine.loadRules();
+      const loaded = await disabledEngine.loadRules()
 
-      expect(loaded).toBe(true); // Returns true but doesn't load rules
-      expect(disabledEngine.getRules().length).toBe(0);
-    });
+      expect(loaded).toBe(true) // Returns true but doesn't load rules
+      expect(disabledEngine.getRules().length).toBe(0)
+    })
 
     it('should handle missing rules file', async () => {
-      const loaded = await engine.loadRules();
+      const loaded = await engine.loadRules()
 
-      expect(loaded).toBe(false);
-      expect(engine.getRules().length).toBe(0);
-    });
+      expect(loaded).toBe(false)
+      expect(engine.getRules().length).toBe(0)
+    })
 
     it('should handle invalid JSON in rules file', async () => {
-      writeFileSync(engine['config'].rulesFilePath, '{invalid json}');
-      const loaded = await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, '{invalid json}')
+      const loaded = await engine.loadRules()
 
-      expect(loaded).toBe(false);
-    });
+      expect(loaded).toBe(false)
+    })
 
     it('should handle missing rules array', async () => {
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify({ notRules: [] }));
-      const loaded = await engine.loadRules();
+      writeFileSync(
+        engine['config'].rulesFilePath,
+        JSON.stringify({ notRules: [] }),
+      )
+      const loaded = await engine.loadRules()
 
-      expect(loaded).toBe(false);
-    });
-  });
+      expect(loaded).toBe(false)
+    })
+  })
 
   describe('Rule Validation', () => {
     it('should reject rules missing required fields', async () => {
@@ -1267,13 +1301,13 @@ describe('RulesEngine - Rule Loading and Validation', () => {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
-      expect(engine.getRules().length).toBe(0);
-    });
+      expect(engine.getRules().length).toBe(0)
+    })
 
     it('should reject rules with invalid type', async () => {
       const rulesConfig = {
@@ -1287,13 +1321,13 @@ describe('RulesEngine - Rule Loading and Validation', () => {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
-      expect(engine.getRules().length).toBe(0);
-    });
+      expect(engine.getRules().length).toBe(0)
+    })
 
     it('should reject rules with invalid severity', async () => {
       const rulesConfig = {
@@ -1307,13 +1341,13 @@ describe('RulesEngine - Rule Loading and Validation', () => {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
-      expect(engine.getRules().length).toBe(0);
-    });
+      expect(engine.getRules().length).toBe(0)
+    })
 
     it('should validate type-specific requirements', async () => {
       const rulesConfig = {
@@ -1342,13 +1376,13 @@ describe('RulesEngine - Rule Loading and Validation', () => {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
-      expect(engine.getRules().length).toBe(0);
-    });
+      expect(engine.getRules().length).toBe(0)
+    })
 
     it('should validate rules configuration', async () => {
       const rulesConfig = {
@@ -1362,17 +1396,17 @@ describe('RulesEngine - Rule Loading and Validation', () => {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
-      const validation = engine.validateRulesConfig();
+      const validation = engine.validateRulesConfig()
 
-      expect(validation.valid).toBe(true);
-      expect(validation.errors.length).toBe(0);
-    });
-  });
+      expect(validation.valid).toBe(true)
+      expect(validation.errors.length).toBe(0)
+    })
+  })
 
   describe('Disabled Rules', () => {
     it('should skip disabled rules during execution', async () => {
@@ -1395,41 +1429,41 @@ describe('RulesEngine - Rule Loading and Validation', () => {
             enabled: false,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
-      const testFile = createTestFile(tmpDir, 'test.ts', 'ENABLED DISABLED');
+      const testFile = createTestFile(tmpDir, 'test.ts', 'ENABLED DISABLED')
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.rulesApplied).toBe(1);
-      expect(result.violations.length).toBe(1);
-      expect(result.violations[0].ruleId).toBe('enabled-rule');
-    });
-  });
-});
+      expect(result.rulesApplied).toBe(1)
+      expect(result.violations.length).toBe(1)
+      expect(result.violations[0].ruleId).toBe('enabled-rule')
+    })
+  })
+})
 
 // ============================================================================
 // RULE MANAGEMENT TESTS
 // ============================================================================
 
 describe('RulesEngine - Rule Management', () => {
-  let engine: RulesEngine;
-  let tmpDir: string;
+  let engine: RulesEngine
+  let tmpDir: string
 
   beforeEach(() => {
-    tmpDir = createTempDir();
+    tmpDir = createTempDir()
     engine = new RulesEngine({
       enabled: true,
       rulesFilePath: join(tmpDir, 'custom-rules.json'),
-    });
-  });
+    })
+  })
 
   afterEach(() => {
-    cleanupTempDir(tmpDir);
-  });
+    cleanupTempDir(tmpDir)
+  })
 
   it('should retrieve all loaded rules', async () => {
     const rulesConfig = {
@@ -1452,17 +1486,17 @@ describe('RulesEngine - Rule Management', () => {
           enabled: true,
         },
       ],
-    };
+    }
 
-    writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-    await engine.loadRules();
+    writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+    await engine.loadRules()
 
-    const rules = engine.getRules();
+    const rules = engine.getRules()
 
-    expect(rules.length).toBe(2);
-    expect(rules[0].id).toBe('rule1');
-    expect(rules[1].id).toBe('rule2');
-  });
+    expect(rules.length).toBe(2)
+    expect(rules[0].id).toBe('rule1')
+    expect(rules[1].id).toBe('rule2')
+  })
 
   it('should filter rules by type', async () => {
     const rulesConfig = {
@@ -1502,42 +1536,42 @@ describe('RulesEngine - Rule Management', () => {
           enabled: true,
         },
       ],
-    };
+    }
 
-    writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-    await engine.loadRules();
+    writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+    await engine.loadRules()
 
-    const patternRules = engine.getRulesByType('pattern');
-    const complexityRules = engine.getRulesByType('complexity');
-    const namingRules = engine.getRulesByType('naming');
-    const structureRules = engine.getRulesByType('structure');
+    const patternRules = engine.getRulesByType('pattern')
+    const complexityRules = engine.getRulesByType('complexity')
+    const namingRules = engine.getRulesByType('naming')
+    const structureRules = engine.getRulesByType('structure')
 
-    expect(patternRules.length).toBe(2);
-    expect(complexityRules.length).toBe(1);
-    expect(namingRules.length).toBe(1);
-    expect(structureRules.length).toBe(0);
-  });
-});
+    expect(patternRules.length).toBe(2)
+    expect(complexityRules.length).toBe(1)
+    expect(namingRules.length).toBe(1)
+    expect(structureRules.length).toBe(0)
+  })
+})
 
 // ============================================================================
 // VIOLATION AGGREGATION AND SCORING TESTS
 // ============================================================================
 
 describe('RulesEngine - Violation Aggregation and Scoring', () => {
-  let engine: RulesEngine;
-  let tmpDir: string;
+  let engine: RulesEngine
+  let tmpDir: string
 
   beforeEach(() => {
-    tmpDir = createTempDir();
+    tmpDir = createTempDir()
     engine = new RulesEngine({
       enabled: true,
       rulesFilePath: join(tmpDir, 'custom-rules.json'),
-    });
-  });
+    })
+  })
 
   afterEach(() => {
-    cleanupTempDir(tmpDir);
-  });
+    cleanupTempDir(tmpDir)
+  })
 
   describe('Violation Severity Counting', () => {
     it('should count violations by severity', async () => {
@@ -1568,10 +1602,10 @@ describe('RulesEngine - Violation Aggregation and Scoring', () => {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       const testFile = createTestFile(
         tmpDir,
@@ -1580,17 +1614,17 @@ describe('RulesEngine - Violation Aggregation and Scoring', () => {
 CRITICAL CRITICAL
 WARNING WARNING WARNING
 INFO
-`
-      );
+`,
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.violationsBySeverity.critical).toBe(2);
-      expect(result.violationsBySeverity.warning).toBe(3);
-      expect(result.violationsBySeverity.info).toBe(1);
-      expect(result.totalViolations).toBe(6);
-    });
-  });
+      expect(result.violationsBySeverity.critical).toBe(2)
+      expect(result.violationsBySeverity.warning).toBe(3)
+      expect(result.violationsBySeverity.info).toBe(1)
+      expect(result.totalViolations).toBe(6)
+    })
+  })
 
   describe('Score Adjustment Calculation', () => {
     it('should calculate negative score adjustment for violations', async () => {
@@ -1605,18 +1639,18 @@ INFO
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
-      const testFile = createTestFile(tmpDir, 'test.ts', 'ERROR ERROR');
+      const testFile = createTestFile(tmpDir, 'test.ts', 'ERROR ERROR')
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.scoreAdjustment).toBeLessThan(0);
-      expect(result.scoreAdjustment).toBeGreaterThanOrEqual(-10); // Max cap
-    });
+      expect(result.scoreAdjustment).toBeLessThan(0)
+      expect(result.scoreAdjustment).toBeGreaterThanOrEqual(-10) // Max cap
+    })
 
     it('should apply formula: critical -2, warning -1, info -0.5', async () => {
       const rulesConfig = {
@@ -1646,22 +1680,22 @@ INFO
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       const testFile = createTestFile(
         tmpDir,
         'test.ts',
-        'CRITICAL WARNING INFO INFO'
-      );
+        'CRITICAL WARNING INFO INFO',
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
       // Formula: 1*(-2) + 1*(-1) + 2*(-0.5) = -4
-      expect(result.scoreAdjustment).toBe(-4);
-    });
+      expect(result.scoreAdjustment).toBe(-4)
+    })
 
     it('should cap adjustment at -10 maximum penalty', async () => {
       const rulesConfig = {
@@ -1675,19 +1709,19 @@ INFO
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
-      const testFile = createTestFile(tmpDir, 'test.ts', 'X X X X X X X X X X');
+      const testFile = createTestFile(tmpDir, 'test.ts', 'X X X X X X X X X X')
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.scoreAdjustment).toBeGreaterThanOrEqual(-10);
-      expect(result.scoreAdjustment).toBeLessThanOrEqual(-10);
-    });
-  });
+      expect(result.scoreAdjustment).toBeGreaterThanOrEqual(-10)
+      expect(result.scoreAdjustment).toBeLessThanOrEqual(-10)
+    })
+  })
 
   describe('Execution Metadata', () => {
     it('should track execution time', async () => {
@@ -1702,18 +1736,18 @@ INFO
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
-      const testFile = createTestFile(tmpDir, 'test.ts', 'test');
+      const testFile = createTestFile(tmpDir, 'test.ts', 'test')
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.executionTime).toBeGreaterThan(0);
-      expect(typeof result.executionTime).toBe('number');
-    });
+      expect(result.executionTime).toBeGreaterThan(0)
+      expect(typeof result.executionTime).toBe('number')
+    })
 
     it('should report number of rules applied', async () => {
       const rulesConfig = {
@@ -1743,39 +1777,39 @@ INFO
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
-      const testFile = createTestFile(tmpDir, 'test.ts', 'test1 test2 test3');
+      const testFile = createTestFile(tmpDir, 'test.ts', 'test1 test2 test3')
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.rulesApplied).toBe(2); // Only enabled rules
-    });
-  });
-});
+      expect(result.rulesApplied).toBe(2) // Only enabled rules
+    })
+  })
+})
 
 // ============================================================================
 // EDGE CASES AND ERROR HANDLING TESTS
 // ============================================================================
 
 describe('RulesEngine - Edge Cases and Error Handling', () => {
-  let engine: RulesEngine;
-  let tmpDir: string;
+  let engine: RulesEngine
+  let tmpDir: string
 
   beforeEach(() => {
-    tmpDir = createTempDir();
+    tmpDir = createTempDir()
     engine = new RulesEngine({
       enabled: true,
       rulesFilePath: join(tmpDir, 'custom-rules.json'),
-    });
-  });
+    })
+  })
 
   afterEach(() => {
-    cleanupTempDir(tmpDir);
-  });
+    cleanupTempDir(tmpDir)
+  })
 
   describe('Large Files', () => {
     it('should handle files with 10000+ lines', async () => {
@@ -1790,29 +1824,29 @@ describe('RulesEngine - Edge Cases and Error Handling', () => {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       // Create a large file with 10000 lines
-      const lines: string[] = [];
+      const lines: string[] = []
       for (let i = 0; i < 10000; i++) {
         if (i === 5000) {
-          lines.push('TARGET marker');
+          lines.push('TARGET marker')
         } else {
-          lines.push(`// Line ${i}`);
+          lines.push(`// Line ${i}`)
         }
       }
 
-      const testFile = createTestFile(tmpDir, 'large.ts', lines.join('\n'));
+      const testFile = createTestFile(tmpDir, 'large.ts', lines.join('\n'))
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.violations.length).toBe(1);
-      expect(result.violations[0].line).toBe(5001);
-    });
-  });
+      expect(result.violations.length).toBe(1)
+      expect(result.violations[0].line).toBe(5001)
+    })
+  })
 
   describe('Empty and Minimal Files', () => {
     it('should handle empty files', async () => {
@@ -1827,17 +1861,17 @@ describe('RulesEngine - Edge Cases and Error Handling', () => {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
-      const testFile = createTestFile(tmpDir, 'empty.ts', '');
+      const testFile = createTestFile(tmpDir, 'empty.ts', '')
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.totalViolations).toBe(0);
-    });
+      expect(result.totalViolations).toBe(0)
+    })
 
     it('should handle single line files', async () => {
       const rulesConfig = {
@@ -1851,18 +1885,18 @@ describe('RulesEngine - Edge Cases and Error Handling', () => {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
-      const testFile = createTestFile(tmpDir, 'single.ts', 'const x = 1;');
+      const testFile = createTestFile(tmpDir, 'single.ts', 'const x = 1;')
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.totalViolations).toBe(1);
-    });
-  });
+      expect(result.totalViolations).toBe(1)
+    })
+  })
 
   describe('File I/O Errors', () => {
     it('should handle unreadable files gracefully', async () => {
@@ -1877,19 +1911,19 @@ describe('RulesEngine - Edge Cases and Error Handling', () => {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
-      const nonExistentFile = join(tmpDir, 'does-not-exist.ts');
+      const nonExistentFile = join(tmpDir, 'does-not-exist.ts')
 
-      const result = await engine.executeRules([nonExistentFile]);
+      const result = await engine.executeRules([nonExistentFile])
 
-      expect(result.violations.length).toBe(0);
-      expect(result.totalViolations).toBe(0);
-    });
-  });
+      expect(result.violations.length).toBe(0)
+      expect(result.totalViolations).toBe(0)
+    })
+  })
 
   describe('Special Characters and Unicode', () => {
     it('should handle files with special characters', async () => {
@@ -1904,18 +1938,22 @@ describe('RulesEngine - Edge Cases and Error Handling', () => {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
-      const testFile = createTestFile(tmpDir, 'unicode.ts', 'const μ = 1; // micro');
+      const testFile = createTestFile(
+        tmpDir,
+        'unicode.ts',
+        'const μ = 1; // micro',
+      )
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.violations.length).toBeGreaterThanOrEqual(1);
-    });
-  });
+      expect(result.violations.length).toBeGreaterThanOrEqual(1)
+    })
+  })
 
   describe('Zero Threshold Cases', () => {
     it('should handle zero threshold for lines complexity', async () => {
@@ -1931,18 +1969,18 @@ describe('RulesEngine - Edge Cases and Error Handling', () => {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
-      const testFile = createTestFile(tmpDir, 'test.ts', 'const x = 1;');
+      const testFile = createTestFile(tmpDir, 'test.ts', 'const x = 1;')
 
-      const result = await engine.executeRules([testFile]);
+      const result = await engine.executeRules([testFile])
 
-      expect(result.violations.length).toBeGreaterThanOrEqual(1);
-    });
-  });
+      expect(result.violations.length).toBeGreaterThanOrEqual(1)
+    })
+  })
 
   describe('Multiple Files', () => {
     it('should process multiple files correctly', async () => {
@@ -1957,22 +1995,22 @@ describe('RulesEngine - Edge Cases and Error Handling', () => {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
-      const file1 = createTestFile(tmpDir, 'file1.ts', 'MARK 1');
-      const file2 = createTestFile(tmpDir, 'file2.ts', 'MARK 2\nMARK 3');
-      const file3 = createTestFile(tmpDir, 'file3.ts', 'no marker');
+      const file1 = createTestFile(tmpDir, 'file1.ts', 'MARK 1')
+      const file2 = createTestFile(tmpDir, 'file2.ts', 'MARK 2\nMARK 3')
+      const file3 = createTestFile(tmpDir, 'file3.ts', 'no marker')
 
-      const result = await engine.executeRules([file1, file2, file3]);
+      const result = await engine.executeRules([file1, file2, file3])
 
-      expect(result.totalViolations).toBe(3);
-      expect(result.violations.filter(v => v.file === file1).length).toBe(1);
-      expect(result.violations.filter(v => v.file === file2).length).toBe(2);
-      expect(result.violations.filter(v => v.file === file3).length).toBe(0);
-    });
+      expect(result.totalViolations).toBe(3)
+      expect(result.violations.filter(v => v.file === file1).length).toBe(1)
+      expect(result.violations.filter(v => v.file === file2).length).toBe(2)
+      expect(result.violations.filter(v => v.file === file3).length).toBe(0)
+    })
 
     it('should track file paths correctly in violations', async () => {
       const rulesConfig = {
@@ -1986,48 +2024,48 @@ describe('RulesEngine - Edge Cases and Error Handling', () => {
             enabled: true,
           },
         ],
-      };
+      }
 
-      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-      await engine.loadRules();
+      writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+      await engine.loadRules()
 
       // Create subdirectories
-      const dir1 = join(tmpDir, 'subdir1');
-      const dir2 = join(tmpDir, 'subdir2');
-      mkdirSync(dir1, { recursive: true });
-      mkdirSync(dir2, { recursive: true });
+      const dir1 = join(tmpDir, 'subdir1')
+      const dir2 = join(tmpDir, 'subdir2')
+      mkdirSync(dir1, { recursive: true })
+      mkdirSync(dir2, { recursive: true })
 
-      const file1 = createTestFile(dir1, 'test1.ts', 'X');
-      const file2 = createTestFile(dir2, 'test2.ts', 'X');
+      const file1 = createTestFile(dir1, 'test1.ts', 'X')
+      const file2 = createTestFile(dir2, 'test2.ts', 'X')
 
-      const result = await engine.executeRules([file1, file2]);
+      const result = await engine.executeRules([file1, file2])
 
-      expect(result.violations.every(v => v.file)).toBe(true);
-      expect(result.violations[0].file).toContain('subdir1');
-      expect(result.violations[1].file).toContain('subdir2');
-    });
-  });
-});
+      expect(result.violations.every(v => v.file)).toBe(true)
+      expect(result.violations[0].file).toContain('subdir1')
+      expect(result.violations[1].file).toContain('subdir2')
+    })
+  })
+})
 
 // ============================================================================
 // CONVERSION TO FINDINGS TESTS
 // ============================================================================
 
 describe('RulesEngine - Conversion to Findings', () => {
-  let engine: RulesEngine;
-  let tmpDir: string;
+  let engine: RulesEngine
+  let tmpDir: string
 
   beforeEach(() => {
-    tmpDir = createTempDir();
+    tmpDir = createTempDir()
     engine = new RulesEngine({
       enabled: true,
       rulesFilePath: join(tmpDir, 'custom-rules.json'),
-    });
-  });
+    })
+  })
 
   afterEach(() => {
-    cleanupTempDir(tmpDir);
-  });
+    cleanupTempDir(tmpDir)
+  })
 
   it('should convert violations to findings', async () => {
     const rulesConfig = {
@@ -2041,35 +2079,53 @@ describe('RulesEngine - Conversion to Findings', () => {
           enabled: true,
         },
       ],
-    };
+    }
 
-    writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig));
-    await engine.loadRules();
+    writeFileSync(engine['config'].rulesFilePath, JSON.stringify(rulesConfig))
+    await engine.loadRules()
 
-    const testFile = createTestFile(tmpDir, 'test.ts', 'test pattern');
+    const testFile = createTestFile(tmpDir, 'test.ts', 'test pattern')
 
-    const result = await engine.executeRules([testFile]);
-    const findings = engine.convertToFindings(result.violations);
+    const result = await engine.executeRules([testFile])
+    const findings = engine.convertToFindings(result.violations)
 
-    expect(findings.length).toBeGreaterThanOrEqual(1);
-    expect(findings[0].id).toContain('custom-rule');
-    expect(findings[0].severity).toBe('high'); // warning maps to high
-    expect(findings[0].category).toBe('codeQuality');
-  });
+    expect(findings.length).toBeGreaterThanOrEqual(1)
+    expect(findings[0].id).toContain('custom-rule')
+    expect(findings[0].severity).toBe('high') // warning maps to high
+    expect(findings[0].category).toBe('codeQuality')
+  })
 
   it('should map severities correctly', () => {
     const violations = [
-      { ruleId: '1', ruleName: 'Critical', severity: 'critical' as const, file: 'test.ts', message: 'Critical' },
-      { ruleId: '2', ruleName: 'Warning', severity: 'warning' as const, file: 'test.ts', message: 'Warning' },
-      { ruleId: '3', ruleName: 'Info', severity: 'info' as const, file: 'test.ts', message: 'Info' },
-    ] as any;
+      {
+        ruleId: '1',
+        ruleName: 'Critical',
+        severity: 'critical' as const,
+        file: 'test.ts',
+        message: 'Critical',
+      },
+      {
+        ruleId: '2',
+        ruleName: 'Warning',
+        severity: 'warning' as const,
+        file: 'test.ts',
+        message: 'Warning',
+      },
+      {
+        ruleId: '3',
+        ruleName: 'Info',
+        severity: 'info' as const,
+        file: 'test.ts',
+        message: 'Info',
+      },
+    ] as any
 
-    const findings = engine.convertToFindings(violations);
+    const findings = engine.convertToFindings(violations)
 
-    expect(findings[0].severity).toBe('critical');
-    expect(findings[1].severity).toBe('high');
-    expect(findings[2].severity).toBe('low');
-  });
-});
+    expect(findings[0].severity).toBe('critical')
+    expect(findings[1].severity).toBe('high')
+    expect(findings[2].severity).toBe('low')
+  })
+})
 
-export {};
+export {}

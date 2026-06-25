@@ -1,0 +1,213 @@
+{
+  "name": "Mark Notification as Read",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_context",
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.tenantId }}",
+        "operation": "validate",
+        "validator": "required"
+      }
+    },
+    {
+      "id": "validate_user",
+      "name": "Validate User",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.user.id }}",
+        "operation": "validate",
+        "validator": "required"
+      }
+    },
+    {
+      "id": "check_bulk_vs_single",
+      "name": "Check Bulk Vs Single",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "condition": "{{ Array.isArray($json.notificationIds) }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "mark_single",
+      "name": "Mark Single",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "filter": {
+          "id": "{{ $json.notificationId }}",
+          "userId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "data": {
+          "isRead": true,
+          "readAt": "{{ new Date().toISOString() }}"
+        },
+        "operation": "database_update",
+        "entity": "Notification"
+      }
+    },
+    {
+      "id": "mark_bulk",
+      "name": "Mark Bulk",
+      "type": "metabuilder.operation",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "filter": {
+          "id": {
+            "$in": "{{ $json.notificationIds }}"
+          },
+          "userId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "data": {
+          "isRead": true,
+          "readAt": "{{ new Date().toISOString() }}"
+        },
+        "operation": "database_update_many",
+        "entity": "Notification"
+      }
+    },
+    {
+      "id": "emit_read_event",
+      "name": "Emit Read Event",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "data": {
+          "notificationIds": "{{ Array.isArray($json.notificationIds) ? $json.notificationIds : [$json.notificationId] }}"
+        },
+        "action": "emit_event",
+        "event": "notification_read",
+        "channel": "{{ 'user:' + $context.user.id }}"
+      }
+    },
+    {
+      "id": "return_success",
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 200,
+        "body": {
+          "message": "Notification(s) marked as read"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "validate_context": {
+      "main": [
+        [
+          {
+            "node": "validate_user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_user": {
+      "main": [
+        [
+          {
+            "node": "check_bulk_vs_single",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_bulk_vs_single": {
+      "main": [
+        [
+          {
+            "node": "mark_single",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mark_single": {
+      "main": [
+        [
+          {
+            "node": "mark_bulk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mark_bulk": {
+      "main": [
+        [
+          {
+            "node": "emit_read_event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "emit_read_event": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_mark_as_read",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

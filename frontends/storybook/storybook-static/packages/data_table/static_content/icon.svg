@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Data table grid -->
+  <rect x="12" y="16" width="40" height="32" rx="2" fill="none"/>
+  <path d="M12 24 L52 24 M12 32 L52 32 M12 40 L52 40" stroke-width="2"/>
+  <path d="M22 16 L22 48 M36 16 L36 48" stroke-width="1.5"/>
+  <circle cx="17" cy="20" r="1.5" fill="currentColor"/>
+  <circle cx="17" cy="28" r="1.5" fill="currentColor"/>
+  <circle cx="17" cy="36" r="1.5" fill="currentColor"/>
+  <circle cx="17" cy="44" r="1.5" fill="currentColor"/>
+</svg>

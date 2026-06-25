@@ -35,7 +35,7 @@ const DEFAULT_NPM_SETTINGS: NpmSettings = {
     { id: '1', name: 'react', version: '^18.2.0', isDev: false },
     { id: '2', name: 'react-dom', version: '^18.2.0', isDev: false },
     { id: '3', name: 'next', version: '^14.0.0', isDev: false },
-    { id: '4', name: '@mui/material', version: '^5.14.0', isDev: false },
+    { id: '4', name: 'sass', version: '^1.77.8', isDev: true },
     { id: '5', name: 'typescript', version: '^5.0.0', isDev: true },
     { id: '6', name: '@types/react', version: '^18.2.0', isDev: true },
   ],

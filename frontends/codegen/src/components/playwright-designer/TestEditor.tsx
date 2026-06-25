@@ -1,7 +1,7 @@
 import { PlaywrightStep, PlaywrightTest } from '@/types/project'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@metabuilder/fakemui/surfaces'
-import { Button, Input, Textarea } from '@metabuilder/fakemui/inputs'
-import { Plus, Play } from '@metabuilder/fakemui/icons'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@metabuilder/m3/surfaces'
+import { Button, Input, Textarea } from '@metabuilder/m3/inputs'
+import { Plus, Play } from '@metabuilder/m3/icons'
 import copy from '@/data/playwright-designer.json'
 import { StepEditor } from './StepEditor'
 

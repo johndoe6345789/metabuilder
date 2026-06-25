@@ -1,0 +1,59 @@
+{
+  "name": "@metabuilder/ui_json_script_editor",
+  "version": "1.0.0",
+  "description": "JSON Script v2.2.0 editor with visual builder and real-time execution feedback",
+  "type": "module",
+  "keywords": [
+    "metabuilder",
+    "admin",
+    "json-script",
+    "editor",
+    "visual",
+    "automation",
+    "workflows"
+  ],
+  "packageId": "ui_json_script_editor",
+  "permissions": {
+    "minLevel": 4,
+    "description": "God level - create and edit automation scripts"
+  },
+  "features": {
+    "json_script_editor": true,
+    "syntax_highlighting": true,
+    "real_time_validation": true,
+    "visual_builder": true,
+    "execution_feedback": true,
+    "script_testing": true,
+    "library_management": true,
+    "version_control": true
+  },
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "files": {
+    "directories": [
+      "component",
+      "page-config",
+      "seed",
+      "workflow"
+    ],
+    "byType": {
+      "workflows": [
+        "workflow/export-script.jsonscript",
+        "workflow/import-script.jsonscript",
+        "workflow/list-scripts.jsonscript",
+        "workflow/save-script.jsonscript",
+        "workflow/validate-script.jsonscript"
+      ],
+      "config": [
+        "package.json"
+      ],
+      "other": [
+        "seed/component.json",
+        "seed/metadata.json",
+        "seed/page-config.json"
+      ]
+    }
+  }
+}

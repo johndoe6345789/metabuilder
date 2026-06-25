@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { toast } from '@/components/ui/sonner'
 
 import AppDialogs from '@/components/app/AppDialogs'
@@ -7,6 +6,8 @@ import appStrings from '@/data/app-shortcuts.json'
 import useAppNavigation from '@/hooks/use-app-navigation'
 import useAppProject from '@/hooks/use-app-project'
 import useAppShortcuts from '@/hooks/use-app-shortcuts'
+import { useAppLayoutState } from
+  '@/components/app/hooks/useAppLayoutState'
 
 export default function AppRouterLayout() {
   const { currentPage, navigateToPage } = useAppNavigation()
@@ -27,10 +28,12 @@ export default function AppRouterLayout() {
     stateContext,
     actionContext,
   } = useAppProject()
-  const { searchOpen, setSearchOpen, shortcutsOpen, setShortcutsOpen, previewOpen, setPreviewOpen } =
-    useAppShortcuts({ featureToggles, navigateToPage })
-  const [lastSaved] = useState<number | null>(() => Date.now())
-  const [errorCount] = useState(0)
+  const {
+    searchOpen, setSearchOpen,
+    shortcutsOpen, setShortcutsOpen,
+    previewOpen, setPreviewOpen,
+  } = useAppShortcuts({ featureToggles, navigateToPage })
+  const { lastSaved, errorCount } = useAppLayoutState()
 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>

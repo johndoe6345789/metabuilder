@@ -1,18 +1,14 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Breadcrumb from '@/components/Breadcrumb'
-import { BASE_PATH } from '@/lib/app-config'
-
-interface ProductPackage {
-  name: string
-  assemblies: string[]
-}
+import { useProductPage } from './hooks/useProductPage'
 
 function formatAssemblyName(name: string): string {
-  return name.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+  return name
+    .replace(/-/g, ' ')
+    .replace(/\b\w/g, c => c.toUpperCase())
 }
 
 export default function ProductPage() {
@@ -20,21 +16,11 @@ export default function ProductPage() {
   const category = params.category as string
   const manufacturer = params.manufacturer as string
   const product = params.product as string
-  const [pkg, setPkg] = useState<ProductPackage | null>(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    fetch(`${BASE_PATH}/packages/${category}/${manufacturer}/${product}/package.json`)
-      .then(res => res.json())
-      .then(data => {
-        setPkg(data)
-        setLoading(false)
-      })
-      .catch(err => {
-        console.error('Failed to load product:', err)
-        setLoading(false)
-      })
-  }, [category, manufacturer, product])
+  const { pkg, loading } = useProductPage(
+    category,
+    manufacturer,
+    product
+  )
 
   return (
     <>

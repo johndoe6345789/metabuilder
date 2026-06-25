@@ -1,7 +1,7 @@
 /**
  * Fakemui Component Registry (Disabled for Phase 4)
  *
- * PHASE 5: This registry will lazy-load fakemui components once type safety issues are resolved
+ * PHASE 5: This registry will lazy-load m3 components once type safety issues are resolved
  */
 
 'use client'

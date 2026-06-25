@@ -5,4 +5,4 @@ export {
   DropTableDialog as default,
   type DropTableDialogProps,
   type TableInfo,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';

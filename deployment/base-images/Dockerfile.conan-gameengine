@@ -1,0 +1,50 @@
+# metabuilder/base-conan-gameengine
+#
+# Conan C++ packages for the game engine only (SDL3, assimp, bullet3, box2d,
+# ffmpeg, cairo, libzip, entt, ...). Split out of the former monolithic
+# base-conan-deps. Consumed by the devcontainer and direct game-engine builds;
+# the game engine is not containerized, so this is not on the app pipeline.
+#
+# Build:  docker build -f Dockerfile.conan-gameengine -t metabuilder/base-conan-gameengine:latest ../../
+
+ARG BASE_REGISTRY=metabuilder
+FROM ${BASE_REGISTRY}/base-apt:latest
+
+# Install Conan 2 with retry
+RUN for i in 1 2 3 4 5; do \
+      pip3 install --break-system-packages conan==2.* \
+      && break \
+      || (echo "pip install failed (attempt $i/5), retrying in $((i*10))s..." && sleep $((i*10))); \
+    done
+
+# Detect Conan profile (must run inside the container, not from host cache)
+RUN conan profile detect --force
+
+# Route Conan through the pkgrepo proxy/cache when CONAN_REMOTE is set (empty =
+# default conancenter). Base builds run with --network=host, so a host URL like
+# http://localhost:5002/conan is reachable.
+ARG CONAN_REMOTE=""
+RUN if [ -n "$CONAN_REMOTE" ]; then \
+      conan remote add pkgrepo "$CONAN_REMOTE" --force && \
+      conan remote disable conancenter; \
+    fi
+
+# ---- Game engine ----
+COPY frontends/gameengine/conanfile.py /deps/gameengine/conanfile.py
+
+RUN mkdir -p /tmp/gameengine-build && \
+    for i in 1 2 3 4 5; do \
+      conan install /deps/gameengine/ \
+        --output-folder=/tmp/gameengine-build \
+        --build=missing \
+        -s build_type=Release \
+        -c tools.system.package_manager:mode=install \
+      && break \
+      || (echo "conan install (gameengine) failed attempt $i/5, retrying in $((i*10))s..." && sleep $((i*10))); \
+    done
+
+# Keep only the Conan package cache in /root/.conan2
+RUN rm -rf /tmp/gameengine-build
+
+LABEL org.metabuilder.image="base-conan-gameengine" \
+      org.metabuilder.description="Pre-built Conan C++ packages (game engine)"

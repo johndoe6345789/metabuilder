@@ -30,8 +30,8 @@ export function TerminalOutput({ lines, isRunning }: TerminalOutputProps) {
   }
 
   // Check if there are any error lines
-  const hasErrors = lines.some((line) => line.type === 'error')
-  const lastErrorLine = lines.findLast((line) => line.type === 'error')
+  const hasErrors = lines.some(line => line.type === 'error')
+  const lastErrorLine = lines.findLast(line => line.type === 'error')
 
   return (
     <div
@@ -53,7 +53,7 @@ export function TerminalOutput({ lines, isRunning }: TerminalOutputProps) {
         </div>
       )}
 
-      {lines.map((line) => (
+      {lines.map(line => (
         <motion.div
           key={line.id}
           initial={{ opacity: 0, y: 5 }}

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Level 5 badge - God level -->
+  <circle cx="32" cy="32" r="18" fill="none" stroke-width="2.5"/>
+  <text x="32" y="40" font-size="24" font-weight="bold" fill="currentColor" text-anchor="middle" font-family="Arial, sans-serif">5</text>
+  <path d="M32 12 L32 18 M20 16 L24 21 M16 28 L22 28 M44 16 L40 21 M48 28 L42 28" stroke-width="1.5" opacity="0.7"/>
+</svg>

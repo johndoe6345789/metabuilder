@@ -16,7 +16,7 @@ import {
   Text,
   TextGradient,
 } from '@/components/atoms'
-import { Code as CodeIcon, Rocket, ShoppingCart, Star } from '@metabuilder/fakemui/icons'
+import { Code as CodeIcon, Rocket, ShoppingCart, Star } from '@metabuilder/m3/icons'
 
 type EnhancedComponentsSectionContent =
   (typeof import('@/data/atomic-library-showcase.json'))['sections']['enhancedComponents']

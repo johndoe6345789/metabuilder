@@ -1,7 +1,7 @@
 import { UnitTest } from '@/types/project'
-import { IconButton } from '@metabuilder/fakemui/inputs'
+import { IconButton } from '@metabuilder/m3/inputs'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Plus, Sparkle, Trash } from '@metabuilder/fakemui/icons'
+import { Plus, Sparkle, Trash } from '@metabuilder/m3/icons'
 import unitTestDesignerCopy from '@/data/unit-test-designer.json'
 
 interface TestSuiteListProps {

@@ -105,7 +105,7 @@ export type { PaginationControlsProps } from './pagination/PaginationControls'
 export type { PaginationInfoProps } from './pagination/PaginationInfo'
 export type { ItemsPerPageSelectorProps } from './pagination/ItemsPerPageSelector'
 
-// Icon utilities (depends on @/fakemui/icons)
+// Icon utilities (depends on @/m3/icons)
 export { getComponentIcon } from './get-component-icon'
 
 // Package Style Loader (depends on @/lib/compiler)

@@ -1,174 +1,82 @@
 import { useState, useEffect } from 'react'
-import { Snippet, SnippetFile, InputParameter } from '@/lib/types'
+import { Snippet } from '@/lib/types'
 import { appConfig } from '@/lib/config'
 import { useTranslation } from '@/hooks/useTranslation'
+import { useSnippetFormFiles, getDefaultFileName } from './useSnippetFormFiles'
+import {
+  useSnippetFormParams,
+  validateSnippetForm,
+} from './useSnippetFormParams'
 
-function getDefaultFileName(language: string): string {
-  const map: Record<string, string> = {
-    Python: 'main.py',
-    JavaScript: 'index.js',
-    TypeScript: 'index.ts',
-    Java: 'Main.java',
-    'C++': 'main.cpp',
-    C: 'main.c',
-    Go: 'main.go',
-    Rust: 'main.rs',
-    Ruby: 'main.rb',
-    Swift: 'main.swift',
-    Kotlin: 'Main.kt',
-    PHP: 'index.php',
-    'C#': 'Program.cs',
-    HTML: 'index.html',
-    CSS: 'style.css',
-    SQL: 'query.sql',
-    'SQL (SQLite)': 'query.sql',
-    'SQL (MySQL)': 'query.sql',
-    'SQL (PostgreSQL)': 'query.sql',
-    Bash: 'script.sh',
-    YAML: 'config.yaml',
-    JSON: 'data.json',
-    Markdown: 'README.md',
-  }
-  return map[language] ?? 'main.txt'
-}
-
-export function useSnippetForm(editingSnippet?: Snippet | null, open?: boolean) {
+export function useSnippetForm(
+  editingSnippet?: Snippet | null,
+  open?: boolean,
+) {
   const t = useTranslation()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [language, setLanguage] = useState(appConfig.defaultLanguage)
+  const [language, setLanguageRaw] = useState(appConfig.defaultLanguage)
   const [code, setCode] = useState('')
   const [hasPreview, setHasPreview] = useState(false)
   const [functionName, setFunctionName] = useState('')
-  const [inputParameters, setInputParameters] = useState<InputParameter[]>([])
-  const [errors, setErrors] = useState<{ title?: string; code?: string }>({})
-  const [files, setFiles] = useState<SnippetFile[]>([])
-  const [activeFile, setActiveFile] = useState('')
+  const [errors, setErrors] = useState<{
+    title?: string
+    code?: string
+  }>({})
+  const fileOps = useSnippetFormFiles(appConfig.defaultLanguage)
+  const params = useSnippetFormParams()
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     if (editingSnippet) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTitle(editingSnippet.title)
       setDescription(editingSnippet.description)
-      setLanguage(editingSnippet.language)
+      setLanguageRaw(editingSnippet.language)
       setCode(editingSnippet.code)
       setHasPreview(editingSnippet.hasPreview || false)
       setFunctionName(editingSnippet.functionName || '')
-      setInputParameters(editingSnippet.inputParameters || [])
-
+      params.setInputParameters(editingSnippet.inputParameters || [])
       if (editingSnippet.files && editingSnippet.files.length > 0) {
-        setFiles(editingSnippet.files)
-        const entry = editingSnippet.entryPoint || editingSnippet.files[0].name
-        setActiveFile(entry)
+        fileOps.setFiles(editingSnippet.files)
+        fileOps.setActiveFile(
+          editingSnippet.entryPoint || editingSnippet.files[0].name,
+        )
       } else {
-        const defaultName = getDefaultFileName(editingSnippet.language)
-        setFiles([{ name: defaultName, content: editingSnippet.code }])
-        setActiveFile(defaultName)
+        fileOps.resetFiles(editingSnippet.language, editingSnippet.code)
       }
     } else {
       setTitle('')
       setDescription('')
-      setLanguage(appConfig.defaultLanguage)
+      setLanguageRaw(appConfig.defaultLanguage)
       setCode('')
       setHasPreview(false)
       setFunctionName('')
-      setInputParameters([])
-
-      const defaultName = getDefaultFileName(appConfig.defaultLanguage)
-      setFiles([{ name: defaultName, content: '' }])
-      setActiveFile(defaultName)
+      params.setInputParameters([])
+      fileOps.resetFiles(appConfig.defaultLanguage)
     }
     setErrors({})
   }, [editingSnippet, open])
   /* eslint-enable react-hooks/exhaustive-deps */
 
-  const handleAddParameter = () => {
-    setInputParameters((prev) => [
-      ...prev,
-      { name: '', type: 'string', defaultValue: '', description: '' },
-    ])
-  }
-
-  const handleRemoveParameter = (index: number) => {
-    setInputParameters((prev) => prev.filter((_, i) => i !== index))
-  }
-
-  const handleUpdateParameter = (index: number, field: keyof InputParameter, value: string) => {
-    setInputParameters((prev) =>
-      prev.map((param, i) => (i === index ? { ...param, [field]: value } : param))
-    )
-  }
-
-  const addFile = (name: string, content = '') => {
-    setFiles((prev) => [...prev, { name, content }])
-    setActiveFile(name)
-  }
-
-  const deleteFile = (name: string) => {
-    setFiles((prev) => {
-      const next = prev.filter((f) => f.name !== name)
-      if (activeFile === name && next.length > 0) {
-        setActiveFile(next[0].name)
-      }
-      return next
-    })
-  }
-
-  const updateFileContent = (name: string, content: string) => {
-    setFiles((prev) => prev.map((f) => (f.name === name ? { ...f, content } : f)))
-    if (name === activeFile) setCode(content)
-  }
-
-  const renameFile = (oldName: string, newName: string) => {
-    setFiles((prev) => prev.map((f) => (f.name === oldName ? { ...f, name: newName } : f)))
-    if (activeFile === oldName) setActiveFile(newName)
-  }
-
-  const uploadFile = (file: File) => {
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      const content = (e.target?.result as string) ?? ''
-      setFiles((prev) => {
-        const idx = prev.findIndex((f) => f.name === file.name)
-        if (idx >= 0) {
-          return prev.map((f, i) => (i === idx ? { ...f, content } : f))
-        }
-        return [...prev, { name: file.name, content }]
-      })
-      setActiveFile(file.name)
-    }
-    reader.readAsText(file)
-  }
-
   const handleLanguageChange = (newLanguage: string) => {
-    setLanguage(newLanguage)
-    // Rename first file to match new language's default extension if it has the old default name
+    setLanguageRaw(newLanguage)
     const oldDefault = getDefaultFileName(language)
     const newDefault = getDefaultFileName(newLanguage)
-    if (files.length > 0 && files[0].name === oldDefault) {
-      renameFile(oldDefault, newDefault)
+    if (fileOps.files.length > 0 && fileOps.files[0].name === oldDefault) {
+      fileOps.renameFile(oldDefault, newDefault)
     }
   }
 
   const validate = () => {
-    const newErrors: { title?: string; code?: string } = {}
-
-    if (!title.trim()) {
-      newErrors.title = t.snippetDialog.fields.title.errorMessage
-    }
-
-    const entryFile = files.find((f) => f.name === activeFile) || files[0]
-    const entryContent = entryFile?.content.trim() || code.trim()
-    if (!entryContent) {
-      newErrors.code = t.snippetDialog.fields.code.errorMessage
-    }
-
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
+    const { errors: e, valid } = validateSnippetForm(title, code, fileOps, t)
+    setErrors(e)
+    return valid
   }
 
   const getFormData = () => {
-    const entryFile = files.find((f) => f.name === activeFile) || files[0]
+    const entryFile =
+      fileOps.files.find(f => f.name === fileOps.activeFile) || fileOps.files[0]
     const entryContent = entryFile?.content.trim() || code.trim()
     return {
       title: title.trim(),
@@ -178,23 +86,22 @@ export function useSnippetForm(editingSnippet?: Snippet | null, open?: boolean) 
       category: editingSnippet?.category || 'general',
       hasPreview,
       functionName: functionName.trim() || undefined,
-      inputParameters: inputParameters.length > 0 ? inputParameters : undefined,
-      files: files.length > 0 ? files : undefined,
-      entryPoint: activeFile || undefined,
+      inputParameters:
+        params.inputParameters.length > 0 ? params.inputParameters : undefined,
+      files: fileOps.files.length > 0 ? fileOps.files : undefined,
+      entryPoint: fileOps.activeFile || undefined,
     }
   }
 
   const resetForm = () => {
     setTitle('')
     setDescription('')
-    setLanguage(appConfig.defaultLanguage)
+    setLanguageRaw(appConfig.defaultLanguage)
     setCode('')
     setHasPreview(false)
     setFunctionName('')
-    setInputParameters([])
-    const defaultName = getDefaultFileName(appConfig.defaultLanguage)
-    setFiles([{ name: defaultName, content: '' }])
-    setActiveFile(defaultName)
+    params.setInputParameters([])
+    fileOps.resetFiles(appConfig.defaultLanguage)
     setErrors({})
   }
 
@@ -205,25 +112,28 @@ export function useSnippetForm(editingSnippet?: Snippet | null, open?: boolean) 
     code,
     hasPreview,
     functionName,
-    inputParameters,
     errors,
-    files,
-    activeFile,
+    inputParameters: params.inputParameters,
+    files: fileOps.files,
+    activeFile: fileOps.activeFile,
     setTitle,
     setDescription,
     setLanguage: handleLanguageChange,
     setCode,
     setHasPreview,
     setFunctionName,
-    setActiveFile,
-    addFile,
-    deleteFile,
-    updateFileContent,
-    renameFile,
-    uploadFile,
-    handleAddParameter,
-    handleRemoveParameter,
-    handleUpdateParameter,
+    setActiveFile: fileOps.setActiveFile,
+    addFile: fileOps.addFile,
+    deleteFile: fileOps.deleteFile,
+    updateFileContent: (name: string, c: string) => {
+      fileOps.updateFileContent(name, c)
+      if (name === fileOps.activeFile) setCode(c)
+    },
+    renameFile: fileOps.renameFile,
+    uploadFile: fileOps.uploadFile,
+    handleAddParameter: params.handleAddParameter,
+    handleRemoveParameter: params.handleRemoveParameter,
+    handleUpdateParameter: params.handleUpdateParameter,
     validate,
     getFormData,
     resetForm,

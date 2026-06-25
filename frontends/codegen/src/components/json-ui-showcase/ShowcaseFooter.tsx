@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import { Separator } from '@metabuilder/fakemui/data-display'
+import { Separator } from '@metabuilder/m3/data-display'
 import { ShowcaseFooterItem } from './types'
 
 interface ShowcaseFooterProps {

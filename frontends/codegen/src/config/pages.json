@@ -447,6 +447,15 @@
       "shortcut": "ctrl+shift+c",
       "order": 27,
       "props": {}
+    },
+    {
+      "id": "site-generator",
+      "title": "Site Generator",
+      "icon": "Globe",
+      "component": "SiteGenerator",
+      "enabled": true,
+      "order": 28,
+      "props": {}
     }
   ]
 }

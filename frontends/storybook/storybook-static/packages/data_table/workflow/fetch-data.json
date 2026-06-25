@@ -1,0 +1,359 @@
+{
+  "name": "Fetch Data for Table",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_tenant_critical",
+      "name": "Validate Tenant Critical",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.tenantId }}",
+        "operation": "validate",
+        "validator": "required",
+        "errorMessage": "tenantId is REQUIRED for multi-tenant safety - data leak prevention"
+      }
+    },
+    {
+      "id": "validate_user_critical",
+      "name": "Validate User Critical",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.user.id }}",
+        "operation": "validate",
+        "validator": "required",
+        "errorMessage": "userId is REQUIRED for row-level ACL"
+      }
+    },
+    {
+      "id": "validate_input",
+      "name": "Validate Input",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $json }}",
+        "operation": "validate",
+        "rules": {
+          "entity": "required|string",
+          "sortBy": "string",
+          "sortOrder": "string",
+          "limit": "number|max:500",
+          "page": "number|min:1"
+        }
+      }
+    },
+    {
+      "id": "extract_params",
+      "name": "Extract Params",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "output": {
+          "entity": "{{ $json.entity }}",
+          "sortBy": "{{ $json.sortBy || 'createdAt' }}",
+          "sortOrder": "{{ $json.sortOrder === 'asc' ? 1 : -1 }}",
+          "limit": "{{ Math.min($json.limit || 50, 500) }}",
+          "page": "{{ $json.page || 1 }}"
+        },
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "calculate_offset",
+      "name": "Calculate Offset",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "output": "{{ ($steps.extract_params.output.page - 1) * $steps.extract_params.output.limit }}",
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "build_filter",
+      "name": "Build Filter",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "output": {
+          "tenantId": "{{ $context.tenantId }}",
+          "searchTerm": "{{ $json.search || null }}",
+          "filters": "{{ $json.filters || {} }}"
+        },
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "apply_user_acl",
+      "name": "Apply User Acl",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
+      "parameters": {
+        "condition": "{{ $context.user.level >= 3 || $build_filter.output.filters.userId === $context.user.id }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "fetch_data",
+      "name": "Fetch Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        400,
+        500
+      ],
+      "parameters": {
+        "operation": "http_request",
+        "url": "{{ '/api/v1/' + $context.tenantId + '/' + $steps.extract_params.output.entity }}",
+        "method": "GET",
+        "queryParameters": {
+          "tenantId": "{{ $context.tenantId }}",
+          "sortBy": "{{ $steps.extract_params.output.sortBy }}",
+          "sortOrder": "{{ $steps.extract_params.output.sortOrder }}",
+          "limit": "{{ $steps.extract_params.output.limit }}",
+          "offset": "{{ $steps.calculate_offset.output }}",
+          "filters": "{{ JSON.stringify($steps.build_filter.output.filters) }}"
+        },
+        "headers": {
+          "Authorization": "{{ 'Bearer ' + $context.token }}"
+        }
+      }
+    },
+    {
+      "id": "validate_response",
+      "name": "Validate Response",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        700,
+        500
+      ],
+      "parameters": {
+        "condition": "{{ $steps.fetch_data.output.status === 200 }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "parse_response",
+      "name": "Parse Response",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        100,
+        700
+      ],
+      "parameters": {
+        "input": "{{ $steps.fetch_data.output.body }}",
+        "output": {
+          "data": "{{ $steps.fetch_data.output.body.data }}",
+          "total": "{{ $steps.fetch_data.output.body.total }}"
+        },
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "format_response",
+      "name": "Format Response",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        400,
+        700
+      ],
+      "parameters": {
+        "output": {
+          "data": "{{ $steps.parse_response.output.data }}",
+          "pagination": {
+            "total": "{{ $steps.parse_response.output.total }}",
+            "page": "{{ $steps.extract_params.output.page }}",
+            "limit": "{{ $steps.extract_params.output.limit }}",
+            "totalPages": "{{ Math.ceil($steps.parse_response.output.total / $steps.extract_params.output.limit) }}"
+          },
+          "sorting": {
+            "sortBy": "{{ $steps.extract_params.output.sortBy }}",
+            "sortOrder": "{{ $steps.extract_params.output.sortOrder === 1 ? 'asc' : 'desc' }}"
+          }
+        },
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "return_success",
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        700,
+        700
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 200,
+        "body": "{{ $steps.format_response.output }}"
+      }
+    }
+  ],
+  "connections": {
+    "validate_tenant_critical": {
+      "main": [
+        [
+          {
+            "node": "validate_user_critical",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_user_critical": {
+      "main": [
+        [
+          {
+            "node": "validate_input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_input": {
+      "main": [
+        [
+          {
+            "node": "extract_params",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "extract_params": {
+      "main": [
+        [
+          {
+            "node": "calculate_offset",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "calculate_offset": {
+      "main": [
+        [
+          {
+            "node": "build_filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "build_filter": {
+      "main": [
+        [
+          {
+            "node": "apply_user_acl",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "apply_user_acl": {
+      "main": [
+        [
+          {
+            "node": "fetch_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_data": {
+      "main": [
+        [
+          {
+            "node": "validate_response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_response": {
+      "main": [
+        [
+          {
+            "node": "parse_response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "parse_response": {
+      "main": [
+        [
+          {
+            "node": "format_response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "format_response": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_fetch_data",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

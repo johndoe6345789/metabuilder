@@ -11,61 +11,72 @@ FROM ${BASE_REGISTRY}/base-node-deps:latest AS builder
 # Each COPY targets only the source tree that workflowui actually imports.
 #
 # types + interfaces (TS type definitions)
-COPY types/ ./types/
-COPY interfaces/ ./interfaces/
+COPY libraries/types/ ./libraries/types/
+COPY libraries/interfaces/ ./libraries/interfaces/
 
 # hooks (shared React hooks)
-COPY hooks/ ./hooks/
+COPY libraries/hooks/ ./libraries/hooks/
 
-# icons (React icon components — imported by components/fakemui)
-COPY icons/ ./icons/
+# icons (React icon components — imported by components/m3)
+COPY libraries/icons/ ./libraries/icons/
 
 # scss (Material 3 SCSS, theme, atoms — loaded by sassOptions)
-COPY scss/ ./scss/
+COPY libraries/scss/ ./libraries/scss/
 
 # translations (i18n strings)
-COPY translations/ ./translations/
+COPY libraries/translations/ ./libraries/translations/
 
 # components + FakeMUI (UI component library)
-COPY components/ ./components/
+COPY libraries/components/ ./libraries/components/
 
 # ── Redux packages (all — small TS source, avoids transitive dep breakage) ───
-COPY redux/core/ ./redux/core/
-COPY redux/slices/ ./redux/slices/
-COPY redux/hooks/ ./redux/hooks/
-COPY redux/adapters/ ./redux/adapters/
-COPY redux/api-clients/ ./redux/api-clients/
-COPY redux/core-hooks/ ./redux/core-hooks/
-COPY redux/email/ ./redux/email/
-COPY redux/hooks-async/ ./redux/hooks-async/
-COPY redux/hooks-auth/ ./redux/hooks-auth/
-COPY redux/hooks-canvas/ ./redux/hooks-canvas/
-COPY redux/hooks-data/ ./redux/hooks-data/
-COPY redux/hooks-forms/ ./redux/hooks-forms/
-COPY redux/hooks-utils/ ./redux/hooks-utils/
-COPY redux/middleware/ ./redux/middleware/
-COPY redux/persist/ ./redux/persist/
-COPY redux/services/ ./redux/services/
-COPY redux/timing-utils/ ./redux/timing-utils/
+COPY libraries/redux/core/ ./libraries/redux/core/
+COPY libraries/redux/slices/ ./libraries/redux/slices/
+COPY libraries/redux/hooks/ ./libraries/redux/hooks/
+COPY libraries/redux/adapters/ ./libraries/redux/adapters/
+COPY libraries/redux/api-clients/ ./libraries/redux/api-clients/
+COPY libraries/redux/core-hooks/ ./libraries/redux/core-hooks/
+COPY libraries/redux/email/ ./libraries/redux/email/
+COPY libraries/redux/hooks-async/ ./libraries/redux/hooks-async/
+COPY libraries/redux/hooks-auth/ ./libraries/redux/hooks-auth/
+COPY libraries/redux/hooks-canvas/ ./libraries/redux/hooks-canvas/
+COPY libraries/redux/hooks-data/ ./libraries/redux/hooks-data/
+COPY libraries/redux/hooks-forms/ ./libraries/redux/hooks-forms/
+COPY libraries/redux/hooks-utils/ ./libraries/redux/hooks-utils/
+COPY libraries/redux/middleware/ ./libraries/redux/middleware/
+COPY libraries/redux/persist/ ./libraries/redux/persist/
+COPY libraries/redux/services/ ./libraries/redux/services/
+COPY libraries/redux/timing-utils/ ./libraries/redux/timing-utils/
 
 # workflow (DAG engine — imported by components package)
-COPY workflow/ ./workflow/
+COPY libraries/workflow/ ./libraries/workflow/
 
 # ── WorkflowUI (the app itself) ─────────────────────────────────────────────
 COPY frontends/workflowui/ ./frontends/workflowui/
 
+# Re-link workspaces so every copied workspace can resolve local deps.
+# The base image installed deps from manifests only; now that real workspace
+# source has been COPYed in, re-run the full workspace install so npm rebuilds
+# the complete node_modules/@metabuilder/* symlink tree (e.g. @metabuilder/types
+# for redux/slices, redux/adapters, redux/hooks-async, api-clients, persist).
+RUN npm install --ignore-scripts --legacy-peer-deps
+
 # Build workspace library packages
-RUN for ws in redux/core redux/slices redux/hooks redux/adapters \
-    redux/hooks-async redux/api-clients redux/persist \
-    components workflow; do \
-    npm run build -w "$ws" --if-present 2>&1 || echo "WARN: $ws build failed (non-critical)"; \
+RUN for ws in libraries/redux/core libraries/redux/slices \
+    libraries/redux/hooks libraries/redux/adapters \
+    libraries/redux/hooks-async libraries/redux/api-clients \
+    libraries/redux/persist libraries/components libraries/workflow; do \
+    npm run build -w "$ws" --if-present 2>&1 || { echo "ERROR: $ws build failed"; exit 1; }; \
 done
 
 # Build the app
 RUN cd frontends/workflowui && npx next build --turbopack
 
 # --- Runtime stage ---
-FROM node:24-alpine
+# Pinned to alpine3.21 (Python 3.12) on purpose: node:24-alpine moved to
+# alpine3.24 / Python 3.14, for which pydantic-core has no musl wheel and its
+# pinned pyo3 won't compile -> pip install fails. 3.12 installs from a wheel.
+FROM node:24-alpine3.21
 WORKDIR /app
 
 # Install Python for Flask backend

@@ -1,14 +1,14 @@
 import { useCRUD, useSearchFilter } from '@/hooks/data'
 import { useToggle, useDialog } from '@/hooks/ui'
 import { useUIState } from '@/hooks/use-ui-state'
-import { Button } from '@metabuilder/fakemui/inputs'
-import { Card, CardHeader, CardTitle, CardContent } from '@metabuilder/fakemui/surfaces'
+import { Button } from '@metabuilder/m3/inputs'
+import { Card, CardHeader, CardTitle, CardContent } from '@metabuilder/m3/surfaces'
 import { MetabuilderWidgetSearchInput as SearchInput } from '@/lib/json-ui/json-components'
 import { MetabuilderLayoutDataCard as DataCard } from '@/lib/json-ui/json-components'
 import { MetabuilderDisplayHeading as Heading, MetabuilderDisplayBadge as Badge } from '@/lib/json-ui/json-components'
-import { Plus, Trash, Eye } from '@metabuilder/fakemui/icons'
-import { Dialog } from '@metabuilder/fakemui/feedback'
-import { DialogContent, DialogHeader, DialogTitle } from '@metabuilder/fakemui/utils'
+import { Plus, Trash, Eye } from '@metabuilder/m3/icons'
+import { Dialog } from '@metabuilder/m3/feedback'
+import { DialogContent, DialogHeader, DialogTitle } from '@metabuilder/m3/utils'
 
 interface Task {
   id: number

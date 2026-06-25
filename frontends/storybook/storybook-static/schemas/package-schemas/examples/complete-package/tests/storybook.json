@@ -1,0 +1,324 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": false,
+  "title": "Test Suite Stories",
+  "description": "Interactive test suite visualization and debugging in Storybook",
+
+  "stories": [
+    {
+      "name": "Email Validation Tests",
+      "render": "runEmailValidationTests",
+      "description": "Interactive email validation test runner",
+      "args": {
+        "showPassing": true,
+        "showFailing": true,
+        "highlightEdgeCases": true
+      },
+      "argTypes": {
+        "showPassing": {
+          "type": "boolean",
+          "defaultValue": true,
+          "description": "Show passing test cases"
+        },
+        "showFailing": {
+          "type": "boolean",
+          "defaultValue": true,
+          "description": "Show failing test cases"
+        },
+        "highlightEdgeCases": {
+          "type": "boolean",
+          "defaultValue": true,
+          "description": "Highlight edge case scenarios"
+        },
+        "runMode": {
+          "type": "select",
+          "options": ["interactive", "automatic", "step-by-step"],
+          "defaultValue": "interactive",
+          "description": "Test execution mode"
+        }
+      },
+      "tags": ["tests", "validation"]
+    },
+
+    {
+      "name": "User Creation Test Suite",
+      "render": "runUserCreationTests",
+      "description": "Visualize user creation validation and edge cases",
+      "args": {
+        "testEnvironment": "sandbox",
+        "mockDatabase": true,
+        "verboseOutput": false
+      },
+      "argTypes": {
+        "testEnvironment": {
+          "type": "select",
+          "options": ["sandbox", "staging", "local"],
+          "defaultValue": "sandbox",
+          "description": "Test environment to use"
+        },
+        "mockDatabase": {
+          "type": "boolean",
+          "defaultValue": true,
+          "description": "Use mocked database"
+        },
+        "verboseOutput": {
+          "type": "boolean",
+          "defaultValue": false,
+          "description": "Show detailed test output"
+        }
+      },
+      "tags": ["tests", "integration"]
+    },
+
+    {
+      "name": "Parameterized Test Viewer",
+      "render": "viewParameterizedTests",
+      "description": "Interactive viewer for parameterized test cases",
+      "args": {
+        "parameterSet": "email-validation-params",
+        "filterByTag": "",
+        "pageSize": 10
+      },
+      "argTypes": {
+        "parameterSet": {
+          "type": "select",
+          "options": [
+            "email-validation-params",
+            "password-strength-params",
+            "user-registration-params",
+            "data-generator-params"
+          ],
+          "defaultValue": "email-validation-params",
+          "description": "Parameter set to visualize"
+        },
+        "filterByTag": {
+          "type": "string",
+          "defaultValue": "",
+          "description": "Filter by tag (empty for all)"
+        },
+        "pageSize": {
+          "type": "number",
+          "defaultValue": 10,
+          "description": "Number of cases per page"
+        },
+        "showGeneratedValues": {
+          "type": "boolean",
+          "defaultValue": true,
+          "description": "Show generated parameter values"
+        }
+      },
+      "tags": ["tests", "parameters"]
+    },
+
+    {
+      "name": "Test Coverage Dashboard",
+      "render": "showTestCoverage",
+      "description": "Visual test coverage overview",
+      "args": {
+        "view": "summary",
+        "includeParameterized": true
+      },
+      "argTypes": {
+        "view": {
+          "type": "select",
+          "options": ["summary", "detailed", "by-suite", "by-tag"],
+          "defaultValue": "summary",
+          "description": "Coverage view mode"
+        },
+        "includeParameterized": {
+          "type": "boolean",
+          "defaultValue": true,
+          "description": "Include parameterized test cases in count"
+        },
+        "highlightLowCoverage": {
+          "type": "boolean",
+          "defaultValue": true,
+          "description": "Highlight areas with low coverage"
+        }
+      },
+      "tags": ["tests", "coverage"],
+      "parameters": {
+        "layout": "fullscreen"
+      }
+    },
+
+    {
+      "name": "Mock Data Inspector",
+      "render": "inspectMockData",
+      "description": "Inspect and modify test fixtures and mocks",
+      "args": {
+        "fixtureSet": "user-fixtures",
+        "editable": true
+      },
+      "argTypes": {
+        "fixtureSet": {
+          "type": "select",
+          "options": ["user-fixtures", "auth-fixtures", "validation-fixtures"],
+          "defaultValue": "user-fixtures",
+          "description": "Fixture set to inspect"
+        },
+        "editable": {
+          "type": "boolean",
+          "defaultValue": true,
+          "description": "Allow editing fixture data"
+        },
+        "format": {
+          "type": "select",
+          "options": ["json", "table", "tree"],
+          "defaultValue": "json",
+          "description": "Display format"
+        }
+      },
+      "tags": ["tests", "fixtures"]
+    },
+
+    {
+      "name": "BDD Test Scenario Runner",
+      "render": "runBDDScenario",
+      "description": "Step through BDD-style test scenarios",
+      "args": {
+        "scenario": "user-profile-update",
+        "showSteps": true,
+        "autoAdvance": false
+      },
+      "argTypes": {
+        "scenario": {
+          "type": "select",
+          "options": [
+            "user-profile-update",
+            "user-login",
+            "user-registration",
+            "password-reset"
+          ],
+          "defaultValue": "user-profile-update",
+          "description": "BDD scenario to run"
+        },
+        "showSteps": {
+          "type": "boolean",
+          "defaultValue": true,
+          "description": "Show Given/When/Then steps"
+        },
+        "autoAdvance": {
+          "type": "boolean",
+          "defaultValue": false,
+          "description": "Auto-advance through steps"
+        },
+        "stepDelay": {
+          "type": "number",
+          "defaultValue": 1000,
+          "description": "Delay between auto-advance steps (ms)"
+        }
+      },
+      "tags": ["tests", "bdd"],
+      "parameters": {
+        "layout": "centered"
+      }
+    }
+  ],
+
+  "renders": {
+    "runEmailValidationTests": {
+      "description": "Email validation test runner with visual feedback",
+      "featured": true
+    },
+    "runUserCreationTests": {
+      "description": "User creation integration test suite"
+    },
+    "viewParameterizedTests": {
+      "description": "Interactive parameterized test viewer"
+    },
+    "showTestCoverage": {
+      "description": "Test coverage visualization dashboard"
+    },
+    "inspectMockData": {
+      "description": "Mock data and fixture inspector"
+    },
+    "runBDDScenario": {
+      "description": "BDD scenario step-through runner"
+    }
+  },
+
+  "defaultContext": {
+    "testMode": true,
+    "mockExternalServices": true,
+    "user": {
+      "id": "test-user",
+      "username": "test_runner",
+      "level": 4
+    }
+  },
+
+  "contextVariants": [
+    {
+      "name": "Test Environment - Sandbox",
+      "description": "Isolated sandbox environment for tests",
+      "context": {
+        "environment": "sandbox",
+        "mockDatabase": true,
+        "mockExternalServices": true
+      }
+    },
+    {
+      "name": "Test Environment - Staging",
+      "description": "Staging environment with real services",
+      "context": {
+        "environment": "staging",
+        "mockDatabase": false,
+        "mockExternalServices": true
+      }
+    },
+    {
+      "name": "Debug Mode",
+      "description": "Verbose test output and debugging",
+      "context": {
+        "debugMode": true,
+        "verboseLogging": true,
+        "breakOnFailure": true
+      }
+    }
+  ],
+
+  "argTypes": {
+    "testEnvironment": {
+      "type": "select",
+      "options": ["sandbox", "staging", "local"],
+      "defaultValue": "sandbox",
+      "description": "Test execution environment",
+      "table": {
+        "category": "Environment"
+      }
+    },
+    "verboseOutput": {
+      "type": "boolean",
+      "defaultValue": false,
+      "description": "Show detailed test output",
+      "table": {
+        "category": "Output"
+      }
+    },
+    "breakOnFailure": {
+      "type": "boolean",
+      "defaultValue": false,
+      "description": "Pause execution on test failure",
+      "table": {
+        "category": "Debugging"
+      }
+    }
+  },
+
+  "parameters": {
+    "layout": "padded",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#f8f9fa" },
+        { "name": "dark", "value": "#1a1a1a" },
+        { "name": "test-green", "value": "#d4edda" },
+        { "name": "test-red", "value": "#f8d7da" }
+      ]
+    },
+    "docs": {
+      "description": "Interactive test visualization and debugging tools"
+    }
+  }
+}

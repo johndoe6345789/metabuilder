@@ -1,0 +1,81 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Database Manager Components",
+  "description": "Database administration, export/import, and statistics",
+  "stories": [
+    {
+      "name": "DatabaseStats",
+      "render": "stats",
+      "description": "Database statistics dashboard with entity counts",
+      "args": {
+        "stats": {
+          "users": 125,
+          "schemas": 42,
+          "packages": 44,
+          "tenants": 3,
+          "workflows": 18,
+          "uiPages": 56,
+          "comments": 892,
+          "cssClasses": 234,
+          "errorLogs": 12,
+          "sessions": 45
+        }
+      }
+    },
+    {
+      "name": "ExportImportPanel",
+      "render": "export",
+      "description": "Export and import database data panel",
+      "args": {
+        "tenantId": "demo-tenant"
+      }
+    },
+    {
+      "name": "SchemaVisualizer",
+      "render": "schema",
+      "description": "Database schema entity list",
+      "args": {
+        "entities": [
+          { "name": "users", "recordCount": 125 },
+          { "name": "schemas", "recordCount": 42 },
+          { "name": "workflows", "recordCount": 18 },
+          { "name": "ui_pages", "recordCount": 56 }
+        ]
+      }
+    },
+    {
+      "name": "DatabaseOperations",
+      "render": "operations",
+      "description": "Dangerous database operations panel",
+      "type": "function"
+    }
+  ],
+  "renders": {
+    "stats": {
+      "description": "Database statistics dashboard",
+      "featured": true
+    },
+    "export": {
+      "description": "Export/Import panel"
+    },
+    "schema": {
+      "description": "Schema visualization"
+    },
+    "operations": {
+      "description": "Database operations"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "supergod-user",
+      "username": "supergod",
+      "level": 5,
+      "email": "supergod@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  }
+}

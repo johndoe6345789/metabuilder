@@ -1,0 +1,295 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/tests.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "complete-example",
+  "description": "Parameterized validation tests using external parameter sets",
+
+  "imports": [
+    {
+      "from": "validation-helpers",
+      "import": ["validateEmail", "checkPasswordStrength", "validateRegistration"]
+    }
+  ],
+
+  "testSuites": [
+    {
+      "id": "email-validation-parameterized",
+      "name": "Email Validation (Parameterized)",
+      "description": "Email validation using external parameter set",
+      "tags": ["validation", "parameterized"],
+
+      "tests": [
+        {
+          "id": "test-email-validation",
+          "name": "should validate emails correctly",
+          "parameterized": true,
+          "parameters": "email-validation-params",
+          "act": {
+            "type": "function_call",
+            "target": "validateEmail",
+            "input": "{{email}}"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "equals",
+                "actual": "result",
+                "expected": "{{expected}}"
+              }
+            ]
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "password-strength-parameterized",
+      "name": "Password Strength (Parameterized)",
+      "description": "Password strength testing with various requirements",
+      "tags": ["security", "parameterized"],
+
+      "tests": [
+        {
+          "id": "test-password-strength",
+          "name": "should check password strength correctly",
+          "parameterized": true,
+          "parameters": "password-strength-params",
+          "act": {
+            "type": "function_call",
+            "target": "checkPasswordStrength",
+            "input": {
+              "password": "{{password}}",
+              "requirements": {
+                "minLength": "{{minLength}}",
+                "requireUppercase": "{{requireUppercase}}",
+                "requireLowercase": "{{requireLowercase}}",
+                "requireNumbers": "{{requireNumbers}}",
+                "requireSpecialChars": "{{requireSpecialChars}}"
+              }
+            }
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "equals",
+                "actual": "result.strength",
+                "expected": "{{expectedStrength}}"
+              }
+            ]
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "registration-validation-parameterized",
+      "name": "User Registration Validation (Parameterized)",
+      "description": "Complete registration validation with parameter set",
+      "tags": ["registration", "integration", "parameterized"],
+
+      "tests": [
+        {
+          "id": "test-registration-validation",
+          "name": "should validate registration data",
+          "parameterized": true,
+          "parameters": "user-registration-params",
+          "act": {
+            "type": "function_call",
+            "target": "validateRegistration",
+            "input": "{{userData}}"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "equals",
+                "actual": "result.valid",
+                "expected": "{{shouldPass}}",
+                "description": "Validation result should match expected"
+              },
+              {
+                "type": "deepEquals",
+                "actual": "result.errors",
+                "expected": "{{expectedErrors}}",
+                "description": "Error fields should match expected"
+              }
+            ]
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "inline-parameterized-suite",
+      "name": "Inline Parameterized Tests",
+      "description": "Examples of inline parameter definitions",
+      "tags": ["inline", "parameterized"],
+
+      "tests": [
+        {
+          "id": "test-string-sanitization",
+          "name": "should sanitize strings correctly",
+          "parameterized": true,
+          "parameters": [
+            {
+              "case": "basic XSS attack",
+              "input": "<script>alert('xss')</script>Hello",
+              "expected": "Hello"
+            },
+            {
+              "case": "SQL injection attempt",
+              "input": "'; DROP TABLE users; --",
+              "expected": "'; DROP TABLE users; --"
+            },
+            {
+              "case": "HTML tags",
+              "input": "<b>Bold</b> text",
+              "expected": "Bold text"
+            },
+            {
+              "case": "normal text",
+              "input": "Just plain text",
+              "expected": "Just plain text"
+            }
+          ],
+          "act": {
+            "type": "function_call",
+            "target": "sanitizeInput",
+            "input": "{{input}}"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "equals",
+                "actual": "result",
+                "expected": "{{expected}}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test-number-ranges",
+          "name": "should validate number ranges",
+          "parameterized": true,
+          "parameters": [
+            {
+              "case": "within range",
+              "input": 50,
+              "expected": true
+            },
+            {
+              "case": "below minimum",
+              "input": -5,
+              "expected": false
+            },
+            {
+              "case": "above maximum",
+              "input": 150,
+              "expected": false
+            },
+            {
+              "case": "at minimum boundary",
+              "input": 0,
+              "expected": true
+            },
+            {
+              "case": "at maximum boundary",
+              "input": 100,
+              "expected": true
+            }
+          ],
+          "act": {
+            "type": "function_call",
+            "target": "isInRange",
+            "input": {
+              "value": "{{input}}",
+              "min": 0,
+              "max": 100
+            }
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "equals",
+                "actual": "result",
+                "expected": "{{expected}}"
+              }
+            ]
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "bdd-style-tests",
+      "name": "BDD-Style Tests",
+      "description": "Behavior-driven development style test examples",
+      "tags": ["bdd", "readable"],
+
+      "tests": [
+        {
+          "id": "test-user-profile-update",
+          "name": "User can update their profile",
+          "arrange": {
+            "given": "a logged-in user with existing profile data",
+            "fixtures": {
+              "userId": "user-123",
+              "currentProfile": {
+                "displayName": "John Doe",
+                "bio": "Original bio"
+              },
+              "updates": {
+                "displayName": "Jane Smith",
+                "bio": "Updated bio text"
+              }
+            },
+            "mocks": [
+              {
+                "target": "database.getUser",
+                "type": "function",
+                "behavior": {
+                  "returnValue": {
+                    "userId": "user-123",
+                    "displayName": "John Doe",
+                    "bio": "Original bio"
+                  }
+                }
+              }
+            ]
+          },
+          "act": {
+            "when": "the user updates their profile information",
+            "type": "function_call",
+            "target": "updateUserProfile",
+            "input": {
+              "userId": "{{userId}}",
+              "updates": "{{updates}}"
+            }
+          },
+          "assert": {
+            "then": "the profile should be updated with new information",
+            "expectations": [
+              {
+                "type": "equals",
+                "actual": "result.displayName",
+                "expected": "Jane Smith",
+                "description": "Display name should be updated"
+              },
+              {
+                "type": "equals",
+                "actual": "result.bio",
+                "expected": "Updated bio text",
+                "description": "Bio should be updated"
+              },
+              {
+                "type": "hasProperty",
+                "actual": "result",
+                "expected": "updatedAt",
+                "description": "Should have updatedAt timestamp"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

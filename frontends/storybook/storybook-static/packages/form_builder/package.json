@@ -1,0 +1,75 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "form_builder",
+  "name": "Form Builder",
+  "version": "1.0.0",
+  "description": "Form fields, validation, and submission handling",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "icon": "static_content/icon.svg",
+  "minLevel": 1,
+  "primary": false,
+  "dependencies": {},
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "FormField",
+      "EmailField",
+      "PasswordField",
+      "NumberField",
+      "SearchBar",
+      "ContactForm"
+    ],
+    "scripts": [
+      "fields",
+      "validate",
+      "contact_form"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "forms",
+      "permissions",
+      "seed",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests",
+      "validation"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/config.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "forms/contact-form.json",
+        "seed/metadata.json",
+        "static_content/icon.svg",
+        "validation/validators.json"
+      ]
+    }
+  }
+}

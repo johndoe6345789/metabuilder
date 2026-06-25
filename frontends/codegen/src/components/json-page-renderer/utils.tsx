@@ -14,7 +14,7 @@ const iconCache = new Map<string, ComponentType<any>>()
 export function getIcon(iconName: string, props?: any) {
   if (!iconCache.has(iconName)) {
     const LazyIcon = dynamic(
-      () => import('@metabuilder/fakemui/icons').then(mod => {
+      () => import('@metabuilder/m3/icons').then(mod => {
         const Icon = (mod as Record<string, any>)[iconName]
         if (!Icon) return { default: (() => null) as unknown as ComponentType }
         return { default: Icon }

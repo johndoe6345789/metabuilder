@@ -1,0 +1,71 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "workflow_editor",
+  "description": "Workflow editor access permissions",
+  "permissions": [
+    {
+      "id": "workflow_editor.view",
+      "name": "View Workflows",
+      "description": "View workflow definitions",
+      "resource": "workflow_editor",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "workflow_editor.create",
+      "name": "Create Workflows",
+      "description": "Create new workflow definitions",
+      "resource": "workflow_editor",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "workflow_editor.edit",
+      "name": "Edit Workflows",
+      "description": "Edit workflow definitions",
+      "resource": "workflow_editor",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "workflow_editor.delete",
+      "name": "Delete Workflows",
+      "description": "Delete workflow definitions",
+      "resource": "workflow_editor",
+      "action": "delete",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "workflow_editor.run",
+      "name": "Run Workflows",
+      "description": "Execute workflow runs",
+      "resource": "workflow_editor",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "workflow_editor.status",
+      "name": "View Run Status",
+      "description": "View workflow run status",
+      "resource": "workflow_editor",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 5
+    }
+  ],
+  "resources": [
+    {
+      "id": "workflow_editor",
+      "name": "Workflow Editor",
+      "type": "component",
+      "description": "Workflow editor and management",
+      "actions": ["read", "create", "update", "delete", "execute"]
+    }
+  ]
+}

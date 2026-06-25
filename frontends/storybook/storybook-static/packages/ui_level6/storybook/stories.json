@@ -1,0 +1,126 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Level 6 - Supergod Panel",
+  "description": "Supergod panel components for tenant management and system administration",
+  "stories": [
+    {
+      "name": "SupergodLayout",
+      "render": "layout",
+      "description": "Complete Supergod panel layout with sidebar, toolbar, and content area",
+      "type": "function"
+    },
+    {
+      "name": "TenantManagement",
+      "render": "tenants",
+      "description": "Tenant list and management interface",
+      "type": "function",
+      "args": {
+        "tenants": [
+          {
+            "id": "tenant-1",
+            "name": "Acme Corporation",
+            "createdAt": "2025-01-15"
+          },
+          {
+            "id": "tenant-2",
+            "name": "Globex Industries",
+            "createdAt": "2025-02-20"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TransferOwnership",
+      "render": "transfer",
+      "description": "Ownership transfer form and history",
+      "type": "function",
+      "args": {
+        "fromUser": {
+          "id": "user-1",
+          "username": "supergod_admin"
+        },
+        "transfers": [
+          {
+            "date": "2025-12-01",
+            "fromUser": "old_admin",
+            "toUser": "new_admin",
+            "status": "completed"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SystemDashboard",
+      "render": "system",
+      "description": "System stats, health, logs, and maintenance mode",
+      "type": "function",
+      "args": {
+        "stats": {
+          "totalTenants": 42,
+          "totalUsers": 1250,
+          "activeSessions": 87,
+          "uptime": "99.9%"
+        },
+        "health": {
+          "database": true,
+          "cache": true,
+          "storage": true
+        }
+      }
+    }
+  ],
+  "renders": {
+    "layout": {
+      "description": "Complete Supergod panel layout",
+      "featured": true
+    },
+    "tenants": {
+      "description": "Tenant management interface"
+    },
+    "transfer": {
+      "description": "Ownership transfer tools"
+    },
+    "system": {
+      "description": "System administration dashboard"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "supergod-demo",
+      "username": "supergod_demo",
+      "level": 6,
+      "email": "supergod@example.com"
+    },
+    "tenant": {
+      "id": "system-tenant",
+      "name": "System Administration"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Supergod User",
+      "description": "Full access to all Supergod features",
+      "context": {
+        "user": {
+          "username": "supergod",
+          "level": 6
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["layout", "tenants", "transfer", "system"],
+    "ignoredScripts": ["tests"]
+  },
+  "parameters": {
+    "layout": "fullscreen",
+    "backgrounds": {
+      "default": "dark",
+      "values": [
+        { "name": "dark", "value": "#1a1a1a" },
+        { "name": "light", "value": "#f5f5f5" }
+      ]
+    }
+  }
+}

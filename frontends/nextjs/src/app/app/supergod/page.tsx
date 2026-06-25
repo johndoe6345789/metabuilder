@@ -25,7 +25,7 @@ import {
   Tab,
   TabPanel,
   Divider,
-} from '@/fakemui'
+} from '@/m3'
 
 const DBAL_URL = typeof process !== 'undefined'
   ? (process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080')

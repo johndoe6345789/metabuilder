@@ -1,0 +1,24 @@
+[
+  {
+    "id": "page_notifications_inbox",
+    "path": "/notifications",
+    "title": "Notifications",
+    "packageId": "notification_center",
+    "component": "notifications_inbox",
+    "level": 1,
+    "requiresAuth": true,
+    "isPublished": true,
+    "sortOrder": 30
+  },
+  {
+    "id": "page_notifications_settings",
+    "path": "/settings/notifications",
+    "title": "Notification Settings",
+    "packageId": "notification_center",
+    "component": "notification_settings",
+    "level": 1,
+    "requiresAuth": true,
+    "isPublished": true,
+    "sortOrder": 31
+  }
+]

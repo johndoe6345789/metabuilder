@@ -4,7 +4,7 @@ import { Provider as ReduxProvider } from 'react-redux'
 import { usePersistGate } from '@metabuilder/redux-persist'
 import { useEffect, useMemo, useState } from 'react'
 
-import { CssBaseline } from '@/fakemui'
+import { CssBaseline } from '@/m3'
 import { store, persistor } from '@/store/store'
 import { RetryableErrorBoundary } from '@/components/RetryableErrorBoundary'
 

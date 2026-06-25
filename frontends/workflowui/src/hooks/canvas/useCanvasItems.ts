@@ -6,25 +6,19 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  // Project slice
   selectProjectIsLoading,
   selectProjectError,
   selectCurrentProjectId,
-  setProjectLoading,
-  setProjectError,
-  // Canvas items slice
-  setCanvasItems,
-  removeCanvasItem,
   selectCanvasItems,
-  // Canvas slice
   selectIsResizing,
   setResizing,
-  // Types
-  type ProjectCanvasItem
+  type ProjectCanvasItem,
 } from '@metabuilder/redux-slices';
-import { projectService } from '@metabuilder/services';
-import { projectCanvasItemDB } from '../../db/schema';
 import { useUI } from '@metabuilder/hooks';
+import {
+  loadCanvasItems as loadItems,
+  deleteCanvasItem as deleteItem,
+} from './canvasItemOps';
 
 export interface UseCanvasItemsReturn {
   canvasItems: ProjectCanvasItem[];
@@ -47,7 +41,6 @@ export function useCanvasItems(): UseCanvasItemsReturn {
   const error = useSelector(selectProjectError);
   const isResizing = useSelector(selectIsResizing);
 
-  // Load canvas items when project changes
   useEffect(() => {
     if (projectId && !isInitialized) {
       loadCanvasItems();
@@ -55,56 +48,31 @@ export function useCanvasItems(): UseCanvasItemsReturn {
     }
   }, [projectId, isInitialized]);
 
-  // Load canvas items from server
   const loadCanvasItems = useCallback(async () => {
     if (!projectId) return;
-
-    dispatch(setProjectLoading(true));
-    try {
-      const response = await projectService.getCanvasItems(projectId);
-      dispatch(setCanvasItems(response.items));
-
-      // Cache in IndexedDB
-      await Promise.all(response.items.map((item) => projectCanvasItemDB.update(item)));
-
-      dispatch(setProjectError(null));
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Failed to load canvas items';
-      dispatch(setProjectError(errorMsg));
-      showError(errorMsg);
-    } finally {
-      dispatch(setProjectLoading(false));
-    }
+    await loadItems(projectId, dispatch, showError);
   }, [projectId, dispatch, showError]);
 
-  // Delete canvas item
   const deleteCanvasItem = useCallback(
     async (itemId: string) => {
       if (!projectId) return;
-
-      dispatch(setProjectLoading(true));
-      try {
-        await projectService.deleteCanvasItem(projectId, itemId);
-        dispatch(removeCanvasItem(itemId));
-        await projectCanvasItemDB.delete(itemId);
-
-        showSuccess('Workflow removed from canvas');
-      } catch (err) {
-        const errorMsg = err instanceof Error ? err.message : 'Failed to remove from canvas';
-        dispatch(setProjectError(errorMsg));
-        showError(errorMsg);
-        throw err;
-      } finally {
-        dispatch(setProjectLoading(false));
-      }
+      await deleteItem(
+        projectId,
+        itemId,
+        dispatch,
+        showError,
+        showSuccess
+      );
     },
     [projectId, dispatch, showError, showSuccess]
   );
 
-  // Set resizing state
-  const setResizingState = useCallback((isResizingState: boolean) => {
-    dispatch(setResizing(isResizingState));
-  }, [dispatch]);
+  const setResizingState = useCallback(
+    (isResizingState: boolean) => {
+      dispatch(setResizing(isResizingState));
+    },
+    [dispatch]
+  );
 
   return {
     canvasItems,
@@ -113,7 +81,7 @@ export function useCanvasItems(): UseCanvasItemsReturn {
     isResizing,
     loadCanvasItems,
     deleteCanvasItem,
-    setResizingState
+    setResizingState,
   };
 }
 

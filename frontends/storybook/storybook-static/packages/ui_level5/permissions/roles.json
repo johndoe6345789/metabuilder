@@ -1,0 +1,158 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "ui_level5",
+  "description": "Level 5 God Panel access permissions",
+  "permissions": [
+    {
+      "id": "level5.panel.view",
+      "name": "View God Panel",
+      "description": "View God panel",
+      "resource": "level5",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "level5.schemas.manage",
+      "name": "Manage Schemas",
+      "description": "Manage database schemas",
+      "resource": "schemas",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "level5.workflows.manage",
+      "name": "Manage Workflows",
+      "description": "Manage workflows",
+      "resource": "workflows",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "level5.packages.manage",
+      "name": "Manage Packages",
+      "description": "Manage packages",
+      "resource": "packages",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "level5.tenants.view",
+      "name": "View Tenants",
+      "description": "View tenant list and details",
+      "resource": "tenants",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "level5.tenants.create",
+      "name": "Create Tenant",
+      "description": "Create new tenants",
+      "resource": "tenants",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "level5.tenants.delete",
+      "name": "Delete Tenant",
+      "description": "Delete existing tenants",
+      "resource": "tenants",
+      "action": "delete",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "level5.gods.view",
+      "name": "View God Users",
+      "description": "View users with god-level privileges",
+      "resource": "gods",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "level5.gods.assign",
+      "name": "Assign God Privileges",
+      "description": "Assign god-level privileges to users",
+      "resource": "gods",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 6
+    },
+    {
+      "id": "level5.transfer.initiate",
+      "name": "Initiate Transfer",
+      "description": "Initiate data transfer between tenants",
+      "resource": "transfer",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "level5.transfer.confirm",
+      "name": "Confirm Transfer",
+      "description": "Confirm and execute data transfers",
+      "resource": "transfer",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 5
+    }
+  ],
+  "resources": [
+    {
+      "id": "level5",
+      "name": "Level 5 Panel",
+      "type": "component",
+      "description": "God panel interface",
+      "actions": ["read"]
+    },
+    {
+      "id": "schemas",
+      "name": "Database Schemas",
+      "type": "entity",
+      "description": "Database schema definitions",
+      "actions": ["read", "manage"]
+    },
+    {
+      "id": "workflows",
+      "name": "Workflows",
+      "type": "entity",
+      "description": "Workflow definitions",
+      "actions": ["read", "manage"]
+    },
+    {
+      "id": "packages",
+      "name": "Packages",
+      "type": "entity",
+      "description": "Package management",
+      "actions": ["read", "manage"]
+    },
+    {
+      "id": "tenants",
+      "name": "Tenants",
+      "type": "entity",
+      "description": "Tenant entities",
+      "actions": ["read", "create", "update", "delete"]
+    },
+    {
+      "id": "gods",
+      "name": "God Users",
+      "type": "entity",
+      "description": "Users with elevated privileges",
+      "actions": ["read", "create"]
+    },
+    {
+      "id": "transfer",
+      "name": "Data Transfer",
+      "type": "custom",
+      "description": "Cross-tenant data transfer operations",
+      "actions": ["create", "execute"]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "minimal-example",
+  "name": "Minimal Example Package",
+  "version": "1.0.0",
+  "description": "A minimal valid MetaBuilder package demonstrating required fields only",
+  "author": "MetaBuilder Team",
+  "license": "MIT"
+}

@@ -1,14 +1,14 @@
 export interface AIPlatform {
-  id: string;
-  name: string;
-  endpoint: string;
-  defaultModel: string;
-  keyPlaceholder: string;
-  keyRequired: boolean;
-  docsUrl: string;
-  docsLabel: string;
+  id: string
+  name: string
+  endpoint: string
+  defaultModel: string
+  keyPlaceholder: string
+  keyRequired: boolean
+  docsUrl: string
+  docsLabel: string
   /** For platforms with non-OpenAI API format */
-  apiFormat: 'openai' | 'anthropic';
+  apiFormat: 'openai' | 'anthropic'
 }
 
 export const AI_PLATFORMS: AIPlatform[] = [
@@ -37,7 +37,8 @@ export const AI_PLATFORMS: AIPlatform[] = [
   {
     id: 'gemini',
     name: 'Google Gemini',
-    endpoint: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
+    endpoint:
+      'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
     defaultModel: 'gemini-1.5-flash',
     keyPlaceholder: 'AIza...',
     keyRequired: true,
@@ -78,10 +79,10 @@ export const AI_PLATFORMS: AIPlatform[] = [
     docsLabel: 'Ollama',
     apiFormat: 'openai',
   },
-];
+]
 
-export const DEFAULT_PLATFORM_ID = 'openai';
+export const DEFAULT_PLATFORM_ID = 'openai'
 
 export function getPlatform(id: string): AIPlatform {
-  return AI_PLATFORMS.find(p => p.id === id) ?? AI_PLATFORMS[0];
+  return AI_PLATFORMS.find(p => p.id === id) ?? AI_PLATFORMS[0]
 }

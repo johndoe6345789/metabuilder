@@ -1,0 +1,81 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "workflowui-settings",
+  "version": "1.0.0",
+  "description": "WorkflowUI Settings page tests - user preferences and configuration",
+  "tests": [
+    {
+      "name": "should display settings page",
+      "tags": [
+        "@settings",
+        "@critical"
+      ],
+      "timeout": 10000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "settings"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display settings categories",
+      "tags": [
+        "@settings",
+        "@navigation"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "settings"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should have interactive elements on settings page",
+      "tags": [
+        "@settings",
+        "@actions"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "settings"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    }
+  ]
+}

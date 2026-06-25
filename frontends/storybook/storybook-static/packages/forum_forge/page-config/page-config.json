@@ -1,0 +1,57 @@
+[
+  {
+    "id": "page_forum_home",
+    "path": "/forum",
+    "title": "Forum",
+    "packageId": "forum_forge",
+    "component": "forum_home",
+    "level": 1,
+    "requiresAuth": true,
+    "isPublished": true,
+    "sortOrder": 20
+  },
+  {
+    "id": "page_forum_category",
+    "path": "/forum/category/:categoryId",
+    "title": "Forum Category",
+    "packageId": "forum_forge",
+    "component": "forum_category_view",
+    "level": 1,
+    "requiresAuth": true,
+    "isPublished": true,
+    "sortOrder": 21
+  },
+  {
+    "id": "page_forum_thread",
+    "path": "/forum/thread/:threadId",
+    "title": "Thread Discussion",
+    "packageId": "forum_forge",
+    "component": "forum_thread_view",
+    "level": 1,
+    "requiresAuth": true,
+    "isPublished": true,
+    "sortOrder": 22
+  },
+  {
+    "id": "page_forum_create_thread",
+    "path": "/forum/create-thread",
+    "title": "Create New Thread",
+    "packageId": "forum_forge",
+    "component": "forum_create_thread",
+    "level": 1,
+    "requiresAuth": true,
+    "isPublished": true,
+    "sortOrder": 23
+  },
+  {
+    "id": "page_forum_moderation",
+    "path": "/admin/forum/moderation",
+    "title": "Forum Moderation",
+    "packageId": "forum_forge",
+    "component": "forum_moderation_panel",
+    "level": 3,
+    "requiresAuth": true,
+    "isPublished": true,
+    "sortOrder": 24
+  }
+]

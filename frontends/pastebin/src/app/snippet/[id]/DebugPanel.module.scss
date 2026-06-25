@@ -1,0 +1,336 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background: var(--mat-sys-surface);
+}
+
+.idle {
+  padding: 16px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+  // Fill the dock and scroll, so the sandbox card is never clipped when the
+  // dock is short.
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.idleHint {
+  font-size: 13px;
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.startBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  &:hover { opacity: 0.88; }
+}
+
+.errorMsg {
+  font-size: 12px;
+  color: var(--mat-sys-error);
+  margin: 4px 0 0;
+  font-family: var(--mono-font, monospace);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  background: var(--mat-sys-surface-container);
+  flex-shrink: 0;
+}
+
+.ctrlBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--mat-sys-on-surface);
+  cursor: pointer;
+  transition: background 0.1s;
+  &:hover:not(:disabled) { background: var(--mat-sys-surface-container-high); }
+  &:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+}
+
+.ctrlStop { color: var(--mat-sys-error); }
+
+.ctrlDivider {
+  width: 1px;
+  height: 18px;
+  margin: 0 4px;
+  background: var(--mat-sys-outline-variant);
+}
+
+.statusBadge {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--mat-sys-surface-container-high);
+  color: var(--mat-sys-on-surface-variant);
+  &[data-status='running']    { background: #1e4d20; color: #81c784; }
+  &[data-status='paused']     { background: #1a3a5c; color: #64b5f6; }
+  &[data-status='terminated'] {
+    background: var(--mat-sys-surface-container-high);
+  }
+  &[data-status='error'] {
+    background: var(--mat-sys-error-container);
+    color: var(--mat-sys-on-error-container);
+  }
+}
+
+.panels {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.pane {
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.paneHead {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0;
+  padding: 6px 12px;
+  background: var(--mat-sys-surface-container);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.scopeHead {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface-variant);
+  padding: 4px 12px;
+  background: var(--mat-sys-surface-container-low);
+}
+
+.varRow {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: 3px 12px;
+  font-size: 12px;
+  font-family: var(--mono-font, monospace);
+  cursor: default;
+  &:hover { background: var(--mat-sys-surface-container); }
+}
+
+.varExpandable { cursor: pointer; }
+.varName  { color: var(--mat-sys-primary); min-width: 100px; }
+.varEq    { color: var(--mat-sys-on-surface-variant); }
+.varVal   {
+  color: var(--mat-sys-on-surface);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.varType  {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 11px;
+  margin-left: 4px;
+}
+
+.frame {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-family: var(--mono-font, monospace);
+  gap: 8px;
+  &:hover { background: var(--mat-sys-surface-container); }
+}
+
+.frameActive { background: var(--mat-sys-primary-container); }
+.frameName { color: var(--mat-sys-on-surface); flex: 1; }
+.frameLoc  {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.watchRow {
+  display: flex;
+  align-items: center;
+  padding: 3px 12px;
+  gap: 6px;
+  font-size: 12px;
+  font-family: var(--mono-font, monospace);
+  &:hover { background: var(--mat-sys-surface-container); }
+}
+
+.watchExpr { color: var(--mat-sys-primary); min-width: 80px; }
+.watchVal  {
+  flex: 1;
+  color: var(--mat-sys-on-surface);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.watchErr  { color: var(--mat-sys-error); }
+
+.watchRemove {
+  border: none;
+  background: transparent;
+  color: var(--mat-sys-on-surface-variant);
+  cursor: pointer;
+  padding: 0 4px;
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0;
+  .watchRow:hover & { opacity: 1; }
+}
+
+.watchForm {
+  display: flex;
+  gap: 4px;
+  padding: 6px 12px;
+}
+
+.watchInput {
+  flex: 1;
+  font-size: 12px;
+  font-family: var(--mono-font, monospace);
+  padding: 3px 8px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 4px;
+  background: var(--mat-sys-surface-container);
+  color: var(--mat-sys-on-surface);
+  outline: none;
+  &:focus { border-color: var(--mat-sys-primary); }
+}
+
+.watchAdd {
+  padding: 3px 10px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 4px;
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  &:disabled { opacity: 0.4; cursor: default; }
+}
+
+.outputPre {
+  margin: 0;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-family: var(--mono-font, monospace);
+  white-space: pre-wrap;
+  word-break: break-all;
+  color: var(--mat-sys-on-surface);
+  [data-cat='stderr']  { color: var(--mat-sys-error); }
+  [data-cat='console'] { color: var(--mat-sys-on-surface-variant); }
+}
+
+// ────────────────────────────────────────────────────────────────
+// Debug sandbox "nerd info" card (idle state) — terminal aesthetic
+// ────────────────────────────────────────────────────────────────
+.sandbox {
+  width: 100%;
+  max-width: 420px;
+  margin-top: 4px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-left: 3px solid var(--mat-sys-primary);
+  border-radius: 6px;
+  background: var(--mat-sys-surface-container-lowest);
+  font-family: var(--mono-font, 'JetBrains Mono', monospace);
+  overflow: hidden;
+}
+
+.sbHead {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: var(--mat-sys-surface-container);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.sbDot {
+  margin-left: auto;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--mat-sys-tertiary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--mat-sys-tertiary) 22%, transparent);
+}
+
+.sbRow {
+  display: flex;
+  gap: 10px;
+  padding: 3px 10px;
+  font-size: 11.5px;
+  line-height: 1.5;
+
+  &:nth-child(even) {
+    background: color-mix(in srgb, var(--mat-sys-on-surface) 3%, transparent);
+  }
+}
+
+.sbKey {
+  flex: 0 0 64px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.sbVal {
+  color: var(--mat-sys-on-surface);
+  word-break: break-word;
+}
+
+.sbNote {
+  margin: 0;
+  padding: 7px 10px 9px;
+  font-family: inherit;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--mat-sys-on-surface-variant);
+  border-top: 1px solid var(--mat-sys-outline-variant);
+}
+
+// Keep the sandbox card present (not overwritten) during an active session.
+.sandboxWrap {
+  padding: 10px 12px 14px;
+}

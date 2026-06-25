@@ -1,6 +1,8 @@
 /**
  * Comprehensive Test Suite for ProfileManager
- * Extended tests for profile loading, validation, operations, merging, and error handling
+ // eslint-disable-next-line max-len
+ * Extended tests for profile loading, validation, operations, merging, and
+ * error handling
  * TDD approach: RED -> GREEN -> REFACTOR
  *
  * Test Coverage:
@@ -12,39 +14,39 @@
  * - Singleton pattern and state management
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
-import { ProfileManager, type ProfileDefinition } from './ProfileManager';
-import { ConfigurationError } from '../types/index';
+import * as fs from 'fs'
+import * as path from 'path'
+import { ProfileManager, type ProfileDefinition } from './ProfileManager'
+import { ConfigurationError } from '../types/index'
 
 describe('ProfileManager - Comprehensive Extended Tests', () => {
-  let profileManager: ProfileManager;
-  const testProfileDir = './.test-profiles-comprehensive';
+  let profileManager: ProfileManager
+  const testProfileDir = './.test-profiles-comprehensive'
 
   beforeEach(() => {
-    profileManager = ProfileManager.getInstance();
+    profileManager = ProfileManager.getInstance()
 
     // Clean up before test
     if (fs.existsSync(testProfileDir)) {
-      fs.rmSync(testProfileDir, { recursive: true });
+      fs.rmSync(testProfileDir, { recursive: true })
     }
-    fs.mkdirSync(testProfileDir, { recursive: true });
-  });
+    fs.mkdirSync(testProfileDir, { recursive: true })
+  })
 
   afterEach(() => {
     // Clean up after test
     if (fs.existsSync(testProfileDir)) {
-      fs.rmSync(testProfileDir, { recursive: true });
+      fs.rmSync(testProfileDir, { recursive: true })
     }
-  });
+  })
 
-  // ============================================================================
+  // ===========================================================================
   // 1. PROFILE LOADING TESTS
-  // ============================================================================
+  // ===========================================================================
 
   describe('Profile Loading - File Operations', () => {
     it('should load valid JSON profile file', () => {
-      const profilePath = path.join(testProfileDir, 'test-profile.json');
+      const profilePath = path.join(testProfileDir, 'test-profile.json')
       const profileData = {
         'test-profile': {
           name: 'test-profile',
@@ -62,38 +64,38 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
             security: 85,
           },
         },
-      };
+      }
 
-      fs.writeFileSync(profilePath, JSON.stringify(profileData, null, 2));
+      fs.writeFileSync(profilePath, JSON.stringify(profileData, null, 2))
 
-      const content = fs.readFileSync(profilePath, 'utf-8');
-      expect(() => JSON.parse(content)).not.toThrow();
-    });
+      const content = fs.readFileSync(profilePath, 'utf-8')
+      expect(() => JSON.parse(content)).not.toThrow()
+    })
 
     it('should handle missing files gracefully', () => {
-      const nonExistentPath = path.join(testProfileDir, 'nonexistent.json');
-      expect(fs.existsSync(nonExistentPath)).toBe(false);
-    });
+      const nonExistentPath = path.join(testProfileDir, 'nonexistent.json')
+      expect(fs.existsSync(nonExistentPath)).toBe(false)
+    })
 
     it('should reject invalid JSON in file', () => {
-      const profilePath = path.join(testProfileDir, 'invalid.json');
-      fs.writeFileSync(profilePath, '{ invalid json ]');
+      const profilePath = path.join(testProfileDir, 'invalid.json')
+      fs.writeFileSync(profilePath, '{ invalid json ]')
 
       expect(() => {
-        const content = fs.readFileSync(profilePath, 'utf-8');
-        JSON.parse(content);
-      }).toThrow(SyntaxError);
-    });
+        const content = fs.readFileSync(profilePath, 'utf-8')
+        JSON.parse(content)
+      }).toThrow(SyntaxError)
+    })
 
     it('should reject non-object JSON content', () => {
-      const profilePath = path.join(testProfileDir, 'non-object.json');
-      fs.writeFileSync(profilePath, '"just a string"');
+      const profilePath = path.join(testProfileDir, 'non-object.json')
+      fs.writeFileSync(profilePath, '"just a string"')
 
-      const content = fs.readFileSync(profilePath, 'utf-8');
-      const parsed = JSON.parse(content);
-      expect(typeof parsed === 'object' && parsed !== null).toBe(false);
-    });
-  });
+      const content = fs.readFileSync(profilePath, 'utf-8')
+      const parsed = JSON.parse(content)
+      expect(typeof parsed === 'object' && parsed !== null).toBe(false)
+    })
+  })
 
   describe('Profile Parsing - Structure Validation', () => {
     it('should parse complete profile structure', () => {
@@ -117,16 +119,16 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
           coverage: { minimum: 70, warning: 60 },
           duplication: { maxPercent: 5, warningPercent: 3 },
         },
-      };
+      }
 
-      profileManager.createProfile('complete-test', profile, false);
-      const retrieved = profileManager.getProfile('complete-test');
+      profileManager.createProfile('complete-test', profile, false)
+      const retrieved = profileManager.getProfile('complete-test')
 
-      expect(retrieved.name).toBe('complete');
-      expect(retrieved.thresholds?.complexity?.max).toBe(15);
-      expect(retrieved.thresholds?.coverage?.minimum).toBe(70);
-      expect(retrieved.thresholds?.duplication?.maxPercent).toBe(5);
-    });
+      expect(retrieved.name).toBe('complete')
+      expect(retrieved.thresholds?.complexity?.max).toBe(15)
+      expect(retrieved.thresholds?.coverage?.minimum).toBe(70)
+      expect(retrieved.thresholds?.duplication?.maxPercent).toBe(5)
+    })
 
     it('should parse profile with minimal fields', () => {
       const profile: ProfileDefinition = {
@@ -144,19 +146,19 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
           architecture: 50,
           security: 50,
         },
-      };
+      }
 
-      profileManager.createProfile('minimal-test', profile, false);
-      const retrieved = profileManager.getProfile('minimal-test');
+      profileManager.createProfile('minimal-test', profile, false)
+      const retrieved = profileManager.getProfile('minimal-test')
 
-      expect(retrieved.name).toBe('minimal');
-      expect(retrieved.thresholds).toBeUndefined();
-    });
-  });
+      expect(retrieved.name).toBe('minimal')
+      expect(retrieved.thresholds).toBeUndefined()
+    })
+  })
 
-  // ============================================================================
+  // ===========================================================================
   // 2. WEIGHT VALIDATION TESTS
-  // ============================================================================
+  // ===========================================================================
 
   describe('Weight Validation', () => {
     it('should validate weights sum to 1.0 exactly', () => {
@@ -175,12 +177,12 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
           architecture: 75,
           security: 75,
         },
-      };
+      }
 
       expect(() => {
-        profileManager.createProfile('weights-exact', validProfile, false);
-      }).not.toThrow();
-    });
+        profileManager.createProfile('weights-exact', validProfile, false)
+      }).not.toThrow()
+    })
 
     it('should accept weights within tolerance (0.001)', () => {
       const toleranceProfile: ProfileDefinition = {
@@ -198,12 +200,12 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
           architecture: 80,
           security: 85,
         },
-      };
+      }
 
       expect(() => {
-        profileManager.createProfile('tolerance-test', toleranceProfile, false);
-      }).not.toThrow();
-    });
+        profileManager.createProfile('tolerance-test', toleranceProfile, false)
+      }).not.toThrow()
+    })
 
     it('should reject weights exceeding sum', () => {
       const overProfile: ProfileDefinition = {
@@ -221,12 +223,12 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
           architecture: 80,
           security: 85,
         },
-      };
+      }
 
       expect(() => {
-        profileManager.createProfile('over-test', overProfile, false);
-      }).toThrow(ConfigurationError);
-    });
+        profileManager.createProfile('over-test', overProfile, false)
+      }).toThrow(ConfigurationError)
+    })
 
     it('should reject weights below sum', () => {
       const underProfile: ProfileDefinition = {
@@ -244,17 +246,17 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
           architecture: 80,
           security: 85,
         },
-      };
+      }
 
       expect(() => {
-        profileManager.createProfile('under-test', underProfile, false);
-      }).toThrow(ConfigurationError);
-    });
-  });
+        profileManager.createProfile('under-test', underProfile, false)
+      }).toThrow(ConfigurationError)
+    })
+  })
 
-  // ============================================================================
+  // ===========================================================================
   // 3. MINIMUM SCORE VALIDATION TESTS
-  // ============================================================================
+  // ===========================================================================
 
   describe('Minimum Score Validation', () => {
     it('should accept scores between 0 and 100', () => {
@@ -273,12 +275,12 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
           architecture: 100,
           security: 75,
         },
-      };
+      }
 
       expect(() => {
-        profileManager.createProfile('valid-scores', validScores, false);
-      }).not.toThrow();
-    });
+        profileManager.createProfile('valid-scores', validScores, false)
+      }).not.toThrow()
+    })
 
     it('should reject negative minimum scores', () => {
       const negativeScores: ProfileDefinition = {
@@ -296,12 +298,12 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
           architecture: 80,
           security: 85,
         },
-      };
+      }
 
       expect(() => {
-        profileManager.createProfile('negative-scores', negativeScores, false);
-      }).toThrow(ConfigurationError);
-    });
+        profileManager.createProfile('negative-scores', negativeScores, false)
+      }).toThrow(ConfigurationError)
+    })
 
     it('should reject minimum scores over 100', () => {
       const overScores: ProfileDefinition = {
@@ -319,17 +321,17 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
           architecture: 80,
           security: 85,
         },
-      };
+      }
 
       expect(() => {
-        profileManager.createProfile('over-scores', overScores, false);
-      }).toThrow(ConfigurationError);
-    });
-  });
+        profileManager.createProfile('over-scores', overScores, false)
+      }).toThrow(ConfigurationError)
+    })
+  })
 
-  // ============================================================================
+  // ===========================================================================
   // 4. THRESHOLD VALIDATION TESTS
-  // ============================================================================
+  // ===========================================================================
 
   describe('Threshold Validation', () => {
     it('should validate complexity thresholds', () => {
@@ -351,12 +353,12 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
         thresholds: {
           complexity: { max: 20, warning: 15 },
         },
-      };
+      }
 
       expect(() => {
-        profileManager.createProfile('complexity-valid', validThresholds, false);
-      }).not.toThrow();
-    });
+        profileManager.createProfile('complexity-valid', validThresholds, false)
+      }).not.toThrow()
+    })
 
     it('should reject when warning exceeds max complexity', () => {
       const invalidThresholds: ProfileDefinition = {
@@ -377,12 +379,16 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
         thresholds: {
           complexity: { max: 10, warning: 20 },
         },
-      };
+      }
 
       expect(() => {
-        profileManager.createProfile('complexity-invalid', invalidThresholds, false);
-      }).toThrow(ConfigurationError);
-    });
+        profileManager.createProfile(
+          'complexity-invalid',
+          invalidThresholds,
+          false,
+        )
+      }).toThrow(ConfigurationError)
+    })
 
     it('should validate duplication thresholds', () => {
       const validDuplication: ProfileDefinition = {
@@ -403,12 +409,16 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
         thresholds: {
           duplication: { maxPercent: 10, warningPercent: 5 },
         },
-      };
+      }
 
       expect(() => {
-        profileManager.createProfile('duplication-valid', validDuplication, false);
-      }).not.toThrow();
-    });
+        profileManager.createProfile(
+          'duplication-valid',
+          validDuplication,
+          false,
+        )
+      }).not.toThrow()
+    })
 
     it('should reject when warning exceeds max duplication', () => {
       const invalidDuplication: ProfileDefinition = {
@@ -429,12 +439,16 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
         thresholds: {
           duplication: { maxPercent: 5, warningPercent: 10 },
         },
-      };
+      }
 
       expect(() => {
-        profileManager.createProfile('duplication-invalid', invalidDuplication, false);
-      }).toThrow(ConfigurationError);
-    });
+        profileManager.createProfile(
+          'duplication-invalid',
+          invalidDuplication,
+          false,
+        )
+      }).toThrow(ConfigurationError)
+    })
 
     it('should accept partial threshold definitions', () => {
       const partialThresholds: ProfileDefinition = {
@@ -455,17 +469,21 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
         thresholds: {
           complexity: { max: 20 },
         },
-      };
+      }
 
       expect(() => {
-        profileManager.createProfile('partial-thresholds', partialThresholds, false);
-      }).not.toThrow();
-    });
-  });
+        profileManager.createProfile(
+          'partial-thresholds',
+          partialThresholds,
+          false,
+        )
+      }).not.toThrow()
+    })
+  })
 
-  // ============================================================================
+  // ===========================================================================
   // 5. CREATE, UPDATE, DELETE OPERATIONS
-  // ============================================================================
+  // ===========================================================================
 
   describe('Profile CRUD Operations', () => {
     it('should create new profile successfully', () => {
@@ -484,11 +502,15 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
           architecture: 80,
           security: 85,
         },
-      };
+      }
 
-      const created = profileManager.createProfile('new-profile', profile, false);
-      expect(created.name).toBe('new-profile');
-    });
+      const created = profileManager.createProfile(
+        'new-profile',
+        profile,
+        false,
+      )
+      expect(created.name).toBe('new-profile')
+    })
 
     it('should prevent duplicate profile names', () => {
       const profile: ProfileDefinition = {
@@ -506,14 +528,14 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
           architecture: 75,
           security: 75,
         },
-      };
+      }
 
-      profileManager.createProfile('duplicate-test', profile, false);
+      profileManager.createProfile('duplicate-test', profile, false)
 
       expect(() => {
-        profileManager.createProfile('duplicate-test', profile, false);
-      }).toThrow(ConfigurationError);
-    });
+        profileManager.createProfile('duplicate-test', profile, false)
+      }).toThrow(ConfigurationError)
+    })
 
     it('should update profile weights', () => {
       const profile: ProfileDefinition = {
@@ -531,9 +553,9 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
           architecture: 75,
           security: 75,
         },
-      };
+      }
 
-      profileManager.createProfile('update-weights', profile, false);
+      profileManager.createProfile('update-weights', profile, false)
       const updated = profileManager.updateProfile(
         'update-weights',
         {
@@ -544,12 +566,12 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
             security: 0.1,
           },
         },
-        false
-      );
+        false,
+      )
 
-      expect(updated.weights.codeQuality).toBe(0.4);
-      expect(updated.weights.testCoverage).toBe(0.3);
-    });
+      expect(updated.weights.codeQuality).toBe(0.4)
+      expect(updated.weights.testCoverage).toBe(0.3)
+    })
 
     it('should delete custom profile', () => {
       const profile: ProfileDefinition = {
@@ -567,36 +589,36 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
           architecture: 75,
           security: 75,
         },
-      };
+      }
 
-      profileManager.createProfile('to-delete', profile, false);
-      expect(profileManager.getAllProfileNames()).toContain('to-delete');
+      profileManager.createProfile('to-delete', profile, false)
+      expect(profileManager.getAllProfileNames()).toContain('to-delete')
 
-      profileManager.deleteProfile('to-delete', false);
-      expect(profileManager.getAllProfileNames()).not.toContain('to-delete');
-    });
+      profileManager.deleteProfile('to-delete', false)
+      expect(profileManager.getAllProfileNames()).not.toContain('to-delete')
+    })
 
     it('should prevent deletion of built-in profiles', () => {
       expect(() => {
-        profileManager.deleteProfile('strict', false);
-      }).toThrow(ConfigurationError);
-    });
-  });
+        profileManager.deleteProfile('strict', false)
+      }).toThrow(ConfigurationError)
+    })
+  })
 
-  // ============================================================================
+  // ===========================================================================
   // 6. PROFILE COMPARISON AND EXPORT/IMPORT
-  // ============================================================================
+  // ===========================================================================
 
   describe('Profile Comparison and Serialization', () => {
     it('should export profile as JSON string', () => {
-      const exported = profileManager.exportProfile('moderate');
-      expect(typeof exported).toBe('string');
+      const exported = profileManager.exportProfile('moderate')
+      expect(typeof exported).toBe('string')
 
-      const parsed = JSON.parse(exported);
-      expect(parsed.name).toBe('moderate');
-      expect(parsed.weights).toBeDefined();
-      expect(parsed.minimumScores).toBeDefined();
-    });
+      const parsed = JSON.parse(exported)
+      expect(parsed.name).toBe('moderate')
+      expect(parsed.weights).toBeDefined()
+      expect(parsed.minimumScores).toBeDefined()
+    })
 
     it('should import profile from JSON string', () => {
       const profileJson = JSON.stringify({
@@ -614,41 +636,41 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
           architecture: 80,
           security: 85,
         },
-      });
+      })
 
-      profileManager.importProfile('imported-json', profileJson, false);
-      const profile = profileManager.getProfile('imported-json');
+      profileManager.importProfile('imported-json', profileJson, false)
+      const profile = profileManager.getProfile('imported-json')
 
-      expect(profile.name).toBe('imported-profile');
-      expect(profile.weights.codeQuality).toBe(0.3);
-    });
+      expect(profile.name).toBe('imported-profile')
+      expect(profile.weights.codeQuality).toBe(0.3)
+    })
 
     it('should compare two profiles', () => {
-      const comparison = profileManager.compareProfiles('strict', 'lenient');
+      const comparison = profileManager.compareProfiles('strict', 'lenient')
 
-      expect(comparison.profile1Name).toBe('strict');
-      expect(comparison.profile2Name).toBe('lenient');
-      expect(comparison.weights).toBeDefined();
-      expect(comparison.minimumScores).toBeDefined();
-      expect(comparison.weights.differences).toBeDefined();
-    });
+      expect(comparison.profile1Name).toBe('strict')
+      expect(comparison.profile2Name).toBe('lenient')
+      expect(comparison.weights).toBeDefined()
+      expect(comparison.minimumScores).toBeDefined()
+      expect(comparison.weights.differences).toBeDefined()
+    })
 
     it('should calculate correct differences in comparison', () => {
-      const comparison = profileManager.compareProfiles('strict', 'moderate');
+      const comparison = profileManager.compareProfiles('strict', 'moderate')
 
-      const strictProfile = profileManager.getProfile('strict');
-      const moderateProfile = profileManager.getProfile('moderate');
+      const strictProfile = profileManager.getProfile('strict')
+      const moderateProfile = profileManager.getProfile('moderate')
 
       const expectedDiff = Math.abs(
-        strictProfile.weights.codeQuality - moderateProfile.weights.codeQuality
-      );
-      expect(comparison.weights.differences.codeQuality).toBe(expectedDiff);
-    });
-  });
+        strictProfile.weights.codeQuality - moderateProfile.weights.codeQuality,
+      )
+      expect(comparison.weights.differences.codeQuality).toBe(expectedDiff)
+    })
+  })
 
-  // ============================================================================
+  // ===========================================================================
   // 7. EDGE CASES
-  // ============================================================================
+  // ===========================================================================
 
   describe('Edge Cases and Boundaries', () => {
     it('should handle very large weight values', () => {
@@ -658,8 +680,8 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
         weights: {
           codeQuality: 0.9999999999,
           testCoverage: 0.0000000001,
-          architecture: 0.0000000000,
-          security: 0.0000000000,
+          architecture: 0.0,
+          security: 0.0,
         },
         minimumScores: {
           codeQuality: 75,
@@ -667,12 +689,12 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
           architecture: 75,
           security: 75,
         },
-      };
+      }
 
       expect(() => {
-        profileManager.createProfile('large-weights', largeWeightProfile, false);
-      }).not.toThrow();
-    });
+        profileManager.createProfile('large-weights', largeWeightProfile, false)
+      }).not.toThrow()
+    })
 
     it('should handle zero weights', () => {
       const zeroWeightProfile: ProfileDefinition = {
@@ -690,12 +712,12 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
           architecture: 75,
           security: 75,
         },
-      };
+      }
 
       expect(() => {
-        profileManager.createProfile('zero-weights', zeroWeightProfile, false);
-      }).not.toThrow();
-    });
+        profileManager.createProfile('zero-weights', zeroWeightProfile, false)
+      }).not.toThrow()
+    })
 
     it('should handle boundary score values', () => {
       const boundaryScores: ProfileDefinition = {
@@ -713,12 +735,12 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
           architecture: 50,
           security: 75,
         },
-      };
+      }
 
       expect(() => {
-        profileManager.createProfile('boundary-scores', boundaryScores, false);
-      }).not.toThrow();
-    });
+        profileManager.createProfile('boundary-scores', boundaryScores, false)
+      }).not.toThrow()
+    })
 
     it('should handle multiple profile updates in sequence', () => {
       const profile: ProfileDefinition = {
@@ -736,9 +758,9 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
           architecture: 75,
           security: 75,
         },
-      };
+      }
 
-      profileManager.createProfile('sequential-updates', profile, false);
+      profileManager.createProfile('sequential-updates', profile, false)
 
       let updated = profileManager.updateProfile(
         'sequential-updates',
@@ -750,9 +772,9 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
             security: 75,
           },
         },
-        false
-      );
-      expect(updated.minimumScores.codeQuality).toBe(80);
+        false,
+      )
+      expect(updated.minimumScores.codeQuality).toBe(80)
 
       updated = profileManager.updateProfile(
         'sequential-updates',
@@ -764,17 +786,18 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
             security: 75,
           },
         },
-        false
-      );
-      expect(updated.minimumScores.codeQuality).toBe(85);
-    });
-  });
+        false,
+      )
+      expect(updated.minimumScores.codeQuality).toBe(85)
+    })
+  })
 
-  // ============================================================================
+  // ===========================================================================
   // 8. INTEGRATION WORKFLOWS
-  // ============================================================================
+  // ===========================================================================
 
   describe('Integration Workflows', () => {
+    // eslint-disable-next-line max-len
     it('should support complete workflow: create, update, compare, delete', () => {
       const profile: ProfileDefinition = {
         name: 'workflow',
@@ -791,10 +814,10 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
           architecture: 80,
           security: 85,
         },
-      };
+      }
 
-      profileManager.createProfile('workflow-test', profile, false);
-      expect(profileManager.getAllProfileNames()).toContain('workflow-test');
+      profileManager.createProfile('workflow-test', profile, false)
+      expect(profileManager.getAllProfileNames()).toContain('workflow-test')
 
       profileManager.updateProfile(
         'workflow-test',
@@ -806,15 +829,18 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
             security: 90,
           },
         },
-        false
-      );
+        false,
+      )
 
-      const comparison = profileManager.compareProfiles('workflow-test', 'strict');
-      expect(comparison).toBeDefined();
+      const comparison = profileManager.compareProfiles(
+        'workflow-test',
+        'strict',
+      )
+      expect(comparison).toBeDefined()
 
-      profileManager.deleteProfile('workflow-test', false);
-      expect(profileManager.getAllProfileNames()).not.toContain('workflow-test');
-    });
+      profileManager.deleteProfile('workflow-test', false)
+      expect(profileManager.getAllProfileNames()).not.toContain('workflow-test')
+    })
 
     it('should manage multiple profiles independently', () => {
       const profile1: ProfileDefinition = {
@@ -832,7 +858,7 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
           architecture: 85,
           security: 90,
         },
-      };
+      }
 
       const profile2: ProfileDefinition = {
         name: 'profile2',
@@ -849,74 +875,84 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
           architecture: 70,
           security: 80,
         },
-      };
+      }
 
-      profileManager.createProfile('multi-1', profile1, false);
-      profileManager.createProfile('multi-2', profile2, false);
+      profileManager.createProfile('multi-1', profile1, false)
+      profileManager.createProfile('multi-2', profile2, false)
 
-      const retrieved1 = profileManager.getProfile('multi-1');
-      const retrieved2 = profileManager.getProfile('multi-2');
+      const retrieved1 = profileManager.getProfile('multi-1')
+      const retrieved2 = profileManager.getProfile('multi-2')
 
-      expect(retrieved1.weights.codeQuality).toBe(0.4);
-      expect(retrieved2.weights.codeQuality).toBe(0.2);
-    });
-  });
+      expect(retrieved1.weights.codeQuality).toBe(0.4)
+      expect(retrieved2.weights.codeQuality).toBe(0.2)
+    })
+  })
 
-  // ============================================================================
+  // ===========================================================================
   // 9. ERROR SCENARIOS
-  // ============================================================================
+  // ===========================================================================
 
   describe('Error Handling', () => {
     it('should throw error for non-existent profile', () => {
       expect(() => {
-        profileManager.getProfile('nonexistent-profile-xyz');
-      }).toThrow(ConfigurationError);
-    });
+        profileManager.getProfile('nonexistent-profile-xyz')
+      }).toThrow(ConfigurationError)
+    })
 
     it('should throw error when updating non-existent profile', () => {
       expect(() => {
-        profileManager.updateProfile('nonexistent', {}, false);
-      }).toThrow(ConfigurationError);
-    });
+        profileManager.updateProfile('nonexistent', {}, false)
+      }).toThrow(ConfigurationError)
+    })
 
     it('should throw error when deleting non-existent profile', () => {
       expect(() => {
-        profileManager.deleteProfile('nonexistent-profile', false);
-      }).toThrow(ConfigurationError);
-    });
+        profileManager.deleteProfile('nonexistent-profile', false)
+      }).toThrow(ConfigurationError)
+    })
 
     it('should reject invalid JSON on import', () => {
       expect(() => {
-        profileManager.importProfile('invalid-json', 'not valid json', false);
-      }).toThrow();
-    });
+        profileManager.importProfile('invalid-json', 'not valid json', false)
+      }).toThrow()
+    })
 
     it('should validate imported profile', () => {
       const invalidJson = JSON.stringify({
         name: 'invalid',
         description: 'Invalid',
-        weights: { codeQuality: 0.5, testCoverage: 0.5, architecture: 0.5, security: 0.5 },
-        minimumScores: { codeQuality: 75, testCoverage: 75, architecture: 75, security: 75 },
-      });
+        weights: {
+          codeQuality: 0.5,
+          testCoverage: 0.5,
+          architecture: 0.5,
+          security: 0.5,
+        },
+        minimumScores: {
+          codeQuality: 75,
+          testCoverage: 75,
+          architecture: 75,
+          security: 75,
+        },
+      })
 
       expect(() => {
-        profileManager.importProfile('invalid-import', invalidJson, false);
-      }).toThrow(ConfigurationError);
-    });
-  });
+        profileManager.importProfile('invalid-import', invalidJson, false)
+      }).toThrow(ConfigurationError)
+    })
+  })
 
-  // ============================================================================
+  // ===========================================================================
   // 10. STATE AND INDEPENDENCE
-  // ============================================================================
+  // ===========================================================================
 
   describe('Profile Independence and State', () => {
     it('should return independent copies of profiles', () => {
-      const profile1 = profileManager.getProfile('moderate');
-      const profile2 = profileManager.getProfile('moderate');
+      const profile1 = profileManager.getProfile('moderate')
+      const profile2 = profileManager.getProfile('moderate')
 
-      profile1.minimumScores.codeQuality = 999;
-      expect(profile2.minimumScores.codeQuality).toBe(80);
-    });
+      profile1.minimumScores.codeQuality = 999
+      expect(profile2.minimumScores.codeQuality).toBe(80)
+    })
 
     it('should persist profile state across retrievals', () => {
       const profile: ProfileDefinition = {
@@ -934,15 +970,15 @@ describe('ProfileManager - Comprehensive Extended Tests', () => {
           architecture: 75,
           security: 75,
         },
-      };
+      }
 
-      const instance1 = ProfileManager.getInstance();
-      instance1.createProfile('persistent-test', profile, false);
+      const instance1 = ProfileManager.getInstance()
+      instance1.createProfile('persistent-test', profile, false)
 
-      const instance2 = ProfileManager.getInstance();
-      const retrieved = instance2.getProfile('persistent-test');
+      const instance2 = ProfileManager.getInstance()
+      const retrieved = instance2.getProfile('persistent-test')
 
-      expect(retrieved.name).toBe('persistent');
-    });
-  });
-});
+      expect(retrieved.name).toBe('persistent')
+    })
+  })
+})
