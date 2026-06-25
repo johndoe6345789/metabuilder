@@ -279,6 +279,9 @@ Pre-commit: `npm run build && npm run typecheck && npm run lint && npm run test:
 - **workflowui + new projects**: M3 only (`@metabuilder/m3`)
 - **Legacy projects**: Radix UI + Tailwind acceptable
 - **Never**: Direct MUI imports in workflowui or new M3-based apps
+- **Preferred styling**: SCSS modules (`.module.scss`) — co-located next to component
+- **Migration rule**: Non-modular SCSS (global stylesheets, plain `.scss` imports) should be converted to `.module.scss` as encountered
+- **No `sx` prop on new code**: the `sxToStyle` shim exists for compatibility only; new components use SCSS modules directly
 
 ### WorkflowUI Components
 - Atomic components <100 LOC, SCSS modules, no sx prop

@@ -244,7 +244,7 @@ import styles from './Button.module.scss'
 <button className={styles.root}>Save</button>
 ```
 
-The `sx` prop does exist on some M3 components for gradual migration compatibility, but it is a thin shim (`sxToStyle`) that converts to inline styles — it is not the idiomatic path. New code uses SCSS modules directly.
+The `sx` prop does exist on some M3 components for gradual migration compatibility, but it is a thin shim (`sxToStyle`) that converts to inline styles — it is not the idiomatic path. New code uses SCSS modules directly. Any existing non-modular SCSS (global stylesheets, plain `.scss` imports) should be converted to `.module.scss` as encountered.
 
 **M3 dependencies**: `classnames`, `clsx` — that's it. No MUI, no Emotion, no Radix, no Tailwind runtime.
 
