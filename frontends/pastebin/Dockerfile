@@ -10,6 +10,8 @@ FROM ${BASE_REGISTRY}/base-node-deps:latest AS builder
 ARG NEXT_PUBLIC_FLASK_BACKEND_URL
 ENV NEXT_PUBLIC_FLASK_BACKEND_URL=${NEXT_PUBLIC_FLASK_BACKEND_URL}
 
+COPY package.json .npmrc ./
+
 # ── Shared packages (resolved by transpilePackages + webpack aliases) ────────
 # Each COPY targets only the source tree that pastebin actually imports.
 #

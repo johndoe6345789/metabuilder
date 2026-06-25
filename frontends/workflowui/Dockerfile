@@ -7,6 +7,8 @@
 ARG BASE_REGISTRY=metabuilder
 FROM ${BASE_REGISTRY}/base-node-deps:latest AS builder
 
+COPY package.json .npmrc ./
+
 # ── Shared packages (resolved by transpilePackages + turbopack resolveAlias) ──
 # Each COPY targets only the source tree that workflowui actually imports.
 #

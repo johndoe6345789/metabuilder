@@ -10,6 +10,8 @@ FROM ${BASE_REGISTRY}/base-node-deps:latest AS builder
 ARG NEXT_PUBLIC_AI_ENABLED
 ENV NEXT_PUBLIC_AI_ENABLED=${NEXT_PUBLIC_AI_ENABLED}
 
+COPY package.json .npmrc ./
+
 # types + interfaces (TS type definitions)
 COPY libraries/types/ ./libraries/types/
 COPY libraries/interfaces/ ./libraries/interfaces/
