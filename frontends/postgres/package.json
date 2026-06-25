@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@arcjet/next": "^1.1.0",
-    "@clerk/localizations": "^3.36.0",
+    "@clerk/localizations": "^4.2.3",
     "@clerk/nextjs": "^6.38.0",
     "@hookform/resolvers": "^5.2.2",
     "@logtape/logtape": "^2.0.2",
