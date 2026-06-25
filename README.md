@@ -435,6 +435,80 @@ docker compose -f deployment/compose.yml up -d pastebin-backend
 
 ---
 
+## CI/CD Infrastructure
+
+Both the CI stack and credential manager live in a **sibling repo** at
+`../jenkins/` (`github.com/johndoe6345789/jenkins`).
+
+### Jenkins (`../jenkins/`)
+
+Docker Compose stack: Jenkins controller + nginx + 8 SSH build agents + `registry:2`.
+
+| Service | URL | Purpose |
+|---------|-----|---------|
+| Jenkins UI | `:8081` | Pipeline dashboard |
+| Docker registry | `:5001` | Internal image registry (no-auth) |
+| Nexus UI | `:8083` | Nexus 3 (package repos) |
+
+**Pipeline jobs** (4 MetaBuilder jobs):
+
+| Job | Frequency | What it does |
+|-----|-----------|-------------|
+| `metabuilder-base-images` | Occasional | Builds apt/node-deps/pip-deps/conan base images, serial build→push→prune per image |
+| `metabuilder-base-heavy` | Rare | Big conan bases (dbal, qt6, gameengine) — disk-gated |
+| `metabuilder-apps` | Every commit | Pulls last-good bases from registry, builds & pushes app images |
+| `metabuilder` | Release | Orchestrator: runs base-images then apps |
+| `metabuilder-deploy` | Auto after apps | Pulls images, retags to `deployment-<svc>:latest`, runs `deployment.py stack up` |
+
+Build and deploy are fully split — build jobs never deploy, deploy jobs never build.
+
+**Key paths:**
+```bash
+../jenkins/Jenkinsfile.nextjs          # Next.js pipeline definition
+../jenkins/Jenkinsfile.cpp             # C++ pipeline definition
+../jenkins/jobs/                       # Jenkins job XML configs
+../jenkins/scripts/setup.py           # Management CLI (doctor, secrets, up/down)
+../jenkins/secrets/                    # gitignored — credentials.yaml, *.env
+../jenkins/secrets.example/           # Templates to bootstrap secrets/
+```
+
+**First-time setup / recovery after host wipe:**
+```bash
+cd ../jenkins
+scripts/setup.py secrets --import-ssh-key <key> --nexus-password <pw>
+scripts/setup.py up
+scripts/setup.py doctor
+# If volumes lost too:
+scripts/setup.py secrets --rotate-ssh-key   # generates new key
+# then rebuild agents and update JENKINS_AGENT_SSH_PUBKEY in docker-compose.yml
+```
+
+### Vault (`../jenkins/scripts/vault/`)
+
+Credential manager — stores, serves, and **rotates** all secrets across the
+entire stack. Written in **Drogon C++** (ported from Flask), Postgres-backed.
+
+| Service | Port | Purpose |
+|---------|------|---------|
+| `vault-backend` | `:5055` | C++ REST API — CRUD + rotation engine |
+| `vault-frontend` | `:4100` | React UI |
+| `vault-db` | internal | PostgreSQL credential store |
+
+**8 rotation adapters**: `env_var`, `db_sha512`, `db_werkzeug`, `db_bcrypt`,
+`db_bcrypt_sqlite`, `pyracms_pbkdf2`, `grafana_api`, `keycloak_realm`, `caprover`.
+
+The vault stores every secret that other services read from `../jenkins/secrets/*.env`
+(e.g. `pastebin.env`, `vault.env`, `pkgrepo-registry.env`, `postgres-dashboard.env`).
+Those files are **gitignored in both repos** — never commit them.
+
+```bash
+cd ../jenkins/scripts/vault
+docker compose up -d          # starts vault-db, vault-backend, vault-frontend
+# UI at http://localhost:4100
+```
+
+---
+
 ## By the Numbers
 
 | Metric | Value |

@@ -299,6 +299,41 @@ Ask: Could this be JSON config? Could a generic renderer handle this? Is it filt
 
 ---
 
+## CI/CD Infrastructure (sibling repo)
+
+Both the build pipeline and credential manager are in `../jenkins/`
+(`github.com/johndoe6345789/jenkins`) — a **separate repo in the same GitHub
+folder**, not inside metabuilder.
+
+### Jenkins (`../jenkins/`)
+
+Docker Compose: controller + nginx + 8 SSH agents + `registry:2` (no-auth, `:5001`).
+
+**Jobs:**
+- `metabuilder-base-images` — builds apt/node/pip/conan base images (serial: build→push→prune)
+- `metabuilder-base-heavy` — big conan bases (dbal/qt6/gameengine), disk-gated, run rarely
+- `metabuilder-apps` — pulls last-good bases, builds & pushes app images; runs every commit
+- `metabuilder` — orchestrator (base-images → apps)
+- `metabuilder-deploy` — pulls images, retags to `deployment-<svc>:latest`, runs `deployment.py stack up`
+
+Build and deploy are fully split. Management CLI: `../jenkins/scripts/setup.py`.
+Secrets in `../jenkins/secrets/` (gitignored). Bootstrap: `setup.py secrets ...`.
+
+### Vault (`../jenkins/scripts/vault/`)
+
+Drogon C++ credential manager — stores and **rotates** all secrets across the stack.
+- `vault-backend` on `:5055`, `vault-frontend` on `:4100`, `vault-db` (PostgreSQL)
+- 8 rotation adapters: `env_var`, `db_sha512`, `db_werkzeug`, `db_bcrypt`,
+  `db_bcrypt_sqlite`, `pyracms_pbkdf2`, `grafana_api`, `keycloak_realm`, `caprover`
+- Secrets it manages live in `../jenkins/secrets/*.env` — **never commit these**
+  (`pastebin.env`, `vault.env`, `pkgrepo-registry.env`, `postgres-dashboard.env`, etc.)
+
+```bash
+cd ../jenkins/scripts/vault && docker compose up -d   # UI: http://localhost:4100
+```
+
+---
+
 ## Dependency Management
 
 ### Conan (C++)
