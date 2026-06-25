@@ -6,6 +6,8 @@
 ARG BASE_REGISTRY=metabuilder
 FROM ${BASE_REGISTRY}/base-postgres-deps:latest AS builder
 
+COPY package.json .npmrc ./
+
 # Copy all source (workspace libs + app)
 COPY libraries/hooks/ ./libraries/hooks/
 COPY libraries/icons/ ./libraries/icons/
@@ -33,6 +35,10 @@ COPY libraries/interfaces/ ./libraries/interfaces/
 COPY libraries/translations/ ./libraries/translations/
 COPY libraries/workflow/ ./libraries/workflow/
 COPY frontends/postgres/ ./frontends/postgres/
+
+# Re-link workspaces after copying source so npm sees the current root manifest
+# and rebuilds node_modules/@metabuilder/* workspace symlinks.
+RUN npm install --ignore-scripts --legacy-peer-deps
 
 # Build workspace libraries
 RUN for ws in libraries/redux/core libraries/redux/slices \
