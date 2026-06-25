@@ -1,48 +1,56 @@
 # MetaBuilder
 
-**Philosophy**: 95% JSON config, 5% TypeScript/C++ infrastructure
-**Scale**: 27,826+ files | 16 frontends | 16 libraries | 84 packages
-**Status**: Production-ready — Quake 3 playable on custom engine ✅
+A universal platform monorepo. One codebase. Every domain.
+
+**Scale**: 27,826+ files | 16 frontends | 16 libraries | 84 packages  
+**Philosophy**: 95% JSON config, 5% TypeScript/C++ infrastructure  
+**Status**: Production-ready — Quake 3 fully playable on custom engine ✅
 
 ---
 
 ## What Is MetaBuilder?
 
-MetaBuilder is a universal platform monorepo — a single repository that covers an unusually broad surface area:
+MetaBuilder is a monorepo that covers an unusually wide surface area — not by sprawl, but by design. Every system is driven by the same JSON-first architecture: entities, workflows, UI components, and game logic are all data. C++ and TypeScript are thin infrastructure that execute it.
 
 | Domain | What's Built |
 |--------|-------------|
-| **Game Engine** | SDL3/bgfx C++ engine running Quake 3 (BSP, physics, weapons, bots, HUD) |
-| **Platform** | Multi-tenant Next.js + C++ DBAL REST API with 8 database backends |
+| **Game Engine** | SDL3/bgfx C++ engine — Quake 3 playable (BSP, physics, weapons, bots, HUD) |
+| **Platform** | Multi-tenant Next.js + C++ DBAL REST API, 8 database backends |
 | **Component Library** | M3 — 241-component Material Design 3 clone (`@metabuilder/m3`) |
+| **Workflow Engine** | Multi-language DAG execution (TS/Python/C++/Rust/Go/Mojo) |
 | **IDE** | CodeForge — in-browser code generation studio (React + Monaco) |
-| **Workflow Engine** | Multi-language DAG engine (TS/Python/C++) with 212 registered steps |
-| **Email Client** | Full IMAP/SMTP email client (Next.js) |
-| **Package Repo** | Multi-format package registry (PyPI, Maven, Go, Cargo, Ruby, Nuget) |
+| **Email Client** | Full IMAP/SMTP client (Next.js, phases 1–5 complete) |
+| **Package Registry** | Multi-format: PyPI, Maven, Go modules, Cargo, Ruby, Nuget |
 | **3D CAD / PCB** | Parametric 3D CAD (CadQuery) and PCB design automation |
-| **Android Apps** | Kotlin/Compose GitHub client, CapRover mobile PaaS client |
+| **Android Apps** | Kotlin/Compose GitHub client + CapRover mobile PaaS client |
 | **Pastebin** | Full-stack code snippet manager (Next.js + Flask + DBAL C++) |
-| **Admin Dashboard** | PostgreSQL admin UI, Docker Swarm terminal, WorkflowUI editor |
-
-Everything is driven by JSON — entities, workflows, UI components, game logic — with C++/TypeScript as thin infrastructure only.
+| **Admin Tooling** | PostgreSQL admin, Docker Swarm terminal, visual workflow editor |
 
 ---
 
-## What's Running (Pastebin Stack)
+## Headline Achievement: Quake 3 on a Custom Engine
 
+The game engine (`frontends/gameengine/`) is a C++ engine built on SDL3/bgfx where **every game system is a composable JSON workflow step** — the same engine that drives the UI platform also drives the game.
+
+```bash
+cd frontends/gameengine
+cmake --build _build/Release --target sdl3_app
+./_build/Release/sdl3_app --bootstrap bootstrap_linux --game quake3
 ```
-http://localhost/pastebin          # UI
-http://localhost/pastebin-api      # Flask auth (register, login, Python runner)
-http://localhost:8080              # DBAL C++ REST API (entities)
-```
 
-**Test accounts** (seeded on first startup):
+| Subsystem | Implementation |
+|-----------|---------------|
+| Rendering | bgfx (Vulkan/Metal/DX12), deferred pipeline, shadow maps, TAA, SSAO, Bloom |
+| BSP loading | Full Quake 3 BSP: lightmap atlas, portal rendering, collision trees |
+| Physics | AABB collision, gravity, jump, friction — pmove implementation |
+| Audio | 3D positional audio (OpenAL + Opus codec) |
+| Gameplay | Weapons, ammo, damage, bots, pickups, movers, triggers, HUD, menus |
+| AI | Bot navigation and pathfinding |
+| **Total workflow steps** | **212 registered** |
 
-| User | Password | Namespaces | Snippets |
-|------|----------|------------|---------|
-| `demo` | `demo1234` | Default, Python Recipes, SQL Patterns, Utilities | 11 |
-| `alice` | `alice1234` | Default, React Components, CSS Tricks, JS Utilities | 9 |
-| `bob` | `bob12345` | Default, Go Patterns, Bash Scripts, API Design | 8 |
+**Game packages** (12): `quake3`, `quake3_screenshot`, `seed`, `standalone_cubes`, `bootstrap_linux`, `bootstrap_mac`, `bootstrap_windows`, `engine_tester`, `asset_loader`, `materialx`, `soundboard`, `assets`
+
+**Performance**: 52+ FPS | ~3–5 ns per workflow step | 545 C++ files (289 .hpp + 256 .cpp)
 
 ---
 
@@ -60,31 +68,20 @@ python3 deployment.py build apps --force dbal pastebin
 python3 deployment.py build base
 ```
 
----
-
-## Game Engine — Quake 3 on a Custom Engine
-
-The game engine (`frontends/gameengine/`) is a production C++ engine built on SDL3/bgfx. Every system — rendering, physics, input, audio, gameplay — is implemented as composable JSON workflow steps.
-
-**Running Quake 3**:
-```bash
-cd frontends/gameengine
-cmake --build _build/Release --target sdl3_app
-./_build/Release/sdl3_app --bootstrap bootstrap_linux --game quake3
+**Running services** (pastebin stack):
+```
+http://localhost/pastebin          # Next.js UI
+http://localhost/pastebin-api      # Flask auth (register, login, Python runner)
+http://localhost:8080              # DBAL C++ REST API (entities)
 ```
 
-**Engine capabilities**:
-| Subsystem | Implementation |
-|-----------|---------------|
-| Rendering | bgfx (Vulkan/Metal/DX12), deferred pipeline, shadow maps, TAA, SSAO, Bloom |
-| BSP loading | Full Quake 3 BSP: lightmap atlas, portal rendering, collision trees |
-| Physics | AABB collision, gravity, jump, friction (pmove) |
-| Audio | 3D positional audio, Opus codec |
-| Gameplay | Weapons, ammo, damage, bots, pickups, movers, triggers, HUD, menus |
-| AI | Bot navigation and movement |
-| **Total workflow steps** | **212 registered** |
+**Test accounts** (seeded automatically on first startup):
 
-**Game packages** (12): `seed`, `standalone_cubes`, `quake3`, `quake3_screenshot`, `bootstrap_mac`, `bootstrap_linux`, `bootstrap_windows`, `engine_tester`, `asset_loader`, `materialx`, `soundboard`, `assets`
+| User | Password | Namespaces | Snippets |
+|------|----------|------------|---------|
+| `demo` | `demo1234` | Default, Python Recipes, SQL Patterns, Utilities | 11 |
+| `alice` | `alice1234` | Default, React Components, CSS Tricks, JS Utilities | 9 |
+| `bob` | `bob12345` | Default, Go Patterns, Bash Scripts, API Design | 8 |
 
 ---
 
@@ -131,7 +128,7 @@ metabuilder/
 ├── packages/               # 84 feature packages
 ├── services/               # Background daemons (media, email, plugin-registry, SMTP)
 ├── deployment/             # Docker Compose stack + build scripts
-├── docs/                   # SQLite3 docs + reports (FTS5 search)
+├── docs/                   # SQLite3 docs (217 docs) + reports (212 reports), FTS5 search
 ├── e2e/                    # Playwright end-to-end tests
 └── config/                 # Lint, test, misc configs
 ```
@@ -161,25 +158,55 @@ POST /User  →  pastebin.User.created  →  WfEngine (detached thread)
 
 ---
 
+## Schema-First Development
+
+Entity schemas in `libraries/dbal/shared/api/schema/entities/` are the **single source of truth** — consumed by the C++ DBAL daemon, TypeScript type generator, seed loader, and workflow engine.
+
+40 entities across 10 categories: Core, CodeForge, Pastebin, Packages, Access, Gaming, E-commerce, Workspace, Video, Music.
+
+```json
+{
+  "name": "Snippet",
+  "tenantId": "pastebin",
+  "package": "pastebin",
+  "fields": [
+    { "name": "id",          "type": "uuid",      "primary": true },
+    { "name": "title",       "type": "string",    "required": true },
+    { "name": "content",     "type": "string",    "required": true },
+    { "name": "namespaceId", "type": "uuid",      "required": true },
+    { "name": "tenantId",    "type": "string",    "required": true },
+    { "name": "createdAt",   "type": "timestamp", "required": true }
+  ]
+}
+```
+
+After schema changes: `python3 libraries/dbal/shared/tools/codegen/gen_types.py`
+
+---
+
 ## M3 Component Library
 
 `libraries/components/m3/` — `@metabuilder/m3`
 
-241 TypeScript component files across 19 categories:
+241 TypeScript components across 19 categories. Zero MUI dependencies. Full SCSS modules.
 
-| Category | Examples |
-|----------|---------|
-| atoms | Avatar, Badge, Button, Chip, Typography |
-| inputs | TextField, Select, Checkbox, DatePicker |
-| data-display | Table, DataGrid, List, Accordion, Tabs |
-| feedback | Snackbar, Alert, ProgressBar, Skeleton |
-| navigation | AppBar, Breadcrumb, BottomNav, Stepper |
-| layout | Box, Stack, Container, Grid |
-| database | QueryBuilder, DataTable, specialized dialogs |
-| email | 25+ email-specific components |
-| canvas | InfiniteCanvas, CanvasGrid, CanvasControls |
-| code | CodeEditor, CodeHighlight, Terminal |
-| workflows | WorkflowCard, WorkflowNode, WorkflowEditor |
+| Category | Components |
+|----------|-----------|
+| atoms | Avatar, Badge, Button, Chip, Divider, Icon, Typography |
+| inputs | Checkbox, DatePicker, RadioGroup, Select, Slider, Switch, TextField |
+| buttons | ButtonGroup, FAB, IconButton, ToggleButton |
+| data-display | Accordion, DataGrid, List, Table, Tabs, Timeline, Tooltip, Tree |
+| surfaces | Card, Dialog, Drawer, Paper, Popover |
+| navigation | AppBar, Breadcrumb, BottomNav, NavRail, Pagination, Stepper |
+| feedback | Alert, LinearProgress, Skeleton, Snackbar, Spinner |
+| layout | Box, Container, Grid, Stack |
+| database | DataTable, QueryBuilder, EntityForm, SchemaViewer |
+| email | 25+ email-specific (ThreadList, ComposeEditor, AttachmentViewer…) |
+| canvas | CanvasControls, CanvasGrid, InfiniteCanvas, MiniMap |
+| code | CodeEditor, CodeHighlight, DiffViewer, Terminal |
+| workflows | WorkflowCard, WorkflowEditor, WorkflowNode |
+| settings | SettingsPanel, ThemeEditor, KeybindingEditor |
+| theming | ThemeProvider, ColorSwatch, TokenEditor |
 
 ---
 
@@ -202,39 +229,46 @@ Switch adapter at runtime: `DATABASE_URL=sqlite://:memory: DBAL_ADAPTER=sqlite`
 
 ## Workflow Engine
 
-`libraries/workflow/` — multi-language DAG execution with **212 step types** (game engine) and **41 example workflows**.
+`libraries/workflow/` — multi-language DAG execution.
 
-**Plugin runtimes**: TypeScript, Python, C++, Rust, Go, Mojo
+**7 plugin runtimes**: TypeScript, Python, C++, Rust, Go, Mojo, registry  
+**41 example workflows**: game loops, web server bootstrap, e2e tests, cross-project workflows  
+**212 step types** (game engine): Graphics, Rendering, Q3 Gameplay (42 steps), Physics, Scene, Camera, Input, Audio, Control Flow, Math, String, Logic, Collections, Value, Composition
 
-**Step categories** (game engine): Graphics, Input, Audio, Scene, Camera, Physics, Rendering, Q3 Gameplay (42 steps), Control Flow, Math, String, Logic, Collections, Value, Composition
+---
+
+## React Hooks
+
+`libraries/hooks/` — `@metabuilder/hooks` (100+ hooks)
+
+Covers: data fetching, state management, storage (IndexedDB/localStorage), UI controls, pagination/sorting/filtering, canvas operations, workflow execution, GitHub API integration.
+
+Packages: `@metabuilder/hooks`, `@metabuilder/hooks-utils`, `@metabuilder/hooks-forms`
 
 ---
 
 ## Development
 
 ```bash
-# Frontend dev
+# Frontend dev servers
 cd frontends/pastebin && npm run dev
 cd frontends/workflowui && npm run dev
+cd frontends/codegen && npm run dev
 
 # DBAL logs
 docker logs -f metabuilder-dbal
 
-# Search docs / reports
-cd docs && python3 docs.py search "topic"
-cd docs/txt && python3 reports.py search "topic"
+# Search docs (SQLite FTS5)
+cd docs && python3 docs.py search "topic"        # 217 docs, 13 categories
+cd docs/txt && python3 reports.py search "topic" # 212 reports
 
 # Type regeneration (after schema changes)
 python3 libraries/dbal/shared/tools/codegen/gen_types.py
+
+# Deploy Flask backend (separate from Next.js build)
+docker compose -f deployment/compose.yml build pastebin-backend
+docker compose -f deployment/compose.yml up -d pastebin-backend
 ```
-
----
-
-## Schema-First Development
-
-Entity schemas live in `libraries/dbal/shared/api/schema/entities/` as JSON (40 entities across 10 categories: Core, CodeForge, Pastebin, Packages, Access, Gaming, E-commerce, Workspace, Video, Music).
-
-They are the **single source of truth** — consumed by the C++ DBAL daemon, TypeScript type generator, seed loader, and workflow engine.
 
 ---
 
@@ -242,18 +276,26 @@ They are the **single source of truth** — consumed by the C++ DBAL daemon, Typ
 
 | Metric | Value |
 |--------|-------|
+| Total files | 27,826+ |
 | Frontends | 16 |
 | Libraries | 16 |
 | Feature packages | 84 |
 | M3 components | 241 |
-| Entity schemas | 40 |
-| Workflow steps (game engine) | 212 |
-| React hooks | 100+ |
-| Workflow examples | 41 |
+| M3 categories | 19 |
 | Icons | 421 |
+| Entity schemas | 40 |
 | DBAL backends | 8 |
+| Workflow steps (game engine) | 212 |
+| Q3 gameplay steps | 42 |
+| Game packages | 12 |
+| Workflow examples | 41 |
+| Plugin runtimes | 7 |
+| React hooks | 100+ |
 | Languages | TypeScript, C++, Python, Kotlin, Mojo, Go, Rust |
+| Game engine FPS (Quake 3) | 52+ |
+| C++ files (game engine) | 545 |
 
 ---
 
-**Last Updated**: 2026-06-25
+**Last Updated**: 2026-06-25  
+**Roadmap**: See [ROADMAP.md](ROADMAP.md) for phase status and what's next.
