@@ -32,26 +32,26 @@ const nextConfig = {
     root: resolve(__dirname, '../..'),
     resolveAlias: {
       // FakeMUI
-      '@metabuilder/m3': m3Path,
-      '@metabuilder/m3/scss': join(m3Path, 'scss/index.scss'),
-      '@metabuilder/m3/icons': join(m3Path, 'icons/index.ts'),
-      '@metabuilder/m3/hooks': join(m3Path, 'hooks.ts'),
+      '@metabuilder/m3': '../../libraries/components/m3',
+      '@metabuilder/m3/scss': '../../libraries/components/m3/scss/index.scss',
+      '@metabuilder/m3/icons': '../../libraries/components/m3/icons/index.ts',
+      '@metabuilder/m3/hooks': '../../libraries/components/m3/hooks.ts',
       // Components — resolve to source
-      '@metabuilder/components': join(componentsPath, 'index.tsx'),
-      '@metabuilder/components/cards': join(componentsPath, 'cards/index.ts'),
-      '@metabuilder/components/layout': join(componentsPath, 'layout/index.ts'),
-      '@metabuilder/components/navigation': join(componentsPath, 'navigation/index.ts'),
-      '@metabuilder/components/feedback': join(componentsPath, 'feedback/index.ts'),
-      '@metabuilder/components/workflow-editor': join(componentsPath, 'workflow-editor/index.ts'),
+      '@metabuilder/components': '../../libraries/components/index.tsx',
+      '@metabuilder/components/cards': '../../libraries/components/cards/index.ts',
+      '@metabuilder/components/layout': '../../libraries/components/layout/index.ts',
+      '@metabuilder/components/navigation': '../../libraries/components/navigation/index.ts',
+      '@metabuilder/components/feedback': '../../libraries/components/feedback/index.ts',
+      '@metabuilder/components/workflow-editor': '../../libraries/components/workflow-editor/index.ts',
       // Redux
-      '@metabuilder/api-clients': resolve(__dirname, '../../libraries/redux/api-clients/src'),
+      '@metabuilder/api-clients': '../../libraries/redux/api-clients/src',
       // Hooks
-      '@metabuilder/hooks': join(hooksPath, 'src'),
-      '@metabuilder/hooks/workflow-editor': join(hooksPath, 'workflow-editor/index.ts'),
+      '@metabuilder/hooks': '../../libraries/hooks/src',
+      '@metabuilder/hooks/workflow-editor': '../../libraries/hooks/workflow-editor/index.ts',
       // Shared SCSS modules
-      '@scss': scssPath,
+      '@scss': '../../libraries/scss',
       // Shared icon exports
-      '@icons': iconsPath,
+      '@icons': '../../libraries/icons',
     },
   },
   sassOptions: {
