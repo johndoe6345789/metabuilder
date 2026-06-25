@@ -2,8 +2,8 @@
 
 > **The Single Source of Truth for MetaBuilder Development**
 
-**Version:** 0.8.8
-**Last Updated:** March 4, 2026
+**Version:** 0.8.9
+**Last Updated:** June 25, 2026
 **Status:** 🎯 C++ DBAL Production Live ✅ — Event-Driven Workflows, JWT Auth, Full-Stack Pastebin
 **Structure:** Universal Platform Monorepo
 
@@ -13,51 +13,59 @@
 
 ```
 metabuilder/
-├── cadquerywrapper/      # Parametric 3D CAD modeling (Python, CadQuery)
-├── caproverforge/        # CapRover PaaS mobile client (Android, Kotlin)
-├── codegen/              # Visual code generation studio (React, Vite)
-├── config/               # Lint, test, misc configs
-├── dbal/                 # Database Abstraction Layer
-│   ├── development/      # TypeScript implementation
-│   ├── production/       # C++ implementation
-│   └── shared/api/schema/# JSON entities (SOURCE OF TRUTH)
-├── deployment/           # Docker & infrastructure
-├── dockerterminal/       # Docker Swarm management (Next.js)
-├── docs/                 # Documentation (organized)
-│   ├── analysis/         # Status reports, assessments
-│   ├── architecture/     # System design docs
-│   ├── guides/           # Quick references, how-tos
-│   ├── implementation/   # Implementation details
-│   ├── packages/         # Package-specific docs
-│   ├── phases/           # Phase completion reports
-│   ├── testing/          # E2E and test docs
-│   └── workflow/         # Workflow engine docs
-├── e2e/                  # End-to-end Playwright tests
-├── fakemui/              # Material UI clone (React, QML)
-├── frontends/            # Multiple frontends
-│   ├── cli/              # Command-line interface
-│   ├── nextjs/           # Primary web UI
-│   └── qt6/              # Desktop application
-├── gameengine/           # SDL3 C++ game engine
-├── mojo/                 # Mojo examples (systems programming)
-│   └── examples/         # Official Modular examples
-├── packagerepo/          # Package repository service (Python, FastAPI)
+├── libraries/            # All shared libraries and infrastructure
+│   ├── dbal/             # Database Abstraction Layer
+│   │   ├── production/   # C++ implementation (Drogon, 14 DB backends)
+│   │   └── shared/       # JSON entity schemas, seeds, workflows (SOURCE OF TRUTH)
+│   ├── workflow/         # Workflow engine
+│   │   ├── executor/     # Multi-language executors (ts, python, cpp)
+│   │   ├── examples/     # 19 example workflows
+│   │   └── plugins/      # Workflow plugins (16 categories)
+│   ├── components/       # Component libraries
+│   │   └── m3/           # M3 component library (@metabuilder/m3, 167 components)
+│   ├── hooks/            # React hooks (@metabuilder/hooks, hooks-utils, hooks-forms)
+│   ├── redux/            # Redux slices, api-clients, service-adapters
+│   ├── schemas/          # JSON validation schemas
+│   ├── scss/             # Shared SCSS tokens and modules
+│   ├── types/            # Shared TypeScript types
+│   ├── interfaces/       # Shared TypeScript interfaces
+│   ├── icons/            # Icon library (421 icons)
+│   ├── translations/     # i18n (EN/ES)
+│   ├── mojo/             # Mojo compiler + language examples
+│   ├── cadquerywrapper/  # Parametric 3D CAD modeling (Python, CadQuery)
+│   ├── pcbgenerator/     # PCB design library (Python)
+│   ├── sparkos/          # Minimal Linux distro + Qt6 app
+│   └── qml/              # QML components (Qt6)
+├── frontends/            # All frontend applications
+│   ├── codegen/          # CodeForge IDE (React, Vite, TypeScript)
+│   ├── pastebin/         # Code snippet sharing (Next.js + Flask)
+│   ├── postgres/         # PostgreSQL admin dashboard (Next.js, M3)
+│   ├── workflowui/       # Visual workflow editor (n8n-style)
+│   ├── gameengine/       # SDL3/bgfx 2D/3D game engine (C++)
+│   ├── cli/              # Command-line interface (C++)
+│   ├── nextjs/           # Primary web UI (Next.js)
+│   ├── qt6/              # Desktop application (Qt6, QML)
+│   ├── storybook/        # Component documentation (React, Vite)
+│   ├── dockerterminal/   # Docker Swarm management (Next.js)
+│   ├── caproverforge/    # CapRover PaaS mobile client (Android, Kotlin)
+│   ├── repoforge/        # GitHub Android client (Kotlin, Compose)
+│   ├── emailclient/      # Email client (Next.js)
+│   ├── exploded-diagrams/# Interactive 3D exploded diagrams
+│   └── packagerepo/      # Package repository service (Python, FastAPI)
 ├── packages/             # 62+ MetaBuilder feature packages
-├── pastebin/             # Snippet pastebin (Next.js)
-├── pcbgenerator/         # PCB design library (Python)
-├── postgres/             # PostgreSQL admin dashboard (Next.js, Drizzle)
-├── repoforge/            # GitHub Android client (Kotlin, Compose)
-├── schemas/              # JSON validation schemas
+├── deployment/           # Docker & infrastructure
+├── docs/                 # Documentation database + archives
+│   ├── docs.db           # SQLite3 (217 docs, 13 categories, FTS5)
+│   ├── docs.py           # Search/create docs
+│   ├── txt/              # Reports database (SQLite3, 212 reports, FTS5)
+│   ├── old/              # Legacy Spark implementation
+│   └── spec/             # Specifications
+├── e2e/                  # End-to-end Playwright tests
+├── config/               # Lint, test, misc configs
 ├── scripts/              # Build and migration scripts
-├── services/             # Background services
-├── smtprelay/            # SMTP relay server (Python, Twisted)
-├── sparkos/              # Minimal Linux distro + Qt6 app
-├── storybook/            # Component documentation (React, Vite)
-├── workflow/             # Workflow engine
-│   ├── executor/         # Multi-language executors (ts, python, cpp)
-│   ├── examples/         # Workflow examples
-│   └── plugins/          # Workflow plugins
-└── [root files]          # package.json, playwright.config.ts, etc.
+├── services/             # Background services (FFmpeg/ImageMagick)
+├── .github/              # GitHub Actions, templates
+└── [root files]          # package.json, playwright.config.ts, CLAUDE.md, etc.
 ```
 
 ### Standalone Projects (15)
@@ -92,7 +100,7 @@ metabuilder/
 - ✅ Generic component renderer (JSON-to-React)
 - ✅ Infrastructure (Docker, PostgreSQL, Redis, Nginx)
 - ✅ Game engine (SDL3/bgfx, 27/27 tests passing)
-- ✅ FakeMUI (167 components — Material Design clone)
+- ✅ M3 component library — `@metabuilder/m3` (167 components, renamed from FakeMUI)
 - ✅ WorkflowUI visual editor (n8n-style, 152 plugin nodes)
 
 **What's Done (Phase 7 — C++ DBAL Production ✅ Complete, shipped Mar 2026):**
@@ -100,10 +108,15 @@ metabuilder/
 - ✅ Full YAML → JSON migration (63 files, yaml-cpp removed)
 - ✅ JWT authentication + JSON ACL config
 - ✅ Event-driven workflow engine (`pastebin.User.created` → 15-node JSON workflow)
-- ✅ Declarative seed data (`dbal/shared/seeds/database/` — 3 users, 12 namespaces, 28 snippets)
+- ✅ Declarative seed data (`libraries/dbal/shared/seeds/database/` — 3 users, 12 namespaces, 28 snippets)
 - ✅ Flask auth backend (register, login, JWT, Python runner)
 - ✅ Pastebin full-stack (Next.js + Redux + IndexedDB + Flask + DBAL C++)
 - ✅ Dark/light theme switcher, i18n (EN/ES)
+
+**What's Done (Jun 2026 — Monorepo Reorganisation ✅ Complete):**
+- ✅ Root reorganised into `libraries/` + `frontends/` category folders
+- ✅ `fakemui` → `m3`, package renamed `@metabuilder/fakemui` → `@metabuilder/m3`
+- ✅ Postgres dashboard fully migrated to SCSS modules (all sx props removed)
 
 **What's Planned (Phase 3+ - Future):**
 - 🔮 Phase 3: Enhanced CRUD (Rich forms, bulk operations, relationships)
@@ -128,6 +141,7 @@ metabuilder/
 | **5** | Advanced Features | 🔮 Planned | 0% | Q2-Q3 2026 |
 | **6** | Advanced Auth | 🔮 Planned | 0% | Q3 2026 |
 | **7** | C++ DBAL Production | ✅ Complete | 100% | March 2026 |
+| **7.5** | Monorepo Reorganisation | ✅ Complete | 100% | June 2026 |
 | **8** | Multi-Source Packages | 🔮 Planned | 0% | Q4 2026 |
 | **9** | Universal Platform | 🔮 Planned | 0% | 2027 |
 
@@ -325,12 +339,12 @@ The original Spark-based version is preserved in `/old` directory for reference:
 
 | Metric | Value |
 |--------|-------|
-| **Current Phase** | Phase 7 Complete ✅ — C++ DBAL Production shipped |
-| **Version** | 0.8.8 (pastebin) |
+| **Current Phase** | Phase 7.5 Complete ✅ — Monorepo reorganised, M3 component library |
+| **Version** | 0.8.9 |
 | **Build Status** | ✅ Production |
 | **Game Engine Tests** | 27/27 passing (100%) |
-| **Last Release** | March 4, 2026 (C++ DBAL + workflows + JWT auth) |
-| **Last Update** | March 4, 2026 |
+| **Last Release** | June 25, 2026 (monorepo reorganisation, fakemui→m3, postgres SCSS) |
+| **Last Update** | June 25, 2026 |
 
 ### Quick Stats
 

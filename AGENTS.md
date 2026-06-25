@@ -1,6 +1,6 @@
 # MetaBuilder — Agent Guide
 
-**Last Updated**: 2026-03-04
+**Last Updated**: 2026-06-25
 Quick-start for AI agents (Claude Code, Copilot, etc.) working on this codebase.
 Read CLAUDE.md for the full guide. This file covers agent-specific patterns and shortcuts.
 
@@ -41,13 +41,13 @@ POST /pastebin/pastebin/User
 
 | Path | What it is |
 |------|-----------|
-| `dbal/shared/api/schema/entities/` | JSON entity schemas — SOURCE OF TRUTH (39 entities) |
-| `dbal/shared/api/schema/events/event_config.json` | Event → workflow mappings |
-| `dbal/shared/api/schema/workflows/` | JSON workflow definitions |
-| `dbal/shared/api/schema/auth/auth.json` | JWT + ACL rules |
-| `dbal/shared/seeds/database/` | Declarative seed data (JSON, loaded at startup) |
-| `dbal/production/src/workflow/` | C++ workflow engine (WfEngine, WfExecutor, steps/) |
-| `dbal/production/src/daemon/server_routes.cpp` | Route registration + auto-seed startup |
+| `libraries/dbal/shared/api/schema/entities/` | JSON entity schemas — SOURCE OF TRUTH (39 entities) |
+| `libraries/dbal/shared/api/schema/events/event_config.json` | Event → workflow mappings |
+| `libraries/dbal/shared/api/schema/workflows/` | JSON workflow definitions |
+| `libraries/dbal/shared/api/schema/auth/auth.json` | JWT + ACL rules |
+| `libraries/dbal/shared/seeds/database/` | Declarative seed data (JSON, loaded at startup) |
+| `libraries/dbal/production/src/workflow/` | C++ workflow engine (WfEngine, WfExecutor, steps/) |
+| `libraries/dbal/production/src/daemon/server_routes.cpp` | Route registration + auto-seed startup |
 | `frontends/pastebin/backend/app.py` | Flask JWT auth + Python runner |
 | `frontends/pastebin/src/` | Next.js React app |
 | `deployment/compose.yml` | Full stack compose |
@@ -60,11 +60,11 @@ POST /pastebin/pastebin/User
 ```bash
 # Search docs first (SQLite FTS5)
 cd docs && python3 docs.py search "topic"
-cd txt && python3 reports.py search "topic"
+cd docs/txt && python3 reports.py search "topic"
 
 # Check what's already there
-ls dbal/shared/api/schema/entities/
-ls dbal/shared/seeds/database/
+ls libraries/dbal/shared/api/schema/entities/
+ls libraries/dbal/shared/seeds/database/
 
 # Logs
 docker logs -f metabuilder-dbal
@@ -95,7 +95,7 @@ docker compose -f compose.yml up dbal-init
 
 ## Entity Schema Format (JSON)
 
-All schemas live in `dbal/shared/api/schema/entities/*.json`.
+All schemas live in `libraries/dbal/shared/api/schema/entities/*.json`.
 
 ```json
 {
@@ -112,13 +112,13 @@ All schemas live in `dbal/shared/api/schema/entities/*.json`.
 }
 ```
 
-After schema changes: `python3 dbal/shared/tools/codegen/gen_types.py`
+After schema changes: `python3 libraries/dbal/shared/tools/codegen/gen_types.py`
 
 ---
 
 ## Seed Data Format (JSON)
 
-All seed files in `dbal/shared/seeds/database/*.json`. Idempotent — skipped if records exist.
+All seed files in `libraries/dbal/shared/seeds/database/*.json`. Idempotent — skipped if records exist.
 
 ```json
 {

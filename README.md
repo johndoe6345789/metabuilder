@@ -70,26 +70,35 @@ POST /User  →  pastebin.User.created  →  WfEngine (detached thread)
 
 ```
 metabuilder/
-├── dbal/
-│   ├── production/          # C++ daemon (Drogon HTTP, 14 DB backends, JWT auth)
-│   │   ├── src/workflow/    # Event-driven workflow engine (7 step types)
-│   │   ├── src/auth/        # JWT validation + JSON ACL config
-│   │   └── build-config/    # Dockerfile, CMakeLists, conanfile
-│   └── shared/
-│       ├── api/schema/      # JSON entity schemas (source of truth)
-│       │   ├── entities/    # 39 entity definitions
-│       │   ├── events/      # event_config.json → workflow mappings
-│       │   └── workflows/   # on_user_created.json etc.
-│       └── seeds/database/  # Declarative JSON seed data
-├── frontends/pastebin/
-│   ├── src/                 # Next.js app (React + Redux + FakeMUI)
-│   └── backend/             # Flask auth + Python runner
-├── workflow/                # DAG workflow engine (TS, Python, C++ plugins)
-├── gameengine/              # SDL3/bgfx 2D/3D engine (27/27 tests)
-├── fakemui/                 # Material Design clone (167 components)
-├── packages/                # 62 feature packages
-├── deployment/              # Docker compose stack + build scripts
-└── CLAUDE.md                # AI assistant guide (read first)
+├── libraries/
+│   ├── dbal/
+│   │   ├── production/          # C++ daemon (Drogon HTTP, 14 DB backends, JWT auth)
+│   │   │   ├── src/workflow/    # Event-driven workflow engine (7 step types)
+│   │   │   ├── src/auth/        # JWT validation + JSON ACL config
+│   │   │   └── build-config/    # Dockerfile, CMakeLists, conanfile
+│   │   └── shared/
+│   │       ├── api/schema/      # JSON entity schemas (source of truth)
+│   │       │   ├── entities/    # 39 entity definitions
+│   │       │   ├── events/      # event_config.json → workflow mappings
+│   │       │   └── workflows/   # on_user_created.json etc.
+│   │       └── seeds/database/  # Declarative JSON seed data
+│   ├── workflow/                # DAG workflow engine (TS, Python, C++ plugins)
+│   ├── components/m3/           # M3 component library (167 components, @metabuilder/m3)
+│   ├── hooks/                   # React hooks (@metabuilder/hooks)
+│   ├── redux/                   # Redux slices + service adapters
+│   └── schemas/                 # JSON validation schemas
+├── frontends/
+│   ├── pastebin/
+│   │   ├── src/                 # Next.js app (React + Redux + M3)
+│   │   └── backend/             # Flask auth + Python runner
+│   ├── gameengine/              # SDL3/bgfx 2D/3D engine (27/27 tests)
+│   ├── codegen/                 # CodeForge IDE (React+Monaco)
+│   ├── postgres/                # PostgreSQL admin dashboard
+│   └── workflowui/              # Visual workflow editor (n8n-style)
+├── packages/                    # 62 feature packages
+├── deployment/                  # Docker compose stack + build scripts
+├── docs/                        # SQLite3 docs DB + reports (docs.db, txt/reports.db)
+└── CLAUDE.md                    # AI assistant guide (read first)
 ```
 
 ---
@@ -130,7 +139,7 @@ curl -X POST http://localhost:8080/admin/seed \
   -d '{"force": true}'
 
 # Search docs / reports
-cd txt && python3 reports.py search "topic"
+cd docs/txt && python3 reports.py search "topic"
 cd docs && python3 docs.py search "topic"
 ```
 
@@ -138,7 +147,7 @@ cd docs && python3 docs.py search "topic"
 
 ## Schema-First Development
 
-Entity schemas live in `dbal/shared/api/schema/entities/` as JSON.
+Entity schemas live in `libraries/dbal/shared/api/schema/entities/` as JSON.
 They are the **single source of truth** — consumed by:
 - C++ DBAL daemon (table creation, CRUD validation)
 - `gen_types.py` (TypeScript + C++ type generation)
@@ -147,9 +156,9 @@ They are the **single source of truth** — consumed by:
 
 ```bash
 # Regenerate types after schema changes
-python3 dbal/shared/tools/codegen/gen_types.py
+python3 libraries/dbal/shared/tools/codegen/gen_types.py
 ```
 
 ---
 
-**Last Updated**: 2026-03-04
+**Last Updated**: 2026-06-25
