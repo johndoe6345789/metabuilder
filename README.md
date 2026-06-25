@@ -1,23 +1,25 @@
 # MetaBuilder
 
-A universal platform monorepo. One codebase. Every domain.
+A meta-application platform. Define your application in JSON. MetaBuilder runs it.
 
 **Scale**: 27,826+ files | ~540K LOC | 16 frontends | 16 libraries | 84 packages  
 **Philosophy**: 95% JSON config, 5% TypeScript/C++ infrastructure  
-**Status**: Production-ready — JSON workflow game engine (Quake 3 proof of concept ✅)
+**Status**: Production-ready platform — multi-tenant, schema-driven, workflow-executed
 
 ---
 
 ## What Is MetaBuilder?
 
-MetaBuilder is a monorepo that covers an unusually wide surface area — not by sprawl, but by design. Every system is driven by the same JSON-first architecture: entities, workflows, UI components, and game logic are all data. C++ and TypeScript are thin infrastructure that execute it.
+MetaBuilder is a **platform for building applications from JSON**. Entities, workflows, UI components, permissions, pages, and game logic are all data — TypeScript and C++ are thin infrastructure that execute it. You define what your application does; MetaBuilder runs it.
+
+The same JSON workflow engine that powers a Quake 3-compatible game loop also powers the web frontends, the DBAL event system, and the visual workflow editor. It is one architecture applied consistently across every domain.
 
 | Domain | What's Built |
 |--------|-------------|
-| **Game Engine** | Game-agnostic JSON workflow engine (SDL3 GPU C++) — Quake 3 as proof of concept ✅ |
-| **Platform** | Multi-tenant Next.js + C++ DBAL REST API, 8 database backends |
-| **Component Library** | M3 — 241-component Material Design 3 clone (`@metabuilder/m3`) |
-| **Workflow Engine** | Multi-language DAG execution (TS/Python/C++/Rust/Go/Mojo) |
+| **Platform** | Multi-tenant app platform — 6-level permissions, schema-driven CRUD, 8 DB backends |
+| **Workflow Engine** | Multi-language DAG execution (TS/Python/C++/Rust/Go/Mojo) — runs everything |
+| **Component Library** | M3 — 241-component Material Design 3 implementation (`@metabuilder/m3`) |
+| **Game Engine** | JSON workflow game engine (SDL3 GPU C++) — Quake 3 proof of concept, any game possible |
 | **IDE** | CodeForge — in-browser code generation studio (React + Monaco) |
 | **Email Client** | Full IMAP/SMTP client (Next.js, phases 1–5 complete) |
 | **Package Registry** | Multi-format: PyPI, Maven, Go modules, Cargo, Ruby, Nuget |
@@ -28,9 +30,9 @@ MetaBuilder is a monorepo that covers an unusually wide surface area — not by 
 
 ---
 
-## Headline Achievement: JSON Workflow Game Engine
+## The JSON Workflow Game Engine
 
-The game engine (`frontends/gameengine/`) is a **game-agnostic C++ engine** built on SDL3 GPU where every game system — rendering, physics, audio, input, AI, gameplay logic — is a composable JSON workflow step. There is no hardcoded game logic. A game is just a JSON file that wires steps together.
+The game engine (`frontends/gameengine/`) demonstrates the full power of the workflow architecture: a **game-agnostic C++ engine** built on SDL3 GPU where every game system — rendering, physics, audio, input, AI, gameplay logic — is a composable JSON workflow step. There is no hardcoded game logic. A game is just a JSON file that wires steps together.
 
 Quake 3 is the current proof of concept (fully playable), but the architecture is open: loading a GTA5 map, a Doom level, or a completely original game is a matter of authoring the right workflow steps, not changing the engine.
 
