@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import { Box, TextField } from '@metabuilder/fakemui';
+import { Box, TextField } from '@metabuilder/m3';
 import { PasswordStrengthIndicator } from '@/../../../components/feedback';
 
 interface PasswordFieldWithStrengthProps {

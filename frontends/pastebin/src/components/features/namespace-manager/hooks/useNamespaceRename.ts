@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef } from 'react'
-import { toast } from '@metabuilder/components/fakemui'
+import { toast } from '@metabuilder/components/m3'
 import { Namespace } from '@/lib/types'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useAppDispatch } from '@/store/hooks'

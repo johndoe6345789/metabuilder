@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback, ComponentProps } from 'react'
 import { createPortal } from 'react-dom'
-import { X, Check, Info, Warning, Spinner } from '@metabuilder/fakemui/icons'
+import { X, Check, Info, Warning, Spinner } from '@metabuilder/m3/icons'
 
 // --- Toast types and state ---
 // Uses globalThis to guarantee singleton state across webpack/turbopack chunks.

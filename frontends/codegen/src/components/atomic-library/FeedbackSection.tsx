@@ -1,5 +1,5 @@
 import { Alert, Heading, InfoPanel, ResponsiveGrid, Section, Separator, Spacer, Stack } from '@/components/atoms'
-import { CheckCircle, Info, WarningCircle, XCircle } from '@metabuilder/fakemui/icons'
+import { CheckCircle, Info, WarningCircle, XCircle } from '@metabuilder/m3/icons'
 
 type FeedbackSectionContent =
   (typeof import('@/data/atomic-library-showcase.json'))['sections']['feedback']

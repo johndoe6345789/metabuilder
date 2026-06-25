@@ -2,7 +2,7 @@
 
 import {
   Alert, CircularProgress,
-} from '@metabuilder/components/fakemui';
+} from '@metabuilder/components/m3';
 import DashboardShell from '@/components/admin/DashboardShell';
 import styles from './dashboard-content.module.scss';
 import pkg from '../../../../../package.json';

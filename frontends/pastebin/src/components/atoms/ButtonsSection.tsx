@@ -1,4 +1,4 @@
-import { Card } from '@metabuilder/components/fakemui'
+import { Card } from '@metabuilder/components/m3'
 import { ComponentShowcase } from '@/components/demo/ComponentShowcase'
 import { atomsCodeSnippets } from '@/lib/component-code-snippets'
 import { Snippet } from '@/lib/types'

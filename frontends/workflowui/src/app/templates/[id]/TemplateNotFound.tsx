@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import { Box, Typography, Button } from '@metabuilder/fakemui';
+import { Box, Typography, Button } from '@metabuilder/m3';
 import styles from '@/../../../scss/atoms/template-detail.module.scss';
 
 export default function TemplateNotFound() {

@@ -1,4 +1,4 @@
-import { Card } from '@metabuilder/components/fakemui'
+import { Card } from '@metabuilder/components/m3'
 import { SidebarNavContent } from './SidebarNavContent'
 
 const sidebarStyle: React.CSSProperties = {

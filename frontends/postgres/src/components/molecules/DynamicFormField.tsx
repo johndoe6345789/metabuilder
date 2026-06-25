@@ -3,7 +3,7 @@
  * Sub-components are in DynamicFormFieldBase.tsx.
  */
 
-import { TextField } from '@metabuilder/components/fakemui';
+import { TextField } from '@metabuilder/components/m3';
 import {
   baseTextProps,
   CheckboxField,

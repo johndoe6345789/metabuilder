@@ -5,7 +5,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Box, Typography } from '../fakemui';
+import { Box, Typography } from '../m3';
 import styles from '../../scss/components/layout/auth-layout.module.scss';
 
 export interface AuthFormLayoutProps {

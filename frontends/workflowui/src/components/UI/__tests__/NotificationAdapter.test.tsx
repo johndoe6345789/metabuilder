@@ -8,9 +8,9 @@ jest.mock('@metabuilder/hooks', () => ({
   useUINotifications: () => mockUseUINotifications(),
 }));
 
-// The real fakemui mock doesn't include NotificationContainer - add it here
-jest.mock('@metabuilder/fakemui', () => ({
-  ...jest.requireActual('@metabuilder/fakemui'),
+// The real m3 mock doesn't include NotificationContainer - add it here
+jest.mock('@metabuilder/m3', () => ({
+  ...jest.requireActual('@metabuilder/m3'),
   NotificationContainer: ({ notifications, onClose, position, maxVisible, className }: any) => (
     <div
       role="region"

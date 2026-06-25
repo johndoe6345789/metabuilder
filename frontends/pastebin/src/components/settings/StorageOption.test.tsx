@@ -2,7 +2,7 @@ import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { StorageOption } from './StorageOption'
 
-jest.mock('@metabuilder/components/fakemui', () => ({
+jest.mock('@metabuilder/components/m3', () => ({
   Radio: ({ id, value, checked, disabled, onChange }: any) => (
     <input
       type="radio"

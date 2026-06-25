@@ -1,4 +1,4 @@
-import { Input, MaterialIcon } from '@metabuilder/components/fakemui'
+import { Input, MaterialIcon } from '@metabuilder/components/m3'
 import styles from './FileTree.module.scss'
 
 interface FileTreeAddRowProps {

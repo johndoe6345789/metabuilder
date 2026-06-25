@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { MaterialIcon } from '@metabuilder/components/fakemui'
+import { MaterialIcon } from '@metabuilder/components/m3'
 import { PageLayout } from '@/app/PageLayout'
 import { UserAvatar } from '@/components/layout/UserAvatar'
 import { MarkdownRenderer } from '@/components/error/MarkdownRenderer'

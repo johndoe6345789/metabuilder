@@ -15,7 +15,7 @@
     "libraries/hooks",
     "libraries/components",
     "libraries/redux/*",
-    "libraries/components/fakemui",
+    "libraries/components/m3",
     "libraries/scss",
     "frontends/*",
     "config",

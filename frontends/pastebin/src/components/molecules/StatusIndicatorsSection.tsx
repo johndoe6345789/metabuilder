@@ -1,4 +1,4 @@
-import { Card, Chip, Divider } from '@metabuilder/components/fakemui'
+import { Card, Chip, Divider } from '@metabuilder/components/m3'
 import styles from './StatusIndicatorsSection.module.scss'
 
 const dotBase = {

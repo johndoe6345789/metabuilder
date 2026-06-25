@@ -1,7 +1,7 @@
 // components/cards/TemplateIcon.tsx
 
 import React from 'react'
-import { Box } from '../fakemui'
+import { Box } from '../m3'
 import styles from '../../scss/components/cards/template-icon.module.scss'
 
 interface TemplateIconProps {

@@ -11,7 +11,7 @@ import {
   Card,
   CardContent,
   Grid,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import { PlayIcon } from '@/../../../icons/react';
 
 const TUTORIALS = [

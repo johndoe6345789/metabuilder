@@ -10,7 +10,7 @@ import {
   Typography,
   Card,
   CardContent,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import FAQCategoryFilter from './FAQCategoryFilter';
 import FAQAccordionItem from './FAQAccordionItem';
 

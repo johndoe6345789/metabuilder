@@ -24,7 +24,7 @@
     "@metabuilder/api-clients": "file:../../redux/api-clients",
     "@metabuilder/components": "file:../../components",
     "@metabuilder/core-hooks": "file:../../redux/core-hooks",
-    "@metabuilder/fakemui": "file:../../components/fakemui",
+    "@metabuilder/m3": "file:../../components/m3",
     "@metabuilder/hooks": "file:../../hooks",
     "@metabuilder/hooks-data": "file:../../redux/hooks-data",
     "@metabuilder/redux-middleware": "file:../../redux/middleware",

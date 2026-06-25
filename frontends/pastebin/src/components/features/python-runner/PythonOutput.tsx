@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Button, Card, MaterialIcon } from '@metabuilder/components/fakemui'
+import { Button, Card, MaterialIcon } from '@metabuilder/components/m3'
 import { PythonTerminal } from './PythonTerminal'
 import { usePythonOutput } from './hooks/usePythonOutput'
 import styles from './PythonOutput.module.scss'

@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import { Divider } from '../../fakemui';
+import { Divider } from '../../m3';
 import type { WorkflowNode, NodeType } from '../types';
 import styles from '../../../scss/atoms/workflow-editor.module.scss';
 

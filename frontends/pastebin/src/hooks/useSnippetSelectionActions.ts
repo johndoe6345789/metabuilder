@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { toast } from '@metabuilder/components/fakemui'
+import { toast } from '@metabuilder/components/m3'
 import { useTranslation } from '@/hooks/useTranslation'
 import {
   toggleSelectionMode,

@@ -1,7 +1,7 @@
-import { Card } from '@metabuilder/fakemui/surfaces'
-import { Label } from '@metabuilder/fakemui/atoms'
-import { Switch } from '@metabuilder/fakemui/inputs'
-import { Bell, CheckCircle, Question, XCircle } from '@metabuilder/fakemui/icons'
+import { Card } from '@metabuilder/m3/surfaces'
+import { Label } from '@metabuilder/m3/atoms'
+import { Switch } from '@metabuilder/m3/inputs'
+import { Bell, CheckCircle, Question, XCircle } from '@metabuilder/m3/icons'
 
 interface NotificationsSectionProps {
   permission: NotificationPermission | 'unsupported'

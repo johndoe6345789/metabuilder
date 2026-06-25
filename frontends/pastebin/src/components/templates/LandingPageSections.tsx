@@ -3,7 +3,7 @@ import {
   Button,
   Chip,
   MaterialIcon,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 import styles from './LandingPageTemplate.module.scss'
 
 const heroBg = {

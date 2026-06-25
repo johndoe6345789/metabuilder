@@ -5,7 +5,7 @@ import {
   FormLabel,
   Divider,
   MaterialIcon,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 import styles from './FormsShowcase.module.scss'
 
 const colStyle = {

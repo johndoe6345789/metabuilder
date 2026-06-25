@@ -2,12 +2,12 @@ import {
   Tabs,
   Tab,
   TabPanel,
-} from '@metabuilder/fakemui/navigation'
+} from '@metabuilder/m3/navigation'
 import {
   Cube,
   Package,
   Stack,
-} from '@metabuilder/fakemui/icons'
+} from '@metabuilder/m3/icons'
 import componentTreeCopy from '@/data/component-tree-viewer.json'
 import { ComponentTree } from '@/types/project'
 import { useComponentTreeViewer } from '../hooks/useComponentTreeViewer'

@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import { Box, Button, Typography } from '@metabuilder/fakemui';
+import { Box, Button, Typography } from '@metabuilder/m3';
 import styles from '@/../../../scss/atoms/plugins.module.scss';
 
 interface PluginEmptyStateProps {

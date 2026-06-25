@@ -13,7 +13,7 @@ import {
   CardHeader,
   CardActions,
   Divider,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import PreferencesAppearance from './PreferencesAppearance';
 import PreferencesNotifications from './PreferencesNotifications';
 

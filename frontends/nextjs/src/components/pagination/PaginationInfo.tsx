@@ -1,6 +1,6 @@
 'use client'
 
-import { Typography } from '@/fakemui'
+import { Typography } from '@/m3'
 import type { PaginationMetadata } from '@/lib/api/pagination'
 
 export interface PaginationInfoProps {

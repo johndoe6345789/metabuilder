@@ -15,7 +15,7 @@ type AnyComponent = ComponentType<ComponentProps>
 
 /**
  * Basic UI Components
- * These mirror the components available in the main app's fakemui library
+ * These mirror the components available in the main app's m3 library
  */
 
 export const Box: React.FC<ComponentProps> = ({ className, children, ...props }) => (

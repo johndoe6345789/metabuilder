@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { FileTreeItem } from './FileTreeItem'
 import type { SnippetFile } from '@/lib/types'
 
-jest.mock('@metabuilder/components/fakemui', () => ({
+jest.mock('@metabuilder/components/m3', () => ({
   Input: ({
     value,
     onChange,

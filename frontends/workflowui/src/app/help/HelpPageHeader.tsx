@@ -3,7 +3,7 @@
 'use client';
 
 import React from 'react';
-import { Box, Typography, TextField } from '@metabuilder/fakemui';
+import { Box, Typography, TextField } from '@metabuilder/m3';
 import {
   HelpIcon,
   SearchIcon,

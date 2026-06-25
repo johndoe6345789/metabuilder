@@ -6,7 +6,7 @@ import React from 'react';
 import {
   Box, Button, Card, CardContent,
   CardHeader, CardActions, Divider,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import DB_CONFIG from './database-config.json';
 import DbAdapterFields from './DbAdapterFields';
 import AdapterSelector from './AdapterSelector';

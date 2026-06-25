@@ -11,7 +11,7 @@ import {
   DialogContent,
   DialogActions,
   Button,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import PluginDialogContent from './PluginDialogContent';
 import type { Plugin } from './hooks/usePlugins';
 

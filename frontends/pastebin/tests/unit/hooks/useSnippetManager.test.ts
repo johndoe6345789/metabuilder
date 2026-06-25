@@ -11,7 +11,7 @@ import { useSnippetManager } from '@/hooks/useSnippetManager'
 import type { SnippetTemplate } from '@/lib/types'
 import * as db from '@/lib/db'
 
-jest.mock('@metabuilder/components/fakemui', () => ({
+jest.mock('@metabuilder/components/m3', () => ({
   toast: {
     success: jest.fn(),
     error: jest.fn(),
@@ -50,7 +50,7 @@ jest.mock('@/store/hooks', () => ({
 import * as reduxHooks from '@/store/hooks'
 
 // Get the mocked toast for assertions
-import { toast } from '@metabuilder/components/fakemui'
+import { toast } from '@metabuilder/components/m3'
 
 describe('useSnippetManager Hook', () => {
   const mockTemplates: SnippetTemplate[] = [

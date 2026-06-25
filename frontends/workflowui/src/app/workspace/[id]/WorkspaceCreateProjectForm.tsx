@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import { Button, TextField } from '@metabuilder/fakemui';
+import { Button, TextField } from '@metabuilder/m3';
 import styles from '@/../../../scss/atoms/workspace.module.scss';
 
 interface WorkspaceCreateProjectFormProps {

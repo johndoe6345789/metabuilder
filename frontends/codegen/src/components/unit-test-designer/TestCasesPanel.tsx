@@ -1,14 +1,14 @@
 import { TestCase } from '@/types/project'
-import { Badge } from '@metabuilder/fakemui/data-display'
+import { Badge } from '@metabuilder/m3/data-display'
 import {
   Button, IconButton, Input, Textarea,
-} from '@metabuilder/fakemui/inputs'
+} from '@metabuilder/m3/inputs'
 import {
   Card, CardContent, CardDescription, CardHeader, CardTitle,
-} from '@metabuilder/fakemui/surfaces'
-import { Label } from '@metabuilder/fakemui/atoms'
+} from '@metabuilder/m3/surfaces'
+import { Label } from '@metabuilder/m3/atoms'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Plus, Trash } from '@metabuilder/fakemui/icons'
+import { Plus, Trash } from '@metabuilder/m3/icons'
 import unitTestDesignerCopy from '@/data/unit-test-designer.json'
 
 interface TestCasesPanelProps {

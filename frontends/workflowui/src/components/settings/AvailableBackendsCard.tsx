@@ -11,7 +11,7 @@ import {
   CardContent,
   CardHeader,
   Chip,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 
 interface Adapter {
   name: string;

@@ -2,7 +2,7 @@ import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { ShareDialogEmailApps } from './ShareDialogEmailApps'
 
-jest.mock('@metabuilder/components/fakemui', () => ({
+jest.mock('@metabuilder/components/m3', () => ({
   MaterialIcon: ({ name }: any) => <span data-icon={name} />,
 }))
 

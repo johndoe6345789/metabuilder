@@ -4,7 +4,7 @@ import { useCodeTerminal } from '@/hooks/useCodeTerminal'
 import { useDebugger } from '@/hooks/useDebugger'
 import { useSnippetAutoSave } from './useSnippetAutoSave'
 import { Snippet } from '@/lib/types'
-import { toast } from '@metabuilder/components/fakemui'
+import { toast } from '@metabuilder/components/m3'
 
 type FileList = { name: string; content: string }[]
 

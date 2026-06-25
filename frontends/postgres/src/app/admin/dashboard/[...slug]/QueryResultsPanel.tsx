@@ -3,7 +3,7 @@
 import {
   Paper, Table, TableBody, TableCell, TableContainer,
   TableHead, TableRow, Typography,
-} from '@metabuilder/components/fakemui';
+} from '@metabuilder/components/m3';
 import s from './dashboard-content.module.scss';
 
 type Field = { name: string };

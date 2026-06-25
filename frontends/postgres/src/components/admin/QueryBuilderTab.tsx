@@ -9,7 +9,7 @@ import {
   QueryBuilderTab as BaseQueryBuilderTab,
   type QueryBuilderParams,
   type QueryResult,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import { getQueryOperators } from '@/utils/featureConfig';
 import { useQueryBuilder } from './hooks/useQueryBuilder';
 

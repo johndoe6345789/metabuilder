@@ -1,5 +1,5 @@
 import { Badge, Chip, CountBadge, Dot, Flex, Heading, Section, Separator, Stack, StatusBadge, Text } from '@/components/atoms'
-import { Star } from '@metabuilder/fakemui/icons'
+import { Star } from '@metabuilder/m3/icons'
 
 type BadgesIndicatorsSectionContent =
   (typeof import('@/data/atomic-library-showcase.json'))['sections']['badgesIndicators']

@@ -18,7 +18,7 @@ export default defineConfig({
     'navigation/index': 'navigation/index.ts',
   },
   format: ['esm'],
-  dts: false, // Disabled due to rootDir issues with icons and fakemui
+  dts: false, // Disabled due to rootDir issues with icons and m3
   splitting: false,
   sourcemap: true,
   clean: true,
@@ -29,7 +29,7 @@ export default defineConfig({
     'next/link',
     'next/navigation',
     'next/image',
-    '@metabuilder/fakemui',
+    '@metabuilder/m3',
     '@metabuilder/interfaces',
     '@metabuilder/hooks',
     '@metabuilder/hooks-canvas',

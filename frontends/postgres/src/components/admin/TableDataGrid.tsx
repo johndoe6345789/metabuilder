@@ -1,15 +1,15 @@
 'use client';
 
-import DeleteIcon from '@metabuilder/components/fakemui/Delete';
-import EditIcon from '@metabuilder/components/fakemui/Edit';
+import DeleteIcon from '@metabuilder/components/m3/Delete';
+import EditIcon from '@metabuilder/components/m3/Edit';
 import NavigateBeforeIcon
-  from '@metabuilder/components/fakemui/NavigateBefore';
+  from '@metabuilder/components/m3/NavigateBefore';
 import NavigateNextIcon
-  from '@metabuilder/components/fakemui/NavigateNext';
+  from '@metabuilder/components/m3/NavigateNext';
 import {
   IconButton, Paper, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, Tooltip, Typography,
-} from '@metabuilder/components/fakemui';
+} from '@metabuilder/components/m3';
 import s from './table-data-view.module.scss';
 import { fmtCell, type TdvField } from './tableDataViewUtils';
 

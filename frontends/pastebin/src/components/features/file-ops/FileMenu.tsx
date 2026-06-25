@@ -1,6 +1,6 @@
 'use client'
 
-import { MaterialIcon } from '@metabuilder/components/fakemui'
+import { MaterialIcon } from '@metabuilder/components/m3'
 import { useFileMenuDismiss } from './hooks/useFileMenuDismiss'
 import styles from './file-menu.module.scss'
 

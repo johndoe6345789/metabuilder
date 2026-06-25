@@ -11,7 +11,7 @@ import {
   Typography,
   Box,
   Avatar,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import styles from '@/../../../scss/atoms/mat-card.module.scss';
 
 interface AchievementLevelCardProps {

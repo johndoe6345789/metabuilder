@@ -3,7 +3,7 @@ import {
   IconButton,
   MaterialIcon,
   Divider,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 
 const labelStyle: React.CSSProperties = {
   fontSize: '0.875rem',

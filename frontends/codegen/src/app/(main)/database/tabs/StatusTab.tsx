@@ -11,7 +11,7 @@ import {
   Button,
   Alert,
   Chip,
-} from '@metabuilder/fakemui'
+} from '@metabuilder/m3'
 import { useStatusTab } from '../hooks/useStatusTab'
 
 function redactUrl(url: string): string {

@@ -3,7 +3,7 @@ import {
   AlertTitle,
   Button,
   MaterialIcon,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 import { AIErrorHelper } from '@/components/error/AIErrorHelper'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useErrorFallback } from './hooks/useErrorFallback'

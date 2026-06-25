@@ -1,4 +1,4 @@
-import { Button, MaterialIcon } from '@metabuilder/components/fakemui'
+import { Button, MaterialIcon } from '@metabuilder/components/m3'
 import { useTranslation } from '@/hooks/useTranslation'
 // eslint-disable-next-line max-len
 import { TemplatePicker } from '@/components/features/snippet-editor/TemplatePicker'

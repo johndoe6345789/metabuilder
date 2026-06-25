@@ -9,7 +9,7 @@ import {
   Box as BoxComp,
   CircularProgress as CircularProgressComp,
   Typography as TypographyComp,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 
 const Box = BoxComp as any;
 const CircularProgress = CircularProgressComp as any;

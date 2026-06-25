@@ -7,7 +7,7 @@ import type {
   ButtonProps, CardProps, CheckboxProps, ChipProps,
   IconButtonProps, PaperProps, SelectProps, TextFieldProps,
   TypographyProps,
-} from '@metabuilder/components/fakemui';
+} from '@metabuilder/components/m3';
 import {
   Box,
   Card as MuiCard,
@@ -21,7 +21,7 @@ import {
   Typography as MuiTypography,
   FormControlLabel,
   MenuItem,
-} from '@metabuilder/components/fakemui';
+} from '@metabuilder/components/m3';
 import React from 'react';
 
 export function Button(props: ButtonProps) {

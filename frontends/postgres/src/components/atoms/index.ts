@@ -45,4 +45,4 @@ export {
   AccordionDetails,
   Chip,
   Tooltip,
-} from '@metabuilder/components/fakemui';
+} from '@metabuilder/components/m3';

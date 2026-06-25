@@ -4,7 +4,7 @@ import {
   Button, Checkbox, Dialog, DialogActions, DialogContent,
   DialogTitle, FormControl, FormControlLabel, InputLabel,
   MenuItem, Select, TextField,
-} from '@metabuilder/components/fakemui';
+} from '@metabuilder/components/m3';
 import s from './add-column-dialog.module.scss';
 import { useAddColumnForm } from './hooks/useAddColumnForm';
 

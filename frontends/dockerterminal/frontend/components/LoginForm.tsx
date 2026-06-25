@@ -10,7 +10,7 @@ import {
   Box,
   Alert,
   LockOpen,
-} from '@metabuilder/components/fakemui';
+} from '@metabuilder/components/m3';
 import { useAuth } from '@/lib/auth';
 import { useRouter } from 'next/navigation';
 import TurboErrorDialog from './TurboErrorDialog';

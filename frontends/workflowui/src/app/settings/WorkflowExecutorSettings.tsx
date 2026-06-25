@@ -12,7 +12,7 @@ import {
   MenuItem,
   TextField,
   Divider,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import PREFS from './settings-options.json';
 
 interface WorkflowExecutorSettingsProps {

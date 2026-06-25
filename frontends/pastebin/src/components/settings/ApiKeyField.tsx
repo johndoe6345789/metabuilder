@@ -1,4 +1,4 @@
-import { Input, FormLabel, MaterialIcon } from '@metabuilder/components/fakemui'
+import { Input, FormLabel, MaterialIcon } from '@metabuilder/components/m3'
 import type { AIPlatform } from '@/config/aiPlatforms'
 import styles from './settings-card.module.scss'
 

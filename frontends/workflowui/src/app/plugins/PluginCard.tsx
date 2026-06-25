@@ -12,7 +12,7 @@ import {
   Button,
   Box,
   Typography,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import styles from '@/../../../scss/atoms/plugins.module.scss';
 import type { Plugin } from './hooks/usePlugins';
 

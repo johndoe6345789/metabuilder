@@ -1,4 +1,4 @@
-import { Label } from '@metabuilder/fakemui/atoms'
+import { Label } from '@metabuilder/m3/atoms'
 import copy from '@/data/favicon-designer.json'
 import { ColorInspector } from './ColorInspector'
 import { FreehandInspector } from './FreehandInspector'

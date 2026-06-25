@@ -12,7 +12,7 @@ import {
   Typography,
   Tabs,
   Tab,
-} from '@metabuilder/fakemui'
+} from '@metabuilder/m3'
 import { StatusTab } from './tabs/StatusTab'
 import { SwitchDatabaseTab } from './tabs/SwitchDatabaseTab'
 import { SeedDataTab } from './tabs/SeedDataTab'

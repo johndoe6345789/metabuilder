@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/refs */
 'use client'
 
-import { MaterialIcon } from '@metabuilder/components/fakemui'
+import { MaterialIcon } from '@metabuilder/components/m3'
 import { useFileCommandPalette } from './hooks/useFileCommandPalette'
 import styles from './file-command-palette.module.scss'
 

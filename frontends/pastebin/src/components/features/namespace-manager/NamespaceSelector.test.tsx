@@ -3,7 +3,7 @@ import { render, screen } from '@/test-utils'
 import { NamespaceSelector } from './NamespaceSelector'
 import type { Namespace } from '@/lib/types'
 
-jest.mock('@metabuilder/components/fakemui', () => ({
+jest.mock('@metabuilder/components/m3', () => ({
   toast: {
     error: jest.fn(),
     success: jest.fn(),

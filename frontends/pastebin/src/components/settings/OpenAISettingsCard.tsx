@@ -7,7 +7,7 @@ import {
   Button,
   FormLabel,
   MaterialIcon,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 import { useTranslation } from '@/hooks/useTranslation'
 import { AI_PLATFORMS } from '@/config/aiPlatforms'
 import { useOpenAISettings } from './hooks/useOpenAISettings'

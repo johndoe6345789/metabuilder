@@ -5,7 +5,7 @@
 import React from 'react';
 import {
   Breadcrumbs, Tabs, Tab, Box,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import { TemplateHeader } from '@metabuilder/components/layout';
 import styles from '@/../../../scss/atoms/template-detail.module.scss';
 import { useTemplateDetail } from './hooks/useTemplateDetail';

@@ -5,7 +5,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Button, TextField } from '@metabuilder/fakemui';
+import { Button, TextField } from '@metabuilder/m3';
 import { AddIcon } from '@/../../../icons/react';
 import styles from '@/../../../scss/atoms/dashboard.module.scss';
 import WorkspacePreviewPanel from './WorkspacePreviewPanel';

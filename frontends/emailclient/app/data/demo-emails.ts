@@ -7,7 +7,7 @@
  */
 import type {
   FolderNavigationItem,
-} from '@metabuilder/fakemui/email'
+} from '@metabuilder/m3/email'
 import foldersJson from './folders.json'
 import emailsJson from './emails.json'
 

@@ -1,4 +1,4 @@
-import { Card } from '@metabuilder/components/fakemui'
+import { Card } from '@metabuilder/components/m3'
 import { Snippet } from '@/lib/types'
 import { SnippetCardHeader } from './SnippetCardHeader'
 import { SnippetCodePreview } from './SnippetCodePreview'

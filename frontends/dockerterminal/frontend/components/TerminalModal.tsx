@@ -14,7 +14,7 @@ import {
   Paper,
   Close,
   Send,
-} from '@metabuilder/components/fakemui';
+} from '@metabuilder/components/m3';
 import { apiClient } from '@/lib/api';
 
 interface TerminalModalProps {

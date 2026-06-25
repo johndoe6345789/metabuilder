@@ -1,6 +1,6 @@
 'use client'
 import { Suspense } from 'react'
-import { MaterialIcon } from '@metabuilder/components/fakemui'
+import { MaterialIcon } from '@metabuilder/components/m3'
 import { ThemeApplier } from '@/components/layout/ThemeApplier'
 import { useResetPasswordForm } from './hooks/useResetPasswordForm'
 import styles from '../login/login.module.scss'

@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ViewModeButton } from './ViewModeButton'
 
-// Mock @metabuilder/components/fakemui
-jest.mock('@metabuilder/components/fakemui', () => ({
+// Mock @metabuilder/components/m3
+jest.mock('@metabuilder/components/m3', () => ({
   Button: ({
     children,
     onClick,

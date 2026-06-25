@@ -7,8 +7,8 @@ import {
   Select,
   MenuItem,
   MaterialIcon,
-} from '@metabuilder/components/fakemui'
-import type { SelectChangeEvent } from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
+import type { SelectChangeEvent } from '@metabuilder/components/m3'
 import { InputParameter } from '@/lib/types'
 import placeholders from '@/data/paramTypePlaceholders.json'
 import { InputParamFields } from './InputParamFields'

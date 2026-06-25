@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Card } from '@metabuilder/fakemui/surfaces'
+import { Card } from '@metabuilder/m3/surfaces'
 import { getIcon } from './utils'
 
 /**

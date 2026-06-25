@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { toast } from '@metabuilder/components/fakemui'
+import { toast } from '@metabuilder/components/m3'
 import {
   saveStorageConfig,
   loadStorageConfig,

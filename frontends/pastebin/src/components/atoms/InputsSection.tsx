@@ -3,7 +3,7 @@ import {
   MaterialIcon,
   Card,
   Divider,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 import { ComponentShowcase } from '@/components/demo/ComponentShowcase'
 import { atomsCodeSnippets } from '@/lib/component-code-snippets'
 import { Snippet } from '@/lib/types'

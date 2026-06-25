@@ -1,5 +1,5 @@
 vi.mock('@/lib/app-config', () => ({ BASE_PATH: '/postgres' }));
-vi.mock('@metabuilder/fakemui', async () => {
+vi.mock('@metabuilder/m3', async () => {
   const React = await import('react');
   const ConstraintDialog = ({ open }: any) => open ? React.createElement('div', { 'data-testid': 'constraint-dialog' }) : null;
   const ConfirmDialog = ({ open }: any) => open ? React.createElement('div', { 'data-testid': 'confirm-dialog' }) : null;

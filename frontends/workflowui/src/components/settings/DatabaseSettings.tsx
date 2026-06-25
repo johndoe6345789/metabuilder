@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import { Box, Typography } from '@metabuilder/fakemui';
+import { Box, Typography } from '@metabuilder/m3';
 import { useDatabaseSettings } from './hooks/useDatabaseSettings';
 import CurrentDbCard from './CurrentDbCard';
 import SwitchDbCard from './SwitchDbCard';

@@ -3,7 +3,7 @@
 'use client';
 
 import React from 'react';
-import { Box, CircularProgress } from '@metabuilder/fakemui';
+import { Box, CircularProgress } from '@metabuilder/m3';
 
 export default function FavoritesLoadingState() {
   return (

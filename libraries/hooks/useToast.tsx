@@ -3,7 +3,7 @@
 /**
  * useToast Hook
  * Standalone toast notification system with React context
- * Migrated from @metabuilder/fakemui for broader usage.
+ * Migrated from @metabuilder/m3 for broader usage.
  *
  * Features:
  * - Multiple severity levels (success, error, warning, info)

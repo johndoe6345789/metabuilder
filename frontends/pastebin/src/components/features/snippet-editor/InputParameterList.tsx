@@ -6,7 +6,7 @@ import {
   Input,
   FormLabel,
   MaterialIcon,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 import { InputParameter } from '@/lib/types'
 import { InputParameterItem } from './InputParameterItem'
 import styles from './input-parameter-list.module.scss'

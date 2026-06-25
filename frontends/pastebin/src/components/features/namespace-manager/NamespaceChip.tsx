@@ -1,4 +1,4 @@
-import { MaterialIcon } from '@metabuilder/components/fakemui'
+import { MaterialIcon } from '@metabuilder/components/m3'
 import type { Namespace } from '@/lib/types'
 import styles from './namespace-selector.module.scss'
 

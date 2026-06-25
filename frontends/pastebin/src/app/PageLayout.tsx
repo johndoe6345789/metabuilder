@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { MaterialIcon } from '@metabuilder/components/fakemui'
+import { MaterialIcon } from '@metabuilder/components/m3'
 import Link from 'next/link'
 import pkg from '../../package.json'
 import { Navigation } from '@/components/layout/navigation/Navigation'

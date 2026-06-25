@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import { Box, Tabs, Tab } from '@metabuilder/fakemui';
+import { Box, Tabs, Tab } from '@metabuilder/m3';
 
 type TabValue = 'all' | 'unlocked' | 'locked';
 

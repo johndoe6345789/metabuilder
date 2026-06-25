@@ -5,8 +5,8 @@ import * as storageModule from '@/lib/storage'
 // Mock the storage module
 jest.mock('@/lib/storage')
 
-// Mock fakemui toast
-jest.mock('@metabuilder/components/fakemui', () => ({
+// Mock m3 toast
+jest.mock('@metabuilder/components/m3', () => ({
   toast: {
     success: jest.fn(),
     error: jest.fn(),
@@ -22,7 +22,7 @@ jest.mock('@/hooks/useTranslation', () => ({
   }),
 }))
 
-import { toast } from '@metabuilder/components/fakemui'
+import { toast } from '@metabuilder/components/m3'
 
 // Mock process.env
 const originalEnv = process.env

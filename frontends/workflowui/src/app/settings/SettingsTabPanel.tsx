@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import { Box } from '@metabuilder/fakemui';
+import { Box } from '@metabuilder/m3';
 
 interface SettingsTabPanelProps {
   children?: React.ReactNode;

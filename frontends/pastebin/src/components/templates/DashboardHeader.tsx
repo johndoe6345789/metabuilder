@@ -1,4 +1,4 @@
-import { Button, Avatar, MaterialIcon } from '@metabuilder/components/fakemui'
+import { Button, Avatar, MaterialIcon } from '@metabuilder/components/m3'
 
 export function DashboardHeader() {
   return (

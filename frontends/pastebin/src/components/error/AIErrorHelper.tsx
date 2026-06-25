@@ -6,7 +6,7 @@ import {
   DialogContent,
   Alert,
   MaterialIcon,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MarkdownRenderer } from './MarkdownRenderer'
 import { LoadingAnalysis } from './LoadingAnalysis'

@@ -1,12 +1,12 @@
 /**
- * Tests for local fakemui re-export barrel
- * The module simply re-exports @metabuilder/fakemui (which is mocked in tests)
+ * Tests for local m3 re-export barrel
+ * The module simply re-exports @metabuilder/m3 (which is mocked in tests)
  */
 
-// fakemui is mapped to __mocks__/fakeMuiMock.tsx in jest config
+// m3 is mapped to __mocks__/fakeMuiMock.tsx in jest config
 import * as FakeMui from '../index';
 
-describe('fakemui index barrel', () => {
+describe('m3 index barrel', () => {
   it('exports Button', () => {
     expect(FakeMui).toHaveProperty('Button');
   });

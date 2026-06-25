@@ -1,5 +1,5 @@
-import { Card } from '@metabuilder/components/fakemui'
-import { Divider } from '@metabuilder/components/fakemui'
+import { Card } from '@metabuilder/components/m3'
+import { Divider } from '@metabuilder/components/m3'
 
 const muted: React.CSSProperties = {
   fontSize: '0.875rem',

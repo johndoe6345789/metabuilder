@@ -1,7 +1,7 @@
 import type { ConflictResolutionCopy } from '@/components/conflict-resolution/types'
 
-import { Card, CardContent } from '@metabuilder/fakemui/surfaces'
-import { XCircle } from '@metabuilder/fakemui/icons'
+import { Card, CardContent } from '@metabuilder/m3/surfaces'
+import { XCircle } from '@metabuilder/m3/icons'
 import { motion } from 'framer-motion'
 
 interface ConflictResolutionErrorProps {

@@ -3,7 +3,7 @@
  */
 
 import React, { ErrorInfo } from 'react';
-import { Button } from '@metabuilder/fakemui';
+import { Button } from '@metabuilder/m3';
 import ErrorDetails from './ErrorDetails';
 
 interface ErrorFallbackDisplayProps {

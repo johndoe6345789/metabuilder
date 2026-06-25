@@ -1,4 +1,4 @@
-import { MaterialIcon } from '@metabuilder/components/fakemui'
+import { MaterialIcon } from '@metabuilder/components/m3'
 import { CreateNamespaceDialog } from './CreateNamespaceDialog'
 import { DeleteNamespaceDialog } from './DeleteNamespaceDialog'
 import { NamespaceChip } from './NamespaceChip'

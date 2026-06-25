@@ -10,7 +10,7 @@ import {
   Table,
   Gear,
   Clock,
-} from '@metabuilder/fakemui/icons'
+} from '@metabuilder/m3/icons'
 import type { ShowcaseExample } from '../types'
 
 const exampleIcons = {

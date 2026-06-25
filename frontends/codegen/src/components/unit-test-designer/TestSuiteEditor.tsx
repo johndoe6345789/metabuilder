@@ -1,10 +1,10 @@
 import { UnitTest } from '@/types/project'
-import { Button, Input, Textarea } from '@metabuilder/fakemui/inputs'
+import { Button, Input, Textarea } from '@metabuilder/m3/inputs'
 import {
   Card, CardContent, CardHeader, CardTitle,
-} from '@metabuilder/fakemui/surfaces'
-import { Label } from '@metabuilder/fakemui/atoms'
-import { Flask } from '@metabuilder/fakemui/icons'
+} from '@metabuilder/m3/surfaces'
+import { Label } from '@metabuilder/m3/atoms'
+import { Flask } from '@metabuilder/m3/icons'
 import unitTestDesignerCopy from '@/data/unit-test-designer.json'
 
 interface TestSuiteEditorProps {

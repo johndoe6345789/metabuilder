@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ShareDialogActions } from './ShareDialogActions'
 
-jest.mock('@metabuilder/components/fakemui', () => ({
+jest.mock('@metabuilder/components/m3', () => ({
   MaterialIcon: ({ name }: any) => <span data-icon={name} />,
 }))
 

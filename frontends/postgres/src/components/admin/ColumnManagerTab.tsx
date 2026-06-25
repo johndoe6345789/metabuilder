@@ -1,6 +1,6 @@
 'use client';
 
-import { Typography } from '@metabuilder/components/fakemui';
+import { Typography } from '@metabuilder/components/m3';
 import { getDataTypes, getFeatureById } from '@/utils/featureConfig';
 import s from './column-manager-tab.module.scss';
 import AddColumnDialog from './AddColumnDialog';

@@ -4,21 +4,21 @@
       "id": "file-ecom-1",
       "name": "page.tsx",
       "path": "/src/app/page.tsx",
-      "content": "'use client'\n\nimport { ProductGrid } from '@/components/ProductGrid'\nimport { Hero } from '@/components/Hero'\nimport { Box, Container } from '@metabuilder/fakemui'\n\nexport default function Home() {\n  return (\n    <Box>\n      <Hero \n        title=\"Summer Collection 2024\"\n        subtitle=\"Discover our latest arrivals\"\n        ctaText=\"Shop Now\"\n      />\n      <Container maxWidth=\"xl\" sx={{ py: 6 }}>\n        <ProductGrid />\n      </Container>\n    </Box>\n  )\n}",
+      "content": "'use client'\n\nimport { ProductGrid } from '@/components/ProductGrid'\nimport { Hero } from '@/components/Hero'\nimport { Box, Container } from '@metabuilder/m3'\n\nexport default function Home() {\n  return (\n    <Box>\n      <Hero \n        title=\"Summer Collection 2024\"\n        subtitle=\"Discover our latest arrivals\"\n        ctaText=\"Shop Now\"\n      />\n      <Container maxWidth=\"xl\" sx={{ py: 6 }}>\n        <ProductGrid />\n      </Container>\n    </Box>\n  )\n}",
       "language": "typescript"
     },
     {
       "id": "file-ecom-2",
       "name": "cart.tsx",
       "path": "/src/app/cart/page.tsx",
-      "content": "'use client'\n\nimport { Cart } from '@/components/Cart'\nimport { Container, Typography, Box } from '@metabuilder/fakemui'\n\nexport default function CartPage() {\n  return (\n    <Container maxWidth=\"lg\" sx={{ py: 6 }}>\n      <Typography variant=\"h3\" gutterBottom>\n        Shopping Cart\n      </Typography>\n      <Cart />\n    </Container>\n  )\n}",
+      "content": "'use client'\n\nimport { Cart } from '@/components/Cart'\nimport { Container, Typography, Box } from '@metabuilder/m3'\n\nexport default function CartPage() {\n  return (\n    <Container maxWidth=\"lg\" sx={{ py: 6 }}>\n      <Typography variant=\"h3\" gutterBottom>\n        Shopping Cart\n      </Typography>\n      <Cart />\n    </Container>\n  )\n}",
       "language": "typescript"
     },
     {
       "id": "file-ecom-3",
       "name": "checkout.tsx",
       "path": "/src/app/checkout/page.tsx",
-      "content": "'use client'\n\nimport { CheckoutForm } from '@/components/CheckoutForm'\nimport { Container, Typography } from '@metabuilder/fakemui'\n\nexport default function CheckoutPage() {\n  return (\n    <Container maxWidth=\"md\" sx={{ py: 6 }}>\n      <Typography variant=\"h3\" gutterBottom>\n        Checkout\n      </Typography>\n      <CheckoutForm />\n    </Container>\n  )\n}",
+      "content": "'use client'\n\nimport { CheckoutForm } from '@/components/CheckoutForm'\nimport { Container, Typography } from '@metabuilder/m3'\n\nexport default function CheckoutPage() {\n  return (\n    <Container maxWidth=\"md\" sx={{ py: 6 }}>\n      <Typography variant=\"h3\" gutterBottom>\n        Checkout\n      </Typography>\n      <CheckoutForm />\n    </Container>\n  )\n}",
       "language": "typescript"
     }
   ],

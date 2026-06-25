@@ -10,8 +10,8 @@ import {
   Paper as PaperComp,
   IconButton as IconButtonComp,
   Tooltip as TooltipComp,
-} from '@metabuilder/fakemui';
-import { ArrowUp, ArrowDown } from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
+import { ArrowUp, ArrowDown } from '@metabuilder/m3';
 
 const Box = BoxComp as any;
 const Paper = PaperComp as any;

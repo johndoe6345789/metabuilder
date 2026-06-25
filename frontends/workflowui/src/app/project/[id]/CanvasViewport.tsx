@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import { Box as BoxComp } from '@metabuilder/fakemui';
+import { Box as BoxComp } from '@metabuilder/m3';
 
 const Box = BoxComp as any;
 

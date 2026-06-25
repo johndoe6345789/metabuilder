@@ -1,5 +1,5 @@
 import { Heading, MetricCard, ResponsiveGrid, Section, Separator } from '@/components/atoms'
-import { Bell, ShoppingCart, User } from '@metabuilder/fakemui/icons'
+import { Bell, ShoppingCart, User } from '@metabuilder/m3/icons'
 
 type CardsMetricsSectionContent =
   (typeof import('@/data/atomic-library-showcase.json'))['sections']['cardsMetrics']

@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { toast } from '@metabuilder/components/fakemui'
+import { toast } from '@metabuilder/components/m3'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { patchSnippetLocal } from '@/store/slices/snippetsSlice'
 import { fetchRevisions, revertToRevision } from '@/store/slices/revisionsSlice'

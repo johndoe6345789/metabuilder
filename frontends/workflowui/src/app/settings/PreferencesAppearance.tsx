@@ -10,7 +10,7 @@ import {
   Typography,
   Select,
   MenuItem,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import PREFS from './settings-options.json';
 
 interface PreferencesAppearanceProps {

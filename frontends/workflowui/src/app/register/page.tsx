@@ -10,7 +10,7 @@ import {
   Button,
   Alert,
   Box,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import { AuthFormLayout } from '@/../../../components/layout';
 import { useRegisterPage } from './hooks/useRegisterPage';
 import RegisterFormFields from './RegisterFormFields';

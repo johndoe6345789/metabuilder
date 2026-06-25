@@ -23,7 +23,7 @@ import {
   Play,
   Tree,
   Wrench,
-} from '@metabuilder/fakemui/icons'
+} from '@metabuilder/m3/icons'
 
 export const navigationIconMap = {
   BookOpen,

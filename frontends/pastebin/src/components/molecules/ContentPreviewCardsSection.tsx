@@ -1,4 +1,4 @@
-import { Card, MaterialIcon, Chip } from '@metabuilder/components/fakemui'
+import { Card, MaterialIcon, Chip } from '@metabuilder/components/m3'
 import styles from './ContentPreviewCardsSection.module.scss'
 
 const metaStyle: React.CSSProperties = {

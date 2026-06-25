@@ -9,7 +9,7 @@ import * as storage from '@/lib/storage'
 
 jest.mock('@/lib/storage')
 
-jest.mock('@metabuilder/components/fakemui', () => ({
+jest.mock('@metabuilder/components/m3', () => ({
   toast: {
     success: jest.fn(),
     error: jest.fn(),
@@ -24,7 +24,7 @@ jest.mock('@/hooks/useTranslation', () => ({
   }),
 }))
 
-import { toast } from '@metabuilder/components/fakemui'
+import { toast } from '@metabuilder/components/m3'
 
 describe('useStorageConfig Hook', () => {
   beforeEach(() => {

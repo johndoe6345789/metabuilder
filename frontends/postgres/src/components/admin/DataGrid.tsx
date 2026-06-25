@@ -5,4 +5,4 @@ export {
   DatabaseDataGrid as default,
   type DatabaseDataGridProps as DataGridProps,
   type DataGridColumn,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';

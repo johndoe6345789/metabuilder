@@ -6,8 +6,8 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Box, Button } from '@metabuilder/fakemui';
-import { Edit, Delete } from '@metabuilder/fakemui';
+import { Box, Button } from '@metabuilder/m3';
+import { Edit, Delete } from '@metabuilder/m3';
 
 interface FavoriteWorkflowActionsProps {
   workflowId: string;

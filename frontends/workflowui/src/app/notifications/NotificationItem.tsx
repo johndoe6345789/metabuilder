@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import { IconButton } from '@metabuilder/fakemui';
+import { IconButton } from '@metabuilder/m3';
 import styles from '@/../../../scss/atoms/notifications.module.scss';
 
 const TYPE_COLORS: Record<string, string> = {

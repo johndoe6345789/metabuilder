@@ -5,7 +5,7 @@ import {
   Avatar,
   Divider,
   MaterialIcon,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 
 const onSurfaceVariant = 'var(--mat-sys-on-surface-variant)'
 

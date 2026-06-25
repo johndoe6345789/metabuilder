@@ -10,7 +10,7 @@ import {
   Box,
   Typography,
   TextField,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import styles from '@/../../../scss/atoms/docs.module.scss';
 import { useDocs } from './hooks/useDocs';
 import DocsSidebar from './DocsSidebar';

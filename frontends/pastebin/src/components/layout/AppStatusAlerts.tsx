@@ -4,7 +4,7 @@ import {
   Alert,
   AlertTitle,
   MaterialIcon,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 import { getStorageConfig } from '@/lib/storage'
 import { useTranslation } from '@/hooks/useTranslation'
 

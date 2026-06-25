@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { LinearProgress, Box, Typography } from '../fakemui';
+import { LinearProgress, Box, Typography } from '../m3';
 import styles from '../../scss/components/feedback/password-strength.module.scss';
 
 export interface PasswordStrengthIndicatorProps {

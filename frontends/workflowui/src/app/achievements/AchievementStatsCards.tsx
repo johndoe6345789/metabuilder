@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import { Grid } from '@metabuilder/fakemui';
+import { Grid } from '@metabuilder/m3';
 import AchievementLevelCard from './AchievementLevelCard';
 import AchievementPointsCard from './AchievementPointsCard';
 import AchievementUnlockedCard from './AchievementUnlockedCard';

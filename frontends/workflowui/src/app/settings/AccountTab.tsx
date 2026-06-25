@@ -15,7 +15,7 @@ import {
   CardHeader,
   CardActions,
   Divider,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 
 export default function AccountTab() {
   return (

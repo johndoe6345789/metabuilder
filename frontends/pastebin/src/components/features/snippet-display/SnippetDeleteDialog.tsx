@@ -5,7 +5,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 import { useTranslation } from '@/hooks/useTranslation'
 
 interface SnippetDeleteDialogProps {

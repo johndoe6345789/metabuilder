@@ -1,6 +1,6 @@
 'use client';
 
-import StorageIcon from '@metabuilder/components/fakemui/Storage';
+import StorageIcon from '@metabuilder/components/m3/Storage';
 import {
   List,
   ListItem,
@@ -8,7 +8,7 @@ import {
   ListItemIcon,
   ListItemText,
   Paper,
-} from '@metabuilder/components/fakemui';
+} from '@metabuilder/components/m3';
 import s from './column-table-list.module.scss';
 
 type TableRow = { table_name: string };

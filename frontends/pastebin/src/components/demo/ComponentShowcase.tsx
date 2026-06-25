@@ -1,5 +1,5 @@
 import { FloppyDisk } from '@phosphor-icons/react'
-import { Card, Button } from '@metabuilder/components/fakemui'
+import { Card, Button } from '@metabuilder/components/m3'
 import { Snippet } from '@/lib/types'
 // eslint-disable-next-line max-len
 import { SnippetDialog } from '@/components/features/snippet-editor/SnippetDialog'

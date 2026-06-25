@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { FileTreeToolbar } from './FileTreeToolbar'
 
-jest.mock('@metabuilder/components/fakemui', () => ({
+jest.mock('@metabuilder/components/m3', () => ({
   MaterialIcon: ({ name }: any) => <span data-icon={name} />,
 }))
 

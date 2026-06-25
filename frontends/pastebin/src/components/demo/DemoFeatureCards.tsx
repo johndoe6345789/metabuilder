@@ -1,6 +1,6 @@
 'use client'
 
-import { Card, CardContent, CardHeader } from '@metabuilder/components/fakemui'
+import { Card, CardContent, CardHeader } from '@metabuilder/components/m3'
 import styles from './DemoFeatureCards.module.scss'
 
 export const DemoFeatureCards = () => {

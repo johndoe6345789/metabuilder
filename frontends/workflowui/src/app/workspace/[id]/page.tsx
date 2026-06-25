@@ -11,7 +11,7 @@ import {
   Button,
   CircularProgress,
   Add,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import styles from '@/../../../scss/atoms/workspace.module.scss';
 import { useWorkspacePage } from './hooks/useWorkspacePage';
 import WorkspaceProjectsBody from './WorkspaceProjectsBody';

@@ -3,7 +3,7 @@ import {
   MenuItem,
   Divider,
   MaterialIcon,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 import { Namespace } from '@/lib/types'
 import { useTranslation } from '@/hooks/useTranslation'
 import styles from './snippet-card-actions.module.scss'

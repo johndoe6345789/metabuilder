@@ -5,7 +5,7 @@ import {
 import {
   propertyEditorIcons,
 } from '@/components/molecules/property-editor/propertyEditorIcons'
-import { Trash } from '@metabuilder/fakemui/icons'
+import { Trash } from '@metabuilder/m3/icons'
 
 interface PropertyEditorHeaderProps {
   componentId: string

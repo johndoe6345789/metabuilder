@@ -3,7 +3,7 @@ import {
   MaterialIcon,
   Input,
   FormLabel,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 import { ComponentShowcase } from '@/components/demo/ComponentShowcase'
 import { moleculesCodeSnippets } from '@/lib/component-code-snippets'
 import { Snippet } from '@/lib/types'

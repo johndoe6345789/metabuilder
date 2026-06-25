@@ -4,8 +4,8 @@
  */
 
 import React from 'react';
-import * as Icons from '@metabuilder/components/fakemui';
-import { Add as AddIcon, Build as BoltIcon, Delete as DeleteIcon, Download as DownloadIcon, Edit as EditIcon, Play as PlayArrowIcon, Table as TableChartIcon } from '@metabuilder/components/fakemui';
+import * as Icons from '@metabuilder/components/m3';
+import { Add as AddIcon, Build as BoltIcon, Delete as DeleteIcon, Download as DownloadIcon, Edit as EditIcon, Play as PlayArrowIcon, Table as TableChartIcon } from '@metabuilder/components/m3';
 
 export const iconOverrides: Record<string, React.ComponentType<any>>
   = {

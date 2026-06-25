@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { MaterialIcon } from '@metabuilder/components/fakemui'
+import { MaterialIcon } from '@metabuilder/components/m3'
 import { useTranslation } from '@/hooks/useTranslation'
 import styles from './loading-analysis.module.scss'
 

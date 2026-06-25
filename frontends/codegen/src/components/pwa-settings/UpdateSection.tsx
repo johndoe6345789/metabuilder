@@ -1,7 +1,7 @@
-import { Button } from '@metabuilder/fakemui/inputs'
-import { Card } from '@metabuilder/fakemui/surfaces'
-import { Label } from '@metabuilder/fakemui/atoms'
-import { CloudArrowDown } from '@metabuilder/fakemui/icons'
+import { Button } from '@metabuilder/m3/inputs'
+import { Card } from '@metabuilder/m3/surfaces'
+import { Label } from '@metabuilder/m3/atoms'
+import { CloudArrowDown } from '@metabuilder/m3/icons'
 
 interface UpdateSectionProps {
   isUpdateAvailable: boolean

@@ -12,7 +12,7 @@ import {
   Typography as TypographyComp,
   Chip as ChipComp,
   Grid as GridComp,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import WorkflowCardActions from './WorkflowCardActions';
 import WorkflowCardMeta from './WorkflowCardMeta';
 import type {

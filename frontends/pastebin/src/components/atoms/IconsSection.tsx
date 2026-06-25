@@ -1,4 +1,4 @@
-import { Card, MaterialIcon } from '@metabuilder/components/fakemui'
+import { Card, MaterialIcon } from '@metabuilder/components/m3'
 import styles from './IconsSection.module.scss'
 
 const ICON_STYLE: React.CSSProperties = {

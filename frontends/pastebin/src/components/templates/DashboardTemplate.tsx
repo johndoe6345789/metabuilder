@@ -1,4 +1,4 @@
-import { Card, Button, MaterialIcon } from '@metabuilder/components/fakemui'
+import { Card, Button, MaterialIcon } from '@metabuilder/components/m3'
 import { DashboardStatsGrid } from './DashboardStatsGrid'
 import { DashboardRecentActivity } from './DashboardRecentActivity'
 import { DashboardQuickActions } from './DashboardQuickActions'

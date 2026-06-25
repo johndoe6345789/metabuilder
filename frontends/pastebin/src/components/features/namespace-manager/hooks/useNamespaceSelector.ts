@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { toast } from '@metabuilder/components/fakemui'
+import { toast } from '@metabuilder/components/m3'
 import { Namespace } from '@/lib/types'
 import { getSnippetsByNamespace, bulkMoveSnippets } from '@/lib/db'
 import { useTranslation } from '@/hooks/useTranslation'

@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { Card, CardContent, CardActions, Button, Box, Typography } from '../fakemui'
+import { Card, CardContent, CardActions, Button, Box, Typography } from '../m3'
 import { TemplateIcon } from './TemplateIcon'
 import { TemplateDifficultyBadge } from '../feedback/TemplateDifficultyBadge'
 import { TemplateRating } from '../feedback/TemplateRating'

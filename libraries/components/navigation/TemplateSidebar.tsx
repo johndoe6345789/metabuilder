@@ -1,7 +1,7 @@
 // components/navigation/TemplateSidebar.tsx
 
 import React from 'react'
-import { Box, Button, Typography } from '../fakemui'
+import { Box, Button, Typography } from '../m3'
 import { TemplateCategoryInfo, TemplateCategory } from '@metabuilder/interfaces/templates'
 import styles from '../../scss/components/navigation/template-sidebar.module.scss'
 

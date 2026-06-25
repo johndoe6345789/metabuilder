@@ -1,7 +1,7 @@
 'use client';
 
-import AddIcon from '@metabuilder/components/fakemui/Add';
-import { Button, Paper } from '@metabuilder/components/fakemui';
+import AddIcon from '@metabuilder/components/m3/Add';
+import { Button, Paper } from '@metabuilder/components/m3';
 import s from './index-table-selector.module.scss';
 import TablePicker from './TablePicker';
 

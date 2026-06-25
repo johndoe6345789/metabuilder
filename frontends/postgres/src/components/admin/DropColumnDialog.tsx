@@ -3,7 +3,7 @@
 import {
   Button, Dialog, DialogActions, DialogContent,
   DialogTitle, FormControl, InputLabel, MenuItem, Select, Typography,
-} from '@metabuilder/components/fakemui';
+} from '@metabuilder/components/m3';
 import s from './drop-column-dialog.module.scss';
 import { useDropColumnForm } from './hooks/useDropColumnForm';
 

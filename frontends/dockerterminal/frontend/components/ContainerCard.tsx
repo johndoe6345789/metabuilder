@@ -9,8 +9,8 @@ import {
   Box,
   Chip,
   Divider,
-} from '@metabuilder/components/fakemui';
-import { TerminalIcon, PlayArrow, Inventory2 } from '@metabuilder/components/fakemui';
+} from '@metabuilder/components/m3';
+import { TerminalIcon, PlayArrow, Inventory2 } from '@metabuilder/components/m3';
 import { Container } from '@/lib/api';
 
 interface ContainerCardProps {

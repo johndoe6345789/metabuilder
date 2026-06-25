@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { toast } from '@metabuilder/components/fakemui'
+import { toast } from '@metabuilder/components/m3'
 import { getDatabaseStats, validateDatabaseSchema } from '@/lib/db'
 import { useTranslation } from '@/hooks/useTranslation'
 

@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import { Box, Typography, LinearProgress } from '@metabuilder/fakemui';
+import { Box, Typography, LinearProgress } from '@metabuilder/m3';
 
 interface AchievementProgressProps {
   progress: number;

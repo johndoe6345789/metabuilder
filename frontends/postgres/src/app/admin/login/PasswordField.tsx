@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { IconButton, TextField, Visibility, VisibilityOff } from '@metabuilder/components/fakemui';
+import { IconButton, TextField, Visibility, VisibilityOff } from '@metabuilder/components/m3';
 
 type PasswordFieldProps = {
   value: string;

@@ -5,7 +5,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogClose,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 import { Snippet } from '@/lib/types'
 import styles from './snippet-viewer.module.scss'
 

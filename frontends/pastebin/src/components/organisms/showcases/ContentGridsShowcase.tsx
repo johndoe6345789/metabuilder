@@ -1,4 +1,4 @@
-import { Card, Button, MaterialIcon } from '@metabuilder/components/fakemui'
+import { Card, Button, MaterialIcon } from '@metabuilder/components/m3'
 import { useContentGridsView } from './hooks/useContentGridsView'
 import { ProjectGridView, ProjectListView } from './ContentGridViews'
 

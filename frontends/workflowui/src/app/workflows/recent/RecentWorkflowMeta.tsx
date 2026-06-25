@@ -5,8 +5,8 @@
 'use client';
 
 import React from 'react';
-import { Box, Typography } from '@metabuilder/fakemui';
-import { AccessTime } from '@metabuilder/fakemui';
+import { Box, Typography } from '@metabuilder/m3';
+import { AccessTime } from '@metabuilder/m3';
 
 interface RecentWorkflowMetaProps {
   updatedAt: number;

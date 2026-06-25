@@ -1,4 +1,4 @@
-import { Typography } from '@metabuilder/components/fakemui';
+import { Typography } from '@metabuilder/components/m3';
 
 export type TdvField = { name: string; dataTypeID: number };
 

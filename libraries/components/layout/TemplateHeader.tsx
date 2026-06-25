@@ -1,7 +1,7 @@
 // components/layout/TemplateHeader.tsx
 
 import React from 'react'
-import { Box, Typography } from '../fakemui'
+import { Box, Typography } from '../m3'
 import { TemplateIcon } from '../cards/TemplateIcon'
 import { TemplateDifficultyBadge } from '../feedback/TemplateDifficultyBadge'
 import { TemplateRating } from '../feedback/TemplateRating'

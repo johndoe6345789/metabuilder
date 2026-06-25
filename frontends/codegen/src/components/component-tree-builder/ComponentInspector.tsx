@@ -1,9 +1,9 @@
 import { ComponentNode } from '@/types/project'
-import { Card } from '@metabuilder/fakemui/surfaces'
-import { Button, IconButton } from '@metabuilder/fakemui/inputs'
-import { Input } from '@metabuilder/fakemui/inputs'
-import { Label } from '@metabuilder/fakemui/atoms'
-import { Plus, Trash, Tree } from '@metabuilder/fakemui/icons'
+import { Card } from '@metabuilder/m3/surfaces'
+import { Button, IconButton } from '@metabuilder/m3/inputs'
+import { Input } from '@metabuilder/m3/inputs'
+import { Label } from '@metabuilder/m3/atoms'
+import { Plus, Trash, Tree } from '@metabuilder/m3/icons'
 
 interface ComponentInspectorProps {
   selectedNode: ComponentNode | null

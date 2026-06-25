@@ -1,12 +1,12 @@
 'use client';
 
-import AddIcon from '@metabuilder/components/fakemui/Add';
-import DeleteIcon from '@metabuilder/components/fakemui/Delete';
-import EditIcon from '@metabuilder/components/fakemui/Edit';
+import AddIcon from '@metabuilder/components/m3/Add';
+import DeleteIcon from '@metabuilder/components/m3/Delete';
+import EditIcon from '@metabuilder/components/m3/Edit';
 import {
   Button, Paper, Table, TableBody,
   TableCell, TableContainer, TableHead, TableRow, Typography,
-} from '@metabuilder/components/fakemui';
+} from '@metabuilder/components/m3';
 import s from './column-schema-panel.module.scss';
 
 export type ColumnInfo = {

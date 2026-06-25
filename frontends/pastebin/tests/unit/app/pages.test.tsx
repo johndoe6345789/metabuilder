@@ -18,7 +18,7 @@ const mockFakeMUIToast = {
   success: jest.fn(),
   error: jest.fn(),
 }
-jest.mock('@metabuilder/components/fakemui', () => ({
+jest.mock('@metabuilder/components/m3', () => ({
   toast: mockFakeMUIToast,
 }))
 

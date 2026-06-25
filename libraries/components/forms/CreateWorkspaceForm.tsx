@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react'
-import { Button, TextField } from '../fakemui'
+import { Button, TextField } from '../m3'
 import { AddIcon } from '../../icons/react'
 import styles from '../../scss/components/forms/create-workspace-form.module.scss'
 

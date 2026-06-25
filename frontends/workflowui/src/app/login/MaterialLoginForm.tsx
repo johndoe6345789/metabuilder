@@ -9,7 +9,7 @@ import {
   Button,
   Alert,
   Box,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import { AuthFormLayout } from '@/../../../components/layout';
 import MaterialLoginFields from './MaterialLoginFields';
 

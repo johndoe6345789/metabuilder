@@ -1,4 +1,4 @@
-import { Card, MaterialIcon } from '@metabuilder/components/fakemui'
+import { Card, MaterialIcon } from '@metabuilder/components/m3'
 
 interface StatCardProps {
   label: string

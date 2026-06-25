@@ -15,7 +15,7 @@ import {
   Refresh,
   Logout,
   Inventory2,
-} from '@metabuilder/components/fakemui';
+} from '@metabuilder/components/m3';
 import { useAuth } from '@/lib/auth';
 import { apiClient, Container as ContainerType } from '@/lib/api';
 import ContainerCard from '@/components/ContainerCard';

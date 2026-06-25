@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import { Alert } from '@metabuilder/fakemui';
+import { Alert } from '@metabuilder/m3';
 
 interface TestResult {
   ok: boolean;

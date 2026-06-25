@@ -9,7 +9,7 @@ import {
   AlertDescription,
   RadioGroup,
   MaterialIcon,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 import { type StorageBackend } from '@/lib/storage'
 import { useTranslation } from '@/hooks/useTranslation'
 import { StorageOption } from './StorageOption'

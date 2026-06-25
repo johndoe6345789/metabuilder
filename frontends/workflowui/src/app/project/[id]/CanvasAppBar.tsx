@@ -13,8 +13,8 @@ import {
   Typography as TypographyComp,
   Button as ButtonComp,
   Tooltip as TooltipComp,
-} from '@metabuilder/fakemui';
-import { Plus, Breadcrumbs } from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
+import { Plus, Breadcrumbs } from '@metabuilder/m3';
 
 const Box = BoxComp as any;
 const Stack = StackComp as any;

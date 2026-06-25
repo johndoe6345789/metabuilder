@@ -1,6 +1,6 @@
 'use client'
 
-import { MaterialIcon } from '@metabuilder/components/fakemui'
+import { MaterialIcon } from '@metabuilder/components/m3'
 import type { ActiveTab } from './hooks/useSnippetViewPage'
 import styles from './snippet-view-page.module.scss'
 

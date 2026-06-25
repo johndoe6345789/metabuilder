@@ -5,7 +5,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Button, Dialog, DialogHeader, DialogTitle, DialogContent, DialogActions } from '../../fakemui';
+import { Button, Dialog, DialogHeader, DialogTitle, DialogContent, DialogActions } from '../../m3';
 import type { WorkflowNode, NodeType } from '../types';
 import { getNodeIcon } from '../icons';
 import { InputPreviewPanel } from './InputPreviewPanel';

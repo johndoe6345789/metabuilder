@@ -6,7 +6,7 @@ import {
   CardContent,
   CardHeader,
   Chip,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 import styles from './PersistenceSettings.module.scss'
 
 const PERSIST_CONFIG = {

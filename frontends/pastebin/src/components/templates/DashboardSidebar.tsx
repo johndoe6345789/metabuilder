@@ -1,4 +1,4 @@
-import { Button, MaterialIcon } from '@metabuilder/components/fakemui'
+import { Button, MaterialIcon } from '@metabuilder/components/m3'
 import styles from './DashboardTemplate.module.scss'
 
 const fullWidthStart: React.CSSProperties = {

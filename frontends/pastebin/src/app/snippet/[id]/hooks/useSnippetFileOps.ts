@@ -5,7 +5,7 @@
 import { useRef, useState } from 'react'
 import { useAppDispatch } from '@/store/hooks'
 import { updateSnippet } from '@/store/slices/snippetsSlice'
-import { toast } from '@metabuilder/components/fakemui'
+import { toast } from '@metabuilder/components/m3'
 import { Snippet } from '@/lib/types'
 
 type FileList = { name: string; content: string }[]

@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { MoveToMenu } from './MoveToMenu'
 import type { Namespace } from '@/lib/types'
 
-jest.mock('@metabuilder/components/fakemui', () => ({
+jest.mock('@metabuilder/components/m3', () => ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Menu: ({ open, onClose, children, onClick, 'data-testid': testId }: any) =>
     open ? (

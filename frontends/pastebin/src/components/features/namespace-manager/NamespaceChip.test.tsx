@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { NamespaceChip } from './NamespaceChip'
 import type { Namespace } from '@/lib/types'
 
-jest.mock('@metabuilder/components/fakemui', () => ({
+jest.mock('@metabuilder/components/m3', () => ({
   MaterialIcon: ({ name }: any) => <span data-icon={name} />,
 }))
 

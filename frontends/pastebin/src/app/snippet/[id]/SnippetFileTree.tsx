@@ -1,6 +1,6 @@
 'use client'
 
-import { MaterialIcon } from '@metabuilder/components/fakemui'
+import { MaterialIcon } from '@metabuilder/components/m3'
 import type { SnippetFileTreeProps } from './snippet-view.types'
 import styles from './snippet-view-page.module.scss'
 

@@ -9,7 +9,7 @@ import {
   Box,
   Card,
   CardContent,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import styles from '@/../../../scss/atoms/mat-card.module.scss';
 import FavoriteWorkflowActions from './FavoriteWorkflowActions';
 import FavoriteWorkflowInfo from './FavoriteWorkflowInfo';

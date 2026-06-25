@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@metabuilder/fakemui/surfaces'
-import { TabPanel } from '@metabuilder/fakemui/navigation'
+import { Card, CardContent, CardHeader, CardTitle } from '@metabuilder/m3/surfaces'
+import { TabPanel } from '@metabuilder/m3/navigation'
 import { type CardsTabData } from './types'
 
 type CardsTabProps = {

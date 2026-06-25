@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import {
   Button, Checkbox, Dialog, DialogActions, DialogContent,
   DialogTitle, FormControlLabel, TextField,
-} from '@metabuilder/components/fakemui';
+} from '@metabuilder/components/m3';
 import type { TdvColumn, TdvSchema } from './hooks/useTableDataView';
 import s from './row-form-dialog.module.scss';
 

@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import { TextField } from '@metabuilder/fakemui';
+import { TextField } from '@metabuilder/m3';
 import PasswordFieldWithStrength from './PasswordFieldWithStrength';
 
 interface RegisterFormFieldsProps {

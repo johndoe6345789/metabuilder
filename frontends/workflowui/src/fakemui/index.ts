@@ -1,1 +1,1 @@
-export * from '@metabuilder/fakemui';
+export * from '@metabuilder/m3';

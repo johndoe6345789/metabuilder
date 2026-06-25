@@ -1,4 +1,4 @@
-import { Button, MaterialIcon } from '@metabuilder/components/fakemui'
+import { Button, MaterialIcon } from '@metabuilder/components/m3'
 import type { ViewMode } from './hooks/useSplitScreenEditor'
 import styles from './split-screen-editor.module.scss'
 

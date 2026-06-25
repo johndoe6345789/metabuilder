@@ -3,7 +3,7 @@ import {
   Button,
   Divider,
   MaterialIcon,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 
 const iconStyle = (extra?: object) => ({
   marginRight: '8px',

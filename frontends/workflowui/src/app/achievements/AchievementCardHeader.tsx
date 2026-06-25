@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import { Box, Typography, Chip, Avatar } from '@metabuilder/fakemui';
+import { Box, Typography, Chip, Avatar } from '@metabuilder/m3';
 
 interface AchievementCardHeaderProps {
   icon: string;

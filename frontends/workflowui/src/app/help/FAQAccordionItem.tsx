@@ -12,7 +12,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import { ChevronDownIcon } from '@/../../../icons/react';
 
 interface FAQ {

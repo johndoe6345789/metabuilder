@@ -1,4 +1,4 @@
-import { MaterialIcon } from '@metabuilder/components/fakemui'
+import { MaterialIcon } from '@metabuilder/components/m3'
 import styles from './snippet-view-page.module.scss'
 
 interface ToolBtnProps {

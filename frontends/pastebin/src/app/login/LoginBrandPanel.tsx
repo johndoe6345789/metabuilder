@@ -1,4 +1,4 @@
-import { MaterialIcon } from '@metabuilder/components/fakemui'
+import { MaterialIcon } from '@metabuilder/components/m3'
 import type { Mode } from './hooks/useLoginPage'
 import pkg from '../../../package.json'
 import styles from './login.module.scss'

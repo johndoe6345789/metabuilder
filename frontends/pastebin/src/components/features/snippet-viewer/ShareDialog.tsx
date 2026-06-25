@@ -1,6 +1,6 @@
 'use client'
 
-import { MaterialIcon } from '@metabuilder/components/fakemui'
+import { MaterialIcon } from '@metabuilder/components/m3'
 import type { Snippet } from '@/lib/types'
 import { useShareDialog } from './hooks/useShareDialog'
 import { ShareDialogActions } from './ShareDialogActions'

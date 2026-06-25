@@ -1,4 +1,4 @@
-import { Card, Button } from '@metabuilder/components/fakemui'
+import { Card, Button } from '@metabuilder/components/m3'
 import styles from './NavigationBarsShowcase.module.scss'
 
 const subtextStyle = {

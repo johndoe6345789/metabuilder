@@ -12,7 +12,7 @@ COPY libraries/translations/package.json ./libraries/translations/
 COPY libraries/workflow/package.json ./libraries/workflow/
 COPY libraries/hooks/package.json ./libraries/hooks/
 COPY libraries/components/package.json ./libraries/components/
-COPY libraries/components/fakemui/package.json ./libraries/components/fakemui/
+COPY libraries/components/m3/package.json ./libraries/components/m3/
 COPY config/package.json ./config/
 COPY libraries/scss/package.json ./libraries/scss/
 COPY frontends/storybook/package.json ./frontends/storybook/

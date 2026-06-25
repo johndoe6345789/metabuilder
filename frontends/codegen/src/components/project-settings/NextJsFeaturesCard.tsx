@@ -1,9 +1,9 @@
 import {
   Card, CardHeader, CardContent,
   CardTitle, CardDescription,
-} from '@metabuilder/fakemui/surfaces'
-import { Label } from '@metabuilder/fakemui/atoms'
-import { Switch } from '@metabuilder/fakemui/inputs'
+} from '@metabuilder/m3/surfaces'
+import { Label } from '@metabuilder/m3/atoms'
+import { Switch } from '@metabuilder/m3/inputs'
 import projectSettingsCopy from '@/data/project-settings.json'
 import { NextJsConfigSectionProps } from '@/components/project-settings/types'
 

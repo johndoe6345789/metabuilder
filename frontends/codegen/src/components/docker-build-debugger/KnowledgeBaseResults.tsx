@@ -1,6 +1,6 @@
-import { Alert } from '@metabuilder/fakemui/feedback'
-import { Badge } from '@metabuilder/fakemui/data-display'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@metabuilder/fakemui/surfaces'
+import { Alert } from '@metabuilder/m3/feedback'
+import { Badge } from '@metabuilder/m3/data-display'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@metabuilder/m3/surfaces'
 import { KnowledgeBaseItem } from '@/types/docker'
 import { motion } from 'framer-motion'
 

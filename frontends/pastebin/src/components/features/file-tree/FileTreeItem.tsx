@@ -1,4 +1,4 @@
-import { Input, MaterialIcon } from '@metabuilder/components/fakemui'
+import { Input, MaterialIcon } from '@metabuilder/components/m3'
 import { type SnippetFile } from '@/lib/types'
 import styles from './FileTree.module.scss'
 

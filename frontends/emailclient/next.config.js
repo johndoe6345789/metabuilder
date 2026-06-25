@@ -15,7 +15,7 @@ const nextConfig = {
   reactStrictMode: true,
   productionBrowserSourceMaps: false,
 
-  // Resolve SCSS @use 'cdk' from fakemui components
+  // Resolve SCSS @use 'cdk' from m3 components
   sassOptions: {
     // loadPaths = Turbopack, includePaths = webpack — both needed
     loadPaths: [
@@ -29,7 +29,7 @@ const nextConfig = {
     silenceDeprecations: ['legacy-js-api', 'import'],
   },
 
-  transpilePackages: ['@metabuilder/fakemui', '@metabuilder/redux-core', '@metabuilder/hooks'],
+  transpilePackages: ['@metabuilder/m3', '@metabuilder/redux-core', '@metabuilder/hooks'],
 
   typescript: {
     ignoreBuildErrors: true,
@@ -138,7 +138,7 @@ const nextConfig = {
 
   // Experimental features (optional)
   experimental: {
-    optimizePackageImports: ['@metabuilder/fakemui']
+    optimizePackageImports: ['@metabuilder/m3']
   },
 
   // Turbopack config (used by `next dev --turbopack`)
@@ -152,7 +152,7 @@ const nextConfig = {
       new webpack.NormalModuleReplacementPlugin(
         /\.module\.scss$/,
         function (resource) {
-          if (resource.context?.includes('fakemui') ||
+          if (resource.context?.includes('m3') ||
               resource.context?.includes('components/dist') ||
               resource.context?.includes('components\\dist')) {
             resource.request = stubScss

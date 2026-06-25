@@ -38,8 +38,8 @@
       "@metabuilder/redux-persist": [
         "../../../libraries/redux/persist/src/index.ts"
       ],
-      "@metabuilder/components/fakemui": [
-        "../../../libraries/components/fakemui/index.ts"
+      "@metabuilder/components/m3": [
+        "../../../libraries/components/m3/index.ts"
       ]
     }
   },

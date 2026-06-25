@@ -1,4 +1,4 @@
-import { Button, MaterialIcon } from '@metabuilder/components/fakemui'
+import { Button, MaterialIcon } from '@metabuilder/components/m3'
 import { Namespace } from '@/lib/types'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useSnippetCardActions } from './hooks/useSnippetCardActions'

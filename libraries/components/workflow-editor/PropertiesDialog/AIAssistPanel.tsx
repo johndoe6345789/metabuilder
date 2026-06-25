@@ -5,7 +5,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Button } from '../../fakemui';
+import { Button } from '../../m3';
 import styles from '../../../scss/atoms/workflow-editor.module.scss';
 
 const SparklesIcon = () => (

@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import * as React from 'react'
 import { Warning } from '@phosphor-icons/react'
-import { Alert, AlertDescription } from '@metabuilder/components/fakemui'
+import { Alert, AlertDescription } from '@metabuilder/components/m3'
 import { AIErrorHelper } from '@/components/error/AIErrorHelper'
 import { InputParameter } from '@/lib/types'
 import { transformReactCode } from '@/lib/react-transform'

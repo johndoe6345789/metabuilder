@@ -7,11 +7,11 @@ import ComponentTreeRenderer from '@/utils/componentTreeRenderer';
 import {
   List, ListItemButton, ListItemIcon, ListItemText,
   Paper, TextField, Typography,
-} from '@metabuilder/components/fakemui';
+} from '@metabuilder/components/m3';
 import InputAdornment
-  from '@metabuilder/components/fakemui/inputs/InputAdornment';
-import SearchIcon from '@metabuilder/components/fakemui/Search';
-import TableChartIcon from '@metabuilder/components/fakemui/TableChart';
+  from '@metabuilder/components/m3/inputs/InputAdornment';
+import SearchIcon from '@metabuilder/components/m3/Search';
+import TableChartIcon from '@metabuilder/components/m3/TableChart';
 import s from './table-manager-tab.module.scss';
 import CreateTableDialog from './CreateTableDialog';
 import DropTableDialog from './DropTableDialog';

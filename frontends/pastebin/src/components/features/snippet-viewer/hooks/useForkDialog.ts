@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { toast } from '@metabuilder/components/fakemui'
+import { toast } from '@metabuilder/components/m3'
 import { useAppDispatch } from '@/store/hooks'
 import { addSnippetLocal } from '@/store/slices/snippetsSlice'
 import { forkSnippet, forkSharedSnippet } from '@/store/slices/revisionsSlice'

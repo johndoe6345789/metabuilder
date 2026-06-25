@@ -1,10 +1,10 @@
 'use client';
 
-import AddIcon from '@metabuilder/components/fakemui/Add';
+import AddIcon from '@metabuilder/components/m3/Add';
 import {
   Alert, Button, CircularProgress,
   Dialog, DialogActions, DialogContent, DialogTitle, Typography,
-} from '@metabuilder/components/fakemui';
+} from '@metabuilder/components/m3';
 import { BASE_PATH } from '@/lib/app-config';
 import s from './table-data-view.module.scss';
 import TableDataGrid from './TableDataGrid';

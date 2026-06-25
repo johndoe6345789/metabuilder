@@ -17,7 +17,7 @@ COPY package.json .npmrc ./
 
 # All workspace package manifests (alphabetical)
 COPY libraries/components/package.json                          ./libraries/components/
-COPY libraries/components/fakemui/package.json                  ./libraries/components/fakemui/
+COPY libraries/components/m3/package.json                  ./libraries/components/m3/
 COPY config/package.json                              ./config/
 COPY libraries/scss/package.json                                ./libraries/scss/
 COPY frontends/codegen/package.json                   ./frontends/codegen/

@@ -1,6 +1,6 @@
 'use client'
 
-import { MaterialIcon } from '@metabuilder/components/fakemui'
+import { MaterialIcon } from '@metabuilder/components/m3'
 import type { useDebugger } from '@/hooks/useDebugger'
 import type { DapStackFrame, DapVariable } from '@/hooks/debugger-types'
 import styles from './DebugPanel.module.scss'

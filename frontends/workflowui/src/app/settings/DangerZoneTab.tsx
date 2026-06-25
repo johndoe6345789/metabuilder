@@ -13,7 +13,7 @@ import {
   CardContent,
   CardHeader,
   Alert,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import { WarningIcon } from '@/../../../icons/react';
 
 interface DangerZoneTabProps {

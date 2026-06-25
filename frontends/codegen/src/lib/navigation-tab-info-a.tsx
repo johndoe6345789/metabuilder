@@ -21,7 +21,7 @@ import {
   Lightbulb,
   PencilRuler,
   Atom,
-} from '@metabuilder/fakemui/icons'
+} from '@metabuilder/m3/icons'
 
 export interface TabInfo {
   title: string

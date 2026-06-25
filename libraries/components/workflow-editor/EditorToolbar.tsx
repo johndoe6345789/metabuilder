@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { Button, IconButton, Tooltip } from '../fakemui';
+import { Button, IconButton, Tooltip } from '../m3';
 import { BackIcon, ZoomInIcon, ZoomOutIcon, ResetIcon, PlayIcon } from './icons';
 import styles from '../../scss/atoms/workflow-editor.module.scss';
 

@@ -3,14 +3,14 @@
  * ErrorDisplay, SuccessDisplay.
  */
 
-import type { AlertProps, CircularProgressProps } from '@metabuilder/components/fakemui';
+import type { AlertProps, CircularProgressProps } from '@metabuilder/components/m3';
 import {
   Alert as MuiAlert,
   Box,
   Button as MuiButton,
   CircularProgress,
   Typography as MuiTypography,
-} from '@metabuilder/components/fakemui';
+} from '@metabuilder/components/m3';
 import React from 'react';
 
 export function Alert(props: AlertProps) {

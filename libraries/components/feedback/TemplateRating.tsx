@@ -1,7 +1,7 @@
 // components/feedback/TemplateRating.tsx
 
 import React from 'react'
-import { Box } from '../fakemui'
+import { Box } from '../m3'
 import styles from '../../scss/components/feedback/template-rating.module.scss'
 
 interface TemplateRatingProps {

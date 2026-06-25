@@ -13,7 +13,7 @@ import {
   CardHeader,
   Alert,
   Chip,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 
 interface DbConfig {
   adapter: string;

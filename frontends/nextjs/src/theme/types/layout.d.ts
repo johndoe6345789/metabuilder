@@ -1,6 +1,6 @@
 /**
  * Custom theme properties for layout and design tokens
- * These types are used by fakemui's theming system
+ * These types are used by m3's theming system
  */
 
 export interface CustomFonts {
@@ -52,7 +52,7 @@ export interface CustomThemeOptions {
 }
 
 /**
- * Extended theme interface for fakemui
+ * Extended theme interface for m3
  */
 export interface FakeMuiTheme {
   mode: 'light' | 'dark'

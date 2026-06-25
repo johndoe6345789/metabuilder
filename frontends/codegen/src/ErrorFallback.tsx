@@ -4,7 +4,7 @@ import { Button } from "./components/ui/button";
 import {
   AlertTriangle as AlertTriangleIcon,
   Refresh as RefreshCwIcon,
-} from '@metabuilder/fakemui/icons';
+} from '@metabuilder/m3/icons';
 
 interface ErrorFallbackProps {
   error: Error;

@@ -1,4 +1,4 @@
-import { Card, Button, Chip, Avatar } from '@metabuilder/components/fakemui'
+import { Card, Button, Chip, Avatar } from '@metabuilder/components/m3'
 import styles from './UserCardsSection.module.scss'
 
 const nameStyle = {

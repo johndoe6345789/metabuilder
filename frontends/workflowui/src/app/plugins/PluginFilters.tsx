@@ -10,7 +10,7 @@ import {
   Typography,
   TextField,
   Button,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import styles from '@/../../../scss/atoms/plugins.module.scss';
 import PluginCategoryButtons from './PluginCategoryButtons';
 

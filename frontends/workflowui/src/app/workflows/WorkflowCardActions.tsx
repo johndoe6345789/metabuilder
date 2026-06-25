@@ -6,7 +6,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Button } from '@metabuilder/fakemui';
+import { Button } from '@metabuilder/m3';
 import {
   EditIcon,
   DeleteIcon,

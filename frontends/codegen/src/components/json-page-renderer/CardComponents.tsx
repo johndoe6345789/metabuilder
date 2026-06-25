@@ -12,11 +12,11 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-} from '@metabuilder/fakemui/surfaces'
+} from '@metabuilder/m3/surfaces'
 import {
   Badge,
-} from '@metabuilder/fakemui/data-display'
-import { Progress } from '@metabuilder/fakemui/feedback'
+} from '@metabuilder/m3/data-display'
+import { Progress } from '@metabuilder/m3/feedback'
 import { getIcon } from './utils'
 
 // ── Build status checks (hardcoded placeholder) ───────────

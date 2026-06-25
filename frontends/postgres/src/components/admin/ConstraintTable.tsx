@@ -1,6 +1,6 @@
 'use client';
 
-import DeleteIcon from '@metabuilder/components/fakemui/Delete';
+import DeleteIcon from '@metabuilder/components/m3/Delete';
 import {
   Button,
   Paper,
@@ -10,7 +10,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from '@metabuilder/components/fakemui';
+} from '@metabuilder/components/m3';
 import s from './constraint-table.module.scss';
 
 type Constraint = {

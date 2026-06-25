@@ -10,7 +10,7 @@ import {
   Typography,
   Switch,
   FormControlLabel,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 
 interface PreferencesNotificationsProps {
   notifications: boolean;

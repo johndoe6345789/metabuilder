@@ -1,6 +1,6 @@
 'use client'
 
-import { MaterialIcon } from '@metabuilder/components/fakemui'
+import { MaterialIcon } from '@metabuilder/components/m3'
 import { getStorageConfig } from '@/lib/storage'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useDropdown } from './hooks/useDropdown'

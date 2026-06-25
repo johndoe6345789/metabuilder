@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Input } from '@metabuilder/components/fakemui'
+import { Input } from '@metabuilder/components/m3'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useTerminalInputFocus } from './hooks/useTerminalInputFocus'
 

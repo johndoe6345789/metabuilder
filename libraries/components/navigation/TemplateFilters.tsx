@@ -1,7 +1,7 @@
 // components/navigation/TemplateFilters.tsx
 
 import React from 'react'
-import { Box, TextField, MenuItem, Button } from '../fakemui'
+import { Box, TextField, MenuItem, Button } from '../m3'
 import styles from '../../scss/components/navigation/template-filters.module.scss'
 
 interface TemplateFiltersProps {

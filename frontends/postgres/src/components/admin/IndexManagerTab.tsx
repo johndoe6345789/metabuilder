@@ -1,6 +1,6 @@
 'use client';
 
-import { Alert, Paper, Typography } from '@metabuilder/components/fakemui';
+import { Alert, Paper, Typography } from '@metabuilder/components/m3';
 import { getFeatureById, getIndexTypes } from '@/utils/featureConfig';
 import s from './index-manager-tab.module.scss';
 import ConfirmDialog from './ConfirmDialog';

@@ -3,9 +3,9 @@
  * CanvasLoadingState, WorkflowCardMeta, WorkflowCardActions, CanvasViewport
  */
 
-// WorkflowCardActions uses Pencil and Star icons from fakemui which aren't in mock
-jest.mock('@metabuilder/fakemui', () => ({
-  ...jest.requireActual('@metabuilder/fakemui'),
+// WorkflowCardActions uses Pencil and Star icons from m3 which aren't in mock
+jest.mock('@metabuilder/m3', () => ({
+  ...jest.requireActual('@metabuilder/m3'),
   Pencil: () => <span data-icon="pencil" />,
   Star: () => <span data-icon="star" />,
 }));

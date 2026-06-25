@@ -9,8 +9,8 @@ import {
   CardActions as CardActionsComp,
   IconButton as IconButtonComp,
   Tooltip as TooltipComp,
-} from '@metabuilder/fakemui';
-import { Pencil, Star } from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
+import { Pencil, Star } from '@metabuilder/m3';
 
 const CardActions = CardActionsComp as any;
 const IconButton = IconButtonComp as any;

@@ -40,7 +40,7 @@ vi.mock('@/utils/featureConfig', async () => ({
   getAllStorybookStories: () => ({}),
   getStorybookStoriesForComponent: () => ({}),
 }));
-vi.mock('@metabuilder/fakemui', async () => {
+vi.mock('@metabuilder/m3', async () => {
   const React = await import('react');
   const ConfirmDialog = ({ open }: any) =>
     open ? React.createElement('div', { 'data-testid': 'confirm-dialog' }) : null;

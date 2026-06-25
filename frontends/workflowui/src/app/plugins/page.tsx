@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import { Breadcrumbs, Box } from '@metabuilder/fakemui';
+import { Breadcrumbs, Box } from '@metabuilder/m3';
 import styles from '@/../../../scss/atoms/plugins.module.scss';
 import { usePlugins } from './hooks/usePlugins';
 import PluginCard from './PluginCard';

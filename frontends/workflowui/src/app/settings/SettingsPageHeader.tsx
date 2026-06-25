@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import { Box, Typography, Alert } from '@metabuilder/fakemui';
+import { Box, Typography, Alert } from '@metabuilder/m3';
 import { SettingsIcon } from '@/../../../icons/react';
 import styles from '@/../../../scss/atoms/settings.module.scss';
 

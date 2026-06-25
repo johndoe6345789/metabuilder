@@ -10,7 +10,7 @@ import {
   Typography,
   Button,
   Dialog,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 
 interface DeleteAccountDialogProps {
   open: boolean;

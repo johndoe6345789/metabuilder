@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { Box, IconButton, Typography } from
-  '@metabuilder/fakemui'
+  '@metabuilder/m3'
 import styles from '@metabuilder/scss/atoms/layout.module.scss'
 import navData from '@/data/navigation.json'
 import {

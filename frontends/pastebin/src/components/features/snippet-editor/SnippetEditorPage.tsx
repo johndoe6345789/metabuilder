@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, MaterialIcon } from '@metabuilder/components/fakemui'
+import { Button, MaterialIcon } from '@metabuilder/components/m3'
 import { Snippet } from '@/lib/types'
 import { SnippetDialogTabs } from './SnippetDialogTabs'
 import { useSnippetEditorPage } from './hooks/useSnippetEditorPage'

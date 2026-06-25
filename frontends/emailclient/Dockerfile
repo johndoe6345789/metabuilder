@@ -13,7 +13,7 @@ FROM ${BASE_REGISTRY}/base-node-deps:latest AS builder
 # hooks (shared React hooks)
 COPY libraries/hooks/ ./libraries/hooks/
 
-# icons (React icon components — imported by components/fakemui)
+# icons (React icon components — imported by components/m3)
 COPY libraries/icons/ ./libraries/icons/
 
 # scss (Material 3 SCSS, theme, atoms — loaded by sassOptions)

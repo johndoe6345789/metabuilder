@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Database } from '@metabuilder/fakemui/icons'
+import { Database } from '@metabuilder/m3/icons'
 import { useDBALSearch } from '@/hooks/use-dbal-search'
 import type {
   ComponentNode,

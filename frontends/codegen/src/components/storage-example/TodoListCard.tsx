@@ -3,9 +3,9 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-} from '@metabuilder/fakemui/surfaces'
-import { Button } from '@metabuilder/fakemui/inputs'
-import { Input } from '@metabuilder/fakemui/inputs'
+} from '@metabuilder/m3/surfaces'
+import { Button } from '@metabuilder/m3/inputs'
+import { Input } from '@metabuilder/m3/inputs'
 import copy from '@/data/storage-example.json'
 
 interface Todo {

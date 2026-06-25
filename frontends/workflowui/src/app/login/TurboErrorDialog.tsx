@@ -12,7 +12,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 
 interface Props {
   open: boolean;

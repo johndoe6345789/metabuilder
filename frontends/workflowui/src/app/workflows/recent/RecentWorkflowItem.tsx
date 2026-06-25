@@ -12,7 +12,7 @@ import {
   Button,
   ListItem,
   Edit,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import type { Workflow } from '@metabuilder/hooks';
 import RecentWorkflowMeta from './RecentWorkflowMeta';
 import RecentWorkflowHeader from './RecentWorkflowHeader';

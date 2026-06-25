@@ -1,12 +1,12 @@
 'use client';
 
-import AccountTreeIcon from '@metabuilder/components/fakemui/AccountTree';
-import CodeIcon from '@metabuilder/components/fakemui/Code';
-import RuleIcon from '@metabuilder/components/fakemui/Rule';
-import SpeedIcon from '@metabuilder/components/fakemui/Speed';
-import StorageIcon from '@metabuilder/components/fakemui/Storage';
-import TableChartIcon from '@metabuilder/components/fakemui/TableChart';
-import ViewColumnIcon from '@metabuilder/components/fakemui/ViewColumn';
+import AccountTreeIcon from '@metabuilder/components/m3/AccountTree';
+import CodeIcon from '@metabuilder/components/m3/Code';
+import RuleIcon from '@metabuilder/components/m3/Rule';
+import SpeedIcon from '@metabuilder/components/m3/Speed';
+import StorageIcon from '@metabuilder/components/m3/Storage';
+import TableChartIcon from '@metabuilder/components/m3/TableChart';
+import ViewColumnIcon from '@metabuilder/components/m3/ViewColumn';
 import type { ComponentType } from 'react';
 import {
   Box,
@@ -17,7 +17,7 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
-} from '@metabuilder/components/fakemui';
+} from '@metabuilder/components/m3';
 import styles from './admin-drawer-content.module.scss';
 
 export type AdminNavItem = {

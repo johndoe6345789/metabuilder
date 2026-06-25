@@ -1,7 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { FormLabel, Checkbox } from '@metabuilder/components/fakemui'
+import { FormLabel, Checkbox } from '@metabuilder/components/m3'
 import { appConfig } from '@/lib/config'
 import { FileTree } from '@/components/features/file-tree/FileTree'
 import type { CodeEditorSectionProps } from './snippet-editor.types'

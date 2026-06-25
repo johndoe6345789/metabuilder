@@ -1,7 +1,7 @@
 'use client';
 
-import { Container, Paper, Typography } from '@metabuilder/components/fakemui';
-import LockOutlined from '@metabuilder/components/fakemui/LockOutlined';
+import { Container, Paper, Typography } from '@metabuilder/components/m3';
+import LockOutlined from '@metabuilder/components/m3/LockOutlined';
 import s from './login.module.scss';
 import LoginForm from './LoginForm';
 import TurboErrorDialog from './TurboErrorDialog';

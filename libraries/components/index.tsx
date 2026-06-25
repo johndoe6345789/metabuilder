@@ -6,7 +6,7 @@
  *
  * - vanilla/  - Pure React components (no external UI library)
  * - radix/    - Radix UI based components (shadcn style)
- * - fakemui/  - Legacy compatibility path for the Material 3 SCSS component set
+ * - m3/  - Legacy compatibility path for the Material 3 SCSS component set
  * - m3scss/   - Material 3 SCSS components
  */
 
@@ -124,10 +124,10 @@ export {
 // Preferred import path:
 //   import { Button, Card } from '@metabuilder/components/m3scss'
 // Legacy compatibility path:
-//   import { Button, Card } from '@metabuilder/components/fakemui'
+//   import { Button, Card } from '@metabuilder/components/m3'
 // Main barrel export (with potential naming conflicts):
 //   import { Button } from '@metabuilder/components'
-export * from './fakemui'
+export * from './m3'
 
 // Feedback components
 export { PasswordStrengthIndicator, type PasswordStrengthIndicatorProps } from './feedback'

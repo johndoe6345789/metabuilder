@@ -5,7 +5,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
-} from '@metabuilder/components/fakemui';
+} from '@metabuilder/components/m3';
 
 type Option = {
   table_name: string;

@@ -3,7 +3,7 @@ import { resolve, join } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
-const fakeMuiPath = resolve(__dirname, '../../libraries/components/fakemui');
+const m3Path = resolve(__dirname, '../../libraries/components/m3');
 const componentsPath = resolve(__dirname, '../../libraries/components');
 const m3ScssPath = resolve(__dirname, '../../libraries/scss/m3-scss');
 
@@ -16,7 +16,7 @@ const nextConfig = {
   typedRoutes: true,
   // Transpile local packages
   transpilePackages: [
-    '@metabuilder/fakemui',
+    '@metabuilder/m3',
     '@metabuilder/api-clients',
     '@metabuilder/redux-persist',
     '@metabuilder/components',
@@ -29,10 +29,10 @@ const nextConfig = {
     root: resolve(__dirname, '../..'),
     resolveAlias: {
       // FakeMUI
-      '@metabuilder/fakemui': './libraries/components/fakemui',
-      '@metabuilder/fakemui/scss': './libraries/components/fakemui/scss/index.scss',
-      '@metabuilder/fakemui/icons': './libraries/components/fakemui/icons/index.ts',
-      '@metabuilder/fakemui/hooks': './libraries/components/fakemui/hooks.ts',
+      '@metabuilder/m3': './libraries/components/m3',
+      '@metabuilder/m3/scss': './libraries/components/m3/scss/index.scss',
+      '@metabuilder/m3/icons': './libraries/components/m3/icons/index.ts',
+      '@metabuilder/m3/hooks': './libraries/components/m3/hooks.ts',
       // Components — resolve to source
       '@metabuilder/components': './libraries/components/index.tsx',
       '@metabuilder/components/cards': './libraries/components/cards/index.ts',
@@ -59,11 +59,11 @@ const nextConfig = {
     silenceDeprecations: ['legacy-js-api', 'import']
   },
   webpack: (config, { isServer }) => {
-    // Add alias for @metabuilder/fakemui and subpaths
-    config.resolve.alias['@metabuilder/fakemui'] = fakeMuiPath;
-    config.resolve.alias['@metabuilder/fakemui/scss'] = join(fakeMuiPath, 'scss/index.scss');
-    config.resolve.alias['@metabuilder/fakemui/icons'] = join(fakeMuiPath, 'icons/index.ts');
-    config.resolve.alias['@metabuilder/fakemui/hooks'] = join(fakeMuiPath, 'hooks.ts');
+    // Add alias for @metabuilder/m3 and subpaths
+    config.resolve.alias['@metabuilder/m3'] = m3Path;
+    config.resolve.alias['@metabuilder/m3/scss'] = join(m3Path, 'scss/index.scss');
+    config.resolve.alias['@metabuilder/m3/icons'] = join(m3Path, 'icons/index.ts');
+    config.resolve.alias['@metabuilder/m3/hooks'] = join(m3Path, 'hooks.ts');
 
     // Resolve @metabuilder/api-clients to source (not dist/) so transpilePackages works on live code
     config.resolve.alias['@metabuilder/api-clients'] = resolve(__dirname, '../../libraries/redux/api-clients/src');

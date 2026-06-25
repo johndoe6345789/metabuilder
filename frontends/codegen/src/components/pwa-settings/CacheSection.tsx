@@ -1,9 +1,9 @@
-import { Badge } from '@metabuilder/fakemui/data-display'
-import { Button } from '@metabuilder/fakemui/inputs'
-import { Card } from '@metabuilder/fakemui/surfaces'
-import { Label } from '@metabuilder/fakemui/atoms'
-import { Separator } from '@metabuilder/fakemui/data-display'
-import { Trash } from '@metabuilder/fakemui/icons'
+import { Badge } from '@metabuilder/m3/data-display'
+import { Button } from '@metabuilder/m3/inputs'
+import { Card } from '@metabuilder/m3/surfaces'
+import { Label } from '@metabuilder/m3/atoms'
+import { Separator } from '@metabuilder/m3/data-display'
+import { Trash } from '@metabuilder/m3/icons'
 
 interface CacheSectionProps {
   cacheSize: string

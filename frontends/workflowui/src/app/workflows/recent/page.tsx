@@ -13,8 +13,8 @@ import {
   List,
   CircularProgress,
   Divider,
-} from '@metabuilder/fakemui';
-import { AccessTime } from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
+import { AccessTime } from '@metabuilder/m3';
 import styles from '@/../../../scss/atoms/mat-card.module.scss';
 import { useRecentWorkflows } from './hooks/useRecentWorkflows';
 import RecentWorkflowItem from './RecentWorkflowItem';

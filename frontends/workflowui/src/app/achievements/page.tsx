@@ -9,7 +9,7 @@ import {
   Box,
   Typography,
   Grid,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import { useAchievements } from './hooks/useAchievements';
 import AchievementCard from './AchievementCard';
 import AchievementStatsCards from './AchievementStatsCards';

@@ -34,21 +34,21 @@
       "import": "./radix/index.ts",
       "types": "./radix/index.ts"
     },
-    "./fakemui": {
-      "import": "./fakemui/index.ts",
-      "types": "./fakemui/index.ts"
+    "./m3": {
+      "import": "./m3/index.ts",
+      "types": "./m3/index.ts"
     },
     "./m3scss": {
-      "import": "./fakemui/index.ts",
-      "types": "./fakemui/index.ts"
+      "import": "./m3/index.ts",
+      "types": "./m3/index.ts"
     },
-    "./fakemui/*": {
-      "import": "./fakemui/*",
-      "types": "./fakemui/*"
+    "./m3/*": {
+      "import": "./m3/*",
+      "types": "./m3/*"
     },
     "./m3scss/*": {
-      "import": "./fakemui/*",
-      "types": "./fakemui/*"
+      "import": "./m3/*",
+      "types": "./m3/*"
     },
     "./loading": {
       "import": "./vanilla/loading/index.tsx",
@@ -74,13 +74,13 @@
       "import": "./vanilla/access-denied/index.tsx",
       "types": "./vanilla/access-denied/index.tsx"
     },
-    "./fakemui/database": {
-      "import": "./fakemui/database/index.ts",
-      "types": "./fakemui/database/index.ts"
+    "./m3/database": {
+      "import": "./m3/database/index.ts",
+      "types": "./m3/database/index.ts"
     },
     "./m3scss/database": {
-      "import": "./fakemui/database/index.ts",
-      "types": "./fakemui/database/index.ts"
+      "import": "./m3/database/index.ts",
+      "types": "./m3/database/index.ts"
     },
     "./cards": {
       "import": "./cards/index.ts",
@@ -106,7 +106,7 @@
     "navigation",
     "vanilla",
     "radix",
-    "fakemui",
+    "m3",
     "database"
   ],
   "scripts": {

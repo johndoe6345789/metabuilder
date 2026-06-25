@@ -2,7 +2,7 @@
 
 import {
   Alert, Button, CircularProgress, TextField,
-} from '@metabuilder/components/fakemui';
+} from '@metabuilder/components/m3';
 import s from './login-form.module.scss';
 import PasswordField from './PasswordField';
 

@@ -5,4 +5,4 @@ export {
   CreateTableDialog as default,
   type CreateTableDialogProps,
   type TableColumn,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';

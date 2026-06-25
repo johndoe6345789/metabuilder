@@ -1,10 +1,10 @@
-import { Button } from '@metabuilder/fakemui/inputs'
-import { Badge } from '@metabuilder/fakemui/data-display'
+import { Button } from '@metabuilder/m3/inputs'
+import { Badge } from '@metabuilder/m3/data-display'
 import {
   ArrowsClockwise,
   CheckCircle,
   TreeStructure,
-} from '@metabuilder/fakemui/icons'
+} from '@metabuilder/m3/icons'
 import componentTreeCopy from '@/data/component-tree-viewer.json'
 
 export function ComponentTreeHeader({

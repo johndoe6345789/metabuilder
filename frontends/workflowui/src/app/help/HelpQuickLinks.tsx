@@ -12,7 +12,7 @@ import {
   CardContent,
   Link,
   Grid,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import {
   CodeIcon,
   PlayIcon,

@@ -26,7 +26,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from '@/fakemui'
+} from '@/m3'
 
 interface UserRecord {
   id: string

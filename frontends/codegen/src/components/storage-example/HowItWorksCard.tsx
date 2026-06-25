@@ -3,7 +3,7 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-} from '@metabuilder/fakemui/surfaces'
+} from '@metabuilder/m3/surfaces'
 import copy from '@/data/storage-example.json'
 
 export function HowItWorksCard() {

@@ -1,11 +1,11 @@
-import { Button } from '@metabuilder/fakemui/inputs'
-import { Input } from '@metabuilder/fakemui/inputs'
-import { Select } from '@metabuilder/fakemui/inputs'
+import { Button } from '@metabuilder/m3/inputs'
+import { Input } from '@metabuilder/m3/inputs'
+import { Select } from '@metabuilder/m3/inputs'
 import type {
   SelectChangeEvent,
-} from '@metabuilder/fakemui/inputs'
-import { MenuItem } from '@metabuilder/fakemui/navigation'
-import { Label } from '@metabuilder/fakemui/atoms'
+} from '@metabuilder/m3/inputs'
+import { MenuItem } from '@metabuilder/m3/navigation'
+import { Label } from '@metabuilder/m3/atoms'
 import fileExplorerCopy from '@/data/file-explorer.json'
 
 export function ManualFileTab({

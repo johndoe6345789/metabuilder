@@ -10,7 +10,7 @@ import {
   Breadcrumbs,
   Box,
   Typography,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import {
   TemplateFilters as Filters,
   TemplateSidebar,

@@ -3,7 +3,7 @@
 'use client';
 
 import React from 'react';
-import { Breadcrumbs } from '@metabuilder/fakemui';
+import { Breadcrumbs } from '@metabuilder/m3';
 import styles from '@/../../../scss/atoms/notifications.module.scss';
 import { useNotifications } from './hooks/useNotifications';
 import NotificationItem from './NotificationItem';

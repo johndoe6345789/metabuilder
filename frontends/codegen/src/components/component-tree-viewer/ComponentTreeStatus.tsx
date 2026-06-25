@@ -1,4 +1,4 @@
-import { Warning } from '@metabuilder/fakemui/icons'
+import { Warning } from '@metabuilder/m3/icons'
 import componentTreeCopy from '@/data/component-tree-viewer.json'
 
 export function ComponentTreeStatus({

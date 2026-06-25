@@ -9,7 +9,7 @@ import {
   CardContent as CardContentComp,
   Stack as StackComp,
   Typography as TypographyComp,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 
 const CardContent = CardContentComp as any;
 const Stack = StackComp as any;

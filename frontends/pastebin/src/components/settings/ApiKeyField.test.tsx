@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { ApiKeyField } from './ApiKeyField'
 import type { AIPlatform } from '@/config/aiPlatforms'
 
-jest.mock('@metabuilder/components/fakemui', () => ({
+jest.mock('@metabuilder/components/m3', () => ({
   Input: ({
     id,
     type,

@@ -16,7 +16,7 @@ import {
   TextField,
   Alert,
   Divider,
-} from '@metabuilder/fakemui'
+} from '@metabuilder/m3'
 import {
   useSwitchDatabaseTab,
   getFieldPlaceholder,

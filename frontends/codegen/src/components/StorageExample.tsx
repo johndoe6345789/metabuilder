@@ -1,4 +1,4 @@
-import { Database } from '@metabuilder/fakemui/icons'
+import { Database } from '@metabuilder/m3/icons'
 import copy from '@/data/storage-example.json'
 import { useStorageExample } from './storage/useStorageExample'
 import { CounterCard } from './storage-example/CounterCard'

@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import { TextField } from '@metabuilder/fakemui';
+import { TextField } from '@metabuilder/m3';
 
 const FIELD_PLACEHOLDERS: Record<string, string> = {
   host: 'localhost',

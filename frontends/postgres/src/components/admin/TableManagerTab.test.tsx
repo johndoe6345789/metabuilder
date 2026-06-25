@@ -1,5 +1,5 @@
 vi.mock('@/lib/app-config', () => ({ BASE_PATH: '/postgres' }));
-vi.mock('@metabuilder/fakemui', async () => {
+vi.mock('@metabuilder/m3', async () => {
   const React = await import('react');
   const CreateTableDialog = ({ open }: any) => open ? React.createElement('div', { 'data-testid': 'create-table-dialog' }) : null;
   const DropTableDialog = ({ open }: any) => open ? React.createElement('div', { 'data-testid': 'drop-table-dialog' }) : null;

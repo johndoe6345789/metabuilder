@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import { Box, Chip } from '@metabuilder/fakemui';
+import { Box, Chip } from '@metabuilder/m3';
 
 interface FAQCategoryFilterProps {
   categories: string[];

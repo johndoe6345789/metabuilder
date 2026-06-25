@@ -1,7 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { MaterialIcon } from '@metabuilder/components/fakemui'
+import { MaterialIcon } from '@metabuilder/components/m3'
 import { ForkDialog } from '@/components/features/snippet-viewer/ForkDialog'
 import { LANGUAGE_COLORS } from '@/lib/config'
 import { useSharePage } from './hooks/useSharePage'

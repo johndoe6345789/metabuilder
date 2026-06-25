@@ -8,30 +8,30 @@ import React, { ComponentType } from 'react'
 import type { UIComponentRegistry } from './component-registry-types'
 import {
   Tabs, Tab, TabPanel,
-} from '@metabuilder/fakemui/navigation'
+} from '@metabuilder/m3/navigation'
 import {
   CardHeader, CardContent, CardActions,
   CardTitle, CardDescription, CardFooter,
-} from '@metabuilder/fakemui/surfaces'
+} from '@metabuilder/m3/surfaces'
 import {
   Button, Switch, Checkbox, Select,
   Input, Textarea, Slider,
-} from '@metabuilder/fakemui/inputs'
+} from '@metabuilder/m3/inputs'
 import {
   AlertTitle, Dialog, Progress, Skeleton,
-} from '@metabuilder/fakemui/feedback'
-import { Tooltip } from '@metabuilder/fakemui/data-display'
-import { Label } from '@metabuilder/fakemui/atoms'
+} from '@metabuilder/m3/feedback'
+import { Tooltip } from '@metabuilder/m3/data-display'
+import { Label } from '@metabuilder/m3/atoms'
 import {
   DialogContent, DialogHeader, DialogTitle,
   DialogContentText, DialogActions,
-} from '@metabuilder/fakemui/utils'
+} from '@metabuilder/m3/utils'
 import {
   Download, Plus, Trash,
   GitBranch as MergeIcon, Database, CheckCircle,
   Refresh, ArrowClockwise, Settings, Search,
   Check, Close, Edit, Warning, Info, CircleCheck,
-} from '@metabuilder/fakemui/icons'
+} from '@metabuilder/m3/icons'
 import { JSONUIShowcase } from '@/components/JSONUIShowcase'
 import { SchemaEditorWorkspace } from
   '@/components/schema-editor/SchemaEditorWorkspace'

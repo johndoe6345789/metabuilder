@@ -7,7 +7,7 @@ import { useSnippetForm } from '@/hooks/useSnippetForm'
 import { useTranslation } from '@/hooks/useTranslation'
 import { appConfig } from '@/lib/config'
 import { Snippet } from '@/lib/types'
-import { toast } from '@metabuilder/components/fakemui'
+import { toast } from '@metabuilder/components/m3'
 
 export function useSnippetEditorPage(initialSnippet?: Snippet | null) {
   const router = useRouter()

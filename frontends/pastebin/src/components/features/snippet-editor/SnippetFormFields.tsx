@@ -4,8 +4,8 @@ import {
   Select,
   MenuItem,
   Textarea,
-} from '@metabuilder/components/fakemui'
-import type { SelectChangeEvent } from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
+import type { SelectChangeEvent } from '@metabuilder/components/m3'
 import { LANGUAGES } from '@/lib/config'
 import { useTranslation } from '@/hooks/useTranslation'
 import styles from './snippet-form-fields.module.scss'

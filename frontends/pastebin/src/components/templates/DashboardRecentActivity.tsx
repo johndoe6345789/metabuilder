@@ -1,4 +1,4 @@
-import { Card, Avatar } from '@metabuilder/components/fakemui'
+import { Card, Avatar } from '@metabuilder/components/m3'
 
 export function DashboardRecentActivity() {
   return (

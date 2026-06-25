@@ -18,7 +18,7 @@ const nextConfig = {
   },
   transpilePackages: [
     '@metabuilder/components',
-    '@metabuilder/fakemui',
+    '@metabuilder/m3',
     '@metabuilder/redux-persist',
     '@metabuilder/redux-slices',
     '@metabuilder/redux-core',
@@ -61,12 +61,12 @@ const nextConfig = {
     // Resolve @metabuilder/components to source
     config.resolve.alias['@metabuilder/components'] = join(componentsPath, 'index.tsx');
 
-    // Add fakemui alias to match workflowui pattern
-    const fakeMuiPath = resolve(__dirname, '../../components/fakemui');
-    config.resolve.alias['@metabuilder/fakemui'] = fakeMuiPath;
+    // Add m3 alias to match workflowui pattern
+    const fakeMuiPath = resolve(__dirname, '../../components/m3');
+    config.resolve.alias['@metabuilder/m3'] = fakeMuiPath;
 
-    // Resolve @metabuilder/components/fakemui subpath (used by migrated components)
-    config.resolve.alias['@metabuilder/components/fakemui'] = join(fakeMuiPath, 'index.ts');
+    // Resolve @metabuilder/components/m3 subpath (used by migrated components)
+    config.resolve.alias['@metabuilder/components/m3'] = join(fakeMuiPath, 'index.ts');
 
     if (!isServer) {
       config.resolve.fallback = {

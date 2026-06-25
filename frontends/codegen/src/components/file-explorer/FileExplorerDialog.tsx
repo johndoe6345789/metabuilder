@@ -1,17 +1,17 @@
 import React, { useState } from 'react'
-import { Button } from '@metabuilder/fakemui/inputs'
-import { Sparkle, Plus } from '@metabuilder/fakemui/icons'
+import { Button } from '@metabuilder/m3/inputs'
+import { Sparkle, Plus } from '@metabuilder/m3/icons'
 import {
   Tabs,
   Tab,
   TabPanel,
-} from '@metabuilder/fakemui/navigation'
-import { Dialog } from '@metabuilder/fakemui/feedback'
+} from '@metabuilder/m3/navigation'
+import { Dialog } from '@metabuilder/m3/feedback'
 import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@metabuilder/fakemui/utils'
+} from '@metabuilder/m3/utils'
 import { ProjectFile } from '@/types/project'
 import fileExplorerCopy from '@/data/file-explorer.json'
 import { useFileExplorerDialog } from './useFileExplorerDialog'

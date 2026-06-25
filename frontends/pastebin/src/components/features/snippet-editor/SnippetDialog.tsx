@@ -8,7 +8,7 @@ import {
   DialogClose,
   Button,
   MaterialIcon,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 import { Snippet } from '@/lib/types'
 import { useTranslation } from '@/hooks/useTranslation'
 import { SnippetDialogTabs } from './SnippetDialogTabs'

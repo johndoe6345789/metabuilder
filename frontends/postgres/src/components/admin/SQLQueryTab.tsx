@@ -4,4 +4,4 @@
 export {
   SQLQueryTab as default,
   type SQLQueryTabProps,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';

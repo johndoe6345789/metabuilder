@@ -4,15 +4,15 @@ const renderHook: typeof baseRenderHook = (cb, options) =>
   baseRenderHook(cb, { wrapper: Providers, ...options })
 import { useDatabaseOperations } from './useDatabaseOperations'
 import * as dbModule from '@/lib/db'
-import { toast } from '@metabuilder/components/fakemui'
+import { toast } from '@metabuilder/components/m3'
 
 // Mock the database module
 jest.mock('@/lib/db')
 
-// The hook surfaces success/error via fakemui's toast, not sonner. Mock just
-// toast — requireActual would load the whole fakemui barrel (heavy + a
+// The hook surfaces success/error via m3's toast, not sonner. Mock just
+// toast — requireActual would load the whole m3 barrel (heavy + a
 // circular-dep crash in email components).
-jest.mock('@metabuilder/components/fakemui', () => ({
+jest.mock('@metabuilder/components/m3', () => ({
   toast: { success: jest.fn(), error: jest.fn() },
 }))
 

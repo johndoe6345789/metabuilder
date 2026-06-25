@@ -1,4 +1,4 @@
-import { Card, Button, Chip } from '@metabuilder/components/fakemui'
+import { Card, Button, Chip } from '@metabuilder/components/m3'
 import styles from './ContentGridsShowcase.module.scss'
 
 const GRADIENT = {

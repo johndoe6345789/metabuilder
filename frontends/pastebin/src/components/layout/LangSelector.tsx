@@ -1,6 +1,6 @@
 'use client'
 
-import { MaterialIcon } from '@metabuilder/components/fakemui'
+import { MaterialIcon } from '@metabuilder/components/m3'
 import { useAppDispatch, useAppSelector, setLocale } from '@/store/exports'
 import type { AppLocale } from '@/store/slices/uiSlice'
 import { useTranslation } from '@/hooks/useTranslation'

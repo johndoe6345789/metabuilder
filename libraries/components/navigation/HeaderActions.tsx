@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { IconButton, Avatar, Menu, MenuItem, Divider, Box } from '../fakemui';
+import { IconButton, Avatar, Menu, MenuItem, Divider, Box } from '../m3';
 import styles from '../../scss/components/navigation/header-actions.module.scss';
 
 export interface HeaderActionsProps {

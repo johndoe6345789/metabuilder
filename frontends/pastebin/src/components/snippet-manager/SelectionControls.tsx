@@ -3,7 +3,7 @@ import {
   Menu,
   MenuItem,
   MaterialIcon,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 import { Namespace } from '@/lib/types'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useMenuAnchor } from './hooks/useMenuAnchor'

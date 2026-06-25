@@ -3,7 +3,7 @@ import {
   Button,
   Chip,
   MaterialIcon,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 import styles from './TaskListsShowcase.module.scss'
 
 const onSurfaceVariant = 'var(--mat-sys-on-surface-variant)'

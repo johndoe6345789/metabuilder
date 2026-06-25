@@ -7,4 +7,4 @@ export {
   type ConstraintDialogMode,
   type ConstraintType,
   type ConstraintInfo,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';

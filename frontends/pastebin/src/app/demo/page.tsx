@@ -7,7 +7,7 @@ import {
   CardContent,
   CardHeader,
   MaterialIcon,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 import { DemoFeatureCards } from '@/components/demo/DemoFeatureCards'
 import { useDemoCode } from './hooks/useDemoCode'
 import { PageLayout } from '../PageLayout'

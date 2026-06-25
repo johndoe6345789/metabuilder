@@ -5,7 +5,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Box, Typography, Button } from '../fakemui';
+import { Box, Typography, Button } from '../m3';
 import styles from '../../scss/components/feedback/not-found.module.scss';
 
 export interface NotFoundStateProps {

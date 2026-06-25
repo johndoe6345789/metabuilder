@@ -3,7 +3,7 @@ import { useAppDispatch } from '@/store/hooks'
 import { updateSnippet } from '@/store/slices/snippetsSlice'
 import { useTranslation } from '@/hooks/useTranslation'
 import { Snippet } from '@/lib/types'
-import { toast } from '@metabuilder/components/fakemui'
+import { toast } from '@metabuilder/components/m3'
 
 type FileList = { name: string; content: string }[]
 

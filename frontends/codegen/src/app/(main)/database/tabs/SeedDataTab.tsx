@@ -16,7 +16,7 @@ import {
   Divider,
   Switch,
   FormControlLabel,
-} from '@metabuilder/fakemui'
+} from '@metabuilder/m3'
 import { useSeedDataTab } from '../hooks/useSeedDataTab'
 
 export function SeedDataTab() {

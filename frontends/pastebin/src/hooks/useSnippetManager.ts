@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { SnippetTemplate } from '@/lib/types'
-import { toast } from '@metabuilder/components/fakemui'
+import { toast } from '@metabuilder/components/m3'
 import { useTranslation } from '@/hooks/useTranslation'
 import { syncTemplatesFromJSON } from '@/lib/db'
 import { fetchSnippetsByNamespace } from '@/store/slices/snippetsSlice'

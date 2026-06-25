@@ -1,4 +1,4 @@
-import { MaterialIcon } from '@metabuilder/components/fakemui'
+import { MaterialIcon } from '@metabuilder/components/m3'
 import styles from './share-dialog.module.scss'
 
 interface ShareDialogEmailAppsProps {

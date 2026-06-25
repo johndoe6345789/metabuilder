@@ -4,7 +4,7 @@ import {
   Button, Checkbox, Chip, FormControl,
   FormControlLabel, InputLabel, MenuItem,
   Select, TextField, Typography,
-} from '@metabuilder/components/fakemui';
+} from '@metabuilder/components/m3';
 import type { IndexType } from '@/utils/featureConfig';
 import s from './index-create-form.module.scss';
 

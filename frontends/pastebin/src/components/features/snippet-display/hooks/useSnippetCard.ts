@@ -5,7 +5,7 @@ import { useTranslation } from '@/hooks/useTranslation'
 import { getAllNamespaces } from '@/lib/db'
 import { useAppDispatch } from '@/store/hooks'
 import { moveSnippet } from '@/store/slices/snippetsSlice'
-import { toast } from '@metabuilder/components/fakemui'
+import { toast } from '@metabuilder/components/m3'
 
 interface UseSnippetCardProps {
   snippet: Snippet

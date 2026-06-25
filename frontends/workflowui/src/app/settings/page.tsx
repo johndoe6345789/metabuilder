@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import { Box } from '@metabuilder/fakemui';
+import { Box } from '@metabuilder/m3';
 import styles from '@/../../../scss/atoms/settings.module.scss';
 import { useSettings } from './hooks/useSettings';
 import SettingsTabsBar from './SettingsTabsBar';

@@ -2,7 +2,7 @@
  * Tests for Dashboard page (app/page.tsx)
  */
 
-// moduleNameMapper already handles @metabuilder/fakemui → fakeMuiMock.tsx
+// moduleNameMapper already handles @metabuilder/m3 → fakeMuiMock.tsx
 // and scss → identity-obj-proxy, so no need to re-mock those.
 
 jest.mock('@/../../../icons/react', () => ({

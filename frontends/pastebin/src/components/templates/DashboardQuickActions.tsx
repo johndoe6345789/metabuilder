@@ -1,4 +1,4 @@
-import { Card, Button, MaterialIcon } from '@metabuilder/components/fakemui'
+import { Card, Button, MaterialIcon } from '@metabuilder/components/m3'
 
 const fullWidthStart: React.CSSProperties = {
   width: '100%',

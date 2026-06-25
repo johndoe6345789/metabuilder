@@ -6,7 +6,7 @@ import {
   Avatar,
   Divider,
   MaterialIcon,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 import styles from './EcommerceTemplate.module.scss'
 
 const onSurfaceVariant = 'var(--mat-sys-on-surface-variant)'

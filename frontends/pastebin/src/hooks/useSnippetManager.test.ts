@@ -1,7 +1,7 @@
 import { renderHook, act, waitFor } from '@testing-library/react'
 import { useSnippetManager } from './useSnippetManager'
 import * as dbModule from '@/lib/db'
-import { toast } from '@metabuilder/components/fakemui'
+import { toast } from '@metabuilder/components/m3'
 import { Provider } from 'react-redux'
 import { store } from '@/store'
 import { validateToken } from '@/store/slices/authThunks'
@@ -17,9 +17,9 @@ jest.mock('next/navigation', () => ({
 // Mock the database module
 jest.mock('@/lib/db')
 
-// The hook uses fakemui's toast, not sonner. Mock only toast (the full
+// The hook uses m3's toast, not sonner. Mock only toast (the full
 // barrel is heavy and has a circular-dep crash in email components).
-jest.mock('@metabuilder/components/fakemui', () => ({
+jest.mock('@metabuilder/components/m3', () => ({
   toast: { success: jest.fn(), error: jest.fn() },
 }))
 

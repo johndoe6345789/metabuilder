@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { toast } from '@metabuilder/components/fakemui'
+import { toast } from '@metabuilder/components/m3'
 import { useAppSelector, useAppDispatch } from '@/store/hooks'
 import {
   selectIsAuthenticated,

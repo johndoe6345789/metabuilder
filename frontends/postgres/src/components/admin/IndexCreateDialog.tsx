@@ -2,7 +2,7 @@
 
 import {
   Dialog, DialogContent, DialogTitle,
-} from '@metabuilder/components/fakemui';
+} from '@metabuilder/components/m3';
 import type { IndexType } from '@/utils/featureConfig';
 import s from './index-create-dialog.module.scss';
 import IndexCreateForm from './IndexCreateForm';

@@ -1,4 +1,4 @@
-import { Card } from '@metabuilder/components/fakemui'
+import { Card } from '@metabuilder/components/m3'
 import styles from './ColorsSection.module.scss'
 
 const codeStyle: React.CSSProperties = {

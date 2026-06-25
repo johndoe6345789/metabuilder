@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { toast } from '@metabuilder/components/fakemui'
+import { toast } from '@metabuilder/components/m3'
 import { createSnippet } from '@/lib/db'
 import type { Snippet } from '@/lib/types'
 

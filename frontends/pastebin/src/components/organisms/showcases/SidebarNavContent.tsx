@@ -1,4 +1,4 @@
-import { Button, Divider, MaterialIcon } from '@metabuilder/components/fakemui'
+import { Button, Divider, MaterialIcon } from '@metabuilder/components/m3'
 
 const fullWidthStart: React.CSSProperties = {
   width: '100%',

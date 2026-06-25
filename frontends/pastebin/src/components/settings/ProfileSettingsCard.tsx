@@ -7,7 +7,7 @@ import {
   Button,
   FormLabel,
   MaterialIcon,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 import { MarkdownRenderer } from '@/components/error/MarkdownRenderer'
 import { useProfileSettings } from './hooks/useProfileSettings'
 import styles from './settings-card.module.scss'

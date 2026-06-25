@@ -4,19 +4,19 @@
  */
 
 import React from 'react';
-import type { IconProps } from '../fakemui/Icon';
+import type { IconProps } from '../m3/Icon';
 
 // Re-export IconProps for consumers
 export type { IconProps };
 
 // Standard Material Design icons (imported from FakeMUI)
-export { Home as HomeIcon } from '../fakemui/Home';
-export { Workflow as WorkflowIcon } from '../fakemui/Workflow';
-export { Star as StarIcon } from '../fakemui/Star';
-export { Settings as SettingsIcon } from '../fakemui/Settings';
-export { Notifications as NotificationsIcon } from '../fakemui/Notifications';
-export { Help as HelpIcon } from '../fakemui/Help';
-export { Delete as DeleteIcon } from '../fakemui/Delete';
+export { Home as HomeIcon } from '../m3/Home';
+export { Workflow as WorkflowIcon } from '../m3/Workflow';
+export { Star as StarIcon } from '../m3/Star';
+export { Settings as SettingsIcon } from '../m3/Settings';
+export { Notifications as NotificationsIcon } from '../m3/Notifications';
+export { Help as HelpIcon } from '../m3/Help';
+export { Delete as DeleteIcon } from '../m3/Delete';
 
 // Custom navigation icons
 export const RecentIcon: React.FC<IconProps> = ({ width = 20, height = 20, className, ...rest }) => (

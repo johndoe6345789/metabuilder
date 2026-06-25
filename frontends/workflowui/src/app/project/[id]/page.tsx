@@ -9,7 +9,7 @@ import React from 'react';
 import {
   Box as BoxComp,
   Grid as GridComp,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import { useProjectCanvasPage } from './hooks/useProjectCanvas';
 import CanvasAppBar from './CanvasAppBar';
 import WorkflowCardItem from './WorkflowCardItem';

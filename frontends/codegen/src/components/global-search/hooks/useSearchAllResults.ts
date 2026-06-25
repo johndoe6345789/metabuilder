@@ -16,7 +16,7 @@ import {
   Folder,
   Play,
   Tree,
-} from '@metabuilder/fakemui/icons'
+} from '@metabuilder/m3/icons'
 import type {
   ComponentNode,
   ComponentTree,

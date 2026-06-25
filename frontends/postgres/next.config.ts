@@ -39,7 +39,7 @@ const baseConfig: NextConfig = {
       path.join(monorepoRoot, 'scss/mixins'),
     ],
   },
-  transpilePackages: ['@metabuilder/fakemui'],
+  transpilePackages: ['@metabuilder/m3'],
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -60,7 +60,7 @@ const baseConfig: NextConfig = {
       new webpack.NormalModuleReplacementPlugin(
         /\.module\.scss$/,
         function (resource: any) {
-          if ((resource.context?.includes('fakemui') ||
+          if ((resource.context?.includes('m3') ||
               resource.context?.includes('components/dist') ||
               resource.context?.includes('components\\dist')) &&
               !resource.request?.includes('mat-dialog')) {

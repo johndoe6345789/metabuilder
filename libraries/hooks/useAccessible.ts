@@ -1,7 +1,7 @@
 /**
  * useAccessible Hooks
  * Provides standardized accessibility attributes, test IDs, and keyboard navigation
- * for React components. Migrated from @metabuilder/fakemui for broader usage.
+ * for React components. Migrated from @metabuilder/m3 for broader usage.
  *
  * Features:
  * - Consistent data-testid generation

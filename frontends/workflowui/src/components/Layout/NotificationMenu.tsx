@@ -5,7 +5,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { IconButton, Menu, MenuItem, Divider } from '@metabuilder/fakemui';
+import { IconButton, Menu, MenuItem, Divider } from '@metabuilder/m3';
 import { testId } from '../../utils/accessibility';
 import { NotificationIcon } from './HeaderIcons';
 

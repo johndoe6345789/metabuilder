@@ -5,7 +5,7 @@ import {
   MenuItem,
   Divider,
   MaterialIcon,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 import { SnippetTemplate } from '@/lib/types'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useTemplatePickerClose } from './hooks/useTemplatePickerClose'

@@ -1,8 +1,8 @@
 'use client';
 
-import MenuIcon from '@metabuilder/components/fakemui/Menu';
-import LogoutIcon from '@metabuilder/components/fakemui/Logout';
-import StorageIcon from '@metabuilder/components/fakemui/Storage';
+import MenuIcon from '@metabuilder/components/m3/Menu';
+import LogoutIcon from '@metabuilder/components/m3/Logout';
+import StorageIcon from '@metabuilder/components/m3/Storage';
 import {
   AppBar,
   Box,
@@ -12,8 +12,8 @@ import {
   Toolbar,
   Typography,
   useMediaQuery,
-} from '@metabuilder/components/fakemui';
-import useTheme from '@metabuilder/components/fakemui/utils/useTheme';
+} from '@metabuilder/components/m3';
+import useTheme from '@metabuilder/components/m3/utils/useTheme';
 import type { ReactNode } from 'react';
 import styles from './dashboard-shell.module.scss';
 import AdminDrawerContent, { type AdminNavItem } from './AdminDrawerContent';

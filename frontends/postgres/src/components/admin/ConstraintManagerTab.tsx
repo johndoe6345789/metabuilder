@@ -1,7 +1,7 @@
 'use client';
 
-import AddIcon from '@metabuilder/components/fakemui/Add';
-import { Button, Typography } from '@metabuilder/components/fakemui';
+import AddIcon from '@metabuilder/components/m3/Add';
+import { Button, Typography } from '@metabuilder/components/m3';
 import { getConstraintTypes, getFeatureById } from '@/utils/featureConfig';
 import s from './constraint-manager-tab.module.scss';
 import ConstraintDialog from './ConstraintDialog';

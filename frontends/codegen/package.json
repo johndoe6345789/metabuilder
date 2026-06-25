@@ -22,7 +22,7 @@
     "@metabuilder/api-clients": "*",
     "@metabuilder/components": "*",
     "@metabuilder/core-hooks": "*",
-    "@metabuilder/fakemui": "*",
+    "@metabuilder/m3": "*",
     "@metabuilder/hooks": "*",
     "@metabuilder/hooks-auth": "*",
     "@metabuilder/hooks-canvas": "*",

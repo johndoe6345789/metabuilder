@@ -1,4 +1,4 @@
-import { Input, FormLabel } from '@metabuilder/components/fakemui'
+import { Input, FormLabel } from '@metabuilder/components/m3'
 import { InputParameter } from '@/lib/types'
 import styles from './input-parameter-item.module.scss'
 

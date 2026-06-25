@@ -4,15 +4,15 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@metabuilder/fakemui/surfaces'
-import { Badge } from '@metabuilder/fakemui/data-display'
-import { Separator } from '@metabuilder/fakemui/data-display'
+} from '@metabuilder/m3/surfaces'
+import { Badge } from '@metabuilder/m3/data-display'
+import { Separator } from '@metabuilder/m3/data-display'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   Folder,
   Package,
   Stack,
-} from '@metabuilder/fakemui/icons'
+} from '@metabuilder/m3/icons'
 import componentTreeCopy from '@/data/component-tree-viewer.json'
 import { ComponentTree } from '@/types/project'
 

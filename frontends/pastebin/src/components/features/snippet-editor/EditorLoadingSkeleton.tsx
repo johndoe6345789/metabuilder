@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react'
-import { Skeleton } from '@metabuilder/components/fakemui'
+import { Skeleton } from '@metabuilder/components/m3'
 
 /** Visually-hidden style for the screen-reader status region. */
 export const srOnly: CSSProperties = {

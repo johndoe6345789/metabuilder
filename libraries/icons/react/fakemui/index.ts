@@ -1,4 +1,4 @@
-// Icon system for fakemui
+// Icon system for m3
 // Add icons as needed to reduce dependencies
 
 // Legacy SVG-based icon (for backward compatibility)

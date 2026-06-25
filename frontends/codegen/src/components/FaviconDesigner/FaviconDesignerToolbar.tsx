@@ -1,5 +1,5 @@
-import { Button } from '@metabuilder/fakemui/inputs'
-import { Copy, Eraser, PencilSimple, Plus, Trash } from '@metabuilder/fakemui/icons'
+import { Button } from '@metabuilder/m3/inputs'
+import { Copy, Eraser, PencilSimple, Plus, Trash } from '@metabuilder/m3/icons'
 import copy from '@/data/favicon-designer.json'
 
 type FaviconDesignerToolbarProps = {

@@ -3,7 +3,7 @@ import { render, screen } from '@/test-utils'
 import userEvent from '@testing-library/user-event'
 import { SnippetDeleteDialog } from './SnippetDeleteDialog'
 
-jest.mock('@metabuilder/components/fakemui', () => ({
+jest.mock('@metabuilder/components/m3', () => ({
   Button: ({ children, onClick, variant, 'data-testid': testId }: any) => (
     <button onClick={onClick} data-variant={variant} data-testid={testId}>
       {children}

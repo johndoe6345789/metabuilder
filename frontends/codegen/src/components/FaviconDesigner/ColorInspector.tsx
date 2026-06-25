@@ -1,5 +1,5 @@
-import { Input } from '@metabuilder/fakemui/inputs'
-import { Label } from '@metabuilder/fakemui/atoms'
+import { Input } from '@metabuilder/m3/inputs'
+import { Label } from '@metabuilder/m3/atoms'
 import copy from '@/data/favicon-designer.json'
 import { FaviconElement } from './types'
 

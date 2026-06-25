@@ -24,9 +24,9 @@ export default defineConfig({
   resolve: {
     dedupe: ['react', 'react-dom'],
     alias: [
-      // fakemui aliases must be first (more specific matches first)
-      { find: /^@\/fakemui\/(.+)$/, replacement: resolve(__dirname, '../../components/fakemui/$1') },
-      { find: /^@\/fakemui$/, replacement: resolve(__dirname, '../../components/fakemui/index.ts') },
+      // m3 aliases must be first (more specific matches first)
+      { find: /^@\/m3\/(.+)$/, replacement: resolve(__dirname, '../../components/m3/$1') },
+      { find: /^@\/m3$/, replacement: resolve(__dirname, '../../components/m3/index.ts') },
       // dbal-ui alias for shared UI components
       { find: /^@dbal-ui\/(.+)$/, replacement: resolve(__dirname, '../../dbal/shared/ui/$1') },
       { find: /^@dbal-ui$/, replacement: resolve(__dirname, '../../dbal/shared/ui') },

@@ -1,7 +1,7 @@
 // components/feedback/TemplateDifficultyBadge.tsx
 
 import React from 'react'
-import { Box } from '../fakemui'
+import { Box } from '../m3'
 import styles from '../../scss/components/feedback/difficulty-badge.module.scss'
 
 interface TemplateDifficultyBadgeProps {

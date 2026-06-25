@@ -60,7 +60,7 @@ export function resolveIconComponent(
   }
   const LazyIcon = dynamic(
     () =>
-      import('@metabuilder/fakemui/icons').then((mod) => {
+      import('@metabuilder/m3/icons').then((mod) => {
         const Icon = (mod as Record<string, any>)[type]
         if (!Icon) {
           return {

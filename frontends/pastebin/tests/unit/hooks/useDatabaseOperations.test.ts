@@ -9,12 +9,12 @@ const renderHook: typeof baseRenderHook = (cb, options) =>
   baseRenderHook(cb, { wrapper: Providers, ...options })
 import { useDatabaseOperations } from '@/hooks/useDatabaseOperations'
 import * as db from '@/lib/db'
-import { toast } from '@metabuilder/components/fakemui'
+import { toast } from '@metabuilder/components/m3'
 
 jest.mock('@/lib/db')
-// The hook uses fakemui's toast; mock only toast (the full barrel is heavy
+// The hook uses m3's toast; mock only toast (the full barrel is heavy
 // and has a circular-dep crash in email components).
-jest.mock('@metabuilder/components/fakemui', () => ({
+jest.mock('@metabuilder/components/m3', () => ({
   toast: { success: jest.fn(), error: jest.fn() },
 }))
 

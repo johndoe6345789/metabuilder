@@ -6,7 +6,7 @@ import {
   CardContent,
   Button,
   MaterialIcon,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useFileInputRef } from './hooks/useFileInputRef'
 import styles from './settings-card.module.scss'

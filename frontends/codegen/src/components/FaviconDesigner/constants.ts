@@ -9,7 +9,7 @@ import {
   TextT,
   Image as ImageIcon,
   Pencil,
-} from '@metabuilder/fakemui/icons'
+} from '@metabuilder/m3/icons'
 import presets from '../../data/favicon-designer-presets.json'
 import { FaviconDesign, FaviconElement } from './types'
 

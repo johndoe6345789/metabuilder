@@ -29,8 +29,8 @@ import {
   AccordionSummary,
   AccordionDetails,
   FormLabel,
-} from '@metabuilder/components/fakemui'
-import { toast } from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
+import { toast } from '@metabuilder/components/m3'
 import * as PhosphorIcons from '@phosphor-icons/react'
 import { buildWrapperCode } from './react-transform-wrapper'
 

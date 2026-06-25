@@ -24,7 +24,7 @@ import {
   Avatar,
   Chip,
   Badge,
-} from '@/fakemui'
+} from '@/m3'
 import {
   getSidebarItems,
   getBottomSidebarItems,

@@ -12,7 +12,7 @@ import {
   Card,
   CardContent,
   CardHeader,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 
 export default function HelpGettingStarted() {
   return (

@@ -15,7 +15,7 @@ import {
   CardContent,
   CardHeader,
   CardActions,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import WorkflowExecutorSettings from './WorkflowExecutorSettings';
 
 interface WorkflowsTabProps {

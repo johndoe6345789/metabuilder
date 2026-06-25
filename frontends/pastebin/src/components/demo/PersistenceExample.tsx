@@ -6,7 +6,7 @@ import {
   FormLabel,
   Button,
   Input,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 import { usePersistenceExample } from './hooks/usePersistenceExample'
 import styles from './PersistenceExample.module.scss'
 

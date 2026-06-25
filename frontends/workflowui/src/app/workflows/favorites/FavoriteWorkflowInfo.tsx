@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import { Box, Typography } from '@metabuilder/fakemui';
+import { Box, Typography } from '@metabuilder/m3';
 
 const STATUS_COLORS: Record<string, string> = {
   active: 'var(--mat-sys-tertiary)',

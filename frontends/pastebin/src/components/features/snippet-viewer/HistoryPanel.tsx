@@ -1,6 +1,6 @@
 'use client'
 
-import { MaterialIcon } from '@metabuilder/components/fakemui'
+import { MaterialIcon } from '@metabuilder/components/m3'
 import { useHistoryPanel } from './hooks/useHistoryPanel'
 import styles from './history-panel.module.scss'
 

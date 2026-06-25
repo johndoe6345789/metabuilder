@@ -15,7 +15,7 @@ FROM ${BASE_REGISTRY}/base-node-deps:latest
 # (e.g. tsup in components/node_modules, not hoisted to root).
 COPY package.json package-lock.json ./
 COPY libraries/components/package.json                          ./libraries/components/
-COPY libraries/components/fakemui/package.json                  ./libraries/components/fakemui/
+COPY libraries/components/m3/package.json                  ./libraries/components/m3/
 COPY config/package.json                              ./config/
 COPY libraries/scss/package.json                                ./libraries/scss/
 COPY frontends/codegen/package.json                   ./frontends/codegen/

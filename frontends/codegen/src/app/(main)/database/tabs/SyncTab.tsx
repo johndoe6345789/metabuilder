@@ -16,7 +16,7 @@ import {
   Divider,
   Switch,
   FormControlLabel,
-} from '@metabuilder/fakemui'
+} from '@metabuilder/m3'
 import { useSyncTab } from '../hooks/useSyncTab'
 
 export function SyncTab() {

@@ -4,4 +4,4 @@
 export {
   ConfirmDialog as default,
   type ConfirmDialogProps,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';

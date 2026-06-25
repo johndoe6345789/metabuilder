@@ -3,7 +3,7 @@
 'use client';
 
 import React from 'react';
-import { Button } from '@metabuilder/fakemui';
+import { Button } from '@metabuilder/m3';
 import { testId } from '../../utils/accessibility';
 import styles from '@/../../../scss/atoms/layout.module.scss';
 import SidebarNavItem from './SidebarNavItem';

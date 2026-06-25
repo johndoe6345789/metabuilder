@@ -17,7 +17,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import styles from '@/../../../scss/atoms/mat-card.module.scss';
 
 interface Achievement {

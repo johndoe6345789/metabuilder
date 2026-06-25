@@ -1,4 +1,4 @@
-import { Chip, Checkbox } from '@metabuilder/components/fakemui'
+import { Chip, Checkbox } from '@metabuilder/components/m3'
 import { Snippet } from '@/lib/types'
 import { LANGUAGE_COLORS } from '@/lib/config'
 import styles from './snippet-card-header.module.scss'

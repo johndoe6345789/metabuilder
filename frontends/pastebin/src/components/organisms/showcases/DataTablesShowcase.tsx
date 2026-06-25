@@ -8,7 +8,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from '@metabuilder/components/fakemui'
+} from '@metabuilder/components/m3'
 
 const h2Style = {
   fontSize: '1.875rem',
