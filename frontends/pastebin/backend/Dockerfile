@@ -9,14 +9,13 @@ RUN for i in 1 2 3 4 5; do \
     done
 
 COPY frontends/pastebin/backend/app.py .
-COPY dbal/shared/seeds/database/pastebin_users.json /app/seeds/database/pastebin_users.json
+COPY libraries/dbal/shared/seeds/database/pastebin_users.json /app/seeds/database/pastebin_users.json
 
 RUN mkdir -p /app/data
 
 EXPOSE 5000
 
 CMD ["python", "app.py"]
-
 
 
 
