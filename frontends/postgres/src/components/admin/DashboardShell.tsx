@@ -11,9 +11,7 @@ import {
   IconButton,
   Toolbar,
   Typography,
-  useMediaQuery,
 } from '@metabuilder/components/m3';
-import useTheme from '@metabuilder/components/m3/utils/useTheme';
 import type { ReactNode } from 'react';
 import styles from './dashboard-shell.module.scss';
 import AdminDrawerContent, { type AdminNavItem } from './AdminDrawerContent';
@@ -41,9 +39,6 @@ export default function DashboardShell({
   children,
   version,
 }: Props) {
-  const theme = useTheme();
-  const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
-
   const drawerContent = (
     <>
       <Toolbar />
@@ -82,11 +77,19 @@ export default function DashboardShell({
       </AppBar>
 
       <Drawer
-        variant={isDesktop ? 'permanent' : 'temporary'}
-        open={isDesktop || mobileOpen}
+        variant="permanent"
+        open
+        className={`${styles.drawer} ${styles.desktopDrawer}`}
+      >
+        {drawerContent}
+      </Drawer>
+
+      <Drawer
+        variant="temporary"
+        open={mobileOpen}
         onClose={onMobileClose}
         ModalProps={{ keepMounted: true }}
-        className={styles.drawer}
+        className={`${styles.drawer} ${styles.mobileDrawer}`}
       >
         {drawerContent}
       </Drawer>

@@ -55,9 +55,24 @@
   flex-shrink: 0;
 }
 
+.desktopDrawer {
+  display: none;
+
+  @media (min-width: 900px) {
+    display: flex;
+  }
+}
+
+.mobileDrawer {
+  @media (min-width: 900px) {
+    display: none;
+  }
+}
+
 .main {
   flex-grow: 1;
   min-width: 0;
+  width: 100%;
   background-color: var(--mat-sys-surface);
   padding: 16px 12px;
 

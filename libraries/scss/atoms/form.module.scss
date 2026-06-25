@@ -38,6 +38,7 @@
 .input {
   width: 100%;
   position: relative;
+  min-height: 56px;
   padding: 16px;
   border: 1px solid var(--mat-sys-outline);
   border-radius: var(--mat-sys-corner-extra-small);
@@ -50,6 +51,46 @@
   transition:
     border-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
     outline var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.inputWrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.inputWrapperFullWidth {
+  width: 100%;
+}
+
+.inputAdornment {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--mat-sys-on-surface-variant);
+  transform: translateY(-50%);
+  pointer-events: auto;
+}
+
+.inputAdornmentStart {
+  left: 12px;
+}
+
+.inputAdornmentEnd {
+  right: 8px;
+}
+
+.inputWithStartAdornment {
+  padding-left: 48px;
+}
+
+.inputWithEndAdornment {
+  padding-right: 56px;
 }
 
 .input:hover:not(:disabled):not(:focus) {
