@@ -80,11 +80,13 @@ export default function TableDataView({ tableName, onBack }: Props) {
       ) : (
         <Paper sx={{ overflow: 'auto' }}>
           <TableContainer>
-            <Table size="small">
+            <Table size="small" sx={{ minWidth: 'max-content' }}>
               <TableHead>
                 <TableRow>
                   {fields.map(f => (
-                    <TableCell key={f.name}><strong>{f.name}</strong></TableCell>
+                    <TableCell key={f.name} sx={{ whiteSpace: 'nowrap' }}>
+                      <strong>{f.name}</strong>
+                    </TableCell>
                   ))}
                   <TableCell />
                 </TableRow>
@@ -93,7 +95,9 @@ export default function TableDataView({ tableName, onBack }: Props) {
                 {rows.map((row, idx) => (
                   <TableRow key={idx}>
                     {fields.map(f => (
-                      <TableCell key={f.name}>{fmtCell(row[f.name], f)}</TableCell>
+                      <TableCell key={f.name} sx={{ whiteSpace: 'nowrap' }}>
+                        {fmtCell(row[f.name], f)}
+                      </TableCell>
                     ))}
                     <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
                       {hasPK ? (

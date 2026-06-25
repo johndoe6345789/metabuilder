@@ -70,6 +70,7 @@ export default function DashboardShell({
             edge="start"
             onClick={onMobileOpen}
             className={styles.hamburger}
+            aria-label="Open navigation drawer"
           >
             <MenuIcon />
           </IconButton>

@@ -1,0 +1,144 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.eyebrow {
+  color: var(--mat-sys-on-surface-variant);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font: var(--mat-sys-label-small-font);
+}
+
+.subtitle {
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-medium-font);
+  max-width: 64ch;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.panel {
+  min-width: 0;
+}
+
+.panelHeader {
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.countRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.count {
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-label-medium-font);
+}
+
+.search {
+  width: 100%;
+}
+
+.list {
+  max-height: min(72vh, 760px);
+  overflow: auto;
+}
+
+.listItem {
+  border-radius: 12px;
+  margin: 2px 8px;
+  padding-inline: 8px;
+}
+
+.infoPanel {
+  padding: 20px;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.infoTitle {
+  font: var(--mat-sys-title-medium-font);
+  color: var(--mat-sys-on-surface);
+}
+
+.infoBody {
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-medium-font);
+  max-width: 48ch;
+}
+
+.tableName {
+  font: var(--mat-sys-title-large-font);
+  color: var(--mat-sys-on-surface);
+  word-break: break-word;
+}
+
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.statCard {
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 12px;
+  padding: 12px;
+  background: var(--mat-sys-surface-container-low);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.statLabel {
+  color: var(--mat-sys-on-surface-variant);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font: var(--mat-sys-label-small-font);
+}
+
+.statValue {
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium-font);
+}
+
+@media (max-width: 720px) {
+  .statGrid {
+    grid-template-columns: 1fr;
+  }
+}
