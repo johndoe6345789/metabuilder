@@ -233,15 +233,18 @@ MUI couples components to its own theming runtime (Emotion, `sx` prop, `ThemePro
 - Overriding anything deeply requires fighting the `sx` cascade or `styled()` wrappers
 - You can't easily swap the component library without rewriting all style overrides
 
-M3 takes the opposite approach:
+M3 takes the opposite approach — **SCSS modules are the preferred and enforced styling method**. Every component is styled with a `.module.scss` file co-located next to it. No `sx` prop, no `styled()` wrapper, no Emotion, no CSS-in-JS at runtime.
 
 ```tsx
-// MUI: styling goes through JS runtime
+// MUI: Emotion CSS-in-JS — styles computed at render time in JS
 <Button sx={{ borderRadius: 2, px: 3 }}>Save</Button>
 
-// M3: plain CSS class, resolved at build time
-<Button className={styles.saveAction}>Save</Button>
+// M3: SCSS module — compiled to static CSS at build time, zero runtime cost
+import styles from './Button.module.scss'
+<button className={styles.root}>Save</button>
 ```
+
+The `sx` prop does exist on some M3 components for gradual migration compatibility, but it is a thin shim (`sxToStyle`) that converts to inline styles — it is not the idiomatic path. New code uses SCSS modules directly.
 
 **M3 dependencies**: `classnames`, `clsx` — that's it. No MUI, no Emotion, no Radix, no Tailwind runtime.
 
