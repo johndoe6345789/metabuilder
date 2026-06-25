@@ -56,6 +56,8 @@ cmake --build _build/Release --target sdl3_app
 
 **Performance**: 52+ FPS | ~3–5 ns per workflow step | 545 C++ files (289 .hpp + 256 .cpp)
 
+> **Planned**: The `qt6` frontend is the natural launcher for the game engine — both are C++, both live in this monorepo. A Qt6 game browser that discovers installed game packages and launches the engine is a straightforward integration.
+
 ---
 
 ## Quick Start
@@ -163,7 +165,7 @@ metabuilder/
 |----------|-------|--------|-------------|
 | `gameengine` | C++20, SDL3 GPU | Production | Custom game engine — Quake 3 fully playable. 212 JSON workflow steps. See section below. |
 | `cli` | C++, Lua runtime | Functional | Command-line interface targeting MetaBuilder services via HTTP. Lua scripting for package execution. Conan + CMake. |
-| `qt6` | Qt6, QML | Functional | Desktop app — Qt Quick replica of the MetaBuilder landing page. Platform-native look via QML. |
+| `qt6` | Qt6, QML | Functional | Desktop app — Qt Quick replica of the MetaBuilder landing page. Platform-native look via QML. Natural future launcher for the game engine (both C++, same monorepo). |
 
 ### Mobile (Android)
 
