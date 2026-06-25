@@ -4,7 +4,7 @@ A universal platform monorepo. One codebase. Every domain.
 
 **Scale**: 27,826+ files | ~540K LOC | 16 frontends | 16 libraries | 84 packages  
 **Philosophy**: 95% JSON config, 5% TypeScript/C++ infrastructure  
-**Status**: Production-ready — Quake 3 fully playable on custom engine ✅
+**Status**: Production-ready — JSON workflow game engine (Quake 3 proof of concept ✅)
 
 ---
 
@@ -14,7 +14,7 @@ MetaBuilder is a monorepo that covers an unusually wide surface area — not by 
 
 | Domain | What's Built |
 |--------|-------------|
-| **Game Engine** | SDL3 GPU C++ engine — Quake 3 playable (BSP, physics, weapons, bots, HUD) |
+| **Game Engine** | Game-agnostic JSON workflow engine (SDL3 GPU C++) — Quake 3 as proof of concept ✅ |
 | **Platform** | Multi-tenant Next.js + C++ DBAL REST API, 8 database backends |
 | **Component Library** | M3 — 241-component Material Design 3 clone (`@metabuilder/m3`) |
 | **Workflow Engine** | Multi-language DAG execution (TS/Python/C++/Rust/Go/Mojo) |
@@ -28,9 +28,11 @@ MetaBuilder is a monorepo that covers an unusually wide surface area — not by 
 
 ---
 
-## Headline Achievement: Quake 3 on a Custom Engine
+## Headline Achievement: JSON Workflow Game Engine
 
-The game engine (`frontends/gameengine/`) is a C++ engine built on SDL3 GPU where **every game system is a composable JSON workflow step** — the same engine that drives the UI platform also drives the game.
+The game engine (`frontends/gameengine/`) is a **game-agnostic C++ engine** built on SDL3 GPU where every game system — rendering, physics, audio, input, AI, gameplay logic — is a composable JSON workflow step. There is no hardcoded game logic. A game is just a JSON file that wires steps together.
+
+Quake 3 is the current proof of concept (fully playable), but the architecture is open: loading a GTA5 map, a Doom level, or a completely original game is a matter of authoring the right workflow steps, not changing the engine.
 
 ```bash
 cd frontends/gameengine
@@ -41,7 +43,7 @@ cmake --build _build/Release --target sdl3_app
 | Subsystem | Implementation |
 |-----------|---------------|
 | Rendering | SDL3 GPU (Vulkan/Metal/DX12), deferred pipeline, shadow maps, TAA, SSAO, Bloom |
-| BSP loading | Full Quake 3 BSP: lightmap atlas, portal rendering, collision trees |
+| Level loading | BSP (Quake 3 maps today — extensible to any format via workflow steps) |
 | Physics | AABB collision, gravity, jump, friction — pmove implementation |
 | Audio | 3D positional audio (OpenAL + Opus codec) |
 | Gameplay | Weapons, ammo, damage, bots, pickups, movers, triggers, HUD, menus |
