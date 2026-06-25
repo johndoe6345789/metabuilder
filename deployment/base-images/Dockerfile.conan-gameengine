@@ -30,7 +30,7 @@ RUN if [ -n "$CONAN_REMOTE" ]; then \
     fi
 
 # ---- Game engine ----
-COPY gameengine/conanfile.py /deps/gameengine/conanfile.py
+COPY frontends/gameengine/conanfile.py /deps/gameengine/conanfile.py
 
 RUN mkdir -p /tmp/gameengine-build && \
     for i in 1 2 3 4 5; do \

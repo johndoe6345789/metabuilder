@@ -680,7 +680,7 @@ services:
     profiles: ["storybook"]
     build:
       context: ../..
-      dockerfile: storybook/Dockerfile
+      dockerfile: frontends/storybook/Dockerfile
     container_name: metabuilder-storybook
     restart: unless-stopped
     healthcheck:
