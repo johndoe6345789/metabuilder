@@ -59,6 +59,9 @@
       "@metabuilder/components/*": [
         "../../libraries/components/*"
       ],
+      "@metabuilder/hooks": [
+        "../../libraries/hooks/index.ts"
+      ],
       "@metabuilder/hooks/workflow-editor": [
         "../../libraries/hooks/workflow-editor/index.ts"
       ]

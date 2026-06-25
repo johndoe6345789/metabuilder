@@ -46,7 +46,7 @@ const nextConfig = {
       // Redux
       '@metabuilder/api-clients': '../../libraries/redux/api-clients/src',
       // Hooks
-      '@metabuilder/hooks': '../../libraries/hooks/src',
+      '@metabuilder/hooks': '../../libraries/hooks/index.ts',
       '@metabuilder/hooks/workflow-editor': '../../libraries/hooks/workflow-editor/index.ts',
       // Shared SCSS modules
       '@scss': '../../libraries/scss',
@@ -84,6 +84,7 @@ const nextConfig = {
     config.resolve.alias['@metabuilder/components/feedback'] = join(componentsPath, 'feedback/index.ts');
     config.resolve.alias['@metabuilder/components/workflow-editor'] = join(componentsPath, 'workflow-editor/index.ts');
     config.resolve.alias['@metabuilder/components'] = join(componentsPath, 'index.tsx');
+    config.resolve.alias['@metabuilder/hooks'] = join(hooksPath, 'index.ts');
     config.resolve.alias['@metabuilder/hooks/workflow-editor'] = resolve(__dirname, '../../libraries/hooks/workflow-editor/index.ts');
     config.resolve.alias['@scss'] = scssPath;
     config.resolve.alias['@icons'] = iconsPath;
