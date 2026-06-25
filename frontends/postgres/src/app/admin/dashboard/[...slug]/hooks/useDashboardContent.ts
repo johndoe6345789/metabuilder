@@ -5,28 +5,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { BASE_PATH } from '@/lib/app-config';
 import { getNavItems } from '@/utils/featureConfig';
 
-type SetMsg = (m: string) => void;
-type ApiOpts = { method: string; body: any };
-
-async function callApi(
-  url: string, opts: ApiOpts,
-  setLoading: SetMsg, setError: SetMsg, setSuccess: SetMsg,
-) {
-  setLoading('1'); setError(''); setSuccess('');
-  try {
-    const res = await fetch(url, {
-      method: opts.method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(opts.body),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Request failed');
-    return data;
-  } finally {
-    setLoading('');
-  }
-}
-
 export function useDashboardContent(section: string, table: string) {
   const router = useRouter();
   const [tables, setTables] = useState<any[]>([]);
