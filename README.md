@@ -135,6 +135,41 @@ metabuilder/
 
 ---
 
+## Frontends (16)
+
+### Web Applications
+
+| Frontend | Stack | Status | Description |
+|----------|-------|--------|-------------|
+| `pastebin` | Next.js + Flask + DBAL C++ | Production | Multi-tenant code snippet manager. JWT auth, Redux + IndexedDB, 3 seeded accounts, event-driven user seeding via DBAL workflows. |
+| `nextjs` | Next.js 16, React 19, App Router | Functional | Primary web UI. Schema-driven CRUD, RSC, ISR, multi-tenant package rendering. |
+| `workflowui` | React, n8n-style DAG editor | Functional | Visual workflow editor with 152+ plugin nodes. 92.6% Playwright E2E pass rate. |
+| `codegen` | React + Monaco Editor | Functional | CodeForge IDE — in-browser code generation studio. Schema → component mapping, live preview. |
+| `postgres` | Next.js + M3 | Functional | PostgreSQL admin dashboard. Fully migrated to `@metabuilder/m3` SCSS modules (no MUI). |
+| `emailclient` | Next.js, Redux, M3 | Phases 1–5 | Full IMAP/SMTP email client. Frontend complete; Flask backend (phases 6–8) TODO. |
+| `packagerepo` | Next.js | Framework | Multi-format package registry. Supports PyPI, Maven, Go modules, Cargo, Ruby Gems, Nuget. |
+| `dockerterminal` | React | Functional | Docker Swarm management UI with interactive container terminal access. |
+| `storybook` | Storybook | Functional | Component docs and testing. Previews MetaBuilder JSON packages without the full app. |
+| `exploded-diagrams` | Next.js | Functional | Interactive 3D exploded views for component/assembly visualisation. |
+| `dbal` | Next.js | Functional | DBAL Daemon overview UI + standalone `/api/status` endpoint. |
+
+### Desktop & CLI
+
+| Frontend | Stack | Status | Description |
+|----------|-------|--------|-------------|
+| `gameengine` | C++20, SDL3, bgfx | Production | Custom game engine — Quake 3 fully playable. 212 JSON workflow steps. See section below. |
+| `cli` | C++, Lua runtime | Functional | Command-line interface targeting MetaBuilder services via HTTP. Lua scripting for package execution. Conan + CMake. |
+| `qt6` | Qt6, QML | Functional | Desktop app — Qt Quick replica of the MetaBuilder landing page. Platform-native look via QML. |
+
+### Mobile (Android)
+
+| Frontend | Stack | Status | Description |
+|----------|-------|--------|-------------|
+| `caproverforge` | Kotlin, Jetpack Compose | Functional | CapRover PaaS mobile client. Native Android APK built via GitHub Actions. |
+| `repoforge` | Kotlin, Jetpack Compose | Functional | GitHub + GitLab client. Dual login flow, native Android. |
+
+---
+
 ## Architecture
 
 ```
