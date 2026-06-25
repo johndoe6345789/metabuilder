@@ -10,6 +10,7 @@ const monorepoRoot = path.resolve(__dirname, '../..');
 // Define the base Next.js configuration
 const baseConfig: NextConfig = {
   basePath: '/postgres',
+  distDir: process.env.NEXT_DIST_DIR || '.next',
   output: 'standalone',
   async redirects() {
     return [
@@ -31,15 +32,23 @@ const baseConfig: NextConfig = {
   },
   sassOptions: {
     includePaths: [
-      path.join(monorepoRoot, 'scss'),
-      path.join(monorepoRoot, 'scss/m3-scss'),
-      path.join(monorepoRoot, 'scss/m3-scss/material'),
-      path.join(monorepoRoot, 'scss/m3-scss/cdk'),
-      path.join(monorepoRoot, 'scss/atoms'),
-      path.join(monorepoRoot, 'scss/mixins'),
+      path.join(monorepoRoot, 'libraries/scss'),
+      path.join(monorepoRoot, 'libraries/scss/m3-scss'),
+      path.join(monorepoRoot, 'libraries/scss/m3-scss/material'),
+      path.join(monorepoRoot, 'libraries/scss/m3-scss/cdk'),
+      path.join(monorepoRoot, 'libraries/scss/atoms'),
+      path.join(monorepoRoot, 'libraries/scss/mixins'),
+    ],
+    loadPaths: [
+      path.join(monorepoRoot, 'libraries/scss'),
+      path.join(monorepoRoot, 'libraries/scss/m3-scss'),
+      path.join(monorepoRoot, 'libraries/scss/m3-scss/material'),
+      path.join(monorepoRoot, 'libraries/scss/m3-scss/cdk'),
+      path.join(monorepoRoot, 'libraries/scss/atoms'),
+      path.join(monorepoRoot, 'libraries/scss/mixins'),
     ],
   },
-  transpilePackages: ['@metabuilder/m3'],
+  transpilePackages: ['@metabuilder/components', '@metabuilder/m3'],
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -56,12 +65,18 @@ const baseConfig: NextConfig = {
   },
   webpack: (config: any, { isServer }: { isServer: boolean }) => {
     const webpack = require('webpack')
+    config.resolve.alias = {
+      ...(config.resolve.alias || {}),
+      '@metabuilder/components/m3': path.join(monorepoRoot, 'libraries/components/m3/index.ts'),
+      '@metabuilder/components/m3/': path.join(monorepoRoot, 'libraries/components/m3/'),
+      '@metabuilder/m3': path.join(monorepoRoot, 'libraries/components/m3/index.ts'),
+      '@metabuilder/m3/': path.join(monorepoRoot, 'libraries/components/m3/'),
+    }
     config.plugins.push(
       new webpack.NormalModuleReplacementPlugin(
         /\.module\.scss$/,
         function (resource: any) {
-          if ((resource.context?.includes('m3') ||
-              resource.context?.includes('components/dist') ||
+          if ((resource.context?.includes('components/dist') ||
               resource.context?.includes('components\\dist')) &&
               !resource.request?.includes('mat-dialog')) {
             resource.request = require.resolve('./src/lib/empty-css-module.js')
