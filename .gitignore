@@ -65,7 +65,7 @@ prisma/dev.db-journal
 
 # Re-track project SQLite databases
 !docs/docs.db
-!txt/reports.db
+!docs/txt/reports.db
 *.sqlite3
 
 # Generated Prisma schema (produced by dbal/shared/tools/codegen/gen_prisma_schema.js)
