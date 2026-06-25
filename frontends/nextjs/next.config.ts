@@ -20,12 +20,12 @@ const nextConfig: NextConfig = {
   // loadPaths = Turbopack (Dart Sass modern API); includePaths = webpack fallback
   sassOptions: {
     loadPaths: [
-      path.join(monorepoRoot, 'scss/m3-scss'),
-      path.join(monorepoRoot, 'scss'),
+      path.join(monorepoRoot, 'libraries/scss/m3-scss'),
+      path.join(monorepoRoot, 'libraries/scss'),
     ],
     includePaths: [
-      path.join(monorepoRoot, 'scss/m3-scss'),
-      path.join(monorepoRoot, 'scss'),
+      path.join(monorepoRoot, 'libraries/scss/m3-scss'),
+      path.join(monorepoRoot, 'libraries/scss'),
     ],
     silenceDeprecations: ['legacy-js-api', 'import'],
   },

@@ -2,7 +2,7 @@
 import { resolve, join } from 'path';
 import { fileURLToPath } from 'url';
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
-const componentsPath = resolve(__dirname, '../../components');
+const componentsPath = resolve(__dirname, '../../libraries/components');
 
 const nextConfig = {
   basePath: '/pastebin',
@@ -30,13 +30,13 @@ const nextConfig = {
   ],
   sassOptions: {
     loadPaths: [
-      resolve(__dirname, '../../scss/m3-scss'),
-      resolve(__dirname, '../../scss'),
+      resolve(__dirname, '../../libraries/scss/m3-scss'),
+      resolve(__dirname, '../../libraries/scss'),
     ],
     includePaths: [
       './src/styles',
-      resolve(__dirname, '../../scss/m3-scss'),
-      resolve(__dirname, '../../scss'),
+      resolve(__dirname, '../../libraries/scss/m3-scss'),
+      resolve(__dirname, '../../libraries/scss'),
     ],
     silenceDeprecations: ['legacy-js-api', 'import'],
   },
@@ -62,7 +62,7 @@ const nextConfig = {
     config.resolve.alias['@metabuilder/components'] = join(componentsPath, 'index.tsx');
 
     // Add m3 alias to match workflowui pattern
-    const fakeMuiPath = resolve(__dirname, '../../components/m3');
+    const fakeMuiPath = resolve(__dirname, '../../libraries/components/m3');
     config.resolve.alias['@metabuilder/m3'] = fakeMuiPath;
 
     // Resolve @metabuilder/components/m3 subpath (used by migrated components)

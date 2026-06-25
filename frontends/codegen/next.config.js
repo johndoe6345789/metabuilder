@@ -113,12 +113,12 @@ const nextConfig = {
 
   sassOptions: {
     loadPaths: [
-      resolve(__dirname, '../../scss/m3-scss'),
-      resolve(__dirname, '../../scss'),
+      resolve(__dirname, '../../libraries/scss/m3-scss'),
+      resolve(__dirname, '../../libraries/scss'),
     ],
     includePaths: [
-      resolve(__dirname, '../../scss/m3-scss'),
-      resolve(__dirname, '../../scss'),
+      resolve(__dirname, '../../libraries/scss/m3-scss'),
+      resolve(__dirname, '../../libraries/scss'),
     ],
     silenceDeprecations: ['legacy-js-api', 'import'],
   },

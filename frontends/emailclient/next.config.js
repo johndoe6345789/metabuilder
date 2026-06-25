@@ -19,12 +19,12 @@ const nextConfig = {
   sassOptions: {
     // loadPaths = Turbopack, includePaths = webpack — both needed
     loadPaths: [
-      path.join(monorepoRoot, 'scss/m3-scss'),
-      path.join(monorepoRoot, 'scss'),
+      path.join(monorepoRoot, 'libraries/scss/m3-scss'),
+      path.join(monorepoRoot, 'libraries/scss'),
     ],
     includePaths: [
-      path.join(monorepoRoot, 'scss/m3-scss'),
-      path.join(monorepoRoot, 'scss'),
+      path.join(monorepoRoot, 'libraries/scss/m3-scss'),
+      path.join(monorepoRoot, 'libraries/scss'),
     ],
     silenceDeprecations: ['legacy-js-api', 'import'],
   },
