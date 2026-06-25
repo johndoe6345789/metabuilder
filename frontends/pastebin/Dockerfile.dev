@@ -15,14 +15,14 @@ COPY frontends/pastebin/tsconfig.json        ./frontends/pastebin/
 COPY frontends/pastebin/postcss.config.mjs   ./frontends/pastebin/
 
 # Shared source packages (baked in — no bind mount needed)
-COPY types/       ./types/
-COPY interfaces/  ./interfaces/
-COPY translations/ ./translations/
-COPY hooks/       ./hooks/
-COPY icons/       ./icons/
-COPY scss/        ./scss/
-COPY components/  ./components/
-COPY redux/       ./redux/
+COPY libraries/types/       ./libraries/types/
+COPY libraries/interfaces/  ./libraries/interfaces/
+COPY libraries/translations/ ./libraries/translations/
+COPY libraries/hooks/       ./libraries/hooks/
+COPY libraries/icons/       ./libraries/icons/
+COPY libraries/scss/        ./libraries/scss/
+COPY libraries/components/  ./libraries/components/
+COPY libraries/redux/       ./libraries/redux/
 
 # Pastebin application source (baked in — no bind mount needed)
 COPY frontends/pastebin/src/        ./frontends/pastebin/src/

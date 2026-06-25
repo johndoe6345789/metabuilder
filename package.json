@@ -8,18 +8,18 @@
     "postinstall": "bash scripts/patch-bundled-deps.sh"
   },
   "workspaces": [
-    "types",
-    "interfaces",
-    "translations",
-    "workflow",
-    "hooks",
-    "components",
-    "redux/*",
-    "components/fakemui",
-    "scss",
+    "libraries/types",
+    "libraries/interfaces",
+    "libraries/translations",
+    "libraries/workflow",
+    "libraries/hooks",
+    "libraries/components",
+    "libraries/redux/*",
+    "libraries/components/fakemui",
+    "libraries/scss",
     "frontends/*",
     "config",
-    "storybook"
+    "packages/*"
   ],
   "devDependencies": {
     "@chromatic-com/playwright": "^0.12.8",

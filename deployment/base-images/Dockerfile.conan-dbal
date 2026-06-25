@@ -30,7 +30,7 @@ RUN if [ -n "$CONAN_REMOTE" ]; then \
     fi
 
 # ---- DBAL daemon ----
-COPY dbal/production/build-config/conanfile.py /deps/dbal/conanfile.py
+COPY libraries/dbal/production/build-config/conanfile.py /deps/dbal/conanfile.py
 
 RUN mkdir -p /tmp/dbal-build && \
     for i in 1 2 3 4 5; do \

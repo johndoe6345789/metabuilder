@@ -6,34 +6,34 @@ WORKDIR /app
 COPY package.json .npmrc ./
 
 # Workspace package.json files
-COPY types/package.json ./types/
-COPY interfaces/package.json ./interfaces/
-COPY translations/package.json ./translations/
-COPY workflow/package.json ./workflow/
-COPY hooks/package.json ./hooks/
-COPY components/package.json ./components/
-COPY components/fakemui/package.json ./components/fakemui/
+COPY libraries/types/package.json ./libraries/types/
+COPY libraries/interfaces/package.json ./libraries/interfaces/
+COPY libraries/translations/package.json ./libraries/translations/
+COPY libraries/workflow/package.json ./libraries/workflow/
+COPY libraries/hooks/package.json ./libraries/hooks/
+COPY libraries/components/package.json ./libraries/components/
+COPY libraries/components/fakemui/package.json ./libraries/components/fakemui/
 COPY config/package.json ./config/
-COPY scss/package.json ./scss/
-COPY storybook/package.json ./storybook/
+COPY libraries/scss/package.json ./libraries/scss/
+COPY frontends/storybook/package.json ./frontends/storybook/
 COPY frontends/nextjs/package.json ./frontends/nextjs/
 COPY frontends/dbal/package.json ./frontends/dbal/
-COPY redux/core/package.json ./redux/core/
-COPY redux/slices/package.json ./redux/slices/
-COPY redux/hooks/package.json ./redux/hooks/
-COPY redux/adapters/package.json ./redux/adapters/
-COPY redux/hooks-data/package.json ./redux/hooks-data/
-COPY redux/hooks-auth/package.json ./redux/hooks-auth/
-COPY redux/hooks-canvas/package.json ./redux/hooks-canvas/
-COPY redux/hooks-async/package.json ./redux/hooks-async/
-COPY redux/hooks-utils/package.json ./redux/hooks-utils/
-COPY redux/hooks-forms/package.json ./redux/hooks-forms/
-COPY redux/core-hooks/package.json ./redux/core-hooks/
-COPY redux/api-clients/package.json ./redux/api-clients/
-COPY redux/timing-utils/package.json ./redux/timing-utils/
-COPY redux/middleware/package.json ./redux/middleware/
-COPY redux/services/package.json ./redux/services/
-COPY redux/persist/package.json ./redux/persist/
+COPY libraries/redux/core/package.json ./libraries/redux/core/
+COPY libraries/redux/slices/package.json ./libraries/redux/slices/
+COPY libraries/redux/hooks/package.json ./libraries/redux/hooks/
+COPY libraries/redux/adapters/package.json ./libraries/redux/adapters/
+COPY libraries/redux/hooks-data/package.json ./libraries/redux/hooks-data/
+COPY libraries/redux/hooks-auth/package.json ./libraries/redux/hooks-auth/
+COPY libraries/redux/hooks-canvas/package.json ./libraries/redux/hooks-canvas/
+COPY libraries/redux/hooks-async/package.json ./libraries/redux/hooks-async/
+COPY libraries/redux/hooks-utils/package.json ./libraries/redux/hooks-utils/
+COPY libraries/redux/hooks-forms/package.json ./libraries/redux/hooks-forms/
+COPY libraries/redux/core-hooks/package.json ./libraries/redux/core-hooks/
+COPY libraries/redux/api-clients/package.json ./libraries/redux/api-clients/
+COPY libraries/redux/timing-utils/package.json ./libraries/redux/timing-utils/
+COPY libraries/redux/middleware/package.json ./libraries/redux/middleware/
+COPY libraries/redux/services/package.json ./libraries/redux/services/
+COPY libraries/redux/persist/package.json ./libraries/redux/persist/
 
 # Strip localhost Verdaccio registry — unreachable inside Docker; fall back to public npm
 RUN sed -i '/@esbuild-kit:registry/d; /localhost:4873/d' .npmrc \
@@ -61,22 +61,23 @@ RUN sed -i '/@esbuild-kit:registry/d; /localhost:4873/d' .npmrc
 RUN npm install --ignore-scripts --legacy-peer-deps
 
 # Build only core workspace libs needed by storybook components
-RUN for ws in redux/core redux/slices redux/hooks redux/adapters \
-    redux/hooks-async redux/api-clients redux/persist \
-    components workflow; do \
+RUN for ws in libraries/redux/core libraries/redux/slices \
+    libraries/redux/hooks libraries/redux/adapters \
+    libraries/redux/hooks-async libraries/redux/api-clients \
+    libraries/redux/persist libraries/components libraries/workflow; do \
     npm run build -w "$ws" --if-present 2>&1 || { echo "ERROR: $ws build failed"; exit 1; }; \
 done
 
 # Fix npm bug with optional platform-specific deps on arm64
 RUN npm rebuild rollup 2>/dev/null || npm install @rollup/rollup-linux-arm64-musl 2>/dev/null || true
 
-RUN cd storybook && npx storybook build
+RUN cd frontends/storybook && npx storybook build
 
 # --- Runtime stage (nginx for correct subpath serving) ---
 FROM nginx:alpine
 
 # Place built storybook at /storybook/ subpath so asset URLs resolve correctly
-COPY --from=builder /app/storybook/storybook-static /usr/share/nginx/html/storybook
+COPY --from=builder /app/frontends/storybook/storybook-static /usr/share/nginx/html/storybook
 
 # nginx config: serve /storybook/ with SPA fallback
 RUN printf 'server {\n\

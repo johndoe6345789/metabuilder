@@ -37,21 +37,21 @@ COPY libraries/pcbgenerator/requirements.txt                                   /
 COPY libraries/pcbgenerator/requirements-dev.txt                               /deps/flat/pcbgenerator-dev.txt
 
 # Tests (no -r includes)
-COPY dbal/production/tests/integration/requirements.txt                        /deps/flat/dbal-tests.txt
+COPY libraries/dbal/production/tests/integration/requirements.txt                        /deps/flat/dbal-tests.txt
 
 # CAD tools — preserve directory for -r requirements.txt in -dev.txt
 COPY libraries/cadquerywrapper/requirements.txt                                /deps/cadquerywrapper/requirements.txt
 COPY libraries/cadquerywrapper/requirements-dev.txt                            /deps/cadquerywrapper/requirements-dev.txt
 
 # Workflow Python plugins — preserve directory so chained -r includes work
-COPY workflow/plugins/python/requirements.txt                                  /deps/workflow/requirements.txt
-COPY workflow/plugins/python/requirements-backend.txt                          /deps/workflow/requirements-backend.txt
-COPY workflow/plugins/python/requirements-web.txt                              /deps/workflow/requirements-web.txt
-COPY workflow/plugins/python/requirements-tools.txt                            /deps/workflow/requirements-tools.txt
-COPY workflow/plugins/python/requirements-notifications.txt                    /deps/workflow/requirements-notifications.txt
-COPY workflow/plugins/python/requirements-packagerepo.txt                      /deps/workflow/requirements-packagerepo.txt
-COPY workflow/plugins/python/requirements-testing.txt                          /deps/workflow/requirements-testing.txt
-COPY workflow/plugins/python/requirements-dev.txt                              /deps/workflow/requirements-dev.txt
+COPY libraries/workflow/plugins/python/requirements.txt                                  /deps/workflow/requirements.txt
+COPY libraries/workflow/plugins/python/requirements-backend.txt                          /deps/workflow/requirements-backend.txt
+COPY libraries/workflow/plugins/python/requirements-web.txt                              /deps/workflow/requirements-web.txt
+COPY libraries/workflow/plugins/python/requirements-tools.txt                            /deps/workflow/requirements-tools.txt
+COPY libraries/workflow/plugins/python/requirements-notifications.txt                    /deps/workflow/requirements-notifications.txt
+COPY libraries/workflow/plugins/python/requirements-packagerepo.txt                      /deps/workflow/requirements-packagerepo.txt
+COPY libraries/workflow/plugins/python/requirements-testing.txt                          /deps/workflow/requirements-testing.txt
+COPY libraries/workflow/plugins/python/requirements-dev.txt                              /deps/workflow/requirements-dev.txt
 
 # Route pip through the pkgrepo pypi cache when given (fetch from PyPI -> store
 # in S3 -> serve). Empty = plain PyPI. deployment.py forwards $PIP_INDEX_URL.

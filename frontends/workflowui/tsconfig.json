@@ -48,7 +48,7 @@
         "./src/styles/*"
       ],
       "@/fakemui": [
-        "../fakemui/index.ts"
+        "../../libraries/components/fakemui/index.ts"
       ]
     },
     "incremental": true,

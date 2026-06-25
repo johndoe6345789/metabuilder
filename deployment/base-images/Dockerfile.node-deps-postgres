@@ -14,10 +14,10 @@ FROM ${BASE_REGISTRY}/base-node-deps:latest
 # package-lock.json is required so npm respects workspace-local placements
 # (e.g. tsup in components/node_modules, not hoisted to root).
 COPY package.json package-lock.json ./
-COPY components/package.json                          ./components/
-COPY components/fakemui/package.json                  ./components/fakemui/
+COPY libraries/components/package.json                          ./libraries/components/
+COPY libraries/components/fakemui/package.json                  ./libraries/components/fakemui/
 COPY config/package.json                              ./config/
-COPY scss/package.json                                ./scss/
+COPY libraries/scss/package.json                                ./libraries/scss/
 COPY frontends/codegen/package.json                   ./frontends/codegen/
 COPY frontends/dbal/package.json                      ./frontends/dbal/
 COPY frontends/emailclient/package.json               ./frontends/emailclient/
@@ -26,29 +26,29 @@ COPY frontends/nextjs/package.json                    ./frontends/nextjs/
 COPY frontends/pastebin/package.json                  ./frontends/pastebin/
 COPY frontends/postgres/package.json                  ./frontends/postgres/
 COPY frontends/workflowui/package.json                ./frontends/workflowui/
-COPY hooks/package.json                               ./hooks/
-COPY interfaces/package.json                          ./interfaces/
-COPY redux/adapters/package.json                      ./redux/adapters/
-COPY redux/api-clients/package.json                   ./redux/api-clients/
-COPY redux/core/package.json                          ./redux/core/
-COPY redux/core-hooks/package.json                    ./redux/core-hooks/
-COPY redux/email/package.json                         ./redux/email/
-COPY redux/hooks/package.json                         ./redux/hooks/
-COPY redux/hooks-async/package.json                   ./redux/hooks-async/
-COPY redux/hooks-auth/package.json                    ./redux/hooks-auth/
-COPY redux/hooks-canvas/package.json                  ./redux/hooks-canvas/
-COPY redux/hooks-data/package.json                    ./redux/hooks-data/
-COPY redux/hooks-forms/package.json                   ./redux/hooks-forms/
-COPY redux/hooks-utils/package.json                   ./redux/hooks-utils/
-COPY redux/middleware/package.json                    ./redux/middleware/
-COPY redux/persist/package.json                       ./redux/persist/
-COPY redux/services/package.json                      ./redux/services/
-COPY redux/slices/package.json                        ./redux/slices/
-COPY redux/timing-utils/package.json                  ./redux/timing-utils/
-COPY storybook/package.json                           ./storybook/
-COPY translations/package.json                        ./translations/
-COPY types/package.json                               ./types/
-COPY workflow/package.json                            ./workflow/
+COPY libraries/hooks/package.json                               ./libraries/hooks/
+COPY libraries/interfaces/package.json                          ./libraries/interfaces/
+COPY libraries/redux/adapters/package.json                      ./libraries/redux/adapters/
+COPY libraries/redux/api-clients/package.json                   ./libraries/redux/api-clients/
+COPY libraries/redux/core/package.json                          ./libraries/redux/core/
+COPY libraries/redux/core-hooks/package.json                    ./libraries/redux/core-hooks/
+COPY libraries/redux/email/package.json                         ./libraries/redux/email/
+COPY libraries/redux/hooks/package.json                         ./libraries/redux/hooks/
+COPY libraries/redux/hooks-async/package.json                   ./libraries/redux/hooks-async/
+COPY libraries/redux/hooks-auth/package.json                    ./libraries/redux/hooks-auth/
+COPY libraries/redux/hooks-canvas/package.json                  ./libraries/redux/hooks-canvas/
+COPY libraries/redux/hooks-data/package.json                    ./libraries/redux/hooks-data/
+COPY libraries/redux/hooks-forms/package.json                   ./libraries/redux/hooks-forms/
+COPY libraries/redux/hooks-utils/package.json                   ./libraries/redux/hooks-utils/
+COPY libraries/redux/middleware/package.json                    ./libraries/redux/middleware/
+COPY libraries/redux/persist/package.json                       ./libraries/redux/persist/
+COPY libraries/redux/services/package.json                      ./libraries/redux/services/
+COPY libraries/redux/slices/package.json                        ./libraries/redux/slices/
+COPY libraries/redux/timing-utils/package.json                  ./libraries/redux/timing-utils/
+COPY frontends/storybook/package.json                           ./frontends/storybook/
+COPY libraries/translations/package.json                        ./libraries/translations/
+COPY libraries/types/package.json                               ./libraries/types/
+COPY libraries/workflow/package.json                            ./libraries/workflow/
 
 # Re-link workspaces. Probe host.docker.internal first, fall back to bridge gateway.
 RUN set -e; \

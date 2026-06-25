@@ -38,13 +38,13 @@
         "./src/*"
       ],
       "@/fakemui": [
-        "../../components/fakemui"
+        "../../libraries/components/fakemui"
       ],
       "@/fakemui/*": [
-        "../../components/fakemui/*"
+        "../../libraries/components/fakemui/*"
       ],
       "@dbal-ui/*": [
-        "../../dbal/shared/ui/*"
+        "../../libraries/dbal/shared/ui/*"
       ]
     },
     "plugins": [
