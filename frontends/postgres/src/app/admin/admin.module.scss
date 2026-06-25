@@ -37,12 +37,17 @@
     background-image: none;
     border-bottom: 1px solid var(--mat-sys-outline-variant);
     box-shadow: none;
+    z-index: 1201 !important;
   }
 
   :global(.MuiDrawer-paper) {
     background-color: var(--mat-sys-surface-container-low);
     background-image: none;
     border-right: 1px solid var(--mat-sys-outline-variant);
+    width: 240px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
   }
 
   :global(.MuiListItemIcon-root) {

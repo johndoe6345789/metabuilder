@@ -2,6 +2,7 @@
 
 import { Alert, Paper, Typography } from '@metabuilder/components/fakemui';
 import { getFeatureById, getIndexTypes } from '@/utils/featureConfig';
+import s from './index-manager-tab.module.scss';
 import ConfirmDialog from './ConfirmDialog';
 import IndexCreateDialog from './IndexCreateDialog';
 import IndexList from './IndexList';
@@ -38,10 +39,10 @@ export default function IndexManagerTab({
         </Typography>
       )}
       {success && (
-        <Alert severity="success" sx={{ mt: 2 }}>{success}</Alert>
+        <Alert severity="success" className={s.alert}>{success}</Alert>
       )}
       {error && (
-        <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>
+        <Alert severity="error" className={s.alert}>{error}</Alert>
       )}
       <IndexTableSelector
         tables={tables}
@@ -58,7 +59,7 @@ export default function IndexManagerTab({
         />
       )}
       {selectedTable && !indexes.length && !loading && (
-        <Paper sx={{ p: 2, mt: 2 }}>
+        <Paper className={s.empty}>
           <Typography color="text.secondary">
             No indexes found for table &quot;{selectedTable}&quot;
           </Typography>

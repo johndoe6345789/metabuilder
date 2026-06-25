@@ -1,9 +1,10 @@
 'use client';
 
 import {
-  Button, Dialog, DialogActions, DialogContent, DialogTitle,
-  FormControl, InputLabel, MenuItem, Select, Typography,
+  Button, Dialog, DialogActions, DialogContent,
+  DialogTitle, FormControl, InputLabel, MenuItem, Select, Typography,
 } from '@metabuilder/components/fakemui';
+import s from './drop-column-dialog.module.scss';
 import { useDropColumnForm } from './hooks/useDropColumnForm';
 
 type Column = { column_name: string };
@@ -25,10 +26,7 @@ export default function DropColumnDialog({
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
       <DialogTitle>Drop Column — {tableName}</DialogTitle>
-      <DialogContent sx={{
-        display: 'flex', flexDirection: 'column',
-        gap: 2, pt: '16px !important',
-      }}>
+      <DialogContent className={s.content}>
         <Typography variant="body2" color="error.main">
           This permanently deletes the column and all its data.
         </Typography>
@@ -44,7 +42,7 @@ export default function DropColumnDialog({
           </Select>
         </FormControl>
       </DialogContent>
-      <DialogActions sx={{ px: 3, pb: 2 }}>
+      <DialogActions className={s.actions}>
         <Button onClick={handleClose}>Cancel</Button>
         <Button variant="contained" color="error" onClick={handleSubmit}
           disabled={busy || !isValid}>

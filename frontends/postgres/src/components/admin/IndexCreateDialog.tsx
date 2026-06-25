@@ -4,6 +4,7 @@ import {
   Dialog, DialogContent, DialogTitle,
 } from '@metabuilder/components/fakemui';
 import type { IndexType } from '@/utils/featureConfig';
+import s from './index-create-dialog.module.scss';
 import IndexCreateForm from './IndexCreateForm';
 
 type IndexCreateDialogProps = {
@@ -42,7 +43,7 @@ export default function IndexCreateDialog({
   return (
     <Dialog open onClose={onCancel} maxWidth="sm" fullWidth>
       <DialogTitle>Create Index on {selectedTable}</DialogTitle>
-      <DialogContent sx={{ pt: '16px !important' }}>
+      <DialogContent className={s.content}>
         <IndexCreateForm
           indexName={indexName}
           onIndexNameChange={onIndexNameChange}

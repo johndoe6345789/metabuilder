@@ -4,9 +4,10 @@ import AddIcon from '@metabuilder/components/fakemui/Add';
 import DeleteIcon from '@metabuilder/components/fakemui/Delete';
 import EditIcon from '@metabuilder/components/fakemui/Edit';
 import {
-  Box, Button, Paper, Table, TableBody,
+  Button, Paper, Table, TableBody,
   TableCell, TableContainer, TableHead, TableRow, Typography,
 } from '@metabuilder/components/fakemui';
+import s from './column-schema-panel.module.scss';
 
 export type ColumnInfo = {
   column_name: string;
@@ -31,29 +32,27 @@ export default function ColumnSchemaPanel({
   const hasColumns = columns.length > 0;
   return (
     <>
-      <Box sx={{ display: 'flex', gap: 1, mb: 1.5, flexWrap: 'wrap' }}>
+      <div className={s.actions}>
         {canAdd && (
-          <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={onAdd}>
-            Add Column
-          </Button>
+          <Button variant="contained" size="small" startIcon={<AddIcon />}
+            onClick={onAdd}>Add Column</Button>
         )}
         {canModify && (
-          <Button variant="outlined" size="small" disabled={!hasColumns} startIcon={<EditIcon />} onClick={onModify}>
-            Modify Column
-          </Button>
+          <Button variant="outlined" size="small" disabled={!hasColumns}
+            startIcon={<EditIcon />} onClick={onModify}>Modify Column</Button>
         )}
         {canDelete && (
-          <Button variant="outlined" size="small" color="error" disabled={!hasColumns} startIcon={<DeleteIcon />} onClick={onDrop}>
-            Drop Column
-          </Button>
+          <Button variant="outlined" size="small" color="error"
+            disabled={!hasColumns} startIcon={<DeleteIcon />}
+            onClick={onDrop}>Drop Column</Button>
         )}
-      </Box>
-      <Paper sx={{ overflow: 'auto' }}>
-        <Box sx={{ px: 2, py: 1, borderBottom: '1px solid rgba(202,196,208,0.08)' }}>
+      </div>
+      <Paper className={s.paper}>
+        <div className={s.header}>
           <Typography variant="caption" color="text.secondary">
             {columns.length} column{columns.length !== 1 ? 's' : ''}
           </Typography>
-        </Box>
+        </div>
         <TableContainer>
           <Table size="small">
             <TableHead>
@@ -67,16 +66,14 @@ export default function ColumnSchemaPanel({
             <TableBody>
               {columns.map(col => (
                 <TableRow key={col.column_name}>
-                  <TableCell sx={{ fontFamily: "'JetBrains Mono', 'Fira Code', 'Consolas', monospace", fontSize: '0.8125rem' }}>
+                  <TableCell className={s.monoCell}>
                     {col.column_name}
                   </TableCell>
-                  <TableCell sx={{ color: 'text.secondary', fontSize: '0.8125rem' }}>
+                  <TableCell className={s.typeCell}>
                     {col.data_type}
                   </TableCell>
-                  <TableCell sx={{ fontSize: '0.8125rem' }}>
-                    {col.is_nullable}
-                  </TableCell>
-                  <TableCell sx={{ color: 'text.disabled', fontSize: '0.8125rem' }}>
+                  <TableCell>{col.is_nullable}</TableCell>
+                  <TableCell className={s.dimCell}>
                     {col.column_default ?? '—'}
                   </TableCell>
                 </TableRow>

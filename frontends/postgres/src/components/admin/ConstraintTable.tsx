@@ -11,6 +11,7 @@ import {
   TableHead,
   TableRow,
 } from '@metabuilder/components/fakemui';
+import s from './constraint-table.module.scss';
 
 type Constraint = {
   constraint_name: string;
@@ -31,7 +32,7 @@ export default function ConstraintTable({
   onDeleteClick,
 }: ConstraintTableProps) {
   return (
-    <Paper sx={{ mt: 2 }}>
+    <Paper className={s.paper}>
       <TableContainer>
         <Table size="small">
           <TableHead>
@@ -46,18 +47,10 @@ export default function ConstraintTable({
           <TableBody>
             {constraints.map(constraint => (
               <TableRow key={constraint.constraint_name}>
-                <TableCell>
-                  {constraint.constraint_name}
-                </TableCell>
-                <TableCell>
-                  {constraint.constraint_type}
-                </TableCell>
-                <TableCell>
-                  {constraint.column_name || '-'}
-                </TableCell>
-                <TableCell>
-                  {constraint.check_clause || '-'}
-                </TableCell>
+                <TableCell>{constraint.constraint_name}</TableCell>
+                <TableCell>{constraint.constraint_type}</TableCell>
+                <TableCell>{constraint.column_name || '-'}</TableCell>
+                <TableCell>{constraint.check_clause || '-'}</TableCell>
                 <TableCell align="right">
                   {canDelete && (
                     <Button

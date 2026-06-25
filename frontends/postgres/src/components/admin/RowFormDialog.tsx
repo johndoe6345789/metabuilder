@@ -6,6 +6,7 @@ import {
   DialogTitle, FormControlLabel, TextField,
 } from '@metabuilder/components/fakemui';
 import type { TdvColumn, TdvSchema } from './hooks/useTableDataView';
+import s from './row-form-dialog.module.scss';
 
 const NUM_TYPES = new Set([
   'integer', 'bigint', 'smallint', 'numeric', 'real',
@@ -64,16 +65,18 @@ export default function RowFormDialog({
               <FormControlLabel
                 key={col.column_name}
                 label={col.column_name}
+                className={s.checkboxRow}
                 control={
                   <Checkbox
                     checked={!!form[col.column_name]}
                     disabled={readonly}
                     onChange={e =>
-                      setForm(f => ({ ...f, [col.column_name]: e.target.checked }))
+                      setForm(f => ({
+                        ...f, [col.column_name]: e.target.checked,
+                      }))
                     }
                   />
                 }
-                sx={{ display: 'block', mb: 1 }}
               />
             );
           }
@@ -89,7 +92,7 @@ export default function RowFormDialog({
               disabled={readonly}
               size="small"
               fullWidth
-              sx={{ mb: 1.5 }}
+              className={s.field}
             />
           );
         })}

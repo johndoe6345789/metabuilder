@@ -13,3 +13,23 @@
   flex-direction: column;
   gap: 16px;
 }
+
+.alert {
+  margin-top: 16px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.queryResults {
+  margin-top: 16px;
+  overflow: auto;
+}
+
+.queryHeader {
+  padding: 8px 16px;
+  border-bottom: 1px solid color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+}

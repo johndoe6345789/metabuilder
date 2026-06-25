@@ -1,7 +1,8 @@
 'use client';
 
 import AddIcon from '@metabuilder/components/fakemui/Add';
-import { Box, Button, Paper } from '@metabuilder/components/fakemui';
+import { Button, Paper } from '@metabuilder/components/fakemui';
+import s from './index-table-selector.module.scss';
 import TablePicker from './TablePicker';
 
 type IndexTableSelectorProps = {
@@ -20,7 +21,7 @@ export default function IndexTableSelector({
   onCreateClick,
 }: IndexTableSelectorProps) {
   return (
-    <Paper sx={{ p: 2, mt: 2, maxWidth: 560, width: '100%' }}>
+    <Paper className={s.paper}>
       <TablePicker
         label="Select Table"
         value={selectedTable}
@@ -28,7 +29,7 @@ export default function IndexTableSelector({
         options={tables}
       />
       {selectedTable && (
-        <Box sx={{ mt: 2 }}>
+        <div className={s.createBtn}>
           <Button
             variant="contained"
             startIcon={<AddIcon />}
@@ -37,7 +38,7 @@ export default function IndexTableSelector({
           >
             Create Index
           </Button>
-        </Box>
+        </div>
       )}
     </Paper>
   );

@@ -30,8 +30,6 @@ type Props = {
   version: string;
 };
 
-const DRAWER_WIDTH = 240;
-
 export default function DashboardShell({
   navItems,
   selectedIndex,
@@ -63,7 +61,7 @@ export default function DashboardShell({
 
   return (
     <Box className={styles.root}>
-      <AppBar position="fixed" sx={{ zIndex: theme => theme.zIndex.drawer + 1 }}>
+      <AppBar position="fixed">
         <Toolbar>
           <IconButton
             color="inherit"
@@ -89,16 +87,6 @@ export default function DashboardShell({
         onClose={onMobileClose}
         ModalProps={{ keepMounted: true }}
         className={styles.drawer}
-        sx={{
-          width: DRAWER_WIDTH,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: DRAWER_WIDTH,
-            boxSizing: 'border-box',
-            display: 'flex',
-            flexDirection: 'column',
-          },
-        }}
       >
         {drawerContent}
       </Drawer>

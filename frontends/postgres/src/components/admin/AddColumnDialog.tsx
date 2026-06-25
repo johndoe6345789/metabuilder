@@ -5,6 +5,7 @@ import {
   DialogTitle, FormControl, FormControlLabel, InputLabel,
   MenuItem, Select, TextField,
 } from '@metabuilder/components/fakemui';
+import s from './add-column-dialog.module.scss';
 import { useAddColumnForm } from './hooks/useAddColumnForm';
 
 type DataType = { name: string };
@@ -29,10 +30,7 @@ export default function AddColumnDialog({
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
       <DialogTitle>Add Column — {tableName}</DialogTitle>
-      <DialogContent sx={{
-        display: 'flex', flexDirection: 'column',
-        gap: 2, pt: '16px !important',
-      }}>
+      <DialogContent className={s.content}>
         <TextField label="Column Name" value={name} fullWidth autoFocus
           size="small" onChange={e => setName(e.target.value)} />
         <FormControl fullWidth size="small">
@@ -52,7 +50,7 @@ export default function AddColumnDialog({
             onChange={e => setNullable(e.target.checked)} />
         } />
       </DialogContent>
-      <DialogActions sx={{ px: 3, pb: 2 }}>
+      <DialogActions className={s.actions}>
         <Button onClick={handleClose}>Cancel</Button>
         <Button variant="contained" onClick={handleSubmit}
           disabled={busy || !isValid}>

@@ -1,8 +1,9 @@
 'use client';
 
 import AddIcon from '@metabuilder/components/fakemui/Add';
-import { Box, Button, Stack, Typography } from '@metabuilder/components/fakemui';
+import { Button, Typography } from '@metabuilder/components/fakemui';
 import { getConstraintTypes, getFeatureById } from '@/utils/featureConfig';
+import s from './constraint-manager-tab.module.scss';
 import ConstraintDialog from './ConstraintDialog';
 import ConstraintTable from './ConstraintTable';
 import { useConstraintManager } from './hooks/useConstraintManager';
@@ -40,7 +41,7 @@ export default function ConstraintManagerTab({
           {feature.description}
         </Typography>
       )}
-      <Stack spacing={2} sx={{ mt: 2, mb: 2, maxWidth: 560, width: '100%' }}>
+      <div className={s.stack}>
         <TablePicker
           label="Select Table"
           value={selectedTable}
@@ -49,7 +50,7 @@ export default function ConstraintManagerTab({
         />
         {selectedTable && (
           <>
-            <Box>
+            <div>
               {canAdd && (
                 <Button
                   variant="contained"
@@ -59,7 +60,7 @@ export default function ConstraintManagerTab({
                   Add Constraint
                 </Button>
               )}
-            </Box>
+            </div>
             <ConstraintTable
               constraints={constraints}
               canDelete={canDelete}
@@ -67,7 +68,7 @@ export default function ConstraintManagerTab({
             />
           </>
         )}
-      </Stack>
+      </div>
       <ConstraintDialog
         open={dialogState.open}
         mode={dialogState.mode}

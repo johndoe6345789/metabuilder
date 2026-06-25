@@ -9,6 +9,7 @@ import {
   ListItemText,
   Paper,
 } from '@metabuilder/components/fakemui';
+import s from './column-table-list.module.scss';
 
 type TableRow = { table_name: string };
 
@@ -24,14 +25,7 @@ export default function ColumnTableList({
   onSelect,
 }: Props) {
   return (
-    <Paper
-      sx={{
-        width: { xs: '100%', md: 220 },
-        flexShrink: 0,
-        overflow: 'auto',
-        maxHeight: { xs: 280, md: '75vh' },
-      }}
-    >
+    <Paper className={s.paper}>
       <List dense disablePadding>
         {tables.map(table => (
           <ListItem key={table.table_name} disablePadding>
@@ -39,14 +33,13 @@ export default function ColumnTableList({
               selected={selectedTable === table.table_name}
               onClick={() => onSelect(table.table_name)}
             >
-              <ListItemIcon sx={{ minWidth: 32 }}>
-                <StorageIcon sx={{ fontSize: 16 }} />
+              <ListItemIcon className={s.icon}>
+                <StorageIcon className={s.iconSmall} />
               </ListItemIcon>
               <ListItemText
-                primary={table.table_name}
-                slotProps={{
-                  primary: { sx: { fontSize: '0.8125rem' } },
-                }}
+                primary={
+                  <span className={s.itemText}>{table.table_name}</span>
+                }
               />
             </ListItemButton>
           </ListItem>

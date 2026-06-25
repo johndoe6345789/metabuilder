@@ -3,9 +3,10 @@
 import DeleteIcon from '@metabuilder/components/fakemui/Delete';
 import SpeedIcon from '@metabuilder/components/fakemui/Speed';
 import {
-  Box, Chip, IconButton, List, ListItem,
+  Chip, IconButton, List, ListItem,
   ListItemIcon, ListItemText, Paper, Tooltip, Typography,
 } from '@metabuilder/components/fakemui';
+import s from './index-list.module.scss';
 
 type IndexEntry = {
   index_name: string;
@@ -42,7 +43,7 @@ export default function IndexList({
   tableName, indexes, onDeleteIndex,
 }: IndexListProps) {
   return (
-    <Paper sx={{ p: 2, mt: 2 }}>
+    <Paper className={s.paper}>
       <Typography variant="h6" gutterBottom>
         Indexes on {tableName}
       </Typography>
@@ -75,7 +76,7 @@ export default function IndexList({
             <ListItemIcon><SpeedIcon /></ListItemIcon>
             <ListItemText
               primary={(
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <div className={s.nameRow}>
                   <Typography variant="body1">
                     {index.index_name}
                   </Typography>
@@ -84,7 +85,7 @@ export default function IndexList({
                     is_unique={index.is_unique}
                     index_type={index.index_type}
                   />
-                </Box>
+                </div>
               )}
               secondary={`Columns: ${index.columns.join(', ')}`}
             />

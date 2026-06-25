@@ -1,8 +1,8 @@
 'use client';
 
-import { Box, Stack, Typography } from '@metabuilder/components/fakemui';
+import { Typography } from '@metabuilder/components/fakemui';
 import { getDataTypes, getFeatureById } from '@/utils/featureConfig';
-import styles from './column-manager-tab.module.scss';
+import s from './column-manager-tab.module.scss';
 import AddColumnDialog from './AddColumnDialog';
 import ColumnSchemaPanel from './ColumnSchemaPanel';
 import ColumnTableList from './ColumnTableList';
@@ -22,10 +22,8 @@ export default function ColumnManagerTab({
 }: Props) {
   const {
     selectedTable, setSelectedTable,
-    schema, dialog, setDialog,
-    columns, withRefresh,
+    schema, dialog, setDialog, columns, withRefresh,
   } = useColumnManager();
-
   const feature = getFeatureById('column-management');
   const dataTypes = getDataTypes();
   const canAdd = feature?.ui.actions.includes('add');
@@ -37,46 +35,27 @@ export default function ColumnManagerTab({
       <Typography variant="h5" gutterBottom>
         {feature?.name ?? 'Column Management'}
       </Typography>
-
-      <Stack
-        spacing={2}
-        className={styles.stack}
-      >
-        <ColumnTableList
-          tables={tables}
-          selectedTable={selectedTable}
-          onSelect={setSelectedTable}
-        />
-
-        <Box className={styles.content}>
-          {!selectedTable && (
-            <Typography
-              color="text.secondary"
-              className={styles.hint}
-            >
-              Select a table to manage its columns
-            </Typography>
-          )}
-          {selectedTable && !schema && (
-            <Typography
-              color="text.secondary"
-              className={styles.hint}
-            >
-              Loading…
-            </Typography>
-          )}
-          {selectedTable && schema && (
-            <ColumnSchemaPanel
-              columns={columns}
-              canAdd={canAdd} canModify={canModify} canDelete={canDelete}
-              onAdd={() => setDialog('add')}
-              onModify={() => setDialog('modify')}
-              onDrop={() => setDialog('drop')}
-            />
-          )}
-        </Box>
-      </Stack>
-
+      <div className={s.stack}>
+        <ColumnTableList tables={tables} selectedTable={selectedTable}
+          onSelect={setSelectedTable} />
+        <div className={s.content}>
+          {!selectedTable || !schema
+            ? (
+              <Typography color="text.secondary" className={s.hint}>
+                {!selectedTable
+                  ? 'Select a table to manage its columns'
+                  : 'Loading…'}
+              </Typography>
+            )
+            : (
+              <ColumnSchemaPanel columns={columns}
+                canAdd={canAdd} canModify={canModify} canDelete={canDelete}
+                onAdd={() => setDialog('add')}
+                onModify={() => setDialog('modify')}
+                onDrop={() => setDialog('drop')} />
+            )}
+        </div>
+      </div>
       <AddColumnDialog open={dialog === 'add'} tableName={selectedTable}
         dataTypes={dataTypes} onClose={() => setDialog(null)}
         onSubmit={withRefresh(onAddColumn)} />

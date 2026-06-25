@@ -5,6 +5,7 @@ import {
   DialogTitle, FormControl, FormControlLabel, InputLabel,
   MenuItem, Select,
 } from '@metabuilder/components/fakemui';
+import s from './modify-column-dialog.module.scss';
 import { useModifyColumnForm } from './hooks/useModifyColumnForm';
 
 type Column = { column_name: string };
@@ -31,10 +32,7 @@ export default function ModifyColumnDialog({
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
       <DialogTitle>Modify Column — {tableName}</DialogTitle>
-      <DialogContent sx={{
-        display: 'flex', flexDirection: 'column',
-        gap: 2, pt: '16px !important',
-      }}>
+      <DialogContent className={s.content}>
         <FormControl fullWidth size="small">
           <InputLabel>Column</InputLabel>
           <Select value={selected} label="Column"
@@ -64,7 +62,7 @@ export default function ModifyColumnDialog({
           </>
         )}
       </DialogContent>
-      <DialogActions sx={{ px: 3, pb: 2 }}>
+      <DialogActions className={s.actions}>
         <Button onClick={handleClose}>Cancel</Button>
         <Button variant="contained" onClick={handleSubmit}
           disabled={busy || !isValid}>
