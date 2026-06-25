@@ -1,7 +1,7 @@
 # MetaBuilder - AI Assistant Guide
 
-**Last Updated**: 2026-03-04 | **Status**: Phase 2 & 3 Complete, Universal Platform in Progress
-**Scale**: 27,826+ files across 34 directories | **Philosophy**: 95% JSON config, 5% TS/C++ infrastructure
+**Last Updated**: 2026-06-25 | **Status**: Universal Platform — Quake 3 on custom engine ✅
+**Scale**: 27,826+ files | 16 frontends | 16 libraries | 84 packages | **Philosophy**: 95% JSON config, 5% TS/C++ infrastructure
 **Documentation**: Code = Doc (self-documenting Python scripts with argparse)
 
 ---
@@ -12,24 +12,23 @@ All documentation is executable code. No separate markdown docs.
 
 ```bash
 # Entry points (each with --help)
-./metabuilder.py --help              # Root project manager
-./codegen/codegen.py --help          # CodeForge IDE
-./pastebin/pastebin.py --help        # Pastebin
-./gameengine/gameengine.py --help    # Game engine
-./postgres/postgres.py --help        # PostgreSQL dashboard
-./mojo/mojo.py --help               # Mojo compiler
+./frontends/codegen/codegen.py --help          # CodeForge IDE
+./frontends/pastebin/pastebin.py --help        # Pastebin
+./frontends/postgres/postgres.py --help        # PostgreSQL dashboard
+./libraries/mojo/mojo.py --help               # Mojo compiler
 cd deployment && python3 deployment.py build base --list  # Docker base images
 
 # Documentation (SQLite3 + FTS5 full-text search)
-cd txt && python3 reports.py search "query"     # 212 reports
-cd docs && python3 docs.py search "query"       # 217 docs, 13 categories
-python3 docs.py list --category guides
+cd docs/txt && python3 reports.py search "query"     # 212 reports
+cd docs && python3 docs.py search "query"            # 217 docs, 13 categories
+cd docs && python3 docs.py list --category guides
 ```
 
 ---
 
 ## Completed Milestones (All ✅)
 
+- **Jun 25**: Root reorganised into category folders (`libraries/`, `frontends/`), `fakemui` renamed to `m3` (`@metabuilder/m3`), postgres dashboard migrated to SCSS modules (all sx props removed)
 - **Mar 4**: DBAL C++ event-driven workflow engine (`pastebin.User.created` → 15-node JSON workflow → seeded namespaces + snippets), full YAML→JSON migration (63 files, yaml-cpp removed), JWT auth + JSON ACL, declarative seed data (`dbal/shared/seeds/database/`), i18n (EN/ES) across all pastebin components, dark/light theme switcher
 - **Feb 7**: Game engine CLI args (`--bootstrap`, `--game`), 27/27 tests passing (100%)
 - **Feb 6**: 6 new DB backends (total 14), SQLite3 doc migration, Docker dev container, WorkflowUI E2E (92.6%)
@@ -41,33 +40,47 @@ python3 docs.py list --category guides
 - **Jan 24**: Dependency fixes, testing library standardization
 - **Jan 23**: Email client (Phases 1-5), Mojo compiler, FakeMUI restructuring, dependency remediation
 
-**Details**: Search `cd txt && python3 reports.py search "topic"` for full completion reports.
+**Details**: Search `cd docs/txt && python3 reports.py search "topic"` for full completion reports.
 
 ---
 
 ## Directory Index
 
-| Directory | Files | Description |
-|-----------|-------|-------------|
-| `dbal/` | 495 | Database Abstraction Layer (C++ daemon + shared schemas) |
-| `workflow/` | 765 | DAG workflow engine, multi-language plugins |
-| `frontends/` | 495 | CLI (C++), Qt6 (QML), Next.js (React) |
-| `packages/` | 550 | 62 modular feature packages |
-| `fakemui/` | 758 | Material UI clone (145 React + 421 icons) |
-| `gameengine/` | 2,737 | SDL3/bgfx 2D/3D game engine |
-| `codegen/` | 1,926 | CodeForge IDE (React+Monaco) |
-| `pastebin/` | 1,114 | Code snippet sharing (Next.js) |
-| `exploded-diagrams/` | 17,565 | Interactive 3D exploded diagrams |
-| `schemas/` | 105 | JSON Schema validation |
-| `services/` | 29 | Media daemon (FFmpeg/ImageMagick) |
-| `postgres/` | 212 | PostgreSQL admin dashboard |
-| `mojo/` | 82 | Mojo compiler + language examples |
-| `docs/` | 1 DB | SQLite3 (217 docs, 13 categories, FTS5) |
-| `txt/` | 1 DB | SQLite3 (212 reports, FTS5, archives) |
-| `old/` | 149 | Legacy Spark implementation |
-| `.github/` | 52 | GitHub Actions, templates |
-
-*Other standalone: pcbgenerator, packagerepo, cadquerywrapper, sparkos, storybook, dockerterminal, smtprelay, caproverforge, repoforge, emailclient, prisma, deployment, spec, scripts, config, e2e*
+| Directory | Description |
+|-----------|-------------|
+| `libraries/dbal/` | C++ DBAL daemon (8 DB backends, JWT auth, event workflows, 40 entity schemas) |
+| `libraries/workflow/` | Multi-language DAG engine (TS/Python/C++, 41 examples, 7 plugin runtimes) |
+| `libraries/components/m3/` | M3 component library — 241 components, 19 categories (`@metabuilder/m3`) |
+| `libraries/hooks/` | 100+ React hooks (`@metabuilder/hooks`, hooks-utils, hooks-forms) |
+| `libraries/redux/` | Redux slices, API clients, middleware (14 categories) |
+| `libraries/schemas/` | JSON Schema validation |
+| `libraries/icons/` | 421 icons |
+| `libraries/mojo/` | Mojo compiler + language examples |
+| `libraries/cadquerywrapper/` | Parametric 3D CAD (Python/CadQuery) |
+| `libraries/pcbgenerator/` | PCB design automation (Python) |
+| `libraries/qml/` | Qt6 QML components |
+| `libraries/sparkos/` | Minimal Linux distro (C++/Qt6) |
+| `frontends/gameengine/` | SDL3/bgfx C++ game engine — Quake 3 playable, **212 workflow steps** |
+| `frontends/pastebin/` | Code snippet sharing (Next.js + Flask + DBAL) |
+| `frontends/codegen/` | CodeForge IDE (React + Monaco) |
+| `frontends/workflowui/` | Visual workflow editor (n8n-style, 152+ plugin nodes) |
+| `frontends/postgres/` | PostgreSQL admin dashboard (Next.js + M3) |
+| `frontends/emailclient/` | Full email client (IMAP/SMTP, Next.js) |
+| `frontends/packagerepo/` | Multi-format package registry (PyPI/Maven/Go/Cargo/Ruby/Nuget) |
+| `frontends/nextjs/` | Primary web UI (Next.js) |
+| `frontends/cli/` | C++ command-line interface |
+| `frontends/qt6/` | Desktop app (Qt6/QML) |
+| `frontends/dockerterminal/` | Docker Swarm management UI |
+| `frontends/storybook/` | Component documentation and testing |
+| `frontends/exploded-diagrams/` | Interactive 3D exploded diagrams |
+| `frontends/caproverforge/` | CapRover PaaS mobile client (Android/Kotlin) |
+| `frontends/repoforge/` | GitHub Android client (Kotlin/Compose) |
+| `packages/` | 84 modular feature packages |
+| `services/` | Background daemons (media, email, plugin-registry, SMTP relay) |
+| `docs/` | SQLite3 (217 docs, 13 categories, FTS5 search) |
+| `docs/txt/` | SQLite3 (212 reports, FTS5, archives) |
+| `docs/old/` | Legacy Spark implementation |
+| `.github/` | GitHub Actions, templates |
 
 ---
 
@@ -80,9 +93,9 @@ python3 docs.py list --category guides
 
 ### 2. Schema-First Development
 ```
-dbal/shared/api/schema/entities/    # JSON entities (SOURCE OF TRUTH)
-schemas/package-schemas/            # JSON validation schemas (27 total)
-dbal/shared/seeds/database/         # Declarative JSON seed data
+dbal/shared/api/schema/entities/       # JSON entities (SOURCE OF TRUTH)
+libraries/schemas/package-schemas/     # JSON validation schemas (27 total)
+dbal/shared/seeds/database/            # Declarative JSON seed data
 ```
 
 ### 3. Multi-Tenant by Default
@@ -159,25 +172,25 @@ dbal/
 - **Elasticsearch search**: `DBAL_SEARCH_URL=http://localhost:9200?index=dbal_search&refresh=true`
 - Patterns: read-through, write-through, cache-aside, dual-write, CDC, search-first
 
-### Workflow Engine (`workflow/`)
+### Workflow Engine (`libraries/workflow/`)
 
-Multi-language: executors (TS, Python, C++), plugins (C++/16 categories, Python, TS, Go, Rust, Mojo), 19 example workflows. Dynamic plugin registry at `/api/plugins` (152 nodes).
+Multi-language: executors (TS, Python, C++), plugins (7 runtimes: TS, Python, C++, Rust, Go, Mojo, registry), 41 example workflows. Dynamic plugin registry at `/api/plugins`. Game engine registers 212 step types.
 
-### Game Engine (`gameengine/`)
+### Game Engine (`frontends/gameengine/`)
 
-SDL 3.2.20, bgfx 1.129, MaterialX 1.39.1, Assimp, Bullet3, Box2D, EnTT 3.16.0, FFmpeg 8.0.1. 36 service interfaces. CLI: `--bootstrap bootstrap_mac --game seed`.
+SDL3/bgfx C++ engine — **Quake 3 fully playable** (BSP, lightmaps, pmove, weapons, bots, HUD, menus). 212 registered workflow steps covering rendering (deferred, TAA, SSAO, Bloom), Q3 gameplay (42 steps), physics (AABB, gravity, friction), audio (3D positional, Opus), scene, camera, input, math, logic. 12 game packages including `quake3`, `quake3_screenshot`, `materialx`. CLI: `--bootstrap bootstrap_linux --game quake3`.
 
-### CodeForge IDE (`codegen/`)
+### CodeForge IDE (`frontends/codegen/`)
 
-~420 TSX files (legacy) → 338 JSON definitions (target). See `codegen/CLAUDE.md`.
+Visual code generation studio — React + Monaco editor. See `frontends/codegen/CLAUDE.md`.
 
-### FakeMUI (`fakemui/`)
+### M3 (`libraries/components/m3/`)
 
-167 components (145 core + 22 email) across 11 categories. Import from `@metabuilder/fakemui`. React/TS, QML (104+), Python (15), 421 icons, 78 SCSS modules.
+**241 component files** across 19 categories (atoms, inputs, data-display, feedback, navigation, layout, database, email, canvas, code, terminal, workflows, settings, theming, help). Import from `@metabuilder/m3`. 421 icons, full SCSS modules — zero MUI dependencies.
 
-### React Hooks (`hooks/`)
+### React Hooks (`libraries/hooks/`)
 
-`@metabuilder/hooks` (30 hooks), `@metabuilder/hooks-utils` (useTableState, useAsyncOperation, useDebounced, useThrottled), `@metabuilder/hooks-forms` (useFormBuilder). Multi-version peer deps (React 18/19, Redux 8/9).
+**100+ React hooks** across all common patterns: data fetching (useAsync, useFetch), state (useToggle, useCounter, useMap, useSet), storage (useLocalStorage, useKvStore, useBlobStorage), UI (useDragDrop, useHotkeys, useDialog, useClickOutside), pagination/sorting/filtering, specialized (useWorkflow, useGitHubBuildStatus, useFaviconDesigner, useCanvasKeyboard). Multi-version peer deps (React 18/19, Redux 8/9).
 
 ### Redux
 
@@ -185,13 +198,13 @@ SDL 3.2.20, bgfx 1.129, MaterialX 1.39.1, Assimp, Bullet3, Box2D, EnTT 3.16.0, F
 
 ### Email Client
 
-Phases 1-5 complete (frontend). 4 DBAL schemas, 22 FakeMUI components, 4 Redux slices, 6 hooks, API endpoints. Phases 6-8 TODO: workflow plugins, Flask backend, Docker.
+Phases 1-5 complete (frontend). DBAL schemas, M3 components (email category), Redux slices, hooks, API endpoints. Phases 6-8 TODO: workflow plugins, Flask backend, Docker.
 
 ---
 
 ## Package System (`packages/`)
 
-62 packages: Admin (7), UI Core (8), Dev Tools (7), Features (6), Testing (4).
+84 packages: Admin, UI Core, Dev Tools, Features, Testing, WorkflowUI suite (17).
 
 ```
 packages/{packageId}/
@@ -263,12 +276,17 @@ Pre-commit: `npm run build && npm run typecheck && npm run lint && npm run test:
 - Incomplete work on feature branches only
 
 ### UI/Styling
-- **workflowui + new projects**: FakeMUI only (`@metabuilder/fakemui`)
+- **workflowui + new projects**: M3 only (`@metabuilder/m3`)
 - **Legacy projects**: Radix UI + Tailwind acceptable
-- **Never**: Direct MUI imports in workflowui or new Fakemui-based apps
+- **Never**: Direct MUI imports in workflowui or new M3-based apps
+- **Preferred styling**: SCSS modules (`.module.scss`) — co-located next to component
+- **Migration rule**: Non-modular SCSS (global stylesheets, plain `.scss` imports) should be converted to `.module.scss` as encountered
+- **No `sx` prop on new code**: the `sxToStyle` shim exists for compatibility only; new components use SCSS modules directly
 
 ### WorkflowUI Components
-- Atomic components <100 LOC, SCSS modules, no sx prop
+- Atomic components ≤80 LOC, SCSS modules, no sx prop
+- 80-character line length margin — keep lines within 80 chars
+- **Heavy splitting**: when a component approaches 80 LOC, split aggressively — extract sub-components, hooks, or helpers rather than letting any single file grow. Prefer many small files over one large one.
 - Categories: layout/, cards/, forms/, navigation/, feedback/
 - Import pattern: `@/components/{domain}/{Component}`
 
@@ -295,7 +313,7 @@ Multi-version peer deps. React 18/19, TypeScript 5.9.3, Next.js 14-16, @reduxjs/
 - TypeScript: `@metabuilder/workflow: ^3.0.0`
 
 ### Known Issues
-- postgres dashboard should stay on FakeMUI-only components
+- postgres dashboard uses M3 (`@metabuilder/m3`) — do not introduce MUI/Radix imports
 - 7 moderate npm vulnerabilities (lodash in @prisma/dev, LOW production risk)
 - eslint/vite version conflicts in some workspaces (partially fixed)
 
@@ -314,7 +332,7 @@ Multi-version peer deps. React 18/19, TypeScript 5.9.3, Next.js 14-16, @reduxjs/
 8. Reports → `reports.db`, Docs → `docs.db` (SQLite, not markdown files)
 9. Git: `git add` on project root first, then commit
 10. Use `mv` not `cp` (prevents duplicates)
-11. Log long commands: `| tee txt/command-$(date +%Y%m%d-%H%M%S).log`
+11. Log long commands: `| tee docs/txt/command-$(date +%Y%m%d-%H%M%S).log`
 12. Search SQLite before browsing files
 
 ### Gotchas & Lessons Learned
@@ -324,7 +342,7 @@ Multi-version peer deps. React 18/19, TypeScript 5.9.3, Next.js 14-16, @reduxjs/
 | Conan profile in Docker mount | Run `conan profile detect` INSIDE cache-mounted RUN |
 | Missing types after refactor | Verify all referenced types exist before committing |
 | Headers in src/ not include/ | Use relative paths or fix build include dirs |
-| No logs for long commands | ALWAYS pipe to txt/*.log |
+| No logs for long commands | ALWAYS pipe to docs/txt/*.log |
 | Dockerfile `build/` conflict | Use `_build/` |
 | Drogon wildcard routes | Check docs for path param syntax |
 | `cp` instead of `mv` | ALWAYS use `mv` to relocate |
@@ -351,7 +369,7 @@ Multi-version peer deps. React 18/19, TypeScript 5.9.3, Next.js 14-16, @reduxjs/
 
 ### Critical Folders to Check Before Any Task
 
-`/redux/`, `/components/`, `/scss/`, `/hooks/`, `/types/`, `/interfaces/`, `/icons/`, `/workflow/`, `/schemas/`, `/packages/`, `/deployment/`, `/docs/docs.db`, `/txt/reports.db`
+`/libraries/redux/`, `/libraries/components/`, `/libraries/scss/`, `/libraries/hooks/`, `/libraries/types/`, `/libraries/interfaces/`, `/libraries/icons/`, `/libraries/workflow/`, `/libraries/schemas/`, `/packages/`, `/deployment/`, `/docs/docs.db`, `/docs/txt/reports.db`
 
 ### Task Workflow
 1. Read relevant CLAUDE.md
@@ -388,8 +406,8 @@ A task is complete when:
 ## Project Organization
 
 - **Root**: Minimal - config, CI/CD, build, package files only
-- **Reports**: `txt/reports.db` - create via `python3 reports.py create "Title" "Content..."`
-- **Docs**: `docs/docs.db` - create via `python3 docs.py create "Title" "Content..." --category guides`
+- **Reports**: `docs/txt/reports.db` - create via `cd docs/txt && python3 reports.py create "Title" "Content..."`
+- **Docs**: `docs/docs.db` - create via `cd docs && python3 docs.py create "Title" "Content..." --category guides`
 - **Rule**: Create directly in SQLite, do NOT create markdown files first
 - **File org**: Implementation type first (react/, python/, qml/), component categorization, preserve legacy in archived folders
 
