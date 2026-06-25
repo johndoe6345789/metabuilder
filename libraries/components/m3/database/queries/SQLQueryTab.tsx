@@ -13,6 +13,9 @@ export type SQLQueryTabProps = {
   title?: string;
   description?: string;
   placeholder?: string;
+  label?: string;
+  executeLabel?: string;
+  hint?: string;
   testId?: string;
 };
 
@@ -61,6 +64,9 @@ export function SQLQueryTab({
   title = 'SQL Query Interface',
   description,
   placeholder = 'SELECT * FROM your_table LIMIT 10;',
+  label = 'SQL Query (SELECT only)',
+  executeLabel = 'Execute Query',
+  hint = 'Type a query above to execute',
   testId,
 }: SQLQueryTabProps) {
   const [queryText, setQueryText] = useState('');
@@ -96,7 +102,7 @@ export function SQLQueryTab({
       <Paper className={styles.card}>
         <Box className={styles.editorBlock}>
           <label className={styles.editorLabel}>
-            SQL Query (SELECT only)
+            {label}
           </label>
           <div className="sql-editor-wrap">
             <pre
@@ -120,11 +126,11 @@ export function SQLQueryTab({
         </Box>
         <Box className={styles.actions}>
           <Button variant="contained" onClick={handleExecute} disabled={loading || !queryText.trim()}>
-            {loading ? <CircularProgress size={24} /> : 'Execute Query'}
+            {loading ? <CircularProgress size={24} /> : executeLabel}
           </Button>
           {!queryText.trim() && !loading && (
             <Typography variant="caption" color="text.secondary" className={styles.hint}>
-              Type a query above to execute
+              {hint}
             </Typography>
           )}
         </Box>

@@ -2,6 +2,7 @@
 
 import AddIcon from '@metabuilder/components/m3/Add';
 import { Button, Typography } from '@metabuilder/components/m3';
+import { useTranslations } from 'next-intl';
 import { getConstraintTypes, getFeatureById } from '@/utils/featureConfig';
 import s from './constraint-manager-tab.module.scss';
 import ConstraintDialog from './ConstraintDialog';
@@ -21,6 +22,7 @@ type ConstraintManagerTabProps = {
 export default function ConstraintManagerTab({
   tables, onAddConstraint, onDropConstraint,
 }: ConstraintManagerTabProps) {
+  const t = useTranslations('Admin');
   const feature = getFeatureById('constraint-management');
   const constraintTypes = getConstraintTypes();
   const canAdd = feature?.ui.actions.includes('add');
@@ -34,16 +36,14 @@ export default function ConstraintManagerTab({
   return (
     <>
       <Typography variant="h5" gutterBottom>
-        {feature?.name || 'Constraint Manager'}
+        {t('view.constraints.title')}
       </Typography>
-      {feature?.description && (
-        <Typography variant="body2" color="text.secondary" gutterBottom>
-          {feature.description}
-        </Typography>
-      )}
+      <Typography variant="body2" color="text.secondary" gutterBottom>
+        {t('view.constraints.description')}
+      </Typography>
       <div className={s.stack}>
         <TablePicker
-          label="Select Table"
+          label={t('queryBuilder.selectTable')}
           value={selectedTable}
           onChange={setSelectedTable}
           options={tables}
@@ -57,7 +57,7 @@ export default function ConstraintManagerTab({
                   startIcon={<AddIcon />}
                   onClick={openAddDialog}
                 >
-                  Add Constraint
+                  {t('view.constraints.addConstraint')}
                 </Button>
               )}
             </div>

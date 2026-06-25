@@ -1,6 +1,7 @@
 'use client';
 
 import { Alert, Paper, Typography } from '@metabuilder/components/m3';
+import { useTranslations } from 'next-intl';
 import { getFeatureById, getIndexTypes } from '@/utils/featureConfig';
 import s from './index-manager-tab.module.scss';
 import ConfirmDialog from './ConfirmDialog';
@@ -18,6 +19,7 @@ export default function IndexManagerTab({
   tables,
   onRefresh,
 }: IndexManagerTabProps) {
+  const t = useTranslations('Admin');
   const feature = getFeatureById('index-management');
   const INDEX_TYPES = getIndexTypes();
   const {
@@ -31,13 +33,11 @@ export default function IndexManagerTab({
   return (
     <>
       <Typography variant="h5" gutterBottom>
-        {feature?.name || 'Index Management'}
+        {t('view.indexes.title')}
       </Typography>
-      {feature?.description && (
-        <Typography variant="body2" color="text.secondary" gutterBottom>
-          {feature.description}
-        </Typography>
-      )}
+      <Typography variant="body2" color="text.secondary" gutterBottom>
+        {t('view.indexes.description')}
+      </Typography>
       {success && (
         <Alert severity="success" className={s.alert}>{success}</Alert>
       )}
@@ -61,7 +61,7 @@ export default function IndexManagerTab({
       {selectedTable && !indexes.length && !loading && (
         <Paper className={s.empty}>
           <Typography color="text.secondary">
-            No indexes found for table &quot;{selectedTable}&quot;
+            {t('view.indexes.noIndexes', { table: selectedTable })}
           </Typography>
         </Paper>
       )}
@@ -85,8 +85,8 @@ export default function IndexManagerTab({
       )}
       <ConfirmDialog
         open={!!deleteIndex}
-        title="Drop Index"
-        message={`Are you sure you want to drop the index "${deleteIndex}"? This action cannot be undone.`}
+        title={t('view.indexes.dropIndex')}
+        message={t('view.indexes.dropIndexConfirm', { name: deleteIndex ?? '' })}
         onConfirm={handleDeleteIndex}
         onCancel={() => setDeleteIndex(null)}
       />

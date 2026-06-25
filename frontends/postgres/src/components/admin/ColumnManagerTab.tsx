@@ -1,6 +1,7 @@
 'use client';
 
 import { Typography } from '@metabuilder/components/m3';
+import { useTranslations } from 'next-intl';
 import { getDataTypes, getFeatureById } from '@/utils/featureConfig';
 import s from './column-manager-tab.module.scss';
 import AddColumnDialog from './AddColumnDialog';
@@ -24,8 +25,9 @@ export default function ColumnManagerTab({
     selectedTable, setSelectedTable,
     schema, dialog, setDialog, columns, withRefresh,
   } = useColumnManager();
-  const feature = getFeatureById('column-management');
+  const t = useTranslations('Admin');
   const dataTypes = getDataTypes();
+  const feature = getFeatureById('column-management');
   const canAdd = feature?.ui.actions.includes('add');
   const canModify = feature?.ui.actions.includes('modify');
   const canDelete = feature?.ui.actions.includes('delete');
@@ -33,7 +35,7 @@ export default function ColumnManagerTab({
   return (
     <>
       <Typography variant="h5" gutterBottom>
-        {feature?.name ?? 'Column Management'}
+        {t('view.columnManager.title')}
       </Typography>
       <div className={s.stack}>
         <ColumnTableList tables={tables} selectedTable={selectedTable}
@@ -43,8 +45,8 @@ export default function ColumnManagerTab({
             ? (
               <Typography color="text.secondary" className={s.hint}>
                 {!selectedTable
-                  ? 'Select a table to manage its columns'
-                  : 'Loading…'}
+                  ? t('view.columnManager.selectTable')
+                  : t('view.columnManager.loading')}
               </Typography>
             )
             : (

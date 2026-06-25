@@ -14,3 +14,4 @@ export {
 } from './useLocale';
 export { useAdminLocale } from './useAdminLocale';
 export { useDrawer } from './useDrawer';
+export { useBrowseLabels } from './useBrowseLabels';

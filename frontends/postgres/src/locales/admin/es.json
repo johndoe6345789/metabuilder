@@ -19,6 +19,74 @@
       "column-manager": "Gestor de columnas",
       "constraints": "Restricciones",
       "indexes": "Índices"
+    },
+    "view": {
+      "columnManager": {
+        "title": "Gestión de columnas",
+        "selectTable": "Selecciona una tabla para gestionar sus columnas",
+        "loading": "Cargando…"
+      },
+      "constraints": {
+        "title": "Gestión de restricciones",
+        "description": "Añade y gestiona restricciones de tabla (PRIMARY KEY, UNIQUE, CHECK)",
+        "addConstraint": "Añadir restricción"
+      },
+      "indexes": {
+        "title": "Gestión de índices",
+        "description": "Crea y gestiona índices de base de datos para optimizar el rendimiento",
+        "noIndexes": "No se encontraron índices para la tabla \"{table}\"",
+        "dropIndex": "Eliminar índice",
+        "dropIndexConfirm": "¿Seguro que quieres eliminar el índice \"{name}\"? Esta acción no se puede deshacer."
+      },
+      "tableManager": {
+        "title": "Gestión de tablas",
+        "description": "Crea y gestiona tablas de base de datos",
+        "createTable": "Crear tabla",
+        "dropTable": "Eliminar tabla",
+        "filter": "Filtrar tablas…",
+        "noMatch": "Ninguna tabla coincide.",
+        "none": "No se encontraron tablas.",
+        "existing": "Tablas existentes"
+      }
+    },
+    "browse": {
+      "title": "Tablas de la base de datos",
+      "tablesCount": "{count} tablas",
+      "eyebrow": "Explorar esquema",
+      "available": "{count} disponibles",
+      "ofTotal": "{count} de {total}",
+      "filter": "Filtrar tablas",
+      "noMatch": "Ninguna tabla coincide con el filtro.",
+      "context": "Contexto",
+      "browseTables": "Explorar tablas",
+      "browseHint": "La lista admite búsqueda y está optimizada para una navegación rápida. Elige una tabla a la izquierda para abrir el explorador de filas.",
+      "selectedHint": "Abre esta tabla para inspeccionar filas, gestionar registros o ir a las herramientas de columnas y restricciones.",
+      "drawerHint": "Usa el panel izquierdo para gestionar tablas, crear consultas y herramientas de esquema.",
+      "total": "Total",
+      "search": "Búsqueda",
+      "layout": "Diseño",
+      "scope": "Alcance",
+      "match": "Coincidencia",
+      "selectedTable": "Tabla seleccionada",
+      "allVisible": "Todas las tablas visibles",
+      "visible": "{count} visibles",
+      "twoPane": "Explorador de dos paneles",
+      "filtered": "Filtrado",
+      "allTables": "Todas las tablas",
+      "openTable": "Abrir tabla"
+    },
+    "sqlQuery": {
+      "title": "Interfaz de consultas SQL",
+      "label": "Consulta SQL (solo SELECT)",
+      "placeholder": "SELECT * FROM your_table LIMIT 10;",
+      "execute": "Ejecutar consulta",
+      "hint": "Escribe una consulta arriba para ejecutarla"
+    },
+    "queryBuilder": {
+      "title": "Generador de consultas",
+      "description": "Crea consultas SELECT visualmente con selección de tablas y columnas, filtros y ordenación",
+      "selectTable": "Seleccionar tabla",
+      "selectATable": "Selecciona una tabla"
     }
   }
 }

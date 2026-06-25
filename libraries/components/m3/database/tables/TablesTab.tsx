@@ -22,12 +22,78 @@ export type TableInfo = {
   table_name: string;
 };
 
+/**
+ * Display strings for TablesTab. All optional — defaults are English, so the
+ * component works standalone; localized apps pass translated values (incl. the
+ * count-aware ones as functions, since the counts are computed internally).
+ */
+export type TablesTabLabels = {
+  title: string;
+  tablesCount: (count: number) => string;
+  browseSchema: string;
+  available: (count: number) => string;
+  ofTotal: (count: number, total: number) => string;
+  filter: string;
+  noMatch: string;
+  context: string;
+  browseTables: string;
+  browseHint: string;
+  selectedHint: string;
+  drawerHint: string;
+  total: string;
+  search: string;
+  layout: string;
+  scope: string;
+  match: string;
+  selectedTable: string;
+  allVisible: string;
+  visible: (count: number) => string;
+  twoPane: string;
+  filtered: string;
+  allTables: string;
+  openTable: string;
+};
+
+const DEFAULT_LABELS: TablesTabLabels = {
+  title: 'Database Tables',
+  tablesCount: n => `${n} tables`,
+  browseSchema: 'Browse schema',
+  available: n => `${n} available`,
+  ofTotal: (n, total) => `${n} of ${total}`,
+  filter: 'Filter tables',
+  noMatch: 'No tables match this filter.',
+  context: 'Context',
+  browseTables: 'Browse tables',
+  browseHint:
+    'The list is searchable and optimized for quick navigation. Pick a table '
+    + 'on the left to open the row browser.',
+  selectedHint:
+    'Open this table to inspect rows, manage records, or jump to the column '
+    + 'and constraint tools.',
+  drawerHint:
+    'Use the left drawer for table management, query building, and schema '
+    + 'tools.',
+  total: 'Total',
+  search: 'Search',
+  layout: 'Layout',
+  scope: 'Scope',
+  match: 'Match',
+  selectedTable: 'Selected table',
+  allVisible: 'All tables visible',
+  visible: n => `${n} visible`,
+  twoPane: 'Two-pane browser',
+  filtered: 'Filtered',
+  allTables: 'All tables',
+  openTable: 'Open table',
+};
+
 export type TablesTabProps = {
   tables: TableInfo[];
   selectedTable: string;
   onTableClick: (tableName: string) => void;
   title?: string;
   description?: string;
+  labels?: Partial<TablesTabLabels>;
   testId?: string;
 };
 
@@ -39,10 +105,13 @@ export function TablesTab({
   tables,
   selectedTable,
   onTableClick,
-  title = 'Database Tables',
+  title,
   description,
+  labels,
   testId,
 }: TablesTabProps) {
+  const L = { ...DEFAULT_LABELS, ...labels };
+  const heading = title ?? L.title;
   const [searchQuery, setSearchQuery] = useState('');
   const filteredTables = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -59,8 +128,8 @@ export function TablesTab({
     <Box data-testid={testId} className={styles.root}>
       <Box className={styles.header}>
         <Box className={styles.titleRow}>
-          <Typography variant="h5">{title}</Typography>
-          <Chip size="small" label={`${tables.length} tables`} />
+          <Typography variant="h5">{heading}</Typography>
+          <Chip size="small" label={L.tablesCount(tables.length)} />
         </Box>
         {description && (
           <Typography variant="body2" className={styles.subtitle}>
@@ -68,7 +137,7 @@ export function TablesTab({
           </Typography>
         )}
         <Typography variant="caption" className={styles.eyebrow}>
-          Browse schema
+          {L.browseSchema}
         </Typography>
       </Box>
 
@@ -78,14 +147,14 @@ export function TablesTab({
             <Box className={styles.countRow}>
               <Typography variant="body2" className={styles.count}>
                 {filteredTables.length === tables.length
-                  ? `${filteredTables.length} available`
-                  : `${filteredTables.length} of ${tables.length}`}
+                  ? L.available(filteredTables.length)
+                  : L.ofTotal(filteredTables.length, tables.length)}
               </Typography>
             </Box>
             <TextField
               size="small"
               className={styles.search}
-              placeholder="Filter tables"
+              placeholder={L.filter}
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               InputProps={{
@@ -117,7 +186,7 @@ export function TablesTab({
             ) : (
               <Box sx={{ p: 2 }}>
                 <Typography variant="body2" color="text.secondary">
-                  No tables match this filter.
+                  {L.noMatch}
                 </Typography>
               </Box>
             )}
@@ -127,7 +196,7 @@ export function TablesTab({
         <Paper className={styles.panel}>
           <Box className={styles.infoPanel}>
             <Typography variant="caption" className={styles.eyebrow}>
-              Context
+              {L.context}
             </Typography>
             {selected ? (
               <>
@@ -135,69 +204,67 @@ export function TablesTab({
                   {selected.table_name}
                 </Typography>
                 <Typography variant="body2" className={styles.infoBody}>
-                  Open this table to inspect rows, manage records, or jump to the
-                  column and constraint tools.
+                  {L.selectedHint}
                 </Typography>
                 <Box className={styles.statGrid}>
                   <Box className={styles.statCard}>
                     <Typography variant="caption" className={styles.statLabel}>
-                      Scope
+                      {L.scope}
                     </Typography>
                     <Typography variant="body2" className={styles.statValue}>
-                      Selected table
+                      {L.selectedTable}
                     </Typography>
                   </Box>
                   <Box className={styles.statCard}>
                     <Typography variant="caption" className={styles.statLabel}>
-                      Match
+                      {L.match}
                     </Typography>
                     <Typography variant="body2" className={styles.statValue}>
-                      {isFiltered ? 'Filtered' : 'All tables'}
+                      {isFiltered ? L.filtered : L.allTables}
                     </Typography>
                   </Box>
                 </Box>
                 <Divider />
                 <Typography variant="body2" className={styles.infoBody}>
-                  Use the left drawer for table management, query building, and schema tools.
+                  {L.drawerHint}
                 </Typography>
                 <Button variant="outlined" onClick={() => onTableClick(selected.table_name)}>
-                  Open table
+                  {L.openTable}
                 </Button>
               </>
             ) : (
               <>
                 <Typography variant="h6" className={styles.tableName}>
-                  Browse tables
+                  {L.browseTables}
                 </Typography>
                 <Typography variant="body2" className={styles.infoBody}>
-                  The list is searchable and optimized for quick navigation.
-                  Pick a table on the left to open the row browser.
+                  {L.browseHint}
                 </Typography>
                 <Box className={styles.statGrid}>
                   <Box className={styles.statCard}>
                     <Typography variant="caption" className={styles.statLabel}>
-                      Total
+                      {L.total}
                     </Typography>
                     <Typography variant="body2" className={styles.statValue}>
-                      {tables.length} tables
+                      {L.tablesCount(tables.length)}
                     </Typography>
                   </Box>
                   <Box className={styles.statCard}>
                     <Typography variant="caption" className={styles.statLabel}>
-                      Search
+                      {L.search}
                     </Typography>
                     <Typography variant="body2" className={styles.statValue}>
                       {isFiltered
-                        ? `${filteredTables.length} visible`
-                        : 'All tables visible'}
+                        ? L.visible(filteredTables.length)
+                        : L.allVisible}
                     </Typography>
                   </Box>
                   <Box className={styles.statCard}>
                     <Typography variant="caption" className={styles.statLabel}>
-                      Layout
+                      {L.layout}
                     </Typography>
                     <Typography variant="body2" className={styles.statValue}>
-                      Two-pane browser
+                      {L.twoPane}
                     </Typography>
                   </Box>
                 </Box>

@@ -10,6 +10,7 @@ import {
 } from '@metabuilder/components/m3';
 import InputAdornment
   from '@metabuilder/components/m3/inputs/InputAdornment';
+import { useTranslations } from 'next-intl';
 import SearchIcon from '@metabuilder/components/m3/Search';
 import TableChartIcon from '@metabuilder/components/m3/TableChart';
 import s from './table-manager-tab.module.scss';
@@ -27,6 +28,7 @@ type TableManagerTabProps = {
 export default function TableManagerTab({
   tables, onCreateTable, onDropTable, onTableClick,
 }: TableManagerTabProps) {
+  const t = useTranslations('Admin');
   const feature = getFeatureById('table-management');
   const dataTypes = getDataTypes().map(dt => dt.name);
   const canCreate = feature?.ui.actions.includes('create');
@@ -51,10 +53,11 @@ export default function TableManagerTab({
       <Paper className={s.paper}>
         <div className={s.inner}>
           <Typography variant="h6" gutterBottom>
-            Existing Tables ({filteredTables.length}
+            {t('view.tableManager.existing')} ({filteredTables.length}
             {searchQuery ? ` of ${tables.length}` : ''})
           </Typography>
-          <TextField size="small" fullWidth placeholder="Filter tables…"
+          <TextField size="small" fullWidth
+            placeholder={t('view.tableManager.filter')}
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             className={s.search}
@@ -70,7 +73,9 @@ export default function TableManagerTab({
             {filteredTables.length === 0 && (
               <Typography variant="body2" color="text.secondary"
                 className={s.tableHint}>
-                {searchQuery ? 'No tables match.' : 'No tables found.'}
+                {searchQuery
+                  ? t('view.tableManager.noMatch')
+                  : t('view.tableManager.none')}
               </Typography>
             )}
             {filteredTables.map(table => (

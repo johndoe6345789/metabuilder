@@ -19,6 +19,74 @@
       "column-manager": "Column Manager",
       "constraints": "Constraints",
       "indexes": "Indexes"
+    },
+    "view": {
+      "columnManager": {
+        "title": "Column Management",
+        "selectTable": "Select a table to manage its columns",
+        "loading": "Loading…"
+      },
+      "constraints": {
+        "title": "Constraint Management",
+        "description": "Add and manage table constraints (PRIMARY KEY, UNIQUE, CHECK)",
+        "addConstraint": "Add Constraint"
+      },
+      "indexes": {
+        "title": "Index Management",
+        "description": "Create and manage database indexes for performance optimization",
+        "noIndexes": "No indexes found for table \"{table}\"",
+        "dropIndex": "Drop Index",
+        "dropIndexConfirm": "Are you sure you want to drop the index \"{name}\"? This action cannot be undone."
+      },
+      "tableManager": {
+        "title": "Table Management",
+        "description": "Create and manage database tables",
+        "createTable": "Create Table",
+        "dropTable": "Drop Table",
+        "filter": "Filter tables…",
+        "noMatch": "No tables match.",
+        "none": "No tables found.",
+        "existing": "Existing Tables"
+      }
+    },
+    "browse": {
+      "title": "Database Tables",
+      "tablesCount": "{count} tables",
+      "eyebrow": "Browse schema",
+      "available": "{count} available",
+      "ofTotal": "{count} of {total}",
+      "filter": "Filter tables",
+      "noMatch": "No tables match this filter.",
+      "context": "Context",
+      "browseTables": "Browse tables",
+      "browseHint": "The list is searchable and optimized for quick navigation. Pick a table on the left to open the row browser.",
+      "selectedHint": "Open this table to inspect rows, manage records, or jump to the column and constraint tools.",
+      "drawerHint": "Use the left drawer for table management, query building, and schema tools.",
+      "total": "Total",
+      "search": "Search",
+      "layout": "Layout",
+      "scope": "Scope",
+      "match": "Match",
+      "selectedTable": "Selected table",
+      "allVisible": "All tables visible",
+      "visible": "{count} visible",
+      "twoPane": "Two-pane browser",
+      "filtered": "Filtered",
+      "allTables": "All tables",
+      "openTable": "Open table"
+    },
+    "sqlQuery": {
+      "title": "SQL Query Interface",
+      "label": "SQL Query (SELECT only)",
+      "placeholder": "SELECT * FROM your_table LIMIT 10;",
+      "execute": "Execute Query",
+      "hint": "Type a query above to execute"
+    },
+    "queryBuilder": {
+      "title": "Query Builder",
+      "description": "Build SELECT queries visually with table/column selection, filters, and sorting",
+      "selectTable": "Select Table",
+      "selectATable": "Select a table"
     }
   }
 }

@@ -10,6 +10,7 @@ import {
   type QueryBuilderParams,
   type QueryResult,
 } from '@metabuilder/m3';
+import { useTranslations } from 'next-intl';
 import { getQueryOperators } from '@/utils/featureConfig';
 import { useQueryBuilder } from './hooks/useQueryBuilder';
 
@@ -22,6 +23,7 @@ export default function QueryBuilderTab({
   tables,
   onExecuteQuery,
 }: PostgresQueryBuilderTabProps) {
+  const t = useTranslations('Admin');
   const operators = getQueryOperators();
   const { fetchColumns } = useQueryBuilder();
 
@@ -31,6 +33,9 @@ export default function QueryBuilderTab({
       onExecuteQuery={onExecuteQuery}
       onFetchColumns={fetchColumns}
       operators={operators}
+      title={t('queryBuilder.title')}
+      description={t('queryBuilder.description')}
+      selectTableLabel={t('queryBuilder.selectTable')}
     />
   );
 }

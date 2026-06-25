@@ -35,6 +35,9 @@ export type QueryBuilderTabProps = {
   onExecuteQuery: (params: QueryBuilderParams) => Promise<QueryResult>;
   onFetchColumns: (tableName: string) => Promise<string[]>;
   operators?: QueryOperator[];
+  title?: string;
+  description?: string;
+  selectTableLabel?: string;
   testId?: string;
 };
 
@@ -83,6 +86,10 @@ export function QueryBuilderTab({
   onExecuteQuery,
   onFetchColumns,
   operators = DEFAULT_OPERATORS,
+  title = 'Query Builder',
+  description = 'Build SELECT queries visually with table/column selection, '
+    + 'filters, and sorting',
+  selectTableLabel = 'Select Table',
   testId,
 }: QueryBuilderTabProps) {
   const [selectedTable, setSelectedTable] = useState('');
@@ -217,7 +224,7 @@ export function QueryBuilderTab({
   return (
     <div data-testid={testId} className={styles.root}>
       <Typography variant="h5" gutterBottom>
-        Query Builder
+        {title}
       </Typography>
       <Typography
         variant="body2"
@@ -225,17 +232,16 @@ export function QueryBuilderTab({
         gutterBottom
         className={styles.intro}
       >
-        Build SELECT queries visually with table/column selection, filters, and
-        sorting
+        {description}
       </Typography>
 
       <Paper className={styles.sectionCard}>
         {/* Table Selection */}
         <FormControl fullWidth className={styles.section}>
-          <InputLabel shrink>Select Table</InputLabel>
+          <InputLabel shrink>{selectTableLabel}</InputLabel>
           <Select
             value={selectedTable}
-            label="Select Table"
+            label={selectTableLabel}
             displayEmpty
             onChange={(e) => handleTableChange(String(e.target.value))}
             renderValue={(selected) =>
