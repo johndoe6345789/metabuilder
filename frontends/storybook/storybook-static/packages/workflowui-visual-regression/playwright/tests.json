@@ -1,0 +1,232 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "workflowui-visual-regression",
+  "version": "1.0.0",
+  "description": "WorkflowUI visual regression tests - screenshots and style verification",
+  "tests": [
+    {
+      "name": "button states visual inspection",
+      "tags": [
+        "@visual",
+        "@buttons"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "visual-buttons-01-home.png"
+        },
+        {
+          "action": "inspectPageStructure"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "dialog animations and transitions",
+      "tags": [
+        "@visual",
+        "@dialog",
+        "@animations"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "visual-dialog-01-closed.png"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "loading states and spinners",
+      "tags": [
+        "@visual",
+        "@loading",
+        "@spinners"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "visual-loading-01-home.png"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "form field states and validation UI",
+      "tags": [
+        "@visual",
+        "@forms",
+        "@validation"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "login"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "visual-form-01-login.png"
+        },
+        {
+          "action": "expect",
+          "testId": "salesforce-login-page",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "sidebar collapse and expand animations",
+      "tags": [
+        "@visual",
+        "@sidebar",
+        "@animations"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "visual-sidebar-01-home.png"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "notification toast appearances",
+      "tags": [
+        "@visual",
+        "@notifications",
+        "@toasts"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "visual-toast-01-home.png"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "dark mode toggle visual comparison",
+      "tags": [
+        "@visual",
+        "@theme",
+        "@darkmode"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "visual-theme-01-initial.png"
+        },
+        {
+          "action": "click",
+          "testId": "toggle-theme-button"
+        },
+        {
+          "action": "wait",
+          "timeout": 500
+        },
+        {
+          "action": "debugScreenshot",
+          "filename": "visual-theme-02-toggled.png"
+        },
+        {
+          "action": "expect",
+          "testId": "toggle-theme-button",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    }
+  ]
+}

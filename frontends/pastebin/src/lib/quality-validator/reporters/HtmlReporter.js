@@ -1,30 +1,39 @@
 /**
  * HTML Reporter - Orchestrator
  * Coordinates sub-reporters to generate complete HTML reports
- * This is the main entry point that delegates to specialized modules
+ * Refactored to use ReporterBase for shared functionality
  */
+import { ReporterBase } from './ReporterBase.js';
 import { generateOpeningTags, generateClosingTags } from './html/HtmlHeader.js';
-import { generateOverallSection, generateComponentScoresSection, generateSummaryStatistics } from './html/HtmlScoreSection.js';
-import { generateFindingsSection, generateRecommendationsSection, generateFindingsSummaryTable } from './html/HtmlDetailsSection.js';
-import { generateMetricsSection, generateWeightVisualization } from './html/HtmlMetricsSection.js';
-import { generateFooter, generateMetadataSection, generateScript, generateResourcesSection, generateLegendSection } from './html/HtmlFooter.js';
+import { generateOverallSection, generateComponentScoresSection, generateSummaryStatistics, } from './html/HtmlScoreSection.js';
+import { generateFindingsSection, generateRecommendationsSection, generateFindingsSummaryTable, } from './html/HtmlDetailsSection.js';
+import { generateMetricsSection, generateWeightVisualization, } from './html/HtmlMetricsSection.js';
+import { generateFooter, generateMetadataSection, generateScript, generateResourcesSection, generateLegendSection, } from './html/HtmlFooter.js';
 /**
  * HTML Reporter - Orchestrates all HTML generation modules
  *
  * @description
- * Coordinates specialized modules to generate complete HTML reports:
+ // eslint-disable-next-line max-len
+ * Extends ReporterBase and coordinates specialized modules to generate complete
+ * HTML reports:
  * - HtmlHeader: Document structure and meta tags
  * - HtmlScoreSection: Overall score and component visualization
  * - HtmlDetailsSection: Findings and recommendations
  * - HtmlMetricsSection: Detailed metrics display
  * - HtmlFooter: Metadata and resources
  * - HtmlStyleSheet: Embedded CSS
+ *
+ // eslint-disable-next-line max-len
+ // eslint-disable-next-line max-len
+ * Leverages ReporterBase shared utilities for metadata handling, formatting,
+ * and aggregation
  */
-export class HtmlReporter {
+export class HtmlReporter extends ReporterBase {
     /**
      * Generate complete HTML report from scoring result
      *
-     * @param {ScoringResult} result - Complete scoring result with all analysis data
+     * @param {ScoringResult} result - Complete scoring result with all
+     *   analysis data
      * @returns {string} Complete HTML document as string
      *
      * @description
@@ -82,14 +91,18 @@ function generateTrendSection(result) {
     if (!result.trend)
         return '';
     const { trend } = result;
-    const change = trend.previousScore ? trend.currentScore - trend.previousScore : 0;
+    const change = trend.previousScore
+        ? trend.currentScore - trend.previousScore
+        : 0;
     const changeStr = change >= 0 ? `+${change.toFixed(1)}` : `${change.toFixed(1)}`;
     const changeClass = change >= 0 ? 'positive' : 'negative';
     return `<section class="section">
     <h2>Trend Analysis</h2>
     <div class="card trend-card">
       <p>Current Score: <strong>${trend.currentScore.toFixed(1)}%</strong></p>
-      <p>Previous Score: <strong>${trend.previousScore?.toFixed(1) || 'N/A'}%</strong></p>
+      <p>Previous Score:
+        <strong>${trend.previousScore?.toFixed(1) || 'N/A'}%</strong>
+      </p>
       <p>Change: <span class="${changeClass}">${changeStr}%</span></p>
       <p>Direction: <strong>${trend.direction || 'stable'}</strong></p>
       ${trend.lastFiveScores ? generateScoreHistory(trend.lastFiveScores) : ''}
@@ -105,7 +118,7 @@ function generateTrendSection(result) {
 function generateScoreHistory(scores) {
     return `
     <h4>Recent Scores</h4>
-    <p>${scores.map((s) => `${s.toFixed(1)}%`).join(' → ')}</p>
+    <p>${scores.map(s => `${s.toFixed(1)}%`).join(' → ')}</p>
   `;
 }
 export const htmlReporter = new HtmlReporter();

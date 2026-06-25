@@ -10,7 +10,7 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
     nexus_url = os.environ.get("NEXUS_URL", "http://localhost:8091/repository/conan-hosted/")
     nexus_user = os.environ.get("NEXUS_USER", "admin")
     nexus_pass = os.environ.get("NEXUS_PASS", "nexus")
-    recipes_dir = PROJECT_ROOT / "dbal" / "production" / "build-config" / "conan-recipes"
+    recipes_dir = PROJECT_ROOT / "libraries" / "dbal" / "production" / "build-config" / "conan-recipes"
 
     log_info("Checking prerequisites...")
     for tool, install_msg in [("go", "https://go.dev/dl/"), ("conan", "pip install conan")]:
@@ -37,7 +37,7 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
         log_info("Skipping testcontainers-native (--skip-native)")
 
     if not args.skip_sidecar:
-        sidecar_src = PROJECT_ROOT / "dbal" / "testcontainers-sidecar"
+        sidecar_src = PROJECT_ROOT / "libraries" / "dbal" / "testcontainers-sidecar"
         log_info("Building testcontainers-sidecar/0.1.0 (Go binary)...")
         env = os.environ.copy()
         env["TESTCONTAINERS_SIDECAR_SRC"] = str(sidecar_src)

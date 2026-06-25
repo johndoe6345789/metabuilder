@@ -2,6 +2,7 @@ import React from 'react'
 import { render, screen } from '@/test-utils'
 import userEvent from '@testing-library/user-event'
 import { ButtonsSection } from '@/components/atoms/ButtonsSection'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Snippet } from '@/lib/types'
 
 describe('ButtonsSection Component', () => {
@@ -19,12 +20,18 @@ describe('ButtonsSection Component', () => {
 
     it('should display the section title', () => {
       render(<ButtonsSection onSaveSnippet={mockOnSaveSnippet} />)
-      expect(screen.getByRole('heading', { name: 'Buttons', level: 2 })).toBeInTheDocument()
+      expect(
+        screen.getByRole('heading', { name: 'Buttons', level: 2 }),
+      ).toBeInTheDocument()
     })
 
     it('should display the section description', () => {
       render(<ButtonsSection onSaveSnippet={mockOnSaveSnippet} />)
-      expect(screen.getByText(/Interactive controls with multiple variants and states/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          /Interactive controls with multiple variants and states/i,
+        ),
+      ).toBeInTheDocument()
     })
 
     it('should render ComponentShowcase with correct title', () => {
@@ -91,7 +98,9 @@ describe('ButtonsSection Component', () => {
     it('should render disabled buttons', () => {
       render(<ButtonsSection onSaveSnippet={mockOnSaveSnippet} />)
       const allButtons = screen.getAllByRole('button')
-      const disabledButtons = allButtons.filter(btn => btn.hasAttribute('disabled'))
+      const disabledButtons = allButtons.filter(btn =>
+        btn.hasAttribute('disabled'),
+      )
       expect(disabledButtons.length).toBeGreaterThan(0)
     })
   })
@@ -137,13 +146,16 @@ describe('ButtonsSection Component', () => {
 
     it('should have descriptive text', () => {
       render(<ButtonsSection onSaveSnippet={mockOnSaveSnippet} />)
-      expect(screen.getByText(/Interactive controls with multiple variants and states/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          /Interactive controls with multiple variants and states/i,
+        ),
+      ).toBeInTheDocument()
     })
 
     it('should render section with proper structure', () => {
-      const { container } = render(<ButtonsSection onSaveSnippet={mockOnSaveSnippet} />)
-      const section = container.querySelector('section')
-      expect(section).toHaveClass('space-y-6')
+      render(<ButtonsSection onSaveSnippet={mockOnSaveSnippet} />)
+      expect(screen.getByTestId('buttons-section')).toBeInTheDocument()
     })
   })
 

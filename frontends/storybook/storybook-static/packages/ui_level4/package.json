@@ -1,0 +1,80 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "ui_level4",
+  "name": "Level 4 - Admin Panel",
+  "version": "1.0.0",
+  "description": "Admin panel for user and system management with schemas, workflows, and automated scripts",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "minLevel": 4,
+  "primary": true,
+  "icon": "static_content/icon.svg",
+  "dependencies": {
+    "ui_permissions": "*",
+    "ui_header": "*",
+    "ui_intro": "*",
+    "user_manager": "*",
+    "admin_dialog": "*"
+  },
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "Level4Header",
+      "Level4Layout",
+      "SchemasTab",
+      "WorkflowsTab",
+      "ScriptsTab",
+      "GodSidebar",
+      "GodToolbar",
+      "GodContent"
+    ],
+    "scripts": [
+      "layout",
+      "schemas",
+      "workflows"
+    ],
+    "pages": [
+      "level4"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "permissions",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/stories.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "static_content/icon.svg"
+      ]
+    }
+  }
+}

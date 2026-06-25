@@ -29,6 +29,7 @@ describe('usePythonTerminal Hook', () => {
       expect(result.current.waitingForInput).toBe(false)
     })
 
+    // eslint-disable-next-line max-len
     it('should always report isInitializing as false (Flask is always ready)', () => {
       const { result } = renderHook(() => usePythonTerminal())
       expect(result.current.isInitializing).toBe(false)
@@ -49,7 +50,9 @@ describe('usePythonTerminal Hook', () => {
     it('should not submit input if not waiting for input', () => {
       const { result } = renderHook(() => usePythonTerminal())
 
-      const mockEvent = { preventDefault: jest.fn() } as unknown as React.FormEvent<HTMLFormElement>
+      const mockEvent = {
+        preventDefault: jest.fn(),
+      } as unknown as React.FormEvent<HTMLFormElement>
 
       const initialValue = 'initial'
       act(() => {
@@ -67,7 +70,9 @@ describe('usePythonTerminal Hook', () => {
     it('should not submit input if no active session', () => {
       const { result } = renderHook(() => usePythonTerminal())
 
-      const mockEvent = { preventDefault: jest.fn() } as unknown as React.FormEvent<HTMLFormElement>
+      const mockEvent = {
+        preventDefault: jest.fn(),
+      } as unknown as React.FormEvent<HTMLFormElement>
 
       act(() => {
         result.current.setInputValue('some input')
@@ -83,9 +88,13 @@ describe('usePythonTerminal Hook', () => {
   })
 
   describe('Code Execution State', () => {
+    // eslint-disable-next-line max-len
     it('should set running state to false after error from Flask not configured', async () => {
       mockFlaskRunner.startInteractiveSession.mockRejectedValue(
-        new Error('Flask backend not configured (NEXT_PUBLIC_FLASK_BACKEND_URL is not set)')
+        new Error(
+          // eslint-disable-next-line max-len
+          'Flask backend not configured (NEXT_PUBLIC_FLASK_BACKEND_URL is not set)',
+        ),
       )
 
       const { result } = renderHook(() => usePythonTerminal())
@@ -98,8 +107,12 @@ describe('usePythonTerminal Hook', () => {
     })
 
     it('should add error line when Flask is not configured', async () => {
-      const errorMsg = 'Flask backend not configured (NEXT_PUBLIC_FLASK_BACKEND_URL is not set)'
-      mockFlaskRunner.startInteractiveSession.mockRejectedValue(new Error(errorMsg))
+      const errorMsg =
+        // eslint-disable-next-line max-len
+        'Flask backend not configured (NEXT_PUBLIC_FLASK_BACKEND_URL is not set)'
+      mockFlaskRunner.startInteractiveSession.mockRejectedValue(
+        new Error(errorMsg),
+      )
 
       const { result } = renderHook(() => usePythonTerminal())
 
@@ -109,11 +122,15 @@ describe('usePythonTerminal Hook', () => {
 
       expect(result.current.lines).toHaveLength(1)
       expect(result.current.lines[0].type).toBe('error')
-      expect(result.current.lines[0].content).toContain('Flask backend not configured')
+      expect(result.current.lines[0].content).toContain(
+        'Flask backend not configured',
+      )
     })
 
     it('should clear lines when running new code', async () => {
-      mockFlaskRunner.startInteractiveSession.mockRejectedValue(new Error('error1'))
+      mockFlaskRunner.startInteractiveSession.mockRejectedValue(
+        new Error('error1'),
+      )
 
       const { result } = renderHook(() => usePythonTerminal())
 
@@ -125,7 +142,9 @@ describe('usePythonTerminal Hook', () => {
       expect(result.current.lines).toHaveLength(1)
 
       // Second run should clear and add new error line
-      mockFlaskRunner.startInteractiveSession.mockRejectedValue(new Error('error2'))
+      mockFlaskRunner.startInteractiveSession.mockRejectedValue(
+        new Error('error2'),
+      )
       await act(async () => {
         await result.current.handleRun('print("second")')
       })
@@ -135,7 +154,9 @@ describe('usePythonTerminal Hook', () => {
     })
 
     it('should reset waitingForInput after execution error', async () => {
-      mockFlaskRunner.startInteractiveSession.mockRejectedValue(new Error('Execution error'))
+      mockFlaskRunner.startInteractiveSession.mockRejectedValue(
+        new Error('Execution error'),
+      )
 
       const { result } = renderHook(() => usePythonTerminal())
 
@@ -196,9 +217,12 @@ describe('usePythonTerminal Hook', () => {
         await Promise.resolve()
       })
 
-      await waitFor(() => {
-        expect(result.current.lines.length).toBeGreaterThan(0)
-      }, { timeout: 1000 })
+      await waitFor(
+        () => {
+          expect(result.current.lines.length).toBeGreaterThan(0)
+        },
+        { timeout: 1000 },
+      )
     })
   })
 

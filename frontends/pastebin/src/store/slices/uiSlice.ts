@@ -28,7 +28,7 @@ const uiSlice = createSlice({
       state.viewerOpen = true
       state.viewingSnippet = action.payload
     },
-    closeViewer: (state) => {
+    closeViewer: state => {
       state.viewerOpen = false
       state.viewingSnippet = null
     },
@@ -44,12 +44,7 @@ const uiSlice = createSlice({
   },
 })
 
-export const {
-  openViewer,
-  closeViewer,
-  setSearchQuery,
-  setLocale,
-  setTheme,
-} = uiSlice.actions
+export const { openViewer, closeViewer, setSearchQuery, setLocale, setTheme } =
+  uiSlice.actions
 
 export default uiSlice.reducer

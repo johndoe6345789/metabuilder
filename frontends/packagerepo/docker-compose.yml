@@ -6,7 +6,9 @@ services:
       context: .
       dockerfile: backend/Dockerfile
     ports:
-      - "5001:5000"
+      # :5001 is reserved for the jenkins CI registry (registry:2); the
+      # packagerepo backend uses :5002 to avoid colliding on the host.
+      - "5002:5000"
     environment:
       - DATA_DIR=/data
       - JWT_SECRET=dev-secret-change-in-production

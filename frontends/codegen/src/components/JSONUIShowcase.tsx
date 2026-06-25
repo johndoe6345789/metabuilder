@@ -1,60 +1,30 @@
-import { useMemo, useState } from 'react'
-import showcaseCopy from '@/config/ui-examples/showcase.json'
-import { FileCode, ChartBar, ListBullets, Table, Gear, Clock } from '@metabuilder/fakemui/icons'
-import { ShowcaseHeader } from '@/components/json-ui-showcase/ShowcaseHeader'
-import { ShowcaseTabs } from '@/components/json-ui-showcase/ShowcaseTabs'
-import { ShowcaseFooter } from '@/components/json-ui-showcase/ShowcaseFooter'
-import { ShowcaseExample } from '@/components/json-ui-showcase/types'
-
-const exampleIcons = {
-  ChartBar,
-  ListBullets,
-  Table,
-  Clock,
-  Gear,
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const webpackRequire = require as any
-const configContext = webpackRequire.context('@/config/ui-examples', false, /\.json$/) as __WebpackModuleApi.RequireContext
-const configModules: Record<string, unknown> = {}
-for (const key of configContext.keys()) {
-  configModules[`/src/config/ui-examples${key.slice(1)}`] = configContext(key)
-}
-
-const resolveExampleConfig = (configPath: string) => {
-  const moduleEntry = configModules[configPath] as { default: ShowcaseExample['config'] } | undefined
-
-  return moduleEntry?.default ?? {}
-}
+import { useJSONUIShowcase } from
+  '@/components/json-ui-showcase/hooks/useJSONUIShowcase'
+import { ShowcaseHeader } from
+  '@/components/json-ui-showcase/ShowcaseHeader'
+import { ShowcaseTabs } from
+  '@/components/json-ui-showcase/ShowcaseTabs'
+import { ShowcaseFooter } from
+  '@/components/json-ui-showcase/ShowcaseFooter'
 
 export function JSONUIShowcase() {
-  const [selectedExample, setSelectedExample] = useState(showcaseCopy.defaultExampleKey)
-  const [showJSON, setShowJSON] = useState(false)
-
-  const examples = useMemo<ShowcaseExample[]>(() => {
-    return showcaseCopy.examples.map((example) => {
-      const icon = exampleIcons[example.iconId as keyof typeof exampleIcons] || FileCode
-      const config = resolveExampleConfig(example.configPath)
-
-      return {
-        key: example.key,
-        name: example.name,
-        description: example.description,
-        icon,
-        config,
-      }
-    })
-  }, [])
+  const {
+    selectedExample,
+    setSelectedExample,
+    showJSON,
+    setShowJSON,
+    examples,
+    copy,
+  } = useJSONUIShowcase()
 
   return (
     <div className="h-full flex flex-col bg-background">
-      <ShowcaseHeader copy={showcaseCopy.header} />
+      <ShowcaseHeader copy={copy.header} />
 
       <div className="flex-1 overflow-hidden">
         <ShowcaseTabs
           examples={examples}
-          copy={showcaseCopy.tabs}
+          copy={copy.tabs}
           selectedExample={selectedExample}
           onSelectedExampleChange={setSelectedExample}
           showJSON={showJSON}
@@ -62,7 +32,7 @@ export function JSONUIShowcase() {
         />
       </div>
 
-      <ShowcaseFooter items={showcaseCopy.footer.items} />
+      <ShowcaseFooter items={copy.footer.items} />
     </div>
   )
 }

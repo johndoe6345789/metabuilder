@@ -1,6 +1,16 @@
-"use client"
+'use client'
 
-import { Button, Dialog, DialogHeader, DialogTitle, DialogContent, DialogActions, DialogClose, Input, MaterialIcon } from '@metabuilder/components/fakemui'
+import {
+  Button,
+  Dialog,
+  DialogHeader,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  DialogClose,
+  Input,
+  MaterialIcon,
+} from '@metabuilder/components/m3'
 import { useTranslation } from '@/hooks/useTranslation'
 import styles from './namespace-dialog.module.scss'
 
@@ -24,8 +34,16 @@ export function CreateNamespaceDialog({
   const t = useTranslation()
   return (
     <>
-      <Dialog open={open} onClose={() => onOpenChange(false)} maxWidth="sm" fullWidth>
-        <DialogClose onClick={() => onOpenChange(false)} aria-label={t.common.close}>
+      <Dialog
+        open={open}
+        onClose={() => onOpenChange(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogClose
+          onClick={() => onOpenChange(false)}
+          aria-label={t.common.close}
+        >
           <MaterialIcon name="close" size={20} />
         </DialogClose>
         <DialogHeader>
@@ -37,8 +55,8 @@ export function CreateNamespaceDialog({
             <Input
               placeholder={t.namespace.create.namePlaceholder}
               value={namespaceName}
-              onChange={(e) => onNamespaceNameChange(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && onCreateNamespace()}
+              onChange={e => onNamespaceNameChange(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && onCreateNamespace()}
               data-testid="namespace-name-input"
               aria-label={t.namespace.create.namePlaceholder}
             />

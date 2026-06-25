@@ -11,7 +11,8 @@ jest.mock('./useStorageMigration')
 
 const mockUseDatabaseOperations = hookModule.useDatabaseOperations as jest.Mock
 const mockUseStorageConfig = storageConfigModule.useStorageConfig as jest.Mock
-const mockUseStorageMigration = storageMigrationModule.useStorageMigration as jest.Mock
+const mockUseStorageMigration =
+  storageMigrationModule.useStorageMigration as jest.Mock
 
 describe('useSettingsState Hook', () => {
   beforeEach(() => {
@@ -52,6 +53,7 @@ describe('useSettingsState Hook', () => {
       expect(result.current.schemaHealth).toBe('unknown')
     })
 
+    // eslint-disable-next-line max-len
     it('should call loadStats, checkSchemaHealth, and loadConfig on mount', () => {
       const loadStats = jest.fn().mockResolvedValue(undefined)
       const checkSchemaHealth = jest.fn().mockResolvedValue(undefined)
@@ -153,6 +155,7 @@ describe('useSettingsState Hook', () => {
   })
 
   describe('handleSaveStorageConfig', () => {
+    // eslint-disable-next-line max-len
     it('should call storage config handler with loadStats as callback', async () => {
       const saveConfig = jest.fn().mockResolvedValue(undefined)
       const loadStats = jest.fn().mockResolvedValue(undefined)
@@ -265,7 +268,7 @@ describe('useSettingsState Hook', () => {
         'checkSchemaHealth',
       ]
 
-      expectedProperties.forEach((prop) => {
+      expectedProperties.forEach(prop => {
         expect(result.current).toHaveProperty(prop)
       })
     })

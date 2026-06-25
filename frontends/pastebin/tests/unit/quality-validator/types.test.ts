@@ -4,6 +4,7 @@
  */
 
 import {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Configuration,
   Finding,
   Recommendation,
@@ -12,9 +13,11 @@ import {
   TestCoverageMetrics,
   ArchitectureMetrics,
   SecurityMetrics,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   AnalysisResult,
   AnalysisError,
   ComponentScores,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   OverallScore,
   ResultMetadata,
   QualityValidationError,
@@ -22,7 +25,7 @@ import {
   AnalysisErrorClass,
   IntegrationError,
   ReportingError,
-} from '../../../src/lib/quality-validator/types/index';
+} from '../../../src/lib/quality-validator/types/index'
 
 describe('Quality Validator Type Definitions', () => {
   describe('CodeQualityMetrics', () => {
@@ -60,13 +63,15 @@ describe('Quality Validator Type Definitions', () => {
           byRule: new Map(),
           status: 'good',
         },
-      };
+      }
 
-      expect(metrics.complexity.averagePerFile).toBeGreaterThanOrEqual(0);
-      expect(metrics.duplication.percent).toBeLessThanOrEqual(100);
-      expect(metrics.linting.errors).toBeGreaterThanOrEqual(0);
-      expect(['good', 'warning', 'critical']).toContain(metrics.duplication.status);
-    });
+      expect(metrics.complexity.averagePerFile).toBeGreaterThanOrEqual(0)
+      expect(metrics.duplication.percent).toBeLessThanOrEqual(100)
+      expect(metrics.linting.errors).toBeGreaterThanOrEqual(0)
+      expect(['good', 'warning', 'critical']).toContain(
+        metrics.duplication.status,
+      )
+    })
 
     it('should handle zero metrics', () => {
       const metrics: CodeQualityMetrics = {
@@ -90,12 +95,12 @@ describe('Quality Validator Type Definitions', () => {
           byRule: new Map(),
           status: 'good',
         },
-      };
+      }
 
-      expect(metrics.complexity.averagePerFile).toBe(0);
-      expect(metrics.duplication.percent).toBe(0);
-      expect(metrics.linting.errors).toBe(0);
-    });
+      expect(metrics.complexity.averagePerFile).toBe(0)
+      expect(metrics.duplication.percent).toBe(0)
+      expect(metrics.linting.errors).toBe(0)
+    })
 
     it('should track critical complexity functions', () => {
       const metrics: CodeQualityMetrics = {
@@ -127,22 +132,44 @@ describe('Quality Validator Type Definitions', () => {
           byRule: new Map(),
           status: 'good',
         },
-      };
+      }
 
-      const criticalFunctions = metrics.complexity.functions.filter(f => f.status === 'critical');
-      expect(criticalFunctions.length).toBe(1);
-      expect(criticalFunctions[0].complexity).toBeGreaterThan(15);
-    });
-  });
+      const criticalFunctions = metrics.complexity.functions.filter(
+        f => f.status === 'critical',
+      )
+      expect(criticalFunctions.length).toBe(1)
+      expect(criticalFunctions[0].complexity).toBeGreaterThan(15)
+    })
+  })
 
   describe('TestCoverageMetrics', () => {
     it('should have valid coverage percentages', () => {
       const metrics: TestCoverageMetrics = {
         overall: {
-          lines: { total: 1000, covered: 850, percentage: 85, status: 'acceptable' },
-          branches: { total: 500, covered: 360, percentage: 72, status: 'acceptable' },
-          functions: { total: 100, covered: 90, percentage: 90, status: 'excellent' },
-          statements: { total: 1200, covered: 1065, percentage: 88.75, status: 'excellent' },
+          lines: {
+            total: 1000,
+            covered: 850,
+            percentage: 85,
+            status: 'acceptable',
+          },
+          branches: {
+            total: 500,
+            covered: 360,
+            percentage: 72,
+            status: 'acceptable',
+          },
+          functions: {
+            total: 100,
+            covered: 90,
+            percentage: 90,
+            status: 'excellent',
+          },
+          statements: {
+            total: 1200,
+            covered: 1065,
+            percentage: 88.75,
+            status: 'excellent',
+          },
         },
         byFile: {},
         effectiveness: {
@@ -155,24 +182,53 @@ describe('Quality Validator Type Definitions', () => {
           issues: [],
         },
         gaps: [
-          { file: 'test.ts', coverage: 70, uncoveredLines: 10, criticality: 'high', suggestedTests: [], estimatedEffort: 'medium' },
+          {
+            file: 'test.ts',
+            coverage: 70,
+            uncoveredLines: 10,
+            criticality: 'high',
+            suggestedTests: [],
+            estimatedEffort: 'medium',
+          },
         ],
-      };
+      }
 
-      expect(metrics.overall.lines.percentage).toBeGreaterThanOrEqual(0);
-      expect(metrics.overall.lines.percentage).toBeLessThanOrEqual(100);
-      expect(metrics.overall.branches.percentage).toBeGreaterThanOrEqual(0);
-      expect(metrics.overall.branches.percentage).toBeLessThanOrEqual(100);
-      expect(['excellent', 'acceptable', 'poor']).toContain(metrics.overall.lines.status);
-    });
+      expect(metrics.overall.lines.percentage).toBeGreaterThanOrEqual(0)
+      expect(metrics.overall.lines.percentage).toBeLessThanOrEqual(100)
+      expect(metrics.overall.branches.percentage).toBeGreaterThanOrEqual(0)
+      expect(metrics.overall.branches.percentage).toBeLessThanOrEqual(100)
+      expect(['excellent', 'acceptable', 'poor']).toContain(
+        metrics.overall.lines.status,
+      )
+    })
 
     it('should identify coverage gaps', () => {
       const metrics: TestCoverageMetrics = {
         overall: {
-          lines: { total: 100, covered: 80, percentage: 80, status: 'acceptable' },
-          branches: { total: 50, covered: 40, percentage: 80, status: 'acceptable' },
-          functions: { total: 20, covered: 18, percentage: 90, status: 'excellent' },
-          statements: { total: 120, covered: 100, percentage: 83.3, status: 'excellent' },
+          lines: {
+            total: 100,
+            covered: 80,
+            percentage: 80,
+            status: 'acceptable',
+          },
+          branches: {
+            total: 50,
+            covered: 40,
+            percentage: 80,
+            status: 'acceptable',
+          },
+          functions: {
+            total: 20,
+            covered: 18,
+            percentage: 90,
+            status: 'excellent',
+          },
+          statements: {
+            total: 120,
+            covered: 100,
+            percentage: 83.3,
+            status: 'excellent',
+          },
         },
         byFile: {},
         effectiveness: {
@@ -185,15 +241,29 @@ describe('Quality Validator Type Definitions', () => {
           issues: [],
         },
         gaps: [
-          { file: 'error.ts', coverage: 60, uncoveredLines: 15, criticality: 'critical', suggestedTests: ['test error handling'], estimatedEffort: 'high' },
-          { file: 'utils.ts', coverage: 75, uncoveredLines: 8, criticality: 'medium', suggestedTests: ['test edge cases'], estimatedEffort: 'medium' },
+          {
+            file: 'error.ts',
+            coverage: 60,
+            uncoveredLines: 15,
+            criticality: 'critical',
+            suggestedTests: ['test error handling'],
+            estimatedEffort: 'high',
+          },
+          {
+            file: 'utils.ts',
+            coverage: 75,
+            uncoveredLines: 8,
+            criticality: 'medium',
+            suggestedTests: ['test edge cases'],
+            estimatedEffort: 'medium',
+          },
         ],
-      };
+      }
 
-      expect(metrics.gaps.length).toBe(2);
-      expect(metrics.gaps[0].criticality).toBe('critical');
-    });
-  });
+      expect(metrics.gaps.length).toBe(2)
+      expect(metrics.gaps[0].criticality).toBe('critical')
+    })
+  })
 
   describe('ArchitectureMetrics', () => {
     it('should validate component organization', () => {
@@ -222,18 +292,28 @@ describe('Quality Validator Type Definitions', () => {
           hookUsage: { issues: [], score: 85 },
           reactBestPractices: { issues: [], score: 88 },
         },
-      };
+      }
 
-      expect(metrics.components.totalCount).toBeGreaterThanOrEqual(0);
-      expect(Array.isArray(metrics.dependencies.circularDependencies)).toBe(true);
-      expect(metrics.components.byType.atoms + metrics.components.byType.molecules).toBeGreaterThan(0);
-    });
+      expect(metrics.components.totalCount).toBeGreaterThanOrEqual(0)
+      expect(Array.isArray(metrics.dependencies.circularDependencies)).toBe(
+        true,
+      )
+      expect(
+        metrics.components.byType.atoms + metrics.components.byType.molecules,
+      ).toBeGreaterThan(0)
+    })
 
     it('should detect circular dependencies', () => {
       const metrics: ArchitectureMetrics = {
         components: {
           totalCount: 10,
-          byType: { atoms: 3, molecules: 2, organisms: 2, templates: 1, unknown: 2 },
+          byType: {
+            atoms: 3,
+            molecules: 2,
+            organisms: 2,
+            templates: 1,
+            unknown: 2,
+          },
           oversized: [],
           misplaced: [],
           averageSize: 200,
@@ -241,7 +321,11 @@ describe('Quality Validator Type Definitions', () => {
         dependencies: {
           totalModules: 10,
           circularDependencies: [
-            { path: ['ComponentA', 'ComponentB', 'ComponentA'], files: ['a.ts', 'b.ts'], severity: 'critical' },
+            {
+              path: ['ComponentA', 'ComponentB', 'ComponentA'],
+              files: ['a.ts', 'b.ts'],
+              severity: 'critical',
+            },
           ],
           layerViolations: [],
           externalDependencies: new Map(),
@@ -251,12 +335,14 @@ describe('Quality Validator Type Definitions', () => {
           hookUsage: { issues: [], score: 75 },
           reactBestPractices: { issues: [], score: 78 },
         },
-      };
+      }
 
-      expect(metrics.dependencies.circularDependencies.length).toBe(1);
-      expect(metrics.dependencies.circularDependencies[0].severity).toBe('critical');
-    });
-  });
+      expect(metrics.dependencies.circularDependencies.length).toBe(1)
+      expect(metrics.dependencies.circularDependencies[0].severity).toBe(
+        'critical',
+      )
+    })
+  })
 
   describe('SecurityMetrics', () => {
     it('should track security vulnerabilities', () => {
@@ -273,12 +359,12 @@ describe('Quality Validator Type Definitions', () => {
         ],
         codePatterns: [],
         performanceIssues: [],
-      };
+      }
 
-      expect(metrics.vulnerabilities).toBeDefined();
-      expect(Array.isArray(metrics.vulnerabilities)).toBe(true);
-      expect(metrics.vulnerabilities[0].severity).toBe('high');
-    });
+      expect(metrics.vulnerabilities).toBeDefined()
+      expect(Array.isArray(metrics.vulnerabilities)).toBe(true)
+      expect(metrics.vulnerabilities[0].severity).toBe('high')
+    })
 
     it('should detect security anti-patterns', () => {
       const metrics: SecurityMetrics = {
@@ -301,14 +387,14 @@ describe('Quality Validator Type Definitions', () => {
           },
         ],
         performanceIssues: [],
-      };
+      }
 
-      expect(metrics.codePatterns.length).toBe(2);
-      const secrets = metrics.codePatterns.filter(p => p.type === 'secret');
-      expect(secrets.length).toBe(1);
-      expect(secrets[0].severity).toBe('critical');
-    });
-  });
+      expect(metrics.codePatterns.length).toBe(2)
+      const secrets = metrics.codePatterns.filter(p => p.type === 'secret')
+      expect(secrets.length).toBe(1)
+      expect(secrets[0].severity).toBe('critical')
+    })
+  })
 
   describe('ScoringResult', () => {
     it('should contain all required sections', () => {
@@ -321,16 +407,92 @@ describe('Quality Validator Type Definitions', () => {
         configUsed: {
           projectName: 'test-project',
           description: 'Test project',
-          codeQuality: { enabled: true, complexity: { enabled: true, max: 10, warning: 8 }, duplication: { enabled: true, maxPercent: 5, warningPercent: 3, minBlockSize: 3 }, linting: { enabled: true, maxErrors: 0, maxWarnings: 10 } },
-          testCoverage: { enabled: true, minimumPercent: 80, warningPercent: 70 },
-          architecture: { enabled: true, components: { enabled: true, maxLines: 300, warningLines: 250, validateAtomicDesign: true, validatePropTypes: true }, dependencies: { enabled: true, allowCircularDependencies: false, allowCrossLayerDependencies: false }, patterns: { enabled: true, validateRedux: true, validateHooks: true, validateReactBestPractices: true } },
-          security: { enabled: true, vulnerabilities: { enabled: true, allowCritical: 0, allowHigh: 2, checkTransitive: true }, patterns: { enabled: true, checkSecrets: true, checkDangerousPatterns: true, checkInputValidation: true, checkXssRisks: true }, performance: { enabled: true, checkRenderOptimization: true, checkBundleSize: true, checkUnusedDeps: true } },
-          scoring: { weights: { codeQuality: 0.3, testCoverage: 0.35, architecture: 0.2, security: 0.15 }, passingGrade: 'B', passingScore: 80 },
-          reporting: { defaultFormat: 'console', colors: true, verbose: false, outputDirectory: '.quality', includeRecommendations: true, includeTrends: true },
-          history: { enabled: true, keepRuns: 10, storePath: '.quality/history', compareToPrevious: true },
+          codeQuality: {
+            enabled: true,
+            complexity: { enabled: true, max: 10, warning: 8 },
+            duplication: {
+              enabled: true,
+              maxPercent: 5,
+              warningPercent: 3,
+              minBlockSize: 3,
+            },
+            linting: { enabled: true, maxErrors: 0, maxWarnings: 10 },
+          },
+          testCoverage: {
+            enabled: true,
+            minimumPercent: 80,
+            warningPercent: 70,
+          },
+          architecture: {
+            enabled: true,
+            components: {
+              enabled: true,
+              maxLines: 300,
+              warningLines: 250,
+              validateAtomicDesign: true,
+              validatePropTypes: true,
+            },
+            dependencies: {
+              enabled: true,
+              allowCircularDependencies: false,
+              allowCrossLayerDependencies: false,
+            },
+            patterns: {
+              enabled: true,
+              validateRedux: true,
+              validateHooks: true,
+              validateReactBestPractices: true,
+            },
+          },
+          security: {
+            enabled: true,
+            vulnerabilities: {
+              enabled: true,
+              allowCritical: 0,
+              allowHigh: 2,
+              checkTransitive: true,
+            },
+            patterns: {
+              enabled: true,
+              checkSecrets: true,
+              checkDangerousPatterns: true,
+              checkInputValidation: true,
+              checkXssRisks: true,
+            },
+            performance: {
+              enabled: true,
+              checkRenderOptimization: true,
+              checkBundleSize: true,
+              checkUnusedDeps: true,
+            },
+          },
+          scoring: {
+            weights: {
+              codeQuality: 0.3,
+              testCoverage: 0.35,
+              architecture: 0.2,
+              security: 0.15,
+            },
+            passingGrade: 'B',
+            passingScore: 80,
+          },
+          reporting: {
+            defaultFormat: 'console',
+            colors: true,
+            verbose: false,
+            outputDirectory: '.quality',
+            includeRecommendations: true,
+            includeTrends: true,
+          },
+          history: {
+            enabled: true,
+            keepRuns: 10,
+            storePath: '.quality/history',
+            compareToPrevious: true,
+          },
           excludePaths: ['node_modules', 'dist', 'coverage'],
         },
-      };
+      }
 
       const result: ScoringResult = {
         overall: {
@@ -349,14 +511,14 @@ describe('Quality Validator Type Definitions', () => {
         findings: [],
         recommendations: [],
         metadata,
-      };
+      }
 
-      expect(result.overall.score).toBeGreaterThanOrEqual(0);
-      expect(result.overall.score).toBeLessThanOrEqual(100);
-      expect(['A', 'B', 'C', 'D', 'F']).toContain(result.overall.grade);
-      expect(['pass', 'fail']).toContain(result.overall.status);
-    });
-  });
+      expect(result.overall.score).toBeGreaterThanOrEqual(0)
+      expect(result.overall.score).toBeLessThanOrEqual(100)
+      expect(['A', 'B', 'C', 'D', 'F']).toContain(result.overall.grade)
+      expect(['pass', 'fail']).toContain(result.overall.status)
+    })
+  })
 
   describe('Finding', () => {
     it('should create valid finding with all properties', () => {
@@ -368,12 +530,19 @@ describe('Quality Validator Type Definitions', () => {
         description: 'Function has cyclomatic complexity > threshold',
         location: { file: 'test.ts', line: 42 },
         remediation: 'Break into smaller functions',
-      };
+      }
 
-      expect(['critical', 'high', 'medium', 'low', 'info']).toContain(finding.severity);
-      expect(['codeQuality', 'testCoverage', 'architecture', 'security']).toContain(finding.category);
-      expect(finding.title).toBeTruthy();
-    });
+      expect(['critical', 'high', 'medium', 'low', 'info']).toContain(
+        finding.severity,
+      )
+      expect([
+        'codeQuality',
+        'testCoverage',
+        'architecture',
+        'security',
+      ]).toContain(finding.category)
+      expect(finding.title).toBeTruthy()
+    })
 
     it('should handle findings with evidence and more info', () => {
       const finding: Finding = {
@@ -387,13 +556,13 @@ describe('Quality Validator Type Definitions', () => {
         evidence: 'API_KEY=sk_live_xxx',
         moreInfo: 'https://docs.example.com/security',
         affectedItems: 1,
-      };
+      }
 
-      expect(finding.severity).toBe('critical');
-      expect(finding.evidence).toBeTruthy();
-      expect(finding.moreInfo).toContain('https');
-    });
-  });
+      expect(finding.severity).toBe('critical')
+      expect(finding.evidence).toBeTruthy()
+      expect(finding.moreInfo).toContain('https')
+    })
+  })
 
   describe('Recommendation', () => {
     it('should create valid recommendation', () => {
@@ -404,12 +573,12 @@ describe('Quality Validator Type Definitions', () => {
         remediation: 'Refactor complex logic into separate functions',
         estimatedEffort: 'medium',
         expectedImpact: '10 point score improvement',
-      };
+      }
 
-      expect(['critical', 'high', 'medium', 'low']).toContain(rec.priority);
-      expect(rec.category).toBeTruthy();
-      expect(['high', 'medium', 'low']).toContain(rec.estimatedEffort);
-    });
+      expect(['critical', 'high', 'medium', 'low']).toContain(rec.priority)
+      expect(rec.category).toBeTruthy()
+      expect(['high', 'medium', 'low']).toContain(rec.estimatedEffort)
+    })
 
     it('should link findings to recommendations', () => {
       const rec: Recommendation = {
@@ -420,12 +589,12 @@ describe('Quality Validator Type Definitions', () => {
         estimatedEffort: 'high',
         expectedImpact: '15 point score improvement',
         relatedFindings: ['find-001', 'find-002'],
-      };
+      }
 
-      expect(rec.relatedFindings).toHaveLength(2);
-      expect(rec.relatedFindings).toContain('find-001');
-    });
-  });
+      expect(rec.relatedFindings).toHaveLength(2)
+      expect(rec.relatedFindings).toContain('find-001')
+    })
+  })
 
   describe('AnalysisError', () => {
     it('should track analysis error details', () => {
@@ -433,73 +602,87 @@ describe('Quality Validator Type Definitions', () => {
         code: 'FILE_READ_ERROR',
         message: 'Could not read file',
         details: 'Permission denied',
-      };
+      }
 
-      expect(error.code).toBeTruthy();
-      expect(error.message).toBeTruthy();
-      expect(error.details).toBeTruthy();
-    });
+      expect(error.code).toBeTruthy()
+      expect(error.message).toBeTruthy()
+      expect(error.details).toBeTruthy()
+    })
 
     it('should support various error codes', () => {
-      const errorCodes = ['FILE_READ_ERROR', 'PARSE_ERROR', 'TIMEOUT', 'INVALID_CONFIG'];
+      const errorCodes = [
+        'FILE_READ_ERROR',
+        'PARSE_ERROR',
+        'TIMEOUT',
+        'INVALID_CONFIG',
+      ]
       errorCodes.forEach(code => {
         const error: AnalysisError = {
           code,
           message: `Error: ${code}`,
-        };
-        expect(error.code).toBe(code);
-      });
-    });
-  });
+        }
+        expect(error.code).toBe(code)
+      })
+    })
+  })
 
   describe('Error Classes', () => {
     it('should create ConfigurationError', () => {
-      const error = new ConfigurationError('Invalid config', 'Weights do not sum to 1.0');
-      expect(error.code).toBe('CONFIG_ERROR');
-      expect(error.message).toBe('Invalid config');
-      expect(error.details).toBe('Weights do not sum to 1.0');
-    });
+      const error = new ConfigurationError(
+        'Invalid config',
+        'Weights do not sum to 1.0',
+      )
+      expect(error.code).toBe('CONFIG_ERROR')
+      expect(error.message).toBe('Invalid config')
+      expect(error.details).toBe('Weights do not sum to 1.0')
+    })
 
     it('should create AnalysisErrorClass', () => {
-      const error = new AnalysisErrorClass('Analysis failed', 'File not found');
-      expect(error.code).toBe('ANALYSIS_ERROR');
-      expect(error.message).toBe('Analysis failed');
-    });
+      const error = new AnalysisErrorClass('Analysis failed', 'File not found')
+      expect(error.code).toBe('ANALYSIS_ERROR')
+      expect(error.message).toBe('Analysis failed')
+    })
 
     it('should create IntegrationError', () => {
-      const error = new IntegrationError('Integration failed', 'External tool error');
-      expect(error.code).toBe('INTEGRATION_ERROR');
-    });
+      const error = new IntegrationError(
+        'Integration failed',
+        'External tool error',
+      )
+      expect(error.code).toBe('INTEGRATION_ERROR')
+    })
 
     it('should create ReportingError', () => {
-      const error = new ReportingError('Report generation failed', 'Invalid output path');
-      expect(error.code).toBe('REPORTING_ERROR');
-    });
+      const error = new ReportingError(
+        'Report generation failed',
+        'Invalid output path',
+      )
+      expect(error.code).toBe('REPORTING_ERROR')
+    })
 
     it('should extend QualityValidationError', () => {
-      const error = new ConfigurationError('Test error');
-      expect(error instanceof QualityValidationError).toBe(true);
-      expect(error instanceof Error).toBe(true);
-    });
-  });
+      const error = new ConfigurationError('Test error')
+      expect(error instanceof QualityValidationError).toBe(true)
+      expect(error instanceof Error).toBe(true)
+    })
+  })
 
   describe('Type Conversions', () => {
     it('should convert score to grade correctly', () => {
       const scoreToGrade = (score: number): 'A' | 'B' | 'C' | 'D' | 'F' => {
-        if (score >= 90) return 'A';
-        if (score >= 80) return 'B';
-        if (score >= 70) return 'C';
-        if (score >= 60) return 'D';
-        return 'F';
-      };
+        if (score >= 90) return 'A'
+        if (score >= 80) return 'B'
+        if (score >= 70) return 'C'
+        if (score >= 60) return 'D'
+        return 'F'
+      }
 
-      expect(scoreToGrade(95)).toBe('A');
-      expect(scoreToGrade(89.9)).toBe('B');
-      expect(scoreToGrade(85)).toBe('B');
-      expect(scoreToGrade(75)).toBe('C');
-      expect(scoreToGrade(65)).toBe('D');
-      expect(scoreToGrade(55)).toBe('F');
-    });
+      expect(scoreToGrade(95)).toBe('A')
+      expect(scoreToGrade(89.9)).toBe('B')
+      expect(scoreToGrade(85)).toBe('B')
+      expect(scoreToGrade(75)).toBe('C')
+      expect(scoreToGrade(65)).toBe('D')
+      expect(scoreToGrade(55)).toBe('F')
+    })
 
     it('should convert severity levels', () => {
       const severityWeight = (severity: string): number => {
@@ -509,15 +692,15 @@ describe('Quality Validator Type Definitions', () => {
           medium: 50,
           low: 25,
           info: 10,
-        };
-        return weights[severity] || 0;
-      };
+        }
+        return weights[severity] || 0
+      }
 
-      expect(severityWeight('critical')).toBe(100);
-      expect(severityWeight('high')).toBe(75);
-      expect(severityWeight('low')).toBe(25);
-    });
-  });
+      expect(severityWeight('critical')).toBe(100)
+      expect(severityWeight('high')).toBe(75)
+      expect(severityWeight('low')).toBe(25)
+    })
+  })
 
   describe('Weighted Scoring', () => {
     it('should calculate weighted component scores', () => {
@@ -526,25 +709,25 @@ describe('Quality Validator Type Definitions', () => {
         testCoverage: 90,
         architecture: 75,
         security: 85,
-      };
+      }
 
       const weights = {
         codeQuality: 0.3,
         testCoverage: 0.35,
         architecture: 0.2,
         security: 0.15,
-      };
+      }
 
       const total =
         scores.codeQuality * weights.codeQuality +
         scores.testCoverage * weights.testCoverage +
         scores.architecture * weights.architecture +
-        scores.security * weights.security;
+        scores.security * weights.security
 
-      expect(total).toBeCloseTo(83.25, 1);
-      expect(total).toBeGreaterThanOrEqual(0);
-      expect(total).toBeLessThanOrEqual(100);
-    });
+      expect(total).toBeCloseTo(83.25, 1)
+      expect(total).toBeGreaterThanOrEqual(0)
+      expect(total).toBeLessThanOrEqual(100)
+    })
 
     it('should handle perfect scores', () => {
       const componentScores: ComponentScores = {
@@ -552,15 +735,15 @@ describe('Quality Validator Type Definitions', () => {
         testCoverage: { score: 100, weight: 0.35, weightedScore: 35 },
         architecture: { score: 100, weight: 0.2, weightedScore: 20 },
         security: { score: 100, weight: 0.15, weightedScore: 15 },
-      };
+      }
 
       const total =
         componentScores.codeQuality.weightedScore +
         componentScores.testCoverage.weightedScore +
         componentScores.architecture.weightedScore +
-        componentScores.security.weightedScore;
+        componentScores.security.weightedScore
 
-      expect(total).toBe(100);
-    });
-  });
-});
+      expect(total).toBe(100)
+    })
+  })
+})

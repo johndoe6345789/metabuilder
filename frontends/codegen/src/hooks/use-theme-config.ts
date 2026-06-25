@@ -82,19 +82,50 @@ export function useThemeConfig() {
       const root = document.documentElement
       const sidebar = themeConfig.sidebar
 
-      if (sidebar.width) root.style.setProperty('--sidebar-width', sidebar.width)
-      if (sidebar.widthMobile) root.style.setProperty('--sidebar-width-mobile', sidebar.widthMobile)
-      if (sidebar.widthIcon) root.style.setProperty('--sidebar-width-icon', sidebar.widthIcon)
-      if (sidebar.backgroundColor) root.style.setProperty('--sidebar-bg', sidebar.backgroundColor)
-      if (sidebar.foregroundColor) root.style.setProperty('--sidebar-fg', sidebar.foregroundColor)
-      if (sidebar.borderColor) root.style.setProperty('--sidebar-border', sidebar.borderColor)
-      if (sidebar.accentColor) root.style.setProperty('--sidebar-accent', sidebar.accentColor)
-      if (sidebar.accentForeground) root.style.setProperty('--sidebar-accent-fg', sidebar.accentForeground)
-      if (sidebar.hoverBackground) root.style.setProperty('--sidebar-hover-bg', sidebar.hoverBackground)
-      if (sidebar.activeBackground) root.style.setProperty('--sidebar-active-bg', sidebar.activeBackground)
-      if (sidebar.headerHeight) root.style.setProperty('--sidebar-header-height', sidebar.headerHeight)
-      if (sidebar.transitionDuration) root.style.setProperty('--sidebar-transition', sidebar.transitionDuration)
-      if (sidebar.zIndex !== undefined) root.style.setProperty('--sidebar-z-index', sidebar.zIndex.toString())
+      if (sidebar.width)
+        root.style.setProperty('--sidebar-width', sidebar.width)
+      if (sidebar.widthMobile)
+        root.style.setProperty(
+          '--sidebar-width-mobile', sidebar.widthMobile,
+        )
+      if (sidebar.widthIcon)
+        root.style.setProperty(
+          '--sidebar-width-icon', sidebar.widthIcon,
+        )
+      if (sidebar.backgroundColor)
+        root.style.setProperty('--sidebar-bg', sidebar.backgroundColor)
+      if (sidebar.foregroundColor)
+        root.style.setProperty('--sidebar-fg', sidebar.foregroundColor)
+      if (sidebar.borderColor)
+        root.style.setProperty('--sidebar-border', sidebar.borderColor)
+      if (sidebar.accentColor)
+        root.style.setProperty(
+          '--sidebar-accent', sidebar.accentColor,
+        )
+      if (sidebar.accentForeground)
+        root.style.setProperty(
+          '--sidebar-accent-fg', sidebar.accentForeground,
+        )
+      if (sidebar.hoverBackground)
+        root.style.setProperty(
+          '--sidebar-hover-bg', sidebar.hoverBackground,
+        )
+      if (sidebar.activeBackground)
+        root.style.setProperty(
+          '--sidebar-active-bg', sidebar.activeBackground,
+        )
+      if (sidebar.headerHeight)
+        root.style.setProperty(
+          '--sidebar-header-height', sidebar.headerHeight,
+        )
+      if (sidebar.transitionDuration)
+        root.style.setProperty(
+          '--sidebar-transition', sidebar.transitionDuration,
+        )
+      if (sidebar.zIndex !== undefined)
+        root.style.setProperty(
+          '--sidebar-z-index', sidebar.zIndex.toString(),
+        )
     }
   }, [themeConfig, isLoading])
 

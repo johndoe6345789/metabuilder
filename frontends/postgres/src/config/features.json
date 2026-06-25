@@ -63,42 +63,42 @@
     "fr": {
       "features": {
         "database-crud": {
-          "name": "Opérations CRUD de base de données",
-          "description": "Créer, lire, mettre à jour et supprimer des enregistrements de base de données"
+          "name": "Op\u00e9rations CRUD de base de donn\u00e9es",
+          "description": "Cr\u00e9er, lire, mettre \u00e0 jour et supprimer des enregistrements de base de donn\u00e9es"
         },
         "table-management": {
           "name": "Gestion des tables",
-          "description": "Créer et gérer des tables de base de données"
+          "description": "Cr\u00e9er et g\u00e9rer des tables de base de donn\u00e9es"
         },
         "column-management": {
           "name": "Gestion des colonnes",
           "description": "Ajouter, modifier et supprimer des colonnes de table"
         },
         "sql-query": {
-          "name": "Interface de requête SQL",
-          "description": "Exécuter des requêtes SQL personnalisées"
+          "name": "Interface de requ\u00eate SQL",
+          "description": "Ex\u00e9cuter des requ\u00eates SQL personnalis\u00e9es"
         },
         "constraint-management": {
           "name": "Gestion des contraintes",
-          "description": "Ajouter et gérer les contraintes de table (PRIMARY KEY, UNIQUE, CHECK)"
+          "description": "Ajouter et g\u00e9rer les contraintes de table (PRIMARY KEY, UNIQUE, CHECK)"
         },
         "query-builder": {
-          "name": "Constructeur de requêtes",
-          "description": "Constructeur de requêtes visuel pour créer des requêtes SELECT"
+          "name": "Constructeur de requ\u00eates",
+          "description": "Constructeur de requ\u00eates visuel pour cr\u00e9er des requ\u00eates SELECT"
         },
         "index-management": {
           "name": "Gestion des index",
-          "description": "Créer et gérer des index de base de données pour l'optimisation des performances"
+          "description": "Cr\u00e9er et g\u00e9rer des index de base de donn\u00e9es pour l'optimisation des performances"
         }
       },
       "actions": {
-        "create": "Créer",
+        "create": "Cr\u00e9er",
         "read": "Lire",
-        "update": "Mettre à jour",
+        "update": "Mettre \u00e0 jour",
         "delete": "Supprimer",
         "add": "Ajouter",
         "modify": "Modifier",
-        "execute": "Exécuter",
+        "execute": "Ex\u00e9cuter",
         "list": "Lister",
         "build": "Construire"
       },
@@ -116,8 +116,8 @@
         "id": "ID",
         "name": "Nom",
         "email": "E-mail",
-        "created_at": "Créé le",
-        "updated_at": "Mis à jour le"
+        "created_at": "Cr\u00e9\u00e9 le",
+        "updated_at": "Mis \u00e0 jour le"
       }
     }
   },
@@ -157,7 +157,13 @@
   },
   "tableLayouts": {
     "users": {
-      "columns": ["id", "name", "email", "created_at", "updated_at"],
+      "columns": [
+        "id",
+        "name",
+        "email",
+        "created_at",
+        "updated_at"
+      ],
       "columnWidths": {
         "id": 80,
         "name": 200,
@@ -170,10 +176,18 @@
         "direction": "desc"
       },
       "hiddenColumns": [],
-      "frozenColumns": ["id"]
+      "frozenColumns": [
+        "id"
+      ]
     },
     "products": {
-      "columns": ["id", "name", "price", "stock", "created_at"],
+      "columns": [
+        "id",
+        "name",
+        "price",
+        "stock",
+        "created_at"
+      ],
       "columnWidths": {
         "id": 80,
         "name": 250,
@@ -186,7 +200,9 @@
         "direction": "asc"
       },
       "hiddenColumns": [],
-      "frozenColumns": ["id"]
+      "frozenColumns": [
+        "id"
+      ]
     }
   },
   "columnLayouts": {
@@ -233,7 +249,12 @@
       "enableExport": true,
       "enableFilters": true,
       "rowsPerPage": 25,
-      "allowedActions": ["create", "read", "update", "delete"]
+      "allowedActions": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
     },
     "products": {
       "enablePagination": true,
@@ -241,7 +262,12 @@
       "enableExport": true,
       "enableFilters": true,
       "rowsPerPage": 50,
-      "allowedActions": ["create", "read", "update", "delete"]
+      "allowedActions": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
     }
   },
   "columnFeatures": {
@@ -351,9 +377,18 @@
           "label": "Role",
           "required": true,
           "options": [
-            { "value": "admin", "label": "Administrator" },
-            { "value": "user", "label": "User" },
-            { "value": "guest", "label": "Guest" }
+            {
+              "value": "admin",
+              "label": "Administrator"
+            },
+            {
+              "value": "user",
+              "label": "User"
+            },
+            {
+              "value": "guest",
+              "label": "Guest"
+            }
           ]
         },
         {
@@ -410,10 +445,22 @@
           "label": "Category",
           "required": true,
           "options": [
-            { "value": "electronics", "label": "Electronics" },
-            { "value": "clothing", "label": "Clothing" },
-            { "value": "food", "label": "Food" },
-            { "value": "books", "label": "Books" }
+            {
+              "value": "electronics",
+              "label": "Electronics"
+            },
+            {
+              "value": "clothing",
+              "label": "Clothing"
+            },
+            {
+              "value": "food",
+              "label": "Food"
+            },
+            {
+              "value": "books",
+              "label": "Books"
+            }
           ]
         },
         {
@@ -515,30 +562,63 @@
   },
   "permissions": {
     "users": {
-      "create": ["admin"],
-      "read": ["admin", "user"],
-      "update": ["admin"],
-      "delete": ["admin"]
+      "create": [
+        "admin"
+      ],
+      "read": [
+        "admin",
+        "user"
+      ],
+      "update": [
+        "admin"
+      ],
+      "delete": [
+        "admin"
+      ]
     },
     "products": {
-      "create": ["admin", "editor"],
-      "read": ["admin", "editor", "user"],
-      "update": ["admin", "editor"],
-      "delete": ["admin"]
+      "create": [
+        "admin",
+        "editor"
+      ],
+      "read": [
+        "admin",
+        "editor",
+        "user"
+      ],
+      "update": [
+        "admin",
+        "editor"
+      ],
+      "delete": [
+        "admin"
+      ]
     }
   },
   "relationships": {
     "users": {
-      "hasMany": ["orders", "reviews"],
+      "hasMany": [
+        "orders",
+        "reviews"
+      ],
       "belongsTo": []
     },
     "products": {
-      "hasMany": ["reviews", "orderItems"],
-      "belongsTo": ["category"]
+      "hasMany": [
+        "reviews",
+        "orderItems"
+      ],
+      "belongsTo": [
+        "category"
+      ]
     },
     "orders": {
-      "belongsTo": ["users"],
-      "hasMany": ["orderItems"]
+      "belongsTo": [
+        "users"
+      ],
+      "hasMany": [
+        "orderItems"
+      ]
     }
   },
   "uiViews": {
@@ -553,7 +633,11 @@
       "detail": {
         "component": "DetailView",
         "showRelated": true,
-        "tabs": ["info", "orders", "activity"]
+        "tabs": [
+          "info",
+          "orders",
+          "activity"
+        ]
       },
       "create": {
         "component": "FormDialog",
@@ -575,7 +659,11 @@
       "detail": {
         "component": "DetailView",
         "showRelated": true,
-        "tabs": ["info", "reviews", "inventory"]
+        "tabs": [
+          "info",
+          "reviews",
+          "inventory"
+        ]
       },
       "create": {
         "component": "FormDialog",
@@ -591,7 +679,10 @@
     "AdminDashboard": {
       "component": "Box",
       "props": {
-        "sx": { "display": "flex", "minHeight": "100vh" }
+        "sx": {
+          "display": "flex",
+          "minHeight": "100vh"
+        }
       },
       "children": [
         {
@@ -603,7 +694,11 @@
           "children": [
             {
               "component": "Box",
-              "props": { "sx": { "p": 2 } },
+              "props": {
+                "sx": {
+                  "p": 1.5
+                }
+              },
               "children": [
                 {
                   "component": "Typography",
@@ -633,7 +728,11 @@
         {
           "component": "Box",
           "props": {
-            "sx": { "flexGrow": 1, "display": "flex", "flexDirection": "column" }
+            "sx": {
+              "flexGrow": 1,
+              "display": "flex",
+              "flexDirection": "column"
+            }
           },
           "children": [
             {
@@ -655,7 +754,11 @@
                     },
                     {
                       "component": "Box",
-                      "props": { "sx": { "flexGrow": 1 } }
+                      "props": {
+                        "sx": {
+                          "flexGrow": 1
+                        }
+                      }
                     },
                     {
                       "component": "IconButton",
@@ -671,7 +774,10 @@
             {
               "component": "Box",
               "props": {
-                "sx": { "p": 3, "flexGrow": 1 }
+                "sx": {
+                  "p": 3,
+                  "flexGrow": 1
+                }
               },
               "children": [
                 {
@@ -690,7 +796,11 @@
         {
           "component": "Box",
           "props": {
-            "sx": { "display": "flex", "justifyContent": "space-between", "mb": 3 }
+            "sx": {
+              "display": "flex",
+              "justifyContent": "space-between",
+              "mb": 3
+            }
           },
           "children": [
             {
@@ -702,7 +812,12 @@
             },
             {
               "component": "Box",
-              "props": { "sx": { "display": "flex", "gap": 2 } },
+              "props": {
+                "sx": {
+                  "display": "flex",
+                  "gap": 2
+                }
+              },
               "children": [
                 {
                   "component": "Button",
@@ -730,12 +845,22 @@
         },
         {
           "component": "Paper",
-          "props": { "sx": { "mb": 2 } },
+          "props": {
+            "sx": {
+              "mb": 2
+            }
+          },
           "condition": "features.enableSearch || features.enableFilters",
           "children": [
             {
               "component": "Box",
-              "props": { "sx": { "p": 2, "display": "flex", "gap": 2 } },
+              "props": {
+                "sx": {
+                  "p": 2,
+                  "display": "flex",
+                  "gap": 2
+                }
+              },
               "children": [
                 {
                   "component": "TextField",
@@ -776,7 +901,13 @@
         },
         {
           "component": "Box",
-          "props": { "sx": { "mt": 2, "display": "flex", "justifyContent": "center" } },
+          "props": {
+            "sx": {
+              "mt": 2,
+              "display": "flex",
+              "justifyContent": "center"
+            }
+          },
           "condition": "features.enablePagination",
           "children": [
             {
@@ -796,7 +927,13 @@
       "children": [
         {
           "component": "Box",
-          "props": { "sx": { "display": "flex", "justifyContent": "space-between", "mb": 3 } },
+          "props": {
+            "sx": {
+              "display": "flex",
+              "justifyContent": "space-between",
+              "mb": 3
+            }
+          },
           "children": [
             {
               "component": "Box",
@@ -814,14 +951,21 @@
                   "props": {
                     "variant": "h4",
                     "text": "{{resourceName}} #{{id}}",
-                    "sx": { "mt": 2 }
+                    "sx": {
+                      "mt": 2
+                    }
                   }
                 }
               ]
             },
             {
               "component": "Box",
-              "props": { "sx": { "display": "flex", "gap": 2 } },
+              "props": {
+                "sx": {
+                  "display": "flex",
+                  "gap": 2
+                }
+              },
               "children": [
                 {
                   "component": "Button",
@@ -875,11 +1019,18 @@
           "children": [
             {
               "component": "Paper",
-              "props": { "sx": { "p": 3 } },
+              "props": {
+                "sx": {
+                  "p": 3
+                }
+              },
               "children": [
                 {
                   "component": "Grid",
-                  "props": { "container": true, "spacing": 2 },
+                  "props": {
+                    "container": true,
+                    "spacing": 2
+                  },
                   "children": [
                     {
                       "component": "Grid",
@@ -917,14 +1068,20 @@
         {
           "component": "Box",
           "condition": "relationships && relationships.hasMany.length > 0",
-          "props": { "sx": { "mt": 4 } },
+          "props": {
+            "sx": {
+              "mt": 4
+            }
+          },
           "children": [
             {
               "component": "Typography",
               "props": {
                 "variant": "h6",
                 "text": "Related Records",
-                "sx": { "mb": 2 }
+                "sx": {
+                  "mb": 2
+                }
               }
             },
             {
@@ -990,11 +1147,18 @@
           "children": [
             {
               "component": "Box",
-              "props": { "sx": { "pt": 2 } },
+              "props": {
+                "sx": {
+                  "pt": 2
+                }
+              },
               "children": [
                 {
                   "component": "Grid",
-                  "props": { "container": true, "spacing": 2 },
+                  "props": {
+                    "container": true,
+                    "spacing": 2
+                  },
                   "children": [
                     {
                       "component": "Grid",
@@ -1047,7 +1211,10 @@
     },
     "DashboardStatsCards": {
       "component": "Grid",
-      "props": { "container": true, "spacing": 3 },
+      "props": {
+        "container": true,
+        "spacing": 3
+      },
       "children": [
         {
           "component": "Grid",
@@ -1068,7 +1235,11 @@
                     {
                       "component": "Box",
                       "props": {
-                        "sx": { "display": "flex", "alignItems": "center", "mb": 2 }
+                        "sx": {
+                          "display": "flex",
+                          "alignItems": "center",
+                          "mb": 2
+                        }
                       },
                       "children": [
                         {
@@ -1076,7 +1247,10 @@
                           "props": {
                             "name": "{{card.icon}}",
                             "color": "{{card.color}}",
-                            "sx": { "fontSize": 40, "mr": 2 }
+                            "sx": {
+                              "fontSize": 40,
+                              "mr": 2
+                            }
                           }
                         },
                         {
@@ -1105,7 +1279,10 @@
                       "component": "Box",
                       "condition": "card.change",
                       "props": {
-                        "sx": { "display": "flex", "alignItems": "center" }
+                        "sx": {
+                          "display": "flex",
+                          "alignItems": "center"
+                        }
                       },
                       "children": [
                         {
@@ -1158,7 +1335,10 @@
         {
           "component": "Box",
           "props": {
-            "sx": { "mt": 2, "mb": 2 }
+            "sx": {
+              "mt": 1.5,
+              "mb": 1.5
+            }
           },
           "children": [
             {
@@ -1168,7 +1348,9 @@
                 "variant": "contained",
                 "startIcon": "Add",
                 "onClick": "openCreateDialog",
-                "sx": { "mr": 2 },
+                "sx": {
+                  "mr": 2
+                },
                 "text": "Create Table"
               }
             },
@@ -1182,78 +1364,6 @@
                 "onClick": "openDropDialog",
                 "text": "Drop Table"
               }
-            }
-          ]
-        },
-        {
-          "component": "Paper",
-          "props": {
-            "sx": { "mt": 2 }
-          },
-          "children": [
-            {
-              "component": "Box",
-              "props": {
-                "sx": { "p": 2 }
-              },
-              "children": [
-                {
-                  "component": "Typography",
-                  "props": {
-                    "variant": "h6",
-                    "gutterBottom": true,
-                    "text": "Existing Tables"
-                  }
-                },
-                {
-                  "component": "List",
-                  "children": [
-                    {
-                      "component": "ListItem",
-                      "forEach": "tables",
-                      "children": [
-                        {
-                          "component": "ListItemIcon",
-                          "children": [
-                            {
-                              "component": "IconButton",
-                              "props": {
-                                "size": "small"
-                              },
-                              "children": [
-                                {
-                                  "component": "Typography",
-                                  "props": {
-                                    "text": "📊"
-                                  }
-                                }
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "component": "ListItemText",
-                          "props": {
-                            "primary": "{{table.table_name}}"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "component": "ListItem",
-                      "condition": "tables.length === 0",
-                      "children": [
-                        {
-                          "component": "ListItemText",
-                          "props": {
-                            "primary": "No tables found"
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
             }
           ]
         }
@@ -1283,7 +1393,10 @@
         {
           "component": "Paper",
           "props": {
-            "sx": { "p": 2, "mb": 2 }
+            "sx": {
+              "p": 2,
+              "mb": 2
+            }
           },
           "children": [
             {
@@ -1324,7 +1437,9 @@
           "component": "Box",
           "condition": "selectedTable && canAdd",
           "props": {
-            "sx": { "mb": 2 }
+            "sx": {
+              "mb": 2
+            }
           },
           "children": [
             {
@@ -1334,7 +1449,9 @@
                 "variant": "contained",
                 "startIcon": "Add",
                 "onClick": "openAddDialog",
-                "sx": { "mr": 1 },
+                "sx": {
+                  "mr": 1
+                },
                 "text": "Add Column"
               }
             },
@@ -1345,7 +1462,9 @@
                 "variant": "outlined",
                 "startIcon": "Edit",
                 "onClick": "openModifyDialog",
-                "sx": { "mr": 1 },
+                "sx": {
+                  "mr": 1
+                },
                 "text": "Modify Column"
               }
             },
@@ -1366,7 +1485,9 @@
           "component": "Paper",
           "condition": "tableSchema && tableSchema.columns",
           "props": {
-            "sx": { "mt": 2 }
+            "sx": {
+              "mt": 1.5
+            }
           },
           "children": [
             {
@@ -1499,7 +1620,10 @@
         {
           "component": "Paper",
           "props": {
-            "sx": { "p": 2, "mb": 2 }
+            "sx": {
+              "p": 2,
+              "mb": 2
+            }
           },
           "children": [
             {
@@ -1540,7 +1664,9 @@
           "component": "Box",
           "condition": "selectedTable && canAdd",
           "props": {
-            "sx": { "mb": 2 }
+            "sx": {
+              "mb": 2
+            }
           },
           "children": [
             {
@@ -1559,7 +1685,9 @@
           "component": "Paper",
           "condition": "constraints && constraints.length > 0",
           "props": {
-            "sx": { "mt": 2 }
+            "sx": {
+              "mt": 1.5
+            }
           },
           "children": [
             {
@@ -1644,9 +1772,10 @@
                                   },
                                   "children": [
                                     {
-                                      "component": "Typography",
+                                      "component": "Icon",
                                       "props": {
-                                        "text": "🗑️"
+                                        "name": "Delete",
+                                        "fontSize": "small"
                                       }
                                     }
                                   ]
@@ -1689,7 +1818,10 @@
         {
           "component": "Paper",
           "props": {
-            "sx": { "p": 2, "mb": 2 }
+            "sx": {
+              "p": 2,
+              "mb": 2
+            }
           },
           "children": [
             {
@@ -1730,7 +1862,9 @@
           "component": "Box",
           "condition": "selectedTable",
           "props": {
-            "sx": { "mb": 2 }
+            "sx": {
+              "mb": 2
+            }
           },
           "children": [
             {
@@ -1748,13 +1882,17 @@
           "component": "Paper",
           "condition": "indexes && indexes.length > 0",
           "props": {
-            "sx": { "mt": 2 }
+            "sx": {
+              "mt": 1.5
+            }
           },
           "children": [
             {
               "component": "Box",
               "props": {
-                "sx": { "p": 2 }
+                "sx": {
+                  "p": 1.5
+                }
               },
               "children": [
                 {
@@ -1776,9 +1914,10 @@
                           "component": "ListItemIcon",
                           "children": [
                             {
-                              "component": "Typography",
+                              "component": "Icon",
                               "props": {
-                                "text": "⚡"
+                                "name": "Bolt",
+                                "fontSize": "small"
                               }
                             }
                           ]
@@ -1792,7 +1931,10 @@
                         }
                       ]
                     }
-                  ]
+                  ],
+                  "props": {
+                    "dense": true
+                  }
                 }
               ]
             }
@@ -1823,14 +1965,19 @@
         {
           "component": "Paper",
           "props": {
-            "sx": { "p": 2, "mb": 2 }
+            "sx": {
+              "p": 2,
+              "mb": 2
+            }
           },
           "children": [
             {
               "component": "FormControl",
               "props": {
                 "fullWidth": true,
-                "sx": { "mb": 2 }
+                "sx": {
+                  "mb": 2
+                }
               },
               "children": [
                 {
@@ -1874,7 +2021,12 @@
                 {
                   "component": "Box",
                   "props": {
-                    "sx": { "display": "flex", "flexWrap": "wrap", "gap": 1, "mb": 2 }
+                    "sx": {
+                      "display": "flex",
+                      "flexWrap": "wrap",
+                      "gap": 1,
+                      "mb": 2
+                    }
                   },
                   "children": [
                     {
@@ -1891,7 +2043,11 @@
                 {
                   "component": "Box",
                   "props": {
-                    "sx": { "mt": 2, "display": "flex", "gap": 2 }
+                    "sx": {
+                      "mt": 2,
+                      "display": "flex",
+                      "gap": 2
+                    }
                   },
                   "children": [
                     {
@@ -1922,7 +2078,11 @@
           "component": "Paper",
           "condition": "generatedQuery",
           "props": {
-            "sx": { "p": 2, "mb": 2, "backgroundColor": "#f5f5f5" }
+            "sx": {
+              "p": 2,
+              "mb": 2,
+              "backgroundColor": "#f5f5f5"
+            }
           },
           "children": [
             {
@@ -1937,7 +2097,10 @@
               "component": "Typography",
               "props": {
                 "variant": "body2",
-                "sx": { "fontFamily": "monospace", "whiteSpace": "pre-wrap" },
+                "sx": {
+                  "fontFamily": "monospace",
+                  "whiteSpace": "pre-wrap"
+                },
                 "text": "{{generatedQuery}}"
               }
             }
@@ -1947,7 +2110,9 @@
           "component": "Box",
           "condition": "result",
           "props": {
-            "sx": { "mt": 2 }
+            "sx": {
+              "mt": 2
+            }
           },
           "children": [
             {
@@ -1975,19 +2140,35 @@
         },
         "variant": {
           "type": "enum",
-          "values": ["text", "outlined", "contained"],
+          "values": [
+            "text",
+            "outlined",
+            "contained"
+          ],
           "default": "text",
           "description": "Button variant style"
         },
         "color": {
           "type": "enum",
-          "values": ["default", "primary", "secondary", "error", "warning", "info", "success"],
+          "values": [
+            "default",
+            "primary",
+            "secondary",
+            "error",
+            "warning",
+            "info",
+            "success"
+          ],
           "default": "primary",
           "description": "Button color theme"
         },
         "size": {
           "type": "enum",
-          "values": ["small", "medium", "large"],
+          "values": [
+            "small",
+            "medium",
+            "large"
+          ],
           "default": "medium",
           "description": "Button size"
         },
@@ -2033,19 +2214,33 @@
         },
         "type": {
           "type": "enum",
-          "values": ["text", "email", "password", "number", "tel", "url"],
+          "values": [
+            "text",
+            "email",
+            "password",
+            "number",
+            "tel",
+            "url"
+          ],
           "default": "text",
           "description": "Input type"
         },
         "variant": {
           "type": "enum",
-          "values": ["standard", "outlined", "filled"],
+          "values": [
+            "standard",
+            "outlined",
+            "filled"
+          ],
           "default": "outlined",
           "description": "TextField variant"
         },
         "size": {
           "type": "enum",
-          "values": ["small", "medium"],
+          "values": [
+            "small",
+            "medium"
+          ],
           "default": "medium",
           "description": "Field size"
         },
@@ -2097,7 +2292,21 @@
         },
         "variant": {
           "type": "enum",
-          "values": ["h1", "h2", "h3", "h4", "h5", "h6", "subtitle1", "subtitle2", "body1", "body2", "caption", "button", "overline"],
+          "values": [
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            "h5",
+            "h6",
+            "subtitle1",
+            "subtitle2",
+            "body1",
+            "body2",
+            "caption",
+            "button",
+            "overline"
+          ],
           "default": "body1",
           "description": "Typography variant"
         },
@@ -2107,7 +2316,12 @@
         },
         "align": {
           "type": "enum",
-          "values": ["left", "center", "right", "justify"],
+          "values": [
+            "left",
+            "center",
+            "right",
+            "justify"
+          ],
           "default": "left",
           "description": "Text alignment"
         },
@@ -2189,7 +2403,10 @@
         },
         "variant": {
           "type": "enum",
-          "values": ["elevation", "outlined"],
+          "values": [
+            "elevation",
+            "outlined"
+          ],
           "default": "elevation",
           "description": "Paper variant"
         },
@@ -2226,7 +2443,14 @@
         },
         "maxWidth": {
           "type": "enum",
-          "values": ["xs", "sm", "md", "lg", "xl", false],
+          "values": [
+            "xs",
+            "sm",
+            "md",
+            "lg",
+            "xl",
+            false
+          ],
           "default": "sm",
           "description": "Maximum width of dialog"
         },
@@ -2276,7 +2500,10 @@
         },
         "size": {
           "type": "enum",
-          "values": ["small", "medium"],
+          "values": [
+            "small",
+            "medium"
+          ],
           "default": "medium",
           "description": "Table size"
         }
@@ -2302,13 +2529,21 @@
         },
         "color": {
           "type": "enum",
-          "values": ["primary", "secondary", "standard"],
+          "values": [
+            "primary",
+            "secondary",
+            "standard"
+          ],
           "default": "standard",
           "description": "Pagination color"
         },
         "size": {
           "type": "enum",
-          "values": ["small", "medium", "large"],
+          "values": [
+            "small",
+            "medium",
+            "large"
+          ],
           "default": "medium",
           "description": "Pagination size"
         },
@@ -2339,13 +2574,20 @@
         },
         "orientation": {
           "type": "enum",
-          "values": ["horizontal", "vertical"],
+          "values": [
+            "horizontal",
+            "vertical"
+          ],
           "default": "horizontal",
           "description": "Tab orientation"
         },
         "variant": {
           "type": "enum",
-          "values": ["standard", "scrollable", "fullWidth"],
+          "values": [
+            "standard",
+            "scrollable",
+            "fullWidth"
+          ],
           "default": "standard",
           "description": "Tabs variant"
         }
@@ -2387,13 +2629,25 @@
         },
         "color": {
           "type": "enum",
-          "values": ["inherit", "primary", "secondary", "action", "disabled", "error"],
+          "values": [
+            "inherit",
+            "primary",
+            "secondary",
+            "action",
+            "disabled",
+            "error"
+          ],
           "default": "inherit",
           "description": "Icon color"
         },
         "fontSize": {
           "type": "enum",
-          "values": ["small", "medium", "large", "inherit"],
+          "values": [
+            "small",
+            "medium",
+            "large",
+            "inherit"
+          ],
           "default": "medium",
           "description": "Icon size"
         }
@@ -2410,13 +2664,25 @@
         },
         "color": {
           "type": "enum",
-          "values": ["default", "primary", "secondary", "error", "warning", "info", "success"],
+          "values": [
+            "default",
+            "primary",
+            "secondary",
+            "error",
+            "warning",
+            "info",
+            "success"
+          ],
           "default": "default",
           "description": "Button color"
         },
         "size": {
           "type": "enum",
-          "values": ["small", "medium", "large"],
+          "values": [
+            "small",
+            "medium",
+            "large"
+          ],
           "default": "medium",
           "description": "Button size"
         },
@@ -2450,7 +2716,11 @@
         },
         "variant": {
           "type": "enum",
-          "values": ["standard", "outlined", "filled"],
+          "values": [
+            "standard",
+            "outlined",
+            "filled"
+          ],
           "default": "outlined",
           "description": "Select variant"
         },
@@ -2493,7 +2763,11 @@
         },
         "color": {
           "type": "enum",
-          "values": ["default", "primary", "secondary"],
+          "values": [
+            "default",
+            "primary",
+            "secondary"
+          ],
           "default": "primary",
           "description": "Checkbox color"
         }
@@ -2505,13 +2779,25 @@
       "props": {
         "position": {
           "type": "enum",
-          "values": ["fixed", "absolute", "sticky", "static", "relative"],
+          "values": [
+            "fixed",
+            "absolute",
+            "sticky",
+            "static",
+            "relative"
+          ],
           "default": "fixed",
           "description": "AppBar position"
         },
         "color": {
           "type": "enum",
-          "values": ["default", "primary", "secondary", "transparent", "inherit"],
+          "values": [
+            "default",
+            "primary",
+            "secondary",
+            "transparent",
+            "inherit"
+          ],
           "default": "primary",
           "description": "AppBar color"
         },
@@ -2528,7 +2814,10 @@
       "props": {
         "variant": {
           "type": "enum",
-          "values": ["regular", "dense"],
+          "values": [
+            "regular",
+            "dense"
+          ],
           "default": "regular",
           "description": "Toolbar variant"
         },
@@ -2549,13 +2838,22 @@
         },
         "variant": {
           "type": "enum",
-          "values": ["permanent", "persistent", "temporary"],
+          "values": [
+            "permanent",
+            "persistent",
+            "temporary"
+          ],
           "default": "temporary",
           "description": "Drawer variant"
         },
         "anchor": {
           "type": "enum",
-          "values": ["left", "right", "top", "bottom"],
+          "values": [
+            "left",
+            "right",
+            "top",
+            "bottom"
+          ],
           "default": "left",
           "description": "Drawer anchor position"
         },
@@ -2571,13 +2869,22 @@
       "props": {
         "severity": {
           "type": "enum",
-          "values": ["error", "warning", "info", "success"],
+          "values": [
+            "error",
+            "warning",
+            "info",
+            "success"
+          ],
           "default": "info",
           "description": "Alert severity"
         },
         "variant": {
           "type": "enum",
-          "values": ["standard", "filled", "outlined"],
+          "values": [
+            "standard",
+            "filled",
+            "outlined"
+          ],
           "default": "standard",
           "description": "Alert variant"
         },
@@ -2602,13 +2909,20 @@
         },
         "color": {
           "type": "enum",
-          "values": ["primary", "secondary", "inherit"],
+          "values": [
+            "primary",
+            "secondary",
+            "inherit"
+          ],
           "default": "primary",
           "description": "Progress color"
         },
         "variant": {
           "type": "enum",
-          "values": ["determinate", "indeterminate"],
+          "values": [
+            "determinate",
+            "indeterminate"
+          ],
           "default": "indeterminate",
           "description": "Progress variant"
         },
@@ -2629,24 +2943,37 @@
       "endpoints": [
         {
           "path": "/api/admin/record",
-          "methods": ["POST", "PUT", "DELETE"],
+          "methods": [
+            "POST",
+            "PUT",
+            "DELETE"
+          ],
           "description": "Manage database records"
         },
         {
           "path": "/api/admin/table-data",
-          "methods": ["POST"],
+          "methods": [
+            "POST"
+          ],
           "description": "Fetch table data"
         },
         {
           "path": "/api/admin/table-schema",
-          "methods": ["POST"],
+          "methods": [
+            "POST"
+          ],
           "description": "Fetch table schema information"
         }
       ],
       "ui": {
         "showInNav": true,
         "icon": "Storage",
-        "actions": ["create", "read", "update", "delete"]
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ]
       }
     },
     {
@@ -2658,14 +2985,20 @@
       "endpoints": [
         {
           "path": "/api/admin/table-manage",
-          "methods": ["POST", "DELETE"],
+          "methods": [
+            "POST",
+            "DELETE"
+          ],
           "description": "Create and drop tables"
         }
       ],
       "ui": {
         "showInNav": true,
         "icon": "TableChart",
-        "actions": ["create", "delete"]
+        "actions": [
+          "create",
+          "delete"
+        ]
       }
     },
     {
@@ -2677,14 +3010,22 @@
       "endpoints": [
         {
           "path": "/api/admin/column-manage",
-          "methods": ["POST", "PUT", "DELETE"],
+          "methods": [
+            "POST",
+            "PUT",
+            "DELETE"
+          ],
           "description": "Manage table columns"
         }
       ],
       "ui": {
         "showInNav": true,
         "icon": "ViewColumn",
-        "actions": ["add", "modify", "delete"]
+        "actions": [
+          "add",
+          "modify",
+          "delete"
+        ]
       }
     },
     {
@@ -2696,14 +3037,18 @@
       "endpoints": [
         {
           "path": "/api/admin/query",
-          "methods": ["POST"],
+          "methods": [
+            "POST"
+          ],
           "description": "Execute SQL queries"
         }
       ],
       "ui": {
         "showInNav": true,
         "icon": "Code",
-        "actions": ["execute"]
+        "actions": [
+          "execute"
+        ]
       }
     },
     {
@@ -2715,14 +3060,22 @@
       "endpoints": [
         {
           "path": "/api/admin/constraints",
-          "methods": ["GET", "POST", "DELETE"],
+          "methods": [
+            "GET",
+            "POST",
+            "DELETE"
+          ],
           "description": "Manage table constraints"
         }
       ],
       "ui": {
         "showInNav": true,
         "icon": "Rule",
-        "actions": ["list", "add", "delete"]
+        "actions": [
+          "list",
+          "add",
+          "delete"
+        ]
       }
     },
     {
@@ -2734,14 +3087,19 @@
       "endpoints": [
         {
           "path": "/api/admin/query-builder",
-          "methods": ["POST"],
+          "methods": [
+            "POST"
+          ],
           "description": "Execute queries built with query builder"
         }
       ],
       "ui": {
         "showInNav": true,
         "icon": "AccountTree",
-        "actions": ["build", "execute"]
+        "actions": [
+          "build",
+          "execute"
+        ]
       }
     },
     {
@@ -2753,14 +3111,22 @@
       "endpoints": [
         {
           "path": "/api/admin/indexes",
-          "methods": ["GET", "POST", "DELETE"],
+          "methods": [
+            "GET",
+            "POST",
+            "DELETE"
+          ],
           "description": "Manage table indexes"
         }
       ],
       "ui": {
         "showInNav": true,
         "icon": "Speed",
-        "actions": ["list", "create", "delete"]
+        "actions": [
+          "list",
+          "create",
+          "delete"
+        ]
       }
     }
   ],
@@ -2841,7 +3207,7 @@
   "navItems": [
     {
       "id": "tables",
-      "label": "Tables",
+      "label": "Browse",
       "icon": "Storage",
       "featureId": "database-crud"
     },
@@ -2859,7 +3225,7 @@
     },
     {
       "id": "table-manager",
-      "label": "Table Manager",
+      "label": "Schema",
       "icon": "TableChart",
       "featureId": "table-management"
     },
@@ -2883,23 +3249,73 @@
     }
   ],
   "indexTypes": [
-    { "value": "BTREE", "label": "B-Tree (Default)", "description": "General purpose, balanced tree index" },
-    { "value": "HASH", "label": "Hash", "description": "Fast equality searches" },
-    { "value": "GIN", "label": "GIN", "description": "Generalized Inverted Index for full-text search" },
-    { "value": "GIST", "label": "GiST", "description": "Generalized Search Tree for geometric data" },
-    { "value": "BRIN", "label": "BRIN", "description": "Block Range Index for very large tables" }
+    {
+      "value": "BTREE",
+      "label": "B-Tree (Default)",
+      "description": "General purpose, balanced tree index"
+    },
+    {
+      "value": "HASH",
+      "label": "Hash",
+      "description": "Fast equality searches"
+    },
+    {
+      "value": "GIN",
+      "label": "GIN",
+      "description": "Generalized Inverted Index for full-text search"
+    },
+    {
+      "value": "GIST",
+      "label": "GiST",
+      "description": "Generalized Search Tree for geometric data"
+    },
+    {
+      "value": "BRIN",
+      "label": "BRIN",
+      "description": "Block Range Index for very large tables"
+    }
   ],
   "queryOperators": [
-    { "value": "=", "label": "Equals" },
-    { "value": "!=", "label": "Not Equals" },
-    { "value": ">", "label": "Greater Than" },
-    { "value": "<", "label": "Less Than" },
-    { "value": ">=", "label": "Greater or Equal" },
-    { "value": "<=", "label": "Less or Equal" },
-    { "value": "LIKE", "label": "Like (Pattern Match)" },
-    { "value": "IN", "label": "In List" },
-    { "value": "IS NULL", "label": "Is Null" },
-    { "value": "IS NOT NULL", "label": "Is Not Null" }
+    {
+      "value": "=",
+      "label": "Equals"
+    },
+    {
+      "value": "!=",
+      "label": "Not Equals"
+    },
+    {
+      "value": ">",
+      "label": "Greater Than"
+    },
+    {
+      "value": "<",
+      "label": "Less Than"
+    },
+    {
+      "value": ">=",
+      "label": "Greater or Equal"
+    },
+    {
+      "value": "<=",
+      "label": "Less or Equal"
+    },
+    {
+      "value": "LIKE",
+      "label": "Like (Pattern Match)"
+    },
+    {
+      "value": "IN",
+      "label": "In List"
+    },
+    {
+      "value": "IS NULL",
+      "label": "Is Null"
+    },
+    {
+      "value": "IS NOT NULL",
+      "label": "Is Not Null"
+    }
   ],
   "sqlTemplates": {
     "parameterTypes": {
@@ -2930,13 +3346,30 @@
       "dataType": {
         "type": "enum",
         "description": "PostgreSQL data type",
-        "allowedValues": ["INTEGER", "BIGINT", "SERIAL", "VARCHAR", "TEXT", "BOOLEAN", "TIMESTAMP", "DATE", "JSON", "JSONB"],
+        "allowedValues": [
+          "INTEGER",
+          "BIGINT",
+          "SERIAL",
+          "VARCHAR",
+          "TEXT",
+          "BOOLEAN",
+          "TIMESTAMP",
+          "DATE",
+          "JSON",
+          "JSONB"
+        ],
         "sanitize": "enum"
       },
       "indexType": {
         "type": "enum",
         "description": "PostgreSQL index type",
-        "allowedValues": ["BTREE", "HASH", "GIN", "GIST", "BRIN"],
+        "allowedValues": [
+          "BTREE",
+          "HASH",
+          "GIN",
+          "GIST",
+          "BRIN"
+        ],
         "sanitize": "enum"
       },
       "schemaName": {
@@ -2969,7 +3402,10 @@
           "drizzlePattern": {
             "type": "raw",
             "template": "SELECT table_name FROM information_schema.tables WHERE table_schema = $1 AND table_name = $2",
-            "paramOrder": ["schemaName", "tableName"]
+            "paramOrder": [
+              "schemaName",
+              "tableName"
+            ]
           },
           "returns": "rows",
           "securityNotes": "Uses parameterized query - safe from SQL injection"
@@ -2986,7 +3422,11 @@
           "drizzlePattern": {
             "type": "raw",
             "template": "SELECT column_name FROM information_schema.columns WHERE table_schema = $1 AND table_name = $2 AND column_name = $3",
-            "paramOrder": ["schemaName", "tableName", "columnName"]
+            "paramOrder": [
+              "schemaName",
+              "tableName",
+              "columnName"
+            ]
           },
           "returns": "rows",
           "securityNotes": "Uses parameterized query - safe from SQL injection"
@@ -3003,7 +3443,9 @@
           "drizzlePattern": {
             "type": "raw",
             "template": "SELECT table_name FROM information_schema.tables WHERE table_schema = $1 ORDER BY table_name",
-            "paramOrder": ["schemaName"]
+            "paramOrder": [
+              "schemaName"
+            ]
           },
           "returns": "rows",
           "securityNotes": "Uses parameterized query - safe from SQL injection"
@@ -3019,7 +3461,10 @@
           "drizzlePattern": {
             "type": "raw",
             "template": "SELECT column_name, data_type, is_nullable, column_default, character_maximum_length FROM information_schema.columns WHERE table_schema = $1 AND table_name = $2 ORDER BY ordinal_position",
-            "paramOrder": ["schemaName", "tableName"]
+            "paramOrder": [
+              "schemaName",
+              "tableName"
+            ]
           },
           "returns": "rows",
           "securityNotes": "Uses parameterized query - safe from SQL injection"
@@ -3099,7 +3544,10 @@
           "drizzlePattern": {
             "type": "raw",
             "template": "SELECT i.relname as indexname, ix.indisprimary, ix.indisunique, am.amname, pg_get_indexdef(ix.indexrelid) as indexdef FROM pg_class t JOIN pg_index ix ON t.oid = ix.indrelid JOIN pg_class i ON i.oid = ix.indexrelid JOIN pg_am am ON i.relam = am.oid WHERE t.relkind = 'r' AND t.relname = $1 AND t.relnamespace = (SELECT oid FROM pg_namespace WHERE nspname = $2) ORDER BY i.relname",
-            "paramOrder": ["tableName", "schemaName"]
+            "paramOrder": [
+              "tableName",
+              "schemaName"
+            ]
           },
           "returns": "rows",
           "securityNotes": "Uses parameterized query - safe from SQL injection"
@@ -3148,7 +3596,10 @@
           "drizzlePattern": {
             "type": "raw",
             "template": "SELECT tc.constraint_name, tc.constraint_type, STRING_AGG(kcu.column_name, ', ') as columns, cc.check_clause FROM information_schema.table_constraints tc LEFT JOIN information_schema.key_column_usage kcu ON tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema LEFT JOIN information_schema.check_constraints cc ON tc.constraint_name = cc.constraint_name WHERE tc.table_schema = $1 AND tc.table_name = $2 GROUP BY tc.constraint_name, tc.constraint_type, cc.check_clause",
-            "paramOrder": ["schemaName", "tableName"]
+            "paramOrder": [
+              "schemaName",
+              "tableName"
+            ]
           },
           "returns": "rows",
           "securityNotes": "Uses parameterized query - safe from SQL injection"
@@ -3192,7 +3643,11 @@
     "adminLogin": {
       "name": "Admin Login Flow",
       "description": "Complete admin login flow for testing",
-      "tags": ["admin", "auth", "login"],
+      "tags": [
+        "admin",
+        "auth",
+        "login"
+      ],
       "steps": [
         {
           "action": "goto",
@@ -3231,7 +3686,11 @@
     "createTable": {
       "name": "Create Table Workflow",
       "description": "Test creating a new database table through UI",
-      "tags": ["admin", "table", "crud"],
+      "tags": [
+        "admin",
+        "table",
+        "crud"
+      ],
       "steps": [
         {
           "action": "goto",
@@ -3298,7 +3757,11 @@
     "addColumn": {
       "name": "Add Column to Table",
       "description": "Test adding a column to an existing table",
-      "tags": ["admin", "column", "crud"],
+      "tags": [
+        "admin",
+        "column",
+        "crud"
+      ],
       "steps": [
         {
           "action": "goto",
@@ -3345,7 +3808,11 @@
     "createIndex": {
       "name": "Create Database Index",
       "description": "Test creating an index on a table",
-      "tags": ["admin", "index", "performance"],
+      "tags": [
+        "admin",
+        "index",
+        "performance"
+      ],
       "steps": [
         {
           "action": "goto",
@@ -3391,7 +3858,11 @@
     "queryBuilder": {
       "name": "Query Builder Workflow",
       "description": "Test building and executing a query",
-      "tags": ["admin", "query", "select"],
+      "tags": [
+        "admin",
+        "query",
+        "select"
+      ],
       "steps": [
         {
           "action": "goto",
@@ -3432,7 +3903,11 @@
     "securityCheck": {
       "name": "API Security Check",
       "description": "Verify API endpoints require authentication",
-      "tags": ["security", "api", "auth"],
+      "tags": [
+        "security",
+        "api",
+        "auth"
+      ],
       "steps": [
         {
           "action": "goto",
@@ -3452,14 +3927,35 @@
         "description": "Basic data grid with sample data",
         "args": {
           "columns": [
-            { "name": "id", "label": "ID" },
-            { "name": "name", "label": "Name" },
-            { "name": "email", "label": "Email" }
+            {
+              "name": "id",
+              "label": "ID"
+            },
+            {
+              "name": "name",
+              "label": "Name"
+            },
+            {
+              "name": "email",
+              "label": "Email"
+            }
           ],
           "rows": [
-            { "id": 1, "name": "John Doe", "email": "john@example.com" },
-            { "id": 2, "name": "Jane Smith", "email": "jane@example.com" },
-            { "id": 3, "name": "Bob Johnson", "email": "bob@example.com" }
+            {
+              "id": 1,
+              "name": "John Doe",
+              "email": "john@example.com"
+            },
+            {
+              "id": 2,
+              "name": "Jane Smith",
+              "email": "jane@example.com"
+            },
+            {
+              "id": 3,
+              "name": "Bob Johnson",
+              "email": "bob@example.com"
+            }
           ],
           "primaryKey": "id"
         }
@@ -3469,13 +3965,30 @@
         "description": "Data grid with action buttons",
         "args": {
           "columns": [
-            { "name": "id", "label": "ID" },
-            { "name": "name", "label": "Name" },
-            { "name": "status", "label": "Status" }
+            {
+              "name": "id",
+              "label": "ID"
+            },
+            {
+              "name": "name",
+              "label": "Name"
+            },
+            {
+              "name": "status",
+              "label": "Status"
+            }
           ],
           "rows": [
-            { "id": 1, "name": "Active User", "status": "active" },
-            { "id": 2, "name": "Pending User", "status": "pending" }
+            {
+              "id": 1,
+              "name": "Active User",
+              "status": "active"
+            },
+            {
+              "id": 2,
+              "name": "Pending User",
+              "status": "pending"
+            }
           ],
           "onEdit": "handleEdit",
           "onDelete": "handleDelete",
@@ -3491,8 +4004,14 @@
         "description": "Data grid with no data",
         "args": {
           "columns": [
-            { "name": "id", "label": "ID" },
-            { "name": "name", "label": "Name" }
+            {
+              "name": "id",
+              "label": "ID"
+            },
+            {
+              "name": "name",
+              "label": "Name"
+            }
           ],
           "rows": []
         }
@@ -3530,8 +4049,18 @@
           "open": true,
           "title": "Add User",
           "fields": [
-            { "name": "name", "label": "Name", "type": "text", "required": true },
-            { "name": "email", "label": "Email", "type": "email", "required": true }
+            {
+              "name": "name",
+              "label": "Name",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "email",
+              "label": "Email",
+              "type": "email",
+              "required": true
+            }
           ],
           "submitLabel": "Save"
         }
@@ -3543,9 +4072,23 @@
           "open": true,
           "title": "Edit User",
           "fields": [
-            { "name": "name", "label": "Name", "type": "text", "required": true },
-            { "name": "email", "label": "Email", "type": "email", "required": true },
-            { "name": "role", "label": "Role", "type": "text" }
+            {
+              "name": "name",
+              "label": "Name",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "email",
+              "label": "Email",
+              "type": "email",
+              "required": true
+            },
+            {
+              "name": "role",
+              "label": "Role",
+              "type": "text"
+            }
           ],
           "initialData": {
             "name": "John Doe",
@@ -3562,7 +4105,13 @@
         "description": "Dialog for creating a new table",
         "args": {
           "open": true,
-          "dataTypes": ["INTEGER", "VARCHAR", "TEXT", "BOOLEAN", "TIMESTAMP"]
+          "dataTypes": [
+            "INTEGER",
+            "VARCHAR",
+            "TEXT",
+            "BOOLEAN",
+            "TIMESTAMP"
+          ]
         }
       },
       "withColumns": {
@@ -3570,7 +4119,13 @@
         "description": "Dialog with some columns already added",
         "args": {
           "open": true,
-          "dataTypes": ["INTEGER", "VARCHAR", "TEXT", "BOOLEAN", "TIMESTAMP"]
+          "dataTypes": [
+            "INTEGER",
+            "VARCHAR",
+            "TEXT",
+            "BOOLEAN",
+            "TIMESTAMP"
+          ]
         },
         "play": [
           "await userEvent.type(screen.getByLabelText('Table Name'), 'users')",

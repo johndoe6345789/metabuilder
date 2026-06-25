@@ -1,0 +1,157 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "complete-example",
+  "description": "Role-based access control for complete example package",
+  "roles": [
+    {
+      "id": "admin",
+      "name": "Administrator",
+      "description": "Full system access",
+      "level": 100,
+      "permissions": ["*"],
+      "system": true
+    },
+    {
+      "id": "user",
+      "name": "User",
+      "description": "Standard user access",
+      "level": 10,
+      "permissions": ["users.read", "users.update.own", "content.create", "content.read"],
+      "default": true
+    },
+    {
+      "id": "moderator",
+      "name": "Moderator",
+      "description": "Content moderation access",
+      "level": 50,
+      "permissions": ["users.read", "content.*", "reports.manage"],
+      "inherits": ["user"]
+    }
+  ],
+  "permissions": [
+    {
+      "id": "users.read",
+      "name": "Read Users",
+      "description": "View user information",
+      "resource": "users",
+      "action": "read",
+      "scope": "global"
+    },
+    {
+      "id": "users.update.own",
+      "name": "Update Own Profile",
+      "description": "Update own user profile",
+      "resource": "users",
+      "action": "update",
+      "scope": "user",
+      "conditions": [
+        {
+          "type": "ownership",
+          "attribute": "userId",
+          "operator": "equals",
+          "value": "currentUser.id"
+        }
+      ]
+    },
+    {
+      "id": "content.create",
+      "name": "Create Content",
+      "description": "Create new content",
+      "resource": "content",
+      "action": "create",
+      "scope": "global"
+    },
+    {
+      "id": "content.read",
+      "name": "Read Content",
+      "description": "View content",
+      "resource": "content",
+      "action": "read",
+      "scope": "global"
+    },
+    {
+      "id": "content.update",
+      "name": "Update Content",
+      "description": "Edit content",
+      "resource": "content",
+      "action": "update",
+      "scope": "global"
+    },
+    {
+      "id": "content.delete",
+      "name": "Delete Content",
+      "description": "Delete content",
+      "resource": "content",
+      "action": "delete",
+      "scope": "global"
+    }
+  ],
+  "resources": [
+    {
+      "id": "users",
+      "name": "Users",
+      "type": "entity",
+      "description": "User resources",
+      "actions": ["create", "read", "update", "delete"],
+      "ownership": {
+        "enabled": true,
+        "field": "userId",
+        "allowedActions": ["read", "update"]
+      }
+    },
+    {
+      "id": "content",
+      "name": "Content",
+      "type": "entity",
+      "description": "Content resources",
+      "actions": ["create", "read", "update", "delete", "manage"],
+      "ownership": {
+        "enabled": true,
+        "field": "authorId",
+        "allowedActions": ["read", "update", "delete"]
+      }
+    }
+  ],
+  "policies": [
+    {
+      "id": "business_hours_policy",
+      "name": "Business Hours Access",
+      "description": "Restrict sensitive operations to business hours",
+      "effect": "deny",
+      "priority": 10,
+      "rules": [
+        {
+          "resources": ["users.*"],
+          "actions": ["delete"],
+          "conditions": [
+            {
+              "type": "time",
+              "timeRange": {
+                "start": "09:00",
+                "end": "17:00",
+                "timezone": "America/New_York",
+                "days": ["monday", "tuesday", "wednesday", "thursday", "friday"]
+              }
+            }
+          ]
+        }
+      ],
+      "enabled": false
+    }
+  ],
+  "config": {
+    "enabled": true,
+    "model": "RBAC",
+    "defaultDeny": true,
+    "caching": {
+      "enabled": true,
+      "ttl": 300
+    },
+    "audit": {
+      "enabled": true,
+      "logDenials": true,
+      "logGrants": false
+    }
+  }
+}

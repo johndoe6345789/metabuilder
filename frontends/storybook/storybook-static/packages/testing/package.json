@@ -1,0 +1,72 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "testing",
+  "name": "Testing Framework",
+  "version": "2.0.0",
+  "description": "JSON-based testing framework for MetaBuilder packages with parameterized tests, mocks, and assertions",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "tools",
+  "minLevel": 3,
+  "primary": false,
+  "icon": "static_content/icon.svg",
+  "keywords": [
+    "testing",
+    "json",
+    "unit-test",
+    "framework",
+    "assertions",
+    "mocks",
+    "parameterized"
+  ],
+  "dependencies": {},
+  "devDependencies": {},
+  "exports": {
+    "components": [
+      "TestRunner",
+      "TestResults"
+    ],
+    "scripts": [
+      "framework",
+      "runner",
+      "assertions",
+      "mocks"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "permissions",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "tests": [
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/stories.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "static_content/icon.svg"
+      ]
+    }
+  }
+}

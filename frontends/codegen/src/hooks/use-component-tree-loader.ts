@@ -8,9 +8,13 @@ type ComponentTreeLoaderOptions = {
   autoLoad?: boolean
 }
 
-export function useComponentTreeLoader({ autoLoad = true }: ComponentTreeLoaderOptions = {}) {
+export function useComponentTreeLoader(
+  { autoLoad = true }: ComponentTreeLoaderOptions = {},
+) {
   const dispatch = useAppDispatch()
-  const storedTrees = useAppSelector((state) => state.uiState.data['project-component-trees']) as ComponentTree[] | undefined
+  const storedTrees = useAppSelector(
+    (state) => state.uiState.data['project-component-trees'],
+  ) as ComponentTree[] | undefined
   const [isLoaded, setIsLoaded] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
@@ -24,16 +28,25 @@ export function useComponentTreeLoader({ autoLoad = true }: ComponentTreeLoaderO
 
     const existingTrees = storedTrees
 
-    if (!existingTrees || !Array.isArray(existingTrees) || existingTrees.length === 0) {
-      dispatch(setUIState({ key: 'project-component-trees', value: componentTreesData.all }))
+    if (
+      !existingTrees ||
+      !Array.isArray(existingTrees) ||
+      existingTrees.length === 0
+    ) {
+      dispatch(setUIState({
+        key: 'project-component-trees', value: componentTreesData.all,
+      }))
     } else {
       const newTrees = componentTreesData.all.filter(
-        newTree => !existingTrees.some(existingTree => existingTree.id === newTree.id)
+        newTree =>
+          !existingTrees.some(existingTree => existingTree.id === newTree.id)
       )
 
       if (newTrees.length > 0) {
         const mergedTrees = [...existingTrees, ...newTrees]
-        dispatch(setUIState({ key: 'project-component-trees', value: mergedTrees }))
+        dispatch(setUIState({
+          key: 'project-component-trees', value: mergedTrees,
+        }))
       }
     }
 
@@ -42,27 +55,39 @@ export function useComponentTreeLoader({ autoLoad = true }: ComponentTreeLoaderO
   }, [dispatch, storedTrees])
 
   const getComponentTrees = useCallback((): ComponentTree[] => {
-    return (storedTrees && Array.isArray(storedTrees)) ? storedTrees : componentTreesData.all
+    return (storedTrees && Array.isArray(storedTrees))
+      ? storedTrees : componentTreesData.all
   }, [storedTrees])
 
-  const getComponentTreesByCategory = useCallback((category: 'molecule' | 'organism'): ComponentTree[] => {
-    const trees = getComponentTrees()
-    return trees.filter(tree => (tree as any).category === category)
-  }, [getComponentTrees])
+  const getComponentTreesByCategory = useCallback(
+    (category: 'molecule' | 'organism'): ComponentTree[] => {
+      const trees = getComponentTrees()
+      return trees.filter(tree => (tree as any).category === category)
+    },
+    [getComponentTrees],
+  )
 
-  const getComponentTreeById = useCallback((id: string): ComponentTree | undefined => {
-    const trees = getComponentTrees()
-    return trees.find(tree => tree.id === id)
-  }, [getComponentTrees])
+  const getComponentTreeById = useCallback(
+    (id: string): ComponentTree | undefined => {
+      const trees = getComponentTrees()
+      return trees.find(tree => tree.id === id)
+    },
+    [getComponentTrees],
+  )
 
-  const getComponentTreeByName = useCallback((name: string): ComponentTree | undefined => {
-    const trees = getComponentTrees()
-    return trees.find(tree => tree.name === name)
-  }, [getComponentTrees])
+  const getComponentTreeByName = useCallback(
+    (name: string): ComponentTree | undefined => {
+      const trees = getComponentTrees()
+      return trees.find(tree => tree.name === name)
+    },
+    [getComponentTrees],
+  )
 
   const reloadFromJSON = useCallback(() => {
     setIsLoading(true)
-    dispatch(setUIState({ key: 'project-component-trees', value: componentTreesData.all }))
+    dispatch(setUIState({
+      key: 'project-component-trees', value: componentTreesData.all,
+    }))
     loadedRef.current = true
     setIsLoaded(true)
     setIsLoading(false)

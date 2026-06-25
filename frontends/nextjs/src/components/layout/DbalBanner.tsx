@@ -5,7 +5,7 @@
  */
 'use client'
 
-import { Typography } from '@/fakemui'
+import { Typography } from '@/m3'
 
 export interface DbalBannerProps {
   visible: boolean

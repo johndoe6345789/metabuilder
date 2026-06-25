@@ -1,0 +1,150 @@
+{
+  "name": "List IRC Channels",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_context",
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.tenantId }}",
+        "operation": "validate",
+        "validator": "required"
+      }
+    },
+    {
+      "id": "extract_params",
+      "name": "Extract Params",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "output": {
+          "includePrivate": "{{ $context.user.level >= 2 }}",
+          "includeSecret": "{{ $context.user.level >= 3 }}"
+        },
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "build_filter",
+      "name": "Build Filter",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "output": {
+          "tenantId": "{{ $context.tenantId }}",
+          "mode": {
+            "$in": "{{ [$steps.extract_params.output.includeSecret ? 'secret' : null, $steps.extract_params.output.includePrivate ? 'private' : null, 'public'].filter(x => x) }}"
+          }
+        },
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "fetch_channels",
+      "name": "Fetch Channels",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "filter": "{{ $steps.build_filter.output }}",
+        "sort": {
+          "createdAt": -1
+        },
+        "operation": "database_read",
+        "entity": "IRCChannel"
+      }
+    },
+    {
+      "id": "return_success",
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 200,
+        "body": {
+          "channels": "{{ $steps.fetch_channels.output }}"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "validate_context": {
+      "main": [
+        [
+          {
+            "node": "extract_params",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "extract_params": {
+      "main": [
+        [
+          {
+            "node": "build_filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "build_filter": {
+      "main": [
+        [
+          {
+            "node": "fetch_channels",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_channels": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_list_channels",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

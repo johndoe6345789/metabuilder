@@ -1,6 +1,6 @@
 'use client';
 
-import { TextField as MuiTextField, TextFieldProps as MuiTextFieldProps } from '@mui/material';
+import { TextField as MuiTextField, TextFieldProps as MuiTextFieldProps } from '@metabuilder/components/m3';
 
 export type TextFieldProps = MuiTextFieldProps & {
   // Additional props from features.json

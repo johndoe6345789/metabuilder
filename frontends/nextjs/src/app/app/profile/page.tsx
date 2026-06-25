@@ -16,7 +16,7 @@ import {
   TextField,
   Avatar,
   Divider,
-} from '@/fakemui'
+} from '@/m3'
 import { getRoleLevel } from '@/lib/constants'
 import { getLevelColor } from '@/lib/packages/navigation'
 

@@ -1,0 +1,101 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "ui_home",
+  "name": "Home Page",
+  "version": "1.0.0",
+  "description": "Landing page with hero, features, about, and contact sections - the MetaBuilder home experience",
+  "author": "MetaBuilder Contributors",
+  "license": "MIT",
+  "repository": "https://github.com/metabuilder/metabuilder",
+  "homepage": "https://metabuilder.dev",
+  "bugs": "https://github.com/metabuilder/metabuilder/issues",
+  "category": "ui",
+  "icon": "static_content/icon.svg",
+  "minLevel": 0,
+  "primary": true,
+  "keywords": [
+    "home",
+    "landing",
+    "hero",
+    "ui",
+    "public"
+  ],
+  "dependencies": {
+    "ui_header": "^1.0.0",
+    "ui_footer": "^1.0.0"
+  },
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "home_page",
+      "hero_section",
+      "features_section",
+      "feature_card_1",
+      "feature_card_2",
+      "feature_card_3",
+      "feature_card_4",
+      "feature_card_5",
+      "feature_card_6",
+      "about_section",
+      "contact_section"
+    ],
+    "scripts": [
+      "home_ui",
+      "navigate"
+    ]
+  },
+  "seed": {
+    "schema": "seed/page-config.json"
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "files": {
+    "directories": [
+      "component",
+      "components",
+      "page-config",
+      "permissions",
+      "playwright",
+      "seed",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "pages": [
+        "page-config/metadata.json",
+        "page-config/page-config.json"
+      ],
+      "tests": [
+        "playwright/metadata.json",
+        "playwright/tests.json",
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/stories.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "component/metadata.json",
+        "component/ui-components.json",
+        "static_content/icon.svg"
+      ]
+    }
+  }
+}

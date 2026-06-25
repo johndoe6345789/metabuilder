@@ -1,6 +1,6 @@
 {
   "name": "codesnippet",
-  "version": "1.7.0",
+  "version": "1.9.6",
   "type": "module",
   "private": true,
   "scripts": {
@@ -10,12 +10,14 @@
     "lint": "eslint . --config eslint.config.mjs",
     "lint:fix": "eslint . --config eslint.config.mjs --fix",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:local": "NO_CONTAINERS=true playwright test",
     "test:unit": "jest --coverage",
+    "build:quality": "tsc -p tsconfig.quality-build.json",
     "quality-check": "node run-quality-check.mjs",
     "quality-check:json": "node run-quality-check.mjs --format json --output .quality/report.json",
     "quality-check:html": "node run-quality-check.mjs --format html --output .quality/report.html",

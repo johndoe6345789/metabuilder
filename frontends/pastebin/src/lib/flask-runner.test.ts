@@ -25,7 +25,8 @@ function mockErrorResponse(status: number, body?: object) {
   return jest.fn().mockResolvedValue({
     ok: false,
     status,
-    json: () => (body ? Promise.resolve(body) : Promise.reject(new Error('no body'))),
+    json: () =>
+      body ? Promise.resolve(body) : Promise.reject(new Error('no body')),
     statusText: 'Bad Request',
   })
 }
@@ -71,7 +72,10 @@ describe('runCodeViaFlask', () => {
       setAuthToken('my-jwt-token')
       global.fetch = mockOkResponse({ output: '', error: null })
 
-      await runCodeViaFlask({ language: 'python', files: [{ name: 'main.py', content: 'pass' }] })
+      await runCodeViaFlask({
+        language: 'python',
+        files: [{ name: 'main.py', content: 'pass' }],
+      })
 
       const [, options] = (global.fetch as jest.Mock).mock.calls[0]
       expect(options.headers['Authorization']).toBe('Bearer my-jwt-token')
@@ -81,7 +85,10 @@ describe('runCodeViaFlask', () => {
       setAuthToken(null)
       global.fetch = mockOkResponse({ output: '', error: null })
 
-      await runCodeViaFlask({ language: 'python', files: [{ name: 'main.py', content: 'pass' }] })
+      await runCodeViaFlask({
+        language: 'python',
+        files: [{ name: 'main.py', content: 'pass' }],
+      })
 
       const [, options] = (global.fetch as jest.Mock).mock.calls[0]
       expect(options.headers['Authorization']).toBeUndefined()
@@ -101,7 +108,10 @@ describe('runCodeViaFlask', () => {
     it('POSTs to /api/run', async () => {
       global.fetch = mockOkResponse({ output: 'ok', error: null })
 
-      await runCodeViaFlask({ language: 'python', files: [{ name: 'main.py', content: 'pass' }] })
+      await runCodeViaFlask({
+        language: 'python',
+        files: [{ name: 'main.py', content: 'pass' }],
+      })
 
       const [url, options] = (global.fetch as jest.Mock).mock.calls[0]
       expect(url).toBe(`${BASE}/api/run`)
@@ -123,7 +133,11 @@ describe('runCodeViaFlask', () => {
     it('includes entryPoint when provided', async () => {
       global.fetch = mockOkResponse({ output: '', error: null })
 
-      await runCodeViaFlask({ language: 'python', files: [], entryPoint: 'main.py' })
+      await runCodeViaFlask({
+        language: 'python',
+        files: [],
+        entryPoint: 'main.py',
+      })
 
       const [, options] = (global.fetch as jest.Mock).mock.calls[0]
       const body = JSON.parse(options.body)
@@ -142,7 +156,10 @@ describe('runCodeViaFlask', () => {
     })
 
     it('returns error from response', async () => {
-      global.fetch = mockOkResponse({ output: '', error: 'SyntaxError: bad code' })
+      global.fetch = mockOkResponse({
+        output: '',
+        error: 'SyntaxError: bad code',
+      })
 
       const result = await runCodeViaFlask({ language: 'python', files: [] })
 
@@ -161,7 +178,7 @@ describe('runCodeViaFlask', () => {
       global.fetch = mockErrorResponse(500, { error: 'Internal server error' })
 
       await expect(
-        runCodeViaFlask({ language: 'python', files: [] })
+        runCodeViaFlask({ language: 'python', files: [] }),
       ).rejects.toThrow('Internal server error')
     })
 
@@ -181,7 +198,7 @@ describe('runCodeViaFlask', () => {
       global.fetch = mockErrorResponse(503)
 
       await expect(
-        runCodeViaFlask({ language: 'python', files: [] })
+        runCodeViaFlask({ language: 'python', files: [] }),
       ).rejects.toThrow(/Server error/)
     })
   })
@@ -191,7 +208,7 @@ describe('runCodeViaFlask', () => {
       delete process.env.NEXT_PUBLIC_FLASK_BACKEND_URL
 
       await expect(
-        runCodeViaFlask({ language: 'python', files: [] })
+        runCodeViaFlask({ language: 'python', files: [] }),
       ).rejects.toThrow(/Flask backend not configured/)
     })
   })
@@ -202,6 +219,7 @@ describe('runCodeViaFlask', () => {
 // ---------------------------------------------------------------------------
 
 describe('runPythonViaFlask', () => {
+  // eslint-disable-next-line max-len
   it('delegates to runCodeViaFlask with language=python and main.py', async () => {
     global.fetch = mockOkResponse({ output: 'result', error: null })
 
@@ -280,7 +298,10 @@ describe('startInteractiveSession', () => {
     it('returns session_id from response', async () => {
       global.fetch = mockOkResponse({ session_id: 'my-session-id' })
 
-      const sid = await startInteractiveSession({ language: 'python', files: [] })
+      const sid = await startInteractiveSession({
+        language: 'python',
+        files: [],
+      })
 
       expect(sid).toBe('my-session-id')
     })
@@ -289,7 +310,7 @@ describe('startInteractiveSession', () => {
       global.fetch = mockErrorResponse(401, { error: 'Unauthorized' })
 
       await expect(
-        startInteractiveSession({ language: 'python', files: [] })
+        startInteractiveSession({ language: 'python', files: [] }),
       ).rejects.toThrow('Unauthorized')
     })
 
@@ -297,7 +318,7 @@ describe('startInteractiveSession', () => {
       global.fetch = mockErrorResponse(502)
 
       await expect(
-        startInteractiveSession({ language: 'python', files: [] })
+        startInteractiveSession({ language: 'python', files: [] }),
       ).rejects.toThrow(/Failed to start session/)
     })
   })
@@ -311,7 +332,11 @@ describe('pollSession', () => {
   describe('auth header', () => {
     it('sends Authorization header when token set', async () => {
       setAuthToken('poll-tok')
-      global.fetch = mockOkResponse({ output: [], waiting_for_input: false, done: true })
+      global.fetch = mockOkResponse({
+        output: [],
+        waiting_for_input: false,
+        done: true,
+      })
 
       await pollSession('sess-1', 0)
 
@@ -320,7 +345,11 @@ describe('pollSession', () => {
     })
 
     it('omits Authorization header when no token', async () => {
-      global.fetch = mockOkResponse({ output: [], waiting_for_input: false, done: true })
+      global.fetch = mockOkResponse({
+        output: [],
+        waiting_for_input: false,
+        done: true,
+      })
 
       await pollSession('sess-1', 0)
 
@@ -331,7 +360,11 @@ describe('pollSession', () => {
 
   describe('request', () => {
     it('GETs correct URL with offset', async () => {
-      global.fetch = mockOkResponse({ output: [], waiting_for_input: false, done: true })
+      global.fetch = mockOkResponse({
+        output: [],
+        waiting_for_input: false,
+        done: true,
+      })
 
       await pollSession('sess-42', 7)
 
@@ -340,7 +373,11 @@ describe('pollSession', () => {
     })
 
     it('uses GET (no method property = default GET)', async () => {
-      global.fetch = mockOkResponse({ output: [], waiting_for_input: false, done: false })
+      global.fetch = mockOkResponse({
+        output: [],
+        waiting_for_input: false,
+        done: false,
+      })
 
       await pollSession('s', 0)
 
@@ -443,7 +480,9 @@ describe('sendSessionInput', () => {
         json: () => Promise.resolve({}),
       })
 
-      await expect(sendSessionInput('sess-1', 'val')).rejects.toThrow('Send input failed')
+      await expect(sendSessionInput('sess-1', 'val')).rejects.toThrow(
+        'Send input failed',
+      )
     })
   })
 })

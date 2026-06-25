@@ -4,10 +4,12 @@
 # package manager cache, and software 3D renderer in a single image.
 #
 # Layers (in order):
-#   base-conan-deps   → all apt packages + all Conan C++ packages
-#   base-node-deps    → all npm workspace packages (copied in)
-#   base-pip-deps     → all Python pip packages (copied in)
-#   base-android-sdk  → Android SDK 34 + Gradle (copied in)
+#   base-conan-{dbal,cli,media,qt6,gameengine}
+#                     -> apt packages + the union of all Conan C++ caches,
+#                        merged via `conan cache save`/`restore` (Conan >= 2.1)
+#   base-node-deps    -> all npm workspace packages (copied in)
+#   base-pip-deps     -> all Python pip packages (copied in)
+#   base-android-sdk  -> Android SDK 34 + Gradle (copied in)
 #   + Rust / Cargo
 #   + Go 1.22
 #   + Mesa software renderer (CPU-powered headless 3D/GL/Vulkan)
@@ -17,10 +19,35 @@
 # VS Code: "image": "metabuilder/devcontainer:latest" in devcontainer.json
 
 ARG BASE_REGISTRY=metabuilder
+
+# Conan caches are now per-target images. Export each non-DBAL cache from its
+# own image, then restore them on top of the DBAL conan base so the
+# devcontainer keeps the full union the old monolithic base-conan-deps had.
+# (conan cache save/restore correctly updates the Conan 2 sqlite index, which
+# a raw `COPY /root/.conan2` across images would clobber.) Requires Conan >= 2.1.
+FROM ${BASE_REGISTRY}/base-conan-cli:latest        AS conan-cli
+RUN conan cache save --file /conan-cli.tgz "*"
+FROM ${BASE_REGISTRY}/base-conan-media:latest      AS conan-media
+RUN conan cache save --file /conan-media.tgz "*"
+FROM ${BASE_REGISTRY}/base-conan-qt6:latest        AS conan-qt6
+RUN conan cache save --file /conan-qt6.tgz "*"
+FROM ${BASE_REGISTRY}/base-conan-gameengine:latest AS conan-gameengine
+RUN conan cache save --file /conan-gameengine.tgz "*"
+
 FROM ${BASE_REGISTRY}/base-node-deps:latest    AS node-deps
 FROM ${BASE_REGISTRY}/base-pip-deps:latest     AS pip-deps
 FROM ${BASE_REGISTRY}/base-android-sdk:latest  AS android-sdk
-FROM ${BASE_REGISTRY}/base-conan-deps:latest
+
+FROM ${BASE_REGISTRY}/base-conan-dbal:latest
+COPY --from=conan-cli        /conan-cli.tgz        /tmp/conan-cli.tgz
+COPY --from=conan-media      /conan-media.tgz      /tmp/conan-media.tgz
+COPY --from=conan-qt6        /conan-qt6.tgz        /tmp/conan-qt6.tgz
+COPY --from=conan-gameengine /conan-gameengine.tgz /tmp/conan-gameengine.tgz
+RUN conan cache restore /tmp/conan-cli.tgz \
+    && conan cache restore /tmp/conan-media.tgz \
+    && conan cache restore /tmp/conan-qt6.tgz \
+    && conan cache restore /tmp/conan-gameengine.tgz \
+    && rm -f /tmp/conan-*.tgz
 
 # ── Node.js (from base-node-deps) ─────────────────────────────────────────────
 # Copy pre-installed node_modules + node binary from base-node-deps image

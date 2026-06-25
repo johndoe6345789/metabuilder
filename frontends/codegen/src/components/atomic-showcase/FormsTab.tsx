@@ -1,4 +1,4 @@
-import { Envelope, Heart, Share, Trash } from '@metabuilder/fakemui/icons'
+import { Envelope, Heart, Share, Trash } from '@metabuilder/m3/icons'
 import formsCopy from '@/data/atomic-showcase/forms.json'
 import {
   ActionButton,

@@ -1,0 +1,123 @@
+{
+  "name": "Export JSON Script",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_context",
+      "name": "Validate Context",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $context.tenantId }}",
+        "operation": "validate",
+        "validator": "required"
+      }
+    },
+    {
+      "id": "fetch_script",
+      "name": "Fetch Script",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "filter": {
+          "id": "{{ $json.scriptId }}",
+          "tenantId": "{{ $context.tenantId }}"
+        },
+        "operation": "database_read",
+        "entity": "JSONScript"
+      }
+    },
+    {
+      "id": "prepare_export",
+      "name": "Prepare Export",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "output": {
+          "name": "{{ $steps.fetch_script.output.name }}.jsonscript",
+          "content": "{{ $steps.fetch_script.output.script }}",
+          "contentType": "application/json"
+        },
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "return_file",
+      "name": "Return File",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json",
+          "Content-Disposition": "attachment; filename={{ $steps.prepare_export.output.name }}"
+        },
+        "body": "{{ $steps.prepare_export.output.content }}"
+      }
+    }
+  ],
+  "connections": {
+    "validate_context": {
+      "main": [
+        [
+          {
+            "node": "fetch_script",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetch_script": {
+      "main": [
+        [
+          {
+            "node": "prepare_export",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "prepare_export": {
+      "main": [
+        [
+          {
+            "node": "return_file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_export_script",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

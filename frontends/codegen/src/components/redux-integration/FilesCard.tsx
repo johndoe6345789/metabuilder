@@ -1,6 +1,6 @@
-import { Button } from '@metabuilder/fakemui/inputs'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@metabuilder/fakemui/surfaces'
-import { Database, Trash } from '@metabuilder/fakemui/icons'
+import { Button } from '@metabuilder/m3/inputs'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@metabuilder/m3/surfaces'
+import { Database, Trash } from '@metabuilder/m3/icons'
 import reduxIntegrationCopy from '@/data/redux-integration-demo.json'
 import { FileItem } from '@/store/slices/filesSlice'
 

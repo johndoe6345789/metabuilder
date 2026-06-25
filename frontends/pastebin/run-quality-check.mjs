@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* global process */
 
 import { QualityValidator } from './src/lib/quality-validator/index.js';
 

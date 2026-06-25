@@ -1,9 +1,9 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@metabuilder/fakemui/surfaces'
-import { Button } from '@metabuilder/fakemui/inputs'
-import { Badge } from '@metabuilder/fakemui/data-display'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@metabuilder/m3/surfaces'
+import { Button } from '@metabuilder/m3/inputs'
+import { Badge } from '@metabuilder/m3/data-display'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { DataSource, UIComponent } from '@/types/json-ui'
-import { Link, Code } from '@metabuilder/fakemui/icons'
+import { Link, Code } from '@metabuilder/m3/icons'
 
 interface ComponentBindingsCardCopy {
   title: string

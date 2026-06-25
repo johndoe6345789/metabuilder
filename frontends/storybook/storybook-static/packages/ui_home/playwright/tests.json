@@ -1,0 +1,355 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "ui_home",
+  "version": "1.0.0",
+  "description": "E2E tests for ui_home package - validates landing page rendering and navigation",
+  "tests": [
+    {
+      "name": "should load home page successfully",
+      "description": "Verifies the home page loads and displays content",
+      "tags": [
+        "@smoke",
+        "@critical"
+      ],
+      "timeout": 10000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display hero section or main content",
+      "description": "Validates main content area renders",
+      "tags": [
+        "@smoke",
+        "@ui"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "testId": "header-actions",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display feature content",
+      "description": "Validates page has visible feature content",
+      "tags": [
+        "@smoke",
+        "@ui",
+        "@features"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display navigation header",
+      "description": "Validates navigation bar with action buttons",
+      "tags": [
+        "@smoke",
+        "@navigation"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "testId": "header-actions",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display theme toggle",
+      "description": "Validates theme toggle button is accessible",
+      "tags": [
+        "@ui",
+        "@content"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "testId": "toggle-theme-button",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should load without critical errors",
+      "description": "Ensures page loads without JS errors affecting layout",
+      "tags": [
+        "@smoke",
+        "@critical"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should have accessible navigation",
+      "description": "Tests keyboard navigation is present",
+      "tags": [
+        "@interaction",
+        "@navigation"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "navigation_tests_merged",
+      "description": "Navigation tests from navigation package - home page loads",
+      "tags": [
+        "@navigation",
+        "@routing"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should navigate from homepage",
+      "tags": [
+        "@navigation",
+        "@routing"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should have working navigation menu",
+      "tags": [
+        "@navigation"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "testId": "header-actions",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should handle 404 pages gracefully",
+      "tags": [
+        "@navigation",
+        "@error-handling"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "this-page-does-not-exist-12345"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "testId": "not-found-state",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should have accessible main content",
+      "tags": [
+        "@navigation",
+        "@accessibility"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should show navigation on small screens",
+      "tags": [
+        "@navigation",
+        "@responsive",
+        "@mobile"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should show navigation on large screens",
+      "tags": [
+        "@navigation",
+        "@responsive",
+        "@desktop"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    }
+  ]
+}

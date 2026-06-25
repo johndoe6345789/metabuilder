@@ -1,0 +1,547 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/index.schema.json",
+  "title": "MetaBuilder Schema Index",
+  "description": "Master index of all package schemas with cross-validation rules",
+  "type": "object",
+  "required": ["schemaVersion", "schemas"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "description": "Index schema version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "default": "2.0.0"
+    },
+    "baseUrl": {
+      "type": "string",
+      "description": "Base URL for schema resolution",
+      "format": "uri",
+      "default": "https://metabuilder.dev/schemas/"
+    },
+    "schemas": {
+      "type": "object",
+      "description": "Schema registry with metadata and dependencies",
+      "properties": {
+        "metadata": {
+          "$ref": "#/definitions/schemaEntry"
+        },
+        "entities": {
+          "$ref": "#/definitions/schemaEntry"
+        },
+        "types": {
+          "$ref": "#/definitions/schemaEntry"
+        },
+        "script": {
+          "$ref": "#/definitions/schemaEntry"
+        },
+        "components": {
+          "$ref": "#/definitions/schemaEntry"
+        },
+        "validation": {
+          "$ref": "#/definitions/schemaEntry"
+        },
+        "styles": {
+          "$ref": "#/definitions/schemaEntry"
+        },
+        "api": {
+          "$ref": "#/definitions/schemaEntry"
+        },
+        "events": {
+          "$ref": "#/definitions/schemaEntry"
+        },
+        "config": {
+          "$ref": "#/definitions/schemaEntry"
+        },
+        "jobs": {
+          "$ref": "#/definitions/schemaEntry"
+        },
+        "permissions": {
+          "$ref": "#/definitions/schemaEntry"
+        },
+        "forms": {
+          "$ref": "#/definitions/schemaEntry"
+        },
+        "migrations": {
+          "$ref": "#/definitions/schemaEntry"
+        },
+        "stdlib": {
+          "$ref": "#/definitions/schemaEntry"
+        }
+      },
+      "additionalProperties": {
+        "$ref": "#/definitions/schemaEntry"
+      }
+    },
+    "crossValidation": {
+      "type": "object",
+      "description": "Cross-schema validation rules",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable cross-validation",
+          "default": true
+        },
+        "rules": {
+          "type": "array",
+          "description": "Validation rules that span multiple schemas",
+          "items": {
+            "$ref": "#/definitions/validationRule"
+          },
+          "default": [
+            {
+              "id": "function-handler-exists",
+              "description": "API route handlers must reference existing functions",
+              "severity": "error",
+              "type": "reference_exists",
+              "condition": {
+                "source": {
+                  "schema": "api",
+                  "path": "$.routes[*].handler"
+                },
+                "target": {
+                  "schema": "script",
+                  "path": "$.functions[*].name"
+                },
+                "operator": "in"
+              },
+              "message": "Handler '${source.value}' not found in scripts"
+            },
+            {
+              "id": "component-handler-exists",
+              "description": "Component event handlers must reference existing functions",
+              "severity": "error",
+              "type": "reference_exists",
+              "condition": {
+                "source": {
+                  "schema": "components",
+                  "path": "$.components[*].handlers[*]"
+                },
+                "target": {
+                  "schema": "script",
+                  "path": "$.functions[*].name"
+                },
+                "operator": "in"
+              },
+              "message": "Handler function '${source.value}' not found"
+            },
+            {
+              "id": "type-reference-exists",
+              "description": "Type references must exist in types schema",
+              "severity": "error",
+              "type": "reference_exists",
+              "condition": {
+                "source": {
+                  "schema": "script",
+                  "path": "$.functions[*].params[*].type"
+                },
+                "target": {
+                  "schema": "types",
+                  "path": "$.types[*].name"
+                },
+                "operator": "in"
+              },
+              "message": "Type '${source.value}' not found in types schema"
+            },
+            {
+              "id": "entity-reference-exists",
+              "description": "Entity references must exist in entities schema",
+              "severity": "error",
+              "type": "reference_exists",
+              "condition": {
+                "source": {
+                  "schema": "api",
+                  "path": "$.routes[*].entity"
+                },
+                "target": {
+                  "schema": "entities",
+                  "path": "$.entities[*].name"
+                },
+                "operator": "in"
+              },
+              "message": "Entity '${source.value}' not defined"
+            },
+            {
+              "id": "permission-reference-exists",
+              "description": "Permission references must exist in permissions schema",
+              "severity": "error",
+              "type": "reference_exists",
+              "condition": {
+                "source": {
+                  "schema": "api",
+                  "path": "$.routes[*].auth.permissions[*]"
+                },
+                "target": {
+                  "schema": "permissions",
+                  "path": "$.permissions[*].id"
+                },
+                "operator": "in"
+              },
+              "message": "Permission '${source.value}' not defined"
+            },
+            {
+              "id": "circular-dependencies",
+              "description": "Detect circular dependencies in packages",
+              "severity": "error",
+              "type": "circular_dependency",
+              "condition": {
+                "source": {
+                  "schema": "metadata",
+                  "path": "$.dependencies"
+                },
+                "operator": "acyclic"
+              },
+              "message": "Circular dependency detected: ${cycle}"
+            },
+            {
+              "id": "event-handler-exists",
+              "description": "Event subscriber handlers must exist",
+              "severity": "error",
+              "type": "reference_exists",
+              "condition": {
+                "source": {
+                  "schema": "events",
+                  "path": "$.subscribers[*].handler"
+                },
+                "target": {
+                  "schema": "script",
+                  "path": "$.functions[*].name"
+                },
+                "operator": "in"
+              },
+              "message": "Event handler '${source.value}' not found"
+            },
+            {
+              "id": "job-handler-exists",
+              "description": "Job handlers must reference existing functions",
+              "severity": "error",
+              "type": "reference_exists",
+              "condition": {
+                "source": {
+                  "schema": "jobs",
+                  "path": "$.jobs[*].handler"
+                },
+                "target": {
+                  "schema": "script",
+                  "path": "$.functions[*].name"
+                },
+                "operator": "in"
+              },
+              "message": "Job handler '${source.value}' not found"
+            },
+            {
+              "id": "form-validator-exists",
+              "description": "Form validation functions must exist",
+              "severity": "warning",
+              "type": "reference_exists",
+              "condition": {
+                "source": {
+                  "schema": "forms",
+                  "path": "$.forms[*].fields[*].validation.custom"
+                },
+                "target": {
+                  "schema": "validation",
+                  "path": "$.functions[*].name"
+                },
+                "operator": "in"
+              },
+              "message": "Validator '${source.value}' not found"
+            },
+            {
+              "id": "migration-entity-matches",
+              "description": "Migration operations must reference existing entities",
+              "severity": "error",
+              "type": "reference_exists",
+              "condition": {
+                "source": {
+                  "schema": "migrations",
+                  "path": "$.migrations[*].up[*].table"
+                },
+                "target": {
+                  "schema": "entities",
+                  "path": "$.entities[*].tableName"
+                },
+                "operator": "in"
+              },
+              "message": "Migration references undefined table '${source.value}'"
+            },
+            {
+              "id": "max-function-complexity",
+              "description": "Functions should not exceed complexity threshold",
+              "severity": "warning",
+              "type": "performance_limit",
+              "condition": {
+                "source": {
+                  "schema": "script",
+                  "path": "$.functions[*].body.length"
+                },
+                "operator": "less_than",
+                "value": 50
+              },
+              "message": "Function '${source.name}' has ${source.value} statements (max 50)"
+            },
+            {
+              "id": "secure-password-validation",
+              "description": "Password fields must use strong validation",
+              "severity": "error",
+              "type": "security_check",
+              "condition": {
+                "source": {
+                  "schema": "forms",
+                  "path": "$.forms[*].fields[?(@.type=='password')].validation.pattern"
+                },
+                "operator": "matches",
+                "value": "password"
+              },
+              "message": "Password field must use secure password pattern"
+            },
+            {
+              "id": "schema-version-compatibility",
+              "description": "Schema versions must be compatible across package",
+              "severity": "error",
+              "type": "version_compatibility",
+              "condition": {
+                "schemas": ["api", "script", "entities", "types", "components", "validation", "events", "jobs", "forms", "permissions", "config", "migrations", "styles"],
+                "operator": "major_version_match"
+              },
+              "message": "Incompatible schema versions detected. All schemas must have compatible MAJOR versions. Found: ${versions}"
+            },
+            {
+              "id": "minimum-schema-version",
+              "description": "Schemas should use minimum version 2.0.0 for security",
+              "severity": "warning",
+              "type": "version_check",
+              "condition": {
+                "schemas": ["validation", "script"],
+                "operator": "greater_than_or_equal",
+                "value": "2.0.0"
+              },
+              "message": "Schema '${schema}' version ${version} is below recommended 2.0.0 (security improvements)"
+            }
+          ]
+        }
+      }
+    },
+    "packageStructure": {
+      "type": "object",
+      "description": "Standard package directory structure",
+      "properties": {
+        "required": {
+          "type": "array",
+          "description": "Required files/directories",
+          "items": { "type": "string" },
+          "default": ["package.json"]
+        },
+        "recommended": {
+          "type": "array",
+          "description": "Recommended files/directories",
+          "items": { "type": "string" },
+          "default": ["README.md", "LICENSE", "entities/", "scripts/"]
+        },
+        "template": {
+          "type": "object",
+          "description": "Package structure template mapping paths to schemas",
+          "additionalProperties": {
+            "type": "string",
+            "description": "Schema name for this location. Note: scripts/*.json must follow script_schema.json with full function implementations (body), not just metadata declarations."
+          },
+          "default": {
+            "package.json": "metadata",
+            "entities/schema.json": "entities",
+            "types/index.json": "types",
+            "scripts/*.json": "script",
+            "components/ui.json": "components",
+            "validation/validators.json": "validation",
+            "styles/tokens.json": "styles",
+            "api/routes.json": "api",
+            "events/definitions.json": "events",
+            "config/settings.json": "config",
+            "jobs/tasks.json": "jobs",
+            "permissions/roles.json": "permissions",
+            "forms/forms.json": "forms",
+            "migrations/versions.json": "migrations"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "schemaEntry": {
+      "type": "object",
+      "required": ["file", "version", "url"],
+      "properties": {
+        "file": {
+          "type": "string",
+          "description": "Schema filename"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Schema URL"
+        },
+        "version": {
+          "type": "string",
+          "description": "Schema version",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "title": {
+          "type": "string",
+          "description": "Schema title"
+        },
+        "description": {
+          "type": "string",
+          "description": "Schema description"
+        },
+        "status": {
+          "type": "string",
+          "description": "Schema stability status",
+          "enum": ["stable", "beta", "alpha", "deprecated"],
+          "default": "stable"
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Whether this schema is required for a valid package",
+          "default": false
+        },
+        "dependencies": {
+          "type": "array",
+          "description": "Other schemas this schema depends on",
+          "items": { "type": "string" },
+          "examples": [["types", "validation"], ["entities"]]
+        },
+        "compatibleWith": {
+          "type": "object",
+          "description": "Version compatibility matrix",
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^(\\^|~|>=?|<=?)?\\d+\\.\\d+\\.\\d+$"
+          }
+        }
+      }
+    },
+    "validationRule": {
+      "type": "object",
+      "required": ["id", "description", "type", "condition"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique rule identifier",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "description": {
+          "type": "string",
+          "description": "Rule description"
+        },
+        "severity": {
+          "type": "string",
+          "description": "Validation severity",
+          "enum": ["error", "warning", "info"],
+          "default": "error"
+        },
+        "type": {
+          "type": "string",
+          "description": "Validation type",
+          "enum": [
+            "reference_exists",
+            "type_matches",
+            "circular_dependency",
+            "naming_convention",
+            "permission_check",
+            "performance_limit",
+            "security_check",
+            "custom",
+            "acyclic"
+          ]
+        },
+        "condition": {
+          "type": "object",
+          "description": "Validation condition",
+          "properties": {
+            "source": {
+              "type": "object",
+              "description": "Source schema and JSON path",
+              "properties": {
+                "schema": {
+                  "type": "string",
+                  "description": "Source schema name"
+                },
+                "path": {
+                  "type": "string",
+                  "description": "JSONPath expression to source value"
+                }
+              },
+              "required": ["schema", "path"]
+            },
+            "target": {
+              "type": "object",
+              "description": "Target schema and path (for reference validation)",
+              "properties": {
+                "schema": { "type": "string" },
+                "path": { "type": "string" }
+              }
+            },
+            "operator": {
+              "type": "string",
+              "description": "Validation operator",
+              "enum": [
+                "exists",
+                "matches",
+                "in",
+                "not_in",
+                "greater_than",
+                "less_than",
+                "equals",
+                "not_equals",
+                "contains",
+                "regex",
+                "acyclic"
+              ]
+            },
+            "value": {
+              "description": "Expected value (for comparison operators)"
+            },
+            "validator": {
+              "type": "string",
+              "description": "Custom validator function (for custom type)"
+            }
+          },
+          "required": ["source", "operator"]
+        },
+        "message": {
+          "type": "string",
+          "description": "Error message template (supports ${variable} interpolation)"
+        },
+        "fix": {
+          "type": "object",
+          "description": "Auto-fix suggestion",
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Fix description"
+            },
+            "action": {
+              "type": "string",
+              "enum": ["add", "remove", "modify", "rename"],
+              "description": "Fix action type"
+            },
+            "path": {
+              "type": "string",
+              "description": "JSONPath to modify"
+            },
+            "value": {
+              "description": "New value to set"
+            }
+          }
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable this validation rule",
+          "default": true
+        }
+      }
+    }
+  }
+}

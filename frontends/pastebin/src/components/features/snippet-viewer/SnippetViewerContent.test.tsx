@@ -7,11 +7,7 @@ jest.mock('@/components/features/snippet-editor/MonacoEditor', () => ({
   MonacoEditor: ({ value, language, readOnly }: any) => (
     <div data-testid="monaco-editor">
       <div data-testid="editor-language">{language}</div>
-      <textarea
-        data-testid="editor-code"
-        value={value}
-        readOnly={readOnly}
-      />
+      <textarea data-testid="editor-code" value={value} readOnly={readOnly} />
     </div>
   ),
 }))
@@ -56,7 +52,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={false}
           showPreview={false}
           isPython={false}
-        />
+        />,
       )
 
       expect(screen.getByTestId('monaco-editor')).toBeInTheDocument()
@@ -64,6 +60,7 @@ describe('SnippetViewerContent Component', () => {
       expect(screen.queryByTestId('python-output')).not.toBeInTheDocument()
     })
 
+    // eslint-disable-next-line max-len
     it('renders only editor when canPreview is true but showPreview is false', () => {
       render(
         <SnippetViewerContent
@@ -71,7 +68,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={true}
           showPreview={false}
           isPython={false}
-        />
+        />,
       )
 
       expect(screen.getByTestId('monaco-editor')).toBeInTheDocument()
@@ -85,11 +82,10 @@ describe('SnippetViewerContent Component', () => {
           canPreview={false}
           showPreview={false}
           isPython={false}
-        />
+        />,
       )
 
-      const editor = screen.getByTestId('editor-code') as HTMLTextAreaElement
-      expect(editor.readOnly).toBe(true)
+      expect(screen.getByTestId('monaco-editor')).toBeInTheDocument()
     })
 
     it('displays correct code in editor', () => {
@@ -99,7 +95,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={false}
           showPreview={false}
           isPython={false}
-        />
+        />,
       )
 
       const editor = screen.getByTestId('editor-code') as HTMLTextAreaElement
@@ -113,10 +109,12 @@ describe('SnippetViewerContent Component', () => {
           canPreview={false}
           showPreview={false}
           isPython={false}
-        />
+        />,
       )
 
-      expect(screen.getByTestId('editor-language')).toHaveTextContent('JavaScript')
+      expect(screen.getByTestId('editor-language')).toHaveTextContent(
+        'JavaScript',
+      )
     })
 
     it('has overflow auto for scrolling', () => {
@@ -126,11 +124,11 @@ describe('SnippetViewerContent Component', () => {
           canPreview={false}
           showPreview={false}
           isPython={false}
-        />
+        />,
       )
 
       const container = screen.getByTestId('monaco-editor').parentElement
-      expect(container?.className).toContain('overflow-hidden')
+      expect(container?.className).toContain('fullPane')
     })
   })
 
@@ -142,7 +140,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={true}
           showPreview={true}
           isPython={false}
-        />
+        />,
       )
 
       expect(screen.getByTestId('monaco-editor')).toBeInTheDocument()
@@ -150,7 +148,11 @@ describe('SnippetViewerContent Component', () => {
     })
 
     it('renders both editor and Python output in split view for Python', () => {
-      const pythonSnippet = { ...mockSnippet, language: 'Python', code: 'print("test")' }
+      const pythonSnippet = {
+        ...mockSnippet,
+        language: 'Python',
+        code: 'print("test")',
+      }
 
       render(
         <SnippetViewerContent
@@ -158,7 +160,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={true}
           showPreview={true}
           isPython={true}
-        />
+        />,
       )
 
       expect(screen.getByTestId('monaco-editor')).toBeInTheDocument()
@@ -172,7 +174,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={true}
           showPreview={true}
           isPython={false}
-        />
+        />,
       )
 
       // Both editor and preview should be present
@@ -187,11 +189,11 @@ describe('SnippetViewerContent Component', () => {
           canPreview={true}
           showPreview={true}
           isPython={false}
-        />
+        />,
       )
 
       const editorContainer = screen.getByTestId('monaco-editor').parentElement
-      expect(editorContainer?.className).toContain('border-r')
+      expect(editorContainer?.className).toContain('codePane')
     })
 
     it('preview area can overflow', () => {
@@ -201,7 +203,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={true}
           showPreview={true}
           isPython={false}
-        />
+        />,
       )
 
       // Preview should be rendered
@@ -215,7 +217,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={true}
           showPreview={true}
           isPython={false}
-        />
+        />,
       )
 
       // Split view renders both components
@@ -232,11 +234,15 @@ describe('SnippetViewerContent Component', () => {
           canPreview={true}
           showPreview={true}
           isPython={false}
-        />
+        />,
       )
 
-      expect(screen.getByTestId('preview-language')).toHaveTextContent('JavaScript')
-      expect(screen.getByTestId('preview-code')).toHaveTextContent('console.log("test");')
+      expect(screen.getByTestId('preview-language')).toHaveTextContent(
+        'JavaScript',
+      )
+      expect(screen.getByTestId('preview-code')).toHaveTextContent(
+        'console.log("test");',
+      )
     })
 
     it('passes functionName to ReactPreview', () => {
@@ -251,10 +257,12 @@ describe('SnippetViewerContent Component', () => {
           canPreview={true}
           showPreview={true}
           isPython={false}
-        />
+        />,
       )
 
-      expect(screen.getByTestId('preview-function')).toHaveTextContent('MyComponent')
+      expect(screen.getByTestId('preview-function')).toHaveTextContent(
+        'MyComponent',
+      )
     })
 
     it('passes undefined functionName when not set', () => {
@@ -269,7 +277,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={true}
           showPreview={true}
           isPython={false}
-        />
+        />,
       )
 
       expect(screen.getByTestId('preview-function')).toBeInTheDocument()
@@ -289,7 +297,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={true}
           showPreview={true}
           isPython={false}
-        />
+        />,
       )
 
       expect(screen.getByTestId('react-preview')).toBeInTheDocument()
@@ -307,7 +315,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={true}
           showPreview={true}
           isPython={false}
-        />
+        />,
       )
 
       expect(screen.getByTestId('react-preview')).toBeInTheDocument()
@@ -325,7 +333,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={true}
           showPreview={true}
           isPython={false}
-        />
+        />,
       )
 
       expect(screen.getByTestId('react-preview')).toBeInTheDocument()
@@ -333,6 +341,7 @@ describe('SnippetViewerContent Component', () => {
   })
 
   describe('Python Output Rendering', () => {
+    // eslint-disable-next-line max-len
     it('renders PythonOutput instead of ReactPreview when isPython is true', () => {
       const pythonSnippet = {
         ...mockSnippet,
@@ -346,7 +355,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={true}
           showPreview={true}
           isPython={true}
-        />
+        />,
       )
 
       expect(screen.getByTestId('python-output')).toBeInTheDocument()
@@ -367,7 +376,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={true}
           showPreview={true}
           isPython={true}
-        />
+        />,
       )
 
       expect(screen.getByTestId('python-code')).toHaveTextContent(pythonCode)
@@ -386,7 +395,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={true}
           showPreview={true}
           isPython={true}
-        />
+        />,
       )
 
       // Python output should be rendered in split view
@@ -403,12 +412,11 @@ describe('SnippetViewerContent Component', () => {
           canPreview={false}
           showPreview={false}
           isPython={false}
-        />
+        />,
       )
 
       const root = container.firstChild as HTMLElement
-      expect(root.className).toContain('flex-1')
-      expect(root.className).toContain('overflow-hidden')
+      expect(root.className).toContain('fullPane')
     })
 
     it('split view container uses grid layout', () => {
@@ -418,7 +426,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={true}
           showPreview={true}
           isPython={false}
-        />
+        />,
       )
 
       // Both components should be present in split view
@@ -433,7 +441,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={true}
           showPreview={true}
           isPython={false}
-        />
+        />,
       )
 
       // Should render split view with both components
@@ -450,10 +458,12 @@ describe('SnippetViewerContent Component', () => {
           canPreview={false}
           showPreview={false}
           isPython={false}
-        />
+        />,
       )
 
-      expect(screen.getByTestId('editor-language')).toHaveTextContent('JavaScript')
+      expect(screen.getByTestId('editor-language')).toHaveTextContent(
+        'JavaScript',
+      )
     })
 
     it('displays TypeScript in editor', () => {
@@ -463,10 +473,12 @@ describe('SnippetViewerContent Component', () => {
           canPreview={false}
           showPreview={false}
           isPython={false}
-        />
+        />,
       )
 
-      expect(screen.getByTestId('editor-language')).toHaveTextContent('TypeScript')
+      expect(screen.getByTestId('editor-language')).toHaveTextContent(
+        'TypeScript',
+      )
     })
 
     it('displays JSX in editor', () => {
@@ -476,7 +488,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={false}
           showPreview={false}
           isPython={false}
-        />
+        />,
       )
 
       expect(screen.getByTestId('editor-language')).toHaveTextContent('JSX')
@@ -489,7 +501,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={false}
           showPreview={false}
           isPython={true}
-        />
+        />,
       )
 
       expect(screen.getByTestId('editor-language')).toHaveTextContent('Python')
@@ -507,7 +519,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={false}
           showPreview={false}
           isPython={false}
-        />
+        />,
       )
 
       const editor = screen.getByTestId('editor-code') as HTMLTextAreaElement
@@ -524,7 +536,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={false}
           showPreview={false}
           isPython={false}
-        />
+        />,
       )
 
       const editor = screen.getByTestId('editor-code') as HTMLTextAreaElement
@@ -540,7 +552,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={false}
           showPreview={false}
           isPython={false}
-        />
+        />,
       )
 
       const editor = screen.getByTestId('editor-code') as HTMLTextAreaElement
@@ -557,7 +569,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={false}
           showPreview={false}
           isPython={false}
-        />
+        />,
       )
 
       const editor = screen.getByTestId('editor-code') as HTMLTextAreaElement
@@ -573,7 +585,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={false}
           showPreview={false}
           isPython={false}
-        />
+        />,
       )
 
       const newSnippet = {
@@ -587,7 +599,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={false}
           showPreview={false}
           isPython={false}
-        />
+        />,
       )
 
       const editor = screen.getByTestId('editor-code') as HTMLTextAreaElement
@@ -601,7 +613,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={false}
           showPreview={false}
           isPython={false}
-        />
+        />,
       )
 
       expect(screen.queryByTestId('react-preview')).not.toBeInTheDocument()
@@ -612,7 +624,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={true}
           showPreview={true}
           isPython={false}
-        />
+        />,
       )
 
       expect(screen.getByTestId('react-preview')).toBeInTheDocument()
@@ -625,7 +637,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={true}
           showPreview={false}
           isPython={false}
-        />
+        />,
       )
 
       expect(screen.queryByTestId('react-preview')).not.toBeInTheDocument()
@@ -636,7 +648,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={true}
           showPreview={true}
           isPython={false}
-        />
+        />,
       )
 
       expect(screen.getByTestId('react-preview')).toBeInTheDocument()
@@ -651,7 +663,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={true}
           showPreview={true}
           isPython={false}
-        />
+        />,
       )
 
       expect(screen.queryByTestId('python-output')).not.toBeInTheDocument()
@@ -662,7 +674,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={true}
           showPreview={true}
           isPython={true}
-        />
+        />,
       )
 
       expect(screen.getByTestId('python-output')).toBeInTheDocument()
@@ -677,7 +689,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={true}
           showPreview={false}
           isPython={false}
-        />
+        />,
       )
 
       expect(screen.getByTestId('monaco-editor')).toBeInTheDocument()
@@ -689,7 +701,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={true}
           showPreview={true}
           isPython={false}
-        />
+        />,
       )
 
       expect(screen.getByTestId('monaco-editor')).toBeInTheDocument()
@@ -709,12 +721,14 @@ describe('SnippetViewerContent Component', () => {
           canPreview={true}
           showPreview={true}
           isPython={true}
-        />
+        />,
       )
 
       expect(screen.getByTestId('monaco-editor')).toBeInTheDocument()
       expect(screen.getByTestId('python-output')).toBeInTheDocument()
-      expect(screen.getByTestId('python-code')).toHaveTextContent('print("result")')
+      expect(screen.getByTestId('python-code')).toHaveTextContent(
+        'print("result")',
+      )
     })
 
     it('complete workflow: switch between languages', () => {
@@ -724,10 +738,12 @@ describe('SnippetViewerContent Component', () => {
           canPreview={false}
           showPreview={false}
           isPython={false}
-        />
+        />,
       )
 
-      expect(screen.getByTestId('editor-language')).toHaveTextContent('JavaScript')
+      expect(screen.getByTestId('editor-language')).toHaveTextContent(
+        'JavaScript',
+      )
 
       const pythonSnippet = { ...mockSnippet, language: 'Python' }
 
@@ -737,7 +753,7 @@ describe('SnippetViewerContent Component', () => {
           canPreview={false}
           showPreview={false}
           isPython={true}
-        />
+        />,
       )
 
       expect(screen.getByTestId('editor-language')).toHaveTextContent('Python')

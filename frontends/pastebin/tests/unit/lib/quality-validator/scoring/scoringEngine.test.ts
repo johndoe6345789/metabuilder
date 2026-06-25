@@ -12,17 +12,22 @@
  * 7. Performance - efficient handling of large result sets, quick calculation
  */
 
-import { ScoringEngine } from '../../../../../src/lib/quality-validator/scoring/scoringEngine';
+import { ScoringEngine } from '../../../../../src/lib/quality-validator/scoring/scoringEngine'
 import {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   CodeQualityMetrics,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   TestCoverageMetrics,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ArchitectureMetrics,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   SecurityMetrics,
   ScoringWeights,
   Finding,
   ResultMetadata,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ComponentScores,
-} from '../../../../../src/lib/quality-validator/types/index.js';
+} from '../../../../../src/lib/quality-validator/types/index.js'
 import {
   createMockCodeQualityMetrics,
   createMockTestCoverageMetrics,
@@ -30,47 +35,56 @@ import {
   createMockSecurityMetrics,
   createDefaultConfig,
   createMockFinding,
-} from '../../../../../tests/test-utils';
-import * as trendStorageModule from '../../../../../src/lib/quality-validator/utils/trendStorage';
+} from '../../../../../tests/test-utils'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import * as trendStorageModule from '../../../../../src/lib/quality-validator/utils/trendStorage'
 
 /**
  * Mock the trend storage to avoid file I/O during tests
  */
-jest.mock('../../../../../src/lib/quality-validator/utils/trendStorage', () => ({
-  saveTrendHistory: jest.fn(() => ({ records: [] })),
-  createHistoricalRecord: jest.fn((score, grade, scores) => ({
-    score,
-    grade,
-    componentScores: scores,
-    timestamp: new Date().toISOString(),
-  })),
-}));
+jest.mock(
+  '../../../../../src/lib/quality-validator/utils/trendStorage',
+  () => ({
+    saveTrendHistory: jest.fn(() => ({ records: [] })),
+    createHistoricalRecord: jest.fn((score, grade, scores) => ({
+      score,
+      grade,
+      componentScores: scores,
+      timestamp: new Date().toISOString(),
+    })),
+  }),
+)
 
 /**
  * Mock the trendAnalyzer to avoid side effects
  */
-jest.mock('../../../../../src/lib/quality-validator/scoring/trendAnalyzer', () => ({
-  trendAnalyzer: {
-    analyzeTrend: jest.fn((score, componentScores) => ({
-      currentScore: score,
-      direction: 'stable',
-      changePercent: 0,
-    })),
-  },
-}));
+jest.mock(
+  '../../../../../src/lib/quality-validator/scoring/trendAnalyzer',
+  () => ({
+    trendAnalyzer: {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      analyzeTrend: jest.fn((score, componentScores) => ({
+        currentScore: score,
+        direction: 'stable',
+        changePercent: 0,
+      })),
+    },
+  }),
+)
 
 describe('ScoringEngine - Comprehensive Tests', () => {
-  let engine: ScoringEngine;
-  let mockFinding: Finding;
-  let defaultWeights: ScoringWeights;
-  let defaultMetadata: ResultMetadata;
+  let engine: ScoringEngine
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  let mockFinding: Finding
+  let defaultWeights: ScoringWeights
+  let defaultMetadata: ResultMetadata
 
   beforeEach(() => {
-    engine = new ScoringEngine();
-    mockFinding = createMockFinding();
+    engine = new ScoringEngine()
+    mockFinding = createMockFinding()
 
-    const config = createDefaultConfig();
-    defaultWeights = config.scoring.weights;
+    const config = createDefaultConfig()
+    defaultWeights = config.scoring.weights
 
     defaultMetadata = {
       timestamp: new Date().toISOString(),
@@ -79,14 +93,14 @@ describe('ScoringEngine - Comprehensive Tests', () => {
       projectPath: process.cwd(),
       nodeVersion: process.version,
       configUsed: config,
-    };
+    }
 
-    jest.clearAllMocks();
-  });
+    jest.clearAllMocks()
+  })
 
   afterEach(() => {
-    jest.clearAllMocks();
-  });
+    jest.clearAllMocks()
+  })
 
   // ============================================================================
   // 1. SCORE CALCULATION TESTS
@@ -101,12 +115,12 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.overall.score).toBeGreaterThanOrEqual(0);
-      expect(result.overall.score).toBeLessThanOrEqual(100);
-    });
+      expect(result.overall.score).toBeGreaterThanOrEqual(0)
+      expect(result.overall.score).toBeLessThanOrEqual(100)
+    })
 
     it('should return normalized score with decimal precision', () => {
       const result = engine.calculateScore(
@@ -116,13 +130,13 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(typeof result.overall.score).toBe('number');
-      expect(result.overall.score).toBeGreaterThanOrEqual(0);
-      expect(result.overall.score).toBeLessThanOrEqual(100);
-    });
+      expect(typeof result.overall.score).toBe('number')
+      expect(result.overall.score).toBeGreaterThanOrEqual(0)
+      expect(result.overall.score).toBeLessThanOrEqual(100)
+    })
 
     it('should apply weights correctly to component scores', () => {
       const result = engine.calculateScore(
@@ -132,18 +146,18 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Overall score should be sum of weighted component scores
       const expectedOverall =
         result.componentScores.codeQuality.weightedScore +
         result.componentScores.testCoverage.weightedScore +
         result.componentScores.architecture.weightedScore +
-        result.componentScores.security.weightedScore;
+        result.componentScores.security.weightedScore
 
-      expect(result.overall.score).toBeCloseTo(expectedOverall, 1);
-    });
+      expect(result.overall.score).toBeCloseTo(expectedOverall, 1)
+    })
 
     it('should handle custom weights correctly', () => {
       const customWeights: ScoringWeights = {
@@ -151,7 +165,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         testCoverage: 0.3,
         architecture: 0.1,
         security: 0.1,
-      };
+      }
 
       const result = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -160,15 +174,15 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         customWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.componentScores.codeQuality.weight).toBe(0.5);
-      expect(result.componentScores.testCoverage.weight).toBe(0.3);
-      expect(result.componentScores.architecture.weight).toBe(0.1);
-      expect(result.componentScores.security.weight).toBe(0.1);
-    });
-  });
+      expect(result.componentScores.codeQuality.weight).toBe(0.5)
+      expect(result.componentScores.testCoverage.weight).toBe(0.3)
+      expect(result.componentScores.architecture.weight).toBe(0.1)
+      expect(result.componentScores.security.weight).toBe(0.1)
+    })
+  })
 
   // ============================================================================
   // 2. COVERAGE SCORING TESTS
@@ -178,12 +192,32 @@ describe('ScoringEngine - Comprehensive Tests', () => {
     it('should calculate high score for high line coverage', () => {
       const coverage = createMockTestCoverageMetrics({
         overall: {
-          lines: { total: 1000, covered: 950, percentage: 95, status: 'excellent' },
-          branches: { total: 500, covered: 475, percentage: 95, status: 'excellent' },
-          functions: { total: 100, covered: 95, percentage: 95, status: 'excellent' },
-          statements: { total: 1200, covered: 1140, percentage: 95, status: 'excellent' },
+          lines: {
+            total: 1000,
+            covered: 950,
+            percentage: 95,
+            status: 'excellent',
+          },
+          branches: {
+            total: 500,
+            covered: 475,
+            percentage: 95,
+            status: 'excellent',
+          },
+          functions: {
+            total: 100,
+            covered: 95,
+            percentage: 95,
+            status: 'excellent',
+          },
+          statements: {
+            total: 1200,
+            covered: 1140,
+            percentage: 95,
+            status: 'excellent',
+          },
         },
-      });
+      })
 
       const result = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -192,21 +226,36 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.componentScores.testCoverage.score).toBeGreaterThan(90);
-    });
+      expect(result.componentScores.testCoverage.score).toBeGreaterThan(90)
+    })
 
     it('should calculate lower score for low line coverage', () => {
       const coverage = createMockTestCoverageMetrics({
         overall: {
           lines: { total: 1000, covered: 500, percentage: 50, status: 'poor' },
-          branches: { total: 500, covered: 250, percentage: 50, status: 'poor' },
-          functions: { total: 100, covered: 50, percentage: 50, status: 'poor' },
-          statements: { total: 1200, covered: 600, percentage: 50, status: 'poor' },
+          branches: {
+            total: 500,
+            covered: 250,
+            percentage: 50,
+            status: 'poor',
+          },
+          functions: {
+            total: 100,
+            covered: 50,
+            percentage: 50,
+            status: 'poor',
+          },
+          statements: {
+            total: 1200,
+            covered: 600,
+            percentage: 50,
+            status: 'poor',
+          },
         },
-      });
+      })
 
       const result = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -215,11 +264,11 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.componentScores.testCoverage.score).toBeLessThan(70);
-    });
+      expect(result.componentScores.testCoverage.score).toBeLessThan(70)
+    })
 
     it('should apply effectiveness score bonus', () => {
       const highEffectiveness = createMockTestCoverageMetrics({
@@ -232,7 +281,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           effectivenessScore: 95,
           issues: [],
         },
-      });
+      })
 
       const lowEffectiveness = createMockTestCoverageMetrics({
         effectiveness: {
@@ -244,7 +293,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           effectivenessScore: 40,
           issues: [],
         },
-      });
+      })
 
       const resultHigh = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -253,8 +302,8 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       const resultLow = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -263,22 +312,42 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       expect(resultHigh.componentScores.testCoverage.score).toBeGreaterThan(
-        resultLow.componentScores.testCoverage.score
-      );
-    });
+        resultLow.componentScores.testCoverage.score,
+      )
+    })
 
     it('should balance coverage and effectiveness correctly', () => {
       // 60% coverage, high effectiveness
       const balancedMetrics = createMockTestCoverageMetrics({
         overall: {
-          lines: { total: 1000, covered: 600, percentage: 60, status: 'acceptable' },
-          branches: { total: 500, covered: 300, percentage: 60, status: 'acceptable' },
-          functions: { total: 100, covered: 60, percentage: 60, status: 'acceptable' },
-          statements: { total: 1200, covered: 720, percentage: 60, status: 'acceptable' },
+          lines: {
+            total: 1000,
+            covered: 600,
+            percentage: 60,
+            status: 'acceptable',
+          },
+          branches: {
+            total: 500,
+            covered: 300,
+            percentage: 60,
+            status: 'acceptable',
+          },
+          functions: {
+            total: 100,
+            covered: 60,
+            percentage: 60,
+            status: 'acceptable',
+          },
+          statements: {
+            total: 1200,
+            covered: 720,
+            percentage: 60,
+            status: 'acceptable',
+          },
         },
         effectiveness: {
           totalTests: 150,
@@ -289,7 +358,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           effectivenessScore: 95,
           issues: [],
         },
-      });
+      })
 
       const result = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -298,34 +367,74 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Should be moderate score despite lower coverage due to high effectiveness
-      expect(result.componentScores.testCoverage.score).toBeGreaterThan(50);
-      expect(result.componentScores.testCoverage.score).toBeLessThan(80);
-    });
-  });
+      expect(result.componentScores.testCoverage.score).toBeGreaterThan(50)
+      expect(result.componentScores.testCoverage.score).toBeLessThan(80)
+    })
+  })
 
   describe('Coverage Scoring - Threshold Bonuses', () => {
     it('should apply bonus for exceeding 90% coverage threshold', () => {
       const excellent = createMockTestCoverageMetrics({
         overall: {
-          lines: { total: 1000, covered: 920, percentage: 92, status: 'excellent' },
-          branches: { total: 500, covered: 460, percentage: 92, status: 'excellent' },
-          functions: { total: 100, covered: 92, percentage: 92, status: 'excellent' },
-          statements: { total: 1200, covered: 1104, percentage: 92, status: 'excellent' },
+          lines: {
+            total: 1000,
+            covered: 920,
+            percentage: 92,
+            status: 'excellent',
+          },
+          branches: {
+            total: 500,
+            covered: 460,
+            percentage: 92,
+            status: 'excellent',
+          },
+          functions: {
+            total: 100,
+            covered: 92,
+            percentage: 92,
+            status: 'excellent',
+          },
+          statements: {
+            total: 1200,
+            covered: 1104,
+            percentage: 92,
+            status: 'excellent',
+          },
         },
-      });
+      })
 
       const good = createMockTestCoverageMetrics({
         overall: {
-          lines: { total: 1000, covered: 800, percentage: 80, status: 'excellent' },
-          branches: { total: 500, covered: 400, percentage: 80, status: 'excellent' },
-          functions: { total: 100, covered: 80, percentage: 80, status: 'excellent' },
-          statements: { total: 1200, covered: 960, percentage: 80, status: 'excellent' },
+          lines: {
+            total: 1000,
+            covered: 800,
+            percentage: 80,
+            status: 'excellent',
+          },
+          branches: {
+            total: 500,
+            covered: 400,
+            percentage: 80,
+            status: 'excellent',
+          },
+          functions: {
+            total: 100,
+            covered: 80,
+            percentage: 80,
+            status: 'excellent',
+          },
+          statements: {
+            total: 1200,
+            covered: 960,
+            percentage: 80,
+            status: 'excellent',
+          },
         },
-      });
+      })
 
       const resultExcellent = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -334,8 +443,8 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       const resultGood = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -344,14 +453,14 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(resultExcellent.componentScores.testCoverage.score).toBeGreaterThan(
-        resultGood.componentScores.testCoverage.score
-      );
-    });
-  });
+      expect(
+        resultExcellent.componentScores.testCoverage.score,
+      ).toBeGreaterThan(resultGood.componentScores.testCoverage.score)
+    })
+  })
 
   // ============================================================================
   // 3. COMPLEXITY SCORING TESTS
@@ -361,13 +470,15 @@ describe('ScoringEngine - Comprehensive Tests', () => {
     it('should penalize high percentage of critical complexity functions', () => {
       const highComplexity = createMockCodeQualityMetrics({
         complexity: {
-          functions: Array(20).fill(null).map((_, i) => ({
-            file: `src/file${i}.ts`,
-            name: `complexFunc${i}`,
-            line: i * 10,
-            complexity: 25 + i,
-            status: 'critical',
-          })),
+          functions: Array(20)
+            .fill(null)
+            .map((_, i) => ({
+              file: `src/file${i}.ts`,
+              name: `complexFunc${i}`,
+              line: i * 10,
+              complexity: 25 + i,
+              status: 'critical',
+            })),
           averagePerFile: 22,
           maximum: 45,
           distribution: {
@@ -376,17 +487,19 @@ describe('ScoringEngine - Comprehensive Tests', () => {
             critical: 70,
           },
         },
-      });
+      })
 
       const lowComplexity = createMockCodeQualityMetrics({
         complexity: {
-          functions: Array(5).fill(null).map((_, i) => ({
-            file: `src/file${i}.ts`,
-            name: `simpleFunc${i}`,
-            line: i * 10,
-            complexity: 3 + i,
-            status: 'good',
-          })),
+          functions: Array(5)
+            .fill(null)
+            .map((_, i) => ({
+              file: `src/file${i}.ts`,
+              name: `simpleFunc${i}`,
+              line: i * 10,
+              complexity: 3 + i,
+              status: 'good',
+            })),
           averagePerFile: 5.5,
           maximum: 8,
           distribution: {
@@ -395,7 +508,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
             critical: 5,
           },
         },
-      });
+      })
 
       const resultHigh = engine.calculateScore(
         highComplexity,
@@ -404,8 +517,8 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       const resultLow = engine.calculateScore(
         lowComplexity,
@@ -414,24 +527,26 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       expect(resultHigh.componentScores.codeQuality.score).toBeLessThan(
-        resultLow.componentScores.codeQuality.score
-      );
-    });
+        resultLow.componentScores.codeQuality.score,
+      )
+    })
 
     it('should reward low complexity with bonus points', () => {
       const excellent = createMockCodeQualityMetrics({
         complexity: {
-          functions: Array(50).fill(null).map((_, i) => ({
-            file: `src/file${i}.ts`,
-            name: `goodFunc${i}`,
-            line: i * 10,
-            complexity: 2 + Math.random() * 3,
-            status: 'good',
-          })),
+          functions: Array(50)
+            .fill(null)
+            .map((_, i) => ({
+              file: `src/file${i}.ts`,
+              name: `goodFunc${i}`,
+              line: i * 10,
+              complexity: 2 + Math.random() * 3,
+              status: 'good',
+            })),
           averagePerFile: 3,
           maximum: 5,
           distribution: {
@@ -440,7 +555,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
             critical: 0,
           },
         },
-      });
+      })
 
       const result = engine.calculateScore(
         excellent,
@@ -449,11 +564,11 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.componentScores.codeQuality.score).toBeGreaterThan(95);
-    });
+      expect(result.componentScores.codeQuality.score).toBeGreaterThan(95)
+    })
 
     it('should weight critical complexity more heavily than warnings', () => {
       const withWarnings = createMockCodeQualityMetrics({
@@ -467,7 +582,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
             critical: 10,
           },
         },
-      });
+      })
 
       const withCritical = createMockCodeQualityMetrics({
         complexity: {
@@ -480,7 +595,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
             critical: 40,
           },
         },
-      });
+      })
 
       const resultWarnings = engine.calculateScore(
         withWarnings,
@@ -489,8 +604,8 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       const resultCritical = engine.calculateScore(
         withCritical,
@@ -499,14 +614,14 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       expect(resultWarnings.componentScores.codeQuality.score).toBeGreaterThan(
-        resultCritical.componentScores.codeQuality.score
-      );
-    });
-  });
+        resultCritical.componentScores.codeQuality.score,
+      )
+    })
+  })
 
   describe('Complexity Scoring - Distribution Analysis', () => {
     it('should handle all functions in good state', () => {
@@ -521,7 +636,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
             critical: 0,
           },
         },
-      });
+      })
 
       const result = engine.calculateScore(
         allGood,
@@ -530,11 +645,11 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.componentScores.codeQuality.score).toBe(100);
-    });
+      expect(result.componentScores.codeQuality.score).toBe(100)
+    })
 
     it('should calculate score when total is zero', () => {
       const emptyProject = createMockCodeQualityMetrics({
@@ -548,7 +663,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
             critical: 0,
           },
         },
-      });
+      })
 
       const result = engine.calculateScore(
         emptyProject,
@@ -557,12 +672,12 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.componentScores.codeQuality.score).toBe(100);
-    });
-  });
+      expect(result.componentScores.codeQuality.score).toBe(100)
+    })
+  })
 
   // ============================================================================
   // 4. DUPLICATION SCORING TESTS
@@ -577,7 +692,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           blocks: [],
           status: 'good',
         },
-      });
+      })
 
       const result = engine.calculateScore(
         excellent,
@@ -586,12 +701,12 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      const codeQualityComponent = result.componentScores.codeQuality.score;
-      expect(codeQualityComponent).toBeGreaterThan(80);
-    });
+      const codeQualityComponent = result.componentScores.codeQuality.score
+      expect(codeQualityComponent).toBeGreaterThan(80)
+    })
 
     it('should score 90 for 3-5% duplication range', () => {
       const good = createMockCodeQualityMetrics({
@@ -601,7 +716,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           blocks: [],
           status: 'warning',
         },
-      });
+      })
 
       const result = engine.calculateScore(
         good,
@@ -610,11 +725,11 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.componentScores.codeQuality.score).toBeGreaterThan(70);
-    });
+      expect(result.componentScores.codeQuality.score).toBeGreaterThan(70)
+    })
 
     it('should apply penalties for high duplication', () => {
       const low = createMockCodeQualityMetrics({
@@ -624,7 +739,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           blocks: [],
           status: 'good',
         },
-      });
+      })
 
       const high = createMockCodeQualityMetrics({
         duplication: {
@@ -633,7 +748,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           blocks: [],
           status: 'critical',
         },
-      });
+      })
 
       const resultLow = engine.calculateScore(
         low,
@@ -642,8 +757,8 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       const resultHigh = engine.calculateScore(
         high,
@@ -652,11 +767,13 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(resultHigh.componentScores.codeQuality.score).toBeLessThan(resultLow.componentScores.codeQuality.score);
-    });
+      expect(resultHigh.componentScores.codeQuality.score).toBeLessThan(
+        resultLow.componentScores.codeQuality.score,
+      )
+    })
 
     it('should never return negative score for duplication', () => {
       const extreme = createMockCodeQualityMetrics({
@@ -666,7 +783,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           blocks: [],
           status: 'critical',
         },
-      });
+      })
 
       const result = engine.calculateScore(
         extreme,
@@ -675,12 +792,12 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.componentScores.codeQuality.score).toBeGreaterThanOrEqual(0);
-    });
-  });
+      expect(result.componentScores.codeQuality.score).toBeGreaterThanOrEqual(0)
+    })
+  })
 
   // ============================================================================
   // 5. LINTING SCORING TESTS
@@ -697,7 +814,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           byRule: new Map(),
           status: 'good',
         },
-      });
+      })
 
       const result = engine.calculateScore(
         perfect,
@@ -706,11 +823,11 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.componentScores.codeQuality.score).toBeGreaterThan(80);
-    });
+      expect(result.componentScores.codeQuality.score).toBeGreaterThan(80)
+    })
 
     it('should penalize errors more heavily than warnings', () => {
       const errors = createMockCodeQualityMetrics({
@@ -722,7 +839,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           byRule: new Map(),
           status: 'critical',
         },
-      });
+      })
 
       const warnings = createMockCodeQualityMetrics({
         linting: {
@@ -733,7 +850,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           byRule: new Map(),
           status: 'warning',
         },
-      });
+      })
 
       const resultErrors = engine.calculateScore(
         errors,
@@ -742,8 +859,8 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       const resultWarnings = engine.calculateScore(
         warnings,
@@ -752,13 +869,13 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       expect(resultErrors.componentScores.codeQuality.score).toBeLessThan(
-        resultWarnings.componentScores.codeQuality.score
-      );
-    });
+        resultWarnings.componentScores.codeQuality.score,
+      )
+    })
 
     it('should cap warning penalty at 50 points', () => {
       const extreme = createMockCodeQualityMetrics({
@@ -770,7 +887,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           byRule: new Map(),
           status: 'critical',
         },
-      });
+      })
 
       const result = engine.calculateScore(
         extreme,
@@ -779,12 +896,12 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.componentScores.codeQuality.score).toBeGreaterThanOrEqual(0);
-      expect(result.componentScores.codeQuality.score).toBeLessThanOrEqual(100);
-    });
+      expect(result.componentScores.codeQuality.score).toBeGreaterThanOrEqual(0)
+      expect(result.componentScores.codeQuality.score).toBeLessThanOrEqual(100)
+    })
 
     it('should handle warnings threshold of 5', () => {
       // Exactly 5 warnings should not penalize
@@ -797,7 +914,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           byRule: new Map(),
           status: 'good',
         },
-      });
+      })
 
       // 6 warnings should penalize
       const aboveThreshold = createMockCodeQualityMetrics({
@@ -809,7 +926,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           byRule: new Map(),
           status: 'warning',
         },
-      });
+      })
 
       const resultAt = engine.calculateScore(
         atThreshold,
@@ -818,8 +935,8 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       const resultAbove = engine.calculateScore(
         aboveThreshold,
@@ -828,14 +945,14 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       expect(resultAt.componentScores.codeQuality.score).toBeGreaterThan(
-        resultAbove.componentScores.codeQuality.score
-      );
-    });
-  });
+        resultAbove.componentScores.codeQuality.score,
+      )
+    })
+  })
 
   // ============================================================================
   // 6. ARCHITECTURE SCORING TESTS
@@ -846,28 +963,42 @@ describe('ScoringEngine - Comprehensive Tests', () => {
       const withOversized = createMockArchitectureMetrics({
         components: {
           totalCount: 50,
-          byType: { atoms: 20, molecules: 15, organisms: 10, templates: 5, unknown: 0 },
-          oversized: Array(5).fill(null).map((_, i) => ({
-            file: `src/components/Oversized${i}.tsx`,
-            name: `OversizedComponent${i}`,
-            lines: 800,
-            type: 'organism',
-            suggestion: 'Split into smaller components',
-          })),
+          byType: {
+            atoms: 20,
+            molecules: 15,
+            organisms: 10,
+            templates: 5,
+            unknown: 0,
+          },
+          oversized: Array(5)
+            .fill(null)
+            .map((_, i) => ({
+              file: `src/components/Oversized${i}.tsx`,
+              name: `OversizedComponent${i}`,
+              lines: 800,
+              type: 'organism',
+              suggestion: 'Split into smaller components',
+            })),
           misplaced: [],
           averageSize: 250,
         },
-      });
+      })
 
       const clean = createMockArchitectureMetrics({
         components: {
           totalCount: 50,
-          byType: { atoms: 20, molecules: 15, organisms: 10, templates: 5, unknown: 0 },
+          byType: {
+            atoms: 20,
+            molecules: 15,
+            organisms: 10,
+            templates: 5,
+            unknown: 0,
+          },
           oversized: [],
           misplaced: [],
           averageSize: 150,
         },
-      });
+      })
 
       const resultOversized = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -876,8 +1007,8 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       const resultClean = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -886,29 +1017,31 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       expect(resultOversized.componentScores.architecture.score).toBeLessThan(
-        resultClean.componentScores.architecture.score
-      );
-    });
-  });
+        resultClean.componentScores.architecture.score,
+      )
+    })
+  })
 
   describe('Architecture Scoring - Dependencies', () => {
     it('should heavily penalize circular dependencies', () => {
       const withCircular = createMockArchitectureMetrics({
         dependencies: {
           totalModules: 100,
-          circularDependencies: Array(3).fill(null).map((_, i) => ({
-            path: ['module' + i, 'module' + ((i + 1) % 3)],
-            files: [`file${i}.ts`, `file${(i + 1) % 3}.ts`],
-            severity: 'critical',
-          })),
+          circularDependencies: Array(3)
+            .fill(null)
+            .map((_, i) => ({
+              path: ['module' + i, 'module' + ((i + 1) % 3)],
+              files: [`file${i}.ts`, `file${(i + 1) % 3}.ts`],
+              severity: 'critical',
+            })),
           layerViolations: [],
           externalDependencies: new Map(),
         },
-      });
+      })
 
       const clean = createMockArchitectureMetrics({
         dependencies: {
@@ -917,7 +1050,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           layerViolations: [],
           externalDependencies: new Map(),
         },
-      });
+      })
 
       const resultWithCircular = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -926,8 +1059,8 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       const resultClean = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -936,28 +1069,30 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(resultWithCircular.componentScores.architecture.score).toBeLessThan(
-        resultClean.componentScores.architecture.score
-      );
-    });
+      expect(
+        resultWithCircular.componentScores.architecture.score,
+      ).toBeLessThan(resultClean.componentScores.architecture.score)
+    })
 
     it('should penalize layer violations', () => {
       const withViolations = createMockArchitectureMetrics({
         dependencies: {
           totalModules: 100,
           circularDependencies: [],
-          layerViolations: Array(2).fill(null).map((_, i) => ({
-            source: `source${i}`,
-            target: `target${i}`,
-            violationType: 'cross-layer',
-            suggestion: 'Restructure dependencies',
-          })),
+          layerViolations: Array(2)
+            .fill(null)
+            .map((_, i) => ({
+              source: `source${i}`,
+              target: `target${i}`,
+              violationType: 'cross-layer',
+              suggestion: 'Restructure dependencies',
+            })),
           externalDependencies: new Map(),
         },
-      });
+      })
 
       const clean = createMockArchitectureMetrics({
         dependencies: {
@@ -966,7 +1101,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           layerViolations: [],
           externalDependencies: new Map(),
         },
-      });
+      })
 
       const resultViolations = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -975,8 +1110,8 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       const resultClean = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -985,13 +1120,13 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       expect(resultViolations.componentScores.architecture.score).toBeLessThan(
-        resultClean.componentScores.architecture.score
-      );
-    });
+        resultClean.componentScores.architecture.score,
+      )
+    })
 
     it('should weight circular dependencies more heavily than layer violations', () => {
       const circularOnly = createMockArchitectureMetrics({
@@ -1009,29 +1144,33 @@ describe('ScoringEngine - Comprehensive Tests', () => {
               severity: 'critical',
             },
           ],
-          layerViolations: Array(3).fill(null).map((_, i) => ({
-            source: `s${i}`,
-            target: `t${i}`,
-            violationType: 'cross-layer',
-            suggestion: 'Fix',
-          })),
+          layerViolations: Array(3)
+            .fill(null)
+            .map((_, i) => ({
+              source: `s${i}`,
+              target: `t${i}`,
+              violationType: 'cross-layer',
+              suggestion: 'Fix',
+            })),
           externalDependencies: new Map(),
         },
-      });
+      })
 
       const violationsOnly = createMockArchitectureMetrics({
         dependencies: {
           totalModules: 100,
           circularDependencies: [],
-          layerViolations: Array(5).fill(null).map((_, i) => ({
-            source: `s${i}`,
-            target: `t${i}`,
-            violationType: 'cross-layer',
-            suggestion: 'Fix',
-          })),
+          layerViolations: Array(5)
+            .fill(null)
+            .map((_, i) => ({
+              source: `s${i}`,
+              target: `t${i}`,
+              violationType: 'cross-layer',
+              suggestion: 'Fix',
+            })),
           externalDependencies: new Map(),
         },
-      });
+      })
 
       const resultCircular = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -1040,8 +1179,8 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       const resultViolations = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -1050,14 +1189,14 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       expect(resultCircular.componentScores.architecture.score).toBeLessThan(
-        resultViolations.componentScores.architecture.score
-      );
-    });
-  });
+        resultViolations.componentScores.architecture.score,
+      )
+    })
+  })
 
   describe('Architecture Scoring - Pattern Compliance', () => {
     it('should average pattern scores correctly', () => {
@@ -1067,7 +1206,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           hookUsage: { issues: [], score: 100 },
           reactBestPractices: { issues: [], score: 100 },
         },
-      });
+      })
 
       const mixed = createMockArchitectureMetrics({
         patterns: {
@@ -1075,7 +1214,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           hookUsage: { issues: [], score: 60 },
           reactBestPractices: { issues: [], score: 80 },
         },
-      });
+      })
 
       const resultGood = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -1084,8 +1223,8 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       const resultMixed = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -1094,14 +1233,14 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       expect(resultGood.componentScores.architecture.score).toBeGreaterThan(
-        resultMixed.componentScores.architecture.score
-      );
-    });
-  });
+        resultMixed.componentScores.architecture.score,
+      )
+    })
+  })
 
   // ============================================================================
   // 7. SECURITY SCORING TESTS
@@ -1122,13 +1261,13 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         ],
         codePatterns: [],
         performanceIssues: [],
-      });
+      })
 
       const safe = createMockSecurityMetrics({
         vulnerabilities: [],
         codePatterns: [],
         performanceIssues: [],
-      });
+      })
 
       const resultWithCritical = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -1137,8 +1276,8 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         withCritical,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       const resultSafe = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -1147,33 +1286,35 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         safe,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       expect(resultWithCritical.componentScores.security.score).toBeLessThan(
-        resultSafe.componentScores.security.score
-      );
-    });
+        resultSafe.componentScores.security.score,
+      )
+    })
 
     it('should penalize critical vulnerabilities', () => {
       const safe = createMockSecurityMetrics({
         vulnerabilities: [],
         codePatterns: [],
         performanceIssues: [],
-      });
+      })
 
       const withCritical = createMockSecurityMetrics({
-        vulnerabilities: Array(2).fill(null).map((_, i) => ({
-          package: `package${i}`,
-          currentVersion: '1.0.0',
-          vulnerabilityType: 'RCE',
-          severity: 'critical' as const,
-          description: 'Critical',
-          fixedInVersion: '1.1.0',
-        })),
+        vulnerabilities: Array(2)
+          .fill(null)
+          .map((_, i) => ({
+            package: `package${i}`,
+            currentVersion: '1.0.0',
+            vulnerabilityType: 'RCE',
+            severity: 'critical' as const,
+            description: 'Critical',
+            fixedInVersion: '1.1.0',
+          })),
         codePatterns: [],
         performanceIssues: [],
-      });
+      })
 
       const resultSafe = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -1182,8 +1323,8 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         safe,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       const resultWithCritical = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -1192,14 +1333,14 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         withCritical,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       expect(resultWithCritical.componentScores.security.score).toBeLessThan(
-        resultSafe.componentScores.security.score
-      );
-    });
-  });
+        resultSafe.componentScores.security.score,
+      )
+    })
+  })
 
   describe('Security Scoring - Code Patterns', () => {
     it('should penalize dangerous code patterns', () => {
@@ -1222,13 +1363,13 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           },
         ],
         performanceIssues: [],
-      });
+      })
 
       const clean = createMockSecurityMetrics({
         vulnerabilities: [],
         codePatterns: [],
         performanceIssues: [],
-      });
+      })
 
       const resultPatterns = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -1237,8 +1378,8 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         withPatterns,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       const resultClean = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -1247,28 +1388,30 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         clean,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       expect(resultPatterns.componentScores.security.score).toBeLessThan(
-        resultClean.componentScores.security.score
-      );
-    });
-  });
+        resultClean.componentScores.security.score,
+      )
+    })
+  })
 
   describe('Security Scoring - Performance Issues', () => {
     it('should apply capped penalty for performance issues', () => {
       const manyIssues = createMockSecurityMetrics({
         vulnerabilities: [],
         codePatterns: [],
-        performanceIssues: Array(20).fill(null).map((_, i) => ({
-          type: 'slowRender',
-          severity: 'medium',
-          file: `src/component${i}.tsx`,
-          message: 'Slow rendering',
-          suggestion: 'Optimize',
-        })),
-      });
+        performanceIssues: Array(20)
+          .fill(null)
+          .map((_, i) => ({
+            type: 'slowRender',
+            severity: 'medium',
+            file: `src/component${i}.tsx`,
+            message: 'Slow rendering',
+            suggestion: 'Optimize',
+          })),
+      })
 
       const fewIssues = createMockSecurityMetrics({
         vulnerabilities: [],
@@ -1282,7 +1425,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
             suggestion: 'Optimize',
           },
         ],
-      });
+      })
 
       const resultMany = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -1291,8 +1434,8 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         manyIssues,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       const resultFew = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -1301,40 +1444,48 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         fewIssues,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       expect(resultMany.componentScores.security.score).toBeLessThan(
-        resultFew.componentScores.security.score
-      );
-      expect(resultMany.componentScores.security.score).toBeGreaterThanOrEqual(70);
-    });
+        resultFew.componentScores.security.score,
+      )
+      expect(resultMany.componentScores.security.score).toBeGreaterThanOrEqual(
+        70,
+      )
+    })
 
     it('should never return negative security score', () => {
       const extreme = createMockSecurityMetrics({
-        vulnerabilities: Array(10).fill(null).map((_, i) => ({
-          package: `package${i}`,
-          currentVersion: '1.0.0',
-          vulnerabilityType: 'RCE',
-          severity: 'critical' as const,
-          description: 'Critical',
-          fixedInVersion: '1.1.0',
-        })),
-        codePatterns: Array(10).fill(null).map((_, i) => ({
-          type: 'secret' as const,
-          severity: 'critical' as const,
-          file: `src/file${i}.ts`,
-          message: 'Secret exposed',
-          remediation: 'Remove secret',
-        })),
-        performanceIssues: Array(50).fill(null).map((_, i) => ({
-          type: 'slowRender',
-          severity: 'high' as const,
-          file: `src/component${i}.tsx`,
-          message: 'Slow rendering',
-          suggestion: 'Optimize',
-        })),
-      });
+        vulnerabilities: Array(10)
+          .fill(null)
+          .map((_, i) => ({
+            package: `package${i}`,
+            currentVersion: '1.0.0',
+            vulnerabilityType: 'RCE',
+            severity: 'critical' as const,
+            description: 'Critical',
+            fixedInVersion: '1.1.0',
+          })),
+        codePatterns: Array(10)
+          .fill(null)
+          .map((_, i) => ({
+            type: 'secret' as const,
+            severity: 'critical' as const,
+            file: `src/file${i}.ts`,
+            message: 'Secret exposed',
+            remediation: 'Remove secret',
+          })),
+        performanceIssues: Array(50)
+          .fill(null)
+          .map((_, i) => ({
+            type: 'slowRender',
+            severity: 'high' as const,
+            file: `src/component${i}.tsx`,
+            message: 'Slow rendering',
+            suggestion: 'Optimize',
+          })),
+      })
 
       const result = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -1343,13 +1494,13 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         extreme,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.componentScores.security.score).toBeGreaterThanOrEqual(0);
-      expect(result.componentScores.security.score).toBeLessThanOrEqual(100);
-    });
-  });
+      expect(result.componentScores.security.score).toBeGreaterThanOrEqual(0)
+      expect(result.componentScores.security.score).toBeLessThanOrEqual(100)
+    })
+  })
 
   // ============================================================================
   // 8. GRADE ASSIGNMENT TESTS
@@ -1358,19 +1509,51 @@ describe('ScoringEngine - Comprehensive Tests', () => {
   describe('Grade Assignment', () => {
     it('should assign A for score >= 90', () => {
       const excellent = createMockCodeQualityMetrics({
-        complexity: { functions: [], averagePerFile: 3, maximum: 5, distribution: { good: 100, warning: 0, critical: 0 } },
+        complexity: {
+          functions: [],
+          averagePerFile: 3,
+          maximum: 5,
+          distribution: { good: 100, warning: 0, critical: 0 },
+        },
         duplication: { percent: 1, lines: 10, blocks: [], status: 'good' },
-        linting: { errors: 0, warnings: 0, info: 0, violations: [], byRule: new Map(), status: 'good' },
-      });
+        linting: {
+          errors: 0,
+          warnings: 0,
+          info: 0,
+          violations: [],
+          byRule: new Map(),
+          status: 'good',
+        },
+      })
 
       const excellentCoverage = createMockTestCoverageMetrics({
         overall: {
-          lines: { total: 1000, covered: 950, percentage: 95, status: 'excellent' },
-          branches: { total: 500, covered: 475, percentage: 95, status: 'excellent' },
-          functions: { total: 100, covered: 95, percentage: 95, status: 'excellent' },
-          statements: { total: 1200, covered: 1140, percentage: 95, status: 'excellent' },
+          lines: {
+            total: 1000,
+            covered: 950,
+            percentage: 95,
+            status: 'excellent',
+          },
+          branches: {
+            total: 500,
+            covered: 475,
+            percentage: 95,
+            status: 'excellent',
+          },
+          functions: {
+            total: 100,
+            covered: 95,
+            percentage: 95,
+            status: 'excellent',
+          },
+          statements: {
+            total: 1200,
+            covered: 1140,
+            percentage: 95,
+            status: 'excellent',
+          },
         },
-      });
+      })
 
       const result = engine.calculateScore(
         excellent,
@@ -1379,20 +1562,32 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       if (result.overall.score >= 90) {
-        expect(result.overall.grade).toBe('A');
+        expect(result.overall.grade).toBe('A')
       }
-    });
+    })
 
     it('should assign B for score 80-89', () => {
       const good = createMockCodeQualityMetrics({
-        complexity: { functions: [], averagePerFile: 6, maximum: 12, distribution: { good: 80, warning: 15, critical: 5 } },
+        complexity: {
+          functions: [],
+          averagePerFile: 6,
+          maximum: 12,
+          distribution: { good: 80, warning: 15, critical: 5 },
+        },
         duplication: { percent: 3, lines: 100, blocks: [], status: 'good' },
-        linting: { errors: 1, warnings: 5, info: 0, violations: [], byRule: new Map(), status: 'good' },
-      });
+        linting: {
+          errors: 1,
+          warnings: 5,
+          info: 0,
+          violations: [],
+          byRule: new Map(),
+          status: 'good',
+        },
+      })
 
       const result = engine.calculateScore(
         good,
@@ -1401,20 +1596,32 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       if (result.overall.score >= 80 && result.overall.score < 90) {
-        expect(result.overall.grade).toBe('B');
+        expect(result.overall.grade).toBe('B')
       }
-    });
+    })
 
     it('should assign C for score 70-79', () => {
       const acceptable = createMockCodeQualityMetrics({
-        complexity: { functions: [], averagePerFile: 10, maximum: 20, distribution: { good: 60, warning: 30, critical: 10 } },
+        complexity: {
+          functions: [],
+          averagePerFile: 10,
+          maximum: 20,
+          distribution: { good: 60, warning: 30, critical: 10 },
+        },
         duplication: { percent: 6, lines: 300, blocks: [], status: 'warning' },
-        linting: { errors: 3, warnings: 10, info: 0, violations: [], byRule: new Map(), status: 'warning' },
-      });
+        linting: {
+          errors: 3,
+          warnings: 10,
+          info: 0,
+          violations: [],
+          byRule: new Map(),
+          status: 'warning',
+        },
+      })
 
       const result = engine.calculateScore(
         acceptable,
@@ -1423,18 +1630,35 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(['A', 'B', 'C', 'D', 'F']).toContain(result.overall.grade);
-    });
+      expect(['A', 'B', 'C', 'D', 'F']).toContain(result.overall.grade)
+    })
 
     it('should assign D for score 60-69', () => {
       const poor = createMockCodeQualityMetrics({
-        complexity: { functions: [], averagePerFile: 15, maximum: 35, distribution: { good: 40, warning: 40, critical: 20 } },
-        duplication: { percent: 12, lines: 800, blocks: [], status: 'critical' },
-        linting: { errors: 5, warnings: 25, info: 0, violations: [], byRule: new Map(), status: 'critical' },
-      });
+        complexity: {
+          functions: [],
+          averagePerFile: 15,
+          maximum: 35,
+          distribution: { good: 40, warning: 40, critical: 20 },
+        },
+        duplication: {
+          percent: 12,
+          lines: 800,
+          blocks: [],
+          status: 'critical',
+        },
+        linting: {
+          errors: 5,
+          warnings: 25,
+          info: 0,
+          violations: [],
+          byRule: new Map(),
+          status: 'critical',
+        },
+      })
 
       const result = engine.calculateScore(
         poor,
@@ -1443,27 +1667,59 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(['A', 'B', 'C', 'D', 'F']).toContain(result.overall.grade);
-    });
+      expect(['A', 'B', 'C', 'D', 'F']).toContain(result.overall.grade)
+    })
 
     it('should assign F for score < 60', () => {
       const failing = createMockCodeQualityMetrics({
-        complexity: { functions: [], averagePerFile: 25, maximum: 50, distribution: { good: 20, warning: 30, critical: 50 } },
-        duplication: { percent: 20, lines: 1500, blocks: [], status: 'critical' },
-        linting: { errors: 15, warnings: 50, info: 0, violations: [], byRule: new Map(), status: 'critical' },
-      });
+        complexity: {
+          functions: [],
+          averagePerFile: 25,
+          maximum: 50,
+          distribution: { good: 20, warning: 30, critical: 50 },
+        },
+        duplication: {
+          percent: 20,
+          lines: 1500,
+          blocks: [],
+          status: 'critical',
+        },
+        linting: {
+          errors: 15,
+          warnings: 50,
+          info: 0,
+          violations: [],
+          byRule: new Map(),
+          status: 'critical',
+        },
+      })
 
       const failingCoverage = createMockTestCoverageMetrics({
         overall: {
           lines: { total: 1000, covered: 300, percentage: 30, status: 'poor' },
-          branches: { total: 500, covered: 100, percentage: 20, status: 'poor' },
-          functions: { total: 100, covered: 25, percentage: 25, status: 'poor' },
-          statements: { total: 1200, covered: 300, percentage: 25, status: 'poor' },
+          branches: {
+            total: 500,
+            covered: 100,
+            percentage: 20,
+            status: 'poor',
+          },
+          functions: {
+            total: 100,
+            covered: 25,
+            percentage: 25,
+            status: 'poor',
+          },
+          statements: {
+            total: 1200,
+            covered: 300,
+            percentage: 25,
+            status: 'poor',
+          },
         },
-      });
+      })
 
       const result = engine.calculateScore(
         failing,
@@ -1472,16 +1728,16 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       if (result.overall.score < 60) {
-        expect(result.overall.grade).toBe('F');
+        expect(result.overall.grade).toBe('F')
       }
-    });
+    })
 
     it('should always return valid grade A-F', () => {
-      const validGrades = ['A', 'B', 'C', 'D', 'F'];
+      const validGrades = ['A', 'B', 'C', 'D', 'F']
 
       for (let score = 0; score <= 100; score += 10) {
         const result = engine.calculateScore(
@@ -1491,13 +1747,13 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           createMockSecurityMetrics(),
           defaultWeights,
           [],
-          defaultMetadata
-        );
+          defaultMetadata,
+        )
 
-        expect(validGrades).toContain(result.overall.grade);
+        expect(validGrades).toContain(result.overall.grade)
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // 9. PASS/FAIL STATUS TESTS
@@ -1506,10 +1762,22 @@ describe('ScoringEngine - Comprehensive Tests', () => {
   describe('Pass/Fail Status', () => {
     it('should return pass status for score >= 80', () => {
       const good = createMockCodeQualityMetrics({
-        complexity: { functions: [], averagePerFile: 6, maximum: 12, distribution: { good: 80, warning: 15, critical: 5 } },
+        complexity: {
+          functions: [],
+          averagePerFile: 6,
+          maximum: 12,
+          distribution: { good: 80, warning: 15, critical: 5 },
+        },
         duplication: { percent: 3, lines: 100, blocks: [], status: 'good' },
-        linting: { errors: 0, warnings: 3, info: 0, violations: [], byRule: new Map(), status: 'good' },
-      });
+        linting: {
+          errors: 0,
+          warnings: 3,
+          info: 0,
+          violations: [],
+          byRule: new Map(),
+          status: 'good',
+        },
+      })
 
       const result = engine.calculateScore(
         good,
@@ -1518,30 +1786,62 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       if (result.overall.score >= 80) {
-        expect(result.overall.status).toBe('pass');
-        expect(result.overall.passesThresholds).toBe(true);
+        expect(result.overall.status).toBe('pass')
+        expect(result.overall.passesThresholds).toBe(true)
       }
-    });
+    })
 
     it('should return fail status for score < 80', () => {
       const poor = createMockCodeQualityMetrics({
-        complexity: { functions: [], averagePerFile: 20, maximum: 40, distribution: { good: 30, warning: 40, critical: 30 } },
-        duplication: { percent: 15, lines: 1000, blocks: [], status: 'critical' },
-        linting: { errors: 8, warnings: 30, info: 0, violations: [], byRule: new Map(), status: 'critical' },
-      });
+        complexity: {
+          functions: [],
+          averagePerFile: 20,
+          maximum: 40,
+          distribution: { good: 30, warning: 40, critical: 30 },
+        },
+        duplication: {
+          percent: 15,
+          lines: 1000,
+          blocks: [],
+          status: 'critical',
+        },
+        linting: {
+          errors: 8,
+          warnings: 30,
+          info: 0,
+          violations: [],
+          byRule: new Map(),
+          status: 'critical',
+        },
+      })
 
       const poorCoverage = createMockTestCoverageMetrics({
         overall: {
           lines: { total: 1000, covered: 400, percentage: 40, status: 'poor' },
-          branches: { total: 500, covered: 150, percentage: 30, status: 'poor' },
-          functions: { total: 100, covered: 35, percentage: 35, status: 'poor' },
-          statements: { total: 1200, covered: 400, percentage: 33, status: 'poor' },
+          branches: {
+            total: 500,
+            covered: 150,
+            percentage: 30,
+            status: 'poor',
+          },
+          functions: {
+            total: 100,
+            covered: 35,
+            percentage: 35,
+            status: 'poor',
+          },
+          statements: {
+            total: 1200,
+            covered: 400,
+            percentage: 33,
+            status: 'poor',
+          },
         },
-      });
+      })
 
       const result = engine.calculateScore(
         poor,
@@ -1550,14 +1850,14 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       if (result.overall.score < 80) {
-        expect(result.overall.status).toBe('fail');
-        expect(result.overall.passesThresholds).toBe(false);
+        expect(result.overall.status).toBe('fail')
+        expect(result.overall.passesThresholds).toBe(false)
       }
-    });
+    })
 
     it('should have pass/fail status match passesThresholds field', () => {
       const result = engine.calculateScore(
@@ -1567,16 +1867,16 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       if (result.overall.status === 'pass') {
-        expect(result.overall.passesThresholds).toBe(true);
+        expect(result.overall.passesThresholds).toBe(true)
       } else {
-        expect(result.overall.passesThresholds).toBe(false);
+        expect(result.overall.passesThresholds).toBe(false)
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // 10. EDGE CASES - NULL AND MISSING DATA
@@ -1584,14 +1884,22 @@ describe('ScoringEngine - Comprehensive Tests', () => {
 
   describe('Edge Cases - Null and Missing Metrics', () => {
     it('should handle all null metrics gracefully', () => {
-      const result = engine.calculateScore(null, null, null, null, defaultWeights, [], defaultMetadata);
+      const result = engine.calculateScore(
+        null,
+        null,
+        null,
+        null,
+        defaultWeights,
+        [],
+        defaultMetadata,
+      )
 
-      expect(result).toBeDefined();
-      expect(result.overall.score).toBeGreaterThanOrEqual(0);
-      expect(result.overall.score).toBeLessThanOrEqual(100);
-      expect(result.overall.grade).toBeDefined();
-      expect(result.overall.status).toBeDefined();
-    });
+      expect(result).toBeDefined()
+      expect(result.overall.score).toBeGreaterThanOrEqual(0)
+      expect(result.overall.score).toBeLessThanOrEqual(100)
+      expect(result.overall.grade).toBeDefined()
+      expect(result.overall.status).toBeDefined()
+    })
 
     it('should assign default score of 50 to null code quality', () => {
       const result = engine.calculateScore(
@@ -1601,11 +1909,11 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.componentScores.codeQuality.score).toBe(50);
-    });
+      expect(result.componentScores.codeQuality.score).toBe(50)
+    })
 
     it('should assign default score of 30 to null test coverage', () => {
       const result = engine.calculateScore(
@@ -1615,11 +1923,11 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.componentScores.testCoverage.score).toBe(30);
-    });
+      expect(result.componentScores.testCoverage.score).toBe(30)
+    })
 
     it('should assign default score of 50 to null architecture', () => {
       const result = engine.calculateScore(
@@ -1629,11 +1937,11 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.componentScores.architecture.score).toBe(50);
-    });
+      expect(result.componentScores.architecture.score).toBe(50)
+    })
 
     it('should assign default score of 50 to null security', () => {
       const result = engine.calculateScore(
@@ -1643,11 +1951,11 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         null,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.componentScores.security.score).toBe(50);
-    });
+      expect(result.componentScores.security.score).toBe(50)
+    })
 
     it('should handle partially null metrics', () => {
       const result = engine.calculateScore(
@@ -1657,12 +1965,12 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.overall.score).toBeGreaterThanOrEqual(0);
-      expect(result.overall.score).toBeLessThanOrEqual(100);
-    });
+      expect(result.overall.score).toBeGreaterThanOrEqual(0)
+      expect(result.overall.score).toBeLessThanOrEqual(100)
+    })
 
     it('should handle empty metrics gracefully', () => {
       const empty = createMockCodeQualityMetrics({
@@ -1677,8 +1985,15 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           },
         },
         duplication: { percent: 0, lines: 0, blocks: [], status: 'good' },
-        linting: { errors: 0, warnings: 0, info: 0, violations: [], byRule: new Map(), status: 'good' },
-      });
+        linting: {
+          errors: 0,
+          warnings: 0,
+          info: 0,
+          violations: [],
+          byRule: new Map(),
+          status: 'good',
+        },
+      })
 
       const result = engine.calculateScore(
         empty,
@@ -1687,13 +2002,13 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.overall.score).toBeGreaterThanOrEqual(0);
-      expect(result.overall.score).toBeLessThanOrEqual(100);
-    });
-  });
+      expect(result.overall.score).toBeGreaterThanOrEqual(0)
+      expect(result.overall.score).toBeLessThanOrEqual(100)
+    })
+  })
 
   // ============================================================================
   // 11. EDGE CASES - BOUNDARY VALUES
@@ -1709,8 +2024,15 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           distribution: { good: 0, warning: 0, critical: 0 },
         },
         duplication: { percent: 0, lines: 0, blocks: [], status: 'good' },
-        linting: { errors: 0, warnings: 0, info: 0, violations: [], byRule: new Map(), status: 'good' },
-      });
+        linting: {
+          errors: 0,
+          warnings: 0,
+          info: 0,
+          violations: [],
+          byRule: new Map(),
+          status: 'good',
+        },
+      })
 
       const result = engine.calculateScore(
         empty,
@@ -1719,12 +2041,12 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.overall.score).toBeGreaterThanOrEqual(0);
-      expect(result.overall.score).toBeLessThanOrEqual(100);
-    });
+      expect(result.overall.score).toBeGreaterThanOrEqual(0)
+      expect(result.overall.score).toBeLessThanOrEqual(100)
+    })
 
     it('should calculate score correctly for 0% coverage', () => {
       const noCoverage = createMockTestCoverageMetrics({
@@ -1732,9 +2054,14 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           lines: { total: 1000, covered: 0, percentage: 0, status: 'poor' },
           branches: { total: 500, covered: 0, percentage: 0, status: 'poor' },
           functions: { total: 100, covered: 0, percentage: 0, status: 'poor' },
-          statements: { total: 1200, covered: 0, percentage: 0, status: 'poor' },
+          statements: {
+            total: 1200,
+            covered: 0,
+            percentage: 0,
+            status: 'poor',
+          },
         },
-      });
+      })
 
       const result = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -1743,22 +2070,42 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.overall.score).toBeGreaterThanOrEqual(0);
-      expect(result.overall.score).toBeLessThanOrEqual(100);
-    });
+      expect(result.overall.score).toBeGreaterThanOrEqual(0)
+      expect(result.overall.score).toBeLessThanOrEqual(100)
+    })
 
     it('should calculate score correctly for 100% coverage', () => {
       const perfectCoverage = createMockTestCoverageMetrics({
         overall: {
-          lines: { total: 1000, covered: 1000, percentage: 100, status: 'excellent' },
-          branches: { total: 500, covered: 500, percentage: 100, status: 'excellent' },
-          functions: { total: 100, covered: 100, percentage: 100, status: 'excellent' },
-          statements: { total: 1200, covered: 1200, percentage: 100, status: 'excellent' },
+          lines: {
+            total: 1000,
+            covered: 1000,
+            percentage: 100,
+            status: 'excellent',
+          },
+          branches: {
+            total: 500,
+            covered: 500,
+            percentage: 100,
+            status: 'excellent',
+          },
+          functions: {
+            total: 100,
+            covered: 100,
+            percentage: 100,
+            status: 'excellent',
+          },
+          statements: {
+            total: 1200,
+            covered: 1200,
+            percentage: 100,
+            status: 'excellent',
+          },
         },
-      });
+      })
 
       const result = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -1767,17 +2114,22 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.overall.score).toBeGreaterThanOrEqual(0);
-      expect(result.overall.score).toBeLessThanOrEqual(100);
-    });
+      expect(result.overall.score).toBeGreaterThanOrEqual(0)
+      expect(result.overall.score).toBeLessThanOrEqual(100)
+    })
 
     it('should handle extreme duplication percentages', () => {
       const extreme = createMockCodeQualityMetrics({
-        duplication: { percent: 100, lines: 100000, blocks: [], status: 'critical' },
-      });
+        duplication: {
+          percent: 100,
+          lines: 100000,
+          blocks: [],
+          status: 'critical',
+        },
+      })
 
       const result = engine.calculateScore(
         extreme,
@@ -1786,12 +2138,12 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.overall.score).toBeGreaterThanOrEqual(0);
-      expect(result.overall.score).toBeLessThanOrEqual(100);
-    });
+      expect(result.overall.score).toBeGreaterThanOrEqual(0)
+      expect(result.overall.score).toBeLessThanOrEqual(100)
+    })
 
     it('should handle extreme complexity values', () => {
       const extreme = createMockCodeQualityMetrics({
@@ -1801,7 +2153,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           maximum: 500,
           distribution: { good: 0, warning: 0, critical: 100 },
         },
-      });
+      })
 
       const result = engine.calculateScore(
         extreme,
@@ -1810,13 +2162,13 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.overall.score).toBeGreaterThanOrEqual(0);
-      expect(result.overall.score).toBeLessThanOrEqual(100);
-    });
-  });
+      expect(result.overall.score).toBeGreaterThanOrEqual(0)
+      expect(result.overall.score).toBeLessThanOrEqual(100)
+    })
+  })
 
   // ============================================================================
   // 12. PERFECT METRICS TESTS
@@ -1825,17 +2177,49 @@ describe('ScoringEngine - Comprehensive Tests', () => {
   describe('Edge Cases - Perfect Metrics', () => {
     it('should calculate near-perfect score for excellent metrics', () => {
       const perfect = createMockCodeQualityMetrics({
-        complexity: { functions: [], averagePerFile: 2, maximum: 5, distribution: { good: 100, warning: 0, critical: 0 } },
+        complexity: {
+          functions: [],
+          averagePerFile: 2,
+          maximum: 5,
+          distribution: { good: 100, warning: 0, critical: 0 },
+        },
         duplication: { percent: 0.5, lines: 5, blocks: [], status: 'good' },
-        linting: { errors: 0, warnings: 0, info: 0, violations: [], byRule: new Map(), status: 'good' },
-      });
+        linting: {
+          errors: 0,
+          warnings: 0,
+          info: 0,
+          violations: [],
+          byRule: new Map(),
+          status: 'good',
+        },
+      })
 
       const perfectCoverage = createMockTestCoverageMetrics({
         overall: {
-          lines: { total: 1000, covered: 1000, percentage: 100, status: 'excellent' },
-          branches: { total: 500, covered: 500, percentage: 100, status: 'excellent' },
-          functions: { total: 100, covered: 100, percentage: 100, status: 'excellent' },
-          statements: { total: 1200, covered: 1200, percentage: 100, status: 'excellent' },
+          lines: {
+            total: 1000,
+            covered: 1000,
+            percentage: 100,
+            status: 'excellent',
+          },
+          branches: {
+            total: 500,
+            covered: 500,
+            percentage: 100,
+            status: 'excellent',
+          },
+          functions: {
+            total: 100,
+            covered: 100,
+            percentage: 100,
+            status: 'excellent',
+          },
+          statements: {
+            total: 1200,
+            covered: 1200,
+            percentage: 100,
+            status: 'excellent',
+          },
         },
         effectiveness: {
           totalTests: 500,
@@ -1846,12 +2230,18 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           effectivenessScore: 100,
           issues: [],
         },
-      });
+      })
 
       const perfectArch = createMockArchitectureMetrics({
         components: {
           totalCount: 50,
-          byType: { atoms: 20, molecules: 15, organisms: 10, templates: 5, unknown: 0 },
+          byType: {
+            atoms: 20,
+            molecules: 15,
+            organisms: 10,
+            templates: 5,
+            unknown: 0,
+          },
           oversized: [],
           misplaced: [],
           averageSize: 100,
@@ -1867,7 +2257,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           hookUsage: { issues: [], score: 100 },
           reactBestPractices: { issues: [], score: 100 },
         },
-      });
+      })
 
       const result = engine.calculateScore(
         perfect,
@@ -1876,12 +2266,12 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.overall.score).toBeGreaterThan(95);
-    });
-  });
+      expect(result.overall.score).toBeGreaterThan(95)
+    })
+  })
 
   // ============================================================================
   // 13. POOR METRICS TESTS
@@ -1890,17 +2280,39 @@ describe('ScoringEngine - Comprehensive Tests', () => {
   describe('Edge Cases - Very Poor Metrics', () => {
     it('should still return valid score for very poor metrics', () => {
       const terrible = createMockCodeQualityMetrics({
-        complexity: { functions: [], averagePerFile: 50, maximum: 100, distribution: { good: 0, warning: 10, critical: 90 } },
-        duplication: { percent: 40, lines: 5000, blocks: [], status: 'critical' },
-        linting: { errors: 50, warnings: 100, info: 0, violations: [], byRule: new Map(), status: 'critical' },
-      });
+        complexity: {
+          functions: [],
+          averagePerFile: 50,
+          maximum: 100,
+          distribution: { good: 0, warning: 10, critical: 90 },
+        },
+        duplication: {
+          percent: 40,
+          lines: 5000,
+          blocks: [],
+          status: 'critical',
+        },
+        linting: {
+          errors: 50,
+          warnings: 100,
+          info: 0,
+          violations: [],
+          byRule: new Map(),
+          status: 'critical',
+        },
+      })
 
       const terribleCoverage = createMockTestCoverageMetrics({
         overall: {
           lines: { total: 1000, covered: 100, percentage: 10, status: 'poor' },
           branches: { total: 500, covered: 10, percentage: 2, status: 'poor' },
           functions: { total: 100, covered: 5, percentage: 5, status: 'poor' },
-          statements: { total: 1200, covered: 100, percentage: 8, status: 'poor' },
+          statements: {
+            total: 1200,
+            covered: 100,
+            percentage: 8,
+            status: 'poor',
+          },
         },
         effectiveness: {
           totalTests: 10,
@@ -1911,35 +2323,49 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           effectivenessScore: 5,
           issues: [],
         },
-      });
+      })
 
       const terribleArch = createMockArchitectureMetrics({
         components: {
           totalCount: 5,
-          byType: { atoms: 0, molecules: 0, organisms: 0, templates: 0, unknown: 5 },
-          oversized: Array(4).fill(null).map((_, i) => ({
-            file: `src/Big${i}.tsx`,
-            name: `BigComponent${i}`,
-            lines: 2000,
-            type: 'unknown',
-            suggestion: 'Split',
-          })),
+          byType: {
+            atoms: 0,
+            molecules: 0,
+            organisms: 0,
+            templates: 0,
+            unknown: 5,
+          },
+          oversized: Array(4)
+            .fill(null)
+            .map((_, i) => ({
+              file: `src/Big${i}.tsx`,
+              name: `BigComponent${i}`,
+              lines: 2000,
+              type: 'unknown',
+              suggestion: 'Split',
+            })),
           misplaced: [],
           averageSize: 2000,
         },
         dependencies: {
           totalModules: 5,
-          circularDependencies: Array(3).fill(null).map((_, i) => ({
-            path: ['a', 'b'],
-            files: ['a.ts', 'b.ts'],
-            severity: 'critical' as const,
-          })),
-          layerViolations: Array(5).fill(null).map((_, i) => ({
-            source: 's',
-            target: 't',
-            violationType: 'cross',
-            suggestion: 'Fix',
-          })),
+          circularDependencies: Array(3)
+            .fill(null)
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            .map((_, i) => ({
+              path: ['a', 'b'],
+              files: ['a.ts', 'b.ts'],
+              severity: 'critical' as const,
+            })),
+          layerViolations: Array(5)
+            .fill(null)
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            .map((_, i) => ({
+              source: 's',
+              target: 't',
+              violationType: 'cross',
+              suggestion: 'Fix',
+            })),
           externalDependencies: new Map(),
         },
         patterns: {
@@ -1947,7 +2373,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           hookUsage: { issues: [], score: 10 },
           reactBestPractices: { issues: [], score: 10 },
         },
-      });
+      })
 
       const result = engine.calculateScore(
         terrible,
@@ -1956,14 +2382,14 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.overall.score).toBeGreaterThanOrEqual(0);
-      expect(result.overall.score).toBeLessThanOrEqual(100);
-      expect(result.overall.grade).toBe('F');
-    });
-  });
+      expect(result.overall.score).toBeGreaterThanOrEqual(0)
+      expect(result.overall.score).toBeLessThanOrEqual(100)
+      expect(result.overall.grade).toBe('F')
+    })
+  })
 
   // ============================================================================
   // 14. RECOMMENDATIONS TESTS
@@ -1978,25 +2404,57 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(Array.isArray(result.recommendations)).toBe(true);
-    });
+      expect(Array.isArray(result.recommendations)).toBe(true)
+    })
 
     it('should limit recommendations to top 5', () => {
       const issues = createMockCodeQualityMetrics({
-        complexity: { functions: [], averagePerFile: 20, maximum: 40, distribution: { good: 20, warning: 40, critical: 40 } },
-        duplication: { percent: 10, lines: 1000, blocks: [], status: 'critical' },
-        linting: { errors: 10, warnings: 50, info: 0, violations: [], byRule: new Map(), status: 'critical' },
-      });
+        complexity: {
+          functions: [],
+          averagePerFile: 20,
+          maximum: 40,
+          distribution: { good: 20, warning: 40, critical: 40 },
+        },
+        duplication: {
+          percent: 10,
+          lines: 1000,
+          blocks: [],
+          status: 'critical',
+        },
+        linting: {
+          errors: 10,
+          warnings: 50,
+          info: 0,
+          violations: [],
+          byRule: new Map(),
+          status: 'critical',
+        },
+      })
 
       const lowCoverage = createMockTestCoverageMetrics({
         overall: {
           lines: { total: 1000, covered: 400, percentage: 40, status: 'poor' },
-          branches: { total: 500, covered: 150, percentage: 30, status: 'poor' },
-          functions: { total: 100, covered: 35, percentage: 35, status: 'poor' },
-          statements: { total: 1200, covered: 400, percentage: 33, status: 'poor' },
+          branches: {
+            total: 500,
+            covered: 150,
+            percentage: 30,
+            status: 'poor',
+          },
+          functions: {
+            total: 100,
+            covered: 35,
+            percentage: 35,
+            status: 'poor',
+          },
+          statements: {
+            total: 1200,
+            covered: 400,
+            percentage: 33,
+            status: 'poor',
+          },
         },
         effectiveness: {
           totalTests: 50,
@@ -2007,7 +2465,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           effectivenessScore: 30,
           issues: [],
         },
-      });
+      })
 
       const result = engine.calculateScore(
         issues,
@@ -2016,11 +2474,11 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.recommendations.length).toBeLessThanOrEqual(5);
-    });
+      expect(result.recommendations.length).toBeLessThanOrEqual(5)
+    })
 
     it('should prioritize critical recommendations first', () => {
       const security = createMockSecurityMetrics({
@@ -2036,7 +2494,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         ],
         codePatterns: [],
         performanceIssues: [],
-      });
+      })
 
       const result = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -2045,15 +2503,17 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         security,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       if (result.recommendations.length > 0) {
-        const firstRec = result.recommendations[0];
-        expect(['critical', 'high', 'medium', 'low']).toContain(firstRec.priority);
+        const firstRec = result.recommendations[0]
+        expect(['critical', 'high', 'medium', 'low']).toContain(
+          firstRec.priority,
+        )
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // 15. RESULT STRUCTURE TESTS
@@ -2068,15 +2528,15 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.overall).toBeDefined();
-      expect(result.componentScores).toBeDefined();
-      expect(result.findings).toBeDefined();
-      expect(result.recommendations).toBeDefined();
-      expect(result.metadata).toBeDefined();
-    });
+      expect(result.overall).toBeDefined()
+      expect(result.componentScores).toBeDefined()
+      expect(result.findings).toBeDefined()
+      expect(result.recommendations).toBeDefined()
+      expect(result.metadata).toBeDefined()
+    })
 
     it('should include all overall score fields', () => {
       const result = engine.calculateScore(
@@ -2086,15 +2546,15 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.overall.score).toBeDefined();
-      expect(result.overall.grade).toBeDefined();
-      expect(result.overall.status).toBeDefined();
-      expect(result.overall.summary).toBeDefined();
-      expect(result.overall.passesThresholds).toBeDefined();
-    });
+      expect(result.overall.score).toBeDefined()
+      expect(result.overall.grade).toBeDefined()
+      expect(result.overall.status).toBeDefined()
+      expect(result.overall.summary).toBeDefined()
+      expect(result.overall.passesThresholds).toBeDefined()
+    })
 
     it('should include all component score fields', () => {
       const result = engine.calculateScore(
@@ -2104,20 +2564,20 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       const checkComponent = (component: any) => {
-        expect(component.score).toBeDefined();
-        expect(component.weight).toBeDefined();
-        expect(component.weightedScore).toBeDefined();
-      };
+        expect(component.score).toBeDefined()
+        expect(component.weight).toBeDefined()
+        expect(component.weightedScore).toBeDefined()
+      }
 
-      checkComponent(result.componentScores.codeQuality);
-      checkComponent(result.componentScores.testCoverage);
-      checkComponent(result.componentScores.architecture);
-      checkComponent(result.componentScores.security);
-    });
+      checkComponent(result.componentScores.codeQuality)
+      checkComponent(result.componentScores.testCoverage)
+      checkComponent(result.componentScores.architecture)
+      checkComponent(result.componentScores.security)
+    })
 
     it('should preserve metadata in result', () => {
       const result = engine.calculateScore(
@@ -2127,17 +2587,17 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.metadata).toEqual(defaultMetadata);
-    });
+      expect(result.metadata).toEqual(defaultMetadata)
+    })
 
     it('should include findings in result', () => {
       const findings = [
         createMockFinding({ severity: 'high', category: 'security' }),
         createMockFinding({ severity: 'medium', category: 'codeQuality' }),
-      ];
+      ]
 
       const result = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -2146,13 +2606,13 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         findings,
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.findings).toEqual(findings);
-      expect(result.findings.length).toBe(2);
-    });
-  });
+      expect(result.findings).toEqual(findings)
+      expect(result.findings.length).toBe(2)
+    })
+  })
 
   // ============================================================================
   // 16. WEIGHTING SYSTEM TESTS
@@ -2165,29 +2625,56 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         testCoverage: 0.1,
         architecture: 0.1,
         security: 0.1,
-      };
+      }
 
       const balancedWeights: ScoringWeights = {
         codeQuality: 0.25,
         testCoverage: 0.25,
         architecture: 0.25,
         security: 0.25,
-      };
+      }
 
       const excellent = createMockCodeQualityMetrics({
-        complexity: { functions: [], averagePerFile: 2, maximum: 5, distribution: { good: 100, warning: 0, critical: 0 } },
+        complexity: {
+          functions: [],
+          averagePerFile: 2,
+          maximum: 5,
+          distribution: { good: 100, warning: 0, critical: 0 },
+        },
         duplication: { percent: 0.5, lines: 5, blocks: [], status: 'good' },
-        linting: { errors: 0, warnings: 0, info: 0, violations: [], byRule: new Map(), status: 'good' },
-      });
+        linting: {
+          errors: 0,
+          warnings: 0,
+          info: 0,
+          violations: [],
+          byRule: new Map(),
+          status: 'good',
+        },
+      })
 
       const poor = createMockTestCoverageMetrics({
         overall: {
           lines: { total: 1000, covered: 300, percentage: 30, status: 'poor' },
-          branches: { total: 500, covered: 100, percentage: 20, status: 'poor' },
-          functions: { total: 100, covered: 25, percentage: 25, status: 'poor' },
-          statements: { total: 1200, covered: 300, percentage: 25, status: 'poor' },
+          branches: {
+            total: 500,
+            covered: 100,
+            percentage: 20,
+            status: 'poor',
+          },
+          functions: {
+            total: 100,
+            covered: 25,
+            percentage: 25,
+            status: 'poor',
+          },
+          statements: {
+            total: 1200,
+            covered: 300,
+            percentage: 25,
+            status: 'poor',
+          },
         },
-      });
+      })
 
       const resultFocused = engine.calculateScore(
         excellent,
@@ -2196,8 +2683,8 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         codeQualityFocused,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       const resultBalanced = engine.calculateScore(
         excellent,
@@ -2206,14 +2693,14 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         balancedWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // With higher code quality weight, focused should score higher than balanced
       expect(resultFocused.overall.score).toBeGreaterThan(
-        resultBalanced.overall.score
-      );
-    });
+        resultBalanced.overall.score,
+      )
+    })
 
     it('should weight security heavily when configured', () => {
       const securityFocused: ScoringWeights = {
@@ -2221,26 +2708,30 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         testCoverage: 0.1,
         architecture: 0.1,
         security: 0.7,
-      };
+      }
 
       const withVulnerabilities = createMockSecurityMetrics({
-        vulnerabilities: Array(3).fill(null).map((_, i) => ({
-          package: `package${i}`,
-          currentVersion: '1.0.0',
-          vulnerabilityType: 'RCE',
-          severity: 'critical' as const,
-          description: 'Critical vulnerability',
-          fixedInVersion: '1.1.0',
-        })),
-        codePatterns: Array(3).fill(null).map((_, i) => ({
-          type: 'secret' as const,
-          severity: 'critical' as const,
-          file: `src/file${i}.ts`,
-          message: 'Secret',
-          remediation: 'Remove',
-        })),
+        vulnerabilities: Array(3)
+          .fill(null)
+          .map((_, i) => ({
+            package: `package${i}`,
+            currentVersion: '1.0.0',
+            vulnerabilityType: 'RCE',
+            severity: 'critical' as const,
+            description: 'Critical vulnerability',
+            fixedInVersion: '1.1.0',
+          })),
+        codePatterns: Array(3)
+          .fill(null)
+          .map((_, i) => ({
+            type: 'secret' as const,
+            severity: 'critical' as const,
+            file: `src/file${i}.ts`,
+            message: 'Secret',
+            remediation: 'Remove',
+          })),
         performanceIssues: [],
-      });
+      })
 
       const result = engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -2249,13 +2740,13 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         withVulnerabilities,
         securityFocused,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // With high security weight and critical vulnerabilities/patterns, score should be notably low
-      expect(result.overall.score).toBeLessThan(75);
-    });
-  });
+      expect(result.overall.score).toBeLessThan(75)
+    })
+  })
 
   // ============================================================================
   // 17. PERFORMANCE TESTS
@@ -2263,7 +2754,7 @@ describe('ScoringEngine - Comprehensive Tests', () => {
 
   describe('Performance', () => {
     it('should calculate score in reasonable time', () => {
-      const start = performance.now();
+      const start = performance.now()
 
       engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -2272,25 +2763,27 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      const end = performance.now();
-      const duration = end - start;
+      const end = performance.now()
+      const duration = end - start
 
       // Should complete in less than 100ms
-      expect(duration).toBeLessThan(100);
-    });
+      expect(duration).toBeLessThan(100)
+    })
 
     it('should handle large findings arrays efficiently', () => {
-      const manyFindings = Array(1000).fill(null).map((_, i) =>
-        createMockFinding({
-          id: `finding-${i}`,
-          severity: i % 2 === 0 ? 'high' : 'medium',
-        })
-      );
+      const manyFindings = Array(1000)
+        .fill(null)
+        .map((_, i) =>
+          createMockFinding({
+            id: `finding-${i}`,
+            severity: i % 2 === 0 ? 'high' : 'medium',
+          }),
+        )
 
-      const start = performance.now();
+      const start = performance.now()
 
       engine.calculateScore(
         createMockCodeQualityMetrics(),
@@ -2299,21 +2792,21 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         manyFindings,
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      const end = performance.now();
-      const duration = end - start;
+      const end = performance.now()
+      const duration = end - start
 
       // Should still be reasonably fast
-      expect(duration).toBeLessThan(200);
-    });
+      expect(duration).toBeLessThan(200)
+    })
 
     it('should calculate multiple scores efficiently', () => {
-      const times: number[] = [];
+      const times: number[] = []
 
       for (let i = 0; i < 5; i++) {
-        const start = performance.now();
+        const start = performance.now()
 
         engine.calculateScore(
           createMockCodeQualityMetrics(),
@@ -2322,23 +2815,23 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           createMockSecurityMetrics(),
           defaultWeights,
           [],
-          defaultMetadata
-        );
+          defaultMetadata,
+        )
 
-        const end = performance.now();
-        times.push(end - start);
+        const end = performance.now()
+        times.push(end - start)
       }
 
       // All runs should complete quickly (within 10ms each)
       times.forEach(time => {
-        expect(time).toBeLessThan(10);
-      });
+        expect(time).toBeLessThan(10)
+      })
 
       // Total time should be under 50ms for 5 runs
-      const totalTime = times.reduce((a, b) => a + b);
-      expect(totalTime).toBeLessThan(50);
-    });
-  });
+      const totalTime = times.reduce((a, b) => a + b)
+      expect(totalTime).toBeLessThan(50)
+    })
+  })
 
   // ============================================================================
   // 18. SUMMARY GENERATION TESTS
@@ -2346,8 +2839,8 @@ describe('ScoringEngine - Comprehensive Tests', () => {
 
   describe('Summary Generation', () => {
     it('should generate appropriate summary for each grade', () => {
-      const grades = ['A', 'B', 'C', 'D', 'F'] as const;
-      const summaries: Record<string, string> = {};
+      const grades = ['A', 'B', 'C', 'D', 'F'] as const
+      const summaries: Record<string, string> = {}
 
       for (const grade of grades) {
         const result = engine.calculateScore(
@@ -2357,21 +2850,21 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           createMockSecurityMetrics(),
           defaultWeights,
           [],
-          defaultMetadata
-        );
+          defaultMetadata,
+        )
 
         if (result.overall.grade === grade) {
-          summaries[grade] = result.overall.summary;
+          summaries[grade] = result.overall.summary
         }
       }
 
       // Verify summaries contain grade descriptions
-      if (summaries['A']) expect(summaries['A']).toContain('Excellent');
-      if (summaries['B']) expect(summaries['B']).toContain('Good');
-      if (summaries['C']) expect(summaries['C']).toContain('Acceptable');
-      if (summaries['D']) expect(summaries['D']).toContain('Poor');
-      if (summaries['F']) expect(summaries['F']).toContain('Failing');
-    });
+      if (summaries['A']) expect(summaries['A']).toContain('Excellent')
+      if (summaries['B']) expect(summaries['B']).toContain('Good')
+      if (summaries['C']) expect(summaries['C']).toContain('Acceptable')
+      if (summaries['D']) expect(summaries['D']).toContain('Poor')
+      if (summaries['F']) expect(summaries['F']).toContain('Failing')
+    })
 
     it('should include score in summary', () => {
       const result = engine.calculateScore(
@@ -2381,12 +2874,12 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result.overall.summary).toContain(result.overall.score.toFixed(1));
-    });
-  });
+      expect(result.overall.summary).toContain(result.overall.score.toFixed(1))
+    })
+  })
 
   // ============================================================================
   // 19. INTEGRATION TESTS
@@ -2399,14 +2892,14 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         testCoverage: createMockTestCoverageMetrics(),
         architecture: createMockArchitectureMetrics(),
         security: createMockSecurityMetrics(),
-      };
+      }
 
       const metrics2 = {
         codeQuality: createMockCodeQualityMetrics(),
         testCoverage: createMockTestCoverageMetrics(),
         architecture: createMockArchitectureMetrics(),
         security: createMockSecurityMetrics(),
-      };
+      }
 
       const result1 = engine.calculateScore(
         metrics1.codeQuality,
@@ -2415,8 +2908,8 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         metrics1.security,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       const result2 = engine.calculateScore(
         metrics2.codeQuality,
@@ -2425,25 +2918,54 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         metrics2.security,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(result1.overall.score).toBeCloseTo(result2.overall.score, 1);
-      expect(result1.overall.grade).toBe(result2.overall.grade);
-    });
+      expect(result1.overall.score).toBeCloseTo(result2.overall.score, 1)
+      expect(result1.overall.grade).toBe(result2.overall.grade)
+    })
 
     it('should show improvement when metrics improve', () => {
       const poor = createMockCodeQualityMetrics({
-        complexity: { functions: [], averagePerFile: 20, maximum: 40, distribution: { good: 30, warning: 40, critical: 30 } },
-        duplication: { percent: 15, lines: 1000, blocks: [], status: 'critical' },
-        linting: { errors: 8, warnings: 30, info: 0, violations: [], byRule: new Map(), status: 'critical' },
-      });
+        complexity: {
+          functions: [],
+          averagePerFile: 20,
+          maximum: 40,
+          distribution: { good: 30, warning: 40, critical: 30 },
+        },
+        duplication: {
+          percent: 15,
+          lines: 1000,
+          blocks: [],
+          status: 'critical',
+        },
+        linting: {
+          errors: 8,
+          warnings: 30,
+          info: 0,
+          violations: [],
+          byRule: new Map(),
+          status: 'critical',
+        },
+      })
 
       const improved = createMockCodeQualityMetrics({
-        complexity: { functions: [], averagePerFile: 6, maximum: 12, distribution: { good: 80, warning: 15, critical: 5 } },
+        complexity: {
+          functions: [],
+          averagePerFile: 6,
+          maximum: 12,
+          distribution: { good: 80, warning: 15, critical: 5 },
+        },
         duplication: { percent: 3, lines: 100, blocks: [], status: 'good' },
-        linting: { errors: 0, warnings: 3, info: 0, violations: [], byRule: new Map(), status: 'good' },
-      });
+        linting: {
+          errors: 0,
+          warnings: 3,
+          info: 0,
+          violations: [],
+          byRule: new Map(),
+          status: 'good',
+        },
+      })
 
       const resultPoor = engine.calculateScore(
         poor,
@@ -2452,8 +2974,8 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       const resultImproved = engine.calculateScore(
         improved,
@@ -2462,12 +2984,14 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
-      expect(resultImproved.overall.score).toBeGreaterThan(resultPoor.overall.score);
-    });
-  });
+      expect(resultImproved.overall.score).toBeGreaterThan(
+        resultPoor.overall.score,
+      )
+    })
+  })
 
   // ============================================================================
   // 20. CONSISTENCY TESTS
@@ -2479,10 +3003,25 @@ describe('ScoringEngine - Comprehensive Tests', () => {
       const combinations = [
         { cq: null, tc: null, arch: null, sec: null },
         { cq: createMockCodeQualityMetrics(), tc: null, arch: null, sec: null },
-        { cq: createMockCodeQualityMetrics(), tc: createMockTestCoverageMetrics(), arch: null, sec: null },
-        { cq: createMockCodeQualityMetrics(), tc: createMockTestCoverageMetrics(), arch: createMockArchitectureMetrics(), sec: null },
-        { cq: createMockCodeQualityMetrics(), tc: createMockTestCoverageMetrics(), arch: createMockArchitectureMetrics(), sec: createMockSecurityMetrics() },
-      ];
+        {
+          cq: createMockCodeQualityMetrics(),
+          tc: createMockTestCoverageMetrics(),
+          arch: null,
+          sec: null,
+        },
+        {
+          cq: createMockCodeQualityMetrics(),
+          tc: createMockTestCoverageMetrics(),
+          arch: createMockArchitectureMetrics(),
+          sec: null,
+        },
+        {
+          cq: createMockCodeQualityMetrics(),
+          tc: createMockTestCoverageMetrics(),
+          arch: createMockArchitectureMetrics(),
+          sec: createMockSecurityMetrics(),
+        },
+      ]
 
       combinations.forEach(combo => {
         const result = engine.calculateScore(
@@ -2492,13 +3031,13 @@ describe('ScoringEngine - Comprehensive Tests', () => {
           combo.sec,
           defaultWeights,
           [],
-          defaultMetadata
-        );
+          defaultMetadata,
+        )
 
-        expect(result.overall.score).toBeGreaterThanOrEqual(0);
-        expect(result.overall.score).toBeLessThanOrEqual(100);
-      });
-    });
+        expect(result.overall.score).toBeGreaterThanOrEqual(0)
+        expect(result.overall.score).toBeLessThanOrEqual(100)
+      })
+    })
 
     it('should maintain score invariants', () => {
       const result = engine.calculateScore(
@@ -2508,32 +3047,32 @@ describe('ScoringEngine - Comprehensive Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Overall score should equal sum of weighted component scores (within rounding)
       const calculatedOverall =
         result.componentScores.codeQuality.weightedScore +
         result.componentScores.testCoverage.weightedScore +
         result.componentScores.architecture.weightedScore +
-        result.componentScores.security.weightedScore;
+        result.componentScores.security.weightedScore
 
-      expect(result.overall.score).toBeCloseTo(calculatedOverall, 1);
+      expect(result.overall.score).toBeCloseTo(calculatedOverall, 1)
 
       // Weighted scores should equal score * weight (within rounding)
       Object.values(result.componentScores).forEach(component => {
-        const calculated = component.score * component.weight;
-        expect(component.weightedScore).toBeCloseTo(calculated, 1);
-      });
+        const calculated = component.score * component.weight
+        expect(component.weightedScore).toBeCloseTo(calculated, 1)
+      })
 
       // Weights should sum to 1.0
       const totalWeight =
         result.componentScores.codeQuality.weight +
         result.componentScores.testCoverage.weight +
         result.componentScores.architecture.weight +
-        result.componentScores.security.weight;
+        result.componentScores.security.weight
 
-      expect(totalWeight).toBeCloseTo(1.0, 5);
-    });
-  });
-});
+      expect(totalWeight).toBeCloseTo(1.0, 5)
+    })
+  })
+})

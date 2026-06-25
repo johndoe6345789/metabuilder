@@ -32,8 +32,8 @@ def _load_image_names() -> list[str]:
     for svc_name, svc in dc.get("services", {}).items():
         if "build" not in svc:
             continue
-        local = svc.get("image", f"deployment-{svc_name}:latest")
-        name = local.split("/")[-1].split(":")[0].removeprefix("deployment-")
+        local = svc.get("image", f"metabuilder-deploy-{svc_name}:latest")
+        name = local.split("/")[-1].split(":")[0].removeprefix("metabuilder-deploy-")
         names.append(name)
 
     return names

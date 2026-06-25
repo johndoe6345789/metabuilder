@@ -15,5 +15,5 @@ export {
   formatDate,
   formatDateTime,
   capitalize,
-  truncate
+  truncate,
 } from '@metabuilder/services'

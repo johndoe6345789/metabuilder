@@ -1,7 +1,7 @@
 export { generateComponentCode } from './generateComponentCode'
 export { generateFlaskApp } from './generateFlaskApp'
 export { generateFlaskBlueprint } from './generateFlaskBlueprint'
-export { generateMUITheme } from './generateMUITheme'
+export { generateTheme, generateMUITheme } from './generateMUITheme'
 export { generateNextJSProject } from './generateNextJSProject'
 export { generatePlaywrightTests } from './generatePlaywrightTests'
 export { generatePrismaSchema } from './generatePrismaSchema'

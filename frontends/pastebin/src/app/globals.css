@@ -273,3 +273,24 @@ select {
 .alert-m3-error svg {
   color: var(--mat-sys-error, #b3261e);
 }
+
+/* ── Monaco debugger decorations ────────────────────────── */
+.dbg-breakpoint {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%23e51400'/%3E%3C/svg%3E") center/12px no-repeat !important;
+}
+.dbg-current-arrow {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpolygon points='2%2C4 12%2C8 2%2C12' fill='%23ffcc00'/%3E%3C/svg%3E") center/12px no-repeat !important;
+}
+.dbg-current-line {
+  background: rgba(255, 204, 0, 0.22) !important;
+}
+/* bright bar in the line-number gutter for the current execution line */
+.dbg-current-line-num {
+  color: #ffcc00 !important;
+  font-weight: 700 !important;
+}
+.dbg-inline-value {
+  color: #8a8a8a !important;
+  font-style: italic !important;
+  opacity: 0.85;
+}

@@ -1,0 +1,320 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "screenshot_analyzer",
+  "description": "Screenshot Analyzer components for capturing and analyzing pages",
+  "components": [
+    {
+      "id": "screenshot_analyzer",
+      "name": "ScreenshotAnalyzer",
+      "description": "Main screenshot analyzer container with capture and analysis",
+      "category": "demo",
+      "icon": "camera",
+      "props": [],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Container",
+          "className": "screenshot-analyzer-container",
+          "children": [
+            {
+              "type": "Header",
+              "title": "Screenshot Analyzer",
+              "description": "Capture and analyze the current page",
+              "children": [
+                {
+                  "type": "Chip",
+                  "label": "Local Analysis",
+                  "color": "secondary"
+                }
+              ]
+            },
+            {
+              "type": "UploadSection",
+              "props": {}
+            },
+            {
+              "type": "ResultPanel",
+              "props": {}
+            },
+            {
+              "type": "PageInfo",
+              "props": {}
+            }
+          ]
+        }
+      },
+      "bindings": {
+        "browser": true
+      }
+    },
+    {
+      "id": "upload_section",
+      "name": "UploadSection",
+      "description": "Screenshot capture and download controls",
+      "category": "demo",
+      "icon": "upload",
+      "props": [
+        {
+          "name": "screenshotData",
+          "type": "string",
+          "required": false,
+          "default": null,
+          "description": "Screenshot data as base64 or data URL"
+        },
+        {
+          "name": "isCapturing",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether capture is in progress"
+        },
+        {
+          "name": "isAnalyzing",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether analysis is in progress"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "className": "upload-section",
+          "title": "Capture",
+          "description": "Take a screenshot of the current page",
+          "children": [
+            {
+              "type": "conditional",
+              "condition": "{{!screenshotData}}",
+              "then": {
+                "type": "UploadZone",
+                "icon": "camera",
+                "title": "Capture Screenshot",
+                "description": "Click to capture the current page"
+              }
+            },
+            {
+              "type": "conditional",
+              "condition": "{{screenshotData}}",
+              "then": {
+                "type": "ImagePreview",
+                "src": "{{screenshotData}}",
+                "alt": "Screenshot"
+              }
+            },
+            {
+              "type": "ButtonGroup",
+              "children": [
+                {
+                  "type": "Button",
+                  "label": "Capture",
+                  "icon": "camera",
+                  "action": "capture_screenshot",
+                  "loading": "{{isCapturing}}"
+                },
+                {
+                  "type": "Button",
+                  "label": "Download",
+                  "icon": "download",
+                  "action": "download_screenshot",
+                  "disabled": "{{!screenshotData}}",
+                  "variant": "outline"
+                },
+                {
+                  "type": "Button",
+                  "label": "Re-analyze",
+                  "icon": "refresh",
+                  "action": "reanalyze",
+                  "disabled": "{{!screenshotData}}",
+                  "loading": "{{isAnalyzing}}",
+                  "variant": "outline"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "bindings": {
+        "browser": true
+      }
+    },
+    {
+      "id": "result_panel",
+      "name": "ResultPanel",
+      "description": "Analysis results display with tabs",
+      "category": "demo",
+      "icon": "chart",
+      "props": [
+        {
+          "name": "analysisReport",
+          "type": "string",
+          "required": false,
+          "default": "",
+          "description": "Markdown formatted analysis report"
+        },
+        {
+          "name": "analysisResult",
+          "type": "object",
+          "required": false,
+          "default": null,
+          "description": "Structured analysis result object"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "className": "result-panel",
+          "children": [
+            {
+              "type": "conditional",
+              "condition": "{{analysisReport}}",
+              "then": {
+                "type": "Card",
+                "title": "Analysis Report",
+                "children": [
+                  {
+                    "type": "Markdown",
+                    "content": "{{analysisReport}}"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "conditional",
+              "condition": "{{analysisResult}}",
+              "then": {
+                "type": "Tabs",
+                "defaultValue": "summary",
+                "tabs": [
+                  { "value": "summary", "label": "Summary" },
+                  { "value": "components", "label": "Components" },
+                  { "value": "recommendations", "label": "Recommendations" }
+                ],
+                "children": [
+                  {
+                    "type": "TabPanel",
+                    "value": "summary",
+                    "children": [
+                      {
+                        "type": "DataDisplay",
+                        "dataSource": "{{analysisResult.summary}}",
+                        "title": "Summary"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "TabPanel",
+                    "value": "components",
+                    "children": [
+                      {
+                        "type": "ListDisplay",
+                        "dataSource": "{{analysisResult.components}}",
+                        "title": "Detected Components"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "TabPanel",
+                    "value": "recommendations",
+                    "children": [
+                      {
+                        "type": "ListDisplay",
+                        "dataSource": "{{analysisResult.recommendations}}",
+                        "title": "Recommendations"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "bindings": {
+        "browser": false
+      }
+    },
+    {
+      "id": "page_info",
+      "name": "PageInfo",
+      "description": "Current page metadata display",
+      "category": "demo",
+      "icon": "info",
+      "props": [
+        {
+          "name": "pageTitle",
+          "type": "string",
+          "required": false,
+          "description": "Page title"
+        },
+        {
+          "name": "pageUrl",
+          "type": "string",
+          "required": false,
+          "description": "Page URL"
+        },
+        {
+          "name": "viewport",
+          "type": "object",
+          "required": false,
+          "description": "Viewport dimensions with width and height"
+        },
+        {
+          "name": "userAgent",
+          "type": "string",
+          "required": false,
+          "description": "Browser user agent string"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "className": "page-info",
+          "title": "Page Information",
+          "children": [
+            {
+              "type": "Grid",
+              "columns": 2,
+              "gap": 2,
+              "children": [
+                {
+                  "type": "InfoItem",
+                  "label": "Title",
+                  "value": "{{pageTitle}}",
+                  "font": "monospace"
+                },
+                {
+                  "type": "InfoItem",
+                  "label": "URL",
+                  "value": "{{pageUrl}}",
+                  "font": "monospace",
+                  "truncate": true
+                },
+                {
+                  "type": "InfoItem",
+                  "label": "Viewport",
+                  "value": "{{viewport.width}} × {{viewport.height}}",
+                  "font": "monospace"
+                },
+                {
+                  "type": "InfoItem",
+                  "label": "User Agent",
+                  "value": "{{userAgent}}",
+                  "font": "monospace",
+                  "truncate": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "bindings": {
+        "browser": true
+      }
+    }
+  ]
+}

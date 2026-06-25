@@ -1,5 +1,5 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@metabuilder/fakemui/surfaces'
-import { MagnifyingGlass } from '@metabuilder/fakemui/icons'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@metabuilder/m3/surfaces'
+import { MagnifyingGlass } from '@metabuilder/m3/icons'
 
 type KnowledgeBaseSearchPanelProps = {
   searchQuery: string

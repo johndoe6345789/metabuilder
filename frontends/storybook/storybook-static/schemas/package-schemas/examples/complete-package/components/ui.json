@@ -1,0 +1,189 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "complete-example",
+  "description": "UI components for complete example package",
+  "components": [
+    {
+      "id": "user_card",
+      "name": "UserCard",
+      "description": "Displays user information in a card format",
+      "props": [
+        {
+          "name": "user",
+          "type": "User",
+          "required": true,
+          "description": "User object to display"
+        },
+        {
+          "name": "showEmail",
+          "type": "boolean",
+          "required": false,
+          "default": true,
+          "description": "Whether to show email address"
+        },
+        {
+          "name": "onEdit",
+          "type": "function",
+          "required": false,
+          "description": "Callback when edit button clicked"
+        }
+      ],
+      "state": [
+        {
+          "name": "isEditing",
+          "type": "boolean",
+          "default": false
+        }
+      ],
+      "handlers": {
+        "handleEdit": "handleUserEdit",
+        "handleSave": "handleUserSave",
+        "handleCancel": "handleEditCancel"
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "div",
+          "className": "user-card",
+          "children": [
+            {
+              "type": "h3",
+              "children": "{{ props.user.name }}"
+            },
+            {
+              "type": "conditional",
+              "condition": "{{ props.showEmail }}",
+              "then": {
+                "type": "p",
+                "className": "email",
+                "children": "{{ props.user.email }}"
+              }
+            },
+            {
+              "type": "div",
+              "className": "actions",
+              "children": [
+                {
+                  "type": "button",
+                  "onClick": "handleEdit",
+                  "children": "Edit"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "styles": {
+        "className": "user-card",
+        "css": {
+          "padding": "1rem",
+          "border": "1px solid #ddd",
+          "borderRadius": "8px"
+        }
+      }
+    },
+    {
+      "id": "user_list",
+      "name": "UserList",
+      "description": "Displays a list of users",
+      "props": [
+        {
+          "name": "users",
+          "type": "User[]",
+          "required": true
+        },
+        {
+          "name": "onUserClick",
+          "type": "function",
+          "required": false
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "div",
+          "className": "user-list",
+          "children": {
+            "type": "loop",
+            "items": "{{ props.users }}",
+            "iterator": "user",
+            "key": "{{ user.id }}",
+            "template": {
+              "type": "UserCard",
+              "props": {
+                "user": "{{ user }}",
+                "showEmail": true,
+                "onEdit": "{{ props.onUserClick }}"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "button",
+      "name": "Button",
+      "description": "Reusable button component",
+      "props": [
+        {
+          "name": "variant",
+          "type": "string",
+          "required": false,
+          "default": "primary",
+          "enum": ["primary", "secondary", "danger", "success"]
+        },
+        {
+          "name": "size",
+          "type": "string",
+          "required": false,
+          "default": "medium",
+          "enum": ["small", "medium", "large"]
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "name": "onClick",
+          "type": "function",
+          "required": false
+        },
+        {
+          "name": "children",
+          "type": "any",
+          "required": true
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "button",
+          "className": "btn btn-{{ props.variant }} btn-{{ props.size }}",
+          "disabled": "{{ props.disabled || props.loading }}",
+          "onClick": "{{ props.onClick }}",
+          "children": [
+            {
+              "type": "conditional",
+              "condition": "{{ props.loading }}",
+              "then": {
+                "type": "span",
+                "className": "spinner"
+              }
+            },
+            "{{ props.children }}"
+          ]
+        }
+      }
+    }
+  ],
+  "exports": {
+    "components": ["UserCard", "UserList", "Button"]
+  }
+}

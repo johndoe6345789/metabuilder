@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import * as React from 'react'
 import { Warning } from '@phosphor-icons/react'
-import { Alert, AlertDescription } from '@metabuilder/components/fakemui'
+import { Alert, AlertDescription } from '@metabuilder/components/m3'
 import { AIErrorHelper } from '@/components/error/AIErrorHelper'
 import { InputParameter } from '@/lib/types'
 import { transformReactCode } from '@/lib/react-transform'
@@ -15,22 +15,31 @@ interface ReactPreviewProps {
   inputParameters?: InputParameter[]
 }
 
-export function ReactPreview({ code, language, functionName, inputParameters }: ReactPreviewProps) {
+export function ReactPreview({
+  code,
+  language,
+  functionName,
+  inputParameters,
+}: ReactPreviewProps) {
   const { Component, error } = useMemo(() => {
-    const isReactCode = ['JSX', 'TSX', 'JavaScript', 'TypeScript'].includes(language)
-    if (!isReactCode) {
+    if (!['JSX', 'TSX', 'JavaScript', 'TypeScript'].includes(language)) {
       return { Component: null, error: null }
     }
-
     try {
       const transformedComponent = transformReactCode(code, functionName)
       return { Component: transformedComponent, error: null }
     } catch (err) {
-      return { Component: null, error: err instanceof Error ? err.message : 'Failed to render preview' }
+      return {
+        Component: null,
+        error: err instanceof Error ? err.message : 'Failed to render preview',
+      }
     }
   }, [code, language, functionName])
 
-  const props = useMemo(() => parseInputParameters(inputParameters), [inputParameters])
+  const props = useMemo(
+    () => parseInputParameters(inputParameters),
+    [inputParameters],
+  )
 
   if (!['JSX', 'TSX', 'JavaScript', 'TypeScript'].includes(language)) {
     return (
@@ -41,9 +50,17 @@ export function ReactPreview({ code, language, functionName, inputParameters }: 
         aria-label="Preview not available for this language"
       >
         <div className={styles.unsupportedCenter}>
-          <Warning size={48} className={styles.unsupportedIcon} aria-hidden="true" />
-          <p className={styles.unsupportedText}>Preview not available for {language}</p>
-          <p className={styles.unsupportedSub}>Use JSX, TSX, JavaScript, or TypeScript</p>
+          <Warning
+            size={48}
+            className={styles.unsupportedIcon}
+            aria-hidden="true"
+          />
+          <p className={styles.unsupportedText}>
+            Preview not available for {language}
+          </p>
+          <p className={styles.unsupportedSub}>
+            Use JSX, TSX, JavaScript, or TypeScript
+          </p>
         </div>
       </div>
     )
@@ -58,9 +75,14 @@ export function ReactPreview({ code, language, functionName, inputParameters }: 
         aria-live="assertive"
         aria-atomic="true"
       >
-        <Alert severity="error" className={styles.errorAlert} data-testid="preview-error-alert">
+        <Alert
+          severity="error"
+          className={styles.errorAlert}
+          data-testid="preview-error-alert"
+        >
           <Warning size={16} aria-hidden="true" />
           <AlertDescription
+            // eslint-disable-next-line max-len
             className={`${styles.errorDescription} font-mono whitespace-pre-wrap`}
             data-testid="preview-error-message"
           >
@@ -92,7 +114,12 @@ export function ReactPreview({ code, language, functionName, inputParameters }: 
   }
 
   return (
-    <div className={`${styles.previewRoot} overflow-auto`} data-testid="react-preview-container" role="region" aria-label="React component preview">
+    <div
+      className={`${styles.previewRoot} overflow-auto`}
+      data-testid="react-preview-container"
+      role="region"
+      aria-label="React component preview"
+    >
       <div className={styles.previewContent}>
         <Component {...props} />
       </div>

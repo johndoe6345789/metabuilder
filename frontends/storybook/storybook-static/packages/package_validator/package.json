@@ -1,0 +1,115 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "package_validator",
+  "name": "Package Validator",
+  "version": "1.0.0",
+  "description": "Validates JSON-based package structure including scripts, types, components, and tests",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "tools",
+  "icon": "static_content/icon.svg",
+  "minLevel": 5,
+  "primary": true,
+  "dependencies": {},
+  "devDependencies": {
+    "testing": "*"
+  },
+  "externalDependencies": {
+    "fs": {
+      "description": "File system operations for reading package files",
+      "required": true,
+      "functions": [
+        "readFile",
+        "existsSync",
+        "readdir",
+        "statSync"
+      ]
+    },
+    "path": {
+      "description": "Path manipulation utilities",
+      "required": true,
+      "functions": [
+        "join",
+        "resolve",
+        "basename",
+        "dirname",
+        "extname"
+      ]
+    },
+    "JSON": {
+      "description": "JSON parsing and validation",
+      "required": true,
+      "functions": [
+        "parse",
+        "stringify"
+      ]
+    },
+    "ajv": {
+      "description": "JSON Schema validator (Another JSON Schema Validator)",
+      "required": false,
+      "version": "^8.0.0",
+      "functions": [
+        "compile",
+        "validate"
+      ]
+    }
+  },
+  "exports": {
+    "components": [],
+    "scripts": [
+      "validate_package",
+      "validate_metadata",
+      "validate_scripts",
+      "validate_types",
+      "validate_components",
+      "validate_tests",
+      "validate_storybook"
+    ],
+    "types": [
+      "ValidationResult",
+      "ValidationError",
+      "ValidationWarning",
+      "PackageMetadata",
+      "ScriptFile",
+      "TypeDefinition",
+      "ComponentDefinition"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "permissions",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/stories.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "static_content/icon.svg"
+      ]
+    }
+  }
+}

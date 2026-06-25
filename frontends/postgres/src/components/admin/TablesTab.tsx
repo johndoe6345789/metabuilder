@@ -5,4 +5,4 @@ export {
   TablesTab as default,
   type TablesTabProps,
   type TableInfo,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';

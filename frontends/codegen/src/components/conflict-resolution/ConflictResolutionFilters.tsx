@@ -3,8 +3,8 @@ import type {
   ConflictResolutionFilters,
 } from '@/components/conflict-resolution/types'
 
-import { Badge } from '@metabuilder/fakemui/data-display'
-import { MagnifyingGlass } from '@metabuilder/fakemui/icons'
+import { Badge } from '@metabuilder/m3/data-display'
+import { MagnifyingGlass } from '@metabuilder/m3/icons'
 
 interface ConflictResolutionFiltersProps {
   copy: ConflictResolutionCopy

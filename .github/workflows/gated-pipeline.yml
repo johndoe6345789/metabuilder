@@ -618,10 +618,48 @@ jobs:
           name: gate-1-stub-result
           path: gate-artifacts/gate-1/
 
+  refactor-compliance:
+    name: "Gate 1.8: Refactor Compliance (50-100 LOC, hooks extracted)"
+    runs-on: ubuntu-latest
+    needs: schema-check
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run refactor compliance check
+        run: |
+          mkdir -p gate-artifacts/gate-1
+          python3 scripts/refactor-coverage.py --json \
+            > gate-artifacts/gate-1/refactor-coverage.json
+          python3 scripts/refactor-coverage.py \
+            2>&1 | tee gate-artifacts/gate-1/refactor-coverage.txt
+          # Gate: 80% of frontends must have 80% file-level compliance
+          python3 scripts/refactor-coverage.py --fail-below 80 --gate 80
+        continue-on-error: true
+
+      - name: Record validation result
+        if: always()
+        run: |
+          mkdir -p gate-artifacts/gate-1
+          echo "${{ job.status }}" > gate-artifacts/gate-1/refactor-compliance.txt
+          echo "$(date -Iseconds)" > gate-artifacts/gate-1/refactor-compliance-time.txt
+
+      - name: Upload validation result
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: gate-1-refactor-result
+          path: gate-artifacts/gate-1/
+
   gate-1-complete:
     name: "Gate 1: Code Quality - Passed"
     runs-on: ubuntu-latest
-    needs: [schema-check, typecheck, lint, security-scan, file-size-check, code-complexity-check, stub-detection]
+    needs: [schema-check, typecheck, lint, security-scan, file-size-check, code-complexity-check, stub-detection, refactor-compliance]
     steps:
       - name: Download all gate 1 artifacts
         uses: actions/download-artifact@v8
@@ -763,48 +801,131 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Run unit tests with coverage
+      - name: Run unit tests with coverage (all frontends)
         if: steps.cache-restore.outputs.hit != 'true'
         run: |
           set -o pipefail
+          COVERAGE_THRESHOLD=80
+
+          # nextjs (vitest)
+          echo "=== Running tests: frontends/nextjs ==="
           cd frontends/nextjs
-          npx vitest run --coverage --coverage.reporter=text --coverage.reporter=json-summary 2>&1 | tee /tmp/vitest-out.txt
-          FAILED=$(grep -oP '\d+ failed' /tmp/vitest-out.txt | head -1 | grep -oP '\d+' || echo "0")
-          PASSED=$(grep -oP '\d+ passed' /tmp/vitest-out.txt | head -1 | grep -oP '\d+' || echo "0")
-          echo "Tests: $PASSED passed, $FAILED failed"
+          npx vitest run --coverage \
+            --coverage.reporter=text \
+            --coverage.reporter=json \
+            --coverage.reporter=html \
+            --coverage.reporter=json-summary \
+            2>&1 | tee /tmp/vitest-nextjs.txt
+          FAILED=$(grep -oP '\d+ failed' /tmp/vitest-nextjs.txt | head -1 | grep -oP '\d+' || echo "0")
+          PASSED=$(grep -oP '\d+ passed' /tmp/vitest-nextjs.txt | head -1 | grep -oP '\d+' || echo "0")
+          echo "nextjs: $PASSED passed, $FAILED failed"
           if [ "$FAILED" -gt 20 ]; then
-            echo "::error::Too many test failures ($FAILED > 20 threshold)"
+            echo "::error::nextjs: Too many test failures ($FAILED > 20 threshold)"
             exit 1
           fi
+          cd ../..
 
-      - name: Check coverage thresholds
+          # Run test:coverage for each frontend that has the script
+          for frontend in codegen workflowui dbal exploded-diagrams pastebin postgres; do
+            PKG_JSON="frontends/$frontend/package.json"
+            if [ ! -f "$PKG_JSON" ]; then
+              echo "Skipping $frontend — no package.json found"
+              continue
+            fi
+            HAS_COVERAGE=$(node -e "const p=require('./$PKG_JSON'); process.stdout.write(p.scripts && p.scripts['test:coverage'] ? 'yes' : 'no')" 2>/dev/null || echo "no")
+            if [ "$HAS_COVERAGE" = "yes" ]; then
+              echo "=== Running tests: frontends/$frontend ==="
+              cd "frontends/$frontend"
+              npm run test:coverage 2>&1 | tee "/tmp/test-$frontend.txt" || {
+                echo "::error::$frontend: test:coverage script failed"
+                exit 1
+              }
+              cd ../..
+            else
+              echo "Skipping $frontend — no test:coverage script"
+            fi
+          done
+
+      - name: Check coverage thresholds (gate: 80% of frontends must pass 80%)
         run: |
-          cd frontends/nextjs
-          if [ -f coverage/coverage-summary.json ]; then
-            python3 -c "
+          THRESHOLD=80
+          GATE_PCT=80
+          PASSED=0
+          FAILED=0
+          SKIPPED=0
+
+          check_summary() {
+            local frontend="$1"
+            local summary="$2"
+            if [ ! -f "$summary" ]; then
+              echo "::notice::$frontend: No coverage-summary.json — skipping"
+              echo "skip"
+              return 0
+            fi
+            python3 - "$frontend" "$summary" "$THRESHOLD" <<'PYEOF'
           import json, sys
-          with open('coverage/coverage-summary.json') as f:
+          frontend, summary_path, threshold = sys.argv[1], sys.argv[2], float(sys.argv[3])
+          with open(summary_path) as f:
               data = json.load(f)
           total = data['total']
+          failed = []
           for metric in ['lines', 'functions', 'branches', 'statements']:
               pct = total[metric]['pct']
-              print(f'{metric}: {pct}%')
-          lines_pct = total['lines']['pct']
-          if lines_pct < 10:
-              print(f'::error::Line coverage {lines_pct}% is below 10% minimum')
+              print(f'  {frontend} {metric}: {pct}%')
+              if pct < threshold:
+                  failed.append(f'{metric} {pct}%')
+          if failed:
+              print(f'  FAIL {frontend}: {", ".join(failed)} < {threshold}%')
               sys.exit(1)
-          print(f'Coverage gate passed: {lines_pct}% lines covered')
-          "
-          else
-            echo "::warning::No coverage report generated — coverage check skipped"
-          fi
+          print(f'  PASS {frontend}: all metrics >= {threshold}%')
+          PYEOF
+          }
 
-      - name: Upload coverage report
+          for frontend in nextjs codegen workflowui dbal exploded-diagrams pastebin postgres; do
+            summary="frontends/$frontend/coverage/coverage-summary.json"
+            if [ ! -f "$summary" ]; then
+              SKIPPED=$((SKIPPED+1))
+              continue
+            fi
+            if check_summary "$frontend" "$summary"; then
+              PASSED=$((PASSED+1))
+            else
+              FAILED=$((FAILED+1))
+            fi
+          done
+
+          TOTAL=$((PASSED+FAILED))
+          if [ "$TOTAL" -eq 0 ]; then
+            echo "No coverage reports — skipping gate."
+            exit 0
+          fi
+          ACTUAL=$(python3 -c "print(f'{$PASSED/$TOTAL*100:.1f}')")
+          echo ""
+          echo "Coverage gate: $PASSED/$TOTAL frontends passed (${ACTUAL}%)"
+          echo "Gate requires: ${GATE_PCT}% of frontends >= ${THRESHOLD}%"
+          python3 -c "
+          import sys
+          passed, total, gate = $PASSED, $TOTAL, $GATE_PCT
+          pct = passed / total * 100
+          if pct < gate:
+              print(f'::error::Coverage gate FAILED: {pct:.1f}% of frontends pass ({passed}/{total}), need {gate}%')
+              sys.exit(1)
+          print(f'Coverage gate PASSED: {pct:.1f}% of frontends pass ({passed}/{total})')
+          "
+
+      - name: Upload coverage reports
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: coverage-report
-          path: frontends/nextjs/coverage/
+          path: |
+            frontends/nextjs/coverage/
+            frontends/codegen/coverage/
+            frontends/workflowui/coverage/
+            frontends/dbal/coverage/
+            frontends/exploded-diagrams/coverage/
+            frontends/pastebin/coverage/
+            frontends/postgres/coverage/
           retention-days: 7
 
       - name: Record validation result

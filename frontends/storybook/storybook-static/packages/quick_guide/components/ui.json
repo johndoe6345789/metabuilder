@@ -1,0 +1,432 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "quick_guide",
+  "description": "Quick guide builder components for steps and media management",
+  "components": [
+    {
+      "id": "steps_editor",
+      "name": "StepsEditor",
+      "description": "Editor for quick guide steps with add, edit, remove, and reorder functionality",
+      "props": [
+        {
+          "name": "steps",
+          "type": "array",
+          "required": false,
+          "default": [],
+          "description": "Array of step objects"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "className": "h-full",
+          "children": [
+            {
+              "type": "CardHeader",
+              "className": "flex items-center justify-between space-y-0",
+              "children": [
+                {
+                  "type": "Box",
+                  "children": [
+                    {
+                      "type": "CardTitle",
+                      "className": "flex items-center gap-2",
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "name": "ListNumbers",
+                          "size": 20
+                        },
+                        {
+                          "type": "Text",
+                          "children": "Steps"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "CardDescription",
+                      "children": "Keep your quick guide instructions concise and actionable."
+                    }
+                  ]
+                },
+                {
+                  "type": "Flex",
+                  "className": "items-center gap-2",
+                  "children": [
+                    {
+                      "type": "Button",
+                      "variant": "outlined",
+                      "size": "small",
+                      "onClick": "steps.resetOrdering",
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "name": "ArrowCounterClockwise",
+                          "size": 16
+                        },
+                        {
+                          "type": "Text",
+                          "children": "Reset IDs"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Button",
+                      "variant": "contained",
+                      "size": "small",
+                      "onClick": "steps.addStep",
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "name": "Plus",
+                          "size": 16
+                        },
+                        {
+                          "type": "Text",
+                          "children": "Add Step"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "CardContent",
+              "className": "space-y-4",
+              "children": [
+                {
+                  "type": "List",
+                  "dataSource": "steps",
+                  "emptyText": "Add your first step to get started.",
+                  "itemTemplate": {
+                    "type": "Paper",
+                    "variant": "outlined",
+                    "className": "rounded-lg p-4",
+                    "children": [
+                      {
+                        "type": "Flex",
+                        "className": "mb-3 items-center justify-between",
+                        "children": [
+                          {
+                            "type": "Flex",
+                            "className": "items-center gap-2",
+                            "children": [
+                              {
+                                "type": "Chip",
+                                "variant": "outlined",
+                                "label": "Step {{index}}"
+                              },
+                              {
+                                "type": "Text",
+                                "variant": "caption",
+                                "color": "textSecondary",
+                                "children": "Duration: {{item.duration}}"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "IconButton",
+                            "size": "small",
+                            "onClick": "steps.removeStep",
+                            "children": [
+                              {
+                                "type": "Icon",
+                                "name": "Trash",
+                                "size": 16
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Grid",
+                        "container": true,
+                        "spacing": 2,
+                        "children": [
+                          {
+                            "type": "Grid",
+                            "item": true,
+                            "xs": 12,
+                            "sm": 6,
+                            "children": [
+                              {
+                                "type": "TextField",
+                                "name": "title",
+                                "label": "Title",
+                                "value": "{{item.title}}",
+                                "placeholder": "Give this step a short name",
+                                "fullWidth": true
+                              }
+                            ]
+                          },
+                          {
+                            "type": "Grid",
+                            "item": true,
+                            "xs": 12,
+                            "sm": 6,
+                            "children": [
+                              {
+                                "type": "TextField",
+                                "name": "duration",
+                                "label": "Expected duration",
+                                "value": "{{item.duration}}",
+                                "placeholder": "e.g. 30s, 1-2 min",
+                                "fullWidth": true
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "TextField",
+                        "name": "description",
+                        "label": "Description",
+                        "value": "{{item.description}}",
+                        "placeholder": "Outline the actions or context for this step",
+                        "multiline": true,
+                        "rows": 3,
+                        "fullWidth": true,
+                        "sx": { "mt": 2 }
+                      },
+                      {
+                        "type": "TextField",
+                        "name": "mediaUrl",
+                        "label": "Media URL (optional)",
+                        "value": "{{item.mediaUrl}}",
+                        "placeholder": "Link to an image, GIF, or short video",
+                        "fullWidth": true,
+                        "sx": { "mt": 2 }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "events": {
+        "addStep": "steps.addStep",
+        "removeStep": "steps.removeStep",
+        "updateStep": "steps.updateStep",
+        "resetOrdering": "steps.resetOrdering"
+      }
+    },
+    {
+      "id": "media_pane",
+      "name": "MediaPane",
+      "description": "Media management pane for thumbnail and video URLs",
+      "props": [
+        {
+          "name": "thumbnailUrl",
+          "type": "string",
+          "required": false,
+          "default": "",
+          "description": "Thumbnail image URL"
+        },
+        {
+          "name": "videoUrl",
+          "type": "string",
+          "required": false,
+          "default": "",
+          "description": "Demo video URL"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "className": "h-full",
+          "children": [
+            {
+              "type": "CardHeader",
+              "className": "space-y-1",
+              "children": [
+                {
+                  "type": "CardTitle",
+                  "className": "flex items-center gap-2",
+                  "children": [
+                    {
+                      "type": "Icon",
+                      "name": "FilmSlate",
+                      "size": 20
+                    },
+                    {
+                      "type": "Text",
+                      "children": "Media"
+                    }
+                  ]
+                },
+                {
+                  "type": "CardDescription",
+                  "children": "Optional visuals to make the quick guide easier to follow."
+                }
+              ]
+            },
+            {
+              "type": "CardContent",
+              "className": "space-y-4",
+              "children": [
+                {
+                  "type": "Stack",
+                  "spacing": 2,
+                  "children": [
+                    {
+                      "type": "TextField",
+                      "name": "thumbnailUrl",
+                      "label": "Thumbnail image",
+                      "value": "{{thumbnailUrl}}",
+                      "placeholder": "https://images.example.com/quick-guide.png",
+                      "helperText": "Shown in dashboards and previews.",
+                      "fullWidth": true,
+                      "onChange": "media.handleThumbnailChange"
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{thumbnailUrl}}",
+                      "then": {
+                        "type": "Box",
+                        "className": "aspect-video overflow-hidden rounded-lg border",
+                        "sx": { "position": "relative" },
+                        "children": [
+                          {
+                            "type": "Image",
+                            "src": "{{thumbnailUrl}}",
+                            "alt": "Quick guide thumbnail",
+                            "className": "object-cover w-full h-full"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Stack",
+                  "spacing": 2,
+                  "children": [
+                    {
+                      "type": "TextField",
+                      "name": "videoUrl",
+                      "label": "Demo video (optional)",
+                      "value": "{{videoUrl}}",
+                      "placeholder": "YouTube or direct MP4 link",
+                      "helperText": "Embed a short clip that shows the flow in action.",
+                      "fullWidth": true,
+                      "onChange": "media.handleVideoChange"
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{videoUrl}}",
+                      "then": {
+                        "type": "Paper",
+                        "variant": "outlined",
+                        "className": "rounded-lg p-3",
+                        "sx": { "bgcolor": "grey.900" },
+                        "children": [
+                          {
+                            "type": "Chip",
+                            "label": "Preview",
+                            "size": "small",
+                            "variant": "outlined"
+                          },
+                          {
+                            "type": "Box",
+                            "className": "aspect-video overflow-hidden rounded-md mt-2",
+                            "children": [
+                              {
+                                "type": "Iframe",
+                                "src": "{{videoUrl}}",
+                                "className": "h-full w-full"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "events": {
+        "init": "media.prepareMediaState",
+        "onThumbnailChange": "media.handleThumbnailChange",
+        "onVideoChange": "media.handleVideoChange"
+      }
+    },
+    {
+      "id": "quick_guide_builder",
+      "name": "QuickGuideBuilder",
+      "description": "Main quick guide builder combining steps editor and media pane",
+      "props": [
+        {
+          "name": "steps",
+          "type": "array",
+          "required": false,
+          "default": [],
+          "description": "Array of step objects"
+        },
+        {
+          "name": "thumbnailUrl",
+          "type": "string",
+          "required": false,
+          "default": "",
+          "description": "Thumbnail image URL"
+        },
+        {
+          "name": "videoUrl",
+          "type": "string",
+          "required": false,
+          "default": "",
+          "description": "Demo video URL"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Grid",
+          "container": true,
+          "spacing": 3,
+          "children": [
+            {
+              "type": "Grid",
+              "item": true,
+              "xs": 12,
+              "md": 8,
+              "children": [
+                {
+                  "type": "component",
+                  "ref": "steps_editor",
+                  "props": {
+                    "steps": "{{steps}}"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "Grid",
+              "item": true,
+              "xs": 12,
+              "md": 4,
+              "children": [
+                {
+                  "type": "component",
+                  "ref": "media_pane",
+                  "props": {
+                    "thumbnailUrl": "{{thumbnailUrl}}",
+                    "videoUrl": "{{videoUrl}}"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

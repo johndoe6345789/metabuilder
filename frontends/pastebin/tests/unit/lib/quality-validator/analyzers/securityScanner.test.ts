@@ -5,26 +5,26 @@
  * with realistic security scenarios
  */
 
-import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
-import { SecurityScanner } from '../../../../../src/lib/quality-validator/analyzers/securityScanner';
+import { describe, it, expect, beforeEach, afterEach } from '@jest/globals'
+import { SecurityScanner } from '../../../../../src/lib/quality-validator/analyzers/securityScanner'
 import {
   createTempDir,
   cleanupTempDir,
   createTestFile,
-} from '../../../../test-utils';
+} from '../../../../test-utils'
 
 describe('SecurityScanner - Comprehensive Tests', () => {
-  let scanner: SecurityScanner;
-  let tempDir: string;
+  let scanner: SecurityScanner
+  let tempDir: string
 
   beforeEach(() => {
-    scanner = new SecurityScanner();
-    tempDir = createTempDir();
-  });
+    scanner = new SecurityScanner()
+    tempDir = createTempDir()
+  })
 
   afterEach(() => {
-    cleanupTempDir(tempDir);
-  });
+    cleanupTempDir(tempDir)
+  })
 
   // ============================================================================
   // HARDCODED SECRETS DETECTION TESTS
@@ -32,8 +32,8 @@ describe('SecurityScanner - Comprehensive Tests', () => {
 
   describe('Hardcoded Secrets Detection', () => {
     it('should detect hardcoded password', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -44,27 +44,28 @@ export const config = {
   password: 'mySecurePassword123!',
   api: 'https://api.example.com'
 };
-        `
-        );
+        `,
+        )
 
-        const result = await scanner.analyze(['src/config.ts']);
+        const result = await scanner.analyze(['src/config.ts'])
 
-        const secretFindings = result.findings.filter((f) =>
-          f.title.toLowerCase().includes('secret') ||
-          f.title.toLowerCase().includes('hardcoded')
-        );
+        const secretFindings = result.findings.filter(
+          f =>
+            f.title.toLowerCase().includes('secret') ||
+            f.title.toLowerCase().includes('hardcoded'),
+        )
 
         if (secretFindings.length > 0) {
-          expect(secretFindings[0].severity).toMatch(/critical|high/);
+          expect(secretFindings[0].severity).toMatch(/critical|high/)
         }
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should detect hardcoded API keys', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -74,21 +75,21 @@ export const config = {
 const apiKey = 'sk_live_51234567890abcdef';
 const API_KEY = 'AIzaSyDummyKeyForTesting';
 export const getClient = () => apiKey;
-        `
-        );
+        `,
+        )
 
-        const result = await scanner.analyze(['src/api.ts']);
+        const result = await scanner.analyze(['src/api.ts'])
 
-        const metrics = result.metrics as any;
-        expect(metrics.codePatterns).toBeDefined();
+        const metrics = result.metrics as any
+        expect(metrics.codePatterns).toBeDefined()
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should detect hardcoded authentication tokens', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -98,20 +99,20 @@ export const getClient = () => apiKey;
 const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9';
 const auth = 'Bearer abc123xyz789';
 export const authenticate = () => token;
-        `
-        );
+        `,
+        )
 
-        const result = await scanner.analyze(['src/auth.ts']);
+        const result = await scanner.analyze(['src/auth.ts'])
 
-        expect(result).toBeDefined();
+        expect(result).toBeDefined()
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should detect secret in environment-like variable names', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -121,18 +122,18 @@ export const authenticate = () => token;
 const SECRET_KEY = 'super_secret_key_123';
 const DATABASE_PASSWORD = 'admin@password';
 const authorization = 'Basic dXNlcjpwYXNz';
-        `
-        );
+        `,
+        )
 
-        const result = await scanner.analyze(['src/secrets.ts']);
+        const result = await scanner.analyze(['src/secrets.ts'])
 
-        const metrics = result.metrics as any;
-        expect(metrics.codePatterns).toBeDefined();
+        const metrics = result.metrics as any
+        expect(metrics.codePatterns).toBeDefined()
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // XSS VULNERABILITY DETECTION TESTS
@@ -140,8 +141,8 @@ const authorization = 'Basic dXNlcjpwYXNz';
 
   describe('XSS Vulnerability Detection', () => {
     it('should detect dangerouslySetInnerHTML usage', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -153,27 +154,28 @@ import React from 'react';
 export const ContentComponent = ({ html }) => {
   return <div dangerouslySetInnerHTML={{ __html: html }} />;
 };
-        `
-        );
+        `,
+        )
 
-        const result = await scanner.analyze(['src/components/Content.tsx']);
+        const result = await scanner.analyze(['src/components/Content.tsx'])
 
-        const xssFindings = result.findings.filter((f) =>
-          f.title.toLowerCase().includes('dangerously') ||
-          f.title.toLowerCase().includes('xss')
-        );
+        const xssFindings = result.findings.filter(
+          f =>
+            f.title.toLowerCase().includes('dangerously') ||
+            f.title.toLowerCase().includes('xss'),
+        )
 
         if (xssFindings.length > 0) {
-          expect(xssFindings[0].severity).toMatch(/high|critical/);
+          expect(xssFindings[0].severity).toMatch(/high|critical/)
         }
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should detect innerHTML assignments', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -183,26 +185,26 @@ export const ContentComponent = ({ html }) => {
 export const renderContent = (element, html) => {
   element.innerHTML = html;
 };
-        `
-        );
+        `,
+        )
 
-        const result = await scanner.analyze(['src/utils/dom.ts']);
+        const result = await scanner.analyze(['src/utils/dom.ts'])
 
-        const innerHtmlFindings = result.findings.filter((f) =>
-          f.title.toLowerCase().includes('innerhtml')
-        );
+        const innerHtmlFindings = result.findings.filter(f =>
+          f.title.toLowerCase().includes('innerhtml'),
+        )
 
         if (innerHtmlFindings.length > 0) {
-          expect(innerHtmlFindings[0].severity).toMatch(/high/);
+          expect(innerHtmlFindings[0].severity).toMatch(/high/)
         }
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should detect eval() usage', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -212,26 +214,26 @@ export const renderContent = (element, html) => {
 export const executeCode = (code) => {
   return eval(code);
 };
-        `
-        );
+        `,
+        )
 
-        const result = await scanner.analyze(['src/evaluator.ts']);
+        const result = await scanner.analyze(['src/evaluator.ts'])
 
-        const evalFindings = result.findings.filter((f) =>
-          f.title.toLowerCase().includes('eval')
-        );
+        const evalFindings = result.findings.filter(f =>
+          f.title.toLowerCase().includes('eval'),
+        )
 
         if (evalFindings.length > 0) {
-          expect(evalFindings[0].severity).toBe('critical');
+          expect(evalFindings[0].severity).toBe('critical')
         }
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should detect potential XSS with user input in innerHTML', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -241,18 +243,18 @@ export const executeCode = (code) => {
 export const renderUserData = (userData) => {
   return <div dangerouslySetInnerHTML={{ __html: userData.content }} />;
 };
-        `
-        );
+        `,
+        )
 
-        const result = await scanner.analyze(['src/render.tsx']);
+        const result = await scanner.analyze(['src/render.tsx'])
 
-        const metrics = result.metrics as any;
-        expect(metrics.codePatterns).toBeDefined();
+        const metrics = result.metrics as any
+        expect(metrics.codePatterns).toBeDefined()
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // REALISTIC SECURITY SCENARIOS
@@ -260,8 +262,8 @@ export const renderUserData = (userData) => {
 
   describe('Realistic Security Scenarios', () => {
     it('should analyze real-world API client with multiple security issues', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -302,25 +304,27 @@ export const userService = {
 function dangerouslySetInnerHTML(html) {
   return { __html: html };
 }
-        `
-        );
+        `,
+        )
 
-        const result = await scanner.analyze(['src/services/userService.ts']);
+        const result = await scanner.analyze(['src/services/userService.ts'])
 
-        expect(result.findings.length).toBeGreaterThan(0);
-        expect(result.score).toBeLessThan(100);
+        expect(result.findings.length).toBeGreaterThan(0)
+        expect(result.score).toBeLessThan(100)
 
         // Verify critical security issues are found
-        const criticalFindings = result.findings.filter(f => f.severity === 'critical');
-        expect(criticalFindings.length).toBeGreaterThan(0);
+        const criticalFindings = result.findings.filter(
+          f => f.severity === 'critical',
+        )
+        expect(criticalFindings.length).toBeGreaterThan(0)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should detect multiple secret types in configuration file', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -334,27 +338,28 @@ export const secrets = {
   oauth_token: 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxx',
   apiKey: 'AIzaSyAbCdEfGhIjKlMnOpQrStUvWxYzAb',
 };
-        `
-        );
+        `,
+        )
 
-        const result = await scanner.analyze(['src/config/secrets.ts']);
+        const result = await scanner.analyze(['src/config/secrets.ts'])
 
-        const secretFindings = result.findings.filter(f =>
-          f.severity === 'critical' ||
-          (f.description?.toLowerCase().includes('secret') ||
-           f.description?.toLowerCase().includes('password') ||
-           f.description?.toLowerCase().includes('hardcoded'))
-        );
+        const secretFindings = result.findings.filter(
+          f =>
+            f.severity === 'critical' ||
+            f.description?.toLowerCase().includes('secret') ||
+            f.description?.toLowerCase().includes('password') ||
+            f.description?.toLowerCase().includes('hardcoded'),
+        )
 
-        expect(secretFindings.length).toBeGreaterThanOrEqual(0);
+        expect(secretFindings.length).toBeGreaterThanOrEqual(0)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should analyze component with mixed XSS risks', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -392,21 +397,21 @@ export const UserContent: React.FC<Props> = ({ content, userHTML }) => {
     </div>
   );
 };
-        `
-        );
+        `,
+        )
 
-        const result = await scanner.analyze(['src/components/UserContent.tsx']);
+        const result = await scanner.analyze(['src/components/UserContent.tsx'])
 
-        const highSeverityFindings = result.findings.filter(f =>
-          f.severity === 'high' || f.severity === 'critical'
-        );
+        const highSeverityFindings = result.findings.filter(
+          f => f.severity === 'high' || f.severity === 'critical',
+        )
 
-        expect(highSeverityFindings.length).toBeGreaterThanOrEqual(0);
+        expect(highSeverityFindings.length).toBeGreaterThanOrEqual(0)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // PERFORMANCE ISSUES DETECTION TESTS
@@ -414,8 +419,8 @@ export const UserContent: React.FC<Props> = ({ content, userHTML }) => {
 
   describe('Performance Issues Detection', () => {
     it('should detect inline function definitions in JSX', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -425,27 +430,28 @@ export const UserContent: React.FC<Props> = ({ content, userHTML }) => {
 export const Button = ({ onClick }) => {
   return <button onClick={() => onClick()}>Click</button>;
 };
-        `
-        );
+        `,
+        )
 
-        const result = await scanner.analyze(['src/Button.tsx']);
+        const result = await scanner.analyze(['src/Button.tsx'])
 
-        const perfFindings = result.findings.filter((f) =>
-          f.title.toLowerCase().includes('inline') ||
-          f.title.toLowerCase().includes('performance')
-        );
+        const perfFindings = result.findings.filter(
+          f =>
+            f.title.toLowerCase().includes('inline') ||
+            f.title.toLowerCase().includes('performance'),
+        )
 
         if (perfFindings.length > 0) {
-          expect(perfFindings[0].severity).toMatch(/medium|high/);
+          expect(perfFindings[0].severity).toMatch(/medium|high/)
         }
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should detect missing keys in list rendering', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -461,21 +467,21 @@ export const List = ({ items }) => {
     </ul>
   );
 };
-        `
-        );
+        `,
+        )
 
-        const result = await scanner.analyze(['src/List.tsx']);
+        const result = await scanner.analyze(['src/List.tsx'])
 
-        const metrics = result.metrics as any;
-        expect(metrics.performanceIssues).toBeDefined();
+        const metrics = result.metrics as any
+        expect(metrics.performanceIssues).toBeDefined()
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should detect inline objects in JSX props', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -485,26 +491,26 @@ export const List = ({ items }) => {
 export const Component = () => {
   return <Child style={{ color: 'red', fontSize: 14 }} />;
 };
-        `
-        );
+        `,
+        )
 
-        const result = await scanner.analyze(['src/Component.tsx']);
+        const result = await scanner.analyze(['src/Component.tsx'])
 
-        const inlineFindings = result.findings.filter((f) =>
-          f.title.toLowerCase().includes('inline')
-        );
+        const inlineFindings = result.findings.filter(f =>
+          f.title.toLowerCase().includes('inline'),
+        )
 
         if (inlineFindings.length > 0) {
-          expect(inlineFindings[0].severity).toMatch(/medium/);
+          expect(inlineFindings[0].severity).toMatch(/medium/)
         }
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should detect inline array literals in JSX', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -514,20 +520,20 @@ export const Component = () => {
 export const Modal = () => {
   return <Dialog actions={['OK', 'Cancel']} />;
 };
-        `
-        );
+        `,
+        )
 
-        const result = await scanner.analyze(['src/Modal.tsx']);
+        const result = await scanner.analyze(['src/Modal.tsx'])
 
-        expect(result).toBeDefined();
+        expect(result).toBeDefined()
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should report performance issue impact', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -543,21 +549,21 @@ export const Grid = ({ items }) => {
     </div>
   );
 };
-        `
-        );
+        `,
+        )
 
-        const result = await scanner.analyze(['src/Grid.tsx']);
+        const result = await scanner.analyze(['src/Grid.tsx'])
 
-        const metrics = result.metrics as any;
+        const metrics = result.metrics as any
         if (metrics.performanceIssues.length > 0) {
-          const issue = metrics.performanceIssues[0];
-          expect(issue.estimatedImpact).toBeDefined();
+          const issue = metrics.performanceIssues[0]
+          expect(issue.estimatedImpact).toBeDefined()
         }
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // FINDINGS GENERATION TESTS
@@ -565,8 +571,8 @@ export const Grid = ({ items }) => {
 
   describe('Findings Generation', () => {
     it('should generate findings for vulnerabilities', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -576,24 +582,24 @@ export const Grid = ({ items }) => {
 export const evaluate = (code) => {
   return eval(code);
 };
-        `
-        );
+        `,
+        )
 
-        const result = await scanner.analyze(['src/dangerous.ts']);
+        const result = await scanner.analyze(['src/dangerous.ts'])
 
-        const vulnFindings = result.findings.filter((f) =>
-          f.category === 'security'
-        );
+        const vulnFindings = result.findings.filter(
+          f => f.category === 'security',
+        )
 
-        expect(vulnFindings.length).toBeGreaterThanOrEqual(0);
+        expect(vulnFindings.length).toBeGreaterThanOrEqual(0)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should provide remediation guidance in findings', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -603,27 +609,27 @@ export const evaluate = (code) => {
 export const Component = ({ html }) => {
   return <div dangerouslySetInnerHTML={{ __html: html }} />;
 };
-        `
-        );
+        `,
+        )
 
-        const result = await scanner.analyze(['src/insecure.tsx']);
+        const result = await scanner.analyze(['src/insecure.tsx'])
 
-        const securityFindings = result.findings.filter((f) =>
-          f.category === 'security'
-        );
+        const securityFindings = result.findings.filter(
+          f => f.category === 'security',
+        )
 
         if (securityFindings.length > 0) {
-          expect(securityFindings[0].remediation).toBeDefined();
-          expect(securityFindings[0].remediation.length).toBeGreaterThan(0);
+          expect(securityFindings[0].remediation).toBeDefined()
+          expect(securityFindings[0].remediation.length).toBeGreaterThan(0)
         }
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should include location info in findings', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -634,22 +640,22 @@ export const Component = () => {
   const password = 'secret123';
   return <div dangerouslySetInnerHTML={{ __html: 'test' }} />;
 };
-        `
-        );
+        `,
+        )
 
-        const result = await scanner.analyze(['src/located.tsx']);
+        const result = await scanner.analyze(['src/located.tsx'])
 
-        const findings = result.findings.filter((f) => f.location);
+        const findings = result.findings.filter(f => f.location)
 
         if (findings.length > 0) {
-          expect(findings[0].location?.file).toBeDefined();
-          expect(findings[0].location?.line).toBeGreaterThanOrEqual(1);
+          expect(findings[0].location?.file).toBeDefined()
+          expect(findings[0].location?.line).toBeGreaterThanOrEqual(1)
         }
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // SCORE CALCULATION TESTS
@@ -657,15 +663,15 @@ export const Component = () => {
 
   describe('Score Calculation', () => {
     it('should return score between 0 and 100', async () => {
-      const result = await scanner.analyze([]);
+      const result = await scanner.analyze([])
 
-      expect(result.score).toBeGreaterThanOrEqual(0);
-      expect(result.score).toBeLessThanOrEqual(100);
-    });
+      expect(result.score).toBeGreaterThanOrEqual(0)
+      expect(result.score).toBeLessThanOrEqual(100)
+    })
 
     it('should reduce score for critical vulnerabilities', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -675,20 +681,20 @@ export const Component = () => {
 export const bad = () => {
   eval('dangerous code');
 };
-        `
-        );
+        `,
+        )
 
-        const result = await scanner.analyze(['src/critical.ts']);
+        const result = await scanner.analyze(['src/critical.ts'])
 
-        expect(typeof result.score).toBe('number');
+        expect(typeof result.score).toBe('number')
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should reduce score for high vulnerabilities', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -698,32 +704,32 @@ export const bad = () => {
 export const Component = () => {
   return <div dangerouslySetInnerHTML={{ __html: 'unsafe' }} />;
 };
-        `
-        );
+        `,
+        )
 
-        const result = await scanner.analyze(['src/high.tsx']);
+        const result = await scanner.analyze(['src/high.tsx'])
 
-        expect(result.score).toBeLessThanOrEqual(100);
+        expect(result.score).toBeLessThanOrEqual(100)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should assign status based on score', async () => {
-      const result = await scanner.analyze([]);
+      const result = await scanner.analyze([])
 
       if (result.score >= 80) {
-        expect(result.status).toBe('pass');
+        expect(result.status).toBe('pass')
       } else if (result.score >= 70) {
-        expect(result.status).toBe('warning');
+        expect(result.status).toBe('warning')
       } else {
-        expect(result.status).toBe('fail');
+        expect(result.status).toBe('fail')
       }
-    });
+    })
 
     it('should heavily penalize critical security issues', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         // File with secrets
@@ -733,8 +739,8 @@ export const Component = () => {
           `
 const password: 'mySecret123';
 const apiKey = 'sk_live_123456';
-        `
-        );
+        `,
+        )
 
         // File with eval
         createTestFile(
@@ -742,21 +748,18 @@ const apiKey = 'sk_live_123456';
           'src/file2.ts',
           `
 eval(code);
-        `
-        );
+        `,
+        )
 
-        const result = await scanner.analyze([
-          'src/file1.ts',
-          'src/file2.ts',
-        ]);
+        const result = await scanner.analyze(['src/file1.ts', 'src/file2.ts'])
 
         // Should have significant score reduction
-        expect(result.score).toBeLessThan(100);
+        expect(result.score).toBeLessThan(100)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // ERROR HANDLING AND EDGE CASES
@@ -764,48 +767,48 @@ eval(code);
 
   describe('Error Handling and Edge Cases', () => {
     it('should handle empty file paths array', async () => {
-      const result = await scanner.analyze([]);
+      const result = await scanner.analyze([])
 
-      expect(result).toBeDefined();
-      expect(result.category).toBe('security');
-    });
+      expect(result).toBeDefined()
+      expect(result.category).toBe('security')
+    })
 
     it('should skip non-TypeScript files', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
-        createTestFile(tempDir, 'src/config.json', '{}');
-        createTestFile(tempDir, 'src/readme.md', '# README');
+        createTestFile(tempDir, 'src/config.json', '{}')
+        createTestFile(tempDir, 'src/readme.md', '# README')
 
         const result = await scanner.analyze([
           'src/config.json',
           'src/readme.md',
-        ]);
+        ])
 
-        expect(result).toBeDefined();
+        expect(result).toBeDefined()
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should handle non-existent files gracefully', async () => {
-      const result = await scanner.analyze(['non-existent.ts']);
+      const result = await scanner.analyze(['non-existent.ts'])
 
-      expect(result).toBeDefined();
-      expect(result.category).toBe('security');
-    });
+      expect(result).toBeDefined()
+      expect(result.category).toBe('security')
+    })
 
     it('should measure execution time', async () => {
-      const result = await scanner.analyze([]);
+      const result = await scanner.analyze([])
 
-      expect(result.executionTime).toBeGreaterThanOrEqual(0);
-      expect(typeof result.executionTime).toBe('number');
-    });
+      expect(result.executionTime).toBeGreaterThanOrEqual(0)
+      expect(typeof result.executionTime).toBe('number')
+    })
 
     it('should handle files with special characters', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -815,17 +818,17 @@ eval(code);
 const emoji = '🔒';
 const unicodeVar = 'こんにちは';
 const symbols = '@#$%^&*()';
-        `
-        );
+        `,
+        )
 
-        const result = await scanner.analyze(['src/special-chars.ts']);
+        const result = await scanner.analyze(['src/special-chars.ts'])
 
-        expect(result).toBeDefined();
+        expect(result).toBeDefined()
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // MULTIPLE ISSUES SCENARIOS
@@ -833,8 +836,8 @@ const symbols = '@#$%^&*()';
 
   describe('Multiple Security Issues Scenarios', () => {
     it('should detect multiple issues in single file', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -850,71 +853,83 @@ export const ComponentWithIssues = ({ userInput }) => {
     <div dangerouslySetInnerHTML={{ __html: userInput }} />
   );
 };
-        `
-        );
+        `,
+        )
 
-        const result = await scanner.analyze(['src/multiple-issues.tsx']);
+        const result = await scanner.analyze(['src/multiple-issues.tsx'])
 
-        expect(result.findings.length).toBeGreaterThanOrEqual(0);
+        expect(result.findings.length).toBeGreaterThanOrEqual(0)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should analyze complete project for security issues', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
-        createTestFile(tempDir, 'src/utils/encrypt.ts', `
+        createTestFile(
+          tempDir,
+          'src/utils/encrypt.ts',
+          `
 const SECRET = 'my-secret-key';
 export const encrypt = (data) => data;
-`);
+`,
+        )
 
-        createTestFile(tempDir, 'src/components/Display.tsx', `
+        createTestFile(
+          tempDir,
+          'src/components/Display.tsx',
+          `
 export const Display = ({ html }) => (
   <div dangerouslySetInnerHTML={{ __html: html }} />
 );
-`);
+`,
+        )
 
-        createTestFile(tempDir, 'src/evaluator.ts', `
+        createTestFile(
+          tempDir,
+          'src/evaluator.ts',
+          `
 export const run = (code) => eval(code);
-`);
+`,
+        )
 
         const result = await scanner.analyze([
           'src/utils/encrypt.ts',
           'src/components/Display.tsx',
           'src/evaluator.ts',
-        ]);
+        ])
 
-        expect(result.findings).toBeDefined();
-        expect(Array.isArray(result.findings)).toBe(true);
+        expect(result.findings).toBeDefined()
+        expect(Array.isArray(result.findings)).toBe(true)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should limit findings to top 20', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
-        let largeFile = '';
+        let largeFile = ''
         for (let i = 0; i < 30; i++) {
-          largeFile += `element_${i}.innerHTML = userInput;\n`;
+          largeFile += `element_${i}.innerHTML = userInput;\n`
         }
 
-        createTestFile(tempDir, 'src/many-issues.ts', largeFile);
+        createTestFile(tempDir, 'src/many-issues.ts', largeFile)
 
-        const result = await scanner.analyze(['src/many-issues.ts']);
+        const result = await scanner.analyze(['src/many-issues.ts'])
 
-        const metrics = result.metrics as any;
-        expect(metrics.codePatterns.length).toBeLessThanOrEqual(20);
+        const metrics = result.metrics as any
+        expect(metrics.codePatterns.length).toBeLessThanOrEqual(20)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // SAFE CODE TESTS
@@ -922,8 +937,8 @@ export const run = (code) => eval(code);
 
   describe('Safe Code Recognition', () => {
     it('should not flag safe component code', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -953,20 +968,20 @@ export const SafeComponent: React.FC<Props> = ({ title, onClick }) => {
     </div>
   );
 };
-        `
-        );
+        `,
+        )
 
-        const result = await scanner.analyze(['src/SafeComponent.tsx']);
+        const result = await scanner.analyze(['src/SafeComponent.tsx'])
 
-        expect(result.score).toBeGreaterThanOrEqual(80);
+        expect(result.score).toBeGreaterThanOrEqual(80)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should not flag safe utility code', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         createTestFile(
@@ -987,15 +1002,15 @@ export const getUserName = (user: User): string => user.name;
 export const isValidEmail = (email: string): boolean => {
   return /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email);
 };
-        `
-        );
+        `,
+        )
 
-        const result = await scanner.analyze(['src/utils/helpers.ts']);
+        const result = await scanner.analyze(['src/utils/helpers.ts'])
 
-        expect(result.score).toBeGreaterThan(80);
+        expect(result.score).toBeGreaterThan(80)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
-  });
-});
+    })
+  })
+})

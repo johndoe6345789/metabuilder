@@ -1,0 +1,512 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/tests.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "test-examples",
+  "description": "Comprehensive test examples demonstrating all features",
+
+  "imports": [
+    {
+      "from": "test-framework",
+      "import": ["beforeEach", "afterEach", "expect", "mock"]
+    }
+  ],
+
+  "setup": {
+    "beforeAll": [
+      {
+        "type": "initialize",
+        "name": "Setup test environment",
+        "config": {
+          "resetDatabase": true,
+          "loadFixtures": true
+        }
+      }
+    ],
+    "beforeEach": [
+      {
+        "type": "cleanup",
+        "name": "Clear test data",
+        "config": {
+          "tables": ["test_data"]
+        }
+      }
+    ],
+    "afterAll": [
+      {
+        "type": "cleanup",
+        "name": "Cleanup test environment"
+      }
+    ]
+  },
+
+  "testSuites": [
+    {
+      "id": "assertion-types-demo",
+      "name": "Assertion Types Demonstration",
+      "description": "Examples of all available assertion types",
+      "tags": ["demo", "assertions"],
+
+      "tests": [
+        {
+          "id": "equality-assertions",
+          "name": "Equality Assertions",
+          "arrange": {
+            "fixtures": {
+              "value1": 42,
+              "value2": 42,
+              "object1": { "name": "test", "count": 1 },
+              "object2": { "name": "test", "count": 1 }
+            }
+          },
+          "act": {
+            "type": "custom",
+            "target": "identityFunction",
+            "input": "{{value1}}"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "equals",
+                "actual": "{{value1}}",
+                "expected": "{{value2}}",
+                "description": "Basic equality check"
+              },
+              {
+                "type": "strictEquals",
+                "actual": "result",
+                "expected": 42,
+                "description": "Strict equality (type + value)"
+              },
+              {
+                "type": "deepEquals",
+                "actual": "{{object1}}",
+                "expected": "{{object2}}",
+                "description": "Deep object equality"
+              },
+              {
+                "type": "notEquals",
+                "actual": "result",
+                "expected": 43,
+                "description": "Not equals assertion"
+              }
+            ]
+          }
+        },
+        {
+          "id": "comparison-assertions",
+          "name": "Comparison Assertions",
+          "arrange": {
+            "fixtures": {
+              "number": 50
+            }
+          },
+          "act": {
+            "type": "function_call",
+            "target": "getValue",
+            "input": null
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "greaterThan",
+                "actual": "result",
+                "expected": 10
+              },
+              {
+                "type": "lessThan",
+                "actual": "result",
+                "expected": 100
+              },
+              {
+                "type": "greaterThanOrEqual",
+                "actual": "result",
+                "expected": 50
+              },
+              {
+                "type": "lessThanOrEqual",
+                "actual": "result",
+                "expected": 50
+              }
+            ]
+          }
+        },
+        {
+          "id": "type-assertions",
+          "name": "Type and Existence Assertions",
+          "act": {
+            "type": "function_call",
+            "target": "createObject",
+            "input": null
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "notNull",
+                "actual": "result"
+              },
+              {
+                "type": "notUndefined",
+                "actual": "result"
+              },
+              {
+                "type": "truthy",
+                "actual": "result"
+              },
+              {
+                "type": "instanceOf",
+                "actual": "result",
+                "expected": "Object"
+              },
+              {
+                "type": "hasProperty",
+                "actual": "result",
+                "expected": "id"
+              },
+              {
+                "type": "hasLength",
+                "actual": "result.items",
+                "expected": 5
+              }
+            ]
+          }
+        },
+        {
+          "id": "pattern-assertions",
+          "name": "Pattern Matching Assertions",
+          "act": {
+            "type": "function_call",
+            "target": "generateId",
+            "input": null
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "matches",
+                "actual": "result",
+                "expected": "^[a-z0-9-]+$",
+                "description": "ID should match slug pattern"
+              },
+              {
+                "type": "contains",
+                "actual": "result",
+                "expected": "-",
+                "description": "ID should contain hyphen"
+              }
+            ]
+          }
+        },
+        {
+          "id": "error-assertions",
+          "name": "Error Handling Assertions",
+          "act": {
+            "type": "function_call",
+            "target": "throwError",
+            "input": null
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "throws",
+                "expected": "Something went wrong"
+              }
+            ]
+          }
+        },
+        {
+          "id": "negated-assertions",
+          "name": "Negated Assertions",
+          "act": {
+            "type": "function_call",
+            "target": "safeFunction",
+            "input": null
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "throws",
+                "negate": true,
+                "description": "Should not throw"
+              },
+              {
+                "type": "null",
+                "actual": "result",
+                "negate": true,
+                "description": "Result should not be null"
+              }
+            ]
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "mocking-demo",
+      "name": "Mocking Demonstration",
+      "description": "Examples of different mock configurations",
+      "tags": ["demo", "mocks"],
+
+      "tests": [
+        {
+          "id": "simple-mock",
+          "name": "Simple Return Value Mock",
+          "arrange": {
+            "mocks": [
+              {
+                "target": "database.query",
+                "type": "function",
+                "behavior": {
+                  "returnValue": [
+                    { "id": 1, "name": "Test User" }
+                  ]
+                }
+              }
+            ]
+          },
+          "act": {
+            "type": "function_call",
+            "target": "getUsers",
+            "input": null
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "hasLength",
+                "actual": "result",
+                "expected": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "error-mock",
+          "name": "Mock Throwing Error",
+          "arrange": {
+            "mocks": [
+              {
+                "target": "externalApi.fetch",
+                "type": "function",
+                "behavior": {
+                  "throwError": "Network timeout"
+                }
+              }
+            ]
+          },
+          "act": {
+            "type": "function_call",
+            "target": "fetchData",
+            "input": null
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "throws",
+                "expected": "Network timeout"
+              }
+            ]
+          }
+        },
+        {
+          "id": "sequential-mock",
+          "name": "Sequential Return Values",
+          "arrange": {
+            "mocks": [
+              {
+                "target": "random.next",
+                "type": "function",
+                "behavior": {
+                  "calls": [1, 2, 3, 4, 5]
+                }
+              }
+            ]
+          },
+          "act": {
+            "type": "function_call",
+            "target": "getRandomSequence",
+            "input": { "count": 5 }
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "deepEquals",
+                "actual": "result",
+                "expected": [1, 2, 3, 4, 5]
+              }
+            ]
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "parameterized-inline-demo",
+      "name": "Inline Parameterized Tests",
+      "description": "Parameterized tests with inline parameters",
+      "tags": ["demo", "parameterized"],
+
+      "tests": [
+        {
+          "id": "math-operations",
+          "name": "Basic Math Operations",
+          "parameterized": true,
+          "parameters": [
+            { "case": "add positive", "input": { "op": "add", "a": 5, "b": 3 }, "expected": 8 },
+            { "case": "add negative", "input": { "op": "add", "a": -5, "b": -3 }, "expected": -8 },
+            { "case": "subtract", "input": { "op": "subtract", "a": 10, "b": 3 }, "expected": 7 },
+            { "case": "multiply", "input": { "op": "multiply", "a": 4, "b": 5 }, "expected": 20 },
+            { "case": "divide", "input": { "op": "divide", "a": 20, "b": 4 }, "expected": 5 },
+            { "case": "divide by zero", "input": { "op": "divide", "a": 10, "b": 0 }, "shouldThrow": true, "expectedError": "Division by zero" }
+          ],
+          "act": {
+            "type": "function_call",
+            "target": "calculate",
+            "input": "{{input}}"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "equals",
+                "actual": "result",
+                "expected": "{{expected}}"
+              }
+            ]
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "setup-teardown-demo",
+      "name": "Setup and Teardown",
+      "description": "Suite-specific setup and teardown",
+      "tags": ["demo", "lifecycle"],
+
+      "setup": {
+        "beforeAll": [
+          {
+            "type": "fixture",
+            "name": "Create test data",
+            "config": {
+              "action": "seed",
+              "data": "test-users"
+            }
+          }
+        ],
+        "beforeEach": [
+          {
+            "type": "initialize",
+            "name": "Reset state"
+          }
+        ],
+        "afterEach": [
+          {
+            "type": "cleanup",
+            "name": "Clear cache"
+          }
+        ],
+        "afterAll": [
+          {
+            "type": "cleanup",
+            "name": "Remove test data"
+          }
+        ]
+      },
+
+      "tests": [
+        {
+          "id": "test-with-setup",
+          "name": "Test with beforeEach setup",
+          "act": {
+            "type": "function_call",
+            "target": "processData",
+            "input": null
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "truthy",
+                "actual": "result"
+              }
+            ]
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "skip-only-retry-demo",
+      "name": "Skip, Only, and Retry",
+      "description": "Test execution control features",
+      "tags": ["demo", "control"],
+
+      "tests": [
+        {
+          "id": "normal-test",
+          "name": "Normal test",
+          "act": {
+            "type": "function_call",
+            "target": "normalFunction",
+            "input": null
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "truthy",
+                "actual": "result"
+              }
+            ]
+          }
+        },
+        {
+          "id": "skipped-test",
+          "name": "Skipped test",
+          "skip": true,
+          "act": {
+            "type": "function_call",
+            "target": "willNotRun",
+            "input": null
+          },
+          "assert": {
+            "expectations": []
+          }
+        },
+        {
+          "id": "flaky-test",
+          "name": "Flaky test with retry",
+          "retry": 3,
+          "act": {
+            "type": "function_call",
+            "target": "flakyFunction",
+            "input": null
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "equals",
+                "actual": "result",
+                "expected": "success"
+              }
+            ]
+          }
+        },
+        {
+          "id": "timeout-test",
+          "name": "Test with custom timeout",
+          "timeout": 30000,
+          "act": {
+            "type": "function_call",
+            "target": "slowFunction",
+            "input": null
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "truthy",
+                "actual": "result"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

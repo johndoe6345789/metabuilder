@@ -1,6 +1,6 @@
 import { PlaywrightTest } from '@/types/project'
-import { Button, IconButton } from '@metabuilder/fakemui/inputs'
-import { Plus, Sparkle, Trash } from '@metabuilder/fakemui/icons'
+import { Button, IconButton } from '@metabuilder/m3/inputs'
+import { Plus, Sparkle, Trash } from '@metabuilder/m3/icons'
 import copy from '@/data/playwright-designer.json'
 
 interface TestListProps {

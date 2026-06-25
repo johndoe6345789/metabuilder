@@ -4,6 +4,14 @@ import React from 'react'
 // Make React globally available for components that may reference it
 global.React = React
 
+// useTranslation() reads the locale from the Redux store, so every component
+// that renders text would otherwise need a <Provider> in its test. Mock it
+// globally to return the real English strings; tests that need other store
+// state still wrap in a Provider, and tests can override this mock locally.
+jest.mock('@/hooks/useTranslation', () => ({
+  useTranslation: () => jest.requireActual('@/config/locales/en.json'),
+}))
+
 // Mock import.meta for Vite compatibility
 Object.defineProperty(globalThis, 'import', {
   value: {

@@ -1,359 +1,167 @@
 /**
  * File system utilities for Quality Validator
- * Handles file reading, writing, and path resolution
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
-import { AnalysisErrorClass } from '../types/index.js';
-import { logger } from './logger.js';
+import * as fs from 'fs'
+import * as path from 'path'
+import { AnalysisErrorClass } from '../types/index.js'
+import { logger } from './logger.js'
+import {
+  resolvePath,
+  normalizeFilePath,
+  shouldExclude,
+} from './filesystem-path.js'
 
-/**
- * Get the project root directory
- */
-export function getProjectRoot(): string {
-  return process.cwd();
-}
+export {
+  getProjectRoot,
+  resolvePath,
+  normalizeFilePath,
+  pathExists,
+  isFile,
+  isDirectory,
+  getLineCount,
+  getLines,
+  getGitRoot,
+  matchesPattern,
+  shouldExclude,
+} from './filesystem-path.js'
 
-/**
- * Resolve a file path relative to project root
- */
-export function resolvePath(filePath: string): string {
-  const normalized = path.normalize(filePath);
-
-  // Security check: prevent directory traversal
-  if (normalized.includes('..')) {
+export function readFile(p: string): string {
+  try {
+    return fs.readFileSync(resolvePath(p), 'utf-8')
+  } catch (e) {
     throw new AnalysisErrorClass(
-      'Directory traversal detected',
-      `Path contains '..': ${filePath}`
-    );
+      `Failed to read file: ${p}`,
+      (e as Error).message,
+    )
   }
+}
 
-  const resolved = path.resolve(getProjectRoot(), normalized);
-  const projectRoot = getProjectRoot();
-
-  // Ensure path is within project
-  if (!resolved.startsWith(projectRoot)) {
+export function writeFile(p: string, content: string): void {
+  try {
+    const r = resolvePath(p)
+    const d = path.dirname(r)
+    if (!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true })
+    fs.writeFileSync(r, content, 'utf-8')
+    logger.debug(`Written file: ${p}`)
+  } catch (e) {
     throw new AnalysisErrorClass(
-      'Path outside project root',
-      `Attempted to access: ${resolved}`
-    );
-  }
-
-  return resolved;
-}
-
-/**
- * Normalize a file path relative to project root
- */
-export function normalizeFilePath(filePath: string): string {
-  const projectRoot = getProjectRoot();
-  const resolved = resolvePath(filePath);
-  return path.relative(projectRoot, resolved);
-}
-
-/**
- * Check if a path exists
- */
-export function pathExists(filePath: string): boolean {
-  try {
-    return fs.existsSync(resolvePath(filePath));
-  } catch {
-    return false;
+      `Failed to write file: ${p}`,
+      (e as Error).message,
+    )
   }
 }
 
-/**
- * Check if path is a file
- */
-export function isFile(filePath: string): boolean {
+export function readJsonFile<T>(p: string): T {
   try {
-    const stat = fs.statSync(resolvePath(filePath));
-    return stat.isFile();
-  } catch {
-    return false;
-  }
-}
-
-/**
- * Check if path is a directory
- */
-export function isDirectory(dirPath: string): boolean {
-  try {
-    const stat = fs.statSync(resolvePath(dirPath));
-    return stat.isDirectory();
-  } catch {
-    return false;
-  }
-}
-
-/**
- * Read a file as text
- */
-export function readFile(filePath: string): string {
-  try {
-    const resolved = resolvePath(filePath);
-    return fs.readFileSync(resolved, 'utf-8');
-  } catch (error) {
+    return JSON.parse(readFile(p)) as T
+  } catch (e) {
     throw new AnalysisErrorClass(
-      `Failed to read file: ${filePath}`,
-      (error as Error).message
-    );
+      `Failed to parse JSON: ${p}`,
+      (e as Error).message,
+    )
   }
 }
 
-/**
- * Write a file
- */
-export function writeFile(filePath: string, content: string): void {
+export function writeJsonFile<T>(p: string, data: T, pretty = true): void {
   try {
-    const resolved = resolvePath(filePath);
-    const dir = path.dirname(resolved);
-
-    // Create directory if it doesn't exist
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-
-    fs.writeFileSync(resolved, content, 'utf-8');
-    logger.debug(`Written file: ${filePath}`);
-  } catch (error) {
+    writeFile(p, pretty ? JSON.stringify(data, null, 2) : JSON.stringify(data))
+  } catch (e) {
     throw new AnalysisErrorClass(
-      `Failed to write file: ${filePath}`,
-      (error as Error).message
-    );
+      `Failed to write JSON: ${p}`,
+      (e as Error).message,
+    )
   }
 }
 
-/**
- * Read a JSON file
- */
-export function readJsonFile<T>(filePath: string): T {
-  try {
-    const content = readFile(filePath);
-    return JSON.parse(content) as T;
-  } catch (error) {
-    throw new AnalysisErrorClass(
-      `Failed to parse JSON file: ${filePath}`,
-      (error as Error).message
-    );
-  }
-}
-
-/**
- * Write a JSON file
- */
-export function writeJsonFile<T>(filePath: string, data: T, pretty: boolean = true): void {
-  try {
-    const content = pretty ? JSON.stringify(data, null, 2) : JSON.stringify(data);
-    writeFile(filePath, content);
-  } catch (error) {
-    throw new AnalysisErrorClass(
-      `Failed to write JSON file: ${filePath}`,
-      (error as Error).message
-    );
-  }
-}
-
-/**
- * List files in directory recursively
- */
 export function listFilesRecursive(
   dirPath: string,
   extensions?: string[],
-  excludePatterns: string[] = []
+  excludePatterns: string[] = [],
 ): string[] {
-  const results: string[] = [];
-
+  const results: string[] = []
   try {
-    const resolved = resolvePath(dirPath);
-    const walk = (currentPath: string) => {
-      const entries = fs.readdirSync(currentPath, { withFileTypes: true });
-
-      for (const entry of entries) {
-        const fullPath = path.join(currentPath, entry.name);
-        const relativePath = normalizeFilePath(fullPath);
-
-        // Check if should exclude
-        if (shouldExclude(relativePath, excludePatterns)) {
-          continue;
-        }
-
-        if (entry.isFile()) {
-          if (!extensions || extensions.some((ext) => entry.name.endsWith(ext))) {
-            results.push(relativePath);
+    const walk = (cur: string) => {
+      for (const e of fs.readdirSync(cur, { withFileTypes: true })) {
+        const full = path.join(cur, e.name)
+        const rel = normalizeFilePath(full)
+        if (shouldExclude(rel, excludePatterns)) continue
+        if (e.isFile()) {
+          if (!extensions || extensions.some(x => e.name.endsWith(x))) {
+            results.push(rel)
           }
-        } else if (entry.isDirectory()) {
-          walk(fullPath);
-        }
+        } else if (e.isDirectory()) walk(full)
       }
-    };
-
-    walk(resolved);
-  } catch (error) {
-    logger.warn(`Failed to list directory: ${dirPath}`, { error: (error as Error).message });
-  }
-
-  return results;
-}
-
-/**
- * Get all TypeScript/TSX source files
- */
-export function getSourceFiles(excludePatterns: string[] = []): string[] {
-  return listFilesRecursive('src', ['.ts', '.tsx'], excludePatterns);
-}
-
-/**
- * Get all test files
- */
-export function getTestFiles(excludePatterns: string[] = []): string[] {
-  const defaults = ['**/*.spec.ts', '**/*.spec.tsx', '**/*.test.ts', '**/*.test.tsx', '**/__tests__/**'];
-  const patterns = [...defaults, ...excludePatterns];
-  return listFilesRecursive('src', ['.ts', '.tsx'], patterns);
-}
-
-/**
- * Check if a file path matches any exclude pattern
- */
-export function shouldExclude(filePath: string, patterns: string[]): boolean {
-  for (const pattern of patterns) {
-    if (matchesPattern(filePath, pattern)) {
-      return true;
     }
+    walk(resolvePath(dirPath))
+  } catch (e) {
+    logger.warn(`Failed to list: ${dirPath}`, { error: (e as Error).message })
   }
-  return false;
+  return results
 }
 
-/**
- * Escape special regex characters in a string
- * This prevents regex injection attacks (ReDoS)
- */
-function escapeRegexChars(str: string): string {
-  // Escape all regex special characters except * and ? (glob wildcards we handle separately)
-  return str.replace(/[.+^${}()|[\]\\]/g, '\\$&');
+export function getSourceFiles(ex: string[] = []): string[] {
+  return listFilesRecursive('src', ['.ts', '.tsx'], ex)
 }
 
-/**
- * Simple glob pattern matching
- * Safely converts glob patterns to regex by escaping special characters first
- */
-export function matchesPattern(filePath: string, pattern: string): boolean {
-  // First, escape all regex special characters (except glob wildcards * and ?)
-  // Then convert glob wildcards to their regex equivalents
-  const regexPattern = escapeRegexChars(pattern)
-    .replace(/\*/g, '.*')
-    .replace(/\?/g, '.');
-
-  const regex = new RegExp(`^${regexPattern}$`);
-  return regex.test(filePath);
+export function getTestFiles(ex: string[] = []): string[] {
+  return listFilesRecursive(
+    'src',
+    ['.ts', '.tsx'],
+    [
+      '**/*.spec.ts',
+      '**/*.spec.tsx',
+      '**/*.test.ts',
+      '**/*.test.tsx',
+      '**/__tests__/**',
+      ...ex,
+    ],
+  )
 }
 
-/**
- * Get the number of lines in a file
- */
-export function getLineCount(filePath: string): number {
+export function ensureDirectory(p: string): void {
   try {
-    const content = readFile(filePath);
-    return content.split('\n').length;
-  } catch {
-    return 0;
-  }
-}
-
-/**
- * Get lines from a file between start and end
- */
-export function getLines(filePath: string, startLine: number, endLine: number): string[] {
-  try {
-    const content = readFile(filePath);
-    const lines = content.split('\n');
-    return lines.slice(Math.max(0, startLine - 1), Math.min(lines.length, endLine));
-  } catch {
-    return [];
-  }
-}
-
-/**
- * Create a directory if it doesn't exist
- */
-export function ensureDirectory(dirPath: string): void {
-  try {
-    const resolved = resolvePath(dirPath);
-    if (!fs.existsSync(resolved)) {
-      fs.mkdirSync(resolved, { recursive: true });
-      logger.debug(`Created directory: ${dirPath}`);
+    const r = resolvePath(p)
+    if (!fs.existsSync(r)) {
+      fs.mkdirSync(r, { recursive: true })
+      logger.debug(`Created dir: ${p}`)
     }
-  } catch (error) {
+  } catch (e) {
     throw new AnalysisErrorClass(
-      `Failed to create directory: ${dirPath}`,
-      (error as Error).message
-    );
+      `Failed to create dir: ${p}`,
+      (e as Error).message,
+    )
   }
 }
 
-/**
- * Delete a file or directory
- */
-export function deletePathSync(filePath: string): void {
+export function deletePathSync(p: string): void {
   try {
-    const resolved = resolvePath(filePath);
-    if (fs.existsSync(resolved)) {
-      const stat = fs.statSync(resolved);
-      if (stat.isDirectory()) {
-        fs.rmSync(resolved, { recursive: true, force: true });
-      } else {
-        fs.unlinkSync(resolved);
-      }
-      logger.debug(`Deleted: ${filePath}`);
+    const r = resolvePath(p)
+    if (fs.existsSync(r)) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      fs.statSync(r).isDirectory()
+        ? fs.rmSync(r, { recursive: true, force: true })
+        : fs.unlinkSync(r)
+      logger.debug(`Deleted: ${p}`)
     }
-  } catch (error) {
-    throw new AnalysisErrorClass(
-      `Failed to delete: ${filePath}`,
-      (error as Error).message
-    );
+  } catch (e) {
+    throw new AnalysisErrorClass(`Failed to delete: ${p}`, (e as Error).message)
   }
 }
 
-/**
- * Get git root directory (if in git repo)
- */
-export function getGitRoot(): string | null {
-  try {
-    let current = getProjectRoot();
-    while (current !== path.dirname(current)) {
-      if (fs.existsSync(path.join(current, '.git'))) {
-        return current;
-      }
-      current = path.dirname(current);
-    }
-  } catch {
-    // Not in a git repo
-  }
-  return null;
-}
-
-/**
- * Get list of changed files in git
- */
 export function getChangedFiles(since?: string): string[] {
   try {
-    const { execSync } = require('child_process');
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { execSync } = require('child_process')
     const cmd = since
       ? `git diff --name-only ${since}`
-      : 'git diff --name-only HEAD~1';
-
-    const output = execSync(cmd, {
-      cwd: getProjectRoot(),
-      encoding: 'utf-8',
-    });
-
-    return output
+      : 'git diff --name-only HEAD~1'
+    return (execSync(cmd, { cwd: process.cwd(), encoding: 'utf-8' }) as string)
       .split('\n')
-      .filter((line: string) => line.trim().length > 0)
-      .map((line: string) => line.trim());
+      .filter((l: string) => l.trim())
+      .map((l: string) => l.trim())
   } catch {
-    logger.warn('Failed to get changed files from git');
-    return [];
+    logger.warn('Failed to get changed files from git')
+    return []
   }
 }

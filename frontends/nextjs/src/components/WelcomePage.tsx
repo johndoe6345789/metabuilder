@@ -1,6 +1,6 @@
 'use client'
 
-import { Container, Typography, Button, Stack, Paper, Chip, Avatar } from '@/fakemui'
+import { Container, Typography, Button, Stack, Paper, Chip, Avatar } from '@/m3'
 
 /**
  * WelcomePage - Level 1 Public Landing

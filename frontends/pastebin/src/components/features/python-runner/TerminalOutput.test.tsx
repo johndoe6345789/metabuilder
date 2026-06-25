@@ -19,11 +19,15 @@ describe('TerminalOutput', () => {
   })
 
   describe('Empty State', () => {
+    // eslint-disable-next-line max-len
     it('should display empty state message when no lines and not running', () => {
       render(<TerminalOutput {...defaultProps} />)
-      expect(screen.getByText('Click "Run" to execute the Python code')).toBeInTheDocument()
+      expect(
+        screen.getByText('Click "Run" to execute the Python code'),
+      ).toBeInTheDocument()
     })
 
+    // eslint-disable-next-line max-len
     it('should display empty state message when no lines and not running with specific text', () => {
       render(<TerminalOutput {...defaultProps} lines={[]} isRunning={false} />)
       const message = screen.getByText('Click "Run" to execute the Python code')
@@ -32,28 +36,38 @@ describe('TerminalOutput', () => {
 
     it('should not display empty state when running even without lines', () => {
       render(<TerminalOutput {...defaultProps} lines={[]} isRunning={true} />)
-      expect(screen.queryByText('Click "Run" to execute the Python code')).not.toBeInTheDocument()
+      expect(
+        screen.queryByText('Click "Run" to execute the Python code'),
+      ).not.toBeInTheDocument()
     })
 
     it('should not display empty state when lines exist', () => {
       const lines = [{ type: 'output' as const, content: 'test', id: '1' }]
-      render(<TerminalOutput {...defaultProps} lines={lines} isRunning={false} />)
-      expect(screen.queryByText('Click "Run" to execute the Python code')).not.toBeInTheDocument()
+      render(
+        <TerminalOutput {...defaultProps} lines={lines} isRunning={false} />,
+      )
+      expect(
+        screen.queryByText('Click "Run" to execute the Python code'),
+      ).not.toBeInTheDocument()
     })
   })
 
   describe('Output Rendering', () => {
     it('should render output line', () => {
-      const lines = [{ type: 'output' as const, content: 'Hello World', id: '1' }]
+      const lines = [
+        { type: 'output' as const, content: 'Hello World', id: '1' },
+      ]
       render(<TerminalOutput {...defaultProps} lines={lines} />)
       expect(screen.getByText('Hello World')).toBeInTheDocument()
     })
 
     it('should render output line with correct text color', () => {
-      const lines = [{ type: 'output' as const, content: 'Output text', id: '1' }]
+      const lines = [
+        { type: 'output' as const, content: 'Output text', id: '1' },
+      ]
       render(<TerminalOutput {...defaultProps} lines={lines} />)
       const output = screen.getByText('Output text')
-      expect(output).toHaveClass('text-foreground')
+      expect(output).toHaveClass('output')
     })
 
     it('should render multiple output lines', () => {
@@ -69,7 +83,9 @@ describe('TerminalOutput', () => {
     })
 
     it('should preserve whitespace in output', () => {
-      const lines = [{ type: 'output' as const, content: 'Line 1    Spaced', id: '1' }]
+      const lines = [
+        { type: 'output' as const, content: 'Line 1    Spaced', id: '1' },
+      ]
       render(<TerminalOutput {...defaultProps} lines={lines} />)
       expect(screen.getByText(/Line 1.*Spaced/)).toBeInTheDocument()
     })
@@ -77,7 +93,9 @@ describe('TerminalOutput', () => {
 
   describe('Error Rendering', () => {
     it('should render error line', () => {
-      const lines = [{ type: 'error' as const, content: 'Error message', id: '1' }]
+      const lines = [
+        { type: 'error' as const, content: 'Error message', id: '1' },
+      ]
       render(<TerminalOutput {...defaultProps} lines={lines} />)
       expect(screen.getByText('Error message')).toBeInTheDocument()
     })
@@ -86,7 +104,7 @@ describe('TerminalOutput', () => {
       const lines = [{ type: 'error' as const, content: 'Error text', id: '1' }]
       render(<TerminalOutput {...defaultProps} lines={lines} />)
       const error = screen.getByText('Error text')
-      expect(error).toHaveClass('text-destructive')
+      expect(error).toHaveClass('error')
     })
 
     it('should render multiple error lines', () => {
@@ -100,60 +118,85 @@ describe('TerminalOutput', () => {
     })
 
     it('should preserve whitespace in errors', () => {
-      const lines = [{ type: 'error' as const, content: 'Error:    Details', id: '1' }]
+      const lines = [
+        { type: 'error' as const, content: 'Error:    Details', id: '1' },
+      ]
       render(<TerminalOutput {...defaultProps} lines={lines} />)
-      expect(screen.getByText(/Error:.*Details/)).toBeInTheDocument()
+      const el = screen.getAllByText(/Error:.*Details/)
+      expect(el.length).toBeGreaterThan(0)
     })
   })
 
   describe('Input Prompt Rendering', () => {
     it('should render input prompt line', () => {
-      const lines = [{ type: 'input-prompt' as const, content: 'Enter your name: ', id: '1' }]
+      const lines = [
+        {
+          type: 'input-prompt' as const,
+          content: 'Enter your name: ',
+          id: '1',
+        },
+      ]
       render(<TerminalOutput {...defaultProps} lines={lines} />)
       expect(screen.getByText(/Enter your name/)).toBeInTheDocument()
     })
 
     it('should render input prompt with correct styling', () => {
-      const lines = [{ type: 'input-prompt' as const, content: 'Prompt: ', id: '1' }]
+      const lines = [
+        { type: 'input-prompt' as const, content: 'Prompt: ', id: '1' },
+      ]
       render(<TerminalOutput {...defaultProps} lines={lines} />)
       const prompt = screen.getByText(/Prompt/)
-      expect(prompt).toHaveClass('text-accent', 'font-medium')
+      expect(prompt).toHaveClass('inputPrompt')
     })
 
     it('should preserve whitespace in input prompts', () => {
-      const lines = [{ type: 'input-prompt' as const, content: 'Name:     ', id: '1' }]
+      const lines = [
+        { type: 'input-prompt' as const, content: 'Name:     ', id: '1' },
+      ]
       render(<TerminalOutput {...defaultProps} lines={lines} />)
       const prompt = screen.getByText(/Name/)
-      expect(prompt).toHaveClass('whitespace-pre-wrap')
+      expect(prompt).toHaveClass('inputPrompt')
     })
   })
 
   describe('Input Value Rendering', () => {
     it('should render input value line', () => {
-      const lines = [{ type: 'input-value' as const, content: 'user input', id: '1' }]
+      const lines = [
+        { type: 'input-value' as const, content: 'user input', id: '1' },
+      ]
       render(<TerminalOutput {...defaultProps} lines={lines} />)
       expect(screen.getByText('> user input')).toBeInTheDocument()
     })
 
     it('should render input value with prompt prefix', () => {
-      const lines = [{ type: 'input-value' as const, content: 'hello', id: '1' }]
+      const lines = [
+        { type: 'input-value' as const, content: 'hello', id: '1' },
+      ]
       render(<TerminalOutput {...defaultProps} lines={lines} />)
       const value = screen.getByText('> hello')
       expect(value).toBeInTheDocument()
     })
 
     it('should render input value with correct text color', () => {
-      const lines = [{ type: 'input-value' as const, content: 'user value', id: '1' }]
+      const lines = [
+        { type: 'input-value' as const, content: 'user value', id: '1' },
+      ]
       render(<TerminalOutput {...defaultProps} lines={lines} />)
       const value = screen.getByText('> user value')
-      expect(value).toHaveClass('text-primary')
+      expect(value).toHaveClass('inputValue')
     })
 
     it('should preserve whitespace in input values', () => {
-      const lines = [{ type: 'input-value' as const, content: 'text    with    spaces', id: '1' }]
+      const lines = [
+        {
+          type: 'input-value' as const,
+          content: 'text    with    spaces',
+          id: '1',
+        },
+      ]
       render(<TerminalOutput {...defaultProps} lines={lines} />)
       const value = screen.getByText(/text.*with.*spaces/)
-      expect(value).toHaveClass('whitespace-pre-wrap')
+      expect(value).toHaveClass('inputValue')
     })
   })
 
@@ -180,7 +223,7 @@ describe('TerminalOutput', () => {
       render(<TerminalOutput {...defaultProps} lines={lines} />)
       expect(screen.getByText(/Name/)).toBeInTheDocument()
       expect(screen.getByText('Hello John')).toBeInTheDocument()
-      expect(screen.getByText(/Note.*something/)).toBeInTheDocument()
+      expect(screen.getAllByText(/Note.*something/).length).toBeGreaterThan(0)
     })
   })
 
@@ -195,24 +238,32 @@ describe('TerminalOutput', () => {
 
     it('should preserve newlines with whitespace-pre-wrap', () => {
       const lines = [
-        { type: 'output' as const, content: 'First\n  Indented\nThird', id: '1' },
+        {
+          type: 'output' as const,
+          content: 'First\n  Indented\nThird',
+          id: '1',
+        },
       ]
       render(<TerminalOutput {...defaultProps} lines={lines} />)
       const output = screen.getByText(/First/)
-      expect(output).toHaveClass('whitespace-pre-wrap')
+      expect(output).toHaveClass('output')
     })
   })
 
   describe('Empty Content', () => {
     it('should handle empty string content', () => {
       const lines = [{ type: 'output' as const, content: '', id: '1' }]
-      const { container } = render(<TerminalOutput {...defaultProps} lines={lines} />)
+      const { container } = render(
+        <TerminalOutput {...defaultProps} lines={lines} />,
+      )
       expect(container).toBeInTheDocument()
     })
 
     it('should handle line with only whitespace', () => {
       const lines = [{ type: 'output' as const, content: '   ', id: '1' }]
-      const { container } = render(<TerminalOutput {...defaultProps} lines={lines} />)
+      const { container } = render(
+        <TerminalOutput {...defaultProps} lines={lines} />,
+      )
       expect(container).toBeInTheDocument()
     })
   })
@@ -221,7 +272,9 @@ describe('TerminalOutput', () => {
     it('should have correct container styling', () => {
       render(<TerminalOutput {...defaultProps} />)
       // Container should have space-y-1 class for spacing
-      const container = screen.getByText('Click "Run" to execute the Python code').closest('div')
+      const container = screen
+        .getByText('Click "Run" to execute the Python code')
+        .closest('div')
       expect(container).toBeInTheDocument()
     })
 
@@ -270,7 +323,9 @@ describe('TerminalOutput', () => {
         { type: 'output' as const, content: 'First', id: '1' },
         { type: 'output' as const, content: 'Second', id: '2' },
       ]
-      const { rerender } = render(<TerminalOutput {...defaultProps} lines={lines} />)
+      const { rerender } = render(
+        <TerminalOutput {...defaultProps} lines={lines} />,
+      )
 
       rerender(<TerminalOutput {...defaultProps} lines={lines} />)
 
@@ -281,19 +336,25 @@ describe('TerminalOutput', () => {
 
   describe('Special Characters', () => {
     it('should handle special HTML characters', () => {
-      const lines = [{ type: 'output' as const, content: '<div>test</div>', id: '1' }]
+      const lines = [
+        { type: 'output' as const, content: '<div>test</div>', id: '1' },
+      ]
       render(<TerminalOutput {...defaultProps} lines={lines} />)
       expect(screen.getByText('<div>test</div>')).toBeInTheDocument()
     })
 
     it('should handle unicode characters', () => {
-      const lines = [{ type: 'output' as const, content: '日本語テキスト', id: '1' }]
+      const lines = [
+        { type: 'output' as const, content: '日本語テキスト', id: '1' },
+      ]
       render(<TerminalOutput {...defaultProps} lines={lines} />)
       expect(screen.getByText('日本語テキスト')).toBeInTheDocument()
     })
 
     it('should handle emoji characters', () => {
-      const lines = [{ type: 'output' as const, content: 'Success 😊', id: '1' }]
+      const lines = [
+        { type: 'output' as const, content: 'Success 😊', id: '1' },
+      ]
       render(<TerminalOutput {...defaultProps} lines={lines} />)
       expect(screen.getByText('Success 😊')).toBeInTheDocument()
     })
@@ -327,27 +388,43 @@ describe('TerminalOutput', () => {
 
   describe('State Changes', () => {
     it('should update when lines change', () => {
-      const lines1 = [{ type: 'output' as const, content: 'First output', id: '1' }]
-      const { rerender } = render(<TerminalOutput {...defaultProps} lines={lines1} />)
+      const lines1 = [
+        { type: 'output' as const, content: 'First output', id: '1' },
+      ]
+      const { rerender } = render(
+        <TerminalOutput {...defaultProps} lines={lines1} />,
+      )
       expect(screen.getByText('First output')).toBeInTheDocument()
 
-      const lines2 = [{ type: 'output' as const, content: 'Second output', id: '2' }]
+      const lines2 = [
+        { type: 'output' as const, content: 'Second output', id: '2' },
+      ]
       rerender(<TerminalOutput {...defaultProps} lines={lines2} />)
       expect(screen.queryByText('First output')).not.toBeInTheDocument()
       expect(screen.getByText('Second output')).toBeInTheDocument()
     })
 
     it('should update when isRunning changes', () => {
-      const { rerender } = render(<TerminalOutput {...defaultProps} lines={[]} isRunning={false} />)
-      expect(screen.getByText('Click "Run" to execute the Python code')).toBeInTheDocument()
+      const { rerender } = render(
+        <TerminalOutput {...defaultProps} lines={[]} isRunning={false} />,
+      )
+      expect(
+        screen.getByText('Click "Run" to execute the Python code'),
+      ).toBeInTheDocument()
 
       rerender(<TerminalOutput {...defaultProps} lines={[]} isRunning={true} />)
-      expect(screen.queryByText('Click "Run" to execute the Python code')).not.toBeInTheDocument()
+      expect(
+        screen.queryByText('Click "Run" to execute the Python code'),
+      ).not.toBeInTheDocument()
     })
 
     it('should add new lines incrementally', () => {
-      const initialLines = [{ type: 'output' as const, content: 'Line 1', id: '1' }]
-      const { rerender } = render(<TerminalOutput {...defaultProps} lines={initialLines} />)
+      const initialLines = [
+        { type: 'output' as const, content: 'Line 1', id: '1' },
+      ]
+      const { rerender } = render(
+        <TerminalOutput {...defaultProps} lines={initialLines} />,
+      )
 
       const updatedLines = [
         { type: 'output' as const, content: 'Line 1', id: '1' },

@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { StyledLink } from '@/components/StyledLink';
 import { SponsorSection } from '@/components/SponsorSection';
 import { sponsors } from '@/config/sponsors';
+import publicStyles from '@/styles/public.module.scss';
 
 type IPortfolioProps = {
   params: Promise<{ locale: string }>;
@@ -33,7 +34,7 @@ export default async function Portfolio(props: IPortfolioProps) {
     <>
       <p>{t('presentation')}</p>
 
-      <div className="grid grid-cols-1 justify-items-start gap-3 md:grid-cols-2 xl:grid-cols-3">
+      <div className={publicStyles.portfolioGrid}>
         {Array.from(Array.from({ length: 6 }).keys()).map(elt => (
           <StyledLink
             variant="hoverBlue"

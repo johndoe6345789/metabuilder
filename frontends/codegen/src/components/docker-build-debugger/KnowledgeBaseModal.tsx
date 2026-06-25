@@ -1,10 +1,10 @@
-import { Badge } from '@metabuilder/fakemui/data-display'
-import { Button } from '@metabuilder/fakemui/inputs'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@metabuilder/fakemui/surfaces'
-import { Separator } from '@metabuilder/fakemui/data-display'
+import { Badge } from '@metabuilder/m3/data-display'
+import { Button } from '@metabuilder/m3/inputs'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@metabuilder/m3/surfaces'
+import { Separator } from '@metabuilder/m3/data-display'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { KnowledgeBaseItem } from '@/types/docker'
-import { CheckCircle, Copy } from '@metabuilder/fakemui/icons'
+import { CheckCircle, Copy } from '@metabuilder/m3/icons'
 import { AnimatePresence, motion } from 'framer-motion'
 
 type KnowledgeBaseModalProps = {

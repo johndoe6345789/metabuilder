@@ -1,6 +1,6 @@
 /**
  * Component code snippets - Main re-export module
- * This file maintains backward compatibility while delegating to specialized modules
+ * Maintains backward compatibility, delegates to specialized modules
  */
 
 export { atomsCodeSnippets } from './snippets/atoms'

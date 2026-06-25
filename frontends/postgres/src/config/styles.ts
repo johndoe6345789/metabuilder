@@ -2,33 +2,34 @@
  * Shared styles configuration
  * Defines reusable CSS class names for consistent styling across the app
  */
+import publicStyles from '@/styles/public.module.scss';
 
 export const styles = {
   links: {
-    primary: 'text-blue-700 hover:border-b-2 hover:border-blue-700',
-    primaryBold: 'font-bold text-blue-700 hover:border-b-2 hover:border-blue-700',
-    hoverBlue: 'hover:text-blue-700',
-    nav: 'border-none text-gray-700 hover:text-gray-900',
+    primary: publicStyles.linkPrimary,
+    primaryBold: publicStyles.linkPrimaryBold,
+    hoverBlue: publicStyles.linkHoverBlue,
+    nav: publicStyles.linkNav,
   },
   text: {
-    centerSmall: 'text-center text-sm',
-    base: 'text-base',
+    centerSmall: publicStyles.textCenterSmall,
+    base: publicStyles.textBase,
   },
   spacing: {
-    marginTop2: 'mt-2',
-    marginTop3: 'mt-3',
-    marginTop5: 'mt-5',
+    marginTop2: publicStyles.marginTop2,
+    marginTop3: publicStyles.marginTop3,
+    marginTop5: publicStyles.marginTop5,
   },
   image: {
-    centerMarginTop: 'mx-auto mt-2',
+    centerMarginTop: publicStyles.imageCenterMarginTop,
   },
   headings: {
-    h2Bold: 'mt-5 text-2xl font-bold',
+    h2Bold: publicStyles.h2Bold,
   },
   lists: {
-    baseMarginTop: 'mt-3 text-base',
+    baseMarginTop: publicStyles.baseMarginTop,
   },
   containers: {
-    contentPadding: 'py-5 text-xl [&_p]:my-6',
+    contentPadding: publicStyles.contentPadding,
   },
 } as const;

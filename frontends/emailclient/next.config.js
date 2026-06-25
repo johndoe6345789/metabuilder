@@ -1,25 +1,35 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { createRequire } from 'module'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const monorepoRoot = path.resolve(__dirname, '../..')
+const require = createRequire(import.meta.url)
+const { version } = require('./package.json')
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   basePath: '/emailclient',
   output: 'standalone',
+  allowedDevOrigins: ['metabuilder.wardcrew.com', 'wardcrew.com'],
   reactStrictMode: true,
   productionBrowserSourceMaps: false,
 
-  // Resolve SCSS @use 'cdk' from fakemui components
+  // Resolve SCSS @use 'cdk' from m3 components
   sassOptions: {
-    includePaths: [
-      path.join(monorepoRoot, 'scss'),
+    // loadPaths = Turbopack, includePaths = webpack — both needed
+    loadPaths: [
       path.join(monorepoRoot, 'scss/m3-scss'),
+      path.join(monorepoRoot, 'scss'),
     ],
+    includePaths: [
+      path.join(monorepoRoot, 'scss/m3-scss'),
+      path.join(monorepoRoot, 'scss'),
+    ],
+    silenceDeprecations: ['legacy-js-api', 'import'],
   },
 
-  transpilePackages: ['@metabuilder/fakemui', '@metabuilder/redux-core', '@metabuilder/hooks'],
+  transpilePackages: ['@metabuilder/m3', '@metabuilder/redux-core', '@metabuilder/hooks'],
 
   typescript: {
     ignoreBuildErrors: true,
@@ -49,7 +59,8 @@ const nextConfig = {
 
   // Environment variables
   env: {
-    NEXT_PUBLIC_API_URL: process.env.API_BASE_URL || 'http://localhost:3000'
+    NEXT_PUBLIC_API_URL: process.env.API_BASE_URL || 'http://localhost:3000',
+    NEXT_PUBLIC_APP_VERSION: version,
   },
 
   // Headers for security and caching
@@ -127,7 +138,7 @@ const nextConfig = {
 
   // Experimental features (optional)
   experimental: {
-    optimizePackageImports: ['@metabuilder/fakemui']
+    optimizePackageImports: ['@metabuilder/m3']
   },
 
   // Turbopack config (used by `next dev --turbopack`)
@@ -141,7 +152,7 @@ const nextConfig = {
       new webpack.NormalModuleReplacementPlugin(
         /\.module\.scss$/,
         function (resource) {
-          if (resource.context?.includes('fakemui') ||
+          if (resource.context?.includes('m3') ||
               resource.context?.includes('components/dist') ||
               resource.context?.includes('components\\dist')) {
             resource.request = stubScss

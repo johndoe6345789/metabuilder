@@ -30,7 +30,6 @@ COPY services/smtprelay/requirements.txt                                       /
 COPY frontends/dockerterminal/backend/requirements.txt                         /deps/flat/dockerterminal.txt
 COPY frontends/codegen/backend/requirements.txt                                /deps/flat/codegen-backend.txt
 COPY frontends/pastebin/backend/requirements.txt                               /deps/flat/pastebin-backend.txt
-COPY frontends/packagerepo/backend/requirements.txt                            /deps/flat/packagerepo-backend.txt
 COPY frontends/workflowui/backend/requirements.txt                             /deps/flat/workflowui-backend.txt
 
 # PCB generator (no -r includes)
@@ -38,32 +37,42 @@ COPY libraries/pcbgenerator/requirements.txt                                   /
 COPY libraries/pcbgenerator/requirements-dev.txt                               /deps/flat/pcbgenerator-dev.txt
 
 # Tests (no -r includes)
-COPY dbal/production/tests/integration/requirements.txt                        /deps/flat/dbal-tests.txt
+COPY libraries/dbal/production/tests/integration/requirements.txt                        /deps/flat/dbal-tests.txt
 
 # CAD tools — preserve directory for -r requirements.txt in -dev.txt
 COPY libraries/cadquerywrapper/requirements.txt                                /deps/cadquerywrapper/requirements.txt
 COPY libraries/cadquerywrapper/requirements-dev.txt                            /deps/cadquerywrapper/requirements-dev.txt
 
 # Workflow Python plugins — preserve directory so chained -r includes work
-COPY workflow/plugins/python/requirements.txt                                  /deps/workflow/requirements.txt
-COPY workflow/plugins/python/requirements-backend.txt                          /deps/workflow/requirements-backend.txt
-COPY workflow/plugins/python/requirements-web.txt                              /deps/workflow/requirements-web.txt
-COPY workflow/plugins/python/requirements-tools.txt                            /deps/workflow/requirements-tools.txt
-COPY workflow/plugins/python/requirements-notifications.txt                    /deps/workflow/requirements-notifications.txt
-COPY workflow/plugins/python/requirements-packagerepo.txt                      /deps/workflow/requirements-packagerepo.txt
-COPY workflow/plugins/python/requirements-testing.txt                          /deps/workflow/requirements-testing.txt
-COPY workflow/plugins/python/requirements-dev.txt                              /deps/workflow/requirements-dev.txt
+COPY libraries/workflow/plugins/python/requirements.txt                                  /deps/workflow/requirements.txt
+COPY libraries/workflow/plugins/python/requirements-backend.txt                          /deps/workflow/requirements-backend.txt
+COPY libraries/workflow/plugins/python/requirements-web.txt                              /deps/workflow/requirements-web.txt
+COPY libraries/workflow/plugins/python/requirements-tools.txt                            /deps/workflow/requirements-tools.txt
+COPY libraries/workflow/plugins/python/requirements-notifications.txt                    /deps/workflow/requirements-notifications.txt
+COPY libraries/workflow/plugins/python/requirements-packagerepo.txt                      /deps/workflow/requirements-packagerepo.txt
+COPY libraries/workflow/plugins/python/requirements-testing.txt                          /deps/workflow/requirements-testing.txt
+COPY libraries/workflow/plugins/python/requirements-dev.txt                              /deps/workflow/requirements-dev.txt
+
+# Route pip through the pkgrepo pypi cache when given (fetch from PyPI -> store
+# in S3 -> serve). Empty = plain PyPI. deployment.py forwards $PIP_INDEX_URL.
+ARG PIP_INDEX_URL=""
 
 # Merge all requirements (except cadquerywrapper) into a single file,
 # deduplicating packages so pip sees one consistent set of constraints.
-RUN find /deps -name '*.txt' -not -path '*/cadquerywrapper/*' \
+RUN PIP_FLAGS=""; \
+    if [ -n "$PIP_INDEX_URL" ]; then \
+      host=$(printf '%s' "$PIP_INDEX_URL" | sed -E 's#^https?://([^/:]+).*#\1#'); \
+      PIP_FLAGS="--index-url $PIP_INDEX_URL --trusted-host $host"; \
+      echo "==> pip via pkgrepo cache: $PIP_INDEX_URL"; \
+    fi; \
+    find /deps -name '*.txt' -not -path '*/cadquerywrapper/*' \
       -exec cat {} + \
     | grep -v '^\s*#' | grep -v '^\s*$' | grep -v '^\s*-r ' \
     | sort -u > /deps/merged.txt && \
     echo "=== Merged requirements ===" && cat /deps/merged.txt && \
-    pip install --no-cache-dir -r /deps/merged.txt && \
+    pip install $PIP_FLAGS --no-cache-dir -r /deps/merged.txt && \
     # cadquerywrapper best-effort (cadquery-ocp may not resolve on all platforms)
-    pip install --no-cache-dir \
+    pip install $PIP_FLAGS --no-cache-dir \
       -r /deps/cadquerywrapper/requirements.txt \
       -r /deps/cadquerywrapper/requirements-dev.txt \
       2>/dev/null || echo "WARN: cadquerywrapper deps failed (cadquery-ocp platform issue)" && \

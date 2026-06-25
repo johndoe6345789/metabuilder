@@ -1,7 +1,11 @@
 import { Badge, IconButton, PanelHeader, Stack, Text } from '@/components/atoms'
-import { propertyEditorConfig } from '@/components/molecules/property-editor/propertyEditorConfig'
-import { propertyEditorIcons } from '@/components/molecules/property-editor/propertyEditorIcons'
-import { Trash } from '@metabuilder/fakemui/icons'
+import {
+  propertyEditorConfig,
+} from '@/components/molecules/property-editor/propertyEditorConfig'
+import {
+  propertyEditorIcons,
+} from '@/components/molecules/property-editor/propertyEditorIcons'
+import { Trash } from '@metabuilder/m3/icons'
 
 interface PropertyEditorHeaderProps {
   componentId: string
@@ -9,15 +13,23 @@ interface PropertyEditorHeaderProps {
   onDelete: () => void
 }
 
-export function PropertyEditorHeader({ componentId, componentLabel, onDelete }: PropertyEditorHeaderProps) {
-  const Icon = propertyEditorIcons[propertyEditorConfig.icon as keyof typeof propertyEditorIcons]
+export function PropertyEditorHeader({
+  componentId, componentLabel, onDelete,
+}: PropertyEditorHeaderProps) {
+  const iconKey = propertyEditorConfig.icon as keyof typeof propertyEditorIcons
+  const Icon = propertyEditorIcons[iconKey]
 
   return (
     <div className="p-4">
       <PanelHeader
         title={propertyEditorConfig.title}
         subtitle={
-          <Stack direction="horizontal" align="center" spacing="sm" className="mt-1">
+          <Stack
+            direction="horizontal"
+            align="center"
+            spacing="sm"
+            className="mt-1"
+          >
             <Badge variant="outline" className="text-xs font-mono">
               {componentLabel}
             </Badge>
@@ -31,7 +43,10 @@ export function PropertyEditorHeader({ componentId, componentLabel, onDelete }: 
             variant="ghost"
             size="sm"
             onClick={onDelete}
-            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+            className={
+              'text-destructive hover:text-destructive '
+              + 'hover:bg-destructive/10'
+            }
           />
         }
       />

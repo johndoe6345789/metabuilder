@@ -1,42 +1,23 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
-import { MaterialIcon } from '@metabuilder/components/fakemui'
-import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { fetchSharedSnippet } from '@/store/slices/shareSlice'
-import { selectSharedSnippet, selectShareLoading } from '@/store/selectors'
+import { MaterialIcon } from '@metabuilder/components/m3'
 import { ForkDialog } from '@/components/features/snippet-viewer/ForkDialog'
 import { LANGUAGE_COLORS } from '@/lib/config'
+import { useSharePage } from './hooks/useSharePage'
 import styles from './share-page.module.scss'
 
 const MonacoEditor = dynamic(
-  () => import('@/components/features/snippet-editor/MonacoEditor').then(mod => ({ default: mod.MonacoEditor })),
-  { ssr: false }
+  () =>
+    import('@/components/features/snippet-editor/MonacoEditor').then(mod => ({
+      default: mod.MonacoEditor,
+    })),
+  { ssr: false },
 )
 
 export default function SharePage() {
-  const { token } = useParams<{ token: string }>()
-  const dispatch = useAppDispatch()
-  const snippet = useAppSelector(state => selectSharedSnippet(state, token))
-  const loading = useAppSelector(selectShareLoading)
-  const [copied, setCopied] = useState(false)
-  const [forkOpen, setForkOpen] = useState(false)
-
-  useEffect(() => {
-    if (token) dispatch(fetchSharedSnippet(token))
-  }, [token, dispatch])
-
-  function handleCopy() {
-    if (!snippet) return
-    const code = snippet.files?.length
-      ? snippet.files.map(f => `// ${f.name}\n${f.content}`).join('\n\n')
-      : snippet.code
-    navigator.clipboard.writeText(code)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
+  const vm = useSharePage()
+  const { snippet, loading, copied, forkOpen, token } = vm
 
   if (loading && !snippet) {
     return (
@@ -49,9 +30,16 @@ export default function SharePage() {
   if (!snippet) {
     return (
       <div className={styles.centered}>
-        <MaterialIcon name="link_off" size={48} className={styles.notFoundIcon} aria-hidden="true" />
+        <MaterialIcon
+          name="link_off"
+          size={48}
+          className={styles.notFoundIcon}
+          aria-hidden="true"
+        />
         <h1 className={styles.notFoundTitle}>Link not found</h1>
-        <p className={styles.notFoundText}>This share link has expired or been revoked.</p>
+        <p className={styles.notFoundText}>
+          This share link has expired or been revoked.
+        </p>
       </div>
     )
   }
@@ -61,7 +49,6 @@ export default function SharePage() {
 
   return (
     <div className={styles.page}>
-      {/* Header */}
       <div className={styles.header}>
         <div className={styles.titleRow}>
           <h1 className={styles.title}>{snippet.title}</h1>
@@ -83,29 +70,33 @@ export default function SharePage() {
         )}
       </div>
 
-      {/* File tabs if multi-file */}
       {snippet.files && snippet.files.length > 1 && (
         <div className={styles.fileTabs}>
           {snippet.files.map(f => (
-            <span key={f.name} className={styles.fileTab}>{f.name}</span>
+            <span key={f.name} className={styles.fileTab}>
+              {f.name}
+            </span>
           ))}
         </div>
       )}
 
-      {/* Code area */}
       <div className={styles.codeWrap}>
         <div className={styles.codeToolbar}>
           <button
             className={styles.copyBtn}
-            onClick={handleCopy}
+            onClick={vm.handleCopy}
             aria-label="Copy code"
           >
-            <MaterialIcon name={copied ? 'check' : 'content_copy'} size={14} aria-hidden="true" />
+            <MaterialIcon
+              name={copied ? 'check' : 'content_copy'}
+              size={14}
+              aria-hidden="true"
+            />
             {copied ? 'Copied!' : 'Copy code'}
           </button>
           <button
             className={styles.copyBtn}
-            onClick={() => setForkOpen(true)}
+            onClick={() => vm.setForkOpen(true)}
             aria-label="Fork snippet"
           >
             <MaterialIcon name="call_split" size={14} aria-hidden="true" />
@@ -121,7 +112,6 @@ export default function SharePage() {
         />
       </div>
 
-      {/* Footer */}
       <div className={styles.footer}>
         <a href="/" className={styles.footerLink}>
           <MaterialIcon name="code" size={14} aria-hidden="true" />
@@ -131,7 +121,7 @@ export default function SharePage() {
 
       <ForkDialog
         open={forkOpen}
-        onClose={() => setForkOpen(false)}
+        onClose={() => vm.setForkOpen(false)}
         snippet={snippet}
         isShared
         token={token}

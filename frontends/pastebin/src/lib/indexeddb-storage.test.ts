@@ -1,25 +1,42 @@
 import {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   openDB,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getAllSnippets,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getSnippet,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   createSnippet,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateSnippet,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   deleteSnippet,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getAllNamespaces,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   createNamespace,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   deleteNamespace,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getSnippetsByNamespace,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getNamespace,
-  clearDatabase
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  clearDatabase,
 } from './indexeddb-storage'
 import type { Snippet, Namespace } from './types'
 
 /**
  * IndexedDB Storage Tests
  *
- * Note: Full end-to-end testing of IndexedDB requires a real browser environment.
+ // eslint-disable-next-line max-len
+ * Note: Full end-to-end testing of IndexedDB requires a real browser
+ * environment.
  * These tests focus on validating the API structure and basic mock setup.
- * Integration tests should be run in a browser environment or with an IndexedDB polyfill.
+ // eslint-disable-next-line max-len
+ // eslint-disable-next-line max-len
+ * Integration tests should be run in a browser environment or with an IndexedDB
+ * polyfill.
  */
 
 const mockObjectStore = {
@@ -30,22 +47,22 @@ const mockObjectStore = {
   getAll: jest.fn(),
   clear: jest.fn(),
   createIndex: jest.fn(),
-  index: jest.fn()
+  index: jest.fn(),
 }
 
 const mockTransaction = {
   objectStore: jest.fn(() => mockObjectStore),
   onerror: null,
-  oncomplete: null
+  oncomplete: null,
 }
 
 const mockDatabase = {
   transaction: jest.fn(() => mockTransaction),
   createObjectStore: jest.fn(),
   objectStoreNames: {
-    contains: jest.fn(() => true)
+    contains: jest.fn(() => true),
   },
-  close: jest.fn()
+  close: jest.fn(),
 }
 
 function createSuccessRequest(result: any) {
@@ -70,7 +87,7 @@ function createSuccessRequest(result: any) {
     },
     set onerror(fn: any) {
       this._onerror = fn
-    }
+    },
   } as any
 
   return request
@@ -79,7 +96,7 @@ function createSuccessRequest(result: any) {
 const mockRequest = createSuccessRequest(mockDatabase)
 
 global.indexedDB = {
-  open: jest.fn(() => mockRequest)
+  open: jest.fn(() => mockRequest),
 } as any
 
 describe('IndexedDB Storage', () => {
@@ -209,7 +226,7 @@ describe('IndexedDB Storage', () => {
         category: 'test',
         description: 'Test description',
         createdAt: Date.now(),
-        updatedAt: Date.now()
+        updatedAt: Date.now(),
       }
 
       expect(snippet.id).toBeDefined()
@@ -223,7 +240,7 @@ describe('IndexedDB Storage', () => {
         id: 'ns-1',
         name: 'Test Namespace',
         createdAt: Date.now(),
-        isDefault: false
+        isDefault: false,
       }
 
       expect(namespace.id).toBeDefined()

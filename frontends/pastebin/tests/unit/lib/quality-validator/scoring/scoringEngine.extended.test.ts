@@ -14,16 +14,21 @@
  * 9. Trend analysis integration
  */
 
-import { ScoringEngine } from '../../../../../src/lib/quality-validator/scoring/scoringEngine';
+import { ScoringEngine } from '../../../../../src/lib/quality-validator/scoring/scoringEngine'
 import {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   CodeQualityMetrics,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   TestCoverageMetrics,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ArchitectureMetrics,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   SecurityMetrics,
   ScoringWeights,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Finding,
   ResultMetadata,
-} from '../../../../../src/lib/quality-validator/types/index';
+} from '../../../../../src/lib/quality-validator/types/index'
 import {
   createMockCodeQualityMetrics,
   createMockTestCoverageMetrics,
@@ -31,43 +36,50 @@ import {
   createMockSecurityMetrics,
   createDefaultConfig,
   createMockFinding,
-} from '../../../../../tests/test-utils';
+} from '../../../../../tests/test-utils'
 
-jest.mock('../../../../../src/lib/quality-validator/scoring/trendAnalyzer', () => ({
-  trendAnalyzer: {
-    analyzeTrend: jest.fn((score, componentScores) => ({
-      currentScore: score,
-      direction: 'stable',
-      changePercent: 0,
+jest.mock(
+  '../../../../../src/lib/quality-validator/scoring/trendAnalyzer',
+  () => ({
+    trendAnalyzer: {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      analyzeTrend: jest.fn((score, componentScores) => ({
+        currentScore: score,
+        direction: 'stable',
+        changePercent: 0,
+      })),
+    },
+  }),
+)
+
+jest.mock(
+  '../../../../../src/lib/quality-validator/utils/trendStorage',
+  () => ({
+    saveTrendHistory: jest.fn(),
+    createHistoricalRecord: jest.fn((score, grade, scores) => ({
+      score,
+      grade,
+      componentScores: scores,
+      timestamp: new Date().toISOString(),
     })),
-  },
-}));
-
-jest.mock('../../../../../src/lib/quality-validator/utils/trendStorage', () => ({
-  saveTrendHistory: jest.fn(),
-  createHistoricalRecord: jest.fn((score, grade, scores) => ({
-    score,
-    grade,
-    componentScores: scores,
-    timestamp: new Date().toISOString(),
-  })),
-}));
+  }),
+)
 
 describe('ScoringEngine - Extended Edge Case Tests', () => {
-  let engine: ScoringEngine;
-  let defaultWeights: ScoringWeights;
-  let defaultMetadata: ResultMetadata;
+  let engine: ScoringEngine
+  let defaultWeights: ScoringWeights
+  let defaultMetadata: ResultMetadata
 
   beforeEach(() => {
-    engine = new ScoringEngine();
+    engine = new ScoringEngine()
     defaultWeights = {
       codeQuality: 0.3,
       testCoverage: 0.35,
       architecture: 0.2,
       security: 0.15,
-    };
+    }
 
-    const config = createDefaultConfig();
+    const config = createDefaultConfig()
     defaultMetadata = {
       timestamp: new Date().toISOString(),
       toolVersion: '1.0.0',
@@ -75,10 +87,10 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
       projectPath: process.cwd(),
       nodeVersion: process.version,
       configUsed: config,
-    };
+    }
 
-    jest.clearAllMocks();
-  });
+    jest.clearAllMocks()
+  })
 
   // ============================================================================
   // 1. NULL/UNDEFINED METRICS HANDLING
@@ -87,20 +99,28 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
   describe('Null/Undefined Metrics Handling', () => {
     it('should handle all metrics as null', () => {
       // Act
-      const result = engine.calculateScore(null, null, null, null, defaultWeights, [], defaultMetadata);
+      const result = engine.calculateScore(
+        null,
+        null,
+        null,
+        null,
+        defaultWeights,
+        [],
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.overall.score).toBeGreaterThanOrEqual(0);
-      expect(result.overall.score).toBeLessThanOrEqual(100);
-      expect(result.componentScores).toBeDefined();
-    });
+      expect(result.overall.score).toBeGreaterThanOrEqual(0)
+      expect(result.overall.score).toBeLessThanOrEqual(100)
+      expect(result.componentScores).toBeDefined()
+    })
 
     it('should handle partial null metrics', () => {
       // Arrange
-      const codeQuality = createMockCodeQualityMetrics();
-      const testCoverage = null;
-      const architecture = null;
-      const security = null;
+      const codeQuality = createMockCodeQualityMetrics()
+      const testCoverage = null
+      const architecture = null
+      const security = null
 
       // Act
       const result = engine.calculateScore(
@@ -110,28 +130,36 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         security,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.overall.score).toBeDefined();
-      expect(result.componentScores.codeQuality.score).toBeGreaterThan(0);
-      expect(result.componentScores.testCoverage.score).toBe(30);
-      expect(result.componentScores.architecture.score).toBe(50);
-      expect(result.componentScores.security.score).toBe(50);
-    });
+      expect(result.overall.score).toBeDefined()
+      expect(result.componentScores.codeQuality.score).toBeGreaterThan(0)
+      expect(result.componentScores.testCoverage.score).toBe(30)
+      expect(result.componentScores.architecture.score).toBe(50)
+      expect(result.componentScores.security.score).toBe(50)
+    })
 
     it('should provide default score when all metrics are null', () => {
       // Act
-      const result = engine.calculateScore(null, null, null, null, defaultWeights, [], defaultMetadata);
+      const result = engine.calculateScore(
+        null,
+        null,
+        null,
+        null,
+        defaultWeights,
+        [],
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.componentScores.codeQuality.score).toBe(50);
-      expect(result.componentScores.testCoverage.score).toBe(30);
-      expect(result.componentScores.architecture.score).toBe(50);
-      expect(result.componentScores.security.score).toBe(50);
-    });
-  });
+      expect(result.componentScores.codeQuality.score).toBe(50)
+      expect(result.componentScores.testCoverage.score).toBe(30)
+      expect(result.componentScores.architecture.score).toBe(50)
+      expect(result.componentScores.security.score).toBe(50)
+    })
+  })
 
   // ============================================================================
   // 2. COMPLEXITY SCORING EDGE CASES
@@ -147,7 +175,7 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
           maximum: 0,
           distribution: { good: 0, warning: 0, critical: 0 },
         },
-      });
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -157,12 +185,14 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         null,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.componentScores.codeQuality.score).toBeGreaterThanOrEqual(90);
-    });
+      expect(result.componentScores.codeQuality.score).toBeGreaterThanOrEqual(
+        90,
+      )
+    })
 
     it('should penalize critical functions', () => {
       // Arrange
@@ -173,7 +203,7 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
           maximum: 50,
           distribution: { good: 50, warning: 30, critical: 20 },
         },
-      });
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -183,13 +213,13 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         null,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.componentScores.codeQuality.score).toBeLessThan(100);
-      expect(result.componentScores.codeQuality.score).toBeGreaterThan(0);
-    });
+      expect(result.componentScores.codeQuality.score).toBeLessThan(100)
+      expect(result.componentScores.codeQuality.score).toBeGreaterThan(0)
+    })
 
     it('should handle all functions in critical state', () => {
       // Arrange
@@ -201,8 +231,14 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
           distribution: { good: 10, warning: 10, critical: 80 },
         },
         duplication: { percent: 2.5, lines: 50, blocks: [], status: 'good' },
-        linting: { errors: 0, warnings: 3, info: 0, violations: [], byRule: new Map() } as any,
-      });
+        linting: {
+          errors: 0,
+          warnings: 3,
+          info: 0,
+          violations: [],
+          byRule: new Map(),
+        } as any,
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -212,12 +248,12 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         null,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.componentScores.codeQuality.score).toBeLessThan(70);
-    });
+      expect(result.componentScores.codeQuality.score).toBeLessThan(70)
+    })
 
     it('should handle null complexity', () => {
       // Arrange
@@ -228,7 +264,7 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
           maximum: 0,
           distribution: { good: 0, warning: 0, critical: 0 },
         },
-      });
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -238,13 +274,13 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         null,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.componentScores.codeQuality.score).toBeGreaterThan(40);
-    });
-  });
+      expect(result.componentScores.codeQuality.score).toBeGreaterThan(40)
+    })
+  })
 
   // ============================================================================
   // 3. DUPLICATION SCORING EDGE CASES
@@ -255,7 +291,7 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
       // Arrange
       const codeQuality = createMockCodeQualityMetrics({
         duplication: { percent: 0, lines: 0, blocks: [], status: 'good' },
-      });
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -265,18 +301,20 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         null,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.componentScores.codeQuality.score).toBeGreaterThanOrEqual(90);
-    });
+      expect(result.componentScores.codeQuality.score).toBeGreaterThanOrEqual(
+        90,
+      )
+    })
 
     it('should score 90 for 3-5% duplication', () => {
       // Arrange
       const codeQuality = createMockCodeQualityMetrics({
         duplication: { percent: 4, lines: 100, blocks: [], status: 'warning' },
-      });
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -286,18 +324,25 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         null,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.componentScores.codeQuality.score).toBeGreaterThanOrEqual(70);
-    });
+      expect(result.componentScores.codeQuality.score).toBeGreaterThanOrEqual(
+        70,
+      )
+    })
 
     it('should penalize high duplication', () => {
       // Arrange
       const codeQuality = createMockCodeQualityMetrics({
-        duplication: { percent: 20, lines: 500, blocks: [], status: 'critical' },
-      });
+        duplication: {
+          percent: 20,
+          lines: 500,
+          blocks: [],
+          status: 'critical',
+        },
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -307,18 +352,23 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         null,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.componentScores.codeQuality.score).toBeLessThan(80);
-    });
+      expect(result.componentScores.codeQuality.score).toBeLessThan(80)
+    })
 
     it('should handle null duplication', () => {
       // Arrange
       const codeQuality = createMockCodeQualityMetrics({
-        duplication: { percent: undefined, lines: 0, blocks: [], status: 'good' } as any,
-      });
+        duplication: {
+          percent: undefined,
+          lines: 0,
+          blocks: [],
+          status: 'good',
+        } as any,
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -328,13 +378,13 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         null,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.componentScores.codeQuality.score).toBeGreaterThan(30);
-    });
-  });
+      expect(result.componentScores.codeQuality.score).toBeGreaterThan(30)
+    })
+  })
 
   // ============================================================================
   // 4. LINTING SCORE EDGE CASES
@@ -344,8 +394,14 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
     it('should score 100 for no errors or warnings', () => {
       // Arrange
       const codeQuality = createMockCodeQualityMetrics({
-        linting: { errors: 0, warnings: 0, info: 0, violations: [], byRule: new Map() } as any,
-      });
+        linting: {
+          errors: 0,
+          warnings: 0,
+          info: 0,
+          violations: [],
+          byRule: new Map(),
+        } as any,
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -355,18 +411,26 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         null,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.componentScores.codeQuality.score).toBeGreaterThanOrEqual(90);
-    });
+      expect(result.componentScores.codeQuality.score).toBeGreaterThanOrEqual(
+        90,
+      )
+    })
 
     it('should penalize errors significantly', () => {
       // Arrange
       const codeQuality = createMockCodeQualityMetrics({
-        linting: { errors: 10, warnings: 0, info: 0, violations: [], byRule: new Map() } as any,
-      });
+        linting: {
+          errors: 10,
+          warnings: 0,
+          info: 0,
+          violations: [],
+          byRule: new Map(),
+        } as any,
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -376,18 +440,24 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         null,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.componentScores.codeQuality.score).toBeLessThan(100);
-    });
+      expect(result.componentScores.codeQuality.score).toBeLessThan(100)
+    })
 
     it('should handle warnings above threshold', () => {
       // Arrange
       const codeQuality = createMockCodeQualityMetrics({
-        linting: { errors: 0, warnings: 15, info: 0, violations: [], byRule: new Map() } as any,
-      });
+        linting: {
+          errors: 0,
+          warnings: 15,
+          info: 0,
+          violations: [],
+          byRule: new Map(),
+        } as any,
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -397,18 +467,24 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         null,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.componentScores.codeQuality.score).toBeLessThan(100);
-    });
+      expect(result.componentScores.codeQuality.score).toBeLessThan(100)
+    })
 
     it('should handle null linting metrics', () => {
       // Arrange
       const codeQuality = createMockCodeQualityMetrics({
-        linting: { errors: undefined, warnings: undefined, info: 0, violations: [], byRule: new Map() } as any,
-      });
+        linting: {
+          errors: undefined,
+          warnings: undefined,
+          info: 0,
+          violations: [],
+          byRule: new Map(),
+        } as any,
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -418,13 +494,13 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         null,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.componentScores.codeQuality.score).toBeGreaterThan(30);
-    });
-  });
+      expect(result.componentScores.codeQuality.score).toBeGreaterThan(30)
+    })
+  })
 
   // ============================================================================
   // 5. TEST COVERAGE SCORE EDGE CASES
@@ -435,12 +511,32 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
       // Arrange
       const testCoverage = createMockTestCoverageMetrics({
         overall: {
-          lines: { total: 1000, covered: 800, percentage: 80, status: 'excellent' },
-          branches: { total: 500, covered: 400, percentage: 80, status: 'excellent' },
-          functions: { total: 100, covered: 80, percentage: 80, status: 'excellent' },
-          statements: { total: 1200, covered: 960, percentage: 80, status: 'excellent' },
+          lines: {
+            total: 1000,
+            covered: 800,
+            percentage: 80,
+            status: 'excellent',
+          },
+          branches: {
+            total: 500,
+            covered: 400,
+            percentage: 80,
+            status: 'excellent',
+          },
+          functions: {
+            total: 100,
+            covered: 80,
+            percentage: 80,
+            status: 'excellent',
+          },
+          statements: {
+            total: 1200,
+            covered: 960,
+            percentage: 80,
+            status: 'excellent',
+          },
         },
-      });
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -450,21 +546,41 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         null,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.componentScores.testCoverage.score).toBeGreaterThan(60);
-    });
+      expect(result.componentScores.testCoverage.score).toBeGreaterThan(60)
+    })
 
     it('should include effectiveness score in calculation', () => {
       // Arrange
       const testCoverage = createMockTestCoverageMetrics({
         overall: {
-          lines: { total: 1000, covered: 800, percentage: 80, status: 'excellent' },
-          branches: { total: 500, covered: 400, percentage: 80, status: 'excellent' },
-          functions: { total: 100, covered: 80, percentage: 80, status: 'excellent' },
-          statements: { total: 1200, covered: 960, percentage: 80, status: 'excellent' },
+          lines: {
+            total: 1000,
+            covered: 800,
+            percentage: 80,
+            status: 'excellent',
+          },
+          branches: {
+            total: 500,
+            covered: 400,
+            percentage: 80,
+            status: 'excellent',
+          },
+          functions: {
+            total: 100,
+            covered: 80,
+            percentage: 80,
+            status: 'excellent',
+          },
+          statements: {
+            total: 1200,
+            covered: 960,
+            percentage: 80,
+            status: 'excellent',
+          },
         },
         effectiveness: {
           totalTests: 100,
@@ -475,7 +591,7 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
           effectivenessScore: 90,
           issues: [],
         },
-      });
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -485,12 +601,12 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         null,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.componentScores.testCoverage.score).toBeGreaterThan(0);
-    });
+      expect(result.componentScores.testCoverage.score).toBeGreaterThan(0)
+    })
 
     it('should handle zero coverage metrics', () => {
       // Arrange
@@ -499,9 +615,14 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
           lines: { total: 1000, covered: 0, percentage: 0, status: 'poor' },
           branches: { total: 500, covered: 0, percentage: 0, status: 'poor' },
           functions: { total: 100, covered: 0, percentage: 0, status: 'poor' },
-          statements: { total: 1200, covered: 0, percentage: 0, status: 'poor' },
+          statements: {
+            total: 1200,
+            covered: 0,
+            percentage: 0,
+            status: 'poor',
+          },
         },
-      });
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -511,13 +632,13 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         null,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.componentScores.testCoverage.score).toBeLessThan(50);
-    });
-  });
+      expect(result.componentScores.testCoverage.score).toBeLessThan(50)
+    })
+  })
 
   // ============================================================================
   // 6. ARCHITECTURE SCORE EDGE CASES
@@ -529,7 +650,13 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
       const architecture = createMockArchitectureMetrics({
         components: {
           totalCount: 10,
-          byType: { atoms: 3, molecules: 3, organisms: 3, templates: 1, unknown: 0 },
+          byType: {
+            atoms: 3,
+            molecules: 3,
+            organisms: 3,
+            templates: 1,
+            unknown: 0,
+          },
           oversized: [
             { file: 'component.tsx', lines: 2000 } as any,
             { file: 'component2.tsx', lines: 1500 } as any,
@@ -537,7 +664,7 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
           misplaced: [],
           averageSize: 500,
         },
-      });
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -547,12 +674,12 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         null,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.componentScores.architecture.score).toBeLessThan(100);
-    });
+      expect(result.componentScores.architecture.score).toBeLessThan(100)
+    })
 
     it('should penalize circular dependencies', () => {
       // Arrange
@@ -566,7 +693,7 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
           layerViolations: [],
           externalDependencies: new Map(),
         },
-      });
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -576,19 +703,25 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         null,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.componentScores.architecture.score).toBeLessThan(100);
-    });
+      expect(result.componentScores.architecture.score).toBeLessThan(100)
+    })
 
     it('should handle perfect architecture', () => {
       // Arrange
       const architecture = createMockArchitectureMetrics({
         components: {
           totalCount: 50,
-          byType: { atoms: 20, molecules: 15, organisms: 10, templates: 5, unknown: 0 },
+          byType: {
+            atoms: 20,
+            molecules: 15,
+            organisms: 10,
+            templates: 5,
+            unknown: 0,
+          },
           oversized: [],
           misplaced: [],
           averageSize: 150,
@@ -604,7 +737,7 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
           hookUsage: { issues: [], score: 100 },
           reactBestPractices: { issues: [], score: 100 },
         },
-      });
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -614,13 +747,15 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         null,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.componentScores.architecture.score).toBeGreaterThanOrEqual(90);
-    });
-  });
+      expect(result.componentScores.architecture.score).toBeGreaterThanOrEqual(
+        90,
+      )
+    })
+  })
 
   // ============================================================================
   // 7. SECURITY SCORE EDGE CASES
@@ -631,12 +766,22 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
       // Arrange
       const security = createMockSecurityMetrics({
         vulnerabilities: [
-          { id: 'vuln1', severity: 'critical', title: 'Critical', description: 'Test' } as any,
-          { id: 'vuln2', severity: 'critical', title: 'Critical', description: 'Test' } as any,
+          {
+            id: 'vuln1',
+            severity: 'critical',
+            title: 'Critical',
+            description: 'Test',
+          } as any,
+          {
+            id: 'vuln2',
+            severity: 'critical',
+            title: 'Critical',
+            description: 'Test',
+          } as any,
         ],
         codePatterns: [],
         performanceIssues: [],
-      });
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -646,24 +791,39 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         security,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.componentScores.security.score).toBeLessThanOrEqual(50);
-    });
+      expect(result.componentScores.security.score).toBeLessThanOrEqual(50)
+    })
 
     it('should penalize high severity vulnerabilities', () => {
       // Arrange
       const security = createMockSecurityMetrics({
         vulnerabilities: [
-          { id: 'vuln1', severity: 'high', title: 'High', description: 'Test' } as any,
-          { id: 'vuln2', severity: 'high', title: 'High', description: 'Test' } as any,
-          { id: 'vuln3', severity: 'high', title: 'High', description: 'Test' } as any,
+          {
+            id: 'vuln1',
+            severity: 'high',
+            title: 'High',
+            description: 'Test',
+          } as any,
+          {
+            id: 'vuln2',
+            severity: 'high',
+            title: 'High',
+            description: 'Test',
+          } as any,
+          {
+            id: 'vuln3',
+            severity: 'high',
+            title: 'High',
+            description: 'Test',
+          } as any,
         ],
         codePatterns: [],
         performanceIssues: [],
-      });
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -673,23 +833,33 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         security,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.componentScores.security.score).toBeLessThan(100);
-    });
+      expect(result.componentScores.security.score).toBeLessThan(100)
+    })
 
     it('should penalize code pattern issues', () => {
       // Arrange
       const security = createMockSecurityMetrics({
         vulnerabilities: [],
         codePatterns: [
-          { id: 'pattern1', severity: 'high', title: 'Pattern Issue', description: 'Test' } as any,
-          { id: 'pattern2', severity: 'high', title: 'Pattern Issue', description: 'Test' } as any,
+          {
+            id: 'pattern1',
+            severity: 'high',
+            title: 'Pattern Issue',
+            description: 'Test',
+          } as any,
+          {
+            id: 'pattern2',
+            severity: 'high',
+            title: 'Pattern Issue',
+            description: 'Test',
+          } as any,
         ],
         performanceIssues: [],
-      });
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -699,12 +869,12 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         security,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.componentScores.security.score).toBeLessThan(100);
-    });
+      expect(result.componentScores.security.score).toBeLessThan(100)
+    })
 
     it('should penalize performance issues', () => {
       // Arrange
@@ -712,11 +882,23 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         vulnerabilities: [],
         codePatterns: [],
         performanceIssues: [
-          { id: 'perf1', title: 'Performance Issue', description: 'Test' } as any,
-          { id: 'perf2', title: 'Performance Issue', description: 'Test' } as any,
-          { id: 'perf3', title: 'Performance Issue', description: 'Test' } as any,
+          {
+            id: 'perf1',
+            title: 'Performance Issue',
+            description: 'Test',
+          } as any,
+          {
+            id: 'perf2',
+            title: 'Performance Issue',
+            description: 'Test',
+          } as any,
+          {
+            id: 'perf3',
+            title: 'Performance Issue',
+            description: 'Test',
+          } as any,
         ],
-      });
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -726,12 +908,12 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         security,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.componentScores.security.score).toBeLessThan(100);
-    });
+      expect(result.componentScores.security.score).toBeLessThan(100)
+    })
 
     it('should have perfect score with no security issues', () => {
       // Arrange
@@ -739,7 +921,7 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         vulnerabilities: [],
         codePatterns: [],
         performanceIssues: [],
-      });
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -749,13 +931,13 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         security,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.componentScores.security.score).toBe(100);
-    });
-  });
+      expect(result.componentScores.security.score).toBe(100)
+    })
+  })
 
   // ============================================================================
   // 8. GRADE ASSIGNMENT
@@ -764,15 +946,35 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
   describe('Grade Assignment - All Grades', () => {
     it('should assign A grade for score >= 90', () => {
       // Arrange
-      const codeQuality = createMockCodeQualityMetrics();
+      const codeQuality = createMockCodeQualityMetrics()
       const testCoverage = createMockTestCoverageMetrics({
         overall: {
-          lines: { total: 1000, covered: 950, percentage: 95, status: 'excellent' },
-          branches: { total: 500, covered: 475, percentage: 95, status: 'excellent' },
-          functions: { total: 100, covered: 95, percentage: 95, status: 'excellent' },
-          statements: { total: 1200, covered: 1140, percentage: 95, status: 'excellent' },
+          lines: {
+            total: 1000,
+            covered: 950,
+            percentage: 95,
+            status: 'excellent',
+          },
+          branches: {
+            total: 500,
+            covered: 475,
+            percentage: 95,
+            status: 'excellent',
+          },
+          functions: {
+            total: 100,
+            covered: 95,
+            percentage: 95,
+            status: 'excellent',
+          },
+          statements: {
+            total: 1200,
+            covered: 1140,
+            percentage: 95,
+            status: 'excellent',
+          },
         },
-      });
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -782,26 +984,46 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
       if (result.overall.score >= 90) {
-        expect(result.overall.grade).toBe('A');
+        expect(result.overall.grade).toBe('A')
       }
-    });
+    })
 
     it('should assign B grade for score >= 80 and < 90', () => {
       // Arrange
-      const codeQuality = createMockCodeQualityMetrics();
+      const codeQuality = createMockCodeQualityMetrics()
       const testCoverage = createMockTestCoverageMetrics({
         overall: {
-          lines: { total: 1000, covered: 850, percentage: 85, status: 'excellent' },
-          branches: { total: 500, covered: 425, percentage: 85, status: 'excellent' },
-          functions: { total: 100, covered: 85, percentage: 85, status: 'excellent' },
-          statements: { total: 1200, covered: 1020, percentage: 85, status: 'excellent' },
+          lines: {
+            total: 1000,
+            covered: 850,
+            percentage: 85,
+            status: 'excellent',
+          },
+          branches: {
+            total: 500,
+            covered: 425,
+            percentage: 85,
+            status: 'excellent',
+          },
+          functions: {
+            total: 100,
+            covered: 85,
+            percentage: 85,
+            status: 'excellent',
+          },
+          statements: {
+            total: 1200,
+            covered: 1020,
+            percentage: 85,
+            status: 'excellent',
+          },
         },
-      });
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -811,26 +1033,41 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
       if (result.overall.score >= 80 && result.overall.score < 90) {
-        expect(result.overall.grade).toBe('B');
+        expect(result.overall.grade).toBe('B')
       }
-    });
+    })
 
     it('should assign F grade for score < 60', () => {
       // Arrange
       const security = createMockSecurityMetrics({
         vulnerabilities: [
-          { id: 'v1', severity: 'critical', title: 'Critical', description: 'Test' } as any,
-          { id: 'v2', severity: 'critical', title: 'Critical', description: 'Test' } as any,
-          { id: 'v3', severity: 'critical', title: 'Critical', description: 'Test' } as any,
+          {
+            id: 'v1',
+            severity: 'critical',
+            title: 'Critical',
+            description: 'Test',
+          } as any,
+          {
+            id: 'v2',
+            severity: 'critical',
+            title: 'Critical',
+            description: 'Test',
+          } as any,
+          {
+            id: 'v3',
+            severity: 'critical',
+            title: 'Critical',
+            description: 'Test',
+          } as any,
         ],
         codePatterns: [],
         performanceIssues: [],
-      });
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -840,15 +1077,15 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         security,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
       if (result.overall.score < 60) {
-        expect(result.overall.grade).toBe('F');
+        expect(result.overall.grade).toBe('F')
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // 9. PASS/FAIL STATUS
@@ -857,15 +1094,35 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
   describe('Pass/Fail Status Determination', () => {
     it('should set status to pass for score >= 80', () => {
       // Arrange
-      const codeQuality = createMockCodeQualityMetrics();
+      const codeQuality = createMockCodeQualityMetrics()
       const testCoverage = createMockTestCoverageMetrics({
         overall: {
-          lines: { total: 1000, covered: 850, percentage: 85, status: 'excellent' },
-          branches: { total: 500, covered: 425, percentage: 85, status: 'excellent' },
-          functions: { total: 100, covered: 85, percentage: 85, status: 'excellent' },
-          statements: { total: 1200, covered: 1020, percentage: 85, status: 'excellent' },
+          lines: {
+            total: 1000,
+            covered: 850,
+            percentage: 85,
+            status: 'excellent',
+          },
+          branches: {
+            total: 500,
+            covered: 425,
+            percentage: 85,
+            status: 'excellent',
+          },
+          functions: {
+            total: 100,
+            covered: 85,
+            percentage: 85,
+            status: 'excellent',
+          },
+          statements: {
+            total: 1200,
+            covered: 1020,
+            percentage: 85,
+            status: 'excellent',
+          },
         },
-      });
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -875,26 +1132,36 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
       if (result.overall.score >= 80) {
-        expect(result.overall.status).toBe('pass');
-        expect(result.overall.passesThresholds).toBe(true);
+        expect(result.overall.status).toBe('pass')
+        expect(result.overall.passesThresholds).toBe(true)
       }
-    });
+    })
 
     it('should set status to fail for score < 80', () => {
       // Arrange
       const security = createMockSecurityMetrics({
         vulnerabilities: [
-          { id: 'v1', severity: 'critical', title: 'Critical', description: 'Test' } as any,
-          { id: 'v2', severity: 'critical', title: 'Critical', description: 'Test' } as any,
+          {
+            id: 'v1',
+            severity: 'critical',
+            title: 'Critical',
+            description: 'Test',
+          } as any,
+          {
+            id: 'v2',
+            severity: 'critical',
+            title: 'Critical',
+            description: 'Test',
+          } as any,
         ],
         codePatterns: [],
         performanceIssues: [],
-      });
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -904,16 +1171,16 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         security,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
       if (result.overall.score < 80) {
-        expect(result.overall.status).toBe('fail');
-        expect(result.overall.passesThresholds).toBe(false);
+        expect(result.overall.status).toBe('fail')
+        expect(result.overall.passesThresholds).toBe(false)
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // 10. RECOMMENDATION GENERATION
@@ -929,7 +1196,7 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
           maximum: 50,
           distribution: { good: 20, warning: 30, critical: 50 },
         },
-      });
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -939,21 +1206,28 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         null,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.recommendations.length).toBeGreaterThan(0);
-      const complexityRec = result.recommendations.find((r) => r.issue.includes('complexity'));
-      expect(complexityRec).toBeDefined();
-      expect(complexityRec?.priority).toBe('high');
-    });
+      expect(result.recommendations.length).toBeGreaterThan(0)
+      const complexityRec = result.recommendations.find(r =>
+        r.issue.includes('complexity'),
+      )
+      expect(complexityRec).toBeDefined()
+      expect(complexityRec?.priority).toBe('high')
+    })
 
     it('should generate duplication recommendations', () => {
       // Arrange
       const codeQuality = createMockCodeQualityMetrics({
-        duplication: { percent: 10, lines: 500, blocks: [], status: 'critical' },
-      });
+        duplication: {
+          percent: 10,
+          lines: 500,
+          blocks: [],
+          status: 'critical',
+        },
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -963,24 +1237,46 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         null,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      const dupRec = result.recommendations.find((r) => r.issue.includes('duplication'));
-      expect(dupRec).toBeDefined();
-    });
+      const dupRec = result.recommendations.find(r =>
+        r.issue.includes('duplication'),
+      )
+      expect(dupRec).toBeDefined()
+    })
 
     it('should generate test coverage recommendations', () => {
       // Arrange
       const testCoverage = createMockTestCoverageMetrics({
         overall: {
-          lines: { total: 1000, covered: 700, percentage: 70, status: 'warning' as any },
-          branches: { total: 500, covered: 350, percentage: 70, status: 'warning' as any },
-          functions: { total: 100, covered: 70, percentage: 70, status: 'warning' as any },
-          statements: { total: 1200, covered: 840, percentage: 70, status: 'warning' as any },
+          lines: {
+            total: 1000,
+            covered: 700,
+            percentage: 70,
+            status: 'warning' as any,
+          },
+          branches: {
+            total: 500,
+            covered: 350,
+            percentage: 70,
+            status: 'warning' as any,
+          },
+          functions: {
+            total: 100,
+            covered: 70,
+            percentage: 70,
+            status: 'warning' as any,
+          },
+          statements: {
+            total: 1200,
+            covered: 840,
+            percentage: 70,
+            status: 'warning' as any,
+          },
         },
-      });
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -990,23 +1286,30 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         null,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      const coverageRec = result.recommendations.find((r) => r.issue.includes('coverage'));
-      expect(coverageRec).toBeDefined();
-    });
+      const coverageRec = result.recommendations.find(r =>
+        r.issue.includes('coverage'),
+      )
+      expect(coverageRec).toBeDefined()
+    })
 
     it('should generate security recommendations for vulnerabilities', () => {
       // Arrange
       const security = createMockSecurityMetrics({
         vulnerabilities: [
-          { id: 'v1', severity: 'critical', title: 'Critical Vuln', description: 'Test' } as any,
+          {
+            id: 'v1',
+            severity: 'critical',
+            title: 'Critical Vuln',
+            description: 'Test',
+          } as any,
         ],
         codePatterns: [],
         performanceIssues: [],
-      });
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -1016,14 +1319,14 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         security,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      const secRec = result.recommendations.find((r) => r.category === 'security');
-      expect(secRec).toBeDefined();
-      expect(secRec?.priority).toBe('critical');
-    });
+      const secRec = result.recommendations.find(r => r.category === 'security')
+      expect(secRec).toBeDefined()
+      expect(secRec?.priority).toBe('critical')
+    })
 
     it('should limit recommendations to top 5', () => {
       // Arrange
@@ -1035,16 +1338,36 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
           distribution: { good: 10, warning: 40, critical: 50 },
         },
         duplication: { percent: 8, lines: 500, blocks: [], status: 'critical' },
-      });
+      })
 
       const testCoverage = createMockTestCoverageMetrics({
         overall: {
-          lines: { total: 1000, covered: 700, percentage: 70, status: 'warning' as any },
-          branches: { total: 500, covered: 350, percentage: 70, status: 'warning' as any },
-          functions: { total: 100, covered: 70, percentage: 70, status: 'warning' as any },
-          statements: { total: 1200, covered: 840, percentage: 70, status: 'warning' as any },
+          lines: {
+            total: 1000,
+            covered: 700,
+            percentage: 70,
+            status: 'warning' as any,
+          },
+          branches: {
+            total: 500,
+            covered: 350,
+            percentage: 70,
+            status: 'warning' as any,
+          },
+          functions: {
+            total: 100,
+            covered: 70,
+            percentage: 70,
+            status: 'warning' as any,
+          },
+          statements: {
+            total: 1200,
+            covered: 840,
+            percentage: 70,
+            status: 'warning' as any,
+          },
         },
-      });
+      })
 
       const architecture = createMockArchitectureMetrics({
         dependencies: {
@@ -1053,7 +1376,7 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
           layerViolations: [],
           externalDependencies: new Map(),
         },
-      });
+      })
 
       // Act
       const result = engine.calculateScore(
@@ -1063,13 +1386,13 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         null,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.recommendations.length).toBeLessThanOrEqual(5);
-    });
-  });
+      expect(result.recommendations.length).toBeLessThanOrEqual(5)
+    })
+  })
 
   // ============================================================================
   // 11. COMPONENT SCORES STRUCTURE
@@ -1085,31 +1408,31 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
       expect(result.componentScores.codeQuality).toEqual({
         score: expect.any(Number),
         weight: 0.3,
         weightedScore: expect.any(Number),
-      });
+      })
       expect(result.componentScores.testCoverage).toEqual({
         score: expect.any(Number),
         weight: 0.35,
         weightedScore: expect.any(Number),
-      });
+      })
       expect(result.componentScores.architecture).toEqual({
         score: expect.any(Number),
         weight: 0.2,
         weightedScore: expect.any(Number),
-      });
+      })
       expect(result.componentScores.security).toEqual({
         score: expect.any(Number),
         weight: 0.15,
         weightedScore: expect.any(Number),
-      });
-    });
+      })
+    })
 
     it('should calculate weighted scores correctly', () => {
       // Arrange
@@ -1120,17 +1443,27 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         createMockSecurityMetrics(),
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Act & Assert
-      const cqWeighted = result.componentScores.codeQuality.score * result.componentScores.codeQuality.weight;
-      expect(result.componentScores.codeQuality.weightedScore).toBeCloseTo(cqWeighted, 1);
+      const cqWeighted =
+        result.componentScores.codeQuality.score *
+        result.componentScores.codeQuality.weight
+      expect(result.componentScores.codeQuality.weightedScore).toBeCloseTo(
+        cqWeighted,
+        1,
+      )
 
-      const tcWeighted = result.componentScores.testCoverage.score * result.componentScores.testCoverage.weight;
-      expect(result.componentScores.testCoverage.weightedScore).toBeCloseTo(tcWeighted, 1);
-    });
-  });
+      const tcWeighted =
+        result.componentScores.testCoverage.score *
+        result.componentScores.testCoverage.weight
+      expect(result.componentScores.testCoverage.weightedScore).toBeCloseTo(
+        tcWeighted,
+        1,
+      )
+    })
+  })
 
   // ============================================================================
   // 12. FINDINGS HANDLING
@@ -1139,9 +1472,9 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
   describe('Findings Integration', () => {
     it('should include findings in result', () => {
       // Arrange
-      const finding1 = createMockFinding({ severity: 'critical' });
-      const finding2 = createMockFinding({ severity: 'high' });
-      const findings = [finding1, finding2];
+      const finding1 = createMockFinding({ severity: 'critical' })
+      const finding2 = createMockFinding({ severity: 'high' })
+      const findings = [finding1, finding2]
 
       // Act
       const result = engine.calculateScore(
@@ -1151,13 +1484,13 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         null,
         defaultWeights,
         findings,
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.findings).toEqual(findings);
-      expect(result.findings).toHaveLength(2);
-    });
+      expect(result.findings).toEqual(findings)
+      expect(result.findings).toHaveLength(2)
+    })
 
     it('should handle empty findings array', () => {
       // Act
@@ -1168,13 +1501,13 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
         null,
         defaultWeights,
         [],
-        defaultMetadata
-      );
+        defaultMetadata,
+      )
 
       // Assert
-      expect(result.findings).toEqual([]);
-    });
-  });
+      expect(result.findings).toEqual([])
+    })
+  })
 
   // ============================================================================
   // 13. SUMMARY GENERATION
@@ -1183,16 +1516,24 @@ describe('ScoringEngine - Extended Edge Case Tests', () => {
   describe('Summary Generation', () => {
     it('should generate appropriate summary for each grade', () => {
       // Test by simulating different grade scenarios
-      const summaries = new Set<string>();
+      const summaries = new Set<string>()
 
       for (let score = 0; score <= 100; score += 20) {
         // We can't directly test private methods, so we verify through the result
-        const result = engine.calculateScore(null, null, null, null, defaultWeights, [], defaultMetadata);
-        summaries.add(result.overall.summary);
+        const result = engine.calculateScore(
+          null,
+          null,
+          null,
+          null,
+          defaultWeights,
+          [],
+          defaultMetadata,
+        )
+        summaries.add(result.overall.summary)
       }
 
       // Assert that we have summaries (we can't test private method directly)
-      expect(summaries.size).toBeGreaterThan(0);
-    });
-  });
-});
+      expect(summaries.size).toBeGreaterThan(0)
+    })
+  })
+})

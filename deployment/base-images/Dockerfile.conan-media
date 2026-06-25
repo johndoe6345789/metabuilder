@@ -1,0 +1,52 @@
+# metabuilder/base-conan-media
+#
+# Conan C++ packages for the media daemon only (drogon, nlohmann_json,
+# yaml-cpp, spdlog, fmt, cpr). Split out of the former monolithic
+# base-conan-deps so the app pipeline depends on a small, fast base.
+#
+# Build:  docker build -f Dockerfile.conan-media -t metabuilder/base-conan-media:latest ../../
+# App Dockerfiles:  FROM metabuilder/base-conan-media:latest
+
+ARG BASE_REGISTRY=metabuilder
+FROM ${BASE_REGISTRY}/base-apt:latest
+
+# Install Conan 2 with retry
+RUN for i in 1 2 3 4 5; do \
+      pip3 install --break-system-packages conan==2.* \
+      && break \
+      || (echo "pip install failed (attempt $i/5), retrying in $((i*10))s..." && sleep $((i*10))); \
+    done
+
+# Detect Conan profile (must run inside the container, not from host cache)
+RUN conan profile detect --force
+
+# Route Conan through the pkgrepo proxy/cache when CONAN_REMOTE is set (empty =
+# default conancenter). Base builds run with --network=host, so a host URL like
+# http://localhost:5002/conan is reachable.
+ARG CONAN_REMOTE=""
+# Add pkgrepo as the first remote so downloads are served from the local
+# pull-through cache, but keep conancenter enabled so Conan can enumerate
+# version ranges that pkgrepo's proxy doesn't support.
+RUN if [ -n "$CONAN_REMOTE" ]; then \
+      conan remote add pkgrepo "$CONAN_REMOTE" --insert 0 --force; \
+    fi
+
+# ---- Media daemon ----
+COPY services/media_daemon/build-config/conanfile.txt /deps/media-daemon/conanfile.txt
+
+RUN mkdir -p /tmp/media-build && \
+    for i in 1 2 3 4 5; do \
+      conan install /deps/media-daemon/ \
+        --output-folder=/tmp/media-build \
+        --build=missing \
+        -s build_type=Release \
+        -c tools.system.package_manager:mode=install \
+      && break \
+      || (echo "conan install (media-daemon) failed attempt $i/5, retrying in $((i*10))s..." && sleep $((i*10))); \
+    done
+
+# Keep only the Conan package cache in /root/.conan2
+RUN rm -rf /tmp/media-build
+
+LABEL org.metabuilder.image="base-conan-media" \
+      org.metabuilder.description="Pre-built Conan C++ packages (media daemon)"

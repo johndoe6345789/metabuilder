@@ -1,6 +1,6 @@
 'use client'
 
-import { Pagination, Box } from '@/fakemui'
+import { Pagination, Box } from '@/m3'
 import type { PaginationMetadata } from '@/lib/api/pagination'
 
 export interface PaginationControlsProps {

@@ -34,7 +34,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${bricolage.variable} ${jetbrainsMono.variable}`}>
+    <html
+      lang="en"
+      // eslint-disable-next-line max-len
+      className={`${inter.variable} ${bricolage.variable} ${jetbrainsMono.variable}`}
+    >
       <body>
         <Providers>{children}</Providers>
       </body>

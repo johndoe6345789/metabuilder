@@ -4,21 +4,21 @@
       "id": "file-dash-1",
       "name": "page.tsx",
       "path": "/src/app/page.tsx",
-      "content": "'use client'\n\nimport { DashboardStats } from '@/components/DashboardStats'\nimport { RecentActivity } from '@/components/RecentActivity'\nimport { AnalyticsCharts } from '@/components/AnalyticsCharts'\nimport { Grid, Container, Box } from '@mui/material'\n\nexport default function Dashboard() {\n  return (\n    <Container maxWidth=\"xl\" sx={{ py: 4 }}>\n      <Grid container spacing={3}>\n        <Grid item xs={12}>\n          <DashboardStats />\n        </Grid>\n        <Grid item xs={12} lg={8}>\n          <AnalyticsCharts />\n        </Grid>\n        <Grid item xs={12} lg={4}>\n          <RecentActivity />\n        </Grid>\n      </Grid>\n    </Container>\n  )\n}",
+      "content": "'use client'\n\nimport { DashboardStats } from '@/components/DashboardStats'\nimport { RecentActivity } from '@/components/RecentActivity'\nimport { AnalyticsCharts } from '@/components/AnalyticsCharts'\nimport { Grid, Container, Box } from '@metabuilder/m3'\n\nexport default function Dashboard() {\n  return (\n    <Container maxWidth=\"xl\" sx={{ py: 4 }}>\n      <Grid container spacing={3}>\n        <Grid item xs={12}>\n          <DashboardStats />\n        </Grid>\n        <Grid item xs={12} lg={8}>\n          <AnalyticsCharts />\n        </Grid>\n        <Grid item xs={12} lg={4}>\n          <RecentActivity />\n        </Grid>\n      </Grid>\n    </Container>\n  )\n}",
       "language": "typescript"
     },
     {
       "id": "file-dash-2",
       "name": "analytics.tsx",
       "path": "/src/app/analytics/page.tsx",
-      "content": "'use client'\n\nimport { AnalyticsDashboard } from '@/components/AnalyticsDashboard'\nimport { DateRangePicker } from '@/components/DateRangePicker'\nimport { Container, Box, Typography } from '@mui/material'\n\nexport default function AnalyticsPage() {\n  return (\n    <Container maxWidth=\"xl\" sx={{ py: 4 }}>\n      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 4 }}>\n        <Typography variant=\"h4\">Analytics</Typography>\n        <DateRangePicker />\n      </Box>\n      <AnalyticsDashboard />\n    </Container>\n  )\n}",
+      "content": "'use client'\n\nimport { AnalyticsDashboard } from '@/components/AnalyticsDashboard'\nimport { DateRangePicker } from '@/components/DateRangePicker'\nimport { Container, Box, Typography } from '@metabuilder/m3'\n\nexport default function AnalyticsPage() {\n  return (\n    <Container maxWidth=\"xl\" sx={{ py: 4 }}>\n      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 4 }}>\n        <Typography variant=\"h4\">Analytics</Typography>\n        <DateRangePicker />\n      </Box>\n      <AnalyticsDashboard />\n    </Container>\n  )\n}",
       "language": "typescript"
     },
     {
       "id": "file-dash-3",
       "name": "users.tsx",
       "path": "/src/app/users/page.tsx",
-      "content": "'use client'\n\nimport { UserTable } from '@/components/UserTable'\nimport { UserFilters } from '@/components/UserFilters'\nimport { Container, Box, Typography, Button } from '@mui/material'\nimport { Plus } from '@phosphor-icons/react'\n\nexport default function UsersPage() {\n  return (\n    <Container maxWidth=\"xl\" sx={{ py: 4 }}>\n      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 4 }}>\n        <Typography variant=\"h4\">Users</Typography>\n        <Button variant=\"contained\" startIcon={<Plus />}>\n          Add User\n        </Button>\n      </Box>\n      <UserFilters />\n      <UserTable />\n    </Container>\n  )\n}",
+      "content": "'use client'\n\nimport { UserTable } from '@/components/UserTable'\nimport { UserFilters } from '@/components/UserFilters'\nimport { Container, Box, Typography, Button } from '@metabuilder/m3'\nimport { Plus } from '@phosphor-icons/react'\n\nexport default function UsersPage() {\n  return (\n    <Container maxWidth=\"xl\" sx={{ py: 4 }}>\n      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 4 }}>\n        <Typography variant=\"h4\">Users</Typography>\n        <Button variant=\"contained\" startIcon={<Plus />}>\n          Add User\n        </Button>\n      </Box>\n      <UserFilters />\n      <UserTable />\n    </Container>\n  )\n}",
       "language": "typescript"
     }
   ],

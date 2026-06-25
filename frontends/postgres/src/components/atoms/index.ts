@@ -45,4 +45,4 @@ export {
   AccordionDetails,
   Chip,
   Tooltip,
-} from '@mui/material';
+} from '@metabuilder/components/m3';

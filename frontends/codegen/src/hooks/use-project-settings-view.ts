@@ -1,18 +1,26 @@
 import { useState } from 'react'
-import { useProjectSettingsActions } from '@/components/project-settings/useProjectSettingsActions'
+import {
+  useProjectSettingsActions,
+} from '@/components/project-settings/useProjectSettingsActions'
 import copy from '@/data/project-settings.json'
 import { NextJsConfig, NpmSettings } from '@/types/project'
 
 interface UseProjectSettingsViewArgs {
   nextjsConfig: NextJsConfig
   npmSettings: NpmSettings
-  onNextjsConfigChange: (config: NextJsConfig | ((current: NextJsConfig) => NextJsConfig)) => void
-  onNpmSettingsChange: (settings: NpmSettings | ((current: NpmSettings) => NpmSettings)) => void
+  onNextjsConfigChange: (
+    config: NextJsConfig | ((current: NextJsConfig) => NextJsConfig)
+  ) => void
+  onNpmSettingsChange: (
+    settings: NpmSettings | ((current: NpmSettings) => NpmSettings)
+  ) => void
 }
 
 export function useProjectSettingsView(args: UseProjectSettingsViewArgs) {
   const [selectedTab, setSelectedTab] = useState(0)
-  const actions = useProjectSettingsActions({ onNpmSettingsChange: args.onNpmSettingsChange })
+  const actions = useProjectSettingsActions({
+    onNpmSettingsChange: args.onNpmSettingsChange,
+  })
 
   return {
     ...args,

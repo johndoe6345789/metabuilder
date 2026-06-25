@@ -4,15 +4,23 @@ import { DataTablesShowcase } from './showcases/DataTablesShowcase'
 import { FormsShowcase } from './showcases/FormsShowcase'
 import { TaskListsShowcase } from './showcases/TaskListsShowcase'
 import { ContentGridsShowcase } from './showcases/ContentGridsShowcase'
+// eslint-disable-next-line max-len
 import { SidebarNavigationShowcase } from './showcases/SidebarNavigationShowcase'
 
 interface OrganismsSectionProps {
-  onSaveSnippet: (snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>) => void
+  onSaveSnippet: (
+    snippet: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>,
+  ) => void
 }
 
 export function OrganismsSection({ onSaveSnippet }: OrganismsSectionProps) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '64px' }} data-testid="organisms-section" role="region" aria-label="Organism design system components">
+    <div
+      style={{ display: 'flex', flexDirection: 'column', gap: '64px' }}
+      data-testid="organisms-section"
+      role="region"
+      aria-label="Organism design system components"
+    >
       <NavigationBarsShowcase onSaveSnippet={onSaveSnippet} />
       <DataTablesShowcase />
       <FormsShowcase />

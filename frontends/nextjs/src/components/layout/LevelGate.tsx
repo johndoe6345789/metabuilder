@@ -14,7 +14,7 @@
 
 import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
 import { getRoleLevel } from '@/lib/constants'
-import { Typography, Button, Paper } from '@/fakemui'
+import { Typography, Button, Paper } from '@/m3'
 import { useRouter } from 'next/navigation'
 
 export interface LevelGateProps {

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Package box -->
+  <path d="M32 8 L52 18 L52 46 L32 56 L12 46 L12 18 Z" fill="none"/>
+  <path d="M32 8 L32 56 M12 18 L32 28 L52 18"/>
+  <!-- Plus sign for install -->
+  <circle cx="48" cy="14" r="10" fill="none" stroke-width="1.5"/>
+  <path d="M48 10 L48 18 M44 14 L52 14" stroke-width="2"/>
+  <!-- Package layers -->
+  <path d="M18 32 L26 36 M38 36 L46 32" stroke-width="1.5"/>
+  <path d="M18 40 L26 44 M38 44 L46 40" stroke-width="1.5"/>
+</svg>

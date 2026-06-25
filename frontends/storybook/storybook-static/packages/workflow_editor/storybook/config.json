@@ -1,0 +1,56 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Workflow Editor",
+  "description": "Visual workflow editor and execution monitoring",
+  "stories": [
+    {
+      "name": "WorkflowEditor",
+      "render": "editor",
+      "description": "Visual workflow editor with canvas"
+    },
+    {
+      "name": "WorkflowRunCard",
+      "render": "status",
+      "description": "Workflow execution status card",
+      "args": {
+        "status": "running",
+        "progress": 65
+      }
+    }
+  ],
+  "renders": {
+    "editor": {
+      "description": "Workflow visual editor",
+      "featured": true
+    },
+    "status": {
+      "description": "Workflow run status"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "admin-user",
+      "username": "admin",
+      "level": 5
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Super Admin",
+      "description": "Full workflow editor access",
+      "context": {
+        "user": {
+          "level": 5
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["editor", "status", "run"],
+    "ignoredScripts": ["tests"]
+  },
+  "parameters": {
+    "layout": "fullscreen"
+  }
+}

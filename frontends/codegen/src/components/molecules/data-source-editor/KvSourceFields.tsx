@@ -1,6 +1,6 @@
-import { Input } from '@metabuilder/fakemui/inputs'
-import { Label } from '@metabuilder/fakemui/atoms'
-import { Textarea } from '@metabuilder/fakemui/inputs'
+import { Input } from '@metabuilder/m3/inputs'
+import { Label } from '@metabuilder/m3/atoms'
+import { Textarea } from '@metabuilder/m3/inputs'
 import { DataSource } from '@/types/json-ui'
 
 interface KvSourceFieldsCopy {

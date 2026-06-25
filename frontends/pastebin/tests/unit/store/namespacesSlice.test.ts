@@ -36,9 +36,10 @@ const mockNamespaces: Namespace[] = [
   },
 ]
 
-const createTestStore = () => configureStore({
-  reducer: { namespaces: namespacesReducer },
-})
+const createTestStore = () =>
+  configureStore({
+    reducer: { namespaces: namespacesReducer },
+  })
 type TestStore = ReturnType<typeof createTestStore>
 
 describe('namespacesSlice', () => {
@@ -83,6 +84,7 @@ describe('namespacesSlice', () => {
   describe('async thunks', () => {
     describe('fetchNamespaces', () => {
       it('should fetch namespaces successfully', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.ensureDefaultNamespace.mockResolvedValue(undefined)
         mockDb.getAllNamespaces.mockResolvedValue(mockNamespaces)
@@ -96,10 +98,9 @@ describe('namespacesSlice', () => {
       })
 
       it('should set loading to true while fetching', () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
-        mockDb.ensureDefaultNamespace.mockReturnValue(
-          new Promise(() => {})
-        )
+        mockDb.ensureDefaultNamespace.mockReturnValue(new Promise(() => {}))
         mockDb.getAllNamespaces.mockReturnValue(new Promise(() => {}))
 
         store.dispatch(fetchNamespaces())
@@ -108,6 +109,7 @@ describe('namespacesSlice', () => {
       })
 
       it('should select default namespace when selectedId is null and items available', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.ensureDefaultNamespace.mockResolvedValue(undefined)
         mockDb.getAllNamespaces.mockResolvedValue(mockNamespaces)
@@ -119,6 +121,7 @@ describe('namespacesSlice', () => {
       })
 
       it('should select first namespace when no default exists', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         const namespacesWithoutDefault = [
           { ...mockNamespaces[1] },
@@ -134,6 +137,7 @@ describe('namespacesSlice', () => {
       })
 
       it('should not change selectedId if already set', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.ensureDefaultNamespace.mockResolvedValue(undefined)
         mockDb.getAllNamespaces.mockResolvedValue(mockNamespaces)
@@ -146,6 +150,7 @@ describe('namespacesSlice', () => {
       })
 
       it('should handle fetch error', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         const error = new Error('Failed to fetch namespaces')
         mockDb.ensureDefaultNamespace.mockResolvedValue(undefined)
@@ -159,6 +164,7 @@ describe('namespacesSlice', () => {
       })
 
       it('should use default error message when error lacks message', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.ensureDefaultNamespace.mockResolvedValue(undefined)
         mockDb.getAllNamespaces.mockRejectedValue({})
@@ -170,6 +176,7 @@ describe('namespacesSlice', () => {
       })
 
       it('should call ensureDefaultNamespace before fetching all', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.ensureDefaultNamespace.mockResolvedValue(undefined)
         mockDb.getAllNamespaces.mockResolvedValue(mockNamespaces)
@@ -180,6 +187,7 @@ describe('namespacesSlice', () => {
       })
 
       it('should handle empty namespaces list', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.ensureDefaultNamespace.mockResolvedValue(undefined)
         mockDb.getAllNamespaces.mockResolvedValue([])
@@ -194,6 +202,7 @@ describe('namespacesSlice', () => {
 
     describe('createNamespace', () => {
       it('should create a new namespace', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.createNamespace.mockResolvedValue(undefined)
 
@@ -207,6 +216,7 @@ describe('namespacesSlice', () => {
       })
 
       it('should create namespace with generated id and timestamp', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.createNamespace.mockResolvedValue(undefined)
 
@@ -223,6 +233,7 @@ describe('namespacesSlice', () => {
       })
 
       it('should add namespace to items list', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.getAllNamespaces.mockResolvedValue(mockNamespaces)
         mockDb.createNamespace.mockResolvedValue(undefined)
@@ -238,6 +249,7 @@ describe('namespacesSlice', () => {
       })
 
       it('should call database createNamespace function', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.createNamespace.mockResolvedValue(undefined)
 
@@ -252,6 +264,7 @@ describe('namespacesSlice', () => {
 
     describe('deleteNamespace', () => {
       it('should delete a namespace by id', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.getAllNamespaces.mockResolvedValue(mockNamespaces)
         mockDb.deleteNamespace.mockResolvedValue(undefined)
@@ -267,6 +280,7 @@ describe('namespacesSlice', () => {
       })
 
       it('should update selected namespace when deleting currently selected', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.getAllNamespaces.mockResolvedValue(mockNamespaces)
         mockDb.deleteNamespace.mockResolvedValue(undefined)
@@ -282,6 +296,7 @@ describe('namespacesSlice', () => {
       })
 
       it('should select default namespace when deleting selected and default exists', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.getAllNamespaces.mockResolvedValue(mockNamespaces)
         mockDb.deleteNamespace.mockResolvedValue(undefined)
@@ -296,6 +311,7 @@ describe('namespacesSlice', () => {
       })
 
       it('should select first namespace when deleting selected and no default', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.getAllNamespaces.mockResolvedValue(mockNamespaces)
         mockDb.deleteNamespace.mockResolvedValue(undefined)
@@ -310,6 +326,7 @@ describe('namespacesSlice', () => {
       })
 
       it('should set selectedId to null when deleting last namespace', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         const singleNamespace = [mockNamespaces[0]]
         mockDb.getAllNamespaces.mockResolvedValue(singleNamespace)
@@ -325,6 +342,7 @@ describe('namespacesSlice', () => {
       })
 
       it('should not change selectedId when deleting non-selected namespace', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.getAllNamespaces.mockResolvedValue(mockNamespaces)
         mockDb.deleteNamespace.mockResolvedValue(undefined)
@@ -339,6 +357,7 @@ describe('namespacesSlice', () => {
       })
 
       it('should call database deleteNamespace function', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mockDb = require('@/lib/db')
         mockDb.getAllNamespaces.mockResolvedValue(mockNamespaces)
         mockDb.deleteNamespace.mockResolvedValue(undefined)

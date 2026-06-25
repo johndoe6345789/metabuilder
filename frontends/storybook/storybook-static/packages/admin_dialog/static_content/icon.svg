@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Admin panel with sliders -->
+  <rect x="14" y="16" width="36" height="32" rx="2" fill="none"/>
+  <circle cx="24" cy="26" r="2" fill="currentColor"/>
+  <path d="M18 26 L22 26 M26 26 L36 26" stroke-width="1.5"/>
+  <circle cx="32" cy="34" r="2" fill="currentColor"/>
+  <path d="M18 34 L30 34 M34 34 L36 34" stroke-width="1.5"/>
+  <circle cx="28" cy="42" r="2" fill="currentColor"/>
+  <path d="M18 42 L26 42 M30 42 L36 42" stroke-width="1.5"/>
+</svg>

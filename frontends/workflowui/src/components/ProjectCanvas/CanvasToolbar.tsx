@@ -5,6 +5,9 @@
 
 import React, { useCallback } from 'react';
 import { useProjectCanvas } from '../../hooks/canvas';
+import CanvasGridControls from './CanvasGridControls';
+import CanvasZoomControls from './CanvasZoomControls';
+import CanvasActionButtons from './CanvasActionButtons';
 
 interface CanvasToolbarProps {
   onAddWorkflow?: () => void;
@@ -15,7 +18,7 @@ interface CanvasToolbarProps {
 export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
   onAddWorkflow,
   onAutoLayout,
-  onOpenSettings
+  onOpenSettings,
 }) => {
   const {
     zoom_in,
@@ -27,127 +30,43 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
     showGrid,
     toggle_show_grid,
     snapSize,
-    set_snap_size
+    set_snap_size,
   } = useProjectCanvas();
 
   const handleSnapSizeChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      set_snap_size(parseInt(e.target.value, 10));
+    (size: number) => {
+      set_snap_size(size);
     },
     [set_snap_size]
   );
 
   return (
-    <div >
-      {/* Zoom Controls */}
-      <div >
-        <button
-          
-          onClick={zoom_out}
-          title="Zoom out"
-          aria-label="Zoom out"
-        >
-          −
-        </button>
-        <span >{Math.round(zoom * 100)}%</span>
-        <button
-          
-          onClick={zoom_in}
-          title="Zoom in"
-          aria-label="Zoom in"
-        >
-          +
-        </button>
-        <button
-          
-          onClick={reset_view}
-          title="Reset view"
-          aria-label="Reset view"
-        >
-          ⟲
-        </button>
-      </div>
+    <div>
+      <CanvasZoomControls
+        zoom={zoom}
+        onZoomIn={zoom_in}
+        onZoomOut={zoom_out}
+        onResetView={reset_view}
+      />
 
-      {/* Divider */}
-      <div  />
+      <div />
 
-      {/* Grid Controls */}
-      <div >
-        <label >
-          <input
-            type="checkbox"
-            checked={showGrid}
-            onChange={toggle_show_grid}
-            aria-label="Toggle grid visibility"
-          />
-          <span>Grid</span>
-        </label>
+      <CanvasGridControls
+        showGrid={showGrid}
+        gridSnap={gridSnap}
+        snapSize={snapSize}
+        onToggleShowGrid={toggle_show_grid}
+        onToggleGridSnap={toggle_grid_snap}
+        onSnapSizeChange={handleSnapSizeChange}
+      />
 
-        <label >
-          <input
-            type="checkbox"
-            checked={gridSnap}
-            onChange={toggle_grid_snap}
-            aria-label="Toggle grid snap"
-          />
-          <span>Snap</span>
-        </label>
+      <div />
 
-        {gridSnap && (
-          <select
-            
-            value={snapSize}
-            onChange={handleSnapSizeChange}
-            aria-label="Grid snap size"
-          >
-            <option value={5}>5px</option>
-            <option value={10}>10px</option>
-            <option value={15}>15px</option>
-            <option value={20}>20px</option>
-            <option value={25}>25px</option>
-            <option value={50}>50px</option>
-          </select>
-        )}
-      </div>
-
-      {/* Divider */}
-      <div  />
-
-      {/* Actions */}
-      <div >
-        {onAddWorkflow && (
-          <button
-            className={""}
-            onClick={onAddWorkflow}
-            title="Add workflow to canvas"
-            aria-label="Add workflow"
-          >
-            + Add Workflow
-          </button>
-        )}
-
-        {onAutoLayout && (
-          <button
-            
-            onClick={onAutoLayout}
-            title="Auto-arrange workflows"
-            aria-label="Auto-layout"
-          >
-            ⊞ Layout
-          </button>
-        )}
-
-        {onOpenSettings && (
-          <button
-            
-            onClick={onOpenSettings}
-            title="Canvas settings"
-            aria-label="Settings"
-          >
-            ⚙
-          </button>
-        )}
-      </div>
+      <CanvasActionButtons
+        onAddWorkflow={onAddWorkflow}
+        onAutoLayout={onAutoLayout}
+        onOpenSettings={onOpenSettings}
+      />
     </div>
   );
 };

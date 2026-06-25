@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { SnippetToolbar } from './SnippetToolbar'
 import { SnippetTemplate } from '@/lib/types'
@@ -27,7 +27,7 @@ describe('SnippetToolbar', () => {
         onCreateNew={jest.fn()}
         onCreateFromTemplate={jest.fn()}
         templates={mockTemplates}
-      />
+      />,
     )
 
     expect(screen.getByTestId('snippet-search-input')).toBeInTheDocument()
@@ -43,7 +43,7 @@ describe('SnippetToolbar', () => {
         onCreateNew={jest.fn()}
         onCreateFromTemplate={jest.fn()}
         templates={mockTemplates}
-      />
+      />,
     )
 
     expect(screen.getByTestId('snippet-selection-mode-btn')).toBeInTheDocument()
@@ -59,10 +59,12 @@ describe('SnippetToolbar', () => {
         onCreateNew={jest.fn()}
         onCreateFromTemplate={jest.fn()}
         templates={mockTemplates}
-      />
+      />,
     )
 
-    expect(screen.getByTestId('snippet-create-menu-trigger')).toBeInTheDocument()
+    expect(
+      screen.getByTestId('snippet-create-menu-trigger'),
+    ).toBeInTheDocument()
   })
 
   it('has proper aria-label on search input', () => {
@@ -75,7 +77,7 @@ describe('SnippetToolbar', () => {
         onCreateNew={jest.fn()}
         onCreateFromTemplate={jest.fn()}
         templates={mockTemplates}
-      />
+      />,
     )
 
     const searchInput = screen.getByTestId('snippet-search-input')
@@ -95,13 +97,17 @@ describe('SnippetToolbar', () => {
         onCreateNew={jest.fn()}
         onCreateFromTemplate={jest.fn()}
         templates={mockTemplates}
-      />
+      />,
     )
 
-    const searchInput = screen.getByTestId('snippet-search-input') as HTMLInputElement
+    const searchInput = screen.getByTestId(
+      'snippet-search-input',
+    ) as HTMLInputElement
     await user.type(searchInput, 'test')
 
-    expect(onSearchChange).toHaveBeenCalled()
+    await waitFor(() => expect(onSearchChange).toHaveBeenCalled(), {
+      timeout: 500,
+    })
   })
 
   it('selection mode button has aria-pressed attribute', () => {
@@ -114,7 +120,7 @@ describe('SnippetToolbar', () => {
         onCreateNew={jest.fn()}
         onCreateFromTemplate={jest.fn()}
         templates={mockTemplates}
-      />
+      />,
     )
 
     const selectionBtn = screen.getByTestId('snippet-selection-mode-btn')
@@ -132,12 +138,12 @@ describe('SnippetToolbar', () => {
         onCreateNew={jest.fn()}
         onCreateFromTemplate={jest.fn()}
         templates={mockTemplates}
-      />
+      />,
     )
 
     const trigger = screen.getByTestId('snippet-create-menu-trigger')
     await user.click(trigger)
 
-    expect(screen.getByTestId('snippet-create-blank-item')).toBeInTheDocument()
+    expect(screen.getByTestId('create-blank-snippet-item')).toBeInTheDocument()
   })
 })

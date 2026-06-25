@@ -12,8 +12,10 @@ import {
   Toolbar,
   IconButton,
   CircularProgress,
-} from '@mui/material';
-import { Logout, Refresh, Inventory2 } from '@mui/icons-material';
+  Refresh,
+  Logout,
+  Inventory2,
+} from '@metabuilder/components/m3';
 import { useAuth } from '@/lib/auth';
 import { apiClient, Container as ContainerType } from '@/lib/api';
 import ContainerCard from '@/components/ContainerCard';
@@ -118,7 +120,7 @@ export default function Dashboard() {
                 justifyContent: 'center',
               }}
             >
-              <Inventory2 sx={{ color: 'secondary.main' }} />
+              <Inventory2 style={{ color: 'var(--primary)' }} />
             </Box>
             <Box>
               <Typography
@@ -185,7 +187,7 @@ export default function Dashboard() {
                 mb: 2,
               }}
             >
-              <Inventory2 sx={{ fontSize: 40, color: 'text.secondary' }} />
+              <Inventory2 style={{ fontSize: 40, color: 'var(--secondary)' }} />
             </Box>
             <Typography variant="h2" gutterBottom>
               No Active Containers
@@ -198,7 +200,7 @@ export default function Dashboard() {
         ) : (
           <Grid container spacing={3}>
             {containers.map((container) => (
-              <Grid size={{ xs: 12, sm: 6, lg: 4 }} key={container.id}>
+              <Grid item xs={12} sm={6} lg={4} key={container.id}>
                 <ContainerCard
                   container={container}
                   onOpenShell={() => handleOpenShell(container)}

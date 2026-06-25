@@ -15,7 +15,7 @@ import {
   Avatar,
   Chip,
   Divider,
-} from '@/fakemui'
+} from '@/m3'
 import { getRoleLevel } from '@/lib/constants'
 import { getLevelLabel, getLevelColor } from '@/lib/packages/navigation'
 import Link from 'next/link'

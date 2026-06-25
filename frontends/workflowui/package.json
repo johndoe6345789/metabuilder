@@ -15,6 +15,7 @@
     "backend": "python backend/server.py",
     "dev:all": "concurrently \"npm run dev\" \"npm run backend\"",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build"
@@ -23,7 +24,7 @@
     "@metabuilder/api-clients": "file:../../redux/api-clients",
     "@metabuilder/components": "file:../../components",
     "@metabuilder/core-hooks": "file:../../redux/core-hooks",
-    "@metabuilder/fakemui": "file:../../components/fakemui",
+    "@metabuilder/m3": "file:../../components/m3",
     "@metabuilder/hooks": "file:../../hooks",
     "@metabuilder/hooks-data": "file:../../redux/hooks-data",
     "@metabuilder/redux-middleware": "file:../../redux/middleware",
@@ -55,7 +56,7 @@
     "react-dom": "^19.2.4"
   },
   "devDependencies": {
-    "@storybook/react": "^10.2.17",
+    "@storybook/react": "^10.4.4",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",

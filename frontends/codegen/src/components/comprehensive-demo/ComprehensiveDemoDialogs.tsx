@@ -1,6 +1,6 @@
-import { Button } from '@metabuilder/fakemui/inputs'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@metabuilder/fakemui/surfaces'
-import { Input } from '@metabuilder/fakemui/inputs'
+import { Button } from '@metabuilder/m3/inputs'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@metabuilder/m3/surfaces'
+import { Input } from '@metabuilder/m3/inputs'
 import strings from '@/data/comprehensive-demo.json'
 import type { Priority } from './types'
 

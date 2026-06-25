@@ -1,8 +1,14 @@
 import styles from './UserAvatar.module.scss'
 
 const PALETTE = [
-  '#6366f1', '#8b5cf6', '#ec4899', '#f43f5e',
-  '#f97316', '#84cc16', '#14b8a6', '#3b82f6',
+  '#6366f1',
+  '#8b5cf6',
+  '#ec4899',
+  '#f43f5e',
+  '#f97316',
+  '#84cc16',
+  '#14b8a6',
+  '#3b82f6',
 ]
 
 function avatarColor(username: string): string {
@@ -20,7 +26,11 @@ interface UserAvatarProps {
   className?: string
 }
 
-export function UserAvatar({ username, size = 'md', className }: UserAvatarProps) {
+export function UserAvatar({
+  username,
+  size = 'md',
+  className,
+}: UserAvatarProps) {
   const bg = avatarColor(username)
   return (
     <div

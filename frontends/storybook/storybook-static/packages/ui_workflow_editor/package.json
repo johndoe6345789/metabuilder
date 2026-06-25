@@ -1,0 +1,54 @@
+{
+  "name": "@metabuilder/ui_workflow_editor",
+  "version": "1.0.0",
+  "description": "Visual workflow editor with node-based automation builder that exports to JSON",
+  "type": "module",
+  "keywords": [
+    "metabuilder",
+    "admin",
+    "workflow",
+    "automation",
+    "visual",
+    "node-based",
+    "no-code"
+  ],
+  "packageId": "ui_workflow_editor",
+  "permissions": {
+    "minLevel": 3,
+    "description": "Admin level - create and manage workflows"
+  },
+  "features": {
+    "visual_workflow_builder": true,
+    "node_based_editor": true,
+    "drag_and_drop": true,
+    "json_export": true,
+    "workflow_templates": true,
+    "execution_history": true,
+    "scheduling": true,
+    "triggers": true,
+    "actions": true,
+    "conditions": true
+  },
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "files": {
+    "directories": [
+      "component",
+      "page-config",
+      "seed",
+      "workflow"
+    ],
+    "byType": {
+      "config": [
+        "package.json"
+      ],
+      "other": [
+        "seed/component.json",
+        "seed/metadata.json",
+        "seed/page-config.json"
+      ]
+    }
+  }
+}

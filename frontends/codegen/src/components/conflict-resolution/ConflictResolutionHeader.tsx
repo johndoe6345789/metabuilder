@@ -1,7 +1,7 @@
 import type { ConflictResolutionCopy } from '@/components/conflict-resolution/types'
 
-import { Button } from '@metabuilder/fakemui/inputs'
-import { ArrowsClockwise, Trash } from '@metabuilder/fakemui/icons'
+import { Button } from '@metabuilder/m3/inputs'
+import { ArrowsClockwise, Trash } from '@metabuilder/m3/icons'
 
 interface ConflictResolutionHeaderProps {
   copy: ConflictResolutionCopy

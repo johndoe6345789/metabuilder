@@ -1,4 +1,14 @@
-import { Button, IconButton, Dialog, DialogHeader, DialogTitle, DialogContent, DialogActions, DialogClose, MaterialIcon } from '@metabuilder/components/fakemui'
+import {
+  Button,
+  IconButton,
+  Dialog,
+  DialogHeader,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  DialogClose,
+  MaterialIcon,
+} from '@metabuilder/components/m3'
 import { Namespace } from '@/lib/types'
 import { useTranslation } from '@/hooks/useTranslation'
 
@@ -34,8 +44,16 @@ export function DeleteNamespaceDialog({
         </IconButton>
       )}
 
-      <Dialog open={open} onClose={() => onOpenChange(false)} maxWidth="sm" fullWidth>
-        <DialogClose onClick={() => onOpenChange(false)} aria-label={t.common.close}>
+      <Dialog
+        open={open}
+        onClose={() => onOpenChange(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogClose
+          onClick={() => onOpenChange(false)}
+          aria-label={t.common.close}
+        >
           <MaterialIcon name="close" size={20} />
         </DialogClose>
         <DialogHeader>

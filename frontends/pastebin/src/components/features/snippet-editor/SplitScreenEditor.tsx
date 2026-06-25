@@ -1,24 +1,25 @@
 'use client'
 
-import { useState } from 'react'
 import dynamic from 'next/dynamic'
-import { Button, MaterialIcon } from '@metabuilder/components/fakemui'
 import { InputParameter } from '@/lib/types'
+import { useSplitScreenEditor } from './hooks/useSplitScreenEditor'
+import { ViewModeButton } from './ViewModeButton'
 import styles from './split-screen-editor.module.scss'
 
 const MonacoEditor = dynamic(
-  () => import('@/components/features/snippet-editor/MonacoEditor').then(m => ({ default: m.MonacoEditor })),
-  { ssr: false }
+  () => import('./MonacoEditor').then(m => ({ default: m.MonacoEditor })),
+  { ssr: false },
 )
-
 const ReactPreview = dynamic(
-  () => import('@/components/features/snippet-editor/ReactPreview').then(m => ({ default: m.ReactPreview })),
-  { ssr: false }
+  () => import('./ReactPreview').then(m => ({ default: m.ReactPreview })),
+  { ssr: false },
 )
-
 const PythonOutput = dynamic(
-  () => import('@/components/features/python-runner/PythonOutput').then(m => ({ default: m.PythonOutput })),
-  { ssr: false }
+  () =>
+    import('../python-runner/PythonOutput').then(m => ({
+      default: m.PythonOutput,
+    })),
+  { ssr: false },
 )
 
 interface SplitScreenEditorProps {
@@ -30,22 +31,17 @@ interface SplitScreenEditorProps {
   inputParameters?: InputParameter[]
 }
 
-type ViewMode = 'split' | 'code' | 'preview'
-
-export function SplitScreenEditor({ 
-  value, 
-  onChange, 
-  language, 
+export function SplitScreenEditor({
+  value,
+  onChange,
+  language,
   height = '500px',
   functionName,
   inputParameters,
 }: SplitScreenEditorProps) {
-  const [viewMode, setViewMode] = useState<ViewMode>('split')
+  const vm = useSplitScreenEditor(language)
 
-  const isPreviewSupported = ['JSX', 'TSX', 'JavaScript', 'TypeScript', 'Python'].includes(language)
-  const isPython = language === 'Python'
-
-  if (!isPreviewSupported) {
+  if (!vm.isPreviewSupported) {
     return (
       <MonacoEditor
         value={value}
@@ -56,57 +52,63 @@ export function SplitScreenEditor({
     )
   }
 
+  const previewLabel = vm.isPython ? 'Output' : 'Preview'
+  const preview = vm.isPython ? (
+    <PythonOutput code={value} />
+  ) : (
+    <ReactPreview
+      code={value}
+      language={language}
+      functionName={functionName}
+      inputParameters={inputParameters}
+    />
+  )
+
   return (
     <div className={styles.root} data-testid="split-screen-editor">
       <div className={styles.toolbar}>
-        <div className={styles.viewModeBar} role="group" aria-label="View mode selector">
-          <Button
-            variant={viewMode === 'code' ? 'filled' : 'text'}
-            size="sm"
-            onClick={() => setViewMode('code')}
-            className={styles.viewModeBtn}
-            data-testid="view-mode-code-btn"
-            aria-label="Code"
-            aria-pressed={viewMode === 'code'}
-          >
-            <MaterialIcon name="code" className={styles.iconSm} aria-hidden="true" />
-            <span className={styles.btnLabel}>Code</span>
-          </Button>
-          <Button
-            variant={viewMode === 'split' ? 'filled' : 'text'}
-            size="sm"
-            onClick={() => setViewMode('split')}
-            className={styles.viewModeBtn}
-            data-testid="view-mode-split-btn"
-            aria-label="Split"
-            aria-pressed={viewMode === 'split'}
-          >
-            <MaterialIcon name="horizontal_split" className={styles.iconSm} aria-hidden="true" />
-            <span className={styles.btnLabel}>Split</span>
-          </Button>
-          <Button
-            variant={viewMode === 'preview' ? 'filled' : 'text'}
-            size="sm"
-            onClick={() => setViewMode('preview')}
-            className={styles.viewModeBtn}
-            data-testid="view-mode-preview-btn"
-            aria-label={isPython ? 'Output' : 'Preview'}
-            aria-pressed={viewMode === 'preview'}
-          >
-            <MaterialIcon name="visibility" className={styles.iconSm} aria-hidden="true" />
-            <span className={styles.btnLabel}>{isPython ? 'Output' : 'Preview'}</span>
-          </Button>
+        <div
+          className={styles.viewModeBar}
+          role="group"
+          aria-label="View mode selector"
+        >
+          <ViewModeButton
+            mode="code"
+            active={vm.viewMode === 'code'}
+            label="Code"
+            iconName="code"
+            onClick={() => vm.setViewMode('code')}
+          />
+          <ViewModeButton
+            mode="split"
+            active={vm.viewMode === 'split'}
+            label="Split"
+            iconName="horizontal_split"
+            onClick={() => vm.setViewMode('split')}
+          />
+          <ViewModeButton
+            mode="preview"
+            active={vm.viewMode === 'preview'}
+            label={previewLabel}
+            iconName="visibility"
+            onClick={() => vm.setViewMode('preview')}
+          />
         </div>
       </div>
-
       <div
-        style={{ height: viewMode === 'split' ? 'auto' : height }}
+        style={{ height: vm.viewMode === 'split' ? 'auto' : height }}
         className={styles.editorContainer}
-        data-testid={`split-screen-editor-${viewMode}`}
+        data-testid={`split-screen-editor-${vm.viewMode}`}
         role="region"
-        aria-label={`${viewMode === 'code' ? 'Code editor' : viewMode === 'preview' ? (isPython ? 'Python output' : 'Preview') : 'Code editor and preview'}`}
+        aria-label={
+          vm.viewMode === 'split'
+            ? 'Code editor and preview'
+            : vm.viewMode === 'code'
+              ? 'Code editor'
+              : previewLabel
+        }
       >
-        {viewMode === 'code' && (
+        {vm.viewMode === 'code' && (
           <MonacoEditor
             value={value}
             onChange={onChange}
@@ -114,23 +116,14 @@ export function SplitScreenEditor({
             height={height}
           />
         )}
-
-        {viewMode === 'preview' && (
-          isPython ? (
-            <PythonOutput code={value} />
-          ) : (
-            <ReactPreview
-              code={value}
-              language={language}
-              functionName={functionName}
-              inputParameters={inputParameters}
-            />
-          )
-        )}
-
-        {viewMode === 'split' && (
+        {vm.viewMode === 'preview' && preview}
+        {vm.viewMode === 'split' && (
           <div className={styles.splitGrid} data-testid="split-screen-grid">
-            <div className={styles.splitPane} style={{ height }} data-testid="split-screen-code-pane">
+            <div
+              className={styles.splitPane}
+              style={{ height }}
+              data-testid="split-screen-code-pane"
+            >
               <MonacoEditor
                 value={value}
                 onChange={onChange}
@@ -138,17 +131,12 @@ export function SplitScreenEditor({
                 height={height}
               />
             </div>
-            <div className={styles.splitPane} style={{ height }} data-testid="split-screen-preview-pane">
-              {isPython ? (
-                <PythonOutput code={value} />
-              ) : (
-                <ReactPreview
-                  code={value}
-                  language={language}
-                  functionName={functionName}
-                  inputParameters={inputParameters}
-                />
-              )}
+            <div
+              className={styles.splitPane}
+              style={{ height }}
+              data-testid="split-screen-preview-pane"
+            >
+              {preview}
             </div>
           </div>
         )}

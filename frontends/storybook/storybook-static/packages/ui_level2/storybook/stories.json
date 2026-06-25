@@ -1,0 +1,140 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": false,
+  "title": "Level 2 - User Dashboard",
+  "description": "User dashboard components including profile, comments, and chat panels",
+  "stories": [
+    {
+      "name": "Profile",
+      "render": "profile",
+      "description": "User profile panel with avatar, name, and edit form",
+      "type": "function",
+      "args": {
+        "user": {
+          "username": "demo_user",
+          "displayName": "Demo User",
+          "email": "demo@example.com",
+          "avatar": "/avatars/default.png"
+        }
+      }
+    },
+    {
+      "name": "Comments",
+      "render": "comments",
+      "description": "User comments list with edit and delete actions",
+      "type": "function",
+      "args": {
+        "comments": [
+          {
+            "id": "1",
+            "text": "Great article on automation scripting!",
+            "timestamp": "2 days ago",
+            "topic": "Getting Started with Automation Scripts"
+          },
+          {
+            "id": "2",
+            "text": "Thanks for the help!",
+            "timestamp": "1 week ago",
+            "topic": "Component Rendering"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Chat",
+      "render": "chat",
+      "description": "Real-time chat panel",
+      "type": "function",
+      "args": {
+        "messages": []
+      }
+    },
+    {
+      "name": "FullDashboard",
+      "render": "layout",
+      "description": "Complete Level 2 dashboard with all tabs",
+      "type": "function"
+    }
+  ],
+  "renders": {
+    "profile": {
+      "description": "Profile panel with user information",
+      "featured": true
+    },
+    "comments": {
+      "description": "Comments list panel"
+    },
+    "chat": {
+      "description": "Real-time chat panel"
+    },
+    "layout": {
+      "description": "Full dashboard layout with tabs"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "demo-user",
+      "username": "demo_user",
+      "displayName": "Demo User",
+      "level": 2,
+      "email": "demo@example.com",
+      "avatar": "/avatars/default.png"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Standard User",
+      "description": "Level 2 user with standard permissions",
+      "context": {
+        "user": {
+          "username": "user",
+          "level": 2
+        }
+      }
+    },
+    {
+      "name": "New User",
+      "description": "New user with no comments",
+      "context": {
+        "user": {
+          "username": "newbie",
+          "level": 2
+        },
+        "comments": []
+      }
+    },
+    {
+      "name": "Active User",
+      "description": "User with many comments",
+      "context": {
+        "user": {
+          "username": "active_user",
+          "level": 2
+        },
+        "comments": [
+          { "id": "1", "text": "Comment 1" },
+          { "id": "2", "text": "Comment 2" },
+          { "id": "3", "text": "Comment 3" }
+        ]
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["layout", "profile", "comments", "chat"],
+    "ignoredScripts": ["init", "types", "tests"]
+  },
+  "parameters": {
+    "layout": "padded",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#f5f5f5" },
+        { "name": "dark", "value": "#1a1a1a" }
+      ]
+    }
+  }
+}

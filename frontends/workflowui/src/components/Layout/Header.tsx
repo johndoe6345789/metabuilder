@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import { IconButton, Box, Typography } from '@metabuilder/fakemui';
+import { IconButton, Box, Typography } from '@metabuilder/m3';
 import { HeaderActions } from '@/../../../components/navigation';
 import { useUI, useHeaderLogic } from '../../hooks';
 import { testId } from '../../utils/accessibility';

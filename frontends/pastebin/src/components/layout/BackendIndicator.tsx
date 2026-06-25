@@ -2,7 +2,6 @@
 
 import { BackendStatus, statusIndicatorStyles } from '@metabuilder/components'
 import { getStorageConfig } from '@/lib/storage'
-import { useEffect } from 'react'
 import { useTranslation } from '@/hooks/useTranslation'
 
 // Inject status indicator styles (only once)

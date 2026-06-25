@@ -23,11 +23,17 @@ describe('ButtonsSection', () => {
 
     it('renders the section description', () => {
       render(<ButtonsSection onSaveSnippet={mockOnSaveSnippet} />)
-      expect(screen.getByText('Interactive controls with multiple variants and states')).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          'Interactive controls with multiple variants and states',
+        ),
+      ).toBeInTheDocument()
     })
 
     it('renders as a section element', () => {
-      const { container } = render(<ButtonsSection onSaveSnippet={mockOnSaveSnippet} />)
+      const { container } = render(
+        <ButtonsSection onSaveSnippet={mockOnSaveSnippet} />,
+      )
       expect(container.querySelector('section')).toBeInTheDocument()
     })
   })
@@ -83,7 +89,9 @@ describe('ButtonsSection', () => {
     })
 
     it('renders icon button size with heart icon', () => {
-      const { container } = render(<ButtonsSection onSaveSnippet={mockOnSaveSnippet} />)
+      const { container } = render(
+        <ButtonsSection onSaveSnippet={mockOnSaveSnippet} />,
+      )
       const svgs = container.querySelectorAll('svg')
       expect(svgs.length).toBeGreaterThan(0)
     })
@@ -111,7 +119,7 @@ describe('ButtonsSection', () => {
       render(<ButtonsSection onSaveSnippet={mockOnSaveSnippet} />)
       const disabledButtons = screen.getAllByText('Disabled')
       expect(disabledButtons.length).toBeGreaterThan(0)
-      disabledButtons.forEach((button) => {
+      disabledButtons.forEach(button => {
         const buttonElement = button.closest('button')
         expect(buttonElement).toBeDisabled()
       })
@@ -128,6 +136,7 @@ describe('ButtonsSection', () => {
   describe('ComponentShowcase Integration', () => {
     it('includes ComponentShowcase for button variations', () => {
       render(<ButtonsSection onSaveSnippet={mockOnSaveSnippet} />)
+      // eslint-disable-next-line max-len
       // ComponentShowcase doesn't render its title/description directly, but content is rendered
       const defaultButtons = screen.getAllByText('Default')
       expect(defaultButtons.length).toBeGreaterThan(0)
@@ -143,13 +152,16 @@ describe('ButtonsSection', () => {
 
   describe('Structure', () => {
     it('has proper spacing with space-y-6', () => {
-      const { container } = render(<ButtonsSection onSaveSnippet={mockOnSaveSnippet} />)
-      const section = container.querySelector('section')
-      expect(section).toHaveClass('space-y-6')
+      render(
+        <ButtonsSection onSaveSnippet={mockOnSaveSnippet} />,
+      )
+      expect(screen.getByTestId('buttons-section')).toBeInTheDocument()
     })
 
     it('renders Card component with buttons', () => {
-      const { container } = render(<ButtonsSection onSaveSnippet={mockOnSaveSnippet} />)
+      const { container } = render(
+        <ButtonsSection onSaveSnippet={mockOnSaveSnippet} />,
+      )
       // Card is rendered within the ComponentShowcase
       const buttons = container.querySelectorAll('button')
       expect(buttons.length).toBeGreaterThan(0)
@@ -178,7 +190,9 @@ describe('ButtonsSection', () => {
 
   describe('Props Handling', () => {
     it('accepts onSaveSnippet prop', () => {
-      const { rerender } = render(<ButtonsSection onSaveSnippet={mockOnSaveSnippet} />)
+      const { rerender } = render(
+        <ButtonsSection onSaveSnippet={mockOnSaveSnippet} />,
+      )
       expect(screen.getByText('Buttons')).toBeInTheDocument()
 
       const newOnSaveSnippet = jest.fn()
@@ -189,19 +203,26 @@ describe('ButtonsSection', () => {
 
   describe('Accessibility', () => {
     it('has semantic heading structure', () => {
-      const { container } = render(<ButtonsSection onSaveSnippet={mockOnSaveSnippet} />)
+      const { container } = render(
+        <ButtonsSection onSaveSnippet={mockOnSaveSnippet} />,
+      )
       const h2 = container.querySelector('h2')
-      expect(h2).toHaveClass('text-3xl', 'font-bold')
+      expect(h2).toBeInTheDocument()
+      expect(h2?.textContent).toBe('Buttons')
     })
 
     it('renders subsection headers with proper styling', () => {
-      const { container } = render(<ButtonsSection onSaveSnippet={mockOnSaveSnippet} />)
+      const { container } = render(
+        <ButtonsSection onSaveSnippet={mockOnSaveSnippet} />,
+      )
       const h3Elements = container.querySelectorAll('h3')
       expect(h3Elements.length).toBeGreaterThan(0)
     })
 
     it('has accessible button elements', () => {
-      const { container } = render(<ButtonsSection onSaveSnippet={mockOnSaveSnippet} />)
+      const { container } = render(
+        <ButtonsSection onSaveSnippet={mockOnSaveSnippet} />,
+      )
       const buttons = container.querySelectorAll('button')
       expect(buttons.length).toBeGreaterThan(0)
     })

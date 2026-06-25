@@ -1,0 +1,119 @@
+{
+  "name": "Handle Data Table Sorting",
+  "active": false,
+  "nodes": [
+    {
+      "id": "extract_sort_params",
+      "name": "Extract Sort Params",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $json }}",
+        "output": {
+          "sortBy": "{{ $json.sortBy || 'createdAt' }}",
+          "sortOrder": "{{ $json.sortOrder || 'desc' }}"
+        },
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "validate_sort_fields",
+      "name": "Validate Sort Fields",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "condition": "{{ ['id', 'name', 'email', 'createdAt', 'updatedAt', 'status'].includes($steps.extract_sort_params.output.sortBy) }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "apply_sort",
+      "name": "Apply Sort",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $json.data }}",
+        "output": "{{ $json.data.sort((a, b) => { const aVal = a[$steps.extract_sort_params.output.sortBy]; const bVal = b[$steps.extract_sort_params.output.sortBy]; if ($steps.extract_sort_params.output.sortOrder === 'asc') return aVal > bVal ? 1 : -1; return aVal < bVal ? 1 : -1; }) }}",
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "return_sorted",
+      "name": "Return Sorted",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "data": {
+          "sortBy": "{{ $steps.extract_sort_params.output.sortBy }}",
+          "sortOrder": "{{ $steps.extract_sort_params.output.sortOrder }}",
+          "data": "{{ $steps.apply_sort.output }}"
+        },
+        "action": "emit_event",
+        "event": "data_sorted"
+      }
+    }
+  ],
+  "connections": {
+    "extract_sort_params": {
+      "main": [
+        [
+          {
+            "node": "validate_sort_fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_sort_fields": {
+      "main": [
+        [
+          {
+            "node": "apply_sort",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "apply_sort": {
+      "main": [
+        [
+          {
+            "node": "return_sorted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_sorting",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

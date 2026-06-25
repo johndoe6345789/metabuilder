@@ -73,6 +73,10 @@ export const LinearProgress = ({ value, 'data-testid': testId, ...props }: any) 
   <div data-testid={testId} data-value={value} role="progressbar" {...props} />
 );
 
+export const CircularProgress = ({ 'data-testid': testId, ...props }: any) => (
+  <div data-testid={testId || 'circular-progress'} role="progressbar" {...props} />
+);
+
 export const Chip = ({ label, 'data-testid': testId, ...props }: any) => (
   <span data-testid={testId} {...props}>{label}</span>
 );
@@ -128,16 +132,24 @@ export const Tabs = ({ children, 'data-testid': testId, value, onChange, ...prop
   <div
     data-testid={testId}
     data-value={value}
-    onClick={() => onChange && onChange({}, 0)}
     role="tablist"
     {...props}
   >
-    {children}
+    {React.Children.map(children, (child, index) =>
+      child
+        ? React.cloneElement(child, {
+            onClick: () => onChange && onChange({}, index),
+            'aria-selected': child.props.id
+              ? value === parseInt(child.props.id.replace(/.*-(\d+)$/, '$1'), 10)
+              : value === index,
+          })
+        : child
+    )}
   </div>
 );
 
-export const Tab = ({ label, 'data-testid': testId, ...props }: any) => (
-  <button data-testid={testId} role="tab" {...props}>{label}</button>
+export const Tab = ({ label, 'data-testid': testId, onClick, ...props }: any) => (
+  <button data-testid={testId} role="tab" onClick={onClick} {...props}>{label}</button>
 );
 
 export const Dialog = ({ children, open, 'data-testid': testId, ...props }: any) => (
@@ -257,3 +269,19 @@ export const TableRow = ({ children, 'data-testid': testId, ...props }: any) => 
 );
 
 export const TableCell = ({ children, ...props }: any) => <td {...props}>{children}</td>;
+
+// Icon exports (FakeMUI icon components used by various app components)
+export const ArrowUp = (props: any) => <span data-icon="arrow-up" {...props} />;
+export const ArrowDown = (props: any) => <span data-icon="arrow-down" {...props} />;
+export const Plus = (props: any) => <span data-icon="plus" {...props} />;
+export const AccessTime = (props: any) => <span data-icon="access-time" {...props} />;
+export const Edit = (props: any) => <span data-icon="edit" {...props} />;
+export const Delete = (props: any) => <span data-icon="delete" {...props} />;
+export const AppBar = ({ children, 'data-testid': testId, position, elevation, ...props }: any) => (
+  <header data-testid={testId} data-position={position} data-elevation={elevation} {...props}>
+    {children}
+  </header>
+);
+export const Toolbar = ({ children, 'data-testid': testId, ...props }: any) => (
+  <div data-testid={testId} role="toolbar" {...props}>{children}</div>
+);

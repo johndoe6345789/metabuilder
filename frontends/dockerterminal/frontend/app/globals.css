@@ -1,8 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0f1419;
+  --foreground: #eef2f7;
+  --surface: #18202a;
+  --surface-2: #202a36;
+  --border: #2c3947;
+  --primary: #6ee7db;
+  --secondary: #9fb3c8;
+  --danger: #f87171;
 }
 
 @theme inline {
@@ -12,15 +18,24 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.dockerterminal-theme {
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "JetBrains Mono", "Courier New", monospace;
+}
+
+.dockerterminal-theme a {
+  color: var(--primary);
+}
+
+.dockerterminal-theme .dockerterminal-surface {
+  background: var(--surface);
+  border: 1px solid var(--border);
 }

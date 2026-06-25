@@ -1,0 +1,74 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/test-parameters.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "package_manager",
+  "description": "Parameterized test data for package manager tests",
+
+  "parameters": {
+    "samplePackages": [
+      {
+        "packageId": "dashboard",
+        "name": "Dashboard",
+        "version": "1.0.0",
+        "category": "ui",
+        "installed": true,
+        "enabled": true
+      },
+      {
+        "packageId": "data_table",
+        "name": "Data Table",
+        "version": "1.0.0",
+        "category": "ui",
+        "installed": true,
+        "enabled": true
+      },
+      {
+        "packageId": "workflow_editor",
+        "name": "Workflow Editor",
+        "version": "1.0.0",
+        "category": "tools",
+        "installed": false,
+        "enabled": false
+      },
+      {
+        "packageId": "forum_forge",
+        "name": "Forum Forge",
+        "version": "1.0.0",
+        "category": "social",
+        "installed": true,
+        "enabled": false
+      }
+    ],
+    "categories": [
+      { "id": "all", "label": "All Categories" },
+      { "id": "ui", "label": "UI Components" },
+      { "id": "tools", "label": "Tools" },
+      { "id": "managers", "label": "Managers" },
+      { "id": "social", "label": "Social" }
+    ],
+    "searchQueries": [
+      { "query": "dashboard", "expectedCount": 1 },
+      { "query": "table", "expectedCount": 1 },
+      { "query": "editor", "expectedCount": 1 },
+      { "query": "nonexistent", "expectedCount": 0 }
+    ],
+    "dependencyScenarios": [
+      {
+        "name": "no dependencies",
+        "dependencies": {}
+      },
+      {
+        "name": "single dependency",
+        "dependencies": { "data_table": "*" }
+      },
+      {
+        "name": "multiple dependencies",
+        "dependencies": {
+          "data_table": "*",
+          "ui_permissions": "*",
+          "form_builder": "^1.0.0"
+        }
+      }
+    ]
+  }
+}

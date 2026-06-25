@@ -4,28 +4,29 @@
  * and test effectiveness analysis with realistic scenarios
  */
 
-import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
-import { CoverageAnalyzer } from '../../../../../src/lib/quality-validator/analyzers/coverageAnalyzer';
+import { describe, it, expect, beforeEach, afterEach } from '@jest/globals'
+import { CoverageAnalyzer } from '../../../../../src/lib/quality-validator/analyzers/coverageAnalyzer'
 import {
   createTempDir,
   cleanupTempDir,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   createTestFile,
-} from '../../../../test-utils';
-import * as fs from 'fs';
-import * as path from 'path';
+} from '../../../../test-utils'
+import * as fs from 'fs'
+import * as path from 'path'
 
 describe('CoverageAnalyzer - Comprehensive Tests', () => {
-  let analyzer: CoverageAnalyzer;
-  let tempDir: string;
+  let analyzer: CoverageAnalyzer
+  let tempDir: string
 
   beforeEach(() => {
-    analyzer = new CoverageAnalyzer();
-    tempDir = createTempDir();
-  });
+    analyzer = new CoverageAnalyzer()
+    tempDir = createTempDir()
+  })
 
   afterEach(() => {
-    cleanupTempDir(tempDir);
-  });
+    cleanupTempDir(tempDir)
+  })
 
   // ============================================================================
   // COVERAGE METRICS PARSING TESTS
@@ -33,8 +34,8 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
 
   describe('Coverage Metrics Parsing', () => {
     it('should parse LCOV format coverage data', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         const coverageData = {
@@ -74,29 +75,29 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
               covered: 100,
             },
           },
-        };
+        }
 
-        const coverageDir = path.join(tempDir, 'coverage');
-        fs.mkdirSync(coverageDir, { recursive: true });
+        const coverageDir = path.join(tempDir, 'coverage')
+        fs.mkdirSync(coverageDir, { recursive: true })
         fs.writeFileSync(
           path.join(coverageDir, 'coverage-final.json'),
           JSON.stringify(coverageData),
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        expect(result.category).toBe('testCoverage');
-        expect(result.score).toBeGreaterThanOrEqual(0);
-        expect(result.status).toMatch(/pass|fail|warning/);
+        expect(result.category).toBe('testCoverage')
+        expect(result.score).toBeGreaterThanOrEqual(0)
+        expect(result.status).toMatch(/pass|fail|warning/)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should calculate line coverage percentage', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         const coverageData = {
@@ -112,28 +113,28 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
             functions: { total: 0, covered: 0 },
             statements: { total: 0, covered: 0 },
           },
-        };
+        }
 
-        const coverageDir = path.join(tempDir, 'coverage');
-        fs.mkdirSync(coverageDir, { recursive: true });
+        const coverageDir = path.join(tempDir, 'coverage')
+        fs.mkdirSync(coverageDir, { recursive: true })
         fs.writeFileSync(
           path.join(coverageDir, 'coverage-final.json'),
           JSON.stringify(coverageData),
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        const metrics = result.metrics as any;
-        expect(metrics.overall.lines.percentage).toBe(85);
+        const metrics = result.metrics as any
+        expect(metrics.overall.lines.percentage).toBe(85)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should calculate branch coverage percentage', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         const coverageData = {
@@ -149,28 +150,28 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
             functions: { total: 0, covered: 0 },
             statements: { total: 0, covered: 0 },
           },
-        };
+        }
 
-        const coverageDir = path.join(tempDir, 'coverage');
-        fs.mkdirSync(coverageDir, { recursive: true });
+        const coverageDir = path.join(tempDir, 'coverage')
+        fs.mkdirSync(coverageDir, { recursive: true })
         fs.writeFileSync(
           path.join(coverageDir, 'coverage-final.json'),
           JSON.stringify(coverageData),
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        const metrics = result.metrics as any;
-        expect(metrics.overall.branches.percentage).toBe(80);
+        const metrics = result.metrics as any
+        expect(metrics.overall.branches.percentage).toBe(80)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should calculate function coverage percentage', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         const coverageData = {
@@ -186,28 +187,28 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
             functions: { total: 20, covered: 18 },
             statements: { total: 0, covered: 0 },
           },
-        };
+        }
 
-        const coverageDir = path.join(tempDir, 'coverage');
-        fs.mkdirSync(coverageDir, { recursive: true });
+        const coverageDir = path.join(tempDir, 'coverage')
+        fs.mkdirSync(coverageDir, { recursive: true })
         fs.writeFileSync(
           path.join(coverageDir, 'coverage-final.json'),
           JSON.stringify(coverageData),
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        const metrics = result.metrics as any;
-        expect(metrics.overall.functions.percentage).toBe(90);
+        const metrics = result.metrics as any
+        expect(metrics.overall.functions.percentage).toBe(90)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should handle 0% coverage gracefully', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         const coverageData = {
@@ -223,28 +224,28 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
             functions: { total: 0, covered: 0 },
             statements: { total: 0, covered: 0 },
           },
-        };
+        }
 
-        const coverageDir = path.join(tempDir, 'coverage');
-        fs.mkdirSync(coverageDir, { recursive: true });
+        const coverageDir = path.join(tempDir, 'coverage')
+        fs.mkdirSync(coverageDir, { recursive: true })
         fs.writeFileSync(
           path.join(coverageDir, 'coverage-final.json'),
           JSON.stringify(coverageData),
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        const metrics = result.metrics as any;
-        expect(metrics.overall.lines.percentage).toBe(0);
+        const metrics = result.metrics as any
+        expect(metrics.overall.lines.percentage).toBe(0)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should handle 100% coverage', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         const coverageData = {
@@ -260,25 +261,25 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
             functions: { total: 10, covered: 10 },
             statements: { total: 50, covered: 50 },
           },
-        };
+        }
 
-        const coverageDir = path.join(tempDir, 'coverage');
-        fs.mkdirSync(coverageDir, { recursive: true });
+        const coverageDir = path.join(tempDir, 'coverage')
+        fs.mkdirSync(coverageDir, { recursive: true })
         fs.writeFileSync(
           path.join(coverageDir, 'coverage-final.json'),
           JSON.stringify(coverageData),
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        const metrics = result.metrics as any;
-        expect(metrics.overall.lines.percentage).toBe(100);
+        const metrics = result.metrics as any
+        expect(metrics.overall.lines.percentage).toBe(100)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // COVERAGE STATUS EVALUATION TESTS
@@ -286,8 +287,8 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
 
   describe('Coverage Status Evaluation', () => {
     it('should mark coverage as excellent (>= 80%)', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         const coverageData = {
@@ -303,28 +304,28 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
             functions: { total: 0, covered: 0 },
             statements: { total: 0, covered: 0 },
           },
-        };
+        }
 
-        const coverageDir = path.join(tempDir, 'coverage');
-        fs.mkdirSync(coverageDir, { recursive: true });
+        const coverageDir = path.join(tempDir, 'coverage')
+        fs.mkdirSync(coverageDir, { recursive: true })
         fs.writeFileSync(
           path.join(coverageDir, 'coverage-final.json'),
           JSON.stringify(coverageData),
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        const metrics = result.metrics as any;
-        expect(metrics.overall.lines.status).toBe('excellent');
+        const metrics = result.metrics as any
+        expect(metrics.overall.lines.status).toBe('excellent')
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should mark coverage as acceptable (60-80%)', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         const coverageData = {
@@ -340,28 +341,28 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
             functions: { total: 0, covered: 0 },
             statements: { total: 0, covered: 0 },
           },
-        };
+        }
 
-        const coverageDir = path.join(tempDir, 'coverage');
-        fs.mkdirSync(coverageDir, { recursive: true });
+        const coverageDir = path.join(tempDir, 'coverage')
+        fs.mkdirSync(coverageDir, { recursive: true })
         fs.writeFileSync(
           path.join(coverageDir, 'coverage-final.json'),
           JSON.stringify(coverageData),
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        const metrics = result.metrics as any;
-        expect(metrics.overall.lines.status).toBe('acceptable');
+        const metrics = result.metrics as any
+        expect(metrics.overall.lines.status).toBe('acceptable')
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should mark coverage as poor (< 60%)', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         const coverageData = {
@@ -377,25 +378,25 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
             functions: { total: 0, covered: 0 },
             statements: { total: 0, covered: 0 },
           },
-        };
+        }
 
-        const coverageDir = path.join(tempDir, 'coverage');
-        fs.mkdirSync(coverageDir, { recursive: true });
+        const coverageDir = path.join(tempDir, 'coverage')
+        fs.mkdirSync(coverageDir, { recursive: true })
         fs.writeFileSync(
           path.join(coverageDir, 'coverage-final.json'),
           JSON.stringify(coverageData),
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        const metrics = result.metrics as any;
-        expect(metrics.overall.lines.status).toBe('poor');
+        const metrics = result.metrics as any
+        expect(metrics.overall.lines.status).toBe('poor')
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // COVERAGE GAP IDENTIFICATION TESTS
@@ -403,8 +404,8 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
 
   describe('Coverage Gap Identification', () => {
     it('should identify files with < 80% coverage', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         const coverageData = {
@@ -420,29 +421,29 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
             functions: { total: 0, covered: 0 },
             statements: { total: 0, covered: 0 },
           },
-        };
+        }
 
-        const coverageDir = path.join(tempDir, 'coverage');
-        fs.mkdirSync(coverageDir, { recursive: true });
+        const coverageDir = path.join(tempDir, 'coverage')
+        fs.mkdirSync(coverageDir, { recursive: true })
         fs.writeFileSync(
           path.join(coverageDir, 'coverage-final.json'),
           JSON.stringify(coverageData),
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        const metrics = result.metrics as any;
-        expect(metrics.gaps).toBeDefined();
-        expect(Array.isArray(metrics.gaps)).toBe(true);
+        const metrics = result.metrics as any
+        expect(metrics.gaps).toBeDefined()
+        expect(Array.isArray(metrics.gaps)).toBe(true)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should calculate uncovered lines', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         const coverageData = {
@@ -458,31 +459,31 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
             functions: { total: 0, covered: 0 },
             statements: { total: 0, covered: 0 },
           },
-        };
+        }
 
-        const coverageDir = path.join(tempDir, 'coverage');
-        fs.mkdirSync(coverageDir, { recursive: true });
+        const coverageDir = path.join(tempDir, 'coverage')
+        fs.mkdirSync(coverageDir, { recursive: true })
         fs.writeFileSync(
           path.join(coverageDir, 'coverage-final.json'),
           JSON.stringify(coverageData),
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        const metrics = result.metrics as any;
+        const metrics = result.metrics as any
         if (metrics.gaps.length > 0) {
-          const gap = metrics.gaps[0];
-          expect(gap.uncoveredLines).toBe(25);
+          const gap = metrics.gaps[0]
+          expect(gap.uncoveredLines).toBe(25)
         }
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should classify gaps by criticality', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         const coverageData = {
@@ -510,33 +511,35 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
             functions: { total: 0, covered: 0 },
             statements: { total: 0, covered: 0 },
           },
-        };
+        }
 
-        const coverageDir = path.join(tempDir, 'coverage');
-        fs.mkdirSync(coverageDir, { recursive: true });
+        const coverageDir = path.join(tempDir, 'coverage')
+        fs.mkdirSync(coverageDir, { recursive: true })
         fs.writeFileSync(
           path.join(coverageDir, 'coverage-final.json'),
           JSON.stringify(coverageData),
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        const metrics = result.metrics as any;
-        expect(metrics.gaps).toBeDefined();
+        const metrics = result.metrics as any
+        expect(metrics.gaps).toBeDefined()
 
-        const gapsByFile = new Map<string, any>(metrics.gaps.map((g: any) => [g.file, g]));
+        const gapsByFile = new Map<string, any>(
+          metrics.gaps.map((g: any) => [g.file, g]),
+        )
         if (gapsByFile.has('src/critical.ts')) {
-          expect(gapsByFile.get('src/critical.ts').criticality).toBe('critical');
+          expect(gapsByFile.get('src/critical.ts').criticality).toBe('critical')
         }
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should suggest tests based on file type', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         const coverageData = {
@@ -564,35 +567,46 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
             functions: { total: 0, covered: 0 },
             statements: { total: 0, covered: 0 },
           },
-        };
+        }
 
-        const coverageDir = path.join(tempDir, 'coverage');
-        fs.mkdirSync(coverageDir, { recursive: true });
+        const coverageDir = path.join(tempDir, 'coverage')
+        fs.mkdirSync(coverageDir, { recursive: true })
         fs.writeFileSync(
           path.join(coverageDir, 'coverage-final.json'),
           JSON.stringify(coverageData),
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        const metrics = result.metrics as any;
-        const gapsByFile = new Map<string, any>(metrics.gaps.map((g: any) => [g.file, g]));
+        const metrics = result.metrics as any
+        const gapsByFile = new Map<string, any>(
+          metrics.gaps.map((g: any) => [g.file, g]),
+        )
 
         if (gapsByFile.has('src/utils/helpers.ts')) {
-          expect(gapsByFile.get('src/utils/helpers.ts').suggestedTests).toBeDefined();
+          expect(
+            gapsByFile.get('src/utils/helpers.ts').suggestedTests,
+          ).toBeDefined()
         }
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should limit gaps to top 10', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
-        const coverageData: any = { total: { lines: { total: 0, covered: 0 }, branches: { total: 0, covered: 0 }, functions: { total: 0, covered: 0 }, statements: { total: 0, covered: 0 } } };
+        const coverageData: any = {
+          total: {
+            lines: { total: 0, covered: 0 },
+            branches: { total: 0, covered: 0 },
+            functions: { total: 0, covered: 0 },
+            statements: { total: 0, covered: 0 },
+          },
+        }
 
         for (let i = 0; i < 20; i++) {
           coverageData[`src/file${i}.ts`] = {
@@ -600,26 +614,26 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
             branches: { total: 0, covered: 0 },
             functions: { total: 0, covered: 0 },
             statements: { total: 0, covered: 0 },
-          };
+          }
         }
 
-        const coverageDir = path.join(tempDir, 'coverage');
-        fs.mkdirSync(coverageDir, { recursive: true });
+        const coverageDir = path.join(tempDir, 'coverage')
+        fs.mkdirSync(coverageDir, { recursive: true })
         fs.writeFileSync(
           path.join(coverageDir, 'coverage-final.json'),
           JSON.stringify(coverageData),
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        const metrics = result.metrics as any;
-        expect(metrics.gaps.length).toBeLessThanOrEqual(10);
+        const metrics = result.metrics as any
+        expect(metrics.gaps.length).toBeLessThanOrEqual(10)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // FINDINGS GENERATION TESTS
@@ -627,8 +641,8 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
 
   describe('Findings Generation', () => {
     it('should generate finding for low overall coverage', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         const coverageData = {
@@ -644,31 +658,31 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
             functions: { total: 100, covered: 50 },
             statements: { total: 100, covered: 50 },
           },
-        };
+        }
 
-        const coverageDir = path.join(tempDir, 'coverage');
-        fs.mkdirSync(coverageDir, { recursive: true });
+        const coverageDir = path.join(tempDir, 'coverage')
+        fs.mkdirSync(coverageDir, { recursive: true })
         fs.writeFileSync(
           path.join(coverageDir, 'coverage-final.json'),
           JSON.stringify(coverageData),
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        const coverageFindings = result.findings.filter((f) =>
-          f.title.toLowerCase().includes('coverage')
-        );
+        const coverageFindings = result.findings.filter(f =>
+          f.title.toLowerCase().includes('coverage'),
+        )
 
-        expect(coverageFindings.length).toBeGreaterThanOrEqual(0);
+        expect(coverageFindings.length).toBeGreaterThanOrEqual(0)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should generate finding for low branch coverage', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         const coverageData = {
@@ -684,33 +698,33 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
             functions: { total: 100, covered: 90 },
             statements: { total: 100, covered: 85 },
           },
-        };
+        }
 
-        const coverageDir = path.join(tempDir, 'coverage');
-        fs.mkdirSync(coverageDir, { recursive: true });
+        const coverageDir = path.join(tempDir, 'coverage')
+        fs.mkdirSync(coverageDir, { recursive: true })
         fs.writeFileSync(
           path.join(coverageDir, 'coverage-final.json'),
           JSON.stringify(coverageData),
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        const branchFindings = result.findings.filter((f) =>
-          f.title.toLowerCase().includes('branch')
-        );
+        const branchFindings = result.findings.filter(f =>
+          f.title.toLowerCase().includes('branch'),
+        )
 
         if (branchFindings.length > 0) {
-          expect(branchFindings[0].category).toBe('testCoverage');
+          expect(branchFindings[0].category).toBe('testCoverage')
         }
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should generate findings for coverage gaps', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         const coverageData = {
@@ -726,26 +740,26 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
             functions: { total: 0, covered: 0 },
             statements: { total: 0, covered: 0 },
           },
-        };
+        }
 
-        const coverageDir = path.join(tempDir, 'coverage');
-        fs.mkdirSync(coverageDir, { recursive: true });
+        const coverageDir = path.join(tempDir, 'coverage')
+        fs.mkdirSync(coverageDir, { recursive: true })
         fs.writeFileSync(
           path.join(coverageDir, 'coverage-final.json'),
           JSON.stringify(coverageData),
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        const gapFindings = result.findings.filter((f) => f.id.startsWith('gap-'));
+        const gapFindings = result.findings.filter(f => f.id.startsWith('gap-'))
 
-        expect(gapFindings.length).toBeGreaterThanOrEqual(0);
+        expect(gapFindings.length).toBeGreaterThanOrEqual(0)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // SCORE CALCULATION TESTS
@@ -753,15 +767,15 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
 
   describe('Score Calculation', () => {
     it('should return score between 0 and 100', async () => {
-      const result = await analyzer.analyze();
+      const result = await analyzer.analyze()
 
-      expect(result.score).toBeGreaterThanOrEqual(0);
-      expect(result.score).toBeLessThanOrEqual(100);
-    });
+      expect(result.score).toBeGreaterThanOrEqual(0)
+      expect(result.score).toBeLessThanOrEqual(100)
+    })
 
     it('should use weighted average: 60% coverage + 40% effectiveness', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         const coverageData = {
@@ -777,36 +791,36 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
             functions: { total: 100, covered: 90 },
             statements: { total: 100, covered: 85 },
           },
-        };
+        }
 
-        const coverageDir = path.join(tempDir, 'coverage');
-        fs.mkdirSync(coverageDir, { recursive: true });
+        const coverageDir = path.join(tempDir, 'coverage')
+        fs.mkdirSync(coverageDir, { recursive: true })
         fs.writeFileSync(
           path.join(coverageDir, 'coverage-final.json'),
           JSON.stringify(coverageData),
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        expect(result.score).toBeGreaterThan(50);
+        expect(result.score).toBeGreaterThan(50)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should assign status based on score', async () => {
-      const result = await analyzer.analyze();
+      const result = await analyzer.analyze()
 
       if (result.score >= 80) {
-        expect(result.status).toBe('pass');
+        expect(result.status).toBe('pass')
       } else if (result.score >= 70) {
-        expect(result.status).toBe('warning');
+        expect(result.status).toBe('warning')
       } else {
-        expect(result.status).toBe('fail');
+        expect(result.status).toBe('fail')
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // ERROR HANDLING AND EDGE CASES
@@ -814,43 +828,43 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
 
   describe('Error Handling and Edge Cases', () => {
     it('should handle missing coverage data gracefully', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        expect(result).toBeDefined();
-        expect(result.category).toBe('testCoverage');
+        expect(result).toBeDefined()
+        expect(result.category).toBe('testCoverage')
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should handle malformed coverage JSON', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
-        const coverageDir = path.join(tempDir, 'coverage');
-        fs.mkdirSync(coverageDir, { recursive: true });
+        const coverageDir = path.join(tempDir, 'coverage')
+        fs.mkdirSync(coverageDir, { recursive: true })
         fs.writeFileSync(
           path.join(coverageDir, 'coverage-final.json'),
           'invalid json {',
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        expect(result).toBeDefined();
+        expect(result).toBeDefined()
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should find coverage data in different paths', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         const coverageData = {
@@ -866,31 +880,31 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
             functions: { total: 0, covered: 0 },
             statements: { total: 0, covered: 0 },
           },
-        };
+        }
 
-        const nycDir = path.join(tempDir, '.nyc_output');
-        fs.mkdirSync(nycDir, { recursive: true });
+        const nycDir = path.join(tempDir, '.nyc_output')
+        fs.mkdirSync(nycDir, { recursive: true })
         fs.writeFileSync(
           path.join(nycDir, 'coverage-final.json'),
           JSON.stringify(coverageData),
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        expect(result).toBeDefined();
+        expect(result).toBeDefined()
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should measure execution time', async () => {
-      const result = await analyzer.analyze();
+      const result = await analyzer.analyze()
 
-      expect(result.executionTime).toBeGreaterThanOrEqual(0);
-      expect(typeof result.executionTime).toBe('number');
-    });
-  });
+      expect(result.executionTime).toBeGreaterThanOrEqual(0)
+      expect(typeof result.executionTime).toBe('number')
+    })
+  })
 
   // ============================================================================
   // MULTI-FILE COVERAGE TESTS
@@ -898,8 +912,8 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
 
   describe('Multi-File Coverage Analysis', () => {
     it('should aggregate coverage from multiple files', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         const coverageData = {
@@ -927,29 +941,29 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
             functions: { total: 0, covered: 0 },
             statements: { total: 0, covered: 0 },
           },
-        };
+        }
 
-        const coverageDir = path.join(tempDir, 'coverage');
-        fs.mkdirSync(coverageDir, { recursive: true });
+        const coverageDir = path.join(tempDir, 'coverage')
+        fs.mkdirSync(coverageDir, { recursive: true })
         fs.writeFileSync(
           path.join(coverageDir, 'coverage-final.json'),
           JSON.stringify(coverageData),
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        const metrics = result.metrics as any;
-        expect(metrics.byFile).toBeDefined();
-        expect(Object.keys(metrics.byFile).length).toBeGreaterThanOrEqual(0);
+        const metrics = result.metrics as any
+        expect(metrics.byFile).toBeDefined()
+        expect(Object.keys(metrics.byFile).length).toBeGreaterThanOrEqual(0)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should sort gaps by coverage (lowest first)', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         const coverageData = {
@@ -977,31 +991,31 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
             functions: { total: 0, covered: 0 },
             statements: { total: 0, covered: 0 },
           },
-        };
+        }
 
-        const coverageDir = path.join(tempDir, 'coverage');
-        fs.mkdirSync(coverageDir, { recursive: true });
+        const coverageDir = path.join(tempDir, 'coverage')
+        fs.mkdirSync(coverageDir, { recursive: true })
         fs.writeFileSync(
           path.join(coverageDir, 'coverage-final.json'),
           JSON.stringify(coverageData),
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        const metrics = result.metrics as any;
+        const metrics = result.metrics as any
         if (metrics.gaps.length > 1) {
           for (let i = 0; i < metrics.gaps.length - 1; i++) {
             expect(metrics.gaps[i].coverage).toBeLessThanOrEqual(
-              metrics.gaps[i + 1].coverage
-            );
+              metrics.gaps[i + 1].coverage,
+            )
           }
         }
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // REALISTIC PROJECT COVERAGE SCENARIOS
@@ -1009,8 +1023,8 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
 
   describe('Realistic Project Coverage Scenarios', () => {
     it('should analyze coverage for typical React component library', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         const coverageData = {
@@ -1044,37 +1058,37 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
             functions: { total: 34, covered: 31 },
             statements: { total: 350, covered: 287 },
           },
-        };
+        }
 
-        const coverageDir = path.join(tempDir, 'coverage');
-        fs.mkdirSync(coverageDir, { recursive: true });
+        const coverageDir = path.join(tempDir, 'coverage')
+        fs.mkdirSync(coverageDir, { recursive: true })
         fs.writeFileSync(
           path.join(coverageDir, 'coverage-final.json'),
           JSON.stringify(coverageData),
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        const metrics = result.metrics as any;
-        expect(metrics.overall.lines.percentage).toBeCloseTo(83.79, 1);
-        expect(metrics.overall.branches.percentage).toBeCloseTo(80.6, 1);
-        expect(metrics.overall.functions.percentage).toBeCloseTo(91.18, 1);
+        const metrics = result.metrics as any
+        expect(metrics.overall.lines.percentage).toBeCloseTo(83.79, 1)
+        expect(metrics.overall.branches.percentage).toBeCloseTo(80.6, 1)
+        expect(metrics.overall.functions.percentage).toBeCloseTo(91.18, 1)
 
         // Check for coverage gaps
-        expect(metrics.gaps.length).toBeGreaterThan(0);
+        expect(metrics.gaps.length).toBeGreaterThan(0)
 
         // Lowest coverage should be the hook
-        const lowestGap = metrics.gaps[0];
-        expect(lowestGap.coverage).toBeLessThan(80);
+        const lowestGap = metrics.gaps[0]
+        expect(lowestGap.coverage).toBeLessThan(80)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should identify critical coverage gaps with suggestions', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         const coverageData = {
@@ -1096,38 +1110,38 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
             functions: { total: 32, covered: 16 },
             statements: { total: 300, covered: 160 },
           },
-        };
+        }
 
-        const coverageDir = path.join(tempDir, 'coverage');
-        fs.mkdirSync(coverageDir, { recursive: true });
+        const coverageDir = path.join(tempDir, 'coverage')
+        fs.mkdirSync(coverageDir, { recursive: true })
         fs.writeFileSync(
           path.join(coverageDir, 'coverage-final.json'),
           JSON.stringify(coverageData),
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        const metrics = result.metrics as any;
+        const metrics = result.metrics as any
         const criticalGaps = metrics.gaps.filter(
-          (gap: any) => gap.criticality === 'critical'
-        );
+          (gap: any) => gap.criticality === 'critical',
+        )
 
         if (criticalGaps.length > 0) {
-          const gap = criticalGaps[0];
-          expect(gap.coverage).toBeLessThan(50);
-          expect(gap.suggestedTests).toBeDefined();
-          expect(Array.isArray(gap.suggestedTests)).toBe(true);
-          expect(gap.estimatedEffort).toMatch(/high|medium|low/);
+          const gap = criticalGaps[0]
+          expect(gap.coverage).toBeLessThan(50)
+          expect(gap.suggestedTests).toBeDefined()
+          expect(Array.isArray(gap.suggestedTests)).toBe(true)
+          expect(gap.estimatedEffort).toMatch(/high|medium|low/)
         }
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should identify test effectiveness issues', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         const coverageData = {
@@ -1143,33 +1157,33 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
             functions: { total: 25, covered: 25 },
             statements: { total: 250, covered: 250 },
           },
-        };
+        }
 
-        const coverageDir = path.join(tempDir, 'coverage');
-        fs.mkdirSync(coverageDir, { recursive: true });
+        const coverageDir = path.join(tempDir, 'coverage')
+        fs.mkdirSync(coverageDir, { recursive: true })
         fs.writeFileSync(
           path.join(coverageDir, 'coverage-final.json'),
           JSON.stringify(coverageData),
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
         // High line coverage but low branch coverage indicates weak tests
-        const metrics = result.metrics as any;
-        expect(metrics.overall.lines.percentage).toBe(100);
-        expect(metrics.overall.branches.percentage).toBeLessThan(50);
+        const metrics = result.metrics as any
+        expect(metrics.overall.lines.percentage).toBe(100)
+        expect(metrics.overall.branches.percentage).toBeLessThan(50)
 
         // Score should reflect this effectiveness issue
-        expect(result.score).toBeLessThan(100);
+        expect(result.score).toBeLessThan(100)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should handle coverage thresholds and status levels', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         // Test at different coverage levels
@@ -1177,7 +1191,7 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
           { coverage: 95, expectedStatus: 'excellent' },
           { coverage: 75, expectedStatus: 'acceptable' },
           { coverage: 40, expectedStatus: 'poor' },
-        ];
+        ]
 
         for (const scenario of scenarios) {
           const coverageData = {
@@ -1193,26 +1207,26 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
               functions: { total: 0, covered: 0 },
               statements: { total: 0, covered: 0 },
             },
-          };
+          }
 
-          const coverageDir = path.join(tempDir, 'coverage');
-          fs.rmSync(coverageDir, { recursive: true, force: true });
-          fs.mkdirSync(coverageDir, { recursive: true });
+          const coverageDir = path.join(tempDir, 'coverage')
+          fs.rmSync(coverageDir, { recursive: true, force: true })
+          fs.mkdirSync(coverageDir, { recursive: true })
           fs.writeFileSync(
             path.join(coverageDir, 'coverage-final.json'),
             JSON.stringify(coverageData),
-            'utf-8'
-          );
+            'utf-8',
+          )
 
-          const result = await analyzer.analyze();
-          const metrics = result.metrics as any;
-          expect(metrics.overall.lines.status).toBe(scenario.expectedStatus);
+          const result = await analyzer.analyze()
+          const metrics = result.metrics as any
+          expect(metrics.overall.lines.status).toBe(scenario.expectedStatus)
         }
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
-  });
+    })
+  })
 
   // ============================================================================
   // COVERAGE METRICS VALIDATION
@@ -1220,8 +1234,8 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
 
   describe('Coverage Metrics Validation', () => {
     it('should validate coverage percentages are 0-100', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         const coverageData = {
@@ -1237,32 +1251,32 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
             functions: { total: 20, covered: 18 },
             statements: { total: 120, covered: 90 },
           },
-        };
+        }
 
-        const coverageDir = path.join(tempDir, 'coverage');
-        fs.mkdirSync(coverageDir, { recursive: true });
+        const coverageDir = path.join(tempDir, 'coverage')
+        fs.mkdirSync(coverageDir, { recursive: true })
         fs.writeFileSync(
           path.join(coverageDir, 'coverage-final.json'),
           JSON.stringify(coverageData),
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        const metrics = result.metrics as any;
+        const metrics = result.metrics as any
         for (const metric of ['lines', 'branches', 'functions', 'statements']) {
-          const percentage = metrics.overall[metric].percentage;
-          expect(percentage).toBeGreaterThanOrEqual(0);
-          expect(percentage).toBeLessThanOrEqual(100);
+          const percentage = metrics.overall[metric].percentage
+          expect(percentage).toBeGreaterThanOrEqual(0)
+          expect(percentage).toBeLessThanOrEqual(100)
         }
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
+    })
 
     it('should handle zero lines to cover scenario', async () => {
-      const originalCwd = process.cwd();
-      process.chdir(tempDir);
+      const originalCwd = process.cwd()
+      process.chdir(tempDir)
 
       try {
         const coverageData = {
@@ -1278,24 +1292,24 @@ describe('CoverageAnalyzer - Comprehensive Tests', () => {
             functions: { total: 0, covered: 0 },
             statements: { total: 0, covered: 0 },
           },
-        };
+        }
 
-        const coverageDir = path.join(tempDir, 'coverage');
-        fs.mkdirSync(coverageDir, { recursive: true });
+        const coverageDir = path.join(tempDir, 'coverage')
+        fs.mkdirSync(coverageDir, { recursive: true })
         fs.writeFileSync(
           path.join(coverageDir, 'coverage-final.json'),
           JSON.stringify(coverageData),
-          'utf-8'
-        );
+          'utf-8',
+        )
 
-        const result = await analyzer.analyze();
+        const result = await analyzer.analyze()
 
-        const metrics = result.metrics as any;
+        const metrics = result.metrics as any
         // Should treat 0/0 as 100% (empty file is "covered")
-        expect(metrics.overall.lines.percentage).toBe(100);
+        expect(metrics.overall.lines.percentage).toBe(100)
       } finally {
-        process.chdir(originalCwd);
+        process.chdir(originalCwd)
       }
-    });
-  });
-});
+    })
+  })
+})

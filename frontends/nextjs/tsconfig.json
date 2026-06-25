@@ -37,14 +37,14 @@
       "@/*": [
         "./src/*"
       ],
-      "@/fakemui": [
-        "../../components/fakemui"
+      "@/m3": [
+        "../../libraries/components/m3"
       ],
-      "@/fakemui/*": [
-        "../../components/fakemui/*"
+      "@/m3/*": [
+        "../../libraries/components/m3/*"
       ],
       "@dbal-ui/*": [
-        "../../dbal/shared/ui/*"
+        "../../libraries/dbal/shared/ui/*"
       ]
     },
     "plugins": [

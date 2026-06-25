@@ -1,8 +1,10 @@
 import { UnitTest } from '@/types/project'
-import { Button, Input, Textarea } from '@metabuilder/fakemui/inputs'
-import { Card, CardContent, CardHeader, CardTitle } from '@metabuilder/fakemui/surfaces'
-import { Label } from '@metabuilder/fakemui/atoms'
-import { Flask } from '@metabuilder/fakemui/icons'
+import { Button, Input, Textarea } from '@metabuilder/m3/inputs'
+import {
+  Card, CardContent, CardHeader, CardTitle,
+} from '@metabuilder/m3/surfaces'
+import { Label } from '@metabuilder/m3/atoms'
+import { Flask } from '@metabuilder/m3/icons'
 import unitTestDesignerCopy from '@/data/unit-test-designer.json'
 
 interface TestSuiteEditorProps {
@@ -14,7 +16,9 @@ export function TestSuiteEditor({ test, onUpdateTest }: TestSuiteEditorProps) {
   return (
     <div className="test-suite-editor">
       <div className="test-suite-editor__header">
-        <h2 className="test-suite-editor__title">{unitTestDesignerCopy.labels.testSuiteConfiguration}</h2>
+        <h2 className="test-suite-editor__title">
+          {unitTestDesignerCopy.labels.testSuiteConfiguration}
+        </h2>
         <Button variant="outlined">
           <Flask size={16} weight="fill" />
           {unitTestDesignerCopy.labels.runTests}
@@ -28,43 +32,71 @@ export function TestSuiteEditor({ test, onUpdateTest }: TestSuiteEditorProps) {
         <CardContent>
           <div className="test-suite-editor__fields">
             <div className="test-suite-editor__field">
-              <Label htmlFor="test-name">{unitTestDesignerCopy.labels.testSuiteName}</Label>
+              <Label htmlFor="test-name">
+                {unitTestDesignerCopy.labels.testSuiteName}
+              </Label>
               <Input
                 id="test-name"
                 value={test.name}
-                onChange={event => onUpdateTest(test.id, { name: event.target.value })}
+                onChange={event =>
+                  onUpdateTest(test.id, { name: event.target.value })
+                }
               />
             </div>
             <div className="test-suite-editor__field">
-              <Label htmlFor="test-description">{unitTestDesignerCopy.labels.description}</Label>
+              <Label htmlFor="test-description">
+                {unitTestDesignerCopy.labels.description}
+              </Label>
               <Textarea
                 id="test-description"
                 value={test.description}
-                onChange={event => onUpdateTest(test.id, { description: event.target.value })}
-                placeholder={unitTestDesignerCopy.placeholders.testSuiteDescription}
+                onChange={event =>
+                  onUpdateTest(test.id, { description: event.target.value })
+                }
+                placeholder={
+                  unitTestDesignerCopy.placeholders.testSuiteDescription
+                }
               />
             </div>
             <div className="test-suite-editor__row">
               <div className="test-suite-editor__field">
-                <Label htmlFor="test-type">{unitTestDesignerCopy.labels.testType}</Label>
+                <Label htmlFor="test-type">
+                  {unitTestDesignerCopy.labels.testType}
+                </Label>
                 <select
                   id="test-type"
                   className="test-suite-editor__select"
                   value={test.testType}
-                  onChange={event => onUpdateTest(test.id, { testType: event.target.value as UnitTest['testType'] })}
+                  onChange={event =>
+                    onUpdateTest(test.id, {
+                      testType: event.target.value as UnitTest['testType'],
+                    })
+                  }
                 >
-                  <option value="component">{unitTestDesignerCopy.testTypes.component}</option>
-                  <option value="function">{unitTestDesignerCopy.testTypes.function}</option>
-                  <option value="hook">{unitTestDesignerCopy.testTypes.hook}</option>
-                  <option value="integration">{unitTestDesignerCopy.testTypes.integration}</option>
+                  <option value="component">
+                    {unitTestDesignerCopy.testTypes.component}
+                  </option>
+                  <option value="function">
+                    {unitTestDesignerCopy.testTypes.function}
+                  </option>
+                  <option value="hook">
+                    {unitTestDesignerCopy.testTypes.hook}
+                  </option>
+                  <option value="integration">
+                    {unitTestDesignerCopy.testTypes.integration}
+                  </option>
                 </select>
               </div>
               <div className="test-suite-editor__field">
-                <Label htmlFor="target-file">{unitTestDesignerCopy.labels.targetFile}</Label>
+                <Label htmlFor="target-file">
+                  {unitTestDesignerCopy.labels.targetFile}
+                </Label>
                 <Input
                   id="target-file"
                   value={test.targetFile}
-                  onChange={event => onUpdateTest(test.id, { targetFile: event.target.value })}
+                  onChange={event =>
+                    onUpdateTest(test.id, { targetFile: event.target.value })
+                  }
                   placeholder={unitTestDesignerCopy.placeholders.targetFile}
                 />
               </div>

@@ -1,0 +1,672 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "dashboard",
+  "description": "Dashboard components including stat cards, grids, and widgets",
+  "components": [
+    {
+      "id": "stat_card",
+      "name": "StatCard",
+      "description": "Statistic card with icon, label, value, and trend indicator",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "description": "Card label text"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": true,
+          "description": "Main statistic value"
+        },
+        {
+          "name": "icon",
+          "type": "string",
+          "required": false,
+          "description": "Icon name"
+        },
+        {
+          "name": "trend",
+          "type": "object",
+          "required": false,
+          "description": "Trend data with direction and percentage"
+        },
+        {
+          "name": "color",
+          "type": "string",
+          "required": false,
+          "default": "primary"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "stat-card",
+          "children": [
+            {
+              "type": "Box",
+              "className": "stat-card-icon",
+              "children": [
+                {
+                  "type": "Icon",
+                  "name": "{{icon}}",
+                  "color": "{{color}}",
+                  "size": 48
+                }
+              ]
+            },
+            {
+              "type": "Stack",
+              "gap": 1,
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "caption",
+                  "color": "secondary",
+                  "children": "{{label}}"
+                },
+                {
+                  "type": "Text",
+                  "variant": "h4",
+                  "fontWeight": "bold",
+                  "children": "{{value}}"
+                },
+                {
+                  "type": "conditional",
+                  "condition": "{{trend}}",
+                  "then": {
+                    "type": "Flex",
+                    "alignItems": "center",
+                    "gap": 0.5,
+                    "children": [
+                      {
+                        "type": "Icon",
+                        "name": "{{trend.direction === 'up' ? 'TrendingUp' : 'TrendingDown'}}",
+                        "size": 16,
+                        "color": "{{trend.direction === 'up' ? 'success' : 'error'}}"
+                      },
+                      {
+                        "type": "Text",
+                        "variant": "caption",
+                        "color": "{{trend.direction === 'up' ? 'success' : 'error'}}",
+                        "children": "{{trend.percentage}}%"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "dashboard_grid",
+      "name": "DashboardGrid",
+      "description": "Responsive grid layout for dashboard widgets",
+      "props": [
+        {
+          "name": "children",
+          "type": "any",
+          "required": true
+        },
+        {
+          "name": "spacing",
+          "type": "number",
+          "default": 3
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Grid",
+          "container": true,
+          "spacing": "{{spacing}}",
+          "className": "dashboard-grid",
+          "children": "{{children}}"
+        }
+      }
+    },
+    {
+      "id": "widget",
+      "name": "Widget",
+      "description": "Generic dashboard widget container",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "subtitle",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "children",
+          "type": "any",
+          "required": true
+        },
+        {
+          "name": "actions",
+          "type": "any",
+          "required": false
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "elevation",
+          "className": "dashboard-widget",
+          "children": [
+            {
+              "type": "CardHeader",
+              "title": "{{title}}",
+              "subtitle": "{{subtitle}}"
+            },
+            {
+              "type": "CardContent",
+              "children": "{{children}}"
+            },
+            {
+              "type": "conditional",
+              "condition": "{{actions}}",
+              "then": {
+                "type": "CardActions",
+                "children": "{{actions}}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "dashboard_home",
+      "name": "DashboardHome",
+      "description": "User dashboard home with greeting, quick links, and navigation shortcuts",
+      "category": "dashboard",
+      "props": [
+        {
+          "name": "user",
+          "type": "object",
+          "required": true,
+          "description": "User object with username, email, avatar properties"
+        },
+        {
+          "name": "onNavigate",
+          "type": "function",
+          "required": false,
+          "description": "Callback function for navigation actions"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "dashboard-home",
+          "children": [
+            {
+              "type": "Card",
+              "variant": "elevation",
+              "className": "greeting-card",
+              "children": [
+                {
+                  "type": "CardContent",
+                  "children": [
+                    {
+                      "type": "Grid",
+                      "container": true,
+                      "spacing": 2,
+                      "children": [
+                        {
+                          "type": "Grid",
+                          "item": true,
+                          "xs": 12,
+                          "sm": 3,
+                          "children": [
+                            {
+                              "type": "Avatar",
+                              "alt": "{{user.username}}",
+                              "className": "greeting-avatar",
+                              "sx": { "width": 80, "height": 80 }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Grid",
+                          "item": true,
+                          "xs": 12,
+                          "sm": 9,
+                          "children": [
+                            {
+                              "type": "Stack",
+                              "gap": 2,
+                              "children": [
+                                {
+                                  "type": "Typography",
+                                  "variant": "h4",
+                                  "children": "Welcome back, {{user.username}}!"
+                                },
+                                {
+                                  "type": "Typography",
+                                  "variant": "body2",
+                                  "color": "textSecondary",
+                                  "children": "{{user.email}}"
+                                },
+                                {
+                                  "type": "Box",
+                                  "className": "quick-links",
+                                  "sx": { "display": "flex", "gap": 1, "marginTop": 1 },
+                                  "children": [
+                                    {
+                                      "type": "Button",
+                                      "variant": "outlined",
+                                      "size": "small",
+                                      "children": "Profile",
+                                      "onClick": "{{onNavigate('profile')}}"
+                                    },
+                                    {
+                                      "type": "Button",
+                                      "variant": "outlined",
+                                      "size": "small",
+                                      "children": "Comments",
+                                      "onClick": "{{onNavigate('comments')}}"
+                                    },
+                                    {
+                                      "type": "Button",
+                                      "variant": "outlined",
+                                      "size": "small",
+                                      "children": "Chat",
+                                      "onClick": "{{onNavigate('chat')}}"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "user_profile",
+      "name": "UserProfile",
+      "description": "User profile display and edit mode",
+      "category": "dashboard",
+      "props": [
+        {
+          "name": "user",
+          "type": "object",
+          "required": true,
+          "description": "User object with username, email, bio, avatar"
+        },
+        {
+          "name": "onSave",
+          "type": "function",
+          "required": false,
+          "description": "Callback when saving profile changes"
+        },
+        {
+          "name": "onCancel",
+          "type": "function",
+          "required": false,
+          "description": "Callback when canceling edit mode"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "elevation",
+          "className": "user-profile",
+          "children": [
+            {
+              "type": "CardHeader",
+              "title": "User Profile"
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Stack",
+                  "gap": 3,
+                  "children": [
+                    {
+                      "type": "Box",
+                      "className": "profile-avatar",
+                      "sx": { "display": "flex", "justifyContent": "center" },
+                      "children": [
+                        {
+                          "type": "Avatar",
+                          "alt": "{{user.username}}",
+                          "sx": { "width": 100, "height": 100 }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Stack",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "Box",
+                          "children": [
+                            {
+                              "type": "Typography",
+                              "variant": "caption",
+                              "color": "textSecondary",
+                              "children": "Username"
+                            },
+                            {
+                              "type": "Typography",
+                              "variant": "body1",
+                              "children": "{{user.username}}"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Box",
+                          "children": [
+                            {
+                              "type": "Typography",
+                              "variant": "caption",
+                              "color": "textSecondary",
+                              "children": "Email"
+                            },
+                            {
+                              "type": "Typography",
+                              "variant": "body1",
+                              "children": "{{user.email}}"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Box",
+                          "children": [
+                            {
+                              "type": "Typography",
+                              "variant": "caption",
+                              "color": "textSecondary",
+                              "children": "Bio"
+                            },
+                            {
+                              "type": "Typography",
+                              "variant": "body2",
+                              "children": "{{user.bio || 'No bio provided'}}"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "comments_list",
+      "name": "CommentsList",
+      "description": "List of comments with pagination and delete functionality",
+      "category": "dashboard",
+      "props": [
+        {
+          "name": "comments",
+          "type": "array",
+          "required": true,
+          "description": "Array of comment objects"
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "required": false,
+          "default": 0,
+          "description": "Current page for pagination"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "required": false,
+          "default": 10,
+          "description": "Number of items per page"
+        },
+        {
+          "name": "onDelete",
+          "type": "function",
+          "required": false,
+          "description": "Callback when deleting a comment"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "elevation",
+          "className": "comments-list",
+          "children": [
+            {
+              "type": "CardHeader",
+              "title": "Comments"
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Stack",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "List",
+                      "className": "comments-items",
+                      "children": [
+                        {
+                          "type": "Typography",
+                          "variant": "body2",
+                          "color": "textSecondary",
+                          "className": "no-comments",
+                          "children": "No comments yet"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "TablePagination",
+                      "count": 0,
+                      "page": "{{page}}",
+                      "rowsPerPage": "{{pageSize}}"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "comment_form",
+      "name": "CommentForm",
+      "description": "Form for writing and submitting new comments",
+      "category": "dashboard",
+      "props": [
+        {
+          "name": "onSubmit",
+          "type": "function",
+          "required": true,
+          "description": "Callback when form is submitted with comment text"
+        },
+        {
+          "name": "isLoading",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Show loading state while submitting"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "comment-form",
+          "children": [
+            {
+              "type": "CardHeader",
+              "title": "Write a Comment"
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Stack",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "TextField",
+                      "placeholder": "Share your thoughts...",
+                      "variant": "outlined",
+                      "multiline": true,
+                      "rows": 4,
+                      "fullWidth": true,
+                      "className": "comment-textarea"
+                    },
+                    {
+                      "type": "Box",
+                      "sx": { "display": "flex", "gap": 1, "justifyContent": "flex-end" },
+                      "children": [
+                        {
+                          "type": "Button",
+                          "variant": "text",
+                          "children": "Cancel"
+                        },
+                        {
+                          "type": "Button",
+                          "variant": "contained",
+                          "color": "primary",
+                          "children": "Submit",
+                          "disabled": "{{isLoading}}"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "irc_chat",
+      "name": "IRCChat",
+      "description": "IRC-style chat interface with message list and input",
+      "category": "dashboard",
+      "props": [
+        {
+          "name": "messages",
+          "type": "array",
+          "required": true,
+          "description": "Array of message objects with sender, text, timestamp"
+        },
+        {
+          "name": "onSendMessage",
+          "type": "function",
+          "required": true,
+          "description": "Callback when sending a message"
+        },
+        {
+          "name": "isLoading",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Show loading state while sending"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "elevation",
+          "className": "irc-chat",
+          "sx": { "height": "500px", "display": "flex", "flexDirection": "column" },
+          "children": [
+            {
+              "type": "CardHeader",
+              "title": "Chat"
+            },
+            {
+              "type": "CardContent",
+              "className": "chat-content",
+              "sx": { "flex": 1, "overflowY": "auto", "padding": 2 },
+              "children": [
+                {
+                  "type": "List",
+                  "className": "messages-list",
+                  "children": [
+                    {
+                      "type": "Typography",
+                      "variant": "body2",
+                      "color": "textSecondary",
+                      "className": "no-messages",
+                      "sx": { "textAlign": "center", "padding": 2 },
+                      "children": "No messages yet"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "className": "chat-input-area",
+              "sx": { "padding": 2, "borderTop": "1px solid #e0e0e0" },
+              "children": [
+                {
+                  "type": "Stack",
+                  "gap": 1,
+                  "children": [
+                    {
+                      "type": "TextField",
+                      "placeholder": "Type your message...",
+                      "variant": "outlined",
+                      "size": "small",
+                      "fullWidth": true,
+                      "className": "message-input"
+                    },
+                    {
+                      "type": "Box",
+                      "sx": { "display": "flex", "justifyContent": "flex-end" },
+                      "children": [
+                        {
+                          "type": "Button",
+                          "variant": "contained",
+                          "color": "primary",
+                          "children": "Send",
+                          "disabled": "{{isLoading}}"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "exports": {
+    "components": ["StatCard", "DashboardGrid", "Widget", "DashboardHome", "UserProfile", "CommentsList", "CommentForm", "IRCChat"]
+  }
+}

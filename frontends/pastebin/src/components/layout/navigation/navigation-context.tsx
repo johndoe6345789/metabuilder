@@ -10,6 +10,6 @@ interface NavigationContextType {
  * data-testid: "navigation-context"
  * aria: Used by navigation components with role="navigation"
  */
-export const NavigationContext = createContext<NavigationContextType | undefined>(
-  undefined
-)
+export const NavigationContext = createContext<
+  NavigationContextType | undefined
+>(undefined)

@@ -1,0 +1,210 @@
+{
+  "name": "Create Forum Thread",
+  "active": false,
+  "nodes": [
+    {
+      "id": "validate_tenant",
+      "name": "Validate Tenant",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "condition": "{{ $context.tenantId !== undefined }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "validate_user",
+      "name": "Validate User",
+      "type": "metabuilder.condition",
+      "typeVersion": 1,
+      "position": [
+        400,
+        100
+      ],
+      "parameters": {
+        "condition": "{{ $context.user.id !== undefined }}",
+        "operation": "condition"
+      }
+    },
+    {
+      "id": "validate_input",
+      "name": "Validate Input",
+      "type": "metabuilder.validate",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "input": "{{ $json }}",
+        "operation": "validate",
+        "rules": {
+          "categoryId": "required|string",
+          "title": "required|string|minLength:3|maxLength:200",
+          "content": "required|string|minLength:10|maxLength:5000"
+        }
+      }
+    },
+    {
+      "id": "generate_slug",
+      "name": "Generate Slug",
+      "type": "metabuilder.transform",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {
+        "output": "{{ $json.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') }}",
+        "operation": "transform_data"
+      }
+    },
+    {
+      "id": "create_thread",
+      "name": "Create Thread",
+      "type": "metabuilder.database",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "data": {
+          "tenantId": "{{ $context.tenantId }}",
+          "categoryId": "{{ $json.categoryId }}",
+          "authorId": "{{ $context.user.id }}",
+          "title": "{{ $json.title }}",
+          "slug": "{{ $steps.generate_slug.output }}",
+          "content": "{{ $json.content }}",
+          "viewCount": 0,
+          "postCount": 1,
+          "isLocked": false,
+          "isPinned": false,
+          "createdAt": "{{ new Date().toISOString() }}",
+          "updatedAt": "{{ new Date().toISOString() }}"
+        },
+        "operation": "database_create",
+        "entity": "ForumThread"
+      }
+    },
+    {
+      "id": "emit_created",
+      "name": "Emit Created",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "data": {
+          "threadId": "{{ $steps.create_thread.output.id }}",
+          "title": "{{ $json.title }}",
+          "authorId": "{{ $context.user.id }}"
+        },
+        "action": "emit_event",
+        "event": "thread_created",
+        "channel": "{{ 'forum:' + $context.tenantId }}"
+      }
+    },
+    {
+      "id": "return_success",
+      "name": "Return Success",
+      "type": "metabuilder.action",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
+      "parameters": {
+        "action": "http_response",
+        "status": 201,
+        "body": "{{ $steps.create_thread.output }}"
+      }
+    }
+  ],
+  "connections": {
+    "validate_tenant": {
+      "main": [
+        [
+          {
+            "node": "validate_user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_user": {
+      "main": [
+        [
+          {
+            "node": "validate_input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_input": {
+      "main": [
+        [
+          {
+            "node": "generate_slug",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "generate_slug": {
+      "main": [
+        [
+          {
+            "node": "create_thread",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_thread": {
+      "main": [
+        [
+          {
+            "node": "emit_created",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "emit_created": {
+      "main": [
+        [
+          {
+            "node": "return_success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "staticData": {},
+  "meta": {},
+  "settings": {
+    "timezone": "UTC",
+    "executionTimeout": 3600,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "id": "workflow_create_thread",
+  "version": "3.0.0",
+  "tenantId": "${TENANT_ID}"
+}

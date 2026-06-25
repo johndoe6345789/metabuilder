@@ -1,10 +1,10 @@
 import type { ConflictResolutionStrategy } from '@/types/conflicts'
 import type { ConflictResolutionCopy } from '@/components/conflict-resolution/types'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@metabuilder/fakemui/surfaces'
-import { Button } from '@metabuilder/fakemui/inputs'
-import { Separator } from '@metabuilder/fakemui/data-display'
-import { ArrowsLeftRight, Cloud, Database } from '@metabuilder/fakemui/icons'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@metabuilder/m3/surfaces'
+import { Button } from '@metabuilder/m3/inputs'
+import { Separator } from '@metabuilder/m3/data-display'
+import { ArrowsLeftRight, Cloud, Database } from '@metabuilder/m3/icons'
 
 interface ConflictResolutionBulkActionsProps {
   copy: ConflictResolutionCopy

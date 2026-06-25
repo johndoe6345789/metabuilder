@@ -1,0 +1,230 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/events.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "advanced-features",
+  "description": "Event-sourcing pattern for orders with complete audit trail",
+  "events": [
+    {
+      "id": "order_created",
+      "name": "order.created",
+      "version": "1.0.0",
+      "description": "Order was created",
+      "channel": "orders",
+      "payload": "OrderCreatedPayload",
+      "metadata": {
+        "timestamp": true,
+        "correlationId": true,
+        "userId": true
+      },
+      "priority": "high",
+      "retention": {
+        "enabled": true,
+        "ttl": 31536000
+      }
+    },
+    {
+      "id": "order_status_changed",
+      "name": "order.statusChanged",
+      "version": "1.0.0",
+      "description": "Order status was updated",
+      "channel": "orders",
+      "payload": {
+        "type": "object",
+        "properties": {
+          "orderId": { "type": "string" },
+          "previousStatus": { "type": "string" },
+          "newStatus": { "type": "string" },
+          "reason": { "type": "string" },
+          "changedBy": { "type": "string" }
+        },
+        "required": ["orderId", "previousStatus", "newStatus"]
+      },
+      "priority": "high",
+      "retention": {
+        "enabled": true,
+        "ttl": 31536000
+      }
+    },
+    {
+      "id": "order_item_added",
+      "name": "order.itemAdded",
+      "version": "1.0.0",
+      "description": "Item was added to order",
+      "channel": "orders",
+      "payload": {
+        "type": "object",
+        "properties": {
+          "orderId": { "type": "string" },
+          "item": { "type": "OrderItem" },
+          "addedBy": { "type": "string" }
+        },
+        "required": ["orderId", "item"]
+      },
+      "retention": {
+        "enabled": true,
+        "ttl": 31536000
+      }
+    },
+    {
+      "id": "order_shipped",
+      "name": "order.shipped",
+      "version": "1.0.0",
+      "description": "Order was shipped",
+      "channel": "orders",
+      "payload": {
+        "type": "object",
+        "properties": {
+          "orderId": { "type": "string" },
+          "trackingNumber": { "type": "string" },
+          "carrier": { "type": "string" },
+          "estimatedDelivery": { "type": "string" },
+          "shippedAt": { "type": "string" }
+        },
+        "required": ["orderId", "trackingNumber", "carrier"]
+      },
+      "priority": "high",
+      "retention": {
+        "enabled": true,
+        "ttl": 31536000
+      }
+    },
+    {
+      "id": "payment_processed",
+      "name": "payment.processed",
+      "version": "1.0.0",
+      "description": "Payment was processed for order",
+      "channel": "payments",
+      "payload": {
+        "type": "object",
+        "properties": {
+          "orderId": { "type": "string" },
+          "paymentId": { "type": "string" },
+          "amount": { "type": "number" },
+          "currency": { "type": "string" },
+          "method": { "type": "string" },
+          "status": { "type": "string" }
+        },
+        "required": ["orderId", "paymentId", "amount", "currency"]
+      },
+      "priority": "critical",
+      "retention": {
+        "enabled": true,
+        "ttl": 94608000
+      }
+    }
+  ],
+  "subscribers": [
+    {
+      "id": "order_event_store",
+      "name": "Order Event Store",
+      "description": "Persist all order events for event sourcing",
+      "events": ["order.*"],
+      "handler": "eventStore.persist",
+      "async": true,
+      "priority": 100,
+      "retry": {
+        "enabled": true,
+        "maxAttempts": 5,
+        "backoff": "exponential"
+      }
+    },
+    {
+      "id": "update_order_projection",
+      "name": "Update Order Projection",
+      "description": "Update read model from events",
+      "events": ["order.*"],
+      "handler": "projections.updateOrder",
+      "async": true,
+      "retry": {
+        "enabled": true,
+        "maxAttempts": 3
+      }
+    },
+    {
+      "id": "send_shipping_notification",
+      "name": "Send Shipping Notification",
+      "description": "Notify customer when order ships",
+      "events": ["order.shipped"],
+      "handler": "notifications.sendShippingEmail",
+      "async": true,
+      "retry": {
+        "enabled": true,
+        "maxAttempts": 3
+      }
+    },
+    {
+      "id": "update_inventory",
+      "name": "Update Inventory",
+      "description": "Update inventory when order is created or cancelled",
+      "events": ["order.created", "order.cancelled"],
+      "handler": "inventory.updateStock",
+      "async": true,
+      "retry": {
+        "enabled": true,
+        "maxAttempts": 5
+      },
+      "deadLetterQueue": {
+        "enabled": true,
+        "channel": "inventory-dlq",
+        "maxRetries": 5
+      }
+    },
+    {
+      "id": "analytics_tracker",
+      "name": "Analytics Tracker",
+      "description": "Track all events for analytics",
+      "events": ["*"],
+      "handler": "analytics.track",
+      "async": true,
+      "priority": -10,
+      "retry": {
+        "enabled": false
+      }
+    }
+  ],
+  "channels": [
+    {
+      "name": "orders",
+      "description": "Order lifecycle events",
+      "type": "stream",
+      "persistent": true,
+      "partitions": 3,
+      "retention": {
+        "ttl": 31536000
+      }
+    },
+    {
+      "name": "payments",
+      "description": "Payment events",
+      "type": "stream",
+      "persistent": true,
+      "retention": {
+        "ttl": 94608000
+      }
+    },
+    {
+      "name": "inventory-dlq",
+      "description": "Failed inventory updates",
+      "type": "queue",
+      "persistent": true
+    }
+  ],
+  "config": {
+    "enabled": true,
+    "engine": "kafka",
+    "connection": {
+      "host": "${KAFKA_HOST}",
+      "port": 9092
+    },
+    "serialization": "json",
+    "compression": "snappy",
+    "monitoring": {
+      "enabled": true,
+      "metrics": ["throughput", "latency", "errors", "retries", "dlq"]
+    },
+    "replay": {
+      "enabled": true,
+      "storage": "kafka"
+    }
+  }
+}

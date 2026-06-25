@@ -1,0 +1,160 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "media_center",
+  "name": "Media Center",
+  "version": "1.1.0",
+  "description": "Media processing dashboard with job queue, radio, TV, document conversion, and retro gaming",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "media",
+  "minLevel": 3,
+  "primary": true,
+  "keywords": [
+    "media",
+    "streaming",
+    "radio",
+    "tv",
+    "transcoding",
+    "documents",
+    "pdf",
+    "retro",
+    "gaming",
+    "emulation"
+  ],
+  "dependencies": {
+    "notification_center": "*",
+    "data_table": "*"
+  },
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "MediaDashboard",
+      "JobQueue",
+      "JobSubmitForm",
+      "RadioChannelList",
+      "RadioChannelEditor",
+      "RadioPlayer",
+      "TvChannelList",
+      "TvChannelEditor",
+      "TvScheduleEditor",
+      "TvEpgViewer",
+      "MediaPlayer",
+      "DocumentConverter",
+      "QuickConvertButtons",
+      "RetroGameLauncher",
+      "RetroGamePlayer",
+      "SaveStateManager",
+      "ActiveSessionsList"
+    ],
+    "pages": [
+      "MediaOverviewPage",
+      "JobsPage",
+      "RadioPage",
+      "TvPage",
+      "DocumentsPage",
+      "RetroPage"
+    ],
+    "scripts": [
+      "media_api",
+      "job_helpers",
+      "radio_helpers",
+      "tv_helpers",
+      "document_helpers",
+      "retro_helpers"
+    ]
+  },
+  "routes": [
+    {
+      "path": "/media",
+      "component": "MediaOverviewPage",
+      "title": "Media Center",
+      "icon": "VideoLibrary",
+      "minLevel": 3
+    },
+    {
+      "path": "/media/jobs",
+      "component": "JobsPage",
+      "title": "Job Queue",
+      "icon": "Queue",
+      "minLevel": 2
+    },
+    {
+      "path": "/media/radio",
+      "component": "RadioPage",
+      "title": "Radio Channels",
+      "icon": "Radio",
+      "minLevel": 3
+    },
+    {
+      "path": "/media/tv",
+      "component": "TvPage",
+      "title": "TV Channels",
+      "icon": "Tv",
+      "minLevel": 3
+    },
+    {
+      "path": "/media/retro",
+      "component": "RetroPage",
+      "title": "Retro Gaming",
+      "icon": "SportsEsports",
+      "minLevel": 2
+    },
+    {
+      "path": "/media/retro/:sessionId",
+      "component": "RetroGamePlayer",
+      "title": "Now Playing",
+      "icon": "SportsEsports",
+      "minLevel": 2
+    }
+  ],
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "page-config",
+      "permissions",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests",
+      "workflow"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "pages": [
+        "page-config/page-config.json"
+      ],
+      "workflows": [
+        "workflow/delete-media.jsonscript",
+        "workflow/extract-image-metadata.jsonscript",
+        "workflow/extract-video-metadata.jsonscript",
+        "workflow/list-user-media.jsonscript"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/stories.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "static_content/icon.svg"
+      ]
+    }
+  }
+}

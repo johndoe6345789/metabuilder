@@ -26,7 +26,9 @@ export function CommentItem({ comment }: CommentItemProps) {
       <div className={styles.itemBody}>
         <div className={styles.itemMeta}>
           <span className={styles.itemAuthor}>{comment.authorUsername}</span>
-          <span className={styles.itemTime}>{relativeTime(comment.createdAt)}</span>
+          <span className={styles.itemTime}>
+            {relativeTime(comment.createdAt)}
+          </span>
         </div>
         <MarkdownRenderer content={comment.content} animate={false} />
       </div>

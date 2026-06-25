@@ -30,7 +30,9 @@ describe('AIErrorHelper Component', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    mockAnalyzeError.mockResolvedValue('## Error Analysis\n\nTest analysis result')
+    mockAnalyzeError.mockResolvedValue(
+      '## Error Analysis\n\nTest analysis result',
+    )
   })
 
   describe('Rendering', () => {
@@ -50,7 +52,7 @@ describe('AIErrorHelper Component', () => {
 
     it('applies custom className', () => {
       const { container } = render(
-        <AIErrorHelper error={testError} className="custom-class" />
+        <AIErrorHelper error={testError} className="custom-class" />,
       )
 
       expect(container.querySelector('.custom-class')).toBeInTheDocument()
@@ -64,6 +66,7 @@ describe('AIErrorHelper Component', () => {
     })
 
     it('button is keyboard accessible', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const user = userEvent.setup()
       render(<AIErrorHelper error={testError} />)
 
@@ -92,7 +95,11 @@ describe('AIErrorHelper Component', () => {
       const button = screen.getByRole('button', { name: /ask ai for help/i })
       await user.click(button)
 
-      expect(mockAnalyzeError).toHaveBeenCalledWith('Custom error', expect.any(String), undefined)
+      expect(mockAnalyzeError).toHaveBeenCalledWith(
+        'Custom error',
+        expect.any(String),
+        undefined,
+      )
     })
 
     it('handles string error input', async () => {
@@ -119,7 +126,7 @@ describe('AIErrorHelper Component', () => {
       expect(mockAnalyzeError).toHaveBeenCalledWith(
         'Test error message',
         expect.any(String),
-        context
+        context,
       )
     })
   })
@@ -225,7 +232,11 @@ describe('AIErrorHelper Component', () => {
       const button = screen.getByRole('button', { name: /ask ai for help/i })
       await user.click(button)
 
-      expect(mockAnalyzeError).toHaveBeenCalledWith('', expect.any(String), undefined)
+      expect(mockAnalyzeError).toHaveBeenCalledWith(
+        '',
+        expect.any(String),
+        undefined,
+      )
     })
   })
 
@@ -272,7 +283,7 @@ describe('AIErrorHelper Component', () => {
       expect(mockAnalyzeError).toHaveBeenCalledWith(
         'Test error message',
         expect.any(String),
-        undefined
+        undefined,
       )
     })
 
@@ -288,7 +299,7 @@ describe('AIErrorHelper Component', () => {
       expect(mockAnalyzeError).toHaveBeenCalledWith(
         'Test error message',
         expect.any(String),
-        context
+        context,
       )
     })
 
@@ -313,14 +324,17 @@ describe('AIErrorHelper Component', () => {
     })
 
     it('renders multiple instances independently', () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { container } = render(
         <div>
           <AIErrorHelper error={new Error('Error 1')} />
           <AIErrorHelper error={new Error('Error 2')} />
-        </div>
+        </div>,
       )
 
-      const buttons = screen.getAllByRole('button', { name: /ask ai for help/i })
+      const buttons = screen.getAllByRole('button', {
+        name: /ask ai for help/i,
+      })
       expect(buttons).toHaveLength(2)
     })
   })
@@ -332,7 +346,7 @@ describe('AIErrorHelper Component', () => {
           error={testError}
           context="Test context"
           className="test-class"
-        />
+        />,
       )
 
       const button = screen.getByRole('button', { name: /ask ai for help/i })
@@ -366,12 +380,10 @@ describe('AIErrorHelper Component', () => {
 
     it('handles prop changes gracefully', () => {
       const { rerender } = render(
-        <AIErrorHelper error={testError} context="Original context" />
+        <AIErrorHelper error={testError} context="Original context" />,
       )
 
-      rerender(
-        <AIErrorHelper error={testError} context="Updated context" />
-      )
+      rerender(<AIErrorHelper error={testError} context="Updated context" />)
 
       const button = screen.getByRole('button', { name: /ask ai for help/i })
       expect(button).toBeInTheDocument()

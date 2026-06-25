@@ -18,12 +18,19 @@ export function generateFlaskBlueprint(blueprint: FlaskBlueprint): string {
   let code = `from flask import Blueprint, request, jsonify\n`
   code += `from typing import Dict, Any\n\n`
 
-  const blueprintVarName = sanitizeIdentifier(blueprint.name, { fallback: 'blueprint' })
-  code += `${blueprintVarName}_bp = Blueprint('${blueprintVarName}', __name__, url_prefix='${blueprint.urlPrefix}')\n\n`
+  const blueprintVarName = sanitizeIdentifier(
+    blueprint.name, { fallback: 'blueprint' },
+  )
+  code += `${blueprintVarName}_bp = Blueprint(`
+    + `'${blueprintVarName}', __name__,`
+    + ` url_prefix='${blueprint.urlPrefix}')\n\n`
 
   blueprint.endpoints.forEach(endpoint => {
-    const functionName = sanitizeIdentifier(endpoint.name, { fallback: 'endpoint' })
-    code += `@${blueprintVarName}_bp.route('${endpoint.path}', methods=['${endpoint.method}'])\n`
+    const functionName = sanitizeIdentifier(
+      endpoint.name, { fallback: 'endpoint' },
+    )
+    code += `@${blueprintVarName}_bp.route(`
+      + `'${endpoint.path}', methods=['${endpoint.method}'])\n`
     code += `def ${functionName}():\n`
     code += `    """\n`
     code += `    ${endpoint.description || endpoint.name}\n`
@@ -31,7 +38,9 @@ export function generateFlaskBlueprint(blueprint: FlaskBlueprint): string {
     if (endpoint.queryParams && endpoint.queryParams.length > 0) {
       code += `    \n    Query Parameters:\n`
       endpoint.queryParams.forEach(param => {
-        code += `    - ${param.name} (${param.type})${param.required ? ' [required]' : ''}: ${param.description || ''}\n`
+        const req = param.required ? ' [required]' : ''
+        const desc = param.description || ''
+        code += `    - ${param.name} (${param.type})${req}: ${desc}\n`
       })
     }
 
@@ -45,20 +54,31 @@ export function generateFlaskBlueprint(blueprint: FlaskBlueprint): string {
 
     if (endpoint.queryParams && endpoint.queryParams.length > 0) {
       endpoint.queryParams.forEach(param => {
-        const paramVarName = sanitizeIdentifier(param.name, { fallback: 'param' })
+        const paramVarName = sanitizeIdentifier(
+          param.name, { fallback: 'param' },
+        )
         if (param.required) {
           code += `    ${paramVarName} = request.args.get('${param.name}')\n`
           code += `    if ${paramVarName} is None:\n`
-          code += `        return jsonify({'error': '${param.name} is required'}), 400\n\n`
+          code += `        return jsonify(`
+            + `{'error': '${param.name} is required'}), 400\n\n`
         } else {
-          const defaultVal = param.defaultValue || (param.type === 'string' ? "''" : param.type === 'number' ? '0' : 'None')
-          code += `    ${paramVarName} = request.args.get('${param.name}', ${defaultVal})\n`
+          const defaultVal = param.defaultValue || (
+            param.type === 'string' ? "''"
+            : param.type === 'number' ? '0' : 'None'
+          )
+          code += `    ${paramVarName} = request.args.get(`
+            + `'${param.name}', ${defaultVal})\n`
         }
       })
       code += `\n`
     }
 
-    if (endpoint.method === 'POST' || endpoint.method === 'PUT' || endpoint.method === 'PATCH') {
+    if (
+      endpoint.method === 'POST' ||
+      endpoint.method === 'PUT' ||
+      endpoint.method === 'PATCH'
+    ) {
       code += `    data = request.get_json()\n`
       code += `    if not data:\n`
       code += `        return jsonify({'error': 'No data provided'}), 400\n\n`

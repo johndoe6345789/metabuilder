@@ -1,0 +1,119 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "ui_level3",
+  "description": "Moderator panel access permissions for level 3 users",
+  "permissions": [
+    {
+      "id": "level3.panel.view",
+      "name": "View Moderator Panel",
+      "description": "View moderator panel",
+      "resource": "level3",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "level3.users.view",
+      "name": "View User List",
+      "description": "View user list",
+      "resource": "level3.users",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "level3.users.edit",
+      "name": "Edit User Accounts",
+      "description": "Edit user account details",
+      "resource": "level3.users",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "level3.users.delete",
+      "name": "Delete User Accounts",
+      "description": "Delete user accounts",
+      "resource": "level3.users",
+      "action": "delete",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "level3.users.ban",
+      "name": "Ban Users",
+      "description": "Ban users from the platform",
+      "resource": "level3.users",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "level3.reports.view",
+      "name": "View Reports",
+      "description": "View reports",
+      "resource": "level3.reports",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "level3.reports.resolve",
+      "name": "Resolve Reports",
+      "description": "Resolve user-submitted reports",
+      "resource": "level3.reports",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "level3.content.moderate",
+      "name": "Moderate Content",
+      "description": "Moderate content",
+      "resource": "level3.content",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "level3.content.delete",
+      "name": "Delete Content",
+      "description": "Delete flagged or inappropriate content",
+      "resource": "level3.content",
+      "action": "delete",
+      "scope": "global",
+      "minLevel": 3
+    }
+  ],
+  "resources": [
+    {
+      "id": "level3",
+      "name": "Moderator Panel",
+      "type": "component",
+      "description": "Level 3 moderator panel resources",
+      "actions": ["read"]
+    },
+    {
+      "id": "level3.users",
+      "name": "User Management",
+      "type": "entity",
+      "description": "User management resources",
+      "actions": ["read", "update", "delete", "manage"]
+    },
+    {
+      "id": "level3.reports",
+      "name": "Reports",
+      "type": "entity",
+      "description": "User-submitted reports",
+      "actions": ["read", "update"]
+    },
+    {
+      "id": "level3.content",
+      "name": "Content",
+      "type": "entity",
+      "description": "User-generated content",
+      "actions": ["manage", "delete"]
+    }
+  ]
+}

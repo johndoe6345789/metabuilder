@@ -1,5 +1,5 @@
 import { ComponentProps } from "react"
-import { Grip as GripVerticalIcon } from "@metabuilder/fakemui/icons"
+import { Grip as GripVerticalIcon } from "@metabuilder/m3/icons"
 import { Group, Panel, Separator } from "react-resizable-panels"
 
 import { cn } from "@/lib/utils"

@@ -1,19 +1,56 @@
-import { Card, Button, Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@metabuilder/components/fakemui'
+import {
+  Card,
+  Button,
+  Chip,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@metabuilder/components/m3'
+
+const h2Style = {
+  fontSize: '1.875rem',
+  lineHeight: '2.25rem',
+  fontWeight: 700,
+  marginBottom: '8px',
+}
+const h3Style = {
+  fontWeight: 600,
+  fontSize: '1.125rem',
+  lineHeight: '1.75rem',
+}
+const borderBottom = {
+  padding: '16px',
+  borderBottom: '1px solid var(--mat-sys-outline-variant)',
+}
+const rowBetween = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+}
 
 export function DataTablesShowcase() {
   return (
-    <section className="space-y-6" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }} data-testid="data-tables-showcase" role="region" aria-label="Data tables showcase">
+    <section
+      className="space-y-6"
+      style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}
+      data-testid="data-tables-showcase"
+      role="region"
+      aria-label="Data tables showcase"
+    >
       <div>
-        <h2 style={{ fontSize: '1.875rem', lineHeight: '2.25rem', fontWeight: 700, marginBottom: '8px' }}>Data Tables</h2>
+        <h2 style={h2Style}>Data Tables</h2>
         <p style={{ color: 'var(--mat-sys-on-surface-variant)' }}>
           Structured data display with actions
         </p>
       </div>
 
       <Card>
-        <div className="border-b" style={{ padding: '16px', borderBottom: '1px solid var(--mat-sys-outline-variant)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <h3 style={{ fontWeight: 600, fontSize: '1.125rem', lineHeight: '1.75rem' }}>Recent Transactions</h3>
+        <div className="border-b" style={borderBottom}>
+          <div style={rowBetween}>
+            <h3 style={h3Style}>Recent Transactions</h3>
             <Button variant="outlined" size="sm">
               Export
             </Button>
@@ -34,7 +71,9 @@ export function DataTablesShowcase() {
                 <TableCell>
                   <Chip>Completed</Chip>
                 </TableCell>
-                <TableCell style={{ fontWeight: 500 }}>Payment received</TableCell>
+                <TableCell style={{ fontWeight: 500 }}>
+                  Payment received
+                </TableCell>
                 <TableCell>Mar 15, 2024</TableCell>
                 <TableCell style={{ textAlign: 'right' }}>$250.00</TableCell>
               </TableRow>
@@ -42,7 +81,9 @@ export function DataTablesShowcase() {
                 <TableCell>
                   <Chip color="secondary">Pending</Chip>
                 </TableCell>
-                <TableCell style={{ fontWeight: 500 }}>Processing payment</TableCell>
+                <TableCell style={{ fontWeight: 500 }}>
+                  Processing payment
+                </TableCell>
                 <TableCell>Mar 14, 2024</TableCell>
                 <TableCell style={{ textAlign: 'right' }}>$150.00</TableCell>
               </TableRow>
@@ -52,13 +93,22 @@ export function DataTablesShowcase() {
                 </TableCell>
                 <TableCell style={{ fontWeight: 500 }}>Refund issued</TableCell>
                 <TableCell>Mar 13, 2024</TableCell>
-                <TableCell style={{ textAlign: 'right', color: 'var(--mat-sys-error)' }}>-$75.00</TableCell>
+                <TableCell
+                  style={{
+                    textAlign: 'right',
+                    color: 'var(--mat-sys-error)',
+                  }}
+                >
+                  -$75.00
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>
                   <Chip color="error">Failed</Chip>
                 </TableCell>
-                <TableCell style={{ fontWeight: 500 }}>Payment declined</TableCell>
+                <TableCell style={{ fontWeight: 500 }}>
+                  Payment declined
+                </TableCell>
                 <TableCell>Mar 12, 2024</TableCell>
                 <TableCell style={{ textAlign: 'right' }}>$0.00</TableCell>
               </TableRow>

@@ -1,4 +1,4 @@
-import { Label } from '@metabuilder/fakemui/atoms'
+import { Label } from '@metabuilder/m3/atoms'
 import copy from '@/data/favicon-designer.json'
 import { ColorInspector } from './ColorInspector'
 import { FreehandInspector } from './FreehandInspector'
@@ -22,21 +22,42 @@ export const ElementInspectorPanel = ({
     <Label>{copy.inspector.title}</Label>
 
     {selectedElement.type === 'freehand' && (
-      <FreehandInspector element={selectedElement} onUpdateElement={onUpdateElement} />
+      <FreehandInspector
+        element={selectedElement}
+        onUpdateElement={onUpdateElement}
+      />
     )}
 
     {(selectedElement.type === 'text' || selectedElement.type === 'emoji') && (
-      <TextEmojiInspector element={selectedElement} onUpdateElement={onUpdateElement} />
+      <TextEmojiInspector
+        element={selectedElement}
+        onUpdateElement={onUpdateElement}
+      />
     )}
 
-    {selectedElement.type !== 'text' && selectedElement.type !== 'emoji' && selectedElement.type !== 'freehand' && (
-      <ShapeInspector element={selectedElement} activeDesign={activeDesign} onUpdateElement={onUpdateElement} />
+    {selectedElement.type !== 'text'
+      && selectedElement.type !== 'emoji'
+      && selectedElement.type !== 'freehand' && (
+      <ShapeInspector
+        element={selectedElement}
+        activeDesign={activeDesign}
+        onUpdateElement={onUpdateElement}
+      />
     )}
 
     {selectedElement.type !== 'freehand' && (
-      <TransformInspector element={selectedElement} activeDesign={activeDesign} onUpdateElement={onUpdateElement} />
+      <TransformInspector
+        element={selectedElement}
+        activeDesign={activeDesign}
+        onUpdateElement={onUpdateElement}
+      />
     )}
 
-    {selectedElement.type !== 'freehand' && <ColorInspector element={selectedElement} onUpdateElement={onUpdateElement} />}
+    {selectedElement.type !== 'freehand' && (
+      <ColorInspector
+        element={selectedElement}
+        onUpdateElement={onUpdateElement}
+      />
+    )}
   </div>
 )

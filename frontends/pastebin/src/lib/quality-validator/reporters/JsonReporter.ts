@@ -4,8 +4,8 @@
  * Refactored to use ReporterBase for shared functionality
  */
 
-import { ScoringResult, JsonReport } from '../types/index.js';
-import { ReporterBase } from './ReporterBase.js';
+import { ScoringResult, JsonReport } from '../types/index.js'
+import { ReporterBase } from './ReporterBase.js'
 
 /**
  * JSON Reporter
@@ -27,17 +27,17 @@ export class JsonReporter extends ReporterBase {
       findings: result.findings,
       recommendations: result.recommendations,
       trend: result.trend,
-    };
+    }
 
-    return JSON.stringify(report, null, 2);
+    return JSON.stringify(report, null, 2)
   }
 
   /**
    * Parse JSON report
    */
   parse(json: string): JsonReport {
-    return JSON.parse(json) as JsonReport;
+    return JSON.parse(json) as JsonReport
   }
 }
 
-export const jsonReporter = new JsonReporter();
+export const jsonReporter = new JsonReporter()

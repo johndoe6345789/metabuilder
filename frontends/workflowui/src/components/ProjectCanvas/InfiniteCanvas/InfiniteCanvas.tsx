@@ -13,25 +13,16 @@
  */
 
 import React, { useRef, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useProjectCanvas } from '../../../hooks/canvas';
-import { useCanvasKeyboard } from '../../../hooks/useCanvasKeyboard';
+import { useCanvasKeyboardActions } from '../../../hooks/useCanvasKeyboardActions';
 import { useCanvasTransform } from './useCanvasTransform';
 import { useCanvasGrid } from './useCanvasGrid';
-import {
-  deleteCanvasItems,
-  duplicateCanvasItems,
-  selectCanvasItems,
-  selectSelectedItemIds,
-  setSelection
-} from '@metabuilder/redux-slices';
 import { CanvasGrid } from './CanvasGrid';
 import { CanvasContent } from './CanvasContent';
 import { ZoomControls } from './ZoomControls';
 import { PanHint } from './PanHint';
 import { NavigationArrows } from './NavigationArrows';
 import styles from '../InfiniteCanvas.module.scss';
-import type { RootState } from '../../../store/store';
 
 interface InfiniteCanvasProps {
   children: React.ReactNode;
@@ -42,69 +33,25 @@ interface InfiniteCanvasProps {
 export const InfiniteCanvas: React.FC<InfiniteCanvasProps> = ({
   children,
   onCanvasPan,
-  onCanvasZoom
+  onCanvasZoom,
 }) => {
   const canvasRef = useRef<HTMLDivElement>(null);
-  const dispatch = useDispatch();
-  const { zoom, pan, zoom_in, zoom_out, reset_view, snapSize } = useProjectCanvas();
-
-  const selectedItemIds = useSelector((state: RootState) => selectSelectedItemIds(state));
-  const canvasItems = useSelector((state: RootState) => selectCanvasItems(state));
+  const {
+    zoom,
+    pan,
+    zoom_in,
+    zoom_out,
+    reset_view,
+    snapSize,
+  } = useProjectCanvas();
 
   const { isPanning, handleMouseDown, handleArrowPan, bindWheelListener } =
     useCanvasTransform(onCanvasPan, onCanvasZoom);
 
   const { gridOffset } = useCanvasGrid();
 
-  /**
-   * Handle select all keyboard shortcut
-   * Dispatches action to select all canvas items
-   */
-  const handleSelectAll = () => {
-    const allItemIds = canvasItems.map((item) => item.id);
-    dispatch(setSelection(new Set(allItemIds)));
-  };
+  useCanvasKeyboardActions();
 
-  /**
-   * Handle delete keyboard shortcut
-   * Removes all selected items from the canvas
-   */
-  const handleDeleteSelected = () => {
-    if (selectedItemIds.size > 0) {
-      const itemsToDelete = Array.from(selectedItemIds);
-      dispatch(deleteCanvasItems(itemsToDelete));
-    }
-  };
-
-  /**
-   * Handle duplicate keyboard shortcut
-   * Creates copies of selected items with offset positions
-   */
-  const handleDuplicateSelected = () => {
-    if (selectedItemIds.size > 0) {
-      const itemsToDuplicate = Array.from(selectedItemIds);
-      dispatch(duplicateCanvasItems(itemsToDuplicate));
-    }
-  };
-
-  /**
-   * Handle search keyboard shortcut
-   * Placeholder for search dialog integration in Phase 4
-   */
-  const handleSearch = () => {
-    // TODO Phase 4: Integrate with search dialog
-    console.log('Search triggered - Phase 4 integration pending');
-  };
-
-  // Initialize keyboard event handler
-  useCanvasKeyboard({
-    onSelectAll: handleSelectAll,
-    onDeleteSelected: handleDeleteSelected,
-    onDuplicateSelected: handleDuplicateSelected,
-    onSearch: handleSearch
-  });
-
-  // Bind wheel listener to canvas element
   useEffect(() => {
     return bindWheelListener(canvasRef.current);
   }, [bindWheelListener]);
@@ -116,13 +63,21 @@ export const InfiniteCanvas: React.FC<InfiniteCanvasProps> = ({
       onMouseDown={handleMouseDown}
       style={{ cursor: isPanning ? 'grabbing' : 'grab' }}
     >
-      <CanvasGrid snapSize={snapSize} gridOffset={gridOffset} />
+      <CanvasGrid
+        snapSize={snapSize}
+        gridOffset={gridOffset}
+      />
 
       <CanvasContent zoom={zoom} panX={pan.x} panY={pan.y}>
         {children}
       </CanvasContent>
 
-      <ZoomControls zoom={zoom} onZoomIn={zoom_in} onZoomOut={zoom_out} onResetView={reset_view} />
+      <ZoomControls
+        zoom={zoom}
+        onZoomIn={zoom_in}
+        onZoomOut={zoom_out}
+        onResetView={reset_view}
+      />
 
       <PanHint />
 

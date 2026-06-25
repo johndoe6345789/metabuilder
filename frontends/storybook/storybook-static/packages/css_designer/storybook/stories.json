@@ -1,0 +1,162 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "CSS Designer Components",
+  "description": "Visual CSS designer for creating and editing style overlays",
+  "stories": [
+    {
+      "name": "CSSDesigner",
+      "render": "designer",
+      "description": "Full CSS Designer interface with all editing panels",
+      "args": {
+        "title": "CSS Designer",
+        "layout": "sidebar"
+      }
+    },
+    {
+      "name": "ColorPaletteEditor",
+      "render": "colors",
+      "description": "Color palette editor with color pickers",
+      "args": {
+        "title": "Color Palette"
+      }
+    },
+    {
+      "name": "FontSelector",
+      "render": "fonts",
+      "description": "Typography settings editor",
+      "args": {
+        "title": "Typography"
+      }
+    },
+    {
+      "name": "SpacingEditor",
+      "render": "spacing",
+      "description": "Spacing and layout settings",
+      "args": {
+        "title": "Spacing"
+      }
+    },
+    {
+      "name": "BorderEditor",
+      "render": "borders",
+      "description": "Border styling settings",
+      "args": {
+        "title": "Borders"
+      }
+    },
+    {
+      "name": "ShadowEditor",
+      "render": "shadows",
+      "description": "Shadow styling settings",
+      "args": {
+        "title": "Shadows"
+      }
+    },
+    {
+      "name": "StylePreview",
+      "render": "preview",
+      "description": "Live preview of styled components",
+      "args": {
+        "title": "Preview"
+      }
+    }
+  ],
+  "renders": {
+    "designer": {
+      "description": "Full CSS Designer interface",
+      "featured": true
+    },
+    "colors": {
+      "description": "Color palette editor panel"
+    },
+    "fonts": {
+      "description": "Typography settings panel"
+    },
+    "spacing": {
+      "description": "Spacing configuration panel"
+    },
+    "borders": {
+      "description": "Border styling panel"
+    },
+    "shadows": {
+      "description": "Shadow styling panel"
+    },
+    "preview": {
+      "description": "Live style preview panel"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "demo-user",
+      "username": "demo_user",
+      "level": 2,
+      "email": "demo@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    },
+    "theme": {
+      "name": "Default",
+      "colors": {
+        "primary": "#1976d2",
+        "secondary": "#9c27b0",
+        "background": "#ffffff",
+        "surface": "#f5f5f5"
+      }
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Standard User",
+      "description": "Can view and edit CSS styles",
+      "context": {
+        "user": {
+          "username": "user",
+          "level": 2
+        }
+      }
+    },
+    {
+      "name": "Admin",
+      "description": "Full management access to CSS designer",
+      "context": {
+        "user": {
+          "username": "admin",
+          "level": 3
+        }
+      }
+    },
+    {
+      "name": "Dark Theme",
+      "description": "Preview with dark theme settings",
+      "context": {
+        "theme": {
+          "name": "Dark",
+          "colors": {
+            "primary": "#90caf9",
+            "secondary": "#ce93d8",
+            "background": "#121212",
+            "surface": "#1e1e1e"
+          }
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["designer", "colors", "fonts", "spacing", "borders", "shadows", "preview"],
+    "ignoredScripts": ["tests"]
+  },
+  "parameters": {
+    "layout": "padded",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#f5f5f5" },
+        { "name": "dark", "value": "#1a1a1a" },
+        { "name": "white", "value": "#ffffff" }
+      ]
+    }
+  }
+}

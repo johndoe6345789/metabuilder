@@ -1,6 +1,6 @@
 import { ComponentNode } from '@/types/project'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { CaretDown, CaretRight, Tree } from '@metabuilder/fakemui/icons'
+import { CaretDown, CaretRight, Tree } from '@metabuilder/m3/icons'
 
 interface ComponentTreeViewProps {
   nodes: ComponentNode[]

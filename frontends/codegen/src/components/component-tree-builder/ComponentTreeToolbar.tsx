@@ -1,5 +1,5 @@
-import { Button, IconButton } from '@metabuilder/fakemui/inputs'
-import { Plus, Sparkle } from '@metabuilder/fakemui/icons'
+import { Button, IconButton } from '@metabuilder/m3/inputs'
+import { Plus, Sparkle } from '@metabuilder/m3/icons'
 
 interface ComponentTreeToolbarProps {
   onGenerate: () => void

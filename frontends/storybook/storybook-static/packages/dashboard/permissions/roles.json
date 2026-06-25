@@ -1,0 +1,44 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "dashboard",
+  "description": "Dashboard access permissions",
+  "permissions": [
+    {
+      "id": "dashboard.view",
+      "name": "View Dashboard",
+      "description": "View dashboard",
+      "resource": "dashboard",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "dashboard.widgets.configure",
+      "name": "Configure Dashboard Widgets",
+      "description": "Configure dashboard widgets",
+      "resource": "dashboard",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "dashboard.widgets.add",
+      "name": "Add Dashboard Widgets",
+      "description": "Add dashboard widgets",
+      "resource": "dashboard",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 3
+    }
+  ],
+  "resources": [
+    {
+      "id": "dashboard",
+      "name": "Dashboard",
+      "type": "component",
+      "description": "Dashboard resources",
+      "actions": ["read", "manage", "create"]
+    }
+  ]
+}

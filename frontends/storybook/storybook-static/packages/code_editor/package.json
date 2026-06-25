@@ -1,0 +1,67 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "code_editor",
+  "name": "Code Editor",
+  "version": "1.0.0",
+  "description": "Code editor components for JSON, scripting, and theme editing",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "editors",
+  "icon": "static_content/icon.svg",
+  "minLevel": 5,
+  "primary": false,
+  "dependencies": {},
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "CodeEditor",
+      "JsonEditor",
+      "ScriptEditor",
+      "ThemeEditor"
+    ],
+    "scripts": [
+      "json",
+      "lua",
+      "theme"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "permissions",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/stories.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "static_content/icon.svg"
+      ]
+    }
+  }
+}

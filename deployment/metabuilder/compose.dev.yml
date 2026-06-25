@@ -1,0 +1,65 @@
+# Development overlay — switches all Next.js frontends to dev mode (next dev --turbopack).
+#
+# Usage (standalone override):
+#   docker compose -f compose.yml -f compose.dev.yml up -d
+#   docker compose -f compose.yml -f compose.dev.yml up -d --build
+#
+# Via CLI:
+#   python3 deployment.py stack up --dev
+#   python3 deployment.py stack build --dev
+#
+# What changes vs compose.yml:
+#   - All frontends use Dockerfile.dev (next dev --turbopack, no build step)
+#   - NODE_ENV set to development
+#   - start_period extended to 120s (dev startup is slower)
+#   - project name uses -dev suffix to allow running alongside prod
+
+name: metabuilder-dev
+
+services:
+  codegen:
+    build:
+      context: ../..
+      dockerfile: frontends/codegen/Dockerfile.dev
+    environment:
+      NODE_ENV: development
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      NEXT_PUBLIC_AI_ENABLED: ${NEXT_PUBLIC_AI_ENABLED:-true}
+    healthcheck:
+      start_period: 120s
+
+  pastebin:
+    build:
+      context: ../..
+      dockerfile: frontends/pastebin/Dockerfile.dev
+    environment:
+      NODE_ENV: development
+    healthcheck:
+      start_period: 120s
+
+  workflowui:
+    build:
+      context: ../..
+      dockerfile: frontends/workflowui/Dockerfile.dev
+    environment:
+      NODE_ENV: development
+    healthcheck:
+      start_period: 120s
+
+  emailclient-app:
+    build:
+      context: ../..
+      dockerfile: frontends/emailclient/Dockerfile.dev
+    environment:
+      NODE_ENV: development
+    healthcheck:
+      start_period: 120s
+
+  exploded-diagrams:
+    build:
+      context: ../..
+      dockerfile: frontends/exploded-diagrams/Dockerfile.dev
+    environment:
+      NODE_ENV: development
+    healthcheck:
+      start_period: 120s

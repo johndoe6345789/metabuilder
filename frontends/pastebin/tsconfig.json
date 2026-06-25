@@ -36,10 +36,10 @@
         "./src/styles/*"
       ],
       "@metabuilder/redux-persist": [
-        "../../redux/persist/src/index.ts"
+        "../../../libraries/redux/persist/src/index.ts"
       ],
-      "@metabuilder/components/fakemui": [
-        "../../components/fakemui/index.ts"
+      "@metabuilder/components/m3": [
+        "../../../libraries/components/m3/index.ts"
       ]
     }
   },

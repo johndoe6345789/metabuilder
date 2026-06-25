@@ -1,0 +1,78 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "screenshot_analyzer",
+  "name": "Screenshot Analyzer",
+  "version": "1.0.0",
+  "description": "Screenshot Analyzer - Capture and analyze the current page",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "demo",
+  "minLevel": 5,
+  "primary": true,
+  "tags": [
+    "screenshot",
+    "analysis",
+    "browser",
+    "dom"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "ScreenshotAnalyzer",
+      "UploadSection",
+      "ResultPanel",
+      "PageInfo"
+    ],
+    "scripts": [
+      "init",
+      "capture",
+      "analyze",
+      "page_info"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "bindings": {
+    "dbal": false,
+    "browser": true
+  },
+  "icon": "static_content/icon.svg",
+  "files": {
+    "directories": [
+      "components",
+      "permissions",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/stories.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "static_content/icon.svg"
+      ]
+    }
+  }
+}

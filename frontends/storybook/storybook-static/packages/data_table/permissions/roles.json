@@ -1,0 +1,62 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "data_table",
+  "description": "Data table component access permissions",
+  "permissions": [
+    {
+      "id": "data_table.view",
+      "name": "View Data Tables",
+      "description": "View data table components",
+      "resource": "data_table",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 1
+    },
+    {
+      "id": "data_table.sort",
+      "name": "Sort Data",
+      "description": "Sort data table columns",
+      "resource": "data_table",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 1
+    },
+    {
+      "id": "data_table.filter",
+      "name": "Filter Data",
+      "description": "Filter data table rows",
+      "resource": "data_table",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 1
+    },
+    {
+      "id": "data_table.export",
+      "name": "Export Data",
+      "description": "Export data table contents",
+      "resource": "data_table",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "data_table.select",
+      "name": "Select Rows",
+      "description": "Select data table rows",
+      "resource": "data_table",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 1
+    }
+  ],
+  "resources": [
+    {
+      "id": "data_table",
+      "name": "Data Table",
+      "type": "component",
+      "description": "Data table UI component",
+      "actions": ["read", "execute"]
+    }
+  ]
+}

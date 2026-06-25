@@ -1,0 +1,53 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "code_editor",
+  "description": "Code editor access permissions",
+  "permissions": [
+    {
+      "id": "editor.code.view",
+      "name": "View Code Editor",
+      "description": "View code in editor (read-only access)",
+      "resource": "code_editor",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "editor.code.edit",
+      "name": "Edit Code",
+      "description": "Edit code in editor",
+      "resource": "code_editor",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "editor.theme.apply",
+      "name": "Apply Editor Themes",
+      "description": "Apply and customize editor themes",
+      "resource": "code_editor",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "editor.script.execute",
+      "name": "Execute Scripts",
+      "description": "Execute scripts in sandbox environment",
+      "resource": "code_editor",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 5
+    }
+  ],
+  "resources": [
+    {
+      "id": "code_editor",
+      "name": "Code Editor",
+      "type": "component",
+      "description": "Code editor resources",
+      "actions": ["read", "update", "manage", "execute"]
+    }
+  ]
+}

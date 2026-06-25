@@ -9,7 +9,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
-import { Typography, Paper, Button } from '@/fakemui'
+import { Typography, Paper, Button } from '@/m3'
 
 export default function AppRootPage() {
   const auth = useAuthContext()

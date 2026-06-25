@@ -1,4 +1,4 @@
-import { FileCode, Folder } from '@metabuilder/fakemui/icons'
+import { FileCode, Folder } from '@metabuilder/m3/icons'
 import { ProjectFile } from '@/types/project'
 
 interface FileExplorerListProps {

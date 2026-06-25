@@ -1,228 +1,95 @@
 /**
  * HTML Report Metrics Section Module
- * Generates detailed metrics display for code quality, coverage, architecture, and security
  */
 
-import { ScoringResult } from '../../types/index.js';
+import { ScoringResult } from '../../types/index.js'
 
-/**
- * Generate detailed metrics display section
- *
- * @param {ScoringResult} result - Complete scoring result with all metrics
- * @returns {string} HTML section with detailed metrics
- *
- * @description
- * Displays detailed metrics from all analysis categories if available
- */
-export function generateMetricsSection(result: ScoringResult): string {
-  let html = '<section class="section"><h2>Detailed Metrics</h2>';
+export { generateWeightVisualization } from './HtmlWeightSection.js'
 
-  // Get metrics from metadata (simplified approach)
-  const config = result.metadata.configUsed;
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-  html += generateCodeQualityMetrics(config);
-  html += generateTestCoverageMetrics(config);
-  html += generateArchitectureMetrics(config);
-  html += generateSecurityMetrics(config);
-
-  html += '</section>';
-  return html;
+function metricCard(title: string, rows: string): string {
+  return (
+    `<div class="card"><h3>${title}</h3>` +
+    `<div class="metrics-grid">${rows}</div></div>`
+  )
 }
 
-/**
- * Generate code quality metrics card
- *
- * @param {any} config - Configuration object
- * @returns {string} HTML code quality metrics card
- */
+function metricRow(label: string, value: unknown): string {
+  return (
+    `<div class="metric">` +
+    `<div class="metric-label">${label}</div>` +
+    `<div class="metric-value">${value}</div>` +
+    `</div>`
+  )
+}
+
 function generateCodeQualityMetrics(config: any): string {
-  if (!config.codeQuality?.enabled) {
-    return '';
-  }
-
-  const cq = config.codeQuality;
-
-  return `<div class="card">
-  <h3>Code Quality Configuration</h3>
-  <div class="metrics-grid">
-    <div class="metric">
-      <div class="metric-label">Complexity Threshold</div>
-      <div class="metric-value">${cq.complexity?.max || 'N/A'}</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Complexity Warning</div>
-      <div class="metric-value">${cq.complexity?.warning || 'N/A'}</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Max Duplication %</div>
-      <div class="metric-value">${cq.duplication?.maxPercent || 'N/A'}%</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Max Lint Errors</div>
-      <div class="metric-value">${cq.linting?.maxErrors || 'N/A'}</div>
-    </div>
-  </div>
-</div>`;
+  if (!config.codeQuality?.enabled) return ''
+  const cq = config.codeQuality
+  return metricCard(
+    'Code Quality Configuration',
+    metricRow('Complexity Threshold', cq.complexity?.max || 'N/A') +
+      metricRow('Complexity Warning', cq.complexity?.warning || 'N/A') +
+      metricRow(
+        'Max Duplication %',
+        `${cq.duplication?.maxPercent || 'N/A'}%`,
+      ) +
+      metricRow('Max Lint Errors', cq.linting?.maxErrors || 'N/A'),
+  )
 }
 
-/**
- * Generate test coverage metrics card
- *
- * @param {any} config - Configuration object
- * @returns {string} HTML test coverage metrics card
- */
 function generateTestCoverageMetrics(config: any): string {
-  if (!config.testCoverage?.enabled) {
-    return '';
-  }
-
-  const tc = config.testCoverage;
-
-  return `<div class="card">
-  <h3>Test Coverage Configuration</h3>
-  <div class="metrics-grid">
-    <div class="metric">
-      <div class="metric-label">Minimum Coverage</div>
-      <div class="metric-value">${tc.minimumPercent || 'N/A'}%</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Warning Threshold</div>
-      <div class="metric-value">${tc.warningPercent || 'N/A'}%</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Min Assertions</div>
-      <div class="metric-value">${tc.effectivenessScore?.minAssertionsPerTest || 'N/A'}</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Max Mock Usage</div>
-      <div class="metric-value">${tc.effectivenessScore?.maxMockUsagePercent || 'N/A'}%</div>
-    </div>
-  </div>
-</div>`;
+  if (!config.testCoverage?.enabled) return ''
+  const tc = config.testCoverage
+  const eff = tc.effectivenessScore
+  return metricCard(
+    'Test Coverage Configuration',
+    metricRow('Minimum Coverage', `${tc.minimumPercent || 'N/A'}%`) +
+      metricRow('Warning Threshold', `${tc.warningPercent || 'N/A'}%`) +
+      metricRow('Min Assertions', eff?.minAssertionsPerTest || 'N/A') +
+      metricRow('Max Mock Usage', `${eff?.maxMockUsagePercent || 'N/A'}%`),
+  )
 }
 
-/**
- * Generate architecture metrics card
- *
- * @param {any} config - Configuration object
- * @returns {string} HTML architecture metrics card
- */
 function generateArchitectureMetrics(config: any): string {
-  if (!config.architecture?.enabled) {
-    return '';
-  }
-
-  const arch = config.architecture;
-
-  return `<div class="card">
-  <h3>Architecture Configuration</h3>
-  <div class="metrics-grid">
-    <div class="metric">
-      <div class="metric-label">Max Component Lines</div>
-      <div class="metric-value">${arch.components?.maxLines || 'N/A'}</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Component Warning</div>
-      <div class="metric-value">${arch.components?.warningLines || 'N/A'}</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Atomic Design Check</div>
-      <div class="metric-value">${arch.components?.validateAtomicDesign ? 'Enabled' : 'Disabled'}</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Pattern Check</div>
-      <div class="metric-value">${arch.patterns?.enabled ? 'Enabled' : 'Disabled'}</div>
-    </div>
-  </div>
-</div>`;
+  if (!config.architecture?.enabled) return ''
+  const arch = config.architecture
+  return metricCard(
+    'Architecture Configuration',
+    metricRow('Max Component Lines', arch.components?.maxLines || 'N/A') +
+      metricRow('Component Warning', arch.components?.warningLines || 'N/A') +
+      metricRow(
+        'Atomic Design Check',
+        arch.components?.validateAtomicDesign ? 'Enabled' : 'Disabled',
+      ) +
+      metricRow(
+        'Pattern Check',
+        arch.patterns?.enabled ? 'Enabled' : 'Disabled',
+      ),
+  )
 }
 
-/**
- * Generate security metrics card
- *
- * @param {any} config - Configuration object
- * @returns {string} HTML security metrics card
- */
 function generateSecurityMetrics(config: any): string {
-  if (!config.security?.enabled) {
-    return '';
-  }
-
-  const sec = config.security;
-
-  return `<div class="card">
-  <h3>Security Configuration</h3>
-  <div class="metrics-grid">
-    <div class="metric">
-      <div class="metric-label">Allow Critical Vulns</div>
-      <div class="metric-value">${sec.vulnerabilities?.allowCritical || 0}</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Allow High Vulns</div>
-      <div class="metric-value">${sec.vulnerabilities?.allowHigh || 0}</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Check Secrets</div>
-      <div class="metric-value">${sec.patterns?.checkSecrets ? 'Yes' : 'No'}</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Check XSS Risks</div>
-      <div class="metric-value">${sec.patterns?.checkXssRisks ? 'Yes' : 'No'}</div>
-    </div>
-  </div>
-</div>`;
+  if (!config.security?.enabled) return ''
+  const sec = config.security
+  return metricCard(
+    'Security Configuration',
+    metricRow('Allow Critical Vulns', sec.vulnerabilities?.allowCritical || 0) +
+      metricRow('Allow High Vulns', sec.vulnerabilities?.allowHigh || 0) +
+      metricRow('Check Secrets', sec.patterns?.checkSecrets ? 'Yes' : 'No') +
+      metricRow('Check XSS Risks', sec.patterns?.checkXssRisks ? 'Yes' : 'No'),
+  )
 }
 
-/**
- * Generate component weight visualization
- *
- * @param {ScoringResult} result - Scoring result
- * @returns {string} HTML weight visualization card
- *
- * @description
- * Shows how each component contributes to overall score
- */
-export function generateWeightVisualization(result: ScoringResult): string {
-  const weights = result.metadata.configUsed.scoring?.weights;
-
-  if (!weights) {
-    return '';
-  }
-
-  return `<section class="section">
-  <h2>Scoring Weights</h2>
-  <div class="card">
-    <h3>Component Contribution to Overall Score</h3>
-    <div class="metrics-grid">
-      <div class="metric">
-        <div class="metric-label">Code Quality</div>
-        <div class="score-bar">
-          <div class="score-fill" style="width: ${weights.codeQuality * 100}%"></div>
-        </div>
-        <div class="metric-value">${(weights.codeQuality * 100).toFixed(1)}%</div>
-      </div>
-      <div class="metric">
-        <div class="metric-label">Test Coverage</div>
-        <div class="score-bar">
-          <div class="score-fill" style="width: ${weights.testCoverage * 100}%"></div>
-        </div>
-        <div class="metric-value">${(weights.testCoverage * 100).toFixed(1)}%</div>
-      </div>
-      <div class="metric">
-        <div class="metric-label">Architecture</div>
-        <div class="score-bar">
-          <div class="score-fill" style="width: ${weights.architecture * 100}%"></div>
-        </div>
-        <div class="metric-value">${(weights.architecture * 100).toFixed(1)}%</div>
-      </div>
-      <div class="metric">
-        <div class="metric-label">Security</div>
-        <div class="score-bar">
-          <div class="score-fill" style="width: ${weights.security * 100}%"></div>
-        </div>
-        <div class="metric-value">${(weights.security * 100).toFixed(1)}%</div>
-      </div>
-    </div>
-  </div>
-</section>`;
+export function generateMetricsSection(result: ScoringResult): string {
+  const config = result.metadata.configUsed
+  return (
+    `<section class="section"><h2>Detailed Metrics</h2>` +
+    generateCodeQualityMetrics(config) +
+    generateTestCoverageMetrics(config) +
+    generateArchitectureMetrics(config) +
+    generateSecurityMetrics(config) +
+    `</section>`
+  )
 }

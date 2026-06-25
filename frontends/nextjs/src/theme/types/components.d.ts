@@ -1,7 +1,7 @@
 /**
  * FakeMUI Component Type Extensions
  * 
- * This file defines additional component variants and props for the fakemui component library.
+ * This file defines additional component variants and props for the m3 component library.
  * These types extend the base component interfaces to support custom variants.
  */
 
@@ -50,7 +50,7 @@ export interface AlertVariants {
   soft: true
 }
 
-/** Combined component extensions for fakemui */
+/** Combined component extensions for m3 */
 export interface FakeMUIComponentExtensions {
   typography: TypographyVariants
   button: {

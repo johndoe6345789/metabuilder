@@ -1,0 +1,519 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "title": "Package Metadata",
+  "description": "MetaBuilder package metadata definition",
+  "type": "object",
+  "required": ["packageId", "name", "version", "description"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "packageId": {
+      "type": "string",
+      "description": "Unique package identifier (snake_case or kebab-case)",
+      "pattern": "^[a-z][a-z0-9_-]*$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable package name"
+    },
+    "version": {
+      "type": "string",
+      "description": "Package version (semver)",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?(\\+[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?$"
+    },
+    "description": {
+      "type": "string",
+      "description": "Package description"
+    },
+    "author": {
+      "type": "string",
+      "description": "Package author"
+    },
+    "license": {
+      "type": "string",
+      "description": "SPDX license identifier (e.g., MIT, Apache-2.0, GPL-3.0)",
+      "examples": ["MIT", "Apache-2.0", "GPL-3.0", "ISC", "BSD-3-Clause"]
+    },
+    "repository": {
+      "type": "string",
+      "description": "Repository URL",
+      "format": "uri"
+    },
+    "homepage": {
+      "type": "string",
+      "description": "Package homepage URL",
+      "format": "uri"
+    },
+    "bugs": {
+      "type": "string",
+      "description": "Issue tracker URL",
+      "format": "uri"
+    },
+    "keywords": {
+      "type": "array",
+      "description": "Keywords for package discovery",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "category": {
+      "type": "string",
+      "description": "Package category"
+    },
+    "icon": {
+      "type": "string",
+      "description": "Path to package icon"
+    },
+    "minLevel": {
+      "type": "integer",
+      "description": "Minimum permission level required (0-6)",
+      "minimum": 0,
+      "maximum": 6,
+      "default": 0
+    },
+    "primary": {
+      "type": "boolean",
+      "description": "Whether this is a primary/featured package",
+      "default": false
+    },
+    "private": {
+      "type": "boolean",
+      "description": "Prevent accidental publication",
+      "default": false
+    },
+    "deprecated": {
+      "oneOf": [
+        { "type": "boolean" },
+        {
+          "type": "object",
+          "properties": {
+            "version": { "type": "string", "description": "Version when deprecated" },
+            "reason": { "type": "string", "description": "Deprecation reason" },
+            "alternative": { "type": "string", "description": "Recommended alternative package" }
+          }
+        }
+      ],
+      "description": "Package deprecation status"
+    },
+    "dependencies": {
+      "type": "object",
+      "description": "Required package dependencies with version constraints",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^(\\^|~|>=?|<=?|=)?\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?(\\+[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?$",
+        "examples": ["^1.2.3", "~2.0.0", ">=1.0.0", "1.2.3"]
+      }
+    },
+    "devDependencies": {
+      "type": "object",
+      "description": "Development-only dependencies with version constraints",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^(\\^|~|>=?|<=?|=)?\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?(\\+[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?$"
+      }
+    },
+    "peerDependencies": {
+      "type": "object",
+      "description": "Peer dependencies (installed by consumer)",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^(\\^|~|>=?|<=?|=)?\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?(\\+[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?$"
+      }
+    },
+    "exports": {
+      "type": "object",
+      "description": "Exported items from this package",
+      "properties": {
+        "scripts": {
+          "type": "array",
+          "description": "Exported script/function names",
+          "items": { "type": "string" }
+        },
+        "types": {
+          "type": "array",
+          "description": "Exported type definitions",
+          "items": { "type": "string" }
+        },
+        "components": {
+          "type": "array",
+          "description": "Exported UI components",
+          "items": { "type": "string" }
+        },
+        "constants": {
+          "type": "array",
+          "description": "Exported constants",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "tests": {
+      "type": "object",
+      "description": "Test configuration",
+      "properties": {
+        "scripts": {
+          "type": "array",
+          "description": "Test script files",
+          "items": { "type": "string" }
+        },
+        "cases": {
+          "type": "array",
+          "description": "Test case files",
+          "items": { "type": "string" }
+        },
+        "parameterized": {
+          "type": "array",
+          "description": "Parameterized test definitions",
+          "items": {
+            "$ref": "#/definitions/parameterizedTest"
+          }
+        }
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "description": "Permission definitions",
+      "additionalProperties": {
+        "$ref": "#/definitions/permission"
+      }
+    },
+    "seed": {
+      "type": "object",
+      "description": "Seed data file references",
+      "properties": {
+        "styles": {
+          "type": "string",
+          "description": "Path to styles JSON file"
+        },
+        "types": {
+          "type": "string",
+          "description": "Path to types JSON file"
+        },
+        "schema": {
+          "type": "string",
+          "description": "Path to entity schema file"
+        }
+      }
+    },
+    "storybook": {
+      "$ref": "#/definitions/storybookConfig"
+    },
+    "runtime": {
+      "type": "object",
+      "description": "Runtime configuration",
+      "properties": {
+        "scripts": {
+          "type": "array",
+          "description": "Script files to load",
+          "items": { "type": "string" }
+        },
+        "main": {
+          "type": "string",
+          "description": "Main entry script file"
+        },
+        "executor": {
+          "type": "object",
+          "description": "Script executor paths",
+          "properties": {
+            "jsonScript": {
+              "type": "string",
+              "description": "Path to the JSON script entry point"
+            },
+            "javascript": {
+              "type": "string",
+              "description": "Path to a JavaScript shim or helper"
+            }
+          }
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "permission": {
+      "type": "object",
+      "required": ["minLevel", "description"],
+      "properties": {
+        "minLevel": {
+          "type": "integer",
+          "description": "Minimum level required",
+          "minimum": 0,
+          "maximum": 6
+        },
+        "description": {
+          "type": "string",
+          "description": "Permission description"
+        },
+        "storybook": {
+          "type": "object",
+          "properties": {
+            "stories": {
+              "type": "array",
+              "items": { "type": "object" }
+            }
+          }
+        }
+      }
+    },
+    "parameterizedTest": {
+      "type": "object",
+      "required": ["logic", "parameters"],
+      "properties": {
+        "logic": {
+          "type": "string",
+          "description": "Path to test logic file"
+        },
+        "parameters": {
+          "type": "string",
+          "description": "Path to test parameters file"
+        }
+      }
+    },
+    "storybookConfig": {
+      "type": "object",
+      "description": "Storybook configuration for package preview and documentation",
+      "properties": {
+        "featured": {
+          "type": "boolean",
+          "description": "Whether this package should be featured/highlighted in Storybook",
+          "default": false
+        },
+        "excludeFromDiscovery": {
+          "type": "boolean",
+          "description": "Exclude this package from auto-discovery",
+          "default": false
+        },
+        "category": {
+          "type": "string",
+          "description": "Override category for Storybook organization"
+        },
+        "title": {
+          "type": "string",
+          "description": "Display title in Storybook (defaults to package name)"
+        },
+        "description": {
+          "type": "string",
+          "description": "Extended description shown in Storybook docs"
+        },
+        "stories": {
+          "type": "array",
+          "description": "Story definitions",
+          "items": {
+            "$ref": "#/definitions/story"
+          }
+        },
+        "renders": {
+          "type": "object",
+          "description": "Map of render function names to their metadata",
+          "additionalProperties": {
+            "$ref": "#/definitions/renderMetadata"
+          }
+        },
+        "defaultContext": {
+          "$ref": "#/definitions/storybookContext",
+          "description": "Default context for this package's stories"
+        },
+        "contextVariants": {
+          "type": "array",
+          "description": "Package-specific context variants",
+          "items": {
+            "$ref": "#/definitions/contextVariant"
+          }
+        },
+        "scripts": {
+          "type": "object",
+          "description": "Script rendering configuration",
+          "properties": {
+            "renderFunctions": {
+              "type": "array",
+              "description": "Function names that produce renderable output",
+              "items": { "type": "string" },
+              "examples": [["render", "main", "layout", "form", "page", "view"]]
+            },
+            "ignoredScripts": {
+              "type": "array",
+              "description": "Script names to exclude from Storybook",
+              "items": { "type": "string" },
+              "examples": [["test", "utils", "init", "validate", "actions"]]
+            }
+          }
+        },
+        "argTypes": {
+          "type": "object",
+          "description": "Global Storybook argTypes for all stories in package",
+          "additionalProperties": {
+            "$ref": "#/definitions/control"
+          }
+        },
+        "parameters": {
+          "type": "object",
+          "description": "Storybook parameters (backgrounds, viewport, etc.)",
+          "properties": {
+            "backgrounds": {
+              "type": "object",
+              "properties": {
+                "default": { "type": "string" },
+                "values": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": { "type": "string" },
+                      "value": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            },
+            "viewport": {
+              "type": "object",
+              "properties": {
+                "defaultViewport": { "type": "string" }
+              }
+            },
+            "layout": {
+              "type": "string",
+              "enum": ["centered", "fullscreen", "padded"],
+              "description": "Story layout mode"
+            },
+            "docs": {
+              "type": "object",
+              "properties": {
+                "description": { "type": "string" },
+                "source": {
+                  "type": "object",
+                  "properties": {
+                    "type": { 
+                      "type": "string",
+                      "enum": ["code", "dynamic", "auto"]
+                    },
+                    "language": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "additionalProperties": true
+        }
+      }
+    },
+    "renderMetadata": {
+      "type": "object",
+      "description": "Metadata for a render function in Storybook",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of what the render produces"
+        },
+        "featured": {
+          "type": "boolean",
+          "description": "Highlight this render in the package's stories",
+          "default": false
+        },
+        "args": {
+          "type": "object",
+          "description": "Default arguments for this render function",
+          "additionalProperties": true
+        },
+        "argTypes": {
+          "type": "object",
+          "description": "Storybook controls for render function arguments",
+          "additionalProperties": {
+            "$ref": "#/definitions/control"
+          }
+        }
+      }
+    },
+    "storybookContext": {
+      "$ref": "storybook-common-definitions.json#/definitions/storybookContext"
+    },
+    "contextVariant": {
+      "$ref": "storybook-common-definitions.json#/definitions/contextVariant"
+    },
+    "story": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Story display name"
+        },
+        "type": {
+          "type": "string",
+          "description": "Story type",
+          "enum": ["function", "component", "script", "render"]
+        },
+        "render": {
+          "type": "string",
+          "description": "Render function or script name to execute"
+        },
+        "function": {
+          "type": "string",
+          "description": "Function name (for function stories)"
+        },
+        "component": {
+          "type": "string",
+          "description": "Component name (for component stories)"
+        },
+        "script": {
+          "type": "string",
+          "description": "Script file path (for script stories)"
+        },
+        "description": {
+          "type": "string",
+          "description": "Story description for documentation"
+        },
+        "args": {
+          "oneOf": [
+            {
+              "type": "array",
+              "description": "Ordered function arguments"
+            },
+            {
+              "type": "object",
+              "description": "Named function arguments"
+            }
+          ]
+        },
+        "props": {
+          "type": "object",
+          "description": "Component props"
+        },
+        "context": {
+          "$ref": "#/definitions/storybookContext",
+          "description": "Custom context for this story"
+        },
+        "argControls": {
+          "type": "object",
+          "description": "Storybook controls for arguments",
+          "additionalProperties": {
+            "$ref": "#/definitions/control"
+          }
+        },
+        "propControls": {
+          "type": "object",
+          "description": "Storybook controls for props",
+          "additionalProperties": {
+            "$ref": "#/definitions/control"
+          }
+        },
+        "parameters": {
+          "type": "object",
+          "description": "Story-specific Storybook parameters",
+          "additionalProperties": true
+        },
+        "decorators": {
+          "type": "array",
+          "description": "Decorator function references",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "control": {
+      "$ref": "storybook-common-definitions.json#/definitions/control"
+    }
+  }
+}

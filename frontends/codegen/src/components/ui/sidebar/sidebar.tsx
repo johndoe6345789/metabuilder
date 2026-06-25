@@ -11,7 +11,7 @@ import {
   ReactNode,
 } from "react"
 import { createPortal } from "react-dom"
-import { X } from "@metabuilder/fakemui/icons"
+import { X } from "@metabuilder/m3/icons"
 
 import sidebarConfig from "@/data/sidebar-config.json"
 import { useThemeConfig } from "@/hooks/use-theme-config"

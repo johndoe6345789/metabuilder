@@ -1,0 +1,29 @@
+{
+  "adapters": [
+    { "value": "postgres", "label": "PostgreSQL" },
+    { "value": "mysql", "label": "MySQL" },
+    { "value": "mongodb", "label": "MongoDB" },
+    { "value": "sqlite", "label": "SQLite" },
+    { "value": "redis", "label": "Redis" },
+    { "value": "elasticsearch", "label": "Elasticsearch" },
+    { "value": "cassandra", "label": "Cassandra" },
+    { "value": "surrealdb", "label": "SurrealDB" },
+    { "value": "supabase", "label": "Supabase" },
+    { "value": "cockroachdb", "label": "CockroachDB" },
+    { "value": "tidb", "label": "TiDB" }
+  ],
+  "adapterFields": {
+    "postgres": ["host", "port", "database", "user", "password"],
+    "mysql": ["host", "port", "database", "user", "password"],
+    "cockroachdb": ["host", "port", "database", "user", "password"],
+    "tidb": ["host", "port", "database", "user", "password"],
+    "sqlite": ["path"],
+    "mongodb": ["connectionString", "database"],
+    "redis": ["host", "port", "dbIndex"],
+    "elasticsearch": ["host", "port", "index"],
+    "cassandra": ["host", "port", "keyspace"],
+    "surrealdb": ["host", "port", "namespace", "database"],
+    "supabase": ["host", "apiKey", "database"],
+    "dynamodb": ["region", "accessKey", "secretKey", "table"]
+  }
+}

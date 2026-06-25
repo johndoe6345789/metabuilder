@@ -1,9 +1,9 @@
 import { PanelHeader } from '@/components/atoms'
-import { Button } from '@metabuilder/fakemui/inputs'
-import { Tooltip } from '@metabuilder/fakemui/data-display'
+import { Button } from '@metabuilder/m3/inputs'
+import { Tooltip } from '@metabuilder/m3/data-display'
 import { componentTreeConfig } from '@/components/molecules/component-tree/componentTreeConfig'
 import { componentTreeIcons } from '@/components/molecules/component-tree/componentTreeIcons'
-import { CaretDown, CaretRight } from '@metabuilder/fakemui/icons'
+import { CaretDown, CaretRight } from '@metabuilder/m3/icons'
 
 interface ComponentTreeHeaderProps {
   componentsCount: number

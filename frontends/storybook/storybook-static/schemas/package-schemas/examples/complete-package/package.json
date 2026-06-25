@@ -1,0 +1,30 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "complete-example",
+  "name": "Complete Example Package",
+  "version": "2.1.0",
+  "description": "A comprehensive MetaBuilder package demonstrating all features",
+  "author": "MetaBuilder Team",
+  "license": "MIT",
+  "repository": "https://github.com/metabuilder/complete-example",
+  "homepage": "https://metabuilder.dev/packages/complete-example",
+  "keywords": ["example", "demo", "complete"],
+  "category": "Examples",
+  "dependencies": {
+    "core-utils": "^1.0.0"
+  },
+  "exports": {
+    "scripts": ["createUser", "validateEmail"],
+    "types": ["User", "ValidationResult"],
+    "components": ["UserCard"]
+  },
+  "tests": {
+    "scripts": ["tests/user.test.json"],
+    "parameterized": [
+      {
+        "logic": "tests/validation.logic.json",
+        "parameters": "tests/validation.params.json"
+      }
+    ]
+  }
+}

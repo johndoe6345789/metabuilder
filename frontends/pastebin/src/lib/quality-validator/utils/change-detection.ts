@@ -1,0 +1,113 @@
+/**
+ * File change detection strategies
+ */
+
+import * as fs from 'fs'
+import * as crypto from 'crypto'
+import { logger } from './logger.js'
+import { getChangedFiles, readFile, pathExists } from './fileSystem.js'
+import { FileRecord, ChangeDetectionState } from './FileChangeDetector.js'
+
+/**
+ * Generate SHA256 hash of file content
+ */
+export function hashFile(filePath: string): string {
+  try {
+    const content = readFile(filePath)
+    return crypto.createHash('sha256').update(content).digest('hex')
+  } catch {
+    return ''
+  }
+}
+
+/**
+ * Get file stat metadata (mtime, size)
+ */
+export function getFileMetadata(filePath: string): Partial<FileRecord> | null {
+  try {
+    const stat = fs.statSync(filePath)
+    return { modifiedTime: stat.mtimeMs, size: stat.size }
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Detect git root by walking up the directory tree
+ */
+export function detectGitRoot(): string | null {
+  try {
+    let current = process.cwd()
+    while (current !== '/') {
+      if (fs.existsSync(`${current}/.git`)) return current
+      current = current.substring(0, current.lastIndexOf('/'))
+    }
+  } catch {
+    logger.debug('Not in a git repository')
+  }
+  return null
+}
+
+/**
+ * Get set of changed files via git status
+ */
+export function getChangedFilesViaGit(gitRoot: string | null): Set<string> {
+  const changed = new Set<string>()
+  if (!gitRoot) return changed
+
+  try {
+    const changedFiles = getChangedFiles()
+    for (const file of changedFiles) {
+      changed.add(file)
+    }
+    logger.debug(`Git detected ${changed.size} changed files`)
+  } catch (error) {
+    logger.debug('Git change detection failed', {
+      error: (error as Error).message,
+    })
+  }
+
+  return changed
+}
+
+/**
+ * Find changed files by comparing stored hash records
+ */
+export function getChangedFilesByHash(
+  files: string[],
+  currentState: ChangeDetectionState,
+): Set<string> {
+  const changed = new Set<string>()
+
+  for (const file of files) {
+    if (!pathExists(file)) {
+      if (currentState.files[file]) changed.add(file)
+      continue
+    }
+
+    try {
+      const metadata = getFileMetadata(file)
+      if (!metadata) continue
+
+      const previousRecord = currentState.files[file]
+
+      if (!previousRecord) {
+        changed.add(file)
+        continue
+      }
+
+      // Always compare the content hash. Gating on size/mtime first would
+      // miss a same-size edit made within the same clock second (and the
+      // detector's whole contract is hash-based change detection).
+      if (hashFile(file) !== previousRecord.hash) {
+        changed.add(file)
+      }
+    } catch (error) {
+      logger.debug(`Failed to check file changes: ${file}`, {
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  return changed
+}

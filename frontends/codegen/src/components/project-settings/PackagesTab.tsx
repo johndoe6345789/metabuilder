@@ -1,8 +1,8 @@
 import { NpmPackage, NpmSettings } from '@/types/project'
-import { Button } from '@metabuilder/fakemui/inputs'
-import { Label } from '@metabuilder/fakemui/atoms'
+import { Button } from '@metabuilder/m3/inputs'
+import { Label } from '@metabuilder/m3/atoms'
 import projectSettingsCopy from '@/data/project-settings.json'
-import { Plus } from '@metabuilder/fakemui/icons'
+import { Plus } from '@metabuilder/m3/icons'
 import { PackageListSection } from '@/components/project-settings/PackageListSection'
 
 interface PackagesTabProps {

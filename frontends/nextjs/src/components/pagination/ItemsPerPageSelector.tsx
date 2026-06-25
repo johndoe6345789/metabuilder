@@ -1,6 +1,6 @@
 'use client'
 
-import { FormControl, FormLabel, Select, Box } from '@/fakemui'
+import { FormControl, FormLabel, Select, Box } from '@/m3'
 
 export interface ItemsPerPageSelectorProps {
   value: number

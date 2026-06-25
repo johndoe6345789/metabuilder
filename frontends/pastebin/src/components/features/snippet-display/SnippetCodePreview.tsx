@@ -6,7 +6,10 @@ interface SnippetCodePreviewProps {
   isTruncated: boolean
 }
 
-export function SnippetCodePreview({ displayCode, isTruncated }: SnippetCodePreviewProps) {
+export function SnippetCodePreview({
+  displayCode,
+  isTruncated,
+}: SnippetCodePreviewProps) {
   const t = useTranslation()
   return (
     <div className={styles.previewContainer} data-testid="snippet-code-preview">
@@ -14,7 +17,11 @@ export function SnippetCodePreview({ displayCode, isTruncated }: SnippetCodePrev
         {displayCode}
       </pre>
       {isTruncated && (
-        <p className={styles.truncatedNotice} role="status" data-testid="code-truncated-notice">
+        <p
+          className={styles.truncatedNotice}
+          role="status"
+          data-testid="code-truncated-notice"
+        >
           {t.snippetCard.viewFullCode}
         </p>
       )}

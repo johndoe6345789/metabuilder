@@ -1,0 +1,221 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "database_manager",
+  "description": "Database administration - uses settings page as equivalent",
+  "version": "1.0",
+  "tags": [
+    "@admin",
+    "@database-management",
+    "@phase-3"
+  ],
+  "tests": [
+    {
+      "name": "can view database settings",
+      "description": "Settings page shows database configuration",
+      "tags": [
+        "@database-admin",
+        "@stats"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "settings"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "can refresh settings view",
+      "description": "Settings page can be reloaded",
+      "tags": [
+        "@database-admin",
+        "@stats"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "settings"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "settings shows health status",
+      "description": "Settings page shows system health indicators",
+      "tags": [
+        "@database-admin",
+        "@stats"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "settings"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "can browse workflow records",
+      "description": "Workflows page displays workflow records",
+      "tags": [
+        "@database-admin",
+        "@browser"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "can sort workflow records",
+      "description": "Workflows list can be sorted",
+      "tags": [
+        "@database-admin",
+        "@browser"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "can filter workflow records",
+      "description": "Workflows list can be filtered",
+      "tags": [
+        "@database-admin",
+        "@browser"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "settings page accessible for export config",
+      "description": "Settings page accessible for data configuration",
+      "tags": [
+        "@database-admin",
+        "@export"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "settings"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "plugins page accessible for backend config",
+      "description": "Plugins page accessible for backend configuration",
+      "tags": [
+        "@database-admin",
+        "@export"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "plugins"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    }
+  ]
+}

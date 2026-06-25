@@ -1,0 +1,15 @@
+[
+  {
+    "id": "page_ui_home_root",
+    "path": "/",
+    "title": "MetaBuilder",
+    "description": "Data-driven application platform",
+    "packageId": "ui_home",
+    "component": "home_page",
+    "level": 0,
+    "requiresAuth": false,
+    "isPublished": true,
+    "sortOrder": 0,
+    "icon": "🏠"
+  }
+]

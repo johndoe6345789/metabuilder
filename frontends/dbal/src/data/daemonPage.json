@@ -1,0 +1,22 @@
+{
+  "architectureHighlights": [
+    {
+      "title": "Sandboxed gRPC Gateway",
+      "description": "TLS-enabled WebSocket/JSON-RPC front door with auth, rate limiting, and ACL enforcement before any query reaches the database."
+    },
+    {
+      "title": "Query Executor",
+      "description": "Builds safe, parameterized SQL statements, validates ACL rules, and routes requests through the configured adapters."
+    },
+    {
+      "title": "Adapter Layer",
+      "description": "Pluggable backends (Postgres/MySQL/SQLite) with typed capability metadata so the core client stays agnostic to the engine."
+    }
+  ],
+  "securityFeatures": [
+    "Process isolation, capability enforcement, and a least-privilege sandbox per deployment.",
+    "Credential vault referenced by the daemon only — secrets never leave the server process.",
+    "Audit logging for every RPC call, including user, operation, entity, and success/failure.",
+    "Row-level security + per-operation ACL checks keep queries scoped to the requester."
+  ]
+}

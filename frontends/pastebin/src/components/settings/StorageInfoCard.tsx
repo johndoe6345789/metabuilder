@@ -1,6 +1,12 @@
 'use client'
 
-import { Card, CardHeader, CardContent, Alert, AlertDescription } from '@metabuilder/components/fakemui'
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Alert,
+  AlertDescription,
+} from '@metabuilder/components/m3'
 import { useTranslation } from '@/hooks/useTranslation'
 import styles from './settings-card.module.scss'
 
@@ -18,7 +24,11 @@ export function StorageInfoCard({ storageType }: StorageInfoCardProps) {
         subheader={<p className={styles.cardDescription}>{s.description}</p>}
       />
       <CardContent>
-        <Alert severity="info" role="status" aria-label="Storage type information">
+        <Alert
+          severity="info"
+          role="status"
+          aria-label="Storage type information"
+        >
           <AlertDescription data-testid="storage-type-description">
             {storageType === 'indexeddb' ? (
               <>

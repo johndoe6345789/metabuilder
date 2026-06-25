@@ -21,10 +21,11 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { prompt, model, jsonMode } = body as {
+    const { prompt, model, jsonMode, maxTokens } = body as {
       prompt: string
       model?: string
       jsonMode?: boolean
+      maxTokens?: number
     }
 
     if (!prompt) {
@@ -37,7 +38,7 @@ export async function POST(request: NextRequest) {
 
     const anthropicBody: Record<string, unknown> = {
       model: claudeModel,
-      max_tokens: 4096,
+      max_tokens: maxTokens ?? 4096,
       messages,
     }
 

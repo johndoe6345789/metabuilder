@@ -1,14 +1,17 @@
-import { useState } from 'react'
 import { toast } from '@/components/ui/sonner'
 
 import AppDialogs from '@/components/app/AppDialogs'
 import AppMainPanel from '@/components/app/AppMainPanel'
-import { MetabuilderNavNavigationMenu as NavigationMenu } from '@/lib/json-ui/json-components'
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
+import { MetabuilderNavNavigationMenu as NavigationMenu } from
+  '@/lib/json-ui/json-components'
+import { SidebarInset, SidebarProvider } from
+  '@/components/ui/sidebar'
 import appStrings from '@/data/app-shortcuts.json'
 import useAppNavigation from '@/hooks/use-app-navigation'
 import useAppProject from '@/hooks/use-app-project'
 import useAppShortcuts from '@/hooks/use-app-shortcuts'
+import { useAppLayoutState } from
+  '@/components/app/hooks/useAppLayoutState'
 
 export default function AppLayout() {
   const { currentPage, navigateToPage } = useAppNavigation()
@@ -29,10 +32,12 @@ export default function AppLayout() {
     stateContext,
     actionContext,
   } = useAppProject()
-  const { searchOpen, setSearchOpen, shortcutsOpen, setShortcutsOpen, previewOpen, setPreviewOpen } =
-    useAppShortcuts({ featureToggles, navigateToPage })
-  const [lastSaved] = useState<number | null>(() => Date.now())
-  const [errorCount] = useState(0)
+  const {
+    searchOpen, setSearchOpen,
+    shortcutsOpen, setShortcutsOpen,
+    previewOpen, setPreviewOpen,
+  } = useAppShortcuts({ featureToggles, navigateToPage })
+  const { lastSaved, errorCount } = useAppLayoutState()
 
   return (
     <SidebarProvider defaultOpen={true}>

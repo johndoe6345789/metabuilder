@@ -1,281 +1,185 @@
 import { useCallback } from 'react'
 import { toast } from '@/components/ui/sonner'
 import { Action, JSONUIContext } from '@/types/json-ui'
-import { evaluateExpression, evaluateTemplate } from '@/lib/json-ui/expression-evaluator'
 import { getNestedValue } from '@/lib/json-ui/utils'
+import {
+  resolveActionValue,
+  getTargetParts,
+  updateByPath,
+  resolveDialogTarget,
+  handleSetValue,
+  handleToggleValue,
+  handleDelta,
+  handleShowToast,
+} from './action-executor-handlers'
 
-export function useActionExecutor(context: JSONUIContext) {
-  const { data, updateData, updatePath, executeAction: contextExecute } = context
+export function useActionExecutor(
+  context: JSONUIContext
+) {
+  const {
+    data,
+    updateData,
+    updatePath,
+    executeAction: contextExecute,
+  } = context
 
-  const getTargetParts = (target?: string) => {
-    if (!target) return null
-    const [sourceId, ...pathParts] = target.split('.')
-    const path = pathParts.join('.')
-    return { sourceId, path: path || undefined }
-  }
+  const executeAction = useCallback(
+    async (action: Action, event?: any) => {
+      try {
+        const eventContext =
+          event && typeof event === 'object'
+            ? event
+            : {}
+        const mergedData = { ...data, ...eventContext }
 
-  const resolveActionExpression = (expression: string, mergedData: Record<string, any>, event?: any) => {
-    let normalized = expression.trim()
-    if (!normalized.startsWith('data.') && !normalized.startsWith('event.')
-      && !normalized.startsWith('"') && !normalized.startsWith("'")
-      && !/^-?\d/.test(normalized) && normalized !== 'true' && normalized !== 'false'
-      && normalized !== 'null' && normalized !== 'undefined' && normalized !== 'Date.now()') {
-      normalized = `data.${normalized}`
-    }
-    return evaluateExpression(normalized, { data: mergedData, event })
-  }
-
-  const executeAction = useCallback(async (action: Action, event?: any) => {
-    try {
-      const eventContext = event && typeof event === 'object' ? event : {}
-      const mergedData = { ...data, ...eventContext }
-      const evaluationContext = { data: mergedData, event }
-      const updateByPath = (sourceId: string, path: string, value: any) => {
-        if (updatePath) {
-          updatePath(sourceId, path, value)
-          return
-        }
-
-        const sourceData = data[sourceId] ?? {}
-        const pathParts = path.split('.')
-        const newData = { ...sourceData }
-        let current: any = newData
-
-        for (let i = 0; i < pathParts.length - 1; i++) {
-          const key = pathParts[i]
-          current[key] = typeof current[key] === 'object' && current[key] !== null ? { ...current[key] } : {}
-          current = current[key]
-        }
-
-        current[pathParts[pathParts.length - 1]] = value
-        updateData(sourceId, newData)
-      }
-
-      const resolveDialogTarget = () => {
-        const defaultSourceId = 'uiState'
-        const hasExplicitTarget = Boolean(action.target && action.path)
-        const sourceId = (hasExplicitTarget ? action.target : defaultSourceId) ?? defaultSourceId
-        const dialogId = action.path ?? action.target
-
-        if (!dialogId) return null
-
-        const dialogPath = dialogId.startsWith('dialogs.') ? dialogId : `dialogs.${dialogId}`
-        return { sourceId, dialogPath }
-      }
-
-      switch (action.type) {
-        case 'create': {
-          if (!action.target) return
-          const currentData = data[action.target] || []
-
-          let newValue
-          if (action.expression) {
-            newValue = resolveActionExpression(action.expression, mergedData, event)
-          } else if (action.valueTemplate) {
-            // New: JSON template with dynamic values
-            newValue = evaluateTemplate(action.valueTemplate, { data: mergedData, event })
-          } else {
-            // Fallback: static value
-            newValue = action.value
+        switch (action.type) {
+          case 'create': {
+            if (!action.target) return
+            const current = data[action.target] || []
+            const newValue = resolveActionValue(
+              action,
+              mergedData,
+              event
+            )
+            updateData(action.target, [
+              ...current,
+              newValue,
+            ])
+            break
           }
 
-          updateData(action.target, [...currentData, newValue])
-          break
-        }
-
-        case 'update': {
-          const targetParts = getTargetParts(action.target)
-          if (!targetParts) return
-
-          let newValue
-          if (action.expression) {
-            newValue = resolveActionExpression(action.expression, mergedData, event)
-          } else if (action.valueTemplate) {
-            newValue = evaluateTemplate(action.valueTemplate, { data: mergedData, event })
-          } else {
-            newValue = action.value
+          case 'update':
+          case 'set-value': {
+            handleSetValue(
+              action,
+              mergedData,
+              event,
+              data,
+              updateData,
+              updatePath
+            )
+            break
           }
 
-          if (targetParts.path) {
-            if (updatePath) {
-              updatePath(targetParts.sourceId, targetParts.path, newValue)
-            }
-          } else {
-            updateData(targetParts.sourceId, newValue)
+          case 'delete': {
+            if (!action.target) return
+            const current = data[action.target] || []
+            const selectorValue = resolveActionValue(
+              action,
+              mergedData,
+              event
+            )
+            if (selectorValue === undefined) return
+            const filtered = current.filter(
+              (item: any) => {
+                if (action.path) {
+                  return (
+                    getNestedValue(item, action.path) !==
+                    selectorValue
+                  )
+                }
+                return item !== selectorValue
+              }
+            )
+            updateData(action.target, filtered)
+            break
           }
-          break
-        }
 
-        case 'delete': {
-          if (!action.target) return
-          const currentData = data[action.target] || []
-
-          let selectorValue
-          if (action.expression) {
-            selectorValue = resolveActionExpression(action.expression, mergedData, event)
-          } else if (action.valueTemplate) {
-            selectorValue = evaluateTemplate(action.valueTemplate, { data: mergedData, event })
-          } else {
-            selectorValue = action.value
+          case 'toggle-value': {
+            handleToggleValue(
+              action,
+              data,
+              updateData,
+              updatePath
+            )
+            break
           }
 
-          if (selectorValue === undefined) return
+          case 'increment': {
+            handleDelta(
+              action,
+              1,
+              data,
+              updateData,
+              updatePath
+            )
+            break
+          }
 
-          const filtered = currentData.filter((item: any) => {
+          case 'decrement': {
+            handleDelta(
+              action,
+              -1,
+              data,
+              updateData,
+              updatePath
+            )
+            break
+          }
+
+          case 'show-toast': {
+            handleShowToast(action)
+            break
+          }
+
+          case 'navigate': {
             if (action.path) {
-              return getNestedValue(item, action.path) !== selectorValue
+              window.location.hash = action.path
             }
-            return item !== selectorValue
-          })
-          updateData(action.target, filtered)
-          break
-        }
-
-        case 'set-value': {
-          const targetParts = getTargetParts(action.target)
-          if (!targetParts) return
-
-          let newValue
-          if (action.expression) {
-            newValue = resolveActionExpression(action.expression, mergedData, event)
-          } else if (action.valueTemplate) {
-            newValue = evaluateTemplate(action.valueTemplate, { data: mergedData, event })
-          } else {
-            newValue = action.value
+            break
           }
 
-          if (targetParts.path) {
-            if (updatePath) {
-              updatePath(targetParts.sourceId, targetParts.path, newValue)
+          case 'open-dialog': {
+            const dt = resolveDialogTarget(action)
+            if (!dt) return
+            updateByPath(
+              dt.sourceId,
+              dt.dialogPath,
+              true,
+              data,
+              updateData,
+              updatePath
+            )
+            break
+          }
+
+          case 'close-dialog': {
+            const dt = resolveDialogTarget(action)
+            if (!dt) return
+            updateByPath(
+              dt.sourceId,
+              dt.dialogPath,
+              false,
+              data,
+              updateData,
+              updatePath
+            )
+            break
+          }
+
+          case 'custom': {
+            if (contextExecute) {
+              await contextExecute(action, event)
             }
-          } else {
-            updateData(targetParts.sourceId, newValue)
+            break
           }
-          break
         }
-
-        case 'toggle-value': {
-          const targetParts = getTargetParts(action.target)
-          if (!targetParts) return
-
-          const currentValue = targetParts.path
-            ? getNestedValue(data[targetParts.sourceId], targetParts.path)
-            : data[targetParts.sourceId]
-          const nextValue = !currentValue
-
-          if (targetParts.path) {
-            if (updatePath) {
-              updatePath(targetParts.sourceId, targetParts.path, nextValue)
-            }
-          } else {
-            updateData(targetParts.sourceId, nextValue)
-          }
-          break
-        }
-
-        case 'increment': {
-          const targetParts = getTargetParts(action.target)
-          if (!targetParts) return
-
-          const currentValue = targetParts.path
-            ? getNestedValue(data[targetParts.sourceId], targetParts.path)
-            : data[targetParts.sourceId]
-          const amount = action.value || 1
-          const nextValue = (currentValue || 0) + amount
-
-          if (targetParts.path) {
-            if (updatePath) {
-              updatePath(targetParts.sourceId, targetParts.path, nextValue)
-            }
-          } else {
-            updateData(targetParts.sourceId, nextValue)
-          }
-          break
-        }
-
-        case 'decrement': {
-          const targetParts = getTargetParts(action.target)
-          if (!targetParts) return
-
-          const currentValue = targetParts.path
-            ? getNestedValue(data[targetParts.sourceId], targetParts.path)
-            : data[targetParts.sourceId]
-          const amount = action.value || 1
-          const nextValue = (currentValue || 0) - amount
-
-          if (targetParts.path) {
-            if (updatePath) {
-              updatePath(targetParts.sourceId, targetParts.path, nextValue)
-            }
-          } else {
-            updateData(targetParts.sourceId, nextValue)
-          }
-          break
-        }
-
-        case 'show-toast': {
-          const message = action.message || 'Action completed'
-          const variant = action.variant || 'success'
-
-          switch (variant) {
-            case 'success':
-              toast.success(message)
-              break
-            case 'error':
-              toast.error(message)
-              break
-            case 'info':
-              toast.info(message)
-              break
-            case 'warning':
-              toast.warning(message)
-              break
-          }
-          break
-        }
-
-        case 'navigate': {
-          if (action.path) {
-            window.location.hash = action.path
-          }
-          break
-        }
-
-        case 'open-dialog': {
-          const dialogTarget = resolveDialogTarget()
-          if (!dialogTarget) return
-          updateByPath(dialogTarget.sourceId, dialogTarget.dialogPath, true)
-          break
-        }
-
-        case 'close-dialog': {
-          const dialogTarget = resolveDialogTarget()
-          if (!dialogTarget) return
-          updateByPath(dialogTarget.sourceId, dialogTarget.dialogPath, false)
-          break
-        }
-
-        case 'custom': {
-          if (contextExecute) {
-            await contextExecute(action, event)
-          }
-          break
-        }
+      } catch (error) {
+        console.error('Action execution failed:', error)
+        toast.error('Action failed')
       }
-    } catch (error) {
-      console.error('Action execution failed:', error)
-      toast.error('Action failed')
-    }
-  }, [data, updateData, updatePath, contextExecute])
+    },
+    [data, updateData, updatePath, contextExecute]
+  )
 
-  const executeActions = useCallback(async (actions: Action[], event?: any) => {
-    for (const action of actions) {
-      await executeAction(action, event)
-    }
-  }, [executeAction])
+  const executeActions = useCallback(
+    async (actions: Action[], event?: any) => {
+      for (const action of actions) {
+        await executeAction(action, event)
+      }
+    },
+    [executeAction]
+  )
 
-  return {
-    executeAction,
-    executeActions,
-  }
+  return { executeAction, executeActions }
 }

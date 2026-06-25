@@ -16,14 +16,20 @@ const nextConfig: NextConfig = {
   // Configure page extensions
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
 
-  // Resolve SCSS @use 'cdk' from fakemui components
+  // Resolve SCSS @use 'cdk' from m3 components
+  // loadPaths = Turbopack (Dart Sass modern API); includePaths = webpack fallback
   sassOptions: {
-    includePaths: [
-      path.join(monorepoRoot, 'scss'),
+    loadPaths: [
       path.join(monorepoRoot, 'scss/m3-scss'),
+      path.join(monorepoRoot, 'scss'),
     ],
+    includePaths: [
+      path.join(monorepoRoot, 'scss/m3-scss'),
+      path.join(monorepoRoot, 'scss'),
+    ],
+    silenceDeprecations: ['legacy-js-api', 'import'],
   },
-  transpilePackages: ['@metabuilder/fakemui', '@metabuilder/redux-persist', '@metabuilder/service-adapters'],
+  transpilePackages: ['@metabuilder/m3', '@metabuilder/redux-persist', '@metabuilder/service-adapters'],
   
   // Experimental features
   experimental: {
@@ -34,10 +40,6 @@ const nextConfig: NextConfig = {
     },
     // Optimize package imports - reduces bundle size significantly
     optimizePackageImports: [
-      '@mui/material',
-      '@mui/icons-material',
-      '@mui/x-data-grid',
-      '@mui/x-date-pickers',
       'recharts',
       'd3',
       'lodash-es',

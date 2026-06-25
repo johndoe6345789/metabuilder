@@ -5,8 +5,8 @@ import * as storageModule from '@/lib/storage'
 // Mock the storage module
 jest.mock('@/lib/storage')
 
-// Mock fakemui toast
-jest.mock('@metabuilder/components/fakemui', () => ({
+// Mock m3 toast
+jest.mock('@metabuilder/components/m3', () => ({
   toast: {
     success: jest.fn(),
     error: jest.fn(),
@@ -16,11 +16,13 @@ jest.mock('@metabuilder/components/fakemui', () => ({
 // Mock useTranslation
 jest.mock('@/hooks/useTranslation', () => ({
   useTranslation: () => ({
-    settings: { storage: { backendUpdated: 'Storage backend updated successfully' } },
+    settings: {
+      storage: { backendUpdated: 'Storage backend updated successfully' },
+    },
   }),
 }))
 
-import { toast } from '@metabuilder/components/fakemui'
+import { toast } from '@metabuilder/components/m3'
 
 // Mock process.env
 const originalEnv = process.env
@@ -139,7 +141,9 @@ describe('useStorageConfig Hook', () => {
       expect(mockStorage.saveStorageConfig).toHaveBeenCalledWith({
         backend: 'indexeddb',
       })
-      expect(mockToast.success).toHaveBeenCalledWith('Storage backend updated successfully')
+      expect(mockToast.success).toHaveBeenCalledWith(
+        'Storage backend updated successfully',
+      )
     })
 
     it('should call onSuccess callback after saving', async () => {

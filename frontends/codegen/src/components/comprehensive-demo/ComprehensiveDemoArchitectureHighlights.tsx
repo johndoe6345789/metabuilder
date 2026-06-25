@@ -1,5 +1,5 @@
-import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@metabuilder/fakemui/surfaces'
-import { Check } from '@metabuilder/fakemui/icons'
+import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@metabuilder/m3/surfaces'
+import { Check } from '@metabuilder/m3/icons'
 import strings from '@/data/comprehensive-demo.json'
 
 export function ComprehensiveDemoArchitectureHighlights() {

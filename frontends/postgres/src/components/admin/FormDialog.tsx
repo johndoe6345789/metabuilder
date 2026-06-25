@@ -5,4 +5,4 @@ export {
   FormDialog as default,
   type FormDialogProps,
   type FormField,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';

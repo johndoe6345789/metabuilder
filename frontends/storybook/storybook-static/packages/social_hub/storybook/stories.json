@@ -1,0 +1,162 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Social Hub",
+  "description": "Modern social feed with creator tools and live rooms",
+  "stories": [
+    {
+      "name": "HeroSection",
+      "render": "hero",
+      "description": "Hero section with title and subtitle",
+      "args": {
+        "title": "Social Hub",
+        "subtitle": "A modern feed for creator updates, curated stories, and live moments."
+      }
+    },
+    {
+      "name": "StatCard",
+      "render": "stat",
+      "description": "Single statistic card",
+      "args": {
+        "label": "Creators live",
+        "value": "128"
+      }
+    },
+    {
+      "name": "StatsGrid",
+      "render": "stats",
+      "description": "Grid of social statistics",
+      "args": {
+        "stats": [
+          { "label": "Creators live", "value": "128" },
+          { "label": "Trending tags", "value": "42" },
+          { "label": "Live rooms", "value": "7" }
+        ]
+      }
+    },
+    {
+      "name": "PostComposer",
+      "render": "composer",
+      "description": "Post composer with textarea and actions",
+      "type": "function"
+    },
+    {
+      "name": "SinglePost",
+      "render": "post",
+      "description": "Single feed post",
+      "args": {
+        "title": "Launch day recap",
+        "body": "We shipped the new live rooms and saw a 32% boost in engagement.",
+        "badge": "Community"
+      }
+    },
+    {
+      "name": "Feed",
+      "render": "feed",
+      "description": "Complete social feed with multiple posts",
+      "args": {
+        "posts": [
+          {
+            "title": "Launch day recap",
+            "body": "We shipped the new live rooms and saw a 32% boost in engagement.",
+            "badge": "Community"
+          },
+          {
+            "title": "Creator spotlight",
+            "body": "Nova shares her workflow for livestreaming and managing subscribers.",
+            "badge": "Spotlight",
+            "badgeVariant": "secondary"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CompleteSocialHub",
+      "render": "complete",
+      "description": "Full social hub layout with all sections",
+      "type": "function"
+    }
+  ],
+  "renders": {
+    "hero": {
+      "description": "Hero section with title and description",
+      "featured": true
+    },
+    "stat": {
+      "description": "Single statistic card"
+    },
+    "stats": {
+      "description": "Statistics grid display"
+    },
+    "composer": {
+      "description": "Post composer interface"
+    },
+    "post": {
+      "description": "Individual feed post"
+    },
+    "feed": {
+      "description": "Complete feed with multiple posts"
+    },
+    "complete": {
+      "description": "Full social hub with all components"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "demo-user",
+      "username": "demo_creator",
+      "level": 2,
+      "email": "creator@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Creator Community"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Standard User",
+      "description": "Can view feed and create posts",
+      "context": {
+        "user": {
+          "username": "user",
+          "level": 2
+        }
+      }
+    },
+    {
+      "name": "Moderator",
+      "description": "Can moderate social content",
+      "context": {
+        "user": {
+          "username": "moderator",
+          "level": 3
+        }
+      }
+    },
+    {
+      "name": "Admin",
+      "description": "Full administrative access",
+      "context": {
+        "user": {
+          "username": "admin",
+          "level": 4
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["hero", "stat", "stats", "composer", "post", "feed", "complete"],
+    "ignoredScripts": ["tests", "init", "validate"]
+  },
+  "parameters": {
+    "layout": "padded",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#f8f9fa" },
+        { "name": "dark", "value": "#1a1a1a" }
+      ]
+    }
+  }
+}

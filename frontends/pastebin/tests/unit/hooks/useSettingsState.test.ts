@@ -3,24 +3,24 @@
  * Tests composite settings state management combining database, storage config, and migration
  */
 
-import { renderHook, act } from '@testing-library/react';
-import { useSettingsState } from '@/hooks/useSettingsState';
+import { renderHook, act } from '@testing-library/react'
+import { useSettingsState } from '@/hooks/useSettingsState'
 
 // Mock all sub-hooks
-jest.mock('@/hooks/useDatabaseOperations');
-jest.mock('@/hooks/useStorageConfig');
-jest.mock('@/hooks/useStorageMigration');
+jest.mock('@/hooks/useDatabaseOperations')
+jest.mock('@/hooks/useStorageConfig')
+jest.mock('@/hooks/useStorageMigration')
 
-import * as useDatabaseOpsHook from '@/hooks/useDatabaseOperations';
-import * as useStorageConfigHook from '@/hooks/useStorageConfig';
-import * as useStorageMigrationHook from '@/hooks/useStorageMigration';
+import * as useDatabaseOpsHook from '@/hooks/useDatabaseOperations'
+import * as useStorageConfigHook from '@/hooks/useStorageConfig'
+import * as useStorageMigrationHook from '@/hooks/useStorageMigration'
 
 describe('useSettingsState Hook', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.clearAllMocks()
 
     // Setup default mocks
-    (useDatabaseOpsHook.useDatabaseOperations as jest.Mock).mockReturnValue({
+    ;(useDatabaseOpsHook.useDatabaseOperations as jest.Mock).mockReturnValue({
       stats: null,
       loading: true,
       schemaHealth: 'unknown',
@@ -32,22 +32,24 @@ describe('useSettingsState Hook', () => {
       handleClear: jest.fn(),
       handleSeed: jest.fn(),
       formatBytes: jest.fn(),
-    });
+    })
 
-    (useStorageConfigHook.useStorageConfig as jest.Mock).mockReturnValue({
+    ;(useStorageConfigHook.useStorageConfig as jest.Mock).mockReturnValue({
       storageBackend: 'indexeddb',
       setStorageBackend: jest.fn(),
       envVarSet: false,
       loadConfig: jest.fn(),
       handleSaveStorageConfig: jest.fn(),
-    });
+    })
 
-    (useStorageMigrationHook.useStorageMigration as jest.Mock).mockReturnValue({});
-  });
+    ;(useStorageMigrationHook.useStorageMigration as jest.Mock).mockReturnValue(
+      {},
+    )
+  })
 
   describe('returned properties', () => {
     it('should return database stats properties', () => {
-      (useDatabaseOpsHook.useDatabaseOperations as jest.Mock).mockReturnValue({
+      ;(useDatabaseOpsHook.useDatabaseOperations as jest.Mock).mockReturnValue({
         stats: {
           snippetCount: 10,
           templateCount: 5,
@@ -65,40 +67,40 @@ describe('useSettingsState Hook', () => {
         handleClear: jest.fn(),
         handleSeed: jest.fn(),
         formatBytes: jest.fn(),
-      });
+      })
 
-      const { result } = renderHook(() => useSettingsState());
+      const { result } = renderHook(() => useSettingsState())
 
-      expect(result.current.stats).toBeTruthy();
-      expect(result.current.loading).toBe(false);
-      expect(result.current.schemaHealth).toBe('healthy');
-      expect(result.current.checkingSchema).toBe(false);
-    });
+      expect(result.current.stats).toBeTruthy()
+      expect(result.current.loading).toBe(false)
+      expect(result.current.schemaHealth).toBe('healthy')
+      expect(result.current.checkingSchema).toBe(false)
+    })
 
     it('should return storage config properties', () => {
-      const { result } = renderHook(() => useSettingsState());
+      const { result } = renderHook(() => useSettingsState())
 
-      expect(result.current.storageBackend).toBe('indexeddb');
-      expect(result.current.envVarSet).toBe(false);
-    });
+      expect(result.current.storageBackend).toBe('indexeddb')
+      expect(result.current.envVarSet).toBe(false)
+    })
 
     it('should return all handler functions', () => {
-      const { result } = renderHook(() => useSettingsState());
+      const { result } = renderHook(() => useSettingsState())
 
-      expect(typeof result.current.handleExport).toBe('function');
-      expect(typeof result.current.handleImport).toBe('function');
-      expect(typeof result.current.handleClear).toBe('function');
-      expect(typeof result.current.handleSeed).toBe('function');
-      expect(typeof result.current.formatBytes).toBe('function');
-      expect(typeof result.current.handleSaveStorageConfig).toBe('function');
-      expect(typeof result.current.checkSchemaHealth).toBe('function');
-    });
-  });
+      expect(typeof result.current.handleExport).toBe('function')
+      expect(typeof result.current.handleImport).toBe('function')
+      expect(typeof result.current.handleClear).toBe('function')
+      expect(typeof result.current.handleSeed).toBe('function')
+      expect(typeof result.current.formatBytes).toBe('function')
+      expect(typeof result.current.handleSaveStorageConfig).toBe('function')
+      expect(typeof result.current.checkSchemaHealth).toBe('function')
+    })
+  })
 
   describe('initialization effects', () => {
     it('should call loadStats on mount', () => {
-      const loadStats = jest.fn();
-      (useDatabaseOpsHook.useDatabaseOperations as jest.Mock).mockReturnValue({
+      const loadStats = jest.fn()
+      ;(useDatabaseOpsHook.useDatabaseOperations as jest.Mock).mockReturnValue({
         stats: null,
         loading: true,
         schemaHealth: 'unknown',
@@ -110,26 +112,26 @@ describe('useSettingsState Hook', () => {
         handleClear: jest.fn(),
         handleSeed: jest.fn(),
         formatBytes: jest.fn(),
-      });
+      })
 
-      const loadConfig = jest.fn();
-      (useStorageConfigHook.useStorageConfig as jest.Mock).mockReturnValue({
+      const loadConfig = jest.fn()
+      ;(useStorageConfigHook.useStorageConfig as jest.Mock).mockReturnValue({
         storageBackend: 'indexeddb',
         setStorageBackend: jest.fn(),
         envVarSet: false,
         loadConfig,
         handleSaveStorageConfig: jest.fn(),
-      });
+      })
 
-      renderHook(() => useSettingsState());
+      renderHook(() => useSettingsState())
 
-      expect(loadStats).toHaveBeenCalled();
-      expect(loadConfig).toHaveBeenCalled();
-    });
+      expect(loadStats).toHaveBeenCalled()
+      expect(loadConfig).toHaveBeenCalled()
+    })
 
     it('should call checkSchemaHealth on mount', () => {
-      const checkSchemaHealth = jest.fn();
-      (useDatabaseOpsHook.useDatabaseOperations as jest.Mock).mockReturnValue({
+      const checkSchemaHealth = jest.fn()
+      ;(useDatabaseOpsHook.useDatabaseOperations as jest.Mock).mockReturnValue({
         stats: null,
         loading: true,
         schemaHealth: 'unknown',
@@ -141,20 +143,20 @@ describe('useSettingsState Hook', () => {
         handleClear: jest.fn(),
         handleSeed: jest.fn(),
         formatBytes: jest.fn(),
-      });
+      })
 
-      renderHook(() => useSettingsState());
+      renderHook(() => useSettingsState())
 
-      expect(checkSchemaHealth).toHaveBeenCalled();
-    });
-  });
+      expect(checkSchemaHealth).toHaveBeenCalled()
+    })
+  })
 
   describe('handleSaveStorageConfig wrapper', () => {
     it('should call saveConfig with loadStats as callback', async () => {
-      const loadStats = jest.fn();
-      const saveConfig = jest.fn();
+      const loadStats = jest.fn()
+      const saveConfig = jest.fn()
 
-      (useDatabaseOpsHook.useDatabaseOperations as jest.Mock).mockReturnValue({
+      ;(useDatabaseOpsHook.useDatabaseOperations as jest.Mock).mockReturnValue({
         stats: null,
         loading: true,
         schemaHealth: 'unknown',
@@ -166,51 +168,51 @@ describe('useSettingsState Hook', () => {
         handleClear: jest.fn(),
         handleSeed: jest.fn(),
         formatBytes: jest.fn(),
-      });
+      })
 
-      (useStorageConfigHook.useStorageConfig as jest.Mock).mockReturnValue({
+      ;(useStorageConfigHook.useStorageConfig as jest.Mock).mockReturnValue({
         storageBackend: 'indexeddb',
         setStorageBackend: jest.fn(),
         envVarSet: false,
         loadConfig: jest.fn(),
         handleSaveStorageConfig: saveConfig,
-      });
+      })
 
-      const { result } = renderHook(() => useSettingsState());
+      const { result } = renderHook(() => useSettingsState())
 
       await act(async () => {
-        await result.current.handleSaveStorageConfig();
-      });
+        await result.current.handleSaveStorageConfig()
+      })
 
-      expect(saveConfig).toHaveBeenCalledWith(loadStats);
-    });
-  });
+      expect(saveConfig).toHaveBeenCalledWith(loadStats)
+    })
+  })
 
   describe('state updates', () => {
     it('should update storage backend', () => {
-      const setStorageBackend = jest.fn();
-      (useStorageConfigHook.useStorageConfig as jest.Mock).mockReturnValue({
+      const setStorageBackend = jest.fn()
+      ;(useStorageConfigHook.useStorageConfig as jest.Mock).mockReturnValue({
         storageBackend: 'indexeddb',
         setStorageBackend,
         envVarSet: false,
         loadConfig: jest.fn(),
         handleSaveStorageConfig: jest.fn(),
-      });
+      })
 
-      const { result } = renderHook(() => useSettingsState());
+      const { result } = renderHook(() => useSettingsState())
 
       act(() => {
-        result.current.setStorageBackend('dbal');
-      });
+        result.current.setStorageBackend('dbal')
+      })
 
-      expect(setStorageBackend).toHaveBeenCalledWith('dbal');
-    });
-  });
+      expect(setStorageBackend).toHaveBeenCalledWith('dbal')
+    })
+  })
 
   describe('format bytes wrapper', () => {
     it('should format bytes correctly', () => {
-      const formatBytes = jest.fn().mockReturnValue('1 KB');
-      (useDatabaseOpsHook.useDatabaseOperations as jest.Mock).mockReturnValue({
+      const formatBytes = jest.fn().mockReturnValue('1 KB')
+      ;(useDatabaseOpsHook.useDatabaseOperations as jest.Mock).mockReturnValue({
         stats: null,
         loading: true,
         schemaHealth: 'unknown',
@@ -222,24 +224,24 @@ describe('useSettingsState Hook', () => {
         handleClear: jest.fn(),
         handleSeed: jest.fn(),
         formatBytes,
-      });
+      })
 
-      const { result } = renderHook(() => useSettingsState());
+      const { result } = renderHook(() => useSettingsState())
 
-      const formatted = result.current.formatBytes(1024);
+      const formatted = result.current.formatBytes(1024)
 
-      expect(formatBytes).toHaveBeenCalledWith(1024);
-      expect(formatted).toBe('1 KB');
-    });
-  });
+      expect(formatBytes).toHaveBeenCalledWith(1024)
+      expect(formatted).toBe('1 KB')
+    })
+  })
 
   describe('complex scenarios', () => {
     it('should handle full settings workflow', async () => {
-      const loadStats = jest.fn();
-      const checkSchemaHealth = jest.fn();
-      const loadConfig = jest.fn();
+      const loadStats = jest.fn()
+      const checkSchemaHealth = jest.fn()
+      const loadConfig = jest.fn()
 
-      (useDatabaseOpsHook.useDatabaseOperations as jest.Mock).mockReturnValue({
+      ;(useDatabaseOpsHook.useDatabaseOperations as jest.Mock).mockReturnValue({
         stats: {
           snippetCount: 10,
           templateCount: 5,
@@ -256,26 +258,26 @@ describe('useSettingsState Hook', () => {
         handleImport: jest.fn(),
         handleClear: jest.fn(),
         handleSeed: jest.fn(),
-        formatBytes: jest.fn((bytes) => `${bytes} B`),
-      });
+        formatBytes: jest.fn(bytes => `${bytes} B`),
+      })
 
-      (useStorageConfigHook.useStorageConfig as jest.Mock).mockReturnValue({
+      ;(useStorageConfigHook.useStorageConfig as jest.Mock).mockReturnValue({
         storageBackend: 'indexeddb',
         setStorageBackend: jest.fn(),
         envVarSet: false,
         loadConfig,
         handleSaveStorageConfig: jest.fn(),
-      });
+      })
 
-      const { result } = renderHook(() => useSettingsState());
+      const { result } = renderHook(() => useSettingsState())
 
       // Verify initialization
-      expect(result.current.stats?.snippetCount).toBe(10);
-      expect(result.current.schemaHealth).toBe('healthy');
+      expect(result.current.stats?.snippetCount).toBe(10)
+      expect(result.current.schemaHealth).toBe('healthy')
 
       // Format bytes
-      const formatted = result.current.formatBytes(1024);
-      expect(formatted).toBe('1024 B');
-    });
-  });
-});
+      const formatted = result.current.formatBytes(1024)
+      expect(formatted).toBe('1024 B')
+    })
+  })
+})

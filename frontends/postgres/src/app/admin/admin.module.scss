@@ -1,0 +1,517 @@
+.adminShell {
+  min-height: 100vh;
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+
+  :global(*) {
+    box-sizing: border-box;
+  }
+
+  :global(body) {
+    margin: 0;
+    padding: 0;
+  }
+
+  :global(.paper) {
+    background: var(--mat-sys-surface-container-low);
+    border: 1px solid var(--mat-sys-outline-variant);
+    border-radius: 16px;
+    box-shadow: var(--mat-sys-level1);
+    overflow: hidden;
+  }
+
+  :global(.paper--outlined) {
+    background: var(--mat-sys-surface);
+    box-shadow: none;
+  }
+
+  :global(.MuiPaper-root) {
+    background-image: none;
+  }
+
+  :global(.MuiAppBar-root) {
+    background-color: var(--mat-sys-surface);
+    background-image: none;
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+    box-shadow: none;
+    z-index: 1201 !important;
+  }
+
+  :global(.MuiDrawer-paper) {
+    background-color: var(--mat-sys-surface-container-low);
+    background-image: none;
+    border-right: 1px solid var(--mat-sys-outline-variant);
+    width: 240px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
+
+  :global(.MuiListItemIcon-root) {
+    color: var(--mat-sys-on-surface-variant);
+    min-width: 40px;
+  }
+
+  :global(.MuiButton-root) {
+    border-radius: 20px;
+    text-transform: none;
+    font-weight: 500;
+  }
+
+  :global(.MuiButton-contained) {
+    background-color: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
+  }
+
+  :global(.MuiButton-contained:hover) {
+    background-color: color-mix(in srgb, var(--mat-sys-primary) 92%, var(--mat-sys-on-primary));
+  }
+
+  :global(.MuiList-root) {
+    padding: 4px 8px;
+  }
+
+  :global(.MuiListItemButton-root) {
+    border-radius: 28px;
+    margin: 1px 0;
+    width: 100%;
+  }
+
+  :global(.MuiListItemButton-root:hover) {
+    background-color: color-mix(in srgb, var(--mat-sys-primary) 8%, transparent);
+  }
+
+  :global(.MuiListItemButton-root.Mui-selected) {
+    background-color: var(--mat-sys-secondary-container);
+    color: var(--mat-sys-on-secondary-container);
+  }
+
+  :global(.MuiListItemButton-root.Mui-selected:hover) {
+    background-color: color-mix(
+      in srgb,
+      var(--mat-sys-secondary-container) 92%,
+      var(--mat-sys-on-secondary-container)
+    );
+  }
+
+  :global(.MuiDivider-root) {
+    border-color: var(--mat-sys-outline-variant);
+  }
+
+  :global(.MuiToolbar-root) {
+    min-height: 56px !important;
+  }
+
+  :global(.mdc-button) {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 0;
+    min-height: 40px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: 20px;
+    background: transparent;
+    color: var(--mat-sys-primary);
+    font: var(--mat-sys-label-large-font);
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+      color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+      box-shadow var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard),
+      border-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+  }
+
+  :global(.mdc-button:hover:not(:disabled)) {
+    background: color-mix(in srgb, var(--mat-sys-primary) 8%, transparent);
+  }
+
+  :global(.mdc-button:focus-visible) {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 2px;
+  }
+
+  :global(.mdc-button:disabled),
+  :global(.mdc-button[aria-disabled='true']) {
+    cursor: not-allowed;
+    color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+  }
+
+  :global(.mat-mdc-button) {
+    background: transparent;
+  }
+
+  :global(.mat-mdc-unelevated-button) {
+    background: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
+    box-shadow: var(--mat-sys-level1);
+  }
+
+  :global(.mat-mdc-unelevated-button:hover:not(:disabled)) {
+    background: color-mix(in srgb, var(--mat-sys-primary) 92%, var(--mat-sys-on-primary));
+    box-shadow: var(--mat-sys-level2);
+  }
+
+  :global(.mat-mdc-outlined-button) {
+    background: var(--mat-sys-surface);
+    color: var(--mat-sys-primary);
+    border: 1px solid var(--mat-sys-outline);
+  }
+
+  :global(.mat-tonal-button) {
+    background: var(--mat-sys-secondary-container);
+    color: var(--mat-sys-on-secondary-container);
+  }
+
+  :global(.mat-mdc-button__label),
+  :global(.mdc-button__label) {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+
+  :global(.mat-icon),
+  :global(.mat-mdc-list-item-icon) {
+    color: currentColor;
+    flex-shrink: 0;
+  }
+
+  :global(.mdc-list),
+  :global(.matList) {
+    margin: 0;
+    padding: 8px;
+    list-style: none;
+  }
+
+  :global(.mdc-list-item) {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 12px;
+    border: 0;
+    border-radius: 14px;
+    background: transparent;
+    color: var(--mat-sys-on-surface-variant);
+    text-align: left;
+    font: var(--mat-sys-body-medium-font);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  :global(.mdc-list-item:hover) {
+    background: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+    color: var(--mat-sys-on-surface);
+  }
+
+  :global(.mdc-list-item--selected),
+  :global(.mdc-list-item--activated) {
+    background: var(--mat-sys-secondary-container);
+    color: var(--mat-sys-on-secondary-container);
+  }
+
+  :global(.mdc-list-item--selected:hover),
+  :global(.mdc-list-item--activated:hover) {
+    background: color-mix(
+      in srgb,
+      var(--mat-sys-secondary-container) 90%,
+      var(--mat-sys-on-secondary-container)
+    );
+  }
+
+  :global(.mdc-list-item__start),
+  :global(.mat-mdc-list-item-icon) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    color: currentColor;
+  }
+
+  :global(.mdc-list-item__content) {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  :global(.mdc-list-item__primary-text) {
+    font: var(--mat-sys-body-medium-font);
+    font-weight: 500;
+    color: inherit;
+  }
+
+  :global(.tableContainer) {
+    width: 100%;
+    overflow: auto;
+  }
+
+  :global(.table) {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    background: var(--mat-sys-surface);
+    font: var(--mat-sys-body-medium-font);
+  }
+
+  :global(.table .cell) {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+    color: var(--mat-sys-on-surface);
+    vertical-align: middle;
+  }
+
+  :global(.table .head .cell) {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--mat-sys-surface-container);
+    color: var(--mat-sys-on-surface-variant);
+    font: var(--mat-sys-label-large-font);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  :global(.table .row:hover) {
+    background: color-mix(in srgb, var(--mat-sys-on-surface) 4%, transparent);
+  }
+
+  :global(.table .row.selected) {
+    background: color-mix(in srgb, var(--mat-sys-primary) 8%, transparent);
+  }
+
+  :global(.table .row:last-child .cell) {
+    border-bottom: none;
+  }
+
+  :global(.table .pagination) {
+    border-top: 1px solid var(--mat-sys-outline-variant);
+    background: var(--mat-sys-surface-container-low);
+  }
+
+  :global(.MuiTableHead-root .MuiTableCell-root) {
+    background-color: var(--mat-sys-surface-container-high);
+    color: var(--mat-sys-on-surface-variant);
+    font: var(--mat-sys-label-large-font);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  :global(.MuiTableCell-root) {
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+    font: var(--mat-sys-body-medium-font);
+    color: var(--mat-sys-on-surface);
+  }
+
+  :global(.MuiInputBase-input) {
+    color: var(--mat-sys-on-surface) !important;
+  }
+
+  :global(.MuiInputBase-input::placeholder) {
+    color: color-mix(in srgb, var(--mat-sys-on-surface-variant) 72%, transparent) !important;
+    opacity: 1 !important;
+  }
+
+  :global(.MuiFormLabel-root),
+  :global(.MuiInputLabel-root) {
+    color: var(--mat-sys-on-surface-variant) !important;
+  }
+
+  :global(.MuiFormLabel-root.Mui-focused),
+  :global(.MuiInputLabel-root.Mui-focused) {
+    color: var(--mat-sys-primary) !important;
+  }
+
+  :global(.input-label),
+  :global(select),
+  :global(.native-select__input) {
+    font-family: inherit !important;
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  :global(.input-label) {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  :global(.input-label__asterisk) {
+    font-family: inherit !important;
+  }
+
+  :global(.MuiSelect-select) {
+    color: var(--mat-sys-on-surface) !important;
+  }
+
+  :global(.MuiSelect-icon) {
+    color: var(--mat-sys-on-surface-variant) !important;
+  }
+
+  :global(.MuiOutlinedInput-notchedOutline) {
+    border-color: var(--mat-sys-outline) !important;
+  }
+
+  :global(.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline) {
+    border-color: var(--mat-sys-primary) !important;
+  }
+
+  :global(.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline) {
+    border-color: var(--mat-sys-primary) !important;
+    border-width: 2px !important;
+  }
+
+  :global(.MuiSvgIcon-root) {
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p {
+    margin-top: 0;
+  }
+
+  h5 {
+    font: var(--mat-sys-title-medium-font);
+    margin-bottom: 8px;
+  }
+
+  h6 {
+    font: var(--mat-sys-title-small-font);
+    margin-bottom: 6px;
+  }
+
+  select {
+    width: 100%;
+    background-color: var(--mat-sys-surface-container-high);
+    color: var(--mat-sys-on-surface);
+    border: 1px solid var(--mat-sys-outline);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-family: inherit;
+    font-size: 0.875rem;
+    line-height: 1.25;
+  }
+
+  select:focus {
+    outline: none;
+    border-color: var(--mat-sys-primary);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--mat-sys-primary) 18%, transparent);
+  }
+
+  h5,
+  h6 {
+    color: var(--mat-sys-on-surface);
+    margin-top: 0;
+  }
+
+  h5 {
+    font: var(--mat-sys-title-medium-font);
+    margin-bottom: 10px;
+  }
+
+  h6 {
+    font: var(--mat-sys-title-small-font);
+    margin-bottom: 8px;
+  }
+
+  :global([class*='matList']),
+  :global([class*='mdc-list']) {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  :global([class*='mat-focus-indicator']) {
+    display: none !important;
+  }
+
+  :global([role='dialog']) input:not([class*='Mui']),
+  :global([role='dialog']) input[class=''] {
+    background-color: var(--mat-sys-surface-container-low) !important;
+    color: var(--mat-sys-on-surface) !important;
+    border-color: var(--mat-sys-outline) !important;
+  }
+
+  :global([role='dialog']) input:not([class*='Mui']):focus {
+    border-color: var(--mat-sys-primary) !important;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--mat-sys-primary) 18%, transparent) !important;
+  }
+
+  :global([role='dialog']) label {
+    color: var(--mat-sys-on-surface-variant) !important;
+  }
+
+  :global([role='dialog']) select {
+    background-color: var(--mat-sys-surface-container-low) !important;
+    color: var(--mat-sys-on-surface) !important;
+    border-color: var(--mat-sys-outline) !important;
+  }
+
+  :global([role='dialog'] button[aria-label='Close dialog']:not([class*='Mui'])) {
+    background-color: transparent !important;
+    border-radius: 50% !important;
+    padding: 0 !important;
+    width: 40px !important;
+    height: 40px !important;
+    color: var(--mat-sys-on-surface-variant) !important;
+  }
+
+  :global([role='dialog'] button[aria-label='Close dialog']:not([class*='Mui']):hover) {
+    background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent) !important;
+  }
+
+  :global(.sql-editor-wrap),
+  .sqlEditorWrap {
+    position: relative;
+  }
+
+  :global(.sql-editor-wrap .sql-pre),
+  :global(.sql-editor-wrap .sql-ta),
+  .sqlEditorWrap :global(.sql-pre),
+  .sqlEditorWrap :global(.sql-ta) {
+    margin: 0;
+    padding: 10px 12px !important;
+    font-family: var(--font-mono) !important;
+    font-size: 0.8125rem !important;
+    line-height: 1.6 !important;
+    white-space: pre !important;
+    tab-size: 2;
+    min-height: 280px;
+    width: 100%;
+    border: 0;
+    outline: 0;
+    box-sizing: border-box;
+    overflow: auto;
+    resize: vertical;
+    color: var(--mat-sys-on-surface);
+  }
+
+  :global(.sql-editor-wrap .sql-pre),
+  .sqlEditorWrap :global(.sql-pre) {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  :global(.sql-editor-wrap .sql-ta),
+  .sqlEditorWrap :global(.sql-ta) {
+    position: relative;
+    background: transparent;
+    color: transparent;
+    caret-color: var(--mat-sys-on-surface);
+  }
+}

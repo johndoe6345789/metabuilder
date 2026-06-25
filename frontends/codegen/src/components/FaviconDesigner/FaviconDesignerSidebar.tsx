@@ -1,4 +1,4 @@
-import { Separator } from '@metabuilder/fakemui/data-display'
+import { Separator } from '@metabuilder/m3/data-display'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { BrushSettingsPanel } from './BrushSettingsPanel'
 import { DesignSettingsPanel } from './DesignSettingsPanel'

@@ -1,0 +1,597 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "category": "Email",
+  "title": "Email Client Components",
+  "description": "Complete Material Design 3 email client UI components library",
+  "stories": [
+    {
+      "name": "AttachmentIcon",
+      "component": "AttachmentIcon",
+      "variations": [
+        {
+          "name": "PDF File",
+          "props": {
+            "filename": "document.pdf",
+            "mimeType": "application/pdf"
+          }
+        },
+        {
+          "name": "Image File",
+          "props": {
+            "filename": "photo.jpg",
+            "mimeType": "image/jpeg"
+          }
+        },
+        {
+          "name": "Video File",
+          "props": {
+            "filename": "video.mp4",
+            "mimeType": "video/mp4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "StarButton",
+      "component": "StarButton",
+      "variations": [
+        {
+          "name": "Unstarred",
+          "props": {
+            "isStarred": false
+          }
+        },
+        {
+          "name": "Starred",
+          "props": {
+            "isStarred": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "MarkAsReadCheckbox",
+      "component": "MarkAsReadCheckbox",
+      "variations": [
+        {
+          "name": "Unread",
+          "props": {
+            "isRead": false
+          }
+        },
+        {
+          "name": "Read",
+          "props": {
+            "isRead": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "EmailAddressInput",
+      "component": "EmailAddressInput",
+      "variations": [
+        {
+          "name": "Single Email",
+          "props": {
+            "placeholder": "user@example.com",
+            "allowMultiple": false
+          }
+        },
+        {
+          "name": "Multiple Recipients",
+          "props": {
+            "placeholder": "email1@example.com, email2@example.com",
+            "allowMultiple": true
+          }
+        },
+        {
+          "name": "With Error",
+          "props": {
+            "error": true,
+            "helperText": "Invalid email format"
+          }
+        }
+      ]
+    },
+    {
+      "name": "RecipientInput",
+      "component": "RecipientInput",
+      "variations": [
+        {
+          "name": "To Field",
+          "props": {
+            "recipientType": "to",
+            "recipients": [
+              "user@example.com"
+            ]
+          }
+        },
+        {
+          "name": "Cc Field",
+          "props": {
+            "recipientType": "cc",
+            "recipients": [
+              "cc@example.com",
+              "cc2@example.com"
+            ]
+          }
+        },
+        {
+          "name": "Bcc Field",
+          "props": {
+            "recipientType": "bcc",
+            "recipients": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "BodyEditor",
+      "component": "BodyEditor",
+      "variations": [
+        {
+          "name": "Plain Text Mode",
+          "props": {
+            "mode": "plain"
+          }
+        },
+        {
+          "name": "HTML Mode",
+          "props": {
+            "mode": "html"
+          }
+        }
+      ]
+    },
+    {
+      "name": "EmailCard",
+      "component": "EmailCard",
+      "variations": [
+        {
+          "name": "Unread Email",
+          "props": {
+            "from": "sender@example.com",
+            "subject": "Important Update",
+            "preview": "This is a preview of the email content that will be shown...",
+            "receivedAt": 1705990800000,
+            "isRead": false,
+            "isStarred": false
+          }
+        },
+        {
+          "name": "Read Email",
+          "props": {
+            "from": "sender@example.com",
+            "subject": "Important Update",
+            "preview": "This is a preview of the email content that will be shown...",
+            "receivedAt": 1705990800000,
+            "isRead": true,
+            "isStarred": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "MessageThread",
+      "component": "MessageThread",
+      "variations": [
+        {
+          "name": "Conversation Thread",
+          "props": {
+            "messages": [
+              {
+                "id": "1",
+                "from": "user1@example.com",
+                "subject": "RE: Project Discussion",
+                "body": "Thanks for your input on the project proposal.",
+                "receivedAt": 1705900000000
+              },
+              {
+                "id": "2",
+                "from": "user2@example.com",
+                "subject": "RE: Project Discussion",
+                "body": "Happy to help! Let me know if you need anything else.",
+                "receivedAt": 1705990800000
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "ComposeWindow",
+      "component": "ComposeWindow",
+      "variations": [
+        {
+          "name": "Empty Compose",
+          "props": {}
+        },
+        {
+          "name": "Draft In Progress",
+          "props": {
+            "to": [
+              "recipient@example.com"
+            ],
+            "subject": "Meeting Tomorrow",
+            "body": "Hi, let's discuss the project tomorrow..."
+          }
+        }
+      ]
+    },
+    {
+      "name": "SignatureCard",
+      "component": "SignatureCard",
+      "variations": [
+        {
+          "name": "Display Mode",
+          "props": {
+            "text": "Best regards,\nJohn Doe\nSoftware Engineer",
+            "editMode": false
+          }
+        },
+        {
+          "name": "Edit Mode",
+          "props": {
+            "text": "Best regards,\nJohn Doe",
+            "editMode": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "AttachmentList",
+      "component": "AttachmentList",
+      "variations": [
+        {
+          "name": "With Attachments",
+          "props": {
+            "attachments": [
+              {
+                "id": "1",
+                "filename": "report.pdf",
+                "mimeType": "application/pdf",
+                "size": 1024000
+              },
+              {
+                "id": "2",
+                "filename": "image.jpg",
+                "mimeType": "image/jpeg",
+                "size": 2048000
+              }
+            ]
+          }
+        },
+        {
+          "name": "No Attachments",
+          "props": {
+            "attachments": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "EmailHeader",
+      "component": "EmailHeader",
+      "variations": [
+        {
+          "name": "Full Header",
+          "props": {
+            "from": "sender@example.com",
+            "to": [
+              "recipient@example.com"
+            ],
+            "cc": [
+              "cc@example.com"
+            ],
+            "subject": "Project Update",
+            "receivedAt": 1705990800000,
+            "isStarred": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "FolderTree",
+      "component": "FolderTree",
+      "variations": [
+        {
+          "name": "Folder Hierarchy",
+          "props": {
+            "folders": [
+              {
+                "id": "inbox",
+                "name": "Inbox",
+                "unreadCount": 5,
+                "type": "inbox"
+              },
+              {
+                "id": "sent",
+                "name": "Sent",
+                "type": "sent"
+              },
+              {
+                "id": "drafts",
+                "name": "Drafts",
+                "unreadCount": 2,
+                "type": "drafts"
+              },
+              {
+                "id": "archive",
+                "name": "Archive",
+                "type": "archive"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "ThreadList",
+      "component": "ThreadList",
+      "variations": [
+        {
+          "name": "Email List",
+          "props": {
+            "emails": [
+              {
+                "from": "user1@example.com",
+                "subject": "Meeting Notes",
+                "preview": "Here are the notes from today's meeting...",
+                "receivedAt": 1705990800000,
+                "isRead": false,
+                "isStarred": true
+              },
+              {
+                "from": "user2@example.com",
+                "subject": "Project Update",
+                "preview": "The project is on track for Q1 launch...",
+                "receivedAt": 1705900000000,
+                "isRead": true,
+                "isStarred": false
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "SyncStatusBadge",
+      "component": "SyncStatusBadge",
+      "variations": [
+        {
+          "name": "Idle",
+          "props": {
+            "status": "idle"
+          }
+        },
+        {
+          "name": "Syncing",
+          "props": {
+            "status": "syncing"
+          }
+        },
+        {
+          "name": "Synced",
+          "props": {
+            "status": "synced",
+            "lastSyncAt": 1705990800000
+          }
+        },
+        {
+          "name": "Error",
+          "props": {
+            "status": "error",
+            "errorMessage": "Connection timeout"
+          }
+        }
+      ]
+    },
+    {
+      "name": "SyncProgress",
+      "component": "SyncProgress",
+      "variations": [
+        {
+          "name": "In Progress",
+          "props": {
+            "progress": 45,
+            "syncedMessages": 45,
+            "totalMessages": 100,
+            "isVisible": true
+          }
+        },
+        {
+          "name": "Completed",
+          "props": {
+            "progress": 100,
+            "syncedMessages": 100,
+            "totalMessages": 100,
+            "isVisible": true
+          }
+        },
+        {
+          "name": "Hidden",
+          "props": {
+            "progress": 0,
+            "isVisible": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "MailboxLayout",
+      "component": "MailboxLayout",
+      "variations": [
+        {
+          "name": "Full Mailbox",
+          "props": {
+            "header": "Email Client",
+            "sidebar": "Folder navigation",
+            "main": "Email list",
+            "detail": "Email detail view"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ComposerLayout",
+      "component": "ComposerLayout",
+      "variations": [
+        {
+          "name": "With Preview",
+          "props": {
+            "form": "Compose form",
+            "preview": "Email preview pane"
+          }
+        }
+      ]
+    },
+    {
+      "name": "SettingsLayout",
+      "component": "SettingsLayout",
+      "variations": [
+        {
+          "name": "Settings Tabs",
+          "props": {
+            "sections": [
+              {
+                "id": "accounts",
+                "label": "Accounts",
+                "content": "Account settings"
+              },
+              {
+                "id": "filters",
+                "label": "Filters",
+                "content": "Filter rules"
+              },
+              {
+                "id": "notifications",
+                "label": "Notifications",
+                "content": "Notification preferences"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "AccountTabs",
+      "component": "AccountTabs",
+      "variations": [
+        {
+          "name": "Multiple Accounts",
+          "props": {
+            "accounts": [
+              {
+                "id": "1",
+                "accountName": "Work",
+                "emailAddress": "work@company.com",
+                "unreadCount": 5
+              },
+              {
+                "id": "2",
+                "accountName": "Personal",
+                "emailAddress": "personal@gmail.com",
+                "unreadCount": 0
+              },
+              {
+                "id": "3",
+                "accountName": "Projects",
+                "emailAddress": "projects@metabuilder.dev",
+                "unreadCount": 12
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "FolderNavigation",
+      "component": "FolderNavigation",
+      "variations": [
+        {
+          "name": "Folder Menu",
+          "props": {
+            "items": [
+              {
+                "id": "inbox",
+                "label": "Inbox",
+                "icon": "📥",
+                "unreadCount": 5,
+                "isActive": true
+              },
+              {
+                "id": "sent",
+                "label": "Sent",
+                "icon": "📤",
+                "isActive": false
+              },
+              {
+                "id": "drafts",
+                "label": "Drafts",
+                "icon": "📝",
+                "unreadCount": 2,
+                "isActive": false
+              },
+              {
+                "id": "archive",
+                "label": "Archive",
+                "icon": "📦",
+                "isActive": false
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "contextVariants": [
+    {
+      "name": "Light Theme",
+      "theme": "light",
+      "description": "Material Design 3 Light theme"
+    },
+    {
+      "name": "Dark Theme",
+      "theme": "dark",
+      "description": "Material Design 3 Dark theme"
+    }
+  ],
+  "defaultContext": {
+    "theme": "light",
+    "layout": "desktop"
+  },
+  "argTypes": {
+    "isRead": {
+      "control": "boolean"
+    },
+    "isStarred": {
+      "control": "boolean"
+    },
+    "status": {
+      "control": "select",
+      "options": [
+        "idle",
+        "syncing",
+        "synced",
+        "error"
+      ]
+    },
+    "mode": {
+      "control": "select",
+      "options": [
+        "plain",
+        "html"
+      ]
+    },
+    "recipientType": {
+      "control": "select",
+      "options": [
+        "to",
+        "cc",
+        "bcc"
+      ]
+    }
+  }
+}

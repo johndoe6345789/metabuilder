@@ -9,16 +9,21 @@
   },
 
   "definitions": {
-    "base_build_order": ["apt", "conan-deps", "android-sdk", "node-deps", "pip-deps", "devcontainer"],
+    "base_build_order": ["apt", "conan-cli", "conan-media", "conan-dbal", "conan-qt6", "conan-gameengine", "android-sdk", "node-deps", "postgres-deps", "pip-deps", "devcontainer"],
     "stack_commands": ["up", "start", "down", "stop", "build", "restart", "logs", "ps", "status", "clean"],
 
     "base_images": {
-      "apt":          { "dockerfile": "Dockerfile.apt",          "tag": "metabuilder/base-apt:latest" },
-      "conan-deps":   { "dockerfile": "Dockerfile.conan-deps",   "tag": "metabuilder/base-conan-deps:latest" },
-      "node-deps":    { "dockerfile": "Dockerfile.node-deps",    "tag": "metabuilder/base-node-deps:latest" },
-      "pip-deps":     { "dockerfile": "Dockerfile.pip-deps",     "tag": "metabuilder/base-pip-deps:latest" },
-      "android-sdk":  { "dockerfile": "Dockerfile.android-sdk",  "tag": "metabuilder/base-android-sdk:latest", "context": "base-images" },
-      "devcontainer": { "dockerfile": "Dockerfile.devcontainer", "tag": "metabuilder/devcontainer:latest" }
+      "apt":              { "dockerfile": "Dockerfile.apt",              "tag": "metabuilder/base-apt:latest" },
+      "conan-cli":        { "dockerfile": "Dockerfile.conan-cli",        "tag": "metabuilder/base-conan-cli:latest" },
+      "conan-media":      { "dockerfile": "Dockerfile.conan-media",      "tag": "metabuilder/base-conan-media:latest" },
+      "conan-dbal":       { "dockerfile": "Dockerfile.conan-dbal",       "tag": "metabuilder/base-conan-dbal:latest" },
+      "conan-qt6":        { "dockerfile": "Dockerfile.conan-qt6",        "tag": "metabuilder/base-conan-qt6:latest" },
+      "conan-gameengine": { "dockerfile": "Dockerfile.conan-gameengine", "tag": "metabuilder/base-conan-gameengine:latest" },
+      "node-deps":        { "dockerfile": "Dockerfile.node-deps",        "tag": "metabuilder/base-node-deps:latest" },
+      "postgres-deps":    { "dockerfile": "Dockerfile.node-deps-postgres", "tag": "metabuilder/base-postgres-deps:latest" },
+      "pip-deps":         { "dockerfile": "Dockerfile.pip-deps",         "tag": "metabuilder/base-pip-deps:latest" },
+      "android-sdk":      { "dockerfile": "Dockerfile.android-sdk",      "tag": "metabuilder/base-android-sdk:latest", "context": "base-images" },
+      "devcontainer":     { "dockerfile": "Dockerfile.devcontainer",     "tag": "metabuilder/devcontainer:latest" }
     },
 
     "nexus_images": {
@@ -26,31 +31,36 @@
         { "local": "metabuilder/base-apt:latest",        "name": "base-apt",        "size": "2.8GB" },
         { "local": "metabuilder/base-node-deps:latest",  "name": "base-node-deps",  "size": "5.5GB" },
         { "local": "metabuilder/base-pip-deps:latest",   "name": "base-pip-deps",   "size": "1.4GB" },
-        { "local": "metabuilder/base-android-sdk:latest", "name": "base-android-sdk", "size": "6.1GB" }
+        { "local": "metabuilder/base-android-sdk:latest", "name": "base-android-sdk", "size": "6.1GB" },
+        { "local": "metabuilder/base-conan-cli:latest",    "name": "base-conan-cli",    "size": "4GB" },
+        { "local": "metabuilder/base-conan-media:latest", "name": "base-conan-media",  "size": "5GB" },
+        { "local": "metabuilder/base-postgres-deps:latest", "name": "base-postgres-deps", "size": "6GB" }
       ],
       "apps": [
-        { "local": "deployment-dbal-init:latest",          "name": "dbal-init",          "size": "12MB" },
-        { "local": "deployment-storybook:latest",          "name": "storybook",          "size": "112MB" },
-        { "local": "deployment-nginx:latest",              "name": "nginx",              "size": "92MB" },
-        { "local": "deployment-nginx-stream:latest",       "name": "nginx-stream",       "size": "92MB" },
-        { "local": "deployment-pastebin-backend:latest",   "name": "pastebin-backend",   "size": "236MB" },
-        { "local": "deployment-emailclient-app:latest",    "name": "emailclient",        "size": "350MB" },
-        { "local": "deployment-email-service:latest",      "name": "email-service",      "size": "388MB" },
-        { "local": "deployment-exploded-diagrams:latest",  "name": "exploded-diagrams",  "size": "315MB" },
-        { "local": "deployment-pastebin:latest",           "name": "pastebin",           "size": "382MB" },
-        { "local": "deployment-frontend-app:latest",       "name": "frontend-app",       "size": "361MB" },
-        { "local": "deployment-workflowui:latest",         "name": "workflowui",         "size": "542MB" },
-        { "local": "deployment-postgres-dashboard:latest", "name": "postgres-dashboard", "size": "508MB" },
-        { "local": "deployment-smtp-relay:latest",         "name": "smtp-relay",         "size": "302MB" },
-        { "local": "deployment-dbal:latest",               "name": "dbal",               "size": "3.0GB" },
-        { "local": "deployment-codegen:latest",            "name": "codegen",            "size": "5.6GB" }
+        { "local": "metabuilder-deploy-dbal-init:latest",          "name": "dbal-init",          "size": "12MB" },
+        { "local": "metabuilder-deploy-storybook:latest",          "name": "storybook",          "size": "112MB" },
+        { "local": "metabuilder-deploy-nginx:latest",              "name": "nginx",              "size": "92MB" },
+        { "local": "metabuilder-deploy-nginx-stream:latest",       "name": "nginx-stream",       "size": "92MB" },
+        { "local": "metabuilder-deploy-pastebin-backend:latest",   "name": "pastebin-backend",   "size": "236MB" },
+        { "local": "metabuilder-deploy-emailclient-app:latest",    "name": "emailclient-app",    "size": "350MB" },
+        { "local": "metabuilder-deploy-email-service:latest",      "name": "email-service",      "size": "388MB" },
+        { "local": "metabuilder-deploy-exploded-diagrams:latest",  "name": "exploded-diagrams",  "size": "315MB" },
+        { "local": "metabuilder-deploy-pastebin:latest",           "name": "pastebin",           "size": "382MB" },
+        { "local": "metabuilder-deploy-frontend-app:latest",       "name": "frontend-app",       "size": "361MB" },
+        { "local": "metabuilder-deploy-workflowui:latest",         "name": "workflowui",         "size": "542MB" },
+        { "local": "metabuilder-deploy-postgres-dashboard:latest", "name": "postgres-dashboard", "size": "508MB" },
+        { "local": "metabuilder-deploy-smtp-relay:latest",         "name": "smtp-relay",         "size": "302MB" },
+        { "local": "metabuilder-deploy-dbal:latest",               "name": "dbal",               "size": "3.0GB" },
+        { "local": "metabuilder-deploy-codegen:latest",            "name": "codegen",            "size": "5.6GB" }
       ],
       "heavy": [
-        { "local": "metabuilder/base-conan-deps:latest", "name": "base-conan-deps", "size": "32GB" },
-        { "local": "metabuilder/devcontainer:latest",    "name": "devcontainer",    "size": "41GB" }
+        { "local": "metabuilder/base-conan-dbal:latest",       "name": "base-conan-dbal",       "size": "8GB" },
+        { "local": "metabuilder/base-conan-qt6:latest",        "name": "base-conan-qt6",        "size": "14GB" },
+        { "local": "metabuilder/base-conan-gameengine:latest", "name": "base-conan-gameengine", "size": "8GB" },
+        { "local": "metabuilder/devcontainer:latest",          "name": "devcontainer",          "size": "41GB" }
       ],
       "heavy_apps": [
-        { "local": "deployment-media-daemon:latest", "name": "media-daemon", "size": "3.5GB" }
+        { "local": "metabuilder-deploy-media-daemon:latest", "name": "media-daemon", "size": "3.5GB" }
       ]
     },
 
@@ -134,7 +144,8 @@
         { "name": "command",      "nargs": "?", "default": "up", "help": "Stack command (default: up)" },
         { "name": "--monitoring", "action": "store_true",         "help": "Include monitoring services" },
         { "name": "--media",      "action": "store_true",         "help": "Include media services" },
-        { "name": "--all",        "action": "store_true", "dest": "all_profiles", "help": "Include all profiles" }
+        { "name": "--all",        "action": "store_true", "dest": "all_profiles", "help": "Include all profiles" },
+        { "name": "--dev",        "action": "store_true",         "help": "Use dev mode (next dev --turbopack) for all frontends" }
       ]
     },
     "release": {
@@ -168,7 +179,18 @@
           "help": "Push all images to Nexus with :main + :latest tags",
           "module": "cli.nexus_populate",
           "arguments": [
-            { "name": "--skip-heavy", "action": "store_true", "help": "Skip conan-deps, devcontainer, media-daemon" }
+            { "name": "--skip-heavy", "action": "store_true", "help": "Skip the heavy conan bases, devcontainer, media-daemon" }
+          ]
+        },
+        "pull": {
+          "help": "Pull app images from Nexus and retag to local deployment-<svc> names (hydrate for stack up)",
+          "module": "cli.nexus_pull",
+          "arguments": [
+            { "name": "--registry", "default": "localhost:5001", "help": "Nexus docker registry (default: localhost:5001)" },
+            { "name": "--tag", "default": "latest", "help": "Image tag to pull (default: latest)" },
+            { "name": "--apps", "nargs": "*", "help": "Only hydrate these app names (default: all)" },
+            { "name": "--include-base", "action": "store_true", "help": "Also hydrate base images" },
+            { "name": "--skip-heavy", "action": "store_true", "help": "Skip heavy_apps (and heavy bases)" }
           ]
         }
       }

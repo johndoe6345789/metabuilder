@@ -1,10 +1,8 @@
 'use client'
 
-import { useEffect } from 'react'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
-import { Box, IconButton, Typography } from '@metabuilder/fakemui'
-import { useUI, useResponsiveSidebar } from '@metabuilder/hooks'
+import { Box, IconButton, Typography } from
+  '@metabuilder/m3'
 import styles from '@metabuilder/scss/atoms/layout.module.scss'
 import navData from '@/data/navigation.json'
 import {
@@ -13,92 +11,94 @@ import {
 } from '@/lib/json-ui/json-components'
 import { Toaster } from '@/components/ui/sonner'
 import pkg from '../../../package.json'
-import { useAppDispatch, useAppSelector } from '@/store'
-import { updateSettings } from '@/store/slices/settingsSlice'
-import { setLocale, fetchTranslations } from '@/store/slices/translationsSlice'
-import { setTheme } from '@metabuilder/redux-slices/uiSlice'
-import { fetchFromDBAL } from '@/store/middleware/dbalSync'
-import { supportedLocales, localeNames } from '@metabuilder/translations'
+import { localeNames } from '@metabuilder/translations'
+import { useMainLayout } from './hooks/useMainLayout'
 
-export default function MainLayout({ children }: { children: React.ReactNode }) {
-  const { theme, sidebarOpen, setSidebar, toggleTheme } = useUI()
-  const { isMobile } = useResponsiveSidebar(sidebarOpen, setSidebar)
-  const pathname = usePathname()
-  const router = useRouter()
-  const dispatch = useAppDispatch()
-  const locale = useAppSelector((state) => state.translations.locale)
-
-  // Restore theme + locale from DBAL on mount (cross-device persistence)
-  useEffect(() => {
-    fetchFromDBAL('settings', 'app').then((data) => {
-      if (!data) return
-      if (data.theme) dispatch(setTheme(data.theme))
-      if (data.locale) {
-        dispatch(setLocale(data.locale))
-        dispatch(fetchTranslations(data.locale) as any)
-      }
-    })
-  }, [dispatch])
-
-  const handleToggleTheme = () => {
-    const nextTheme = theme === 'light' ? 'dark' : 'light'
-    toggleTheme()
-    dispatch(updateSettings({ theme: nextTheme }))
-  }
-
-  const handleCycleLocale = () => {
-    const idx = supportedLocales.indexOf(locale)
-    const nextLocale = supportedLocales[(idx + 1) % supportedLocales.length]
-    dispatch(setLocale(nextLocale))
-    dispatch(updateSettings({ locale: nextLocale }))
-    dispatch(fetchTranslations(nextLocale) as any)
-  }
-
-  const handleNavigate = (page: string) => {
-    const routeMap: Record<string, string> = {
-      dashboard: '/codegen',
-      code: '/codegen/code',
-      models: '/codegen/models',
-      components: '/codegen/components',
-      'component-trees': '/codegen/component-trees',
-      workflows: '/codegen/workflows',
-      lambdas: '/codegen/lambdas',
-      database: '/codegen/database',
-    }
-    router.push(routeMap[page] || `/codegen/${page}`)
-  }
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme)
-  }, [theme])
-
-  const isActive = (href: string) => {
-    if (href === '/') return pathname === '/'
-    return pathname.startsWith(href)
-  }
+export default function MainLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const {
+    theme,
+    locale,
+    sidebarOpen,
+    setSidebar,
+    isMobile,
+    handleToggleTheme,
+    handleCycleLocale,
+    handleNavigate,
+    isActive,
+  } = useMainLayout()
 
   const sidebarContent = (
     <>
-      <Box className={styles.sidebarHeader} data-testid="sidebar-header">
-        <Typography variant="subtitle1" className={styles.sidebarTitle}>Navigation</Typography>
+      <Box
+        className={styles.sidebarHeader}
+        data-testid="sidebar-header"
+      >
+        <Typography
+          variant="subtitle1"
+          className={styles.sidebarTitle}
+        >
+          Navigation
+        </Typography>
       </Box>
-      <nav className={styles.sidebarContent} aria-label="Main navigation" data-testid="main-nav">
+      <nav
+        className={styles.sidebarContent}
+        aria-label="Main navigation"
+        data-testid="main-nav"
+      >
         {navData.sections.map((section) => (
-          <div key={section.title} className={styles.navSection} role="group" aria-label={section.title}>
-            <h3 className={styles.navSectionTitle} id={`nav-section-${section.title.toLowerCase()}`}>
+          <div
+            key={section.title}
+            className={styles.navSection}
+            role="group"
+            aria-label={section.title}
+          >
+            <h3
+              className={styles.navSectionTitle}
+              id={`nav-section-${section.title.toLowerCase()}`}
+            >
               {section.title}
             </h3>
-            <ul className={styles.navList} aria-labelledby={`nav-section-${section.title.toLowerCase()}`}>
+            <ul
+              className={styles.navList}
+              aria-labelledby={
+                `nav-section-${section.title.toLowerCase()}`
+              }
+            >
               {section.items.map((item) => (
-                <li key={item.href} className={styles.navItem}>
+                <li
+                  key={item.href}
+                  className={styles.navItem}
+                >
                   <Link
                     href={item.href as any}
-                    className={`${styles.navLink} ${isActive(item.href) ? styles.navLinkActive : ''}`}
-                    aria-current={isActive(item.href) ? 'page' : undefined}
-                    data-testid={`nav-link-${item.href.replace(/^\//, '') || 'home'}`}
+                    className={
+                      `${styles.navLink} ` +
+                      `${isActive(item.href) ? styles.navLinkActive : ''}`
+                    }
+                    aria-current={
+                      isActive(item.href)
+                        ? 'page'
+                        : undefined
+                    }
+                    data-testid={
+                      `nav-link-${item.href.replace(/^\//, '') || 'home'}`
+                    }
                   >
-                    <span className={`${styles.navIcon} material-symbols-outlined`} aria-hidden="true">{item.icon}</span>
-                    <span className={styles.navLabel}>{item.label}</span>
+                    <span
+                      className={
+                        `${styles.navIcon} material-symbols-outlined`
+                      }
+                      aria-hidden="true"
+                    >
+                      {item.icon}
+                    </span>
+                    <span className={styles.navLabel}>
+                      {item.label}
+                    </span>
                   </Link>
                 </li>
               ))}
@@ -110,9 +110,16 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   )
 
   return (
-    <div className={styles.layout} data-testid="app-layout">
-      {/* Header */}
-      <Box component="header" className={styles.appBar} role="banner" data-testid="app-header">
+    <div
+      className={styles.layout}
+      data-testid="app-layout"
+    >
+      <Box
+        component="header"
+        className={styles.appBar}
+        role="banner"
+        data-testid="app-header"
+      >
         <Box className={styles.appBarLeft}>
           <IconButton
             edge="start"
@@ -123,11 +130,32 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
             aria-controls="sidebar"
             data-testid="toggle-sidebar"
           >
-            <span className="material-symbols-outlined" aria-hidden="true">menu</span>
+            <span
+              className="material-symbols-outlined"
+              aria-hidden="true"
+            >
+              menu
+            </span>
           </IconButton>
-          <Box className={styles.appBarBrand} data-testid="app-brand">
-            <span className="material-symbols-outlined" aria-hidden="true" style={{ color: 'var(--mat-sys-primary)', fontSize: 28 }}>code</span>
-            <Typography variant="h6" component="h1" className={styles.appBarTitle}>
+          <Box
+            className={styles.appBarBrand}
+            data-testid="app-brand"
+          >
+            <span
+              className="material-symbols-outlined"
+              aria-hidden="true"
+              style={{
+                color: 'var(--mat-sys-primary)',
+                fontSize: 28,
+              }}
+            >
+              code
+            </span>
+            <Typography
+              variant="h6"
+              component="h1"
+              className={styles.appBarTitle}
+            >
               CodeForge
             </Typography>
             <span
@@ -149,7 +177,15 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
             </span>
           </Box>
         </Box>
-        <Box className={styles.appBarActions} data-testid="header-actions" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <Box
+          className={styles.appBarActions}
+          data-testid="header-actions"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+          }}
+        >
           <MetabuilderWidgetProjectManager />
           <MetabuilderWidgetHeaderSearch
             onNavigate={handleNavigate}
@@ -157,30 +193,49 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           <IconButton
             color="inherit"
             onClick={handleCycleLocale}
-            aria-label={`Language: ${(localeNames as Record<string, string>)[locale] ?? locale}`}
+            aria-label={
+              `Language: ` +
+              `${(localeNames as Record<string, string>)[locale] ?? locale}`
+            }
             data-testid="toggle-language"
-            title={(localeNames as Record<string, string>)[locale] ?? locale}
+            title={
+              (localeNames as Record<string, string>)[locale] ??
+              locale
+            }
           >
-            <span style={{ fontSize: '12px', fontWeight: 700, lineHeight: 1 }} aria-hidden="true">
+            <span
+              style={{
+                fontSize: '12px',
+                fontWeight: 700,
+                lineHeight: 1,
+              }}
+              aria-hidden="true"
+            >
               {locale.toUpperCase()}
             </span>
           </IconButton>
           <IconButton
             color="inherit"
             onClick={handleToggleTheme}
-            aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+            aria-label={
+              `Switch to ${theme === 'light' ? 'dark' : 'light'} mode`
+            }
             data-testid="toggle-theme"
           >
-            <span className="material-symbols-outlined" aria-hidden="true">
+            <span
+              className="material-symbols-outlined"
+              aria-hidden="true"
+            >
               {theme === 'light' ? 'dark_mode' : 'light_mode'}
             </span>
           </IconButton>
         </Box>
       </Box>
 
-      {/* Content area */}
-      <div className={styles.content} data-testid="app-content">
-        {/* Mobile backdrop */}
+      <div
+        className={styles.content}
+        data-testid="app-content"
+      >
         {isMobile && sidebarOpen && (
           <div
             className={styles.drawerBackdrop}
@@ -190,11 +245,13 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           />
         )}
 
-        {/* Sidebar */}
         {isMobile ? (
           <aside
             id="sidebar"
-            className={`${styles.drawerMobile} ${styles.sidebar} ${sidebarOpen ? styles.drawerMobileOpen : ''}`}
+            className={
+              `${styles.drawerMobile} ${styles.sidebar} ` +
+              `${sidebarOpen ? styles.drawerMobileOpen : ''}`
+            }
             aria-label="Navigation sidebar"
             aria-hidden={!sidebarOpen}
             data-testid="sidebar-mobile"
@@ -204,7 +261,10 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         ) : (
           <aside
             id="sidebar"
-            className={`${styles.sidebar} ${!sidebarOpen ? styles.sidebarHidden : ''}`}
+            className={
+              `${styles.sidebar} ` +
+              `${!sidebarOpen ? styles.sidebarHidden : ''}`
+            }
             aria-label="Navigation sidebar"
             data-testid="sidebar"
           >
@@ -212,8 +272,11 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           </aside>
         )}
 
-        {/* Main content */}
-        <main className={styles.main} role="main" data-testid="main-content">
+        <main
+          className={styles.main}
+          role="main"
+          data-testid="main-content"
+        >
           {children}
         </main>
       </div>

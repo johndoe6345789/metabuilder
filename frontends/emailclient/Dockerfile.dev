@@ -1,0 +1,59 @@
+# Dev-mode Dockerfile for emailclient — source baked in, runs next dev --turbopack.
+# Context: monorepo root (..)
+# Requires: docker build -f deployment/base-images/Dockerfile.node-deps \
+#           -t metabuilder/base-node-deps:latest .
+ARG BASE_REGISTRY=metabuilder
+FROM ${BASE_REGISTRY}/base-node-deps:latest
+
+COPY libraries/hooks/ ./libraries/hooks/
+COPY libraries/icons/ ./libraries/icons/
+COPY libraries/scss/ ./libraries/scss/
+COPY libraries/components/ ./libraries/components/
+COPY libraries/types/ ./libraries/types/
+COPY libraries/interfaces/ ./libraries/interfaces/
+COPY libraries/translations/ ./libraries/translations/
+
+COPY libraries/redux/core/ ./libraries/redux/core/
+COPY libraries/redux/slices/ ./libraries/redux/slices/
+COPY libraries/redux/hooks/ ./libraries/redux/hooks/
+COPY libraries/redux/adapters/ ./libraries/redux/adapters/
+COPY libraries/redux/api-clients/ ./libraries/redux/api-clients/
+COPY libraries/redux/core-hooks/ ./libraries/redux/core-hooks/
+COPY libraries/redux/email/ ./libraries/redux/email/
+COPY libraries/redux/hooks-async/ ./libraries/redux/hooks-async/
+COPY libraries/redux/hooks-auth/ ./libraries/redux/hooks-auth/
+COPY libraries/redux/hooks-canvas/ ./libraries/redux/hooks-canvas/
+COPY libraries/redux/hooks-data/ ./libraries/redux/hooks-data/
+COPY libraries/redux/hooks-forms/ ./libraries/redux/hooks-forms/
+COPY libraries/redux/hooks-utils/ ./libraries/redux/hooks-utils/
+COPY libraries/redux/middleware/ ./libraries/redux/middleware/
+COPY libraries/redux/persist/ ./libraries/redux/persist/
+COPY libraries/redux/services/ ./libraries/redux/services/
+COPY libraries/redux/timing-utils/ ./libraries/redux/timing-utils/
+
+COPY libraries/workflow/ ./libraries/workflow/
+COPY frontends/emailclient/ ./frontends/emailclient/
+
+RUN npm install --ignore-scripts --legacy-peer-deps
+
+RUN for ws in libraries/redux/core libraries/redux/slices \
+    libraries/redux/hooks libraries/redux/adapters \
+    libraries/redux/hooks-async libraries/redux/api-clients \
+    libraries/redux/persist libraries/components libraries/workflow; do \
+    npm run build -w "$ws" --if-present 2>&1 || { echo "ERROR: $ws build failed"; exit 1; }; \
+done
+
+RUN rm -rf frontends/emailclient/.next
+
+ENV NODE_ENV=development
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+ENV NEXT_TELEMETRY_DISABLED=1
+
+EXPOSE 3000
+
+HEALTHCHECK --interval=15s --timeout=5s --start-period=120s --retries=5 \
+    CMD wget --quiet --tries=1 --spider http://127.0.0.1:3000/emailclient || exit 1
+
+WORKDIR /app/frontends/emailclient
+CMD ["npx", "next", "dev", "--turbopack", "-p", "3000"]

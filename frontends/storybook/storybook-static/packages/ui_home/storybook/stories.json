@@ -1,0 +1,178 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Home Page Components",
+  "description": "Landing page with hero, features, about, and contact sections",
+  "stories": [
+    {
+      "name": "HomePage",
+      "render": "home_ui",
+      "description": "Complete home page with all sections",
+      "type": "function"
+    },
+    {
+      "name": "HeroSection",
+      "render": "hero_section",
+      "description": "Hero section with gradient title and CTAs",
+      "args": {
+        "title": "Build Anything, Visually",
+        "subtitle": "A 6-level meta-architecture for creating entire applications through visual workflows, schema editors, and embedded scripting."
+      }
+    },
+    {
+      "name": "FeaturesSection",
+      "render": "features_section",
+      "description": "Features grid showcasing the 6 levels",
+      "args": {
+        "title": "Six Levels of Power"
+      }
+    },
+    {
+      "name": "FeatureCardLevel1",
+      "render": "feature_card_1",
+      "description": "Public Website feature card"
+    },
+    {
+      "name": "FeatureCardLevel2",
+      "render": "feature_card_2",
+      "description": "User Area feature card"
+    },
+    {
+      "name": "FeatureCardLevel3",
+      "render": "feature_card_3",
+      "description": "Moderator Panel feature card"
+    },
+    {
+      "name": "FeatureCardLevel4",
+      "render": "feature_card_4",
+      "description": "Admin Panel feature card"
+    },
+    {
+      "name": "FeatureCardLevel5",
+      "render": "feature_card_5",
+      "description": "God-Tier Builder feature card"
+    },
+    {
+      "name": "FeatureCardLevel6",
+      "render": "feature_card_6",
+      "description": "Super God Panel feature card with NEW badge"
+    },
+    {
+      "name": "AboutSection",
+      "render": "about_section",
+      "description": "About MetaBuilder section"
+    },
+    {
+      "name": "ContactSection",
+      "render": "contact_section",
+      "description": "Contact form section"
+    }
+  ],
+  "renders": {
+    "home_ui": {
+      "description": "Complete home page layout",
+      "featured": true
+    },
+    "hero_section": {
+      "description": "Hero section with gradient effects"
+    },
+    "features_section": {
+      "description": "Six levels feature grid"
+    },
+    "feature_card_1": {
+      "description": "Level 1 feature card"
+    },
+    "feature_card_2": {
+      "description": "Level 2 feature card"
+    },
+    "feature_card_3": {
+      "description": "Level 3 feature card"
+    },
+    "feature_card_4": {
+      "description": "Level 4 feature card"
+    },
+    "feature_card_5": {
+      "description": "Level 5 feature card"
+    },
+    "feature_card_6": {
+      "description": "Level 6 feature card"
+    },
+    "about_section": {
+      "description": "About section"
+    },
+    "contact_section": {
+      "description": "Contact form"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "public-visitor",
+      "username": "visitor",
+      "level": 1,
+      "email": null
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "MetaBuilder Demo"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Public Visitor",
+      "description": "Unauthenticated public visitor",
+      "context": {
+        "user": {
+          "username": "visitor",
+          "level": 1
+        }
+      }
+    },
+    {
+      "name": "Authenticated User",
+      "description": "Logged in user with Level 2 access",
+      "context": {
+        "user": {
+          "username": "user",
+          "level": 2
+        }
+      }
+    },
+    {
+      "name": "Admin",
+      "description": "Admin user with Level 4 access",
+      "context": {
+        "user": {
+          "username": "admin",
+          "level": 4
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": [
+      "home_ui",
+      "hero_section",
+      "features_section",
+      "feature_card_1",
+      "feature_card_2",
+      "feature_card_3",
+      "feature_card_4",
+      "feature_card_5",
+      "feature_card_6",
+      "about_section",
+      "contact_section"
+    ],
+    "ignoredScripts": ["tests", "navigate"]
+  },
+  "parameters": {
+    "layout": "fullscreen",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#ffffff" },
+        { "name": "dark", "value": "#1a1a1a" },
+        { "name": "gradient", "value": "linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%)" }
+      ]
+    }
+  }
+}

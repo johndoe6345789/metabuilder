@@ -4,8 +4,82 @@
 .page {
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - 140px);
-  overflow-x: hidden;
+  flex: 1;
+  min-height: 0;
+  // Fills the viewport by default (work area is flex:1) → nothing scrolls.
+  overflow: hidden;
+}
+
+// IDE dragged taller than the viewport: size to content and let the document
+// (window) scroll instead of clipping — the window scrollbar stays reachable
+// even over the editor, which would otherwise eat an inner scroll.
+.pageGrown {
+  flex: 1 0 auto;
+  min-height: auto;
+  overflow: visible;
+}
+
+// While dragging the IDE resizer: show the cursor everywhere and stop the
+// editor surface from swallowing the mousemove stream.
+.pageResizing {
+  cursor: ns-resize;
+  user-select: none;
+
+  .workArea {
+    pointer-events: none;
+  }
+}
+
+// Drag handle along the IDE's bottom edge — grow the whole work area.
+.ideResizer {
+  flex-shrink: 0;
+  height: 8px;
+  cursor: ns-resize;
+  position: relative;
+  background: var(--mat-sys-surface-container);
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  touch-action: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 46px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--mat-sys-outline);
+  }
+
+  &:hover,
+  &.ideResizerActive {
+    background: var(--mat-sys-primary);
+  }
+  &:hover::after,
+  &.ideResizerActive::after {
+    background: var(--mat-sys-on-primary);
+  }
+}
+
+.maximizeBtn {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 6px;
+  background: none;
+  color: var(--mat-sys-on-surface-variant);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+
+  &:hover {
+    background: var(--mat-sys-surface-container-high);
+    color: var(--mat-sys-on-surface);
+  }
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -168,6 +242,22 @@
       cursor: not-allowed;
     }
   }
+
+  // Debug button — secondary/purple accent
+  &.toolBtnDebug {
+    color: var(--mat-sys-secondary);
+    border-color: color-mix(in srgb, var(--mat-sys-secondary) 30%, transparent);
+
+    &:hover:not(:disabled) {
+      background: color-mix(in srgb, var(--mat-sys-secondary) 15%, transparent);
+      border-color: color-mix(in srgb, var(--mat-sys-secondary) 60%, transparent);
+    }
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+  }
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -176,7 +266,7 @@
 .workArea {
   flex: 1;
   display: flex;
-  min-height: calc(100vh - 310px);
+  min-height: 0;
   border: 1px solid var(--mat-sys-outline-variant);
   border-top: none;
   overflow: hidden;
@@ -470,6 +560,100 @@
 
 .editorPanelHidden {
   display: none;
+}
+
+// Vertical split: code editor on top, debug panel docked at the bottom so
+// both are visible at once while debugging (IDE-style).
+.editorSplit {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+}
+
+.editorSplitMain {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  overflow: hidden;
+}
+
+// While dragging the dock handle: show the resize cursor everywhere and stop
+// the editor (iframe/canvas) from swallowing the mousemove stream.
+.editorSplitDragging {
+  cursor: row-resize;
+  user-select: none;
+
+  .editorSplitMain {
+    pointer-events: none;
+  }
+}
+
+.debugDock {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--mat-sys-surface);
+}
+
+// Grab handle at the top edge of the dock (the split divider). Tall enough to
+// grab easily, with a visible grip so it's obviously draggable.
+.debugDockHandle {
+  flex: 0 0 10px;
+  cursor: ns-resize;
+  position: relative;
+  background: var(--mat-sys-surface-container-high);
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  touch-action: none;
+  transition: background 0.12s;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--mat-sys-outline);
+  }
+
+  &:hover {
+    background: var(--mat-sys-primary);
+  }
+  &:hover::after {
+    background: var(--mat-sys-on-primary);
+  }
+}
+
+.debugDockBody {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  overflow: hidden;
+
+  > * {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+// Debug tab: the DebugPanel fills the whole editor area (focused debug view).
+.debugFull {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  overflow: hidden;
+
+  > * {
+    flex: 1;
+    min-width: 0;
+  }
 }
 
 // ────────────────────────────────────────────────────────────────

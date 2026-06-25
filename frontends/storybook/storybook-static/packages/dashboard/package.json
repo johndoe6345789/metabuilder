@@ -1,0 +1,82 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "dashboard",
+  "name": "Dashboard",
+  "version": "1.0.0",
+  "description": "Dashboard layouts, stat cards, and widgets",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "icon": "static_content/icon.svg",
+  "minLevel": 2,
+  "primary": true,
+  "dependencies": {
+    "data_table": "*",
+    "ui_permissions": "*"
+  },
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "StatCard",
+      "DashboardGrid",
+      "Widget"
+    ],
+    "scripts": [
+      "stats",
+      "layout"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "page-config",
+      "permissions",
+      "playwright",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests",
+      "workflow"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "pages": [
+        "page-config/metadata.json",
+        "page-config/page-config.json"
+      ],
+      "workflows": [
+        "workflow/fetch-dashboard-data.jsonscript",
+        "workflow/fetch-user-comments.jsonscript",
+        "workflow/fetch-user-profile.jsonscript",
+        "workflow/fetch-user-stats.jsonscript"
+      ],
+      "tests": [
+        "playwright/tests.json",
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/config.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "static_content/icon.svg"
+      ]
+    }
+  }
+}

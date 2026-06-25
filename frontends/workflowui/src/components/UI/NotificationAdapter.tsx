@@ -13,7 +13,7 @@ import {
   NotificationContainer,
   type NotificationData,
   type NotificationPosition,
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 import { useUINotifications } from '@metabuilder/hooks';
 
 export interface NotificationAdapterProps {

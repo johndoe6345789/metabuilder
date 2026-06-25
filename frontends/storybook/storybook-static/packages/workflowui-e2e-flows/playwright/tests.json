@@ -1,0 +1,290 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "workflowui-e2e-flows",
+  "version": "1.0.0",
+  "description": "End-to-end user flows with debugging and visual verification",
+  "tests": [
+    {
+      "name": "complete workflow creation journey with screenshots",
+      "tags": [
+        "@e2e",
+        "@critical",
+        "@workflow-creation"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "action": "navigate",
+          "url": "workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "workspace management flow with retry and validation",
+      "tags": [
+        "@e2e",
+        "@workspace",
+        "@crud"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "testId": "header-actions",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "search and filter workflow with element inspection",
+      "tags": [
+        "@e2e",
+        "@search",
+        "@filter"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "placeholder": "Search workflows...",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "navigation flow across all pages with screenshots",
+      "tags": [
+        "@e2e",
+        "@navigation",
+        "@pages"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "action": "navigate",
+          "url": "workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "action": "navigate",
+          "url": "plugins"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "action": "navigate",
+          "url": "settings"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "complex form validation with error handling",
+      "tags": [
+        "@e2e",
+        "@form",
+        "@validation"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "responsive design test with viewport changes",
+      "tags": [
+        "@e2e",
+        "@responsive"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "error recovery and resilience test",
+      "tags": [
+        "@e2e",
+        "@errors",
+        "@recovery"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "nonexistent-route-xyz"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "testId": "not-found-state",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "action": "navigate",
+          "url": "workflows"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "keyboard navigation and accessibility test",
+      "tags": [
+        "@e2e",
+        "@keyboard",
+        "@accessibility"
+      ],
+      "timeout": 30000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": ""
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,7 +1,6 @@
 import { Snippet } from '@/lib/types'
 import { MonacoEditor } from '@/components/features/snippet-editor/MonacoEditor'
-import { ReactPreview } from '@/components/features/snippet-editor/ReactPreview'
-import { PythonOutput } from '@/components/features/python-runner/PythonOutput'
+import { SnippetPreviewContent } from './SnippetPreviewContent'
 import styles from './snippet-viewer.module.scss'
 
 interface SnippetViewerContentProps {
@@ -11,6 +10,10 @@ interface SnippetViewerContentProps {
   isPython: boolean
   wordWrap?: 'on' | 'off'
   onChange?: (value: string) => void
+  breakpoints?: number[]
+  onToggleBreakpoint?: (line: number) => void
+  currentDebugLine?: number | null
+  inlineValues?: { line: number; text: string }[]
 }
 
 export function SnippetViewerContent({
@@ -20,53 +23,43 @@ export function SnippetViewerContent({
   isPython,
   wordWrap = 'on',
   onChange = () => {},
+  breakpoints,
+  onToggleBreakpoint,
+  currentDebugLine,
+  inlineValues,
 }: SnippetViewerContentProps) {
   if (canPreview && showPreview) {
     return (
-      <>
-        <div
-          className={styles.codePane}
-          data-testid="viewer-code-pane"
-          role="region"
-          aria-label="Code editor"
-        >
-          <MonacoEditor
-            value={snippet.code}
-            onChange={onChange}
-            language={snippet.language}
-            height="100%"
-            wordWrap={wordWrap}
-          />
-        </div>
-        <div
-          className={styles.previewPane}
-          data-testid="viewer-preview-pane"
-          role="region"
-          aria-label={`Preview pane - ${isPython ? 'Python output' : 'React preview'}`}
-        >
-          {isPython ? (
-            <PythonOutput code={snippet.code} />
-          ) : (
-            <ReactPreview
-              code={snippet.code}
-              language={snippet.language}
-              functionName={snippet.functionName}
-              inputParameters={snippet.inputParameters}
-            />
-          )}
-        </div>
-      </>
+      <SnippetPreviewContent
+        snippet={snippet}
+        isPython={isPython}
+        wordWrap={wordWrap}
+        onChange={onChange}
+        breakpoints={breakpoints}
+        onToggleBreakpoint={onToggleBreakpoint}
+        currentDebugLine={currentDebugLine}
+        inlineValues={inlineValues}
+      />
     )
   }
 
   return (
-    <div className={styles.fullPane} data-testid="viewer-code-full" role="region" aria-label="Code editor">
+    <div
+      className={styles.fullPane}
+      data-testid="viewer-code-full"
+      role="region"
+      aria-label="Code editor"
+    >
       <MonacoEditor
         value={snippet.code}
         onChange={onChange}
         language={snippet.language}
         height="100%"
         wordWrap={wordWrap}
+        breakpoints={breakpoints}
+        onToggleBreakpoint={onToggleBreakpoint}
+        currentDebugLine={currentDebugLine}
+        inlineValues={inlineValues}
       />
     </div>
   )

@@ -1,0 +1,252 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": false,
+  "title": "Navigation Menu Components",
+  "description": "Sidebar, navigation menus, and breadcrumbs",
+  "stories": [
+    {
+      "name": "Sidebar",
+      "render": "sidebar",
+      "description": "Full sidebar with navigation items",
+      "args": {
+        "title": "MetaBuilder",
+        "subtitle": "Admin Panel",
+        "logo": "/logo.svg",
+        "items": [
+          {
+            "type": "link",
+            "label": "Dashboard",
+            "href": "/dashboard",
+            "icon": "Dashboard",
+            "active": true
+          },
+          {
+            "type": "link",
+            "label": "Users",
+            "href": "/users",
+            "icon": "Users"
+          },
+          {
+            "type": "group",
+            "label": "Settings",
+            "icon": "Settings",
+            "children": [
+              { "label": "Profile", "href": "/settings/profile" },
+              { "label": "Security", "href": "/settings/security" }
+            ]
+          }
+        ],
+        "user": {
+          "name": "John Doe",
+          "role": "Administrator",
+          "avatar": "/avatar.png"
+        }
+      }
+    },
+    {
+      "name": "SidebarCollapsed",
+      "render": "sidebar",
+      "description": "Collapsed sidebar view",
+      "args": {
+        "title": "MetaBuilder",
+        "logo": "/logo.svg",
+        "collapsed": true,
+        "items": [
+          {
+            "type": "link",
+            "label": "Dashboard",
+            "href": "/dashboard",
+            "icon": "Dashboard"
+          },
+          {
+            "type": "link",
+            "label": "Users",
+            "href": "/users",
+            "icon": "Users"
+          }
+        ]
+      }
+    },
+    {
+      "name": "NavigationMenu",
+      "render": "menu",
+      "description": "Horizontal navigation menu bar",
+      "type": "function",
+      "args": {
+        "items": [
+          { "label": "Home", "path": "/" },
+          { "label": "Products", "path": "/products" },
+          {
+            "label": "Admin",
+            "minLevel": 3,
+            "children": [
+              { "label": "Users", "path": "/admin/users" },
+              { "label": "Settings", "path": "/admin/settings" }
+            ]
+          }
+        ],
+        "user": { "level": 3 }
+      }
+    },
+    {
+      "name": "NavigationMenuUser",
+      "render": "menu",
+      "description": "Navigation menu for regular user (limited items)",
+      "type": "function",
+      "args": {
+        "items": [
+          { "label": "Home", "path": "/" },
+          { "label": "Products", "path": "/products" },
+          {
+            "label": "Admin",
+            "minLevel": 3,
+            "children": [
+              { "label": "Users", "path": "/admin/users" }
+            ]
+          }
+        ],
+        "user": { "level": 2 }
+      }
+    },
+    {
+      "name": "Breadcrumbs",
+      "render": "breadcrumbs",
+      "description": "Breadcrumb navigation trail",
+      "args": {
+        "items": [
+          { "label": "Home", "href": "/", "icon": "Home" },
+          { "label": "Settings", "href": "/settings" },
+          { "label": "Profile", "current": true }
+        ]
+      }
+    },
+    {
+      "name": "NavItemLink",
+      "render": "nav_item_link",
+      "description": "Single navigation link item",
+      "args": {
+        "label": "Dashboard",
+        "href": "/dashboard",
+        "icon": "Dashboard",
+        "active": false
+      }
+    },
+    {
+      "name": "NavItemLinkActive",
+      "render": "nav_item_link",
+      "description": "Active navigation link",
+      "args": {
+        "label": "Dashboard",
+        "href": "/dashboard",
+        "icon": "Dashboard",
+        "active": true
+      }
+    },
+    {
+      "name": "NavItemLinkWithBadge",
+      "render": "nav_item_link",
+      "description": "Navigation link with badge",
+      "args": {
+        "label": "Notifications",
+        "href": "/notifications",
+        "icon": "Notifications",
+        "badge": {
+          "text": "5",
+          "variant": "error"
+        }
+      }
+    },
+    {
+      "name": "NavItemGroup",
+      "render": "nav_item_group",
+      "description": "Collapsible navigation group",
+      "args": {
+        "label": "Administration",
+        "icon": "AdminPanelSettings",
+        "open": true,
+        "children": [
+          { "label": "Users", "href": "/admin/users" },
+          { "label": "Roles", "href": "/admin/roles" },
+          { "label": "Settings", "href": "/admin/settings" }
+        ]
+      }
+    }
+  ],
+  "renders": {
+    "sidebar": {
+      "description": "Full sidebar with header, navigation, and footer",
+      "featured": true
+    },
+    "menu": {
+      "description": "Horizontal navigation menu with permission filtering"
+    },
+    "breadcrumbs": {
+      "description": "Breadcrumb navigation trail"
+    },
+    "nav_item_link": {
+      "description": "Single navigation link item"
+    },
+    "nav_item_group": {
+      "description": "Collapsible navigation group"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "demo-user",
+      "username": "demo_user",
+      "level": 2,
+      "email": "demo@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Standard User",
+      "description": "Can view navigation menus",
+      "context": {
+        "user": {
+          "username": "user",
+          "level": 2
+        }
+      }
+    },
+    {
+      "name": "Admin",
+      "description": "Can view and configure navigation",
+      "context": {
+        "user": {
+          "username": "admin",
+          "level": 4
+        }
+      }
+    },
+    {
+      "name": "Moderator",
+      "description": "Can view all menu items",
+      "context": {
+        "user": {
+          "username": "moderator",
+          "level": 3
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["sidebar", "menu"],
+    "ignoredScripts": ["tests", "init"]
+  },
+  "parameters": {
+    "layout": "fullscreen",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#f5f5f5" },
+        { "name": "dark", "value": "#1a1a1a" },
+        { "name": "paper", "value": "#ffffff" }
+      ]
+    }
+  }
+}

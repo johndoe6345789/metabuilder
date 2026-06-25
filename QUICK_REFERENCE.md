@@ -1,199 +1,179 @@
 # Quick Reference: MetaBuilder Game Engine
 
-## Latest Work (Session 30)
+## Current State (June 2026)
 
-**Just Completed**:
-- ✅ 27 new atomic workflow steps
-- ✅ 4 services converted (Audio, Input, Graphics, Scene)
-- ✅ 1 dead service deleted (SelectionStateService)
-- ✅ All code committed and verified
-
-**Latest Commits**:
-```
-72520f42c - docs: Session 30 summary
-0ff57a22b - chore: Delete SelectionStateService
-cc2a594b0 - feat: Convert Audio, Input, Graphics, Scene services
-5d8441515 - feat: Implement graphics init workflow steps
-```
-
-## Build Commands
-
-```bash
-cd /Users/rmac/Documents/metabuilder/gameengine
-
-# Build main app
-cmake --build build/Release --target sdl3_app
-
-# Run with default game (seed)
-./build/Release/sdl3_app --bootstrap bootstrap_mac --game seed
-
-# Run with specific game
-./build/Release/sdl3_app --bootstrap bootstrap_mac --game standalone_cubes
-
-# Run with tracing
-./build/Release/sdl3_app --bootstrap bootstrap_mac --game seed --trace
-```
-
-## Available Workflow Steps (75+)
-
-### Graphics (10 steps)
-- graphics.bgfx.init_viewport
-- graphics.bgfx.init_renderer
-- graphics.bgfx.init
-- graphics.shader.load
-- graphics.buffer.create_vertex
-- graphics.buffer.create_index
-- graphics.frame.begin
-- graphics.frame.end
-- graphics.draw.submit
-- graphics.screenshot.request
-
-### Input (5 steps)
-- input.key.pressed
-- input.mouse.position
-- input.mouse.button.pressed
-- input.gamepad.axis
-- input.gamepad.button.pressed
-
-### Audio (7 steps)
-- audio.play
-- audio.pause
-- audio.resume
-- audio.seek
-- audio.set_volume
-- audio.stop
-- audio.set_looping
-
-### Scene (4+ steps)
-- scene.create
-- scene.add_geometry
-- scene.remove_geometry
-- scene.get_bounds
-- scene.load
-- scene.clear
-- scene.update
-
-### Plus 40+ more in:
-- Camera (teleport, look_at, build_view_state, set_fov, set_pose)
-- Math (add, subtract, multiply, divide, min, max, abs, round, clamp)
-- String (concat, split, join, upper, lower, trim, replace, equals, contains)
-- Logic (and, or, not, if/then/else, compare)
-- Collections (append, count, filter, map, reduce)
-- Validation (checkpoint, png validation)
-- And many more...
-
-## Architecture
-
-**95% Data-Driven**:
-- JSON workflows orchestrate all core systems
-- Minimal C++ service code (only integration layer)
-- Each step: ~50-100 LOC, testable in isolation
-- Dynamic step registration via plugin IDs
-
-**Zero Monolithic Services**:
-- Graphics: Complete pipeline via 10 workflow steps
-- Input: Full event handling via 5 steps
-- Audio: Complete playback control via 7 steps
-- Scene: Full 3D management via 4+ steps
-
-## Key Files
-
-**Workflow Definitions**:
-```
-/gameengine/packages/*/workflows/*.json
-- bootstrap_mac/workflows/
-- standalone_cubes/workflows/graphics_init_atomic.json
-- seed/workflows/demo_gameplay.json
-```
-
-**Workflow Step Implementations**:
-```
-/gameengine/src/services/impl/workflow/
-- graphics/          (10 graphics steps)
-- workflow_generic_steps/  (5 input + 4 audio steps)
-- scene/            (4 scene steps)
-- frame/            (40+ frame/game steps)
-- workflow_*_step_registrar*.cpp  (step discovery)
-```
-
-**Main Entry Point**:
-```
-/gameengine/src/main.cpp
-```
-
-## Recent Fixes
-
-1. **Red background issue** (Fixed Feb 11)
-   - Removed hardcoded color in bgfx initialization
-   - User confirmed: "pink and flashing thing" renders correctly
-
-2. **Validation tour disabled** (Feb 11)
-   - Was forcing test checkpoints in gameplay
-   - Removed from demo_gameplay.json
-
-3. **Dead code cleanup** (Feb 11)
-   - SelectionStateService deleted (136 LOC)
-   - No impact on functionality (was orphaned)
-
-## Next Steps (If Continuing)
-
-**High Priority** (2-3 hours each):
-1. Shader validation steps (120 LOC)
-2. Render coordination steps (80 LOC)
-3. Diagnostics steps (100 LOC)
-
-**Medium Priority**:
-4. GUI parametric drawing steps (90 LOC)
-
-**Result**: Complete atomic conversion of all non-infrastructure services
-
-## Testing
-
-**Manual Test**:
-```bash
-./build/Release/sdl3_app --bootstrap bootstrap_mac --game standalone_cubes
-# Should see: Pink/orange color, cube animation, window updates
-# Expected: 52 FPS rendering
-```
-
-**Unit Tests**:
-```bash
-# Audio step tests exist (369 LOC)
-# Located in: gameengine/tests/unit/workflow/test_audio_*.cpp
-```
-
-## Performance Notes
-
-- **Build time**: ~2 minutes (full rebuild)
-- **Binary size**: 36MB (arm64)
-- **Frame rate**: 52 FPS (verified on metal)
-- **Memory**: Efficient (atomic-based spy thread ~3-5ns overhead)
-
-## Git Server
-
-**Local Setup**: Hospital bedroom
-- Repository size: 8.1GB
-- All commits locally safe
-- No network dependencies
-- Full version history: 60+ commits
-
-## Architecture Philosophy
-
-**95% Data, 5% Code**:
-- Configuration: JSON workflows
-- Business logic: JSON variable flows
-- Infrastructure: C++ (only 5% of code)
-- Composition: JSON orchestration of atomic steps
-
-**One Responsibility Per Step**:
-- Each workflow step does ONE thing
-- Testable in isolation
-- Reusable across workflows
-- Composable into complex behaviors
+**Milestone**: Quake 3 Arena fully playable on the custom engine ✅
+- BSP level loading with lightmap atlas and portal rendering
+- Full player movement (pmove: gravity, jump, friction, acceleration)
+- Weapons, ammo, damage, pickups, movers, triggers
+- Bot AI with navigation
+- HUD, crosshair, hitmarkers, weapon select, menus
+- **212 registered workflow steps** total
 
 ---
 
-**Last Updated**: Feb 11, 2026 (Session 30)
-**Status**: Production-ready architecture, 95% data-driven
-**Git**: All work committed and verified locally
+## Build & Run
 
+```bash
+cd frontends/gameengine
+
+# Build
+cmake --build _build/Release --target sdl3_app
+
+# Run Quake 3
+./_build/Release/sdl3_app --bootstrap bootstrap_linux --game quake3
+
+# Run screenshot capture
+./_build/Release/sdl3_app --bootstrap bootstrap_linux --game quake3_screenshot
+
+# Run default seed demo
+./_build/Release/sdl3_app --bootstrap bootstrap_linux --game seed
+
+# Run cube demo
+./_build/Release/sdl3_app --bootstrap bootstrap_linux --game standalone_cubes
+
+# macOS variants (bootstrap_mac)
+./_build/Release/sdl3_app --bootstrap bootstrap_mac --game quake3
+```
+
+---
+
+## Game Packages (12)
+
+| Package | Purpose |
+|---------|---------|
+| `quake3` | Full Quake 3 Arena gameplay |
+| `quake3_screenshot` | Automated screenshot capture for Q3 |
+| `seed` | Default demo (entities, audio, graphics) |
+| `standalone_cubes` | Cube rendering demo |
+| `bootstrap_mac` | macOS bootstrap (SDL3 + bgfx init) |
+| `bootstrap_linux` | Linux bootstrap |
+| `bootstrap_windows` | Windows bootstrap |
+| `engine_tester` | Test runner for engine validation |
+| `asset_loader` | Asset loading benchmarks |
+| `materialx` | MaterialX PBR rendering demo |
+| `soundboard` | Audio system demo |
+| `assets` | Shared asset package |
+
+---
+
+## Workflow Steps: 212 Registered
+
+### Graphics (10)
+- `graphics.bgfx.init_viewport`, `graphics.bgfx.init_renderer`, `graphics.bgfx.init`
+- `graphics.shader.load`, `graphics.shader.compile`, `graphics.pipeline.create`
+- `graphics.buffer.create_vertex`, `graphics.buffer.create_index`
+- `graphics.frame.begin`, `graphics.frame.end`
+
+### Rendering (40+)
+- `rendering.draw.submit`, `rendering.screenshot.request`
+- `rendering.lighting.*` (directional, point, ambient)
+- `rendering.shadows.*` (shadow maps, cascaded)
+- `rendering.postfx.*` (TAA, SSAO, Bloom, tonemapping)
+- `rendering.grid.*`, `rendering.deferred.*`
+- `rendering.portal.*` (Q3 portal rendering)
+
+### Q3 Gameplay (42)
+- **pmove** (6): `q3.pmove.apply`, `q3.pmove.ground`, `q3.pmove.air`, `q3.pmove.friction`, `q3.pmove.jump`, `q3.pmove.step`
+- **Weapons** (3): `q3.weapon.fire`, `q3.weapon.switch`, `q3.weapon.reload`
+- **Missiles** (2): `q3.missile.spawn`, `q3.missile.update`
+- **Damage** (4): `q3.damage.apply`, `q3.damage.radius`, `q3.damage.shield`, `q3.damage.kill`
+- **Pickups** (3): `q3.pickup.check`, `q3.pickup.apply`, `q3.pickup.respawn`
+- **Movers** (2): `q3.mover.update`, `q3.mover.trigger`
+- **Triggers** (2): `q3.trigger.check`, `q3.trigger.fire`
+- **Bots** (3): `q3.bot.think`, `q3.bot.aim`, `q3.bot.move`
+- **HUD** (3): `q3.hud.draw`, `q3.hud.crosshair`, `q3.hud.hitmarker`
+- **Nav** (1): `q3.nav.pathfind`
+- **Ammo** (1): `q3.ammo.check`
+- **Menus** (1): `q3.menu.update`
+
+### Physics (5)
+- `physics.world.create`, `physics.body.add`, `physics.world.step`
+- `physics.fps.move`, `physics.transform.sync`
+
+### Scene (8)
+- `scene.create`, `scene.load`, `scene.update`, `scene.clear`, `scene.set_active`
+- `scene.geometry.add`, `scene.geometry.remove`, `scene.get_bounds`
+
+### Camera (5)
+- `camera.setup`, `camera.fps.update`, `camera.look_at`, `camera.set_fov`, `camera.teleport`
+
+### Input (5)
+- `input.key.pressed`, `input.mouse.position`, `input.mouse.button.pressed`
+- `input.gamepad.axis`, `input.gamepad.button.pressed`
+
+### Audio (7)
+- `audio.play`, `audio.pause`, `audio.resume`, `audio.seek`
+- `audio.stop`, `audio.set_volume`, `audio.set_looping`
+
+### Control Flow (5)
+- `flow.if`, `flow.while`, `flow.for_each`, `flow.switch`, `flow.try_catch`
+
+### Math (9)
+- `math.add`, `math.sub`, `math.mul`, `math.div`
+- `math.min`, `math.max`, `math.abs`, `math.round`, `math.clamp`
+
+### String (10)
+- `str.concat`, `str.split`, `str.join`, `str.upper`, `str.lower`
+- `str.trim`, `str.replace`, `str.equals`, `str.contains`, `str.format`
+
+### Logic (6)
+- `logic.and`, `logic.or`, `logic.not`
+- `logic.compare` (eq, gt, lt, gte, lte, ne)
+
+### Collections (8)
+- `col.append`, `col.count`, `col.filter`, `col.map`
+- `col.reduce.sum`, `col.reduce.min`, `col.reduce.max`, `col.clear`
+
+### Value / Utility (10)
+- `val.assert`, `val.set_if`, `val.type_check`, `val.default`
+- `val.literal`, `val.copy`, `val.clear`, plus model/texture loading
+
+### Composition (2)
+- `workflow.execute` (call another workflow), `workflow.exit`
+
+---
+
+## Architecture
+
+```
+JSON workflow (q3_game.json)
+  └── workflow steps (212 registered)
+        └── C++ implementations (~50-100 LOC each, testable in isolation)
+              └── SDL3 / bgfx / Bullet3 / OpenAL
+```
+
+**Key files**:
+```
+frontends/gameengine/
+├── packages/              # Game packages (12)
+│   ├── quake3/            # Q3 game definition + workflows
+│   ├── bootstrap_linux/   # Platform bootstrap workflows
+│   └── seed/              # Default demo workflows
+├── src/
+│   ├── services/impl/workflow/
+│   │   ├── graphics/      # 10 graphics steps
+│   │   ├── rendering/     # 40+ rendering steps
+│   │   ├── q3/            # 42 Q3 gameplay steps (36 .cpp files)
+│   │   ├── physics/       # 5 physics steps
+│   │   ├── audio/         # 7 audio steps
+│   │   └── frame/         # Core game loop steps
+│   └── main.cpp           # Entry point
+```
+
+---
+
+## Performance
+
+| Metric | Value |
+|--------|-------|
+| Build time (full) | ~2 minutes |
+| Frame rate (Quake 3) | 52+ FPS |
+| Workflow step overhead | ~3-5ns per step |
+| Total C++ files | 545 (289 .hpp + 256 .cpp) |
+| Q3-specific C++ files | 36 |
+
+---
+
+**Last Updated**: June 25, 2026
+**Status**: Production-ready — Quake 3 playable ✅

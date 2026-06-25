@@ -1,0 +1,15 @@
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.field {
+  margin-top: 16px;
+}
+
+.actions {
+  margin-top: 24px;
+  display: flex;
+  gap: 8px;
+}

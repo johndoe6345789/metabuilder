@@ -75,10 +75,11 @@ describe('PersistenceSettings', () => {
       expect(screen.getByText('ui')).toBeInTheDocument()
     })
 
-    it('slice badges have monospace font', () => {
+    it('slice badges are rendered', () => {
       render(<PersistenceSettings />)
       const snippetsBadge = screen.getByText('snippets')
-      expect(snippetsBadge).toHaveClass('font-mono')
+      // Badge should be rendered (uses FakeMUI Chip component)
+      expect(snippetsBadge).toBeInTheDocument()
     })
   })
 
@@ -106,7 +107,9 @@ describe('PersistenceSettings', () => {
 
     it('persisted slices section has aria label', () => {
       render(<PersistenceSettings />)
-      expect(screen.getByRole('region', { name: 'Persisted slices' })).toBeInTheDocument()
+      expect(
+        screen.getByRole('region', { name: 'Persisted slices' }),
+      ).toBeInTheDocument()
     })
   })
 

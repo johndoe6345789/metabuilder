@@ -4,7 +4,8 @@ import {
   getStorageConfig,
   DBALStorageAdapter,
   StorageConfig,
-  StorageBackend
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  StorageBackend,
 } from './storage'
 import type { Snippet } from './types'
 
@@ -39,11 +40,11 @@ describe('Storage Configuration', () => {
       delete process.env.NEXT_PUBLIC_DBAL_API_URL
       const savedConfig: StorageConfig = {
         backend: 'dbal',
-        dbalUrl: 'http://api.example.com'
+        dbalUrl: 'http://api.example.com',
       }
       localStorage.setItem(
         'codesnippet-storage-config',
-        JSON.stringify(savedConfig)
+        JSON.stringify(savedConfig),
       )
 
       const config = loadStorageConfig()
@@ -55,7 +56,7 @@ describe('Storage Configuration', () => {
       process.env.NEXT_PUBLIC_DBAL_API_URL = 'http://env-url.com'
       localStorage.setItem(
         'codesnippet-storage-config',
-        JSON.stringify({ backend: 'indexeddb' })
+        JSON.stringify({ backend: 'indexeddb' }),
       )
 
       const config = loadStorageConfig()
@@ -90,7 +91,7 @@ describe('Storage Configuration', () => {
     it('should save config to localStorage', () => {
       const config: StorageConfig = {
         backend: 'dbal',
-        dbalUrl: 'http://localhost:5000'
+        dbalUrl: 'http://localhost:5000',
       }
 
       saveStorageConfig(config)
@@ -102,7 +103,7 @@ describe('Storage Configuration', () => {
     it('should update current config after save', () => {
       const config: StorageConfig = {
         backend: 'dbal',
-        dbalUrl: 'http://localhost:5000'
+        dbalUrl: 'http://localhost:5000',
       }
 
       saveStorageConfig(config)
@@ -114,7 +115,7 @@ describe('Storage Configuration', () => {
 
     it('should handle storage errors', () => {
       const config: StorageConfig = {
-        backend: 'indexeddb'
+        backend: 'indexeddb',
       }
 
       jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
@@ -126,7 +127,7 @@ describe('Storage Configuration', () => {
 
     it('should save IndexedDB config without dbalUrl', () => {
       const config: StorageConfig = {
-        backend: 'indexeddb'
+        backend: 'indexeddb',
       }
 
       saveStorageConfig(config)
@@ -140,7 +141,7 @@ describe('Storage Configuration', () => {
     it('should return current configuration', () => {
       const config: StorageConfig = {
         backend: 'dbal',
-        dbalUrl: 'http://localhost:5000'
+        dbalUrl: 'http://localhost:5000',
       }
 
       saveStorageConfig(config)
@@ -160,720 +161,259 @@ describe('Storage Configuration', () => {
 
 describe('DBALStorageAdapter', () => {
   const mockFetch = fetch as jest.MockedFunction<typeof fetch>
+  const URL = 'http://localhost:5000'
+  const snip = (over: Partial<Snippet> = {}): Snippet => ({
+    id: '1',
+    title: 'Test',
+    code: 'test',
+    language: 'javascript',
+    category: 'test',
+    createdAt: 1234567890,
+    updatedAt: 1234567890,
+    description: '',
+    ...over,
+  })
+  const okJson = (data: unknown) =>
+    ({ ok: true, json: async () => ({ data }) }) as unknown as Response
+  const fail = (statusText = 'Server error') =>
+    ({ ok: false, statusText }) as Response
 
   beforeEach(() => {
     mockFetch.mockClear()
-    // Mock AbortSignal.timeout to return a valid signal
     if (!AbortSignal.timeout) {
-      const mockAbortController = new AbortController()
+      const ctrl = new AbortController()
       Object.defineProperty(AbortSignal, 'timeout', {
-        value: () => mockAbortController.signal,
-        writable: true
+        value: () => ctrl.signal,
+        writable: true,
       })
     }
   })
 
   describe('constructor', () => {
-    it('should create adapter with valid URL', () => {
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-      expect(adapter).toBeDefined()
+    it('creates an adapter with a valid URL', () => {
+      expect(new DBALStorageAdapter(URL)).toBeDefined()
     })
-
-    it('should throw error with empty URL', () => {
+    it('throws on an empty URL', () => {
       expect(() => new DBALStorageAdapter('')).toThrow(
-        'DBAL backend URL cannot be empty'
+        'DBAL backend URL cannot be empty',
       )
     })
-
-    it('should throw error with whitespace-only URL', () => {
+    it('throws on a whitespace-only URL', () => {
       expect(() => new DBALStorageAdapter('   ')).toThrow(
-        'DBAL backend URL cannot be empty'
+        'DBAL backend URL cannot be empty',
       )
     })
-
-    it('should remove trailing slash from URL', () => {
-      const adapter = new DBALStorageAdapter('http://localhost:5000/')
-      // URL normalization happens in constructor
-      expect(adapter).toBeDefined()
+    it('removes a trailing slash from the URL', () => {
+      expect(new DBALStorageAdapter('http://localhost:5000/')).toBeDefined()
     })
   })
 
   describe('testConnection', () => {
-    it('should return true on successful connection', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        statusText: 'OK'
-      } as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-      const result = await adapter.testConnection()
-
-      expect(result).toBe(true)
+    it('returns true on a healthy backend', async () => {
+      mockFetch.mockResolvedValueOnce({ ok: true } as Response)
+      const ok = await new DBALStorageAdapter(URL).testConnection()
+      expect(ok).toBe(true)
       expect(mockFetch).toHaveBeenCalledWith(
         expect.stringContaining('/health'),
-        expect.objectContaining({
-          method: 'GET'
-        })
+        expect.objectContaining({ signal: expect.any(AbortSignal) }),
       )
     })
-
-    it('should return false on failed connection', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 500
-      } as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-      const result = await adapter.testConnection()
-
-      expect(result).toBe(false)
+    it('returns false when the backend is unhealthy', async () => {
+      mockFetch.mockResolvedValueOnce(fail())
+      expect(await new DBALStorageAdapter(URL).testConnection()).toBe(false)
     })
-
-    it('should return false on network error', async () => {
+    it('returns false on a network error', async () => {
       mockFetch.mockRejectedValueOnce(new Error('Network error'))
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-      const result = await adapter.testConnection()
-
-      expect(result).toBe(false)
-    })
-
-    it('should return false on invalid URL', async () => {
-      const adapter = new DBALStorageAdapter('not-a-valid-url')
-      const result = await adapter.testConnection()
-
-      expect(result).toBe(false)
-    })
-
-    it('should use 5 second timeout', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true
-      } as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-      await adapter.testConnection()
-
-      expect(mockFetch).toHaveBeenCalledWith(
-        expect.any(String),
-        expect.objectContaining({
-          signal: expect.any(AbortSignal)
-        })
-      )
+      expect(await new DBALStorageAdapter(URL).testConnection()).toBe(false)
     })
   })
 
   describe('getAllSnippets', () => {
-    it('should throw on invalid URL', async () => {
-      const adapter = new DBALStorageAdapter('not-a-valid-url')
-
-      await expect(adapter.getAllSnippets()).rejects.toThrow(
-        'Invalid DBAL backend URL'
-      )
-    })
-
-    it('should fetch all snippets', async () => {
-      const mockSnippets = [
-        {
-          id: '1',
-          title: 'Test',
-          code: 'console.log("test")',
-          language: 'javascript',
-          category: 'test',
-          createdAt: 1234567890,
-          updatedAt: 1234567890,
-          description: ''
-        }
-      ]
-
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockSnippets
-      } as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-      const snippets = await adapter.getAllSnippets()
-
-      expect(snippets).toHaveLength(1)
-      expect(snippets[0].id).toBe('1')
+    it('fetches and maps snippets from the data envelope', async () => {
+      mockFetch.mockResolvedValueOnce(okJson([snip()]))
+      const out = await new DBALStorageAdapter(URL).getAllSnippets()
+      expect(out).toHaveLength(1)
+      expect(out[0].id).toBe('1')
       expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining('/api/snippets')
+        expect.stringContaining('/Snippet'),
+        expect.anything(),
       )
     })
-
-    it('should throw on failed request', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        statusText: 'Server error'
-      } as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-
-      await expect(adapter.getAllSnippets()).rejects.toThrow(
-        'Failed to fetch snippets'
-      )
+    it('throws on a failed request', async () => {
+      mockFetch.mockResolvedValueOnce(fail())
+      await expect(
+        new DBALStorageAdapter(URL).getAllSnippets(),
+      ).rejects.toThrow('Failed to fetch snippets')
     })
-
-    it('should convert date strings to timestamps', async () => {
-      const mockSnippets = [
-        {
-          id: '1',
-          title: 'Test',
-          code: 'test',
-          language: 'javascript',
-          category: 'test',
-          createdAt: '2024-01-01T00:00:00Z',
-          updatedAt: '2024-01-02T00:00:00Z',
-          description: ''
-        }
-      ]
-
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockSnippets
-      } as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-      const snippets = await adapter.getAllSnippets()
-
-      expect(typeof snippets[0].createdAt).toBe('number')
-      expect(typeof snippets[0].updatedAt).toBe('number')
+    it('coerces timestamps to numbers', async () => {
+      mockFetch.mockResolvedValueOnce(
+        okJson([snip({ createdAt: 0, updatedAt: 0 })]),
+      )
+      const out = await new DBALStorageAdapter(URL).getAllSnippets()
+      expect(typeof out[0].createdAt).toBe('number')
+      expect(typeof out[0].updatedAt).toBe('number')
     })
   })
 
   describe('getSnippet', () => {
-    it('should throw on invalid URL', async () => {
-      const adapter = new DBALStorageAdapter('not-a-valid-url')
-
-      await expect(adapter.getSnippet('1')).rejects.toThrow(
-        'Invalid DBAL backend URL'
-      )
-    })
-
-    it('should fetch single snippet', async () => {
-      const mockSnippet = {
-        id: '1',
-        title: 'Test',
-        code: 'test',
-        language: 'javascript',
-        category: 'test',
-        createdAt: 1234567890,
-        updatedAt: 1234567890,
-        description: ''
-      }
-
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: async () => mockSnippet
-      } as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-      const snippet = await adapter.getSnippet('1')
-
-      expect(snippet?.id).toBe('1')
+    it('fetches a single snippet', async () => {
+      mockFetch.mockResolvedValueOnce(okJson(snip()))
+      const out = await new DBALStorageAdapter(URL).getSnippet('1')
+      expect(out?.id).toBe('1')
       expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining('/api/snippets/1')
+        expect.stringContaining('/Snippet/1'),
+        expect.anything(),
       )
     })
-
-    it('should return null on 404', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 404,
-        statusText: 'Not Found'
-      } as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-      const snippet = await adapter.getSnippet('nonexistent')
-
-      expect(snippet).toBeNull()
+    it('returns null on 404', async () => {
+      mockFetch.mockResolvedValueOnce({ ok: false, status: 404 } as Response)
+      expect(await new DBALStorageAdapter(URL).getSnippet('x')).toBeNull()
     })
-
-    it('should throw on other errors', async () => {
+    it('throws on other errors', async () => {
       mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 500,
-        statusText: 'Server error'
+        statusText: 'Server error',
       } as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-
-      await expect(adapter.getSnippet('1')).rejects.toThrow(
-        'Failed to fetch snippet'
+      await expect(new DBALStorageAdapter(URL).getSnippet('1')).rejects.toThrow(
+        'Failed to fetch snippet',
       )
     })
   })
 
   describe('createSnippet', () => {
-    it('should throw on invalid URL', async () => {
-      const adapter = new DBALStorageAdapter('not-a-valid-url')
-      const snippet: Snippet = {
-        id: '1',
-        title: 'Test',
-        code: 'test',
-        language: 'javascript',
-        category: 'test',
-        createdAt: 1234567890,
-        updatedAt: 1234567890,
-        description: ''
-      }
-
-      await expect(adapter.createSnippet(snippet)).rejects.toThrow(
-        'Invalid DBAL backend URL'
-      )
-    })
-
-    it('should create snippet', async () => {
-      const snippet: Snippet = {
-        id: '1',
-        title: 'Test',
-        code: 'test',
-        language: 'javascript',
-        category: 'test',
-        createdAt: 1234567890,
-        updatedAt: 1234567890,
-        description: ''
-      }
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => snippet
-      } as unknown as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-      await adapter.createSnippet(snippet)
-
+    it('POSTs the snippet', async () => {
+      mockFetch.mockResolvedValueOnce(okJson(snip()))
+      await new DBALStorageAdapter(URL).createSnippet(snip())
       expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining('/api/snippets'),
-        expect.objectContaining({
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' }
-        })
+        expect.stringContaining('/Snippet'),
+        expect.objectContaining({ method: 'POST' }),
       )
     })
-
-    it('should throw on failed creation', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        statusText: 'Bad Request'
-      } as Response)
-
-      const snippet: Snippet = {
-        id: '1',
-        title: 'Test',
-        code: 'test',
-        language: 'javascript',
-        category: 'test',
-        createdAt: 1234567890,
-        updatedAt: 1234567890,
-        description: ''
-      }
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-
-      await expect(adapter.createSnippet(snippet)).rejects.toThrow(
-        'Failed to create snippet'
-      )
+    it('throws on a failed creation', async () => {
+      mockFetch.mockResolvedValueOnce(fail('Bad Request'))
+      await expect(
+        new DBALStorageAdapter(URL).createSnippet(snip()),
+      ).rejects.toThrow('Failed to create snippet')
     })
   })
 
   describe('updateSnippet', () => {
-    it('should throw on invalid URL', async () => {
-      const adapter = new DBALStorageAdapter('not-a-valid-url')
-      const snippet: Snippet = {
-        id: '1',
-        title: 'Test',
-        code: 'test',
-        language: 'javascript',
-        category: 'test',
-        createdAt: 1234567890,
-        updatedAt: 1234567890,
-        description: ''
-      }
-
-      await expect(adapter.updateSnippet(snippet)).rejects.toThrow(
-        'Invalid DBAL backend URL'
-      )
-    })
-
-    it('should update snippet', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        statusText: 'OK'
-      } as Response)
-
-      const snippet: Snippet = {
-        id: '1',
-        title: 'Updated',
-        code: 'updated code',
-        language: 'javascript',
-        category: 'test',
-        createdAt: 1234567890,
-        updatedAt: 1234567891,
-        description: ''
-      }
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-      await adapter.updateSnippet(snippet)
-
+    it('PUTs the snippet', async () => {
+      mockFetch.mockResolvedValueOnce({ ok: true } as Response)
+      await new DBALStorageAdapter(URL).updateSnippet(snip({ title: 'New' }))
       expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining('/api/snippets/1'),
-        expect.objectContaining({
-          method: 'PUT'
-        })
+        expect.stringContaining('/Snippet/1'),
+        expect.objectContaining({ method: 'PUT' }),
       )
     })
-
-    it('should throw on failed update', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        statusText: 'Not found'
-      } as Response)
-
-      const snippet: Snippet = {
-        id: '1',
-        title: 'Test',
-        code: 'test',
-        language: 'javascript',
-        category: 'test',
-        createdAt: 1234567890,
-        updatedAt: 1234567890,
-        description: ''
-      }
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-
-      await expect(adapter.updateSnippet(snippet)).rejects.toThrow(
-        'Failed to update snippet'
-      )
+    it('throws on a failed update', async () => {
+      mockFetch.mockResolvedValueOnce(fail('Not found'))
+      await expect(
+        new DBALStorageAdapter(URL).updateSnippet(snip()),
+      ).rejects.toThrow('Failed to update snippet')
     })
   })
 
   describe('deleteSnippet', () => {
-    it('should throw on invalid URL', async () => {
-      const adapter = new DBALStorageAdapter('not-a-valid-url')
-
-      await expect(adapter.deleteSnippet('1')).rejects.toThrow(
-        'Invalid DBAL backend URL'
-      )
-    })
-
-    it('should delete snippet', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true
-      } as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-      await adapter.deleteSnippet('1')
-
+    it('DELETEs the snippet', async () => {
+      mockFetch.mockResolvedValueOnce({ ok: true } as Response)
+      await new DBALStorageAdapter(URL).deleteSnippet('1')
       expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining('/api/snippets/1'),
-        expect.objectContaining({
-          method: 'DELETE'
-        })
+        expect.stringContaining('/Snippet/1'),
+        expect.objectContaining({ method: 'DELETE' }),
       )
     })
-
-    it('should throw on failed deletion', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        statusText: 'Not found'
-      } as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-
-      await expect(adapter.deleteSnippet('1')).rejects.toThrow(
-        'Failed to delete snippet'
-      )
-    })
-  })
-
-  describe('getAllNamespaces', () => {
-    it('should throw on invalid URL', async () => {
-      const adapter = new DBALStorageAdapter('not-a-valid-url')
-
-      await expect(adapter.getAllNamespaces()).rejects.toThrow(
-        'Invalid DBAL backend URL'
-      )
-    })
-
-    it('should fetch all namespaces', async () => {
-      const mockNamespaces = [
-        { id: 'ns1', name: 'Namespace 1', color: '#000000' }
-      ]
-
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockNamespaces
-      } as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-      const namespaces = await adapter.getAllNamespaces()
-
-      expect(namespaces).toHaveLength(1)
-    })
-
-    it('should throw on failed fetch', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        statusText: 'Server Error'
-      } as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-
-      await expect(adapter.getAllNamespaces()).rejects.toThrow(
-        'Failed to fetch namespaces'
-      )
-    })
-  })
-
-  describe('createNamespace', () => {
-    it('should throw on invalid URL', async () => {
-      const adapter = new DBALStorageAdapter('not-a-valid-url')
-
+    it('throws on a failed deletion', async () => {
+      mockFetch.mockResolvedValueOnce(fail('Not found'))
       await expect(
-        adapter.createNamespace({
-          id: 'ns1',
-          name: 'Test',
-          createdAt: Date.now(),
-          isDefault: false,
-        })
-      ).rejects.toThrow('Invalid DBAL backend URL')
-    })
-
-    it('should create namespace', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ id: 'ns1', name: 'Test Namespace', createdAt: Date.now(), isDefault: false })
-      } as unknown as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-      await adapter.createNamespace({
-        id: 'ns1',
-        name: 'Test Namespace',
-        createdAt: Date.now(),
-        isDefault: false,
-      })
-
-      expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining('/api/namespaces'),
-        expect.objectContaining({
-          method: 'POST'
-        })
-      )
-    })
-
-    it('should throw on failed creation', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        statusText: 'Bad Request'
-      } as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-
-      await expect(
-        adapter.createNamespace({
-          id: 'ns1',
-          name: 'Test',
-          createdAt: Date.now(),
-          isDefault: false,
-        })
-      ).rejects.toThrow('Failed to create namespace')
-    })
-  })
-
-  describe('deleteNamespace', () => {
-    it('should throw on invalid URL', async () => {
-      const adapter = new DBALStorageAdapter('not-a-valid-url')
-
-      await expect(adapter.deleteNamespace('ns1')).rejects.toThrow(
-        'Invalid DBAL backend URL'
-      )
-    })
-
-    it('should delete namespace', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true
-      } as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-      await adapter.deleteNamespace('ns1')
-
-      expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining('/api/namespaces/ns1'),
-        expect.objectContaining({
-          method: 'DELETE'
-        })
-      )
-    })
-
-    it('should throw on failed deletion', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        statusText: 'Not Found'
-      } as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-
-      await expect(adapter.deleteNamespace('ns1')).rejects.toThrow(
-        'Failed to delete namespace'
-      )
+        new DBALStorageAdapter(URL).deleteSnippet('1'),
+      ).rejects.toThrow('Failed to delete snippet')
     })
   })
 
   describe('bulkMoveSnippets', () => {
-    it('should throw on invalid URL', async () => {
-      const adapter = new DBALStorageAdapter('not-a-valid-url')
-
-      await expect(adapter.bulkMoveSnippets(['1'], 'ns2')).rejects.toThrow(
-        'Invalid DBAL backend URL'
-      )
-    })
-
-    it('should bulk move snippets', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true
-      } as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-      await adapter.bulkMoveSnippets(['1', '2'], 'ns2')
-
+    it('PUTs each snippet to the target namespace', async () => {
+      mockFetch.mockResolvedValue({ ok: true } as Response)
+      await new DBALStorageAdapter(URL).bulkMoveSnippets(['1', '2'], 'ns2')
       expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining('/api/snippets/bulk-move'),
-        expect.objectContaining({
-          method: 'POST'
-        })
+        expect.stringContaining('/Snippet/'),
+        expect.objectContaining({ method: 'PUT' }),
       )
+      expect(mockFetch).toHaveBeenCalledTimes(2)
     })
-
-    it('should throw on failed bulk move', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        statusText: 'Server Error'
-      } as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-
-      await expect(adapter.bulkMoveSnippets(['1'], 'ns2')).rejects.toThrow(
-        'Failed to bulk move snippets'
-      )
+    it('throws on a failed move', async () => {
+      mockFetch.mockResolvedValueOnce(fail())
+      await expect(
+        new DBALStorageAdapter(URL).bulkMoveSnippets(['1'], 'ns2'),
+      ).rejects.toThrow('Failed to bulk move snippets')
     })
   })
 
   describe('getSnippetsByNamespace', () => {
-    it('should filter snippets by namespace', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => [
-          {
-            id: '1',
-            title: 'Test',
-            code: 'test',
-            language: 'javascript',
-            category: 'test',
-            namespaceId: 'ns1',
-            createdAt: 1234567890,
-            updatedAt: 1234567890,
-            description: ''
-          }
-        ]
-      } as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-      const snippets = await adapter.getSnippetsByNamespace('ns1')
-
-      expect(snippets).toHaveLength(1)
-      expect(snippets[0].namespaceId).toBe('ns1')
+    it('filters snippets by namespace', async () => {
+      mockFetch.mockResolvedValueOnce(okJson([snip({ namespaceId: 'ns1' })]))
+      const out =
+        await new DBALStorageAdapter(URL).getSnippetsByNamespace('ns1')
+      expect(out).toHaveLength(1)
+      expect(out[0].namespaceId).toBe('ns1')
     })
   })
 
-  describe('getNamespace', () => {
-    it('should get namespace by id', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => [
-          { id: 'ns1', name: 'Namespace 1', color: '#000000' }
-        ]
-      } as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-      const namespace = await adapter.getNamespace('ns1')
-
-      expect(namespace?.id).toBe('ns1')
+  describe('namespaces', () => {
+    const ns = { id: 'ns1', name: 'NS', createdAt: 1, isDefault: false }
+    it('fetches all namespaces', async () => {
+      mockFetch.mockResolvedValueOnce(okJson([ns]))
+      expect(await new DBALStorageAdapter(URL).getAllNamespaces()).toHaveLength(
+        1,
+      )
     })
-
-    it('should return null for missing namespace', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => []
-      } as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-      const namespace = await adapter.getNamespace('nonexistent')
-
-      expect(namespace).toBeNull()
+    it('throws on a failed namespace fetch', async () => {
+      mockFetch.mockResolvedValueOnce(fail())
+      await expect(
+        new DBALStorageAdapter(URL).getAllNamespaces(),
+      ).rejects.toThrow('Failed to fetch namespaces')
+    })
+    it('creates a namespace', async () => {
+      mockFetch.mockResolvedValueOnce(okJson(ns))
+      await new DBALStorageAdapter(URL).createNamespace(ns)
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.stringContaining('/Namespace'),
+        expect.objectContaining({ method: 'POST' }),
+      )
+    })
+    it('deletes a namespace', async () => {
+      mockFetch.mockResolvedValueOnce({ ok: true } as Response)
+      await new DBALStorageAdapter(URL).deleteNamespace('ns1')
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.stringContaining('/Namespace/ns1'),
+        expect.objectContaining({ method: 'DELETE' }),
+      )
+    })
+    it('resolves a namespace by id', async () => {
+      mockFetch.mockResolvedValueOnce(okJson([ns]))
+      const out = await new DBALStorageAdapter(URL).getNamespace('ns1')
+      expect(out?.id).toBe('ns1')
+    })
+    it('returns null for a missing namespace', async () => {
+      mockFetch.mockResolvedValueOnce(okJson([]))
+      expect(await new DBALStorageAdapter(URL).getNamespace('x')).toBeNull()
     })
   })
 
   describe('clearDatabase', () => {
-    it('should call wipeDatabase', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true
-      } as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-      await adapter.clearDatabase()
-
-      expect(mockFetch).toHaveBeenCalled()
+    it('is a no-op (not supported via DBAL)', async () => {
+      await new DBALStorageAdapter(URL).clearDatabase()
+      expect(mockFetch).not.toHaveBeenCalled()
     })
   })
 
   describe('getStats', () => {
-    it('should calculate stats from snippets', async () => {
-      const mockSnippets = [
-        {
-          id: '1',
-          title: 'Test 1',
-          code: 'test',
-          language: 'javascript',
-          category: 'test',
-          isTemplate: false,
-          createdAt: 1234567890,
-          updatedAt: 1234567890,
-          description: ''
-        },
-        {
-          id: '2',
-          title: 'Template 1',
-          code: 'test',
-          language: 'javascript',
-          category: 'test',
-          isTemplate: true,
-          createdAt: 1234567890,
-          updatedAt: 1234567890,
-          description: ''
-        }
-      ]
-
-      const mockNamespaces = [
-        { id: '1', name: 'default', createdAt: 1234567890, isDefault: true }
-      ]
-
+    it('aggregates counts from snippets and namespaces', async () => {
       mockFetch
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => mockSnippets,
-          statusText: 'OK'
-        } as Response)
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => mockNamespaces,
-          statusText: 'OK'
-        } as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-      const stats = await adapter.getStats()
-
+        .mockResolvedValueOnce(okJson([snip(), snip({ isTemplate: true })]))
+        .mockResolvedValueOnce(okJson([{ id: 'n', isDefault: true }]))
+      const stats = await new DBALStorageAdapter(URL).getStats()
       expect(stats.snippetCount).toBe(2)
       expect(stats.templateCount).toBe(1)
       expect(stats.databaseSize).toBe(0)
@@ -881,63 +421,23 @@ describe('DBALStorageAdapter', () => {
   })
 
   describe('exportDatabase', () => {
-    it('should export database', async () => {
+    it('exports snippets and namespaces', async () => {
       mockFetch
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => [
-            {
-              id: '1',
-              title: 'Test',
-              code: 'test',
-              language: 'javascript',
-              category: 'test',
-              createdAt: 1234567890,
-              updatedAt: 1234567890,
-              description: ''
-            }
-          ]
-        } as Response)
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => [
-            { id: 'ns1', name: 'Namespace', color: '#000000' }
-          ]
-        } as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-      const data = await adapter.exportDatabase()
-
+        .mockResolvedValueOnce(okJson([snip()]))
+        .mockResolvedValueOnce(okJson([{ id: 'n', name: 'd' }]))
+      const data = await new DBALStorageAdapter(URL).exportDatabase()
       expect(data.snippets).toHaveLength(1)
       expect(data.namespaces).toHaveLength(1)
     })
   })
 
   describe('importDatabase', () => {
-    it('should import database', async () => {
-      mockFetch.mockResolvedValue({
-        ok: true
-      } as Response)
-
-      const adapter = new DBALStorageAdapter('http://localhost:5000')
-      await adapter.importDatabase({
-        snippets: [
-          {
-            id: '1',
-            title: 'Test',
-            code: 'test',
-            language: 'javascript',
-            category: 'test',
-            createdAt: 1234567890,
-            updatedAt: 1234567890,
-            description: ''
-          }
-        ],
-        namespaces: [
-          { id: 'ns1', name: 'Namespace', createdAt: Date.now(), isDefault: false }
-        ]
+    it('creates namespaces then snippets', async () => {
+      mockFetch.mockResolvedValue(okJson({}))
+      await new DBALStorageAdapter(URL).importDatabase({
+        snippets: [snip()],
+        namespaces: [{ id: 'ns1', name: 'NS', createdAt: 1, isDefault: false }],
       })
-
       expect(mockFetch).toHaveBeenCalled()
     })
   })

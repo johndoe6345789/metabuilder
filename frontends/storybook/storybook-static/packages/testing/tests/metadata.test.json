@@ -1,0 +1,70 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/tests.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "testing",
+  "description": "Metadata validation tests for the Testing Framework",
+  "testSuites": [
+    {
+      "id": "metadata_validation",
+      "name": "Testing Framework Metadata",
+      "description": "Verify metadata integrity for the testing framework",
+      "tests": [
+        {
+          "id": "package-id",
+          "name": "packageId matches",
+          "act": {
+            "type": "function_call",
+            "target": "getPackageMetadata",
+            "input": "testing"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "equals",
+                "actual": "result.packageId",
+                "expected": "testing"
+              }
+            ]
+          }
+        },
+        {
+          "id": "icon-exists",
+          "name": "Icon exists",
+          "act": {
+            "type": "function_call",
+            "target": "checkFileExists",
+            "input": "testing/static_content/icon.svg"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "truthy",
+                "actual": "result"
+              }
+            ]
+          }
+        },
+        {
+          "id": "metadata-schema",
+          "name": "package.json validates",
+          "act": {
+            "type": "function_call",
+            "target": "validateAgainstSchema",
+            "input": {
+              "file": "testing/package.json",
+              "schema": "https://metabuilder.dev/schemas/package-metadata.schema.json"
+            }
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "truthy",
+                "actual": "result.valid"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

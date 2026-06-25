@@ -27,7 +27,7 @@ export const fetchNamespaces = createAsyncThunk(
   async () => {
     await ensureDefaultNamespace()
     return await getAllNamespaces()
-  }
+  },
 )
 
 export const createNamespace = createAsyncThunk(
@@ -39,15 +39,17 @@ export const createNamespace = createAsyncThunk(
       createdAt: Date.now(),
       isDefault: false,
     }
-    return await createNamespaceDB(namespace)
-  }
+    // Some backends persist and return void; fall back to the namespace we
+    // built so the store always receives a complete object to push.
+    return (await createNamespaceDB(namespace)) ?? namespace
+  },
 )
 
 export const updateNamespace = createAsyncThunk(
   'namespaces/update',
   async ({ id, name }: { id: string; name: string }) => {
     return await updateNamespaceDB(id, name)
-  }
+  },
 )
 
 export const deleteNamespace = createAsyncThunk(
@@ -55,7 +57,7 @@ export const deleteNamespace = createAsyncThunk(
   async (id: string) => {
     await deleteNamespaceDB(id)
     return id
-  }
+  },
 )
 
 const namespacesSlice = createSlice({
@@ -66,9 +68,9 @@ const namespacesSlice = createSlice({
       state.selectedId = action.payload
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(fetchNamespaces.pending, (state) => {
+      .addCase(fetchNamespaces.pending, state => {
         state.loading = true
         state.error = null
       })
@@ -84,7 +86,7 @@ const namespacesSlice = createSlice({
         state.loading = false
         state.error = action.error.message || 'Failed to fetch namespaces'
       })
-      .addCase(createNamespace.pending, (state) => {
+      .addCase(createNamespace.pending, state => {
         state.loading = true
         state.error = null
       })
@@ -96,7 +98,7 @@ const namespacesSlice = createSlice({
         state.loading = false
         state.error = action.error.message || 'Failed to create namespace'
       })
-      .addCase(updateNamespace.pending, (state) => {
+      .addCase(updateNamespace.pending, state => {
         state.loading = true
         state.error = null
       })
@@ -109,7 +111,7 @@ const namespacesSlice = createSlice({
         state.loading = false
         state.error = action.error.message || 'Failed to update namespace'
       })
-      .addCase(deleteNamespace.pending, (state) => {
+      .addCase(deleteNamespace.pending, state => {
         state.loading = true
         state.error = null
       })

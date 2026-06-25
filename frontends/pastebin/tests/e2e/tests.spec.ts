@@ -17,7 +17,13 @@
  * Schema:        schemas/package-schemas/playwright.schema.json
  */
 
-import { test, expect, Page, Locator, APIRequestContext } from '@playwright/test'
+import {
+  test,
+  expect,
+  Page,
+  Locator,
+  APIRequestContext,
+} from '@playwright/test'
 import { readFileSync, existsSync, readdirSync } from 'fs'
 import { join, dirname, basename } from 'path'
 import { fileURLToPath } from 'url'
@@ -118,10 +124,15 @@ interface TestFile {
 // ─── Variable interpolation ───────────────────────────────────────────────────
 
 function interpolateStr(value: string, data: Record<string, string>): string {
-  return value.replace(/\$\{(\w+)\}/g, (_, key) => (key in data ? data[key] : `\${${key}}`))
+  return value.replace(/\$\{(\w+)\}/g, (_, key) =>
+    key in data ? data[key] : `\${${key}}`,
+  )
 }
 
-function interpolateStep(step: TestStep, data: Record<string, string>): TestStep {
+function interpolateStep(
+  step: TestStep,
+  data: Record<string, string>,
+): TestStep {
   const result: TestStep = { action: step.action }
   const out = result as unknown as Record<string, unknown>
   for (const [key, val] of Object.entries(step)) {
@@ -154,9 +165,13 @@ class PlaywrightTestInterpreter {
     this.vars = new Map()
   }
 
-  async executeSteps(steps: TestStep[], data: Record<string, string> = {}): Promise<void> {
+  async executeSteps(
+    steps: TestStep[],
+    data: Record<string, string> = {},
+  ): Promise<void> {
     for (const rawStep of steps) {
-      const step = Object.keys(data).length > 0 ? interpolateStep(rawStep, data) : rawStep
+      const step =
+        Object.keys(data).length > 0 ? interpolateStep(rawStep, data) : rawStep
       try {
         if (await this.shouldSkip(step)) {
           console.log(`  ↷ skipped "${step.action}" (skipIf matched)`)
@@ -205,7 +220,9 @@ class PlaywrightTestInterpreter {
         break
 
       case 'waitForLoadState':
-        await this.page.waitForLoadState((step.state as any) || 'domcontentloaded')
+        await this.page.waitForLoadState(
+          (step.state as any) || 'domcontentloaded',
+        )
         break
 
       case 'waitForURL':
@@ -274,7 +291,9 @@ class PlaywrightTestInterpreter {
         break
 
       case 'select':
-        await this.page.locator(step.selector as string).selectOption(step.value as string)
+        await this.page
+          .locator(step.selector as string)
+          .selectOption(step.value as string)
         break
 
       case 'check':
@@ -309,10 +328,10 @@ class PlaywrightTestInterpreter {
         if (step.selector) {
           await this.page.locator(step.selector).scrollIntoViewIfNeeded()
         } else {
-          await this.page.evaluate(
-            ({ x, y }) => window.scrollTo(x, y),
-            { x: step.x ?? 0, y: step.y ?? 0 },
-          )
+          await this.page.evaluate(({ x, y }) => window.scrollTo(x, y), {
+            x: step.x ?? 0,
+            y: step.y ?? 0,
+          })
         }
         break
 
@@ -325,7 +344,13 @@ class PlaywrightTestInterpreter {
         await this.page.waitForSelector(step.selector as string, {
           timeout: step.timeout ?? 5000,
           ...(step.state
-            ? { state: step.state as 'attached' | 'detached' | 'visible' | 'hidden' }
+            ? {
+                state: step.state as
+                  | 'attached'
+                  | 'detached'
+                  | 'visible'
+                  | 'hidden',
+              }
             : {}),
         })
         break
@@ -380,7 +405,9 @@ class PlaywrightTestInterpreter {
       // ── Screenshot ───────────────────────────────────────────────────────────
       case 'screenshot': {
         const clipVar = step.clipFrom ? this.vars.get(step.clipFrom) : undefined
-        const clip = clipVar as { x: number; y: number; width: number; height: number } | undefined
+        const clip = clipVar as
+          | { x: number; y: number; width: number; height: number }
+          | undefined
         await this.page.screenshot({
           path: step.filename as string,
           fullPage: !!step.fullPage,
@@ -417,27 +444,31 @@ class PlaywrightTestInterpreter {
     const applyNth = (loc: Locator) =>
       typeof step.nth === 'number' ? loc.nth(step.nth) : loc
 
-    if (step.testId)     return applyNth(this.page.getByTestId(step.testId))
+    if (step.testId) return applyNth(this.page.getByTestId(step.testId))
     if (step.role) {
       const loc = step.text
         ? this.page.getByRole(step.role as any, { name: step.text })
         : this.page.getByRole(step.role as any)
       return applyNth(loc)
     }
-    if (step.label)       return applyNth(this.page.getByLabel(step.label))
-    if (step.placeholder) return applyNth(this.page.getByPlaceholder(step.placeholder))
-    if (step.alt)         return applyNth(this.page.getByAltText(step.alt))
-    if (step.title)       return applyNth(this.page.getByTitle(step.title))
-    if (step.text)        return applyNth(this.page.getByText(step.text))
-    if (step.selector)    return applyNth(this.page.locator(step.selector))
-    throw new Error(`No locator strategy provided in step: ${JSON.stringify(step)}`)
+    if (step.label) return applyNth(this.page.getByLabel(step.label))
+    if (step.placeholder)
+      return applyNth(this.page.getByPlaceholder(step.placeholder))
+    if (step.alt) return applyNth(this.page.getByAltText(step.alt))
+    if (step.title) return applyNth(this.page.getByTitle(step.title))
+    if (step.text) return applyNth(this.page.getByText(step.text))
+    if (step.selector) return applyNth(this.page.locator(step.selector))
+    throw new Error(
+      `No locator strategy provided in step: ${JSON.stringify(step)}`,
+    )
   }
 
   // ── expect action ─────────────────────────────────────────────────────────
 
   private async handleExpect(step: TestStep): Promise<void> {
     const assertion = step.assertion as Assertion
-    if (!assertion?.matcher) throw new Error('expect action requires an assertion.matcher')
+    if (!assertion?.matcher)
+      throw new Error('expect action requires an assertion.matcher')
 
     // Page-level matchers
     if (assertion.matcher === 'toHaveURL') {
@@ -446,7 +477,10 @@ class PlaywrightTestInterpreter {
       // so tests work with both port 80 (Docker stack) and dynamic ports (Testcontainers).
       if (expectedUrl && typeof expectedUrl === 'string') {
         const pageOrigin = new URL(this.page.url()).origin
-        expectedUrl = expectedUrl.replace(/^http:\/\/localhost(?=\/pastebin)/, pageOrigin)
+        expectedUrl = expectedUrl.replace(
+          /^http:\/\/localhost(?=\/pastebin)/,
+          pageOrigin,
+        )
       }
       const base = assertion.not ? expect(this.page).not : expect(this.page)
       await (base as any).toHaveURL(expectedUrl, {
@@ -467,31 +501,79 @@ class PlaywrightTestInterpreter {
     const opts = assertion.timeout ? { timeout: assertion.timeout } : undefined
 
     switch (assertion.matcher) {
-      case 'toBeVisible':     await (base as any).toBeVisible(opts);    break
-      case 'toBeHidden':      await (base as any).toBeHidden(opts);     break
-      case 'toBeEnabled':     await (base as any).toBeEnabled(opts);    break
-      case 'toBeDisabled':    await (base as any).toBeDisabled(opts);   break
-      case 'toBeChecked':     await (base as any).toBeChecked(opts);    break
-      case 'toBeEditable':    await (base as any).toBeEditable(opts);   break
-      case 'toBeEmpty':       await (base as any).toBeEmpty(opts);      break
-      case 'toContainText':   await (base as any).toContainText(assertion.expected ?? assertion.text, opts); break
-      case 'toHaveText':      await (base as any).toHaveText(assertion.expected ?? assertion.text, opts);    break
-      case 'toHaveValue':     await (base as any).toHaveValue(assertion.value ?? assertion.expected, opts);  break
-      case 'toHaveCount':     await (base as any).toHaveCount(assertion.count, opts);                        break
-      case 'toHaveAttribute': await (base as any).toHaveAttribute(assertion.name, assertion.value, opts);    break
-      case 'toHaveClass':     await (base as any).toHaveClass(assertion.className, opts);                    break
-      case 'toHaveCSS':       await (base as any).toHaveCSS(assertion.property, assertion.value, opts);      break
-      case 'toHaveScreenshot':await (base as any).toHaveScreenshot(assertion.name, opts);                    break
+      case 'toBeVisible':
+        await (base as any).toBeVisible(opts)
+        break
+      case 'toBeHidden':
+        await (base as any).toBeHidden(opts)
+        break
+      case 'toBeEnabled':
+        await (base as any).toBeEnabled(opts)
+        break
+      case 'toBeDisabled':
+        await (base as any).toBeDisabled(opts)
+        break
+      case 'toBeChecked':
+        await (base as any).toBeChecked(opts)
+        break
+      case 'toBeEditable':
+        await (base as any).toBeEditable(opts)
+        break
+      case 'toBeEmpty':
+        await (base as any).toBeEmpty(opts)
+        break
+      case 'toContainText':
+        await (base as any).toContainText(
+          assertion.expected ?? assertion.text,
+          opts,
+        )
+        break
+      case 'toHaveText':
+        await (base as any).toHaveText(
+          assertion.expected ?? assertion.text,
+          opts,
+        )
+        break
+      case 'toHaveValue':
+        await (base as any).toHaveValue(
+          assertion.value ?? assertion.expected,
+          opts,
+        )
+        break
+      case 'toHaveCount':
+        await (base as any).toHaveCount(assertion.count, opts)
+        break
+      case 'toHaveAttribute':
+        await (base as any).toHaveAttribute(
+          assertion.name,
+          assertion.value,
+          opts,
+        )
+        break
+      case 'toHaveClass':
+        await (base as any).toHaveClass(assertion.className, opts)
+        break
+      case 'toHaveCSS':
+        await (base as any).toHaveCSS(assertion.property, assertion.value, opts)
+        break
+      case 'toHaveScreenshot':
+        await (base as any).toHaveScreenshot(assertion.name, opts)
+        break
       case 'toBeInViewport': {
         const box = await locator.boundingBox()
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         assertion.not ? expect(box).toBeNull() : expect(box).not.toBeNull()
         break
       }
       case 'custom':
         // Legacy: kept for backwards compatibility. Use evalExpect instead.
         await (assertion.not
-          ? expect(await this.page.evaluate(assertion.script as string)).toBeFalsy()
-          : expect(await this.page.evaluate(assertion.script as string)).toBeTruthy())
+          ? expect(
+              await this.page.evaluate(assertion.script as string),
+            ).toBeFalsy()
+          : expect(
+              await this.page.evaluate(assertion.script as string),
+            ).toBeTruthy())
         break
       default:
         throw new Error(`Unknown expect matcher: "${assertion.matcher}"`)
@@ -500,41 +582,53 @@ class PlaywrightTestInterpreter {
 
   // ── evalExpect value assertions ──────────────────────────────────────────
 
-  private async assertValue(value: unknown, assertion: Assertion): Promise<void> {
-    if (!assertion?.matcher) throw new Error('evalExpect requires an assertion.matcher')
+  private async assertValue(
+    value: unknown,
+    assertion: Assertion,
+  ): Promise<void> {
+    if (!assertion?.matcher)
+      throw new Error('evalExpect requires an assertion.matcher')
     const not = assertion.not === true
 
     switch (assertion.matcher) {
       case 'toBeTruthy':
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         not ? expect(value).toBeFalsy() : expect(value).toBeTruthy()
         break
       case 'toBeFalsy':
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         not ? expect(value).toBeTruthy() : expect(value).toBeFalsy()
         break
       case 'toBeNull':
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         not ? expect(value).not.toBeNull() : expect(value).toBeNull()
         break
       case 'toEqual':
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         not
           ? expect(value).not.toEqual(assertion.expected)
           : expect(value).toEqual(assertion.expected)
         break
       case 'toContain':
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         not
           ? expect(value).not.toContain(assertion.expected)
           : expect(value).toContain(assertion.expected)
         break
       case 'toHaveLength':
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         not
           ? expect(value as unknown[]).not.toHaveLength(assertion.count!)
           : expect(value as unknown[]).toHaveLength(assertion.count!)
         break
       case 'toBeEmpty':
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         not
           ? expect(value as unknown[]).not.toHaveLength(0)
           : expect(value as unknown[]).toHaveLength(0)
         break
       case 'toMatch':
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         not
           ? expect(String(value)).not.toMatch(new RegExp(assertion.pattern!))
           : expect(String(value)).toMatch(new RegExp(assertion.pattern!))
@@ -549,20 +643,36 @@ class PlaywrightTestInterpreter {
   private async handleApiRequest(step: TestStep): Promise<void> {
     const method = ((step.method as string) || 'GET').toUpperCase()
     const url = step.url as string
-    const assertion = step.assertion as { status?: number; bodyContains?: string } | undefined
+    const assertion = step.assertion as
+      | { status?: number; bodyContains?: string }
+      | undefined
 
     let response: Awaited<ReturnType<APIRequestContext['fetch']>>
     switch (method) {
-      case 'GET':    response = await this.request.get(url); break
-      case 'POST':   response = await this.request.post(url, { data: step.body }); break
-      case 'PUT':    response = await this.request.put(url, { data: step.body }); break
-      case 'PATCH':  response = await this.request.patch(url, { data: step.body }); break
-      case 'DELETE': response = await this.request.delete(url); break
-      default:       response = await this.request.fetch(url, { method }); break
+      case 'GET':
+        response = await this.request.get(url)
+        break
+      case 'POST':
+        response = await this.request.post(url, { data: step.body })
+        break
+      case 'PUT':
+        response = await this.request.put(url, { data: step.body })
+        break
+      case 'PATCH':
+        response = await this.request.patch(url, { data: step.body })
+        break
+      case 'DELETE':
+        response = await this.request.delete(url)
+        break
+      default:
+        response = await this.request.fetch(url, { method })
+        break
     }
 
-    if (assertion?.status !== undefined) expect(response.status()).toBe(assertion.status)
-    if (assertion?.bodyContains !== undefined) expect(await response.text()).toContain(assertion.bodyContains)
+    if (assertion?.status !== undefined)
+      expect(response.status()).toBe(assertion.status)
+    if (assertion?.bodyContains !== undefined)
+      expect(await response.text()).toContain(assertion.bodyContains)
   }
 }
 
@@ -586,7 +696,7 @@ async function loginViaApi(page: Page): Promise<void> {
 const JSON_SKIP = new Set(['md3-schema.json', 'tsconfig.json', 'package.json'])
 
 const jsonFiles = readdirSync(__dirname)
-  .filter((f) => f.endsWith('.json') && !JSON_SKIP.has(f))
+  .filter(f => f.endsWith('.json') && !JSON_SKIP.has(f))
   .sort()
 
 for (const jsonFile of jsonFiles) {
@@ -603,7 +713,11 @@ for (const jsonFile of jsonFiles) {
 
   if (!Array.isArray(testDef.tests) || testDef.tests.length === 0) continue
 
-  const suiteName = testDef.suite ?? testDef.description ?? testDef.package ?? basename(jsonFile, '.json')
+  const suiteName =
+    testDef.suite ??
+    testDef.description ??
+    testDef.package ??
+    basename(jsonFile, '.json')
 
   test.describe(suiteName, () => {
     // Login before every test so AuthGuard doesn't redirect
@@ -627,12 +741,14 @@ function registerTest(testCase: TestCase): void {
 
       test.beforeEach(async ({ page }) => {
         interpreter.setPage(page)
-        if (testCase.beforeEach) await interpreter.executeSteps(testCase.beforeEach)
+        if (testCase.beforeEach)
+          await interpreter.executeSteps(testCase.beforeEach)
       })
 
       test.afterEach(async ({ page }) => {
         interpreter.setPage(page)
-        if (testCase.afterEach) await interpreter.executeSteps(testCase.afterEach)
+        if (testCase.afterEach)
+          await interpreter.executeSteps(testCase.afterEach)
       })
 
       if (testCase.parameterize?.data) {

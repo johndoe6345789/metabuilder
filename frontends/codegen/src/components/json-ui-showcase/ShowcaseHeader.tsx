@@ -1,4 +1,4 @@
-import { Badge } from '@metabuilder/fakemui/data-display'
+import { Badge } from '@metabuilder/m3/data-display'
 import { ShowcaseHeaderCopy } from './types'
 
 interface ShowcaseHeaderProps {

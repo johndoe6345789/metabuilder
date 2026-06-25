@@ -1,60 +1,45 @@
-# Multi-stage build: node_modules from base image, source built fresh
+# Multi-stage build — source + build only, no npm install.
+# Deps are pre-baked into base-postgres-deps (immutable, rebuilt on package.json changes).
 # Context: monorepo root (..)
-# Requires: docker build -f deployment/base-images/Dockerfile.node-deps \
-#           -t metabuilder/base-node-deps:latest .
 
 # --- Build stage ---
 ARG BASE_REGISTRY=metabuilder
-FROM ${BASE_REGISTRY}/base-node-deps:latest AS builder
+FROM ${BASE_REGISTRY}/base-postgres-deps:latest AS builder
 
-# ── Shared packages (resolved by transpilePackages + webpack aliases) ────────
-# Each COPY targets only the source tree that postgres actually imports.
-#
-# hooks (shared React hooks)
-COPY hooks/ ./hooks/
-
-# icons (React icon components — imported by components/fakemui)
-COPY icons/ ./icons/
-
-# scss (Material 3 SCSS, theme, atoms — loaded by sassOptions.includePaths)
-COPY scss/ ./scss/
-
-# components + FakeMUI (UI component library)
-COPY components/ ./components/
-
-# ── Redux packages (all — small TS source, avoids transitive dep breakage) ───
-COPY redux/core/ ./redux/core/
-COPY redux/slices/ ./redux/slices/
-COPY redux/hooks/ ./redux/hooks/
-COPY redux/adapters/ ./redux/adapters/
-COPY redux/api-clients/ ./redux/api-clients/
-COPY redux/core-hooks/ ./redux/core-hooks/
-COPY redux/email/ ./redux/email/
-COPY redux/hooks-async/ ./redux/hooks-async/
-COPY redux/hooks-auth/ ./redux/hooks-auth/
-COPY redux/hooks-canvas/ ./redux/hooks-canvas/
-COPY redux/hooks-data/ ./redux/hooks-data/
-COPY redux/hooks-forms/ ./redux/hooks-forms/
-COPY redux/hooks-utils/ ./redux/hooks-utils/
-COPY redux/middleware/ ./redux/middleware/
-COPY redux/persist/ ./redux/persist/
-COPY redux/services/ ./redux/services/
-COPY redux/timing-utils/ ./redux/timing-utils/
-
-# types (transitive dependency via hooks)
-COPY types/ ./types/
-
-# workflow (DAG engine — imported by components package)
-COPY workflow/ ./workflow/
-
-# ── Postgres Dashboard (the app itself) ──────────────────────────────────────
+# Copy all source (workspace libs + app)
+COPY libraries/hooks/ ./libraries/hooks/
+COPY libraries/icons/ ./libraries/icons/
+COPY libraries/scss/ ./libraries/scss/
+COPY libraries/components/ ./libraries/components/
+COPY libraries/redux/core/ ./libraries/redux/core/
+COPY libraries/redux/slices/ ./libraries/redux/slices/
+COPY libraries/redux/hooks/ ./libraries/redux/hooks/
+COPY libraries/redux/adapters/ ./libraries/redux/adapters/
+COPY libraries/redux/api-clients/ ./libraries/redux/api-clients/
+COPY libraries/redux/core-hooks/ ./libraries/redux/core-hooks/
+COPY libraries/redux/email/ ./libraries/redux/email/
+COPY libraries/redux/hooks-async/ ./libraries/redux/hooks-async/
+COPY libraries/redux/hooks-auth/ ./libraries/redux/hooks-auth/
+COPY libraries/redux/hooks-canvas/ ./libraries/redux/hooks-canvas/
+COPY libraries/redux/hooks-data/ ./libraries/redux/hooks-data/
+COPY libraries/redux/hooks-forms/ ./libraries/redux/hooks-forms/
+COPY libraries/redux/hooks-utils/ ./libraries/redux/hooks-utils/
+COPY libraries/redux/middleware/ ./libraries/redux/middleware/
+COPY libraries/redux/persist/ ./libraries/redux/persist/
+COPY libraries/redux/services/ ./libraries/redux/services/
+COPY libraries/redux/timing-utils/ ./libraries/redux/timing-utils/
+COPY libraries/types/ ./libraries/types/
+COPY libraries/interfaces/ ./libraries/interfaces/
+COPY libraries/translations/ ./libraries/translations/
+COPY libraries/workflow/ ./libraries/workflow/
 COPY frontends/postgres/ ./frontends/postgres/
 
-# Build workspace library packages
-RUN for ws in redux/core redux/slices redux/hooks redux/adapters \
-    redux/hooks-async redux/api-clients redux/persist \
-    components workflow; do \
-    npm run build -w "$ws" --if-present 2>&1 || echo "WARN: $ws build failed (non-critical)"; \
+# Build workspace libraries
+RUN for ws in libraries/redux/core libraries/redux/slices \
+    libraries/redux/hooks libraries/redux/adapters \
+    libraries/redux/hooks-async libraries/redux/api-clients \
+    libraries/redux/persist libraries/components libraries/workflow; do \
+    npm run build -w "$ws" --if-present 2>&1 || { echo "ERROR: $ws build failed"; exit 1; }; \
 done
 
 # Build the app

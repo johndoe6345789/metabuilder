@@ -1,24 +1,43 @@
-FROM python:3.12-slim
+FROM debian:bookworm AS build
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+       ca-certificates cmake g++ ninja-build python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN python3 -m pip install --break-system-packages --no-cache-dir conan
+
+WORKDIR /src
+COPY . .
+
+RUN conan profile detect --force \
+    && conan install . --output-folder=build --build=missing \
+       -s build_type=Release \
+    && cmake -S . -B build -G Ninja \
+       -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake \
+       -DCMAKE_BUILD_TYPE=Release \
+    && cmake --build build \
+    && cmake --install build --prefix /opt/codegen-backend
+
+FROM debian:bookworm-slim
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates libpq5 \
+       libstdc++6 \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-
-COPY requirements.txt .
-
-RUN for i in 1 2 3 4 5; do \
-      pip install --no-cache-dir -r requirements.txt && break \
-      || (echo "pip failed (attempt $i/5), retrying in $((i*10))s..." && sleep $((i*10))); \
-    done
-
-COPY app.py .
+COPY --from=build /opt/codegen-backend /opt/codegen-backend
+COPY migrations/ ./migrations/
 
 RUN mkdir -p /data
 
 ENV PORT=5001
-ENV DEBUG=false
-ENV DATABASE_PATH=/data/codeforge.db
+ENV DATABASE_URL="host=codegen-db port=5432 dbname=codegen user=codegen password=codegen"
+ENV MIGRATIONS_DIR=/app/migrations
+ENV SQLITE_MIGRATION_PATH=/data/codeforge.db
 
 EXPOSE 5001
-
 VOLUME ["/data"]
 
-CMD ["gunicorn", "--bind", "0.0.0.0:5001", "--workers", "4", "--timeout", "120", "app:app"]
+CMD ["/opt/codegen-backend/bin/codegen-backend"]

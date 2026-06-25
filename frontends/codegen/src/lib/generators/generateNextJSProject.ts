@@ -1,5 +1,5 @@
 import { ComponentNode, DbModel, ThemeConfig } from '@/types/project'
-import { generateMUITheme } from './generateMUITheme'
+import { generateTheme } from './generateMUITheme'
 import { generatePrismaSchema } from './generatePrismaSchema'
 
 export function generateNextJSProject(
@@ -22,9 +22,6 @@ export function generateNextJSProject(
         lint: 'next lint',
       },
       dependencies: {
-        '@mui/material': '^5.15.0',
-        '@emotion/react': '^11.11.0',
-        '@emotion/styled': '^11.11.0',
         '@prisma/client': '^5.8.0',
         next: '14.1.0',
         react: '^18.2.0',
@@ -35,6 +32,7 @@ export function generateNextJSProject(
         '@types/react': '^18',
         '@types/react-dom': '^18',
         prisma: '^5.8.0',
+        sass: '^1.77.8',
         typescript: '^5',
       },
     },
@@ -44,22 +42,129 @@ export function generateNextJSProject(
 
   files['prisma/schema.prisma'] = generatePrismaSchema(models)
 
-  files['src/theme.ts'] = generateMUITheme(theme)
+  files['src/theme.ts'] = generateTheme(theme)
 
-  files['src/app/page.tsx'] = `'use client'
+  const activeVariant = theme.variants.find((variant) => variant.id === theme.activeVariantId) || theme.variants[0]
+  const colors = activeVariant?.colors
 
-import { ThemeProvider } from '@mui/material/styles'
-import CssBaseline from '@mui/material/CssBaseline'
-import { theme } from '@/theme'
+  files['src/app/layout.tsx'] = `import './globals.scss'
 
-export default function Home() {
+export const metadata = {
+  title: '${projectName}',
+  description: 'Generated with CodeForge',
+}
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <main>
-        {/* Your components here */}
-      </main>
-    </ThemeProvider>
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  )
+}`
+
+  files['src/app/globals.scss'] = `:root {
+  color-scheme: light;
+  --background: ${colors?.background ?? '#ffffff'};
+  --surface: ${colors?.surface ?? '#f7f7f7'};
+  --surface-variant: ${colors?.border ?? '#e5e7eb'};
+  --text-primary: ${colors?.text ?? '#111827'};
+  --text-secondary: ${colors?.textSecondary ?? '#4b5563'};
+  --primary: ${colors?.primaryColor ?? '#6750a4'};
+  --secondary: ${colors?.secondaryColor ?? '#625b71'};
+  --error: ${colors?.errorColor ?? '#b3261e'};
+  --warning: ${colors?.warningColor ?? '#f9ab00'};
+  --success: ${colors?.successColor ?? '#146c2e'};
+  --font-family: ${theme.fontFamily};
+  --radius: ${theme.borderRadius}px;
+  --space: ${theme.spacing}px;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--background);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.app-shell {
+  min-height: 100vh;
+  padding: calc(var(--space) * 4);
+}
+
+.hero {
+  max-width: 42rem;
+  display: grid;
+  gap: calc(var(--space) * 2);
+}
+
+.hero__eyebrow {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  letter-spacing: 0;
+}
+
+.hero__title {
+  margin: 0;
+  font-size: 2.5rem;
+  line-height: 1.1;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--space) * 1.5);
+}
+
+.button {
+  appearance: none;
+  border: 0;
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+.button--primary {
+  background: var(--primary);
+  color: white;
+}
+
+.button--secondary {
+  background: transparent;
+  color: var(--text-primary);
+  box-shadow: inset 0 0 0 1px var(--surface-variant);
+}`
+
+  files['src/app/page.tsx'] = `export default function Home() {
+  return (
+    <main className="app-shell">
+      <section className="hero">
+        <p className="hero__eyebrow">Generated starter</p>
+        <h1 className="hero__title">Build your app with SCSS and design tokens.</h1>
+        <p>
+          This starter keeps the runtime lean: no MUI dependency, no Emotion, just
+          Next.js, Prisma, and a token-driven SCSS layer.
+        </p>
+        <div className="hero__actions">
+          <button className="button button--primary" type="button">
+            Get Started
+          </button>
+          <button className="button button--secondary" type="button">
+            View Docs
+          </button>
+        </div>
+      </section>
+    </main>
   )
 }`
 

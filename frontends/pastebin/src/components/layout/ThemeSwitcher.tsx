@@ -1,6 +1,6 @@
 'use client'
 
-import { MaterialIcon } from '@metabuilder/components/fakemui'
+import { MaterialIcon } from '@metabuilder/components/m3'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { setTheme } from '@/store/slices/uiSlice'
 import { selectTheme } from '@/store/selectors'
@@ -18,10 +18,11 @@ export function ThemeSwitcher() {
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       data-testid="theme-switcher"
     >
-      {isDark
-        ? <MaterialIcon name="light_mode" size={18} aria-hidden="true" />
-        : <MaterialIcon name="dark_mode" size={18} aria-hidden="true" />
-      }
+      {isDark ? (
+        <MaterialIcon name="light_mode" size={18} aria-hidden="true" />
+      ) : (
+        <MaterialIcon name="dark_mode" size={18} aria-hidden="true" />
+      )}
     </button>
   )
 }

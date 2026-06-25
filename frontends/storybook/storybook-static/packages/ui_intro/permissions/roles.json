@@ -1,0 +1,44 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "ui_intro",
+  "description": "Intro section access permissions",
+  "permissions": [
+    {
+      "id": "intro.view",
+      "name": "View Intro Sections",
+      "description": "View intro sections on pages",
+      "resource": "intro",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 1
+    },
+    {
+      "id": "intro.configure",
+      "name": "Configure Intro Sections",
+      "description": "Configure intro section content and layout",
+      "resource": "intro",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "intro.create",
+      "name": "Create Intro Sections",
+      "description": "Create new intro sections",
+      "resource": "intro",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 2
+    }
+  ],
+  "resources": [
+    {
+      "id": "intro",
+      "name": "Intro Section",
+      "type": "component",
+      "description": "Page intro section resources",
+      "actions": ["read", "manage", "create"]
+    }
+  ]
+}

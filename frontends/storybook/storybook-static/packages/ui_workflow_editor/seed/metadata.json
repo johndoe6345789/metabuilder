@@ -1,0 +1,20 @@
+{
+  "packageId": "ui_workflow_editor",
+  "description": "Workflow Editor - Visual node-based automation builder with JSON export",
+  "version": "1.0.0",
+  "features": [
+    "Drag-and-drop node-based workflow builder",
+    "50+ pre-built triggers, actions, and conditions",
+    "Real-time JSON workflow export",
+    "Workflow templates and library",
+    "Execution history and monitoring",
+    "Scheduling and cron support",
+    "Error handling and retry logic",
+    "Multi-step workflows with parallel execution",
+    "Workflow versioning and rollback",
+    "Admin panel for all users (level 3+)"
+  ],
+  "seed": {
+    "schema": "page-config"
+  }
+}

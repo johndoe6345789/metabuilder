@@ -1,0 +1,77 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "css_designer",
+  "name": "CSS Designer",
+  "version": "1.0.0",
+  "description": "Visual CSS designer for creating and editing style overlays. Provides color pickers, font selectors, spacing controls, and exports to SCSS.",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "design",
+  "minLevel": 2,
+  "primary": true,
+  "databaseRequired": false,
+  "dependencies": {
+    "shared": "*"
+  },
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "CSSDesigner",
+      "ColorPaletteEditor",
+      "FontSelector",
+      "SpacingEditor",
+      "BorderEditor",
+      "ShadowEditor",
+      "StylePreview"
+    ],
+    "scripts": [
+      "init",
+      "colors",
+      "fonts",
+      "spacing",
+      "borders",
+      "shadows",
+      "export"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "icon": "static_content/icon.svg",
+  "files": {
+    "directories": [
+      "components",
+      "permissions",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/stories.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "static_content/icon.svg"
+      ]
+    }
+  }
+}

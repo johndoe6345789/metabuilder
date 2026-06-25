@@ -1,0 +1,114 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/tests.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "data_table",
+  "description": "Table sorting functionality tests",
+
+  "testSuites": [
+    {
+      "id": "sorting-functionality",
+      "name": "Sorting Functionality Tests",
+      "description": "Test column sorting in ascending and descending order",
+      "tags": ["sorting", "functionality"],
+
+      "tests": [
+        {
+          "id": "test-sort-ascending",
+          "name": "should sort data in ascending order",
+          "parameterized": true,
+          "parameters": [
+            {
+              "case": "sort names alphabetically",
+              "input": {
+                "data": [
+                  { "id": 1, "name": "Charlie", "age": 30 },
+                  { "id": 2, "name": "Alice", "age": 25 },
+                  { "id": 3, "name": "Bob", "age": 35 }
+                ],
+                "column": "name",
+                "direction": "asc"
+              },
+              "expected": [2, 3, 1]
+            },
+            {
+              "case": "sort numbers ascending",
+              "input": {
+                "data": [
+                  { "id": 1, "name": "Alice", "age": 30 },
+                  { "id": 2, "name": "Bob", "age": 25 },
+                  { "id": 3, "name": "Charlie", "age": 35 }
+                ],
+                "column": "age",
+                "direction": "asc"
+              },
+              "expected": [2, 1, 3]
+            }
+          ],
+          "act": {
+            "type": "function_call",
+            "target": "sorting.sortByColumn",
+            "input": "{{input}}"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "deepEquals",
+                "actual": "result.map(row => row.id)",
+                "expected": "{{expected}}",
+                "description": "Sorted order should match expected"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test-sort-descending",
+          "name": "should sort data in descending order",
+          "parameterized": true,
+          "parameters": [
+            {
+              "case": "sort names reverse alphabetically",
+              "input": {
+                "data": [
+                  { "id": 1, "name": "Alice", "age": 25 },
+                  { "id": 2, "name": "Bob", "age": 30 },
+                  { "id": 3, "name": "Charlie", "age": 35 }
+                ],
+                "column": "name",
+                "direction": "desc"
+              },
+              "expected": [3, 2, 1]
+            },
+            {
+              "case": "sort numbers descending",
+              "input": {
+                "data": [
+                  { "id": 1, "name": "Alice", "age": 25 },
+                  { "id": 2, "name": "Bob", "age": 30 },
+                  { "id": 3, "name": "Charlie", "age": 35 }
+                ],
+                "column": "age",
+                "direction": "desc"
+              },
+              "expected": [3, 2, 1]
+            }
+          ],
+          "act": {
+            "type": "function_call",
+            "target": "sorting.sortByColumn",
+            "input": "{{input}}"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "deepEquals",
+                "actual": "result.map(row => row.id)",
+                "expected": "{{expected}}",
+                "description": "Sorted order should match expected"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

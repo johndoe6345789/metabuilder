@@ -7,23 +7,33 @@ describe('utils', () => {
     })
 
     test('combines multiple classes', () => {
-      expect(cn('bg-blue-500', 'text-white', 'p-4')).toBe('bg-blue-500 text-white p-4')
+      expect(cn('bg-blue-500', 'text-white', 'p-4')).toBe(
+        'bg-blue-500 text-white p-4',
+      )
     })
 
     test('filters out undefined values', () => {
-      expect(cn('bg-blue-500', undefined, 'text-white')).toBe('bg-blue-500 text-white')
+      expect(cn('bg-blue-500', undefined, 'text-white')).toBe(
+        'bg-blue-500 text-white',
+      )
     })
 
     test('filters out null values', () => {
-      expect(cn('bg-blue-500', null, 'text-white')).toBe('bg-blue-500 text-white')
+      expect(cn('bg-blue-500', null, 'text-white')).toBe(
+        'bg-blue-500 text-white',
+      )
     })
 
     test('filters out false values', () => {
-      expect(cn('bg-blue-500', false, 'text-white')).toBe('bg-blue-500 text-white')
+      expect(cn('bg-blue-500', false, 'text-white')).toBe(
+        'bg-blue-500 text-white',
+      )
     })
 
     test('handles all falsy values', () => {
-      expect(cn('active', undefined, null, false, '', 'inactive')).toBe('active inactive')
+      expect(cn('active', undefined, null, false, '', 'inactive')).toBe(
+        'active inactive',
+      )
     })
 
     test('handles empty input', () => {

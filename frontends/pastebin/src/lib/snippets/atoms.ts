@@ -6,4 +6,3 @@
 import atomsData from '@/data/snippets/atoms.json'
 
 export const atomsCodeSnippets: Record<string, string> = atomsData
-

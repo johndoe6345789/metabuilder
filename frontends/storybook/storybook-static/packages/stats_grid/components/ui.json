@@ -1,0 +1,714 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "stats_grid",
+  "description": "Statistics grid components including stat cards and grid layouts",
+  "components": [
+    {
+      "id": "stats_grid",
+      "name": "StatsGrid",
+      "description": "Responsive grid layout for displaying statistics cards",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "description": "Grid title"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": "Grid description"
+        },
+        {
+          "name": "stats",
+          "type": "array",
+          "required": true,
+          "description": "Array of stat items to display"
+        },
+        {
+          "name": "spacing",
+          "type": "number",
+          "default": 3,
+          "description": "Grid spacing"
+        },
+        {
+          "name": "emptyMessage",
+          "type": "string",
+          "default": "No statistics available",
+          "description": "Message when no stats"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Grid",
+          "container": true,
+          "spacing": "{{spacing}}",
+          "className": "stats-grid",
+          "children": [
+            {
+              "type": "conditional",
+              "condition": "{{title || description}}",
+              "then": {
+                "type": "Box",
+                "className": "stats-grid-header",
+                "sx": {
+                  "width": "100%",
+                  "mb": 2
+                },
+                "children": [
+                  {
+                    "type": "conditional",
+                    "condition": "{{title}}",
+                    "then": {
+                      "type": "Text",
+                      "variant": "h5",
+                      "fontWeight": "bold",
+                      "children": "{{title}}"
+                    }
+                  },
+                  {
+                    "type": "conditional",
+                    "condition": "{{description}}",
+                    "then": {
+                      "type": "Text",
+                      "variant": "body2",
+                      "color": "secondary",
+                      "children": "{{description}}"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "conditional",
+              "condition": "{{stats.length > 0}}",
+              "then": {
+                "type": "Grid",
+                "container": true,
+                "spacing": 2,
+                "className": "stats-grid-content",
+                "children": "{{stats}}"
+              },
+              "else": {
+                "type": "Box",
+                "className": "stats-grid-empty",
+                "sx": {
+                  "display": "flex",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "width": "100%",
+                  "py": 4
+                },
+                "children": [
+                  {
+                    "type": "Text",
+                    "variant": "body1",
+                    "color": "secondary",
+                    "children": "{{emptyMessage}}"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "stat_card",
+      "name": "StatCard",
+      "description": "Standard stat card with icon, value, trend indicator, and optional sparkline",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "description": "Card label text"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": true,
+          "description": "Main statistic value"
+        },
+        {
+          "name": "icon",
+          "type": "string",
+          "required": false,
+          "default": "BarChart",
+          "description": "Icon name"
+        },
+        {
+          "name": "trend",
+          "type": "object",
+          "required": false,
+          "description": "Trend data with direction, value, and period"
+        },
+        {
+          "name": "color",
+          "type": "string",
+          "required": false,
+          "default": "primary"
+        },
+        {
+          "name": "target",
+          "type": "object",
+          "required": false,
+          "description": "Target/goal information"
+        },
+        {
+          "name": "showSparkline",
+          "type": "boolean",
+          "default": false,
+          "description": "Show sparkline chart"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "stat-card",
+          "children": [
+            {
+              "type": "Flex",
+              "justifyContent": "space-between",
+              "alignItems": "flex-start",
+              "className": "stat-card-header",
+              "children": [
+                {
+                  "type": "Box",
+                  "className": "stat-card-icon",
+                  "sx": {
+                    "display": "flex",
+                    "alignItems": "center",
+                    "justifyContent": "center",
+                    "width": 48,
+                    "height": 48,
+                    "borderRadius": 2,
+                    "bgcolor": "{{color}}.light"
+                  },
+                  "children": [
+                    {
+                      "type": "Icon",
+                      "name": "{{icon}}",
+                      "size": 24
+                    }
+                  ]
+                },
+                {
+                  "type": "conditional",
+                  "condition": "{{trend}}",
+                  "then": {
+                    "type": "Box",
+                    "className": "stat-card-trend-badge",
+                    "sx": {
+                      "display": "flex",
+                      "alignItems": "center",
+                      "gap": 0.5,
+                      "px": 1,
+                      "py": 0.5,
+                      "borderRadius": 1,
+                      "bgcolor": "{{trend.direction === 'up' ? 'success.light' : trend.direction === 'down' ? 'error.light' : 'action.hover'}}"
+                    },
+                    "children": [
+                      {
+                        "type": "Icon",
+                        "name": "{{trend.direction === 'up' ? 'TrendingUp' : trend.direction === 'down' ? 'TrendingDown' : 'TrendingFlat'}}",
+                        "size": 16
+                      },
+                      {
+                        "type": "Text",
+                        "variant": "caption",
+                        "fontWeight": "medium",
+                        "children": "{{trend.percentage}}%"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "type": "Stack",
+              "gap": 1,
+              "className": "stat-card-content",
+              "sx": {
+                "mt": 2
+              },
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "caption",
+                  "color": "secondary",
+                  "textTransform": "uppercase",
+                  "letterSpacing": 0.5,
+                  "children": "{{label}}"
+                },
+                {
+                  "type": "Text",
+                  "variant": "h4",
+                  "fontWeight": "bold",
+                  "children": "{{value}}"
+                },
+                {
+                  "type": "conditional",
+                  "condition": "{{trend && trend.period}}",
+                  "then": {
+                    "type": "Flex",
+                    "alignItems": "center",
+                    "gap": 1,
+                    "className": "stat-card-comparison",
+                    "children": [
+                      {
+                        "type": "Text",
+                        "variant": "body2",
+                        "color": "{{trend.direction === 'up' ? 'success' : trend.direction === 'down' ? 'error' : 'secondary'}}",
+                        "children": "{{trend.direction === 'up' ? '+' : ''}}{{trend.value}}"
+                      },
+                      {
+                        "type": "Text",
+                        "variant": "caption",
+                        "color": "secondary",
+                        "children": "vs {{trend.period}}"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "condition": "{{showSparkline}}",
+              "then": {
+                "type": "Box",
+                "className": "stat-card-sparkline",
+                "sx": {
+                  "mt": 2,
+                  "height": 40,
+                  "width": "100%"
+                }
+              }
+            },
+            {
+              "type": "conditional",
+              "condition": "{{target}}",
+              "then": {
+                "type": "Box",
+                "className": "stat-card-footer",
+                "sx": {
+                  "mt": 2,
+                  "pt": 2,
+                  "borderTop": 1,
+                  "borderColor": "divider"
+                },
+                "children": [
+                  {
+                    "type": "Flex",
+                    "justifyContent": "space-between",
+                    "alignItems": "center",
+                    "children": [
+                      {
+                        "type": "Text",
+                        "variant": "caption",
+                        "color": "secondary",
+                        "children": "Target"
+                      },
+                      {
+                        "type": "Text",
+                        "variant": "caption",
+                        "fontWeight": "medium",
+                        "children": "{{target.value}}"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Box",
+                    "className": "stat-card-progress",
+                    "sx": {
+                      "mt": 1,
+                      "height": 4,
+                      "width": "100%",
+                      "borderRadius": 2,
+                      "bgcolor": "action.hover"
+                    },
+                    "children": [
+                      {
+                        "type": "Box",
+                        "sx": {
+                          "height": "100%",
+                          "width": "{{target.progress}}%",
+                          "borderRadius": 2,
+                          "bgcolor": "primary.main"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "stat_card_small",
+      "name": "StatCardSmall",
+      "description": "Compact stat card variant for dense displays",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "description": "Card label text"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": true,
+          "description": "Main statistic value"
+        },
+        {
+          "name": "icon",
+          "type": "string",
+          "required": false,
+          "default": "BarChart"
+        },
+        {
+          "name": "trend",
+          "type": "object",
+          "required": false
+        },
+        {
+          "name": "color",
+          "type": "string",
+          "default": "primary"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "stat-card stat-card-small",
+          "sx": {
+            "p": 2
+          },
+          "children": [
+            {
+              "type": "Flex",
+              "alignItems": "center",
+              "gap": 2,
+              "children": [
+                {
+                  "type": "Box",
+                  "sx": {
+                    "display": "flex",
+                    "alignItems": "center",
+                    "justifyContent": "center",
+                    "width": 36,
+                    "height": 36,
+                    "borderRadius": 1,
+                    "bgcolor": "{{color}}.light"
+                  },
+                  "children": [
+                    {
+                      "type": "Icon",
+                      "name": "{{icon}}",
+                      "size": 18
+                    }
+                  ]
+                },
+                {
+                  "type": "Stack",
+                  "gap": 0.5,
+                  "flex": 1,
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "caption",
+                      "color": "secondary",
+                      "children": "{{label}}"
+                    },
+                    {
+                      "type": "Text",
+                      "variant": "h6",
+                      "fontWeight": "bold",
+                      "children": "{{value}}"
+                    }
+                  ]
+                },
+                {
+                  "type": "conditional",
+                  "condition": "{{trend}}",
+                  "then": {
+                    "type": "Flex",
+                    "alignItems": "center",
+                    "gap": 0.5,
+                    "children": [
+                      {
+                        "type": "Icon",
+                        "name": "{{trend.direction === 'up' ? 'TrendingUp' : 'TrendingDown'}}",
+                        "size": 14,
+                        "color": "{{trend.direction === 'up' ? 'success' : 'error'}}"
+                      },
+                      {
+                        "type": "Text",
+                        "variant": "caption",
+                        "color": "{{trend.direction === 'up' ? 'success' : 'error'}}",
+                        "children": "{{trend.percentage}}%"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "stat_card_large",
+      "name": "StatCardLarge",
+      "description": "Large stat card with expanded layout for featured statistics",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "icon",
+          "type": "string",
+          "default": "BarChart"
+        },
+        {
+          "name": "trend",
+          "type": "object",
+          "required": false
+        },
+        {
+          "name": "color",
+          "type": "string",
+          "default": "primary"
+        },
+        {
+          "name": "target",
+          "type": "object",
+          "required": false
+        },
+        {
+          "name": "range",
+          "type": "object",
+          "required": false,
+          "description": "Date range information"
+        },
+        {
+          "name": "showSparkline",
+          "type": "boolean",
+          "default": true
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "elevation",
+          "className": "stat-card stat-card-large",
+          "sx": {
+            "p": 3
+          },
+          "children": [
+            {
+              "type": "Flex",
+              "justifyContent": "space-between",
+              "alignItems": "center",
+              "sx": {
+                "mb": 3
+              },
+              "children": [
+                {
+                  "type": "Flex",
+                  "alignItems": "center",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "Box",
+                      "sx": {
+                        "display": "flex",
+                        "alignItems": "center",
+                        "justifyContent": "center",
+                        "width": 56,
+                        "height": 56,
+                        "borderRadius": 2,
+                        "bgcolor": "{{color}}.light"
+                      },
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "name": "{{icon}}",
+                          "size": 28
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Stack",
+                      "gap": 0.5,
+                      "children": [
+                        {
+                          "type": "Text",
+                          "variant": "subtitle2",
+                          "color": "secondary",
+                          "textTransform": "uppercase",
+                          "letterSpacing": 1,
+                          "children": "{{label}}"
+                        },
+                        {
+                          "type": "Text",
+                          "variant": "h3",
+                          "fontWeight": "bold",
+                          "children": "{{value}}"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "conditional",
+                  "condition": "{{trend}}",
+                  "then": {
+                    "type": "Box",
+                    "sx": {
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "alignItems": "flex-end",
+                      "gap": 0.5
+                    },
+                    "children": [
+                      {
+                        "type": "Flex",
+                        "alignItems": "center",
+                        "gap": 0.5,
+                        "sx": {
+                          "px": 1.5,
+                          "py": 0.5,
+                          "borderRadius": 1,
+                          "bgcolor": "{{trend.direction === 'up' ? 'success.light' : 'error.light'}}"
+                        },
+                        "children": [
+                          {
+                            "type": "Icon",
+                            "name": "{{trend.direction === 'up' ? 'TrendingUp' : 'TrendingDown'}}",
+                            "size": 18
+                          },
+                          {
+                            "type": "Text",
+                            "variant": "body2",
+                            "fontWeight": "bold",
+                            "children": "{{trend.percentage}}%"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "conditional",
+                        "condition": "{{trend.period}}",
+                        "then": {
+                          "type": "Text",
+                          "variant": "caption",
+                          "color": "secondary",
+                          "children": "vs {{trend.period}}"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "condition": "{{showSparkline}}",
+              "then": {
+                "type": "Box",
+                "className": "stat-card-sparkline-large",
+                "sx": {
+                  "height": 80,
+                  "width": "100%",
+                  "mb": 2
+                }
+              }
+            },
+            {
+              "type": "conditional",
+              "condition": "{{target || range}}",
+              "then": {
+                "type": "Flex",
+                "justifyContent": "space-between",
+                "alignItems": "center",
+                "sx": {
+                  "pt": 2,
+                  "borderTop": 1,
+                  "borderColor": "divider"
+                },
+                "children": [
+                  {
+                    "type": "conditional",
+                    "condition": "{{target}}",
+                    "then": {
+                      "type": "Stack",
+                      "gap": 0.5,
+                      "children": [
+                        {
+                          "type": "Text",
+                          "variant": "caption",
+                          "color": "secondary",
+                          "children": "Target"
+                        },
+                        {
+                          "type": "Text",
+                          "variant": "body1",
+                          "fontWeight": "medium",
+                          "children": "{{target.value}}"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "type": "conditional",
+                    "condition": "{{range}}",
+                    "then": {
+                      "type": "Stack",
+                      "gap": 0.5,
+                      "alignItems": "flex-end",
+                      "children": [
+                        {
+                          "type": "Text",
+                          "variant": "caption",
+                          "color": "secondary",
+                          "children": "Date Range"
+                        },
+                        {
+                          "type": "Text",
+                          "variant": "body2",
+                          "children": "{{range.start}} - {{range.end}}"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "exports": {
+    "components": ["StatsGrid", "StatCard", "StatCardSmall", "StatCardLarge"]
+  }
+}

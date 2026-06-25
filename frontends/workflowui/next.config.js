@@ -3,19 +3,20 @@ import { resolve, join } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
-const fakeMuiPath = resolve(__dirname, '../../components/fakemui');
-const componentsPath = resolve(__dirname, '../../components');
-const m3ScssPath = resolve(__dirname, '../../scss/m3-scss');
+const m3Path = resolve(__dirname, '../../libraries/components/m3');
+const componentsPath = resolve(__dirname, '../../libraries/components');
+const m3ScssPath = resolve(__dirname, '../../libraries/scss/m3-scss');
 
 const nextConfig = {
   basePath: '/workflowui',
   output: 'standalone',
+  allowedDevOrigins: ['metabuilder.wardcrew.com', 'wardcrew.com'],
   reactStrictMode: true,
   // typedRoutes moved from experimental to top-level in Next.js 16
   typedRoutes: true,
   // Transpile local packages
   transpilePackages: [
-    '@metabuilder/fakemui',
+    '@metabuilder/m3',
     '@metabuilder/api-clients',
     '@metabuilder/redux-persist',
     '@metabuilder/components',
@@ -28,44 +29,44 @@ const nextConfig = {
     root: resolve(__dirname, '../..'),
     resolveAlias: {
       // FakeMUI
-      '@metabuilder/fakemui': './components/fakemui',
-      '@metabuilder/fakemui/scss': './components/fakemui/scss/index.scss',
-      '@metabuilder/fakemui/icons': './components/fakemui/icons/index.ts',
-      '@metabuilder/fakemui/hooks': './components/fakemui/hooks.ts',
+      '@metabuilder/m3': './libraries/components/m3',
+      '@metabuilder/m3/scss': './libraries/components/m3/scss/index.scss',
+      '@metabuilder/m3/icons': './libraries/components/m3/icons/index.ts',
+      '@metabuilder/m3/hooks': './libraries/components/m3/hooks.ts',
       // Components — resolve to source
-      '@metabuilder/components': './components/index.tsx',
-      '@metabuilder/components/cards': './components/cards/index.ts',
-      '@metabuilder/components/layout': './components/layout/index.ts',
-      '@metabuilder/components/navigation': './components/navigation/index.ts',
+      '@metabuilder/components': './libraries/components/index.tsx',
+      '@metabuilder/components/cards': './libraries/components/cards/index.ts',
+      '@metabuilder/components/layout': './libraries/components/layout/index.ts',
+      '@metabuilder/components/navigation': './libraries/components/navigation/index.ts',
       // Redux
-      '@metabuilder/api-clients': './redux/api-clients/src',
+      '@metabuilder/api-clients': './libraries/redux/api-clients/src',
       // Hooks
-      '@metabuilder/hooks': './hooks/src',
+      '@metabuilder/hooks': './libraries/hooks/src',
     },
   },
   sassOptions: {
     // Load paths for Angular Material SCSS - order matters!
     // m3-scss must be first so 'cdk' resolves to m3-scss/cdk
     loadPaths: [
-      resolve(__dirname, '../../scss/m3-scss'),
-      resolve(__dirname, '../../scss'),
+      resolve(__dirname, '../../libraries/scss/m3-scss'),
+      resolve(__dirname, '../../libraries/scss'),
     ],
     includePaths: [
-      resolve(__dirname, '../../scss/m3-scss'),
+      resolve(__dirname, '../../libraries/scss/m3-scss'),
       m3ScssPath,
-      resolve(__dirname, '../../scss'),
+      resolve(__dirname, '../../libraries/scss'),
     ],
     silenceDeprecations: ['legacy-js-api', 'import']
   },
   webpack: (config, { isServer }) => {
-    // Add alias for @metabuilder/fakemui and subpaths
-    config.resolve.alias['@metabuilder/fakemui'] = fakeMuiPath;
-    config.resolve.alias['@metabuilder/fakemui/scss'] = join(fakeMuiPath, 'scss/index.scss');
-    config.resolve.alias['@metabuilder/fakemui/icons'] = join(fakeMuiPath, 'icons/index.ts');
-    config.resolve.alias['@metabuilder/fakemui/hooks'] = join(fakeMuiPath, 'hooks.ts');
+    // Add alias for @metabuilder/m3 and subpaths
+    config.resolve.alias['@metabuilder/m3'] = m3Path;
+    config.resolve.alias['@metabuilder/m3/scss'] = join(m3Path, 'scss/index.scss');
+    config.resolve.alias['@metabuilder/m3/icons'] = join(m3Path, 'icons/index.ts');
+    config.resolve.alias['@metabuilder/m3/hooks'] = join(m3Path, 'hooks.ts');
 
     // Resolve @metabuilder/api-clients to source (not dist/) so transpilePackages works on live code
-    config.resolve.alias['@metabuilder/api-clients'] = resolve(__dirname, '../../redux/api-clients/src');
+    config.resolve.alias['@metabuilder/api-clients'] = resolve(__dirname, '../../libraries/redux/api-clients/src');
 
     // Resolve @metabuilder/components to source (package.json exports point to .ts/.tsx)
     config.resolve.alias['@metabuilder/components/cards'] = join(componentsPath, 'cards/index.ts');

@@ -14,6 +14,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent.parent  # deployment/
 PROJECT_ROOT = SCRIPT_DIR.parent
 BASE_DIR = SCRIPT_DIR / "base-images"
 COMPOSE_FILE = SCRIPT_DIR / "metabuilder/compose.yml"
+COMPOSE_FILE_DEV = SCRIPT_DIR / "metabuilder/compose.dev.yml"
 
 # ── Colors ───────────────────────────────────────────────────────────────────
 
@@ -64,8 +65,11 @@ def docker_image_exists(tag: str) -> bool:
     ).returncode == 0
 
 
-def docker_compose(*args: str) -> list[str]:
-    return ["docker", "compose", "-f", str(COMPOSE_FILE), *args]
+def docker_compose(*args: str, dev: bool = False) -> list[str]:
+    files = ["-f", str(COMPOSE_FILE)]
+    if dev:
+        files += ["-f", str(COMPOSE_FILE_DEV)]
+    return ["docker", "compose", *files, *args]
 
 
 def curl_status(url: str, auth: str | None = None, timeout: int = 5) -> int:
@@ -101,11 +105,32 @@ def build_with_retry(tag: str, dockerfile: str, context: str, max_attempts: int 
     from datetime import datetime
     date_tag = f"{tag.rsplit(':', 1)[0]}:{datetime.now().strftime('%Y%m%d')}"
 
+    # When BASE_REGISTRY is set (CI on a host whose Docker builders do not
+    # consult the local image store), pass it through so a Dockerfile's
+    # `FROM ${BASE_REGISTRY}/<parent>:latest` resolves from the registry
+    # (Nexus) instead of an unresolvable local-only tag. Unset -> Dockerfile
+    # ARG default ("metabuilder"), preserving local/dev behaviour.
+    extra_args: list[str] = []
+    base_registry = os.environ.get("BASE_REGISTRY")
+    if base_registry:
+        extra_args = ["--build-arg", f"BASE_REGISTRY={base_registry}"]
+    # Route Conan deps through the pkgrepo proxy/cache when set (the conan base
+    # Dockerfiles add it as a remote and disable conancenter).
+    conan_remote = os.environ.get("CONAN_REMOTE")
+    if conan_remote:
+        extra_args += ["--build-arg", f"CONAN_REMOTE={conan_remote}"]
+    # Route pip deps through the pkgrepo pypi cache when set (pip-deps base adds
+    # it as --index-url + --trusted-host).
+    pip_index_url = os.environ.get("PIP_INDEX_URL")
+    if pip_index_url:
+        extra_args += ["--build-arg", f"PIP_INDEX_URL={pip_index_url}"]
+
     log_info(f"Building {tag} ...")
     for attempt in range(1, max_attempts + 1):
         result = run([
             "docker", "build", "--network=host",
             "--file", dockerfile,
+            *extra_args,
             "--tag", tag, "--tag", date_tag,
             context,
         ])

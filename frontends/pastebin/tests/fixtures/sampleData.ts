@@ -11,7 +11,7 @@ import {
   LintingViolation,
   CoverageGap,
   Recommendation,
-} from '../../src/lib/quality-validator/types/index.js';
+} from '../../src/lib/quality-validator/types/index.js'
 
 // ============================================================================
 // SAMPLE FINDINGS
@@ -23,7 +23,8 @@ export const SAMPLE_CODE_QUALITY_FINDINGS: Finding[] = [
     severity: 'high',
     category: 'codeQuality',
     title: 'High cyclomatic complexity',
-    description: 'Function "calculateTotal" has complexity of 25, exceeding threshold of 20',
+    description:
+      'Function "calculateTotal" has complexity of 25, exceeding threshold of 20',
     location: {
       file: 'src/utils/calculator.ts',
       line: 42,
@@ -49,7 +50,7 @@ export const SAMPLE_CODE_QUALITY_FINDINGS: Finding[] = [
     remediation: 'Run eslint --fix to auto-fix issues',
     evidence: 'Warnings: 8',
   },
-];
+]
 
 export const SAMPLE_TEST_COVERAGE_FINDINGS: Finding[] = [
   {
@@ -73,7 +74,7 @@ export const SAMPLE_TEST_COVERAGE_FINDINGS: Finding[] = [
     remediation: 'Add integration tests for auth service methods',
     evidence: 'Coverage: 45%, Uncovered: 120',
   },
-];
+]
 
 export const SAMPLE_ARCHITECTURE_FINDINGS: Finding[] = [
   {
@@ -81,7 +82,8 @@ export const SAMPLE_ARCHITECTURE_FINDINGS: Finding[] = [
     severity: 'medium',
     category: 'architecture',
     title: 'Oversized component',
-    description: 'Component "DashboardPage" has 850 lines, recommended max is 500',
+    description:
+      'Component "DashboardPage" has 850 lines, recommended max is 500',
     location: {
       file: 'src/components/organisms/DashboardPage.tsx',
     },
@@ -93,11 +95,12 @@ export const SAMPLE_ARCHITECTURE_FINDINGS: Finding[] = [
     severity: 'high',
     category: 'architecture',
     title: 'Circular dependency detected',
-    description: 'Circular dependency: utils/auth.ts → services/user.ts → utils/auth.ts',
+    description:
+      'Circular dependency: utils/auth.ts → services/user.ts → utils/auth.ts',
     remediation: 'Restructure modules to break the circular dependency',
     evidence: 'Cycle: utils/auth.ts → services/user.ts → utils/auth.ts',
   },
-];
+]
 
 export const SAMPLE_SECURITY_FINDINGS: Finding[] = [
   {
@@ -135,7 +138,7 @@ export const SAMPLE_SECURITY_FINDINGS: Finding[] = [
     remediation: 'Use safe HTML rendering methods or sanitize with DOMPurify',
     evidence: 'dangerouslySetInnerHTML',
   },
-];
+]
 
 // ============================================================================
 // SAMPLE VULNERABILITIES
@@ -147,12 +150,10 @@ export const SAMPLE_VULNERABILITIES: Vulnerability[] = [
     currentVersion: '4.17.15',
     vulnerabilityType: 'Prototype Pollution',
     severity: 'high',
-    description: 'Lodash versions <4.17.21 are vulnerable to prototype pollution',
+    description:
+      'Lodash versions <4.17.21 are vulnerable to prototype pollution',
     fixedInVersion: '4.17.21',
-    affectedCodeLocations: [
-      'src/utils/deepMerge.ts:12',
-      'src/lib/merge.ts:45',
-    ],
+    affectedCodeLocations: ['src/utils/deepMerge.ts:12', 'src/lib/merge.ts:45'],
   },
   {
     package: 'minimist',
@@ -170,7 +171,7 @@ export const SAMPLE_VULNERABILITIES: Vulnerability[] = [
     description: 'ReDoS vulnerability in dependency',
     fixedInVersion: '8.11.3',
   },
-];
+]
 
 // ============================================================================
 // SAMPLE SECURITY PATTERNS
@@ -205,7 +206,7 @@ export const SAMPLE_SECURITY_PATTERNS: SecurityAntiPattern[] = [
     remediation: 'Escape HTML entities or use DOMPurify',
     evidence: 'innerHTML = userInput',
   },
-];
+]
 
 // ============================================================================
 // SAMPLE COMPLEXITY FUNCTIONS
@@ -240,7 +241,7 @@ export const SAMPLE_COMPLEX_FUNCTIONS: ComplexityFunction[] = [
     complexity: 18,
     status: 'warning',
   },
-];
+]
 
 // ============================================================================
 // SAMPLE LINTING VIOLATIONS
@@ -274,7 +275,7 @@ export const SAMPLE_LINTING_VIOLATIONS: LintingViolation[] = [
     message: 'Variable "unused" is defined but never used',
     fixable: false,
   },
-];
+]
 
 // ============================================================================
 // SAMPLE COVERAGE GAPS
@@ -314,7 +315,7 @@ export const SAMPLE_COVERAGE_GAPS: CoverageGap[] = [
     suggestedTests: ['Test cache expiration'],
     estimatedEffort: 'low',
   },
-];
+]
 
 // ============================================================================
 // SAMPLE RECOMMENDATIONS
@@ -364,12 +365,13 @@ export const SAMPLE_RECOMMENDATIONS: Recommendation[] = [
     priority: 'medium',
     category: 'codeQuality',
     issue: 'Code duplication',
-    remediation: 'Extract 5 duplicated utility functions used across components',
+    remediation:
+      'Extract 5 duplicated utility functions used across components',
     estimatedEffort: 'medium',
     expectedImpact: 'Easier maintenance and consistency',
     relatedFindings: ['dup-001'],
   },
-];
+]
 
 // ============================================================================
 // SAMPLE PROJECT STRUCTURES
@@ -422,7 +424,7 @@ export const SAMPLE_PROJECT_FILES: Record<string, string> = {
       </button>
     );
   `,
-};
+}
 
 // ============================================================================
 // SAMPLE COVERAGE DATA
@@ -453,4 +455,4 @@ export const SAMPLE_COVERAGE_DATA = {
     functions: { total: 50, covered: 36, pct: 72 },
     statements: { total: 600, covered: 408, pct: 68 },
   },
-};
+}
