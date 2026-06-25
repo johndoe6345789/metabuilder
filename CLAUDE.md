@@ -285,6 +285,7 @@ Pre-commit: `npm run build && npm run typecheck && npm run lint && npm run test:
 
 ### WorkflowUI Components
 - Atomic components ≤80 LOC (hard limit, no margin above 80), SCSS modules, no sx prop
+- **Heavy splitting**: when a component approaches 80 LOC, split aggressively — extract sub-components, hooks, or helpers rather than letting any single file grow. Prefer many small files over one large one.
 - Categories: layout/, cards/, forms/, navigation/, feedback/
 - Import pattern: `@/components/{domain}/{Component}`
 
