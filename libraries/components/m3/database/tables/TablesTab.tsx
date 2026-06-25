@@ -16,7 +16,7 @@ import {
 import { Button, InputAdornment, TextField } from '../../inputs';
 import { Storage } from '../../icons';
 import { useMemo, useState } from 'react';
-import styles from '../../../scss/components/tables-tab.module.scss';
+import styles from '../../../../scss/components/tables-tab.module.scss';
 
 export type TableInfo = {
   table_name: string;
