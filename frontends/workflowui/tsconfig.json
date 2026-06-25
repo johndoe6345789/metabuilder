@@ -47,6 +47,9 @@
       "@styles/*": [
         "./src/styles/*"
       ],
+      "@scss/*": [
+        "../../libraries/scss/*"
+      ],
       "@/m3": [
         "../../libraries/components/m3/index.ts"
       ]

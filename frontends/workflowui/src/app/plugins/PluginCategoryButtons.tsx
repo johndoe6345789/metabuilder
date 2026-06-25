@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { Box, Button } from '@metabuilder/m3';
-import styles from '@/../../../scss/atoms/plugins.module.scss';
+import styles from '/atoms/plugins.module.scss';
 import CATEGORIES from './plugin-categories.json';
 
 interface PluginCategoryButtonsProps {

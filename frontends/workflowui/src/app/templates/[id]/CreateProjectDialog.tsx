@@ -17,7 +17,7 @@ import {
   DialogContent,
   DialogActions,
 } from '@metabuilder/m3';
-import styles from '@/../../../scss/atoms/template-detail.module.scss';
+import styles from '/atoms/template-detail.module.scss';
 
 interface CreateProjectDialogProps {
   open: boolean;

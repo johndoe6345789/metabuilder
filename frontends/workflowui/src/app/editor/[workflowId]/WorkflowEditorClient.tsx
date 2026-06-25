@@ -3,7 +3,7 @@
 'use client';
 import React, { useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import styles from '@/../../../scss/atoms/workflow-editor.module.scss';
+import styles from '/atoms/workflow-editor.module.scss';
 import {
   type NodeType,
   EditorToolbar,

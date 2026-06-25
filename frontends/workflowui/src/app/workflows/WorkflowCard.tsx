@@ -6,7 +6,7 @@
 
 import React from 'react';
 import type { Workflow } from '@metabuilder/hooks';
-import styles from '@/../../../scss/atoms/dashboard.module.scss';
+import styles from '/atoms/dashboard.module.scss';
 import WorkflowCardMedia from './WorkflowCardMedia';
 import WorkflowStatusBadge from './WorkflowStatusBadge';
 import WorkflowCardActions from './WorkflowCardActions';

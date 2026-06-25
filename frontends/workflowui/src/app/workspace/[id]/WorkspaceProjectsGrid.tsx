@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { ProjectCard } from '@/../../../components/cards/ProjectCard';
-import styles from '@/../../../scss/atoms/workspace.module.scss';
+import styles from '/atoms/workspace.module.scss';
 
 interface Project {
   id: string;

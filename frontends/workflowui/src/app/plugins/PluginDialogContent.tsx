@@ -10,7 +10,7 @@ import {
   Typography,
   Chip,
 } from '@metabuilder/m3';
-import styles from '@/../../../scss/atoms/plugins.module.scss';
+import styles from '/atoms/plugins.module.scss';
 import type { Plugin } from './hooks/usePlugins';
 
 interface PluginDialogContentProps {

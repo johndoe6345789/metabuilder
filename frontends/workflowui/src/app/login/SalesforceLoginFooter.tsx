@@ -6,7 +6,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import styles from '@/../../../scss/components/layout/salesforce-login.module.scss';
+import styles from '/components/layout/salesforce-login.module.scss';
 
 interface SalesforceLoginFooterProps {
   onSwitchToMaterial: () => void;

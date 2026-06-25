@@ -7,7 +7,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { testId } from '../../utils/accessibility';
-import styles from '@/../../../scss/atoms/layout.module.scss';
+import styles from '/atoms/layout.module.scss';
 
 interface SidebarNavItemProps {
   href: string;

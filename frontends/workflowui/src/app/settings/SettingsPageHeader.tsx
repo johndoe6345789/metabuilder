@@ -7,7 +7,7 @@
 import React from 'react';
 import { Box, Typography, Alert } from '@metabuilder/m3';
 import { SettingsIcon } from '@/../../../icons/react';
-import styles from '@/../../../scss/atoms/settings.module.scss';
+import styles from '/atoms/settings.module.scss';
 
 interface SettingsPageHeaderProps {
   saveSuccess: boolean;

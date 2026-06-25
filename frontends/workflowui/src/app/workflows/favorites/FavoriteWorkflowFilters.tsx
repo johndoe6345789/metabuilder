@@ -15,7 +15,7 @@ import {
   Select,
   MenuItem,
 } from '@metabuilder/m3';
-import styles from '@/../../../scss/atoms/mat-card.module.scss';
+import styles from '/atoms/mat-card.module.scss';
 
 interface FavoriteWorkflowFiltersProps {
   searchQuery: string;

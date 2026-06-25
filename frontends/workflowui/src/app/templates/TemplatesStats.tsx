@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { Box, Typography } from '@metabuilder/m3';
-import styles from '@/../../../scss/atoms/templates.module.scss';
+import styles from '/atoms/templates.module.scss';
 
 interface TemplatesStatsProps {
   totalTemplates: number;

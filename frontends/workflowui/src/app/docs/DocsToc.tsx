@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { Box, Typography } from '@metabuilder/m3';
-import styles from '@/../../../scss/atoms/docs.module.scss';
+import styles from '/atoms/docs.module.scss';
 import TABLE_OF_CONTENTS from './toc.json';
 
 interface DocsTocProps {

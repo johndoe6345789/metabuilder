@@ -7,7 +7,7 @@ import {
   Breadcrumbs, Tabs, Tab, Box,
 } from '@metabuilder/m3';
 import { TemplateHeader } from '@metabuilder/components/layout';
-import styles from '@/../../../scss/atoms/template-detail.module.scss';
+import styles from '/atoms/template-detail.module.scss';
 import { useTemplateDetail } from './hooks/useTemplateDetail';
 import CreateProjectDialog from './CreateProjectDialog';
 import TemplateNotFound from './TemplateNotFound';

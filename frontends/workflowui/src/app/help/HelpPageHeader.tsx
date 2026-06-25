@@ -8,7 +8,7 @@ import {
   HelpIcon,
   SearchIcon,
 } from '@/../../../icons/react';
-import styles from '@/../../../scss/atoms/help.module.scss';
+import styles from '/atoms/help.module.scss';
 
 interface HelpPageHeaderProps {
   searchQuery: string;

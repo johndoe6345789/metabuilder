@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { Box, Typography } from '@metabuilder/m3';
-import styles from '@/../../../scss/atoms/template-detail.module.scss';
+import styles from '/atoms/template-detail.module.scss';
 
 interface WorkflowEntry {
   id: string;

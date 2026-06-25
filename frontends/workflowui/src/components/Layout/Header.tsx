@@ -11,7 +11,7 @@ import { useUI, useHeaderLogic } from '../../hooks';
 import { testId } from '../../utils/accessibility';
 import { MenuIcon, WorkflowLogo } from './HeaderIcons';
 import { NotificationMenu } from './NotificationMenu';
-import styles from '@/../../../scss/atoms/layout.module.scss';
+import styles from '/atoms/layout.module.scss';
 
 interface HeaderProps {
   onMenuClick: () => void;

@@ -15,7 +15,7 @@ import {
   TemplateFilters as Filters,
   TemplateSidebar,
 } from '@metabuilder/components/navigation';
-import styles from '@/../../../scss/atoms/templates.module.scss';
+import styles from '/atoms/templates.module.scss';
 import { useTemplatesPage } from './hooks/useTemplatesPage';
 import TemplatesStats from './TemplatesStats';
 import TemplatesContent from './TemplatesContent';

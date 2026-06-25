@@ -8,7 +8,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Button, CircularProgress } from '@metabuilder/m3';
 import { AddIcon } from '@/../../../icons/react';
-import styles from '@/../../../scss/atoms/dashboard.module.scss';
+import styles from '/atoms/dashboard.module.scss';
 import { useWorkflowsPage } from './hooks/useWorkflowsPage';
 import WorkflowFilters from './WorkflowFilters';
 import WorkflowCard from './WorkflowCard';

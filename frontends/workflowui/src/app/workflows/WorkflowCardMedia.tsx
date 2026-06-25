@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import styles from '@/../../../scss/atoms/dashboard.module.scss';
+import styles from '/atoms/dashboard.module.scss';
 
 const STATUS_COLORS: Record<string, string> = {
   active: 'var(--mat-sys-tertiary)',

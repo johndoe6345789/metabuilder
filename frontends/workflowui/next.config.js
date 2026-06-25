@@ -42,6 +42,8 @@ const nextConfig = {
       '@metabuilder/api-clients': './libraries/redux/api-clients/src',
       // Hooks
       '@metabuilder/hooks': './libraries/hooks/src',
+      // Shared SCSS modules
+      '@scss': './libraries/scss',
     },
   },
   sassOptions: {
@@ -73,6 +75,7 @@ const nextConfig = {
     config.resolve.alias['@metabuilder/components/layout'] = join(componentsPath, 'layout/index.ts');
     config.resolve.alias['@metabuilder/components/navigation'] = join(componentsPath, 'navigation/index.ts');
     config.resolve.alias['@metabuilder/components'] = join(componentsPath, 'index.tsx');
+    config.resolve.alias['@scss'] = resolve(__dirname, '../../libraries/scss');
 
     // Exclude Prisma client from browser bundle (dev uses IndexedDB only)
     // Prisma adapter is loaded via dynamic import() - webpack won't bundle unless used

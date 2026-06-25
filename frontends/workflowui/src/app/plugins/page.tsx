@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { Breadcrumbs, Box } from '@metabuilder/m3';
-import styles from '@/../../../scss/atoms/plugins.module.scss';
+import styles from '/atoms/plugins.module.scss';
 import { usePlugins } from './hooks/usePlugins';
 import PluginCard from './PluginCard';
 import PluginDetailDialog from './PluginDetailDialog';

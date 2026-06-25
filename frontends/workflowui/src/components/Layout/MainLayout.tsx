@@ -10,7 +10,7 @@ import { useUI, useResponsiveSidebar } from '../../hooks';
 import { testId } from '../../utils/accessibility';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
-import styles from '@/../../../scss/atoms/layout.module.scss';
+import styles from '/atoms/layout.module.scss';
 
 interface MainLayoutProps {
   children: React.ReactNode;
