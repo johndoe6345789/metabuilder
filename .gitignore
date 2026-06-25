@@ -72,6 +72,7 @@ prisma/dev.db-journal
 dbal/shared/prisma/
 
 # Testing
+/Testing/
 /test-results/
 /playwright-report/
 /playwright/.cache/
