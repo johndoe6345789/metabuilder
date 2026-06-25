@@ -14,7 +14,7 @@ import {
   CardHeader,
   Alert,
 } from '@metabuilder/m3';
-import { WarningIcon } from '@/../../../icons/react';
+import { WarningIcon } from '@icons/react';
 
 interface DangerZoneTabProps {
   onDeleteClick: () => void;

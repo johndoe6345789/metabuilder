@@ -2,7 +2,7 @@
  * workflowStateUtils - Factory functions for useWorkflowState
  */
 
-import type { Workflow } from '@/../../../components/workflow-editor';
+import type { Workflow } from '@metabuilder/components/workflow-editor';
 
 export function defaultWorkflow(id: string): Workflow {
   return {

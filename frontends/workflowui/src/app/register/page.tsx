@@ -11,7 +11,7 @@ import {
   Alert,
   Box,
 } from '@metabuilder/m3';
-import { AuthFormLayout } from '@/../../../components/layout';
+import { AuthFormLayout } from '@metabuilder/components/layout';
 import { useRegisterPage } from './hooks/useRegisterPage';
 import RegisterFormFields from './RegisterFormFields';
 

@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import styles from '/components/layout/salesforce-login.module.scss';
+import styles from '@scss/components/layout/salesforce-login.module.scss';
 
 export default function SalesforceBrandPanel() {
   return (

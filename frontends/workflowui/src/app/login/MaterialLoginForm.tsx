@@ -10,7 +10,7 @@ import {
   Alert,
   Box,
 } from '@metabuilder/m3';
-import { AuthFormLayout } from '@/../../../components/layout';
+import { AuthFormLayout } from '@metabuilder/components/layout';
 import MaterialLoginFields from './MaterialLoginFields';
 
 interface MaterialLoginFormProps {

@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import styles from '/atoms/workflow-editor.module.scss';
+import styles from '@scss/atoms/workflow-editor.module.scss';
 
 export default function EditorEmptyState() {
   return (

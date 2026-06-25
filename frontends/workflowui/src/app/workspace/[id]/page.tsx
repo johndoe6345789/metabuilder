@@ -12,7 +12,7 @@ import {
   CircularProgress,
   Add,
 } from '@metabuilder/m3';
-import styles from '/atoms/workspace.module.scss';
+import styles from '@scss/atoms/workspace.module.scss';
 import { useWorkspacePage } from './hooks/useWorkspacePage';
 import WorkspaceProjectsBody from './WorkspaceProjectsBody';
 

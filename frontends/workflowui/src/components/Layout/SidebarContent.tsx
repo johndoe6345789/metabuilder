@@ -5,7 +5,7 @@
 import React from 'react';
 import { Button } from '@metabuilder/m3';
 import { testId } from '../../utils/accessibility';
-import styles from '/atoms/layout.module.scss';
+import styles from '@scss/atoms/layout.module.scss';
 import SidebarNavItem from './SidebarNavItem';
 import NAV from './sidebar-nav.json';
 

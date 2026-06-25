@@ -50,8 +50,17 @@
       "@scss/*": [
         "../../libraries/scss/*"
       ],
+      "@icons/*": [
+        "../../libraries/icons/*"
+      ],
       "@/m3": [
         "../../libraries/components/m3/index.ts"
+      ],
+      "@metabuilder/components/*": [
+        "../../libraries/components/*"
+      ],
+      "@metabuilder/hooks/workflow-editor": [
+        "../../libraries/hooks/workflow-editor/index.ts"
       ]
     },
     "incremental": true,

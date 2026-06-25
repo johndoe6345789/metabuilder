@@ -86,8 +86,8 @@ describe('MaterialLoginFields', () => {
 
 // ── MaterialLoginForm ────────────────────────────────────────────────────────
 
-// Mock AuthFormLayout from @/../../../components/layout
-jest.mock('@/../../../components/layout', () => ({
+// Mock AuthFormLayout from @metabuilder/components/layout
+jest.mock('@metabuilder/components/layout', () => ({
   AuthFormLayout: ({ children, title }: any) => (
     <div data-testid="auth-layout">
       <h1>{title}</h1>

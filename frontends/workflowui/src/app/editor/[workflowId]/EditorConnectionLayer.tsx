@@ -13,7 +13,7 @@ import {
 import {
   type NodeType,
   ConnectionLine,
-} from '@/../../../components/workflow-editor';
+} from '@metabuilder/components/workflow-editor';
 import type { WorkflowNode, WorkflowConnection } from '@metabuilder/hooks';
 
 interface DrawingConnection {

@@ -10,7 +10,7 @@ import {
   CardContent,
   Typography,
 } from '@metabuilder/m3';
-import styles from '/atoms/mat-card.module.scss';
+import styles from '@scss/atoms/mat-card.module.scss';
 import AchievementCardHeader from './AchievementCardHeader';
 import AchievementProgress from './AchievementProgress';
 

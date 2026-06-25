@@ -12,7 +12,7 @@ import {
   CardContent,
   Grid,
 } from '@metabuilder/m3';
-import { PlayIcon } from '@/../../../icons/react';
+import { PlayIcon } from '@icons/react';
 
 const TUTORIALS = [
   {

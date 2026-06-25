@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import styles from '/components/layout/salesforce-login.module.scss';
+import styles from '@scss/components/layout/salesforce-login.module.scss';
 
 const GoogleIcon = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none">

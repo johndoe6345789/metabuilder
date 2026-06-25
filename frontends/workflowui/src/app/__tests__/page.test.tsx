@@ -5,7 +5,7 @@
 // moduleNameMapper already handles @metabuilder/m3 → fakeMuiMock.tsx
 // and scss → identity-obj-proxy, so no need to re-mock those.
 
-jest.mock('@/../../../icons/react', () => ({
+jest.mock('@icons/react', () => ({
   AddIcon: () => null,
 }))
 

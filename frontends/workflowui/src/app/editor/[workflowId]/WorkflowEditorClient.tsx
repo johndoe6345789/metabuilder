@@ -3,11 +3,11 @@
 'use client';
 import React, { useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import styles from '/atoms/workflow-editor.module.scss';
+import styles from '@scss/atoms/workflow-editor.module.scss';
 import {
   type NodeType,
   EditorToolbar,
-} from '@/../../../components/workflow-editor';
+} from '@metabuilder/components/workflow-editor';
 import { useWorkflowState } from './hooks/useWorkflowState';
 import { useEditorComposition } from './hooks/useEditorComposition';
 import EditorCanvasArea from './EditorCanvasArea';

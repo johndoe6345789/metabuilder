@@ -10,7 +10,7 @@ import {
   TemplateCard,
   TemplateListItem,
 } from '@metabuilder/components/cards';
-import styles from '/atoms/templates.module.scss';
+import styles from '@scss/atoms/templates.module.scss';
 
 interface Template {
   id: string;

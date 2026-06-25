@@ -8,7 +8,7 @@ import type {
   Dispatch,
   SetStateAction,
 } from 'react';
-import type { NodeType } from '@/../../../components/workflow-editor';
+import type { NodeType } from '@metabuilder/components/workflow-editor';
 import type {
   WorkflowNode,
   WorkflowConnection,

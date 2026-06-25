@@ -18,7 +18,7 @@ import {
   PlayIcon,
   AccountTreeIcon,
   HelpIcon,
-} from '@/../../../icons/react';
+} from '@icons/react';
 import quickLinksData from './quick-links.json';
 
 const ICON_MAP: Record<string, React.ReactNode> = {

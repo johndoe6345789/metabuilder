@@ -12,7 +12,7 @@ import {
   FormControl,
   InputLabel,
 } from '@metabuilder/m3';
-import { SearchIcon } from '@/../../../icons/react';
+import { SearchIcon } from '@icons/react';
 import FILTER_OPTIONS from './workflow-filters.json';
 
 interface WorkflowFiltersProps {

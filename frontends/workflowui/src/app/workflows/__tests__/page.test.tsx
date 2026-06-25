@@ -2,7 +2,7 @@
  * Tests for WorkflowsPage (app/workflows/page.tsx)
  */
 
-jest.mock('@/../../../icons/react', () => ({
+jest.mock('@icons/react', () => ({
   AddIcon: () => null,
 }))
 

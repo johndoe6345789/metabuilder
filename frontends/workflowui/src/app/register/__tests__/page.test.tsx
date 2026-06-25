@@ -6,7 +6,7 @@ jest.mock('../hooks/useRegisterPage', () => ({
   useRegisterPage: jest.fn(),
 }))
 
-// The path @/../../../components/layout resolves to the monorepo components folder
+// The path @metabuilder/components/layout resolves to the monorepo components folder
 // which has ESM transitive deps — mock it directly
 jest.mock('../../../../../../components/layout', () => ({
   AuthFormLayout: ({ children, title, subtitle, footerLinkText }: any) => (

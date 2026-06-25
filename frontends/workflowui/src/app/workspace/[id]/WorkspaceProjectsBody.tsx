@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import styles from '/atoms/workspace.module.scss';
+import styles from '@scss/atoms/workspace.module.scss';
 import WorkspaceCreateProjectForm from './WorkspaceCreateProjectForm';
 import WorkspaceProjectsGrid from './WorkspaceProjectsGrid';
 

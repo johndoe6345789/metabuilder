@@ -5,8 +5,8 @@
 'use client';
 
 import React from 'react';
-import { ProjectCard } from '@/../../../components/cards/ProjectCard';
-import styles from '/atoms/workspace.module.scss';
+import { ProjectCard } from '@metabuilder/components/cards';
+import styles from '@scss/atoms/workspace.module.scss';
 
 interface Project {
   id: string;

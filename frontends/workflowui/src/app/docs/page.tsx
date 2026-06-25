@@ -11,7 +11,7 @@ import {
   Typography,
   TextField,
 } from '@metabuilder/m3';
-import styles from '/atoms/docs.module.scss';
+import styles from '@scss/atoms/docs.module.scss';
 import { useDocs } from './hooks/useDocs';
 import DocsSidebar from './DocsSidebar';
 import DocsContentArea from './DocsContentArea';

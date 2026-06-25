@@ -38,12 +38,17 @@ const nextConfig = {
       '@metabuilder/components/cards': './libraries/components/cards/index.ts',
       '@metabuilder/components/layout': './libraries/components/layout/index.ts',
       '@metabuilder/components/navigation': './libraries/components/navigation/index.ts',
+      '@metabuilder/components/feedback': './libraries/components/feedback/index.ts',
+      '@metabuilder/components/workflow-editor': './libraries/components/workflow-editor/index.ts',
       // Redux
       '@metabuilder/api-clients': './libraries/redux/api-clients/src',
       // Hooks
       '@metabuilder/hooks': './libraries/hooks/src',
+      '@metabuilder/hooks/workflow-editor': './libraries/hooks/workflow-editor/index.ts',
       // Shared SCSS modules
       '@scss': './libraries/scss',
+      // Shared icon exports
+      '@icons': './libraries/icons',
     },
   },
   sassOptions: {
@@ -74,8 +79,12 @@ const nextConfig = {
     config.resolve.alias['@metabuilder/components/cards'] = join(componentsPath, 'cards/index.ts');
     config.resolve.alias['@metabuilder/components/layout'] = join(componentsPath, 'layout/index.ts');
     config.resolve.alias['@metabuilder/components/navigation'] = join(componentsPath, 'navigation/index.ts');
+    config.resolve.alias['@metabuilder/components/feedback'] = join(componentsPath, 'feedback/index.ts');
+    config.resolve.alias['@metabuilder/components/workflow-editor'] = join(componentsPath, 'workflow-editor/index.ts');
     config.resolve.alias['@metabuilder/components'] = join(componentsPath, 'index.tsx');
+    config.resolve.alias['@metabuilder/hooks/workflow-editor'] = resolve(__dirname, '../../libraries/hooks/workflow-editor/index.ts');
     config.resolve.alias['@scss'] = resolve(__dirname, '../../libraries/scss');
+    config.resolve.alias['@icons'] = resolve(__dirname, '../../libraries/icons');
 
     // Exclude Prisma client from browser bundle (dev uses IndexedDB only)
     // Prisma adapter is loaded via dynamic import() - webpack won't bundle unless used

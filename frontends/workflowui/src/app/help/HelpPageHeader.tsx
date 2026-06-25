@@ -7,8 +7,8 @@ import { Box, Typography, TextField } from '@metabuilder/m3';
 import {
   HelpIcon,
   SearchIcon,
-} from '@/../../../icons/react';
-import styles from '/atoms/help.module.scss';
+} from '@icons/react';
+import styles from '@scss/atoms/help.module.scss';
 
 interface HelpPageHeaderProps {
   searchQuery: string;

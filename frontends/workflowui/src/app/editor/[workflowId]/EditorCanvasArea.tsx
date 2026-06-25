@@ -8,8 +8,8 @@ import React from 'react';
 import {
   CanvasNode,
   type NodeType,
-} from '@/../../../components/workflow-editor';
-import styles from '/atoms/workflow-editor.module.scss';
+} from '@metabuilder/components/workflow-editor';
+import styles from '@scss/atoms/workflow-editor.module.scss';
 import EditorConnectionLayer from './EditorConnectionLayer';
 import EditorEmptyState from './EditorEmptyState';
 import type { EditorCanvasAreaProps } from './editorTypes';

@@ -5,7 +5,7 @@
 'use client';
 
 import { DragEvent, RefObject } from 'react';
-import type { NodeType } from '@/../../../components/workflow-editor';
+import type { NodeType } from '@metabuilder/components/workflow-editor';
 import type { WorkflowNode, WorkflowConnection } from '@metabuilder/hooks';
 import type { DrawingConnection } from './useDrawingConnection';
 

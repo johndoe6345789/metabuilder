@@ -9,7 +9,7 @@ import {
   type NodeType,
   NodePalette,
   PropertiesDialog,
-} from '@/../../../components/workflow-editor';
+} from '@metabuilder/components/workflow-editor';
 import type { WorkflowNode } from '@metabuilder/hooks';
 
 interface EditorPanelsProps {
