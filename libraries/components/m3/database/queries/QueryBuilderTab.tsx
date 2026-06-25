@@ -14,6 +14,7 @@ import {
   Checkbox,
   FormControlLabel,
 } from '../../inputs';
+import { MenuItem } from '../../navigation';
 import { Add, Delete, Play } from '../../icons';
 import { DataGrid } from '../grids';
 import styles from './QueryBuilderTab.module.scss';
@@ -231,16 +232,23 @@ export function QueryBuilderTab({
       <Paper className={styles.sectionCard}>
         {/* Table Selection */}
         <FormControl fullWidth className={styles.section}>
-          <InputLabel>Select Table</InputLabel>
+          <InputLabel shrink>Select Table</InputLabel>
           <Select
-            native
             value={selectedTable}
-            onChange={(e) => handleTableChange(e.target.value as string)}
+            label="Select Table"
+            displayEmpty
+            onChange={(e) => handleTableChange(String(e.target.value))}
+            renderValue={(selected) =>
+              (selected as string) ? (selected as string) : <em>Select a table</em>
+            }
           >
+            <MenuItem value="">
+              <em>Select a table</em>
+            </MenuItem>
             {tables.map((table) => (
-              <option key={table.table_name} value={table.table_name}>
+              <MenuItem key={table.table_name} value={table.table_name}>
                 {table.table_name}
-              </option>
+              </MenuItem>
             ))}
           </Select>
         </FormControl>

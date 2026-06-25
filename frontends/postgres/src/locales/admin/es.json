@@ -1,0 +1,24 @@
+{
+  "Admin": {
+    "appTitle": "Administración de Postgres",
+    "openNav": "Abrir el menú de navegación",
+    "logout": "Cerrar sesión",
+    "language": "Idioma",
+    "theme": {
+      "toDark": "Cambiar al tema oscuro",
+      "toLight": "Cambiar al tema claro"
+    },
+    "footer": {
+      "title": "Administración de PostgreSQL"
+    },
+    "nav": {
+      "tables": "Explorar",
+      "query": "Consulta SQL",
+      "query-builder": "Generador de consultas",
+      "table-manager": "Esquema",
+      "column-manager": "Gestor de columnas",
+      "constraints": "Restricciones",
+      "indexes": "Índices"
+    }
+  }
+}

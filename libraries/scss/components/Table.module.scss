@@ -7,18 +7,27 @@
   width: 100%;
   overflow-x: auto;
   border-radius: var(--mat-sys-corner-medium);
+  // Firefox: always show a thin tinted scrollbar so horizontal overflow is
+  // discoverable (matches the webkit affordance below).
+  scrollbar-width: thin;
+  scrollbar-color: var(--mat-sys-outline) transparent;
 
   &::-webkit-scrollbar {
-    height: 8px;
+    height: 10px;
   }
 
   &::-webkit-scrollbar-track {
     background: var(--mat-sys-surface-container-low);
+    border-radius: var(--mat-sys-corner-full);
   }
 
   &::-webkit-scrollbar-thumb {
-    background: var(--mat-sys-outline-variant);
+    background: var(--mat-sys-outline);
     border-radius: var(--mat-sys-corner-full);
+
+    &:hover {
+      background: var(--mat-sys-on-surface-variant);
+    }
   }
 }
 

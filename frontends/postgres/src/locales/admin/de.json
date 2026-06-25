@@ -1,0 +1,24 @@
+{
+  "Admin": {
+    "appTitle": "Postgres-Verwaltung",
+    "openNav": "Navigationsmenü öffnen",
+    "logout": "Abmelden",
+    "language": "Sprache",
+    "theme": {
+      "toDark": "Zum dunklen Design wechseln",
+      "toLight": "Zum hellen Design wechseln"
+    },
+    "footer": {
+      "title": "PostgreSQL-Verwaltung"
+    },
+    "nav": {
+      "tables": "Durchsuchen",
+      "query": "SQL-Abfrage",
+      "query-builder": "Abfrage-Generator",
+      "table-manager": "Schema",
+      "column-manager": "Spaltenverwaltung",
+      "constraints": "Einschränkungen",
+      "indexes": "Indizes"
+    }
+  }
+}

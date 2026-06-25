@@ -1,0 +1,24 @@
+{
+  "Admin": {
+    "appTitle": "Postgres 管理",
+    "openNav": "打开导航菜单",
+    "logout": "退出登录",
+    "language": "语言",
+    "theme": {
+      "toDark": "切换到深色主题",
+      "toLight": "切换到浅色主题"
+    },
+    "footer": {
+      "title": "PostgreSQL 管理"
+    },
+    "nav": {
+      "tables": "浏览",
+      "query": "SQL 查询",
+      "query-builder": "查询构建器",
+      "table-manager": "架构",
+      "column-manager": "列管理",
+      "constraints": "约束",
+      "indexes": "索引"
+    }
+  }
+}

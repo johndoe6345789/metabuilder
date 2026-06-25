@@ -13,8 +13,11 @@ import {
   Typography,
 } from '@metabuilder/components/m3';
 import type { ReactNode } from 'react';
+import { useTranslations } from 'next-intl';
 import styles from './dashboard-shell.module.scss';
 import AdminDrawerContent, { type AdminNavItem } from './AdminDrawerContent';
+import ThemeToggle from './ThemeToggle';
+import LocaleSwitcher from './LocaleSwitcher';
 
 type Props = {
   navItems: AdminNavItem[];
@@ -39,6 +42,7 @@ export default function DashboardShell({
   children,
   version,
 }: Props) {
+  const t = useTranslations('Admin');
   const drawerContent = (
     <>
       <Toolbar />
@@ -62,16 +66,18 @@ export default function DashboardShell({
             color="inherit"
             onClick={onMobileOpen}
             className={styles.hamburger}
-            aria-label="Open navigation drawer"
+            aria-label={t('openNav')}
           >
             <MenuIcon />
           </IconButton>
           <StorageIcon className={styles.barIcon} />
           <Typography variant="h6" noWrap component="div" className={styles.title}>
-            Postgres Admin
+            {t('appTitle')}
           </Typography>
+          <LocaleSwitcher />
+          <ThemeToggle />
           <Button color="inherit" onClick={onLogout} startIcon={<LogoutIcon />}>
-            Logout
+            {t('logout')}
           </Button>
         </Toolbar>
       </AppBar>

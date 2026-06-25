@@ -1,0 +1,24 @@
+{
+  "Admin": {
+    "appTitle": "Postgres 管理",
+    "openNav": "ナビゲーションを開く",
+    "logout": "ログアウト",
+    "language": "言語",
+    "theme": {
+      "toDark": "ダークテーマに切り替え",
+      "toLight": "ライトテーマに切り替え"
+    },
+    "footer": {
+      "title": "PostgreSQL 管理"
+    },
+    "nav": {
+      "tables": "参照",
+      "query": "SQL クエリ",
+      "query-builder": "クエリビルダー",
+      "table-manager": "スキーマ",
+      "column-manager": "カラム管理",
+      "constraints": "制約",
+      "indexes": "インデックス"
+    }
+  }
+}

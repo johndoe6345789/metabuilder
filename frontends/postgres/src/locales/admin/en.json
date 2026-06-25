@@ -1,0 +1,24 @@
+{
+  "Admin": {
+    "appTitle": "Postgres Admin",
+    "openNav": "Open navigation drawer",
+    "logout": "Logout",
+    "language": "Language",
+    "theme": {
+      "toDark": "Switch to dark theme",
+      "toLight": "Switch to light theme"
+    },
+    "footer": {
+      "title": "PostgreSQL Admin"
+    },
+    "nav": {
+      "tables": "Browse",
+      "query": "SQL Query",
+      "query-builder": "Query Builder",
+      "table-manager": "Schema",
+      "column-manager": "Column Manager",
+      "constraints": "Constraints",
+      "indexes": "Indexes"
+    }
+  }
+}
