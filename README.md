@@ -16,7 +16,7 @@ The same JSON workflow engine that powers a Quake 3-compatible game loop also po
 
 | Domain | What's Built |
 |--------|-------------|
-| **Platform** | Multi-tenant app platform — 6-level permissions, schema-driven CRUD, 8 DB backends |
+| **Platform** | `frontends/nextjs` — the vision itself. 6-level permissions (Public→SuperGod), God Panel, 84 packages, `/{tenant}/{package}/{entity}` routing, JSON workflows. Same architecture as the game engine. |
 | **Workflow Engine** | Multi-language DAG execution (TS/Python/C++/Rust/Go/Mojo) — runs everything |
 | **Component Library** | M3 — 241-component Material Design 3 implementation (`@metabuilder/m3`) |
 | **Game Engine** | JSON workflow game engine (SDL3 GPU C++) — Quake 3 proof of concept, any game possible |
@@ -148,7 +148,7 @@ metabuilder/
 | Frontend | Stack | Status | Description |
 |----------|-------|--------|-------------|
 | `pastebin` | Next.js + Flask + DBAL C++ | Production | Multi-tenant code snippet manager. JWT auth, Redux + IndexedDB, 3 seeded accounts, event-driven user seeding via DBAL workflows. |
-| `nextjs` | Next.js 16, React 19, App Router | Functional | Primary web UI. Schema-driven CRUD, RSC, ISR, multi-tenant package rendering. |
+| `nextjs` | Next.js 16, React 19, App Router | Active | **The platform itself** — modern rewrite of the original MetaBuilder vision. 6-level permission system (Public → User → Moderator → Admin → God → SuperGod), God Panel (tab-driven meta-builder configured via JSON), 84 installable packages, `/{tenant}/{package}/{entity}` dynamic routing, JSON workflow execution, schema-driven CRUD. Same JSON-workflow architecture as the game engine, applied to web. |
 | `workflowui` | React, n8n-style DAG editor | Functional | Visual workflow editor with 152+ plugin nodes. 92.6% Playwright E2E pass rate. |
 | `codegen` | React + Monaco Editor | Functional | CodeForge IDE — in-browser code generation studio. Schema → component mapping, live preview. |
 | `postgres` | Next.js + M3 | Functional | PostgreSQL admin dashboard. Fully migrated to `@metabuilder/m3` SCSS modules (no MUI). |
