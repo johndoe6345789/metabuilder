@@ -1,24 +1,11 @@
 'use client';
 
-import MenuIcon from '@metabuilder/components/m3/Menu';
-import LogoutIcon from '@metabuilder/components/m3/Logout';
-import StorageIcon from '@metabuilder/components/m3/Storage';
-import {
-  AppBar,
-  Box,
-  Button,
-  Drawer,
-  IconButton,
-  Toolbar,
-  Typography,
-} from '@metabuilder/components/m3';
+import { Box, Drawer, Toolbar } from '@metabuilder/components/m3';
 import type { ReactNode } from 'react';
-import { useTranslations } from 'next-intl';
 import { useDrawer } from '@/hooks';
 import styles from './dashboard-shell.module.scss';
 import AdminDrawerContent, { type AdminNavItem } from './AdminDrawerContent';
-import ThemeToggle from './ThemeToggle';
-import LocaleSwitcher from './LocaleSwitcher';
+import DashboardAppBar from './DashboardAppBar';
 
 type Props = {
   navItems: AdminNavItem[];
@@ -33,22 +20,13 @@ type Props = {
 };
 
 export default function DashboardShell({
-  navItems,
-  selectedIndex,
-  onNavigate,
-  onLogout,
-  mobileOpen,
-  onMobileOpen,
-  onMobileClose,
-  children,
-  version,
+  navItems, selectedIndex, onNavigate, onLogout, mobileOpen,
+  onMobileOpen, onMobileClose, children, version,
 }: Props) {
-  const t = useTranslations('Admin');
   const { desktopOpen, toggleDesktop } = useDrawer();
 
   const handleMenuClick = () => {
-    // Wide screens: collapse/expand the permanent drawer.
-    // Narrow screens: toggle the temporary drawer open/closed.
+    // Desktop: collapse/expand the permanent drawer; mobile: toggle it.
     if (typeof window !== 'undefined' && window.innerWidth >= 900) {
       toggleDesktop();
     } else if (mobileOpen) {
@@ -58,16 +36,13 @@ export default function DashboardShell({
     }
   };
 
-  const drawerContent = (
+  const drawer = (
     <>
       <Toolbar />
       <AdminDrawerContent
         navItems={navItems}
         selectedIndex={selectedIndex}
-        onNavigate={id => {
-          onNavigate(id);
-          onMobileClose();
-        }}
+        onNavigate={id => { onNavigate(id); onMobileClose(); }}
         version={version}
       />
     </>
@@ -75,28 +50,7 @@ export default function DashboardShell({
 
   return (
     <Box className={styles.root}>
-      <AppBar position="fixed">
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            onClick={handleMenuClick}
-            className={styles.menuButton}
-            aria-label={t('openNav')}
-          >
-            <MenuIcon />
-          </IconButton>
-          <StorageIcon className={styles.barIcon} />
-          <Typography variant="h6" noWrap component="div" className={styles.title}>
-            {t('appTitle')}
-          </Typography>
-          <LocaleSwitcher />
-          <ThemeToggle />
-          <Button color="inherit" onClick={onLogout} startIcon={<LogoutIcon />}>
-            {t('logout')}
-          </Button>
-        </Toolbar>
-      </AppBar>
-
+      <DashboardAppBar onMenuClick={handleMenuClick} onLogout={onLogout} />
       <Drawer
         variant="permanent"
         open
@@ -104,9 +58,8 @@ export default function DashboardShell({
           desktopOpen ? '' : styles.drawerCollapsed
         }`}
       >
-        {drawerContent}
+        {drawer}
       </Drawer>
-
       <Drawer
         variant="temporary"
         open={mobileOpen}
@@ -114,13 +67,9 @@ export default function DashboardShell({
         ModalProps={{ keepMounted: true }}
         className={`${styles.drawer} ${styles.mobileDrawer}`}
       >
-        {drawerContent}
+        {drawer}
       </Drawer>
-
-      <Box
-        component="main"
-        className={styles.main}
-      >
+      <Box component="main" className={styles.main}>
         <Toolbar />
         {children}
       </Box>
