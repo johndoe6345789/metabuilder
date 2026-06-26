@@ -1,31 +1,33 @@
 # metabuilder/base-postgres-deps
 #
-# Extends base-node-deps with the workspace re-link for the postgres dashboard.
-# Bakes in the npm install so source-only changes never trigger it again.
+# Extends base-node-deps with:
+#   1. npm workspace re-link (bakes node_modules symlinks)
+#   2. Compiled dist/ for redux/* and workflow (not in Next.js transpilePackages)
+#
+# Rebuild only when package.json files or these library sources change.
+# App image skips the entire library build loop — only scss/components/app
+# source change per iteration, and Next.js transpiles those directly.
 #
 # Build:  docker build -f deployment/base-images/Dockerfile.node-deps-postgres \
 #                      -t metabuilder/base-postgres-deps:latest ../../
-# Rebuild only when any package.json changes.
 
 ARG BASE_REGISTRY=metabuilder
 FROM ${BASE_REGISTRY}/base-node-deps:latest
 
-# Copy all workspace package manifests (matches base-node-deps COPY set).
-# package-lock.json is required so npm respects workspace-local placements
-# (e.g. tsup in components/node_modules, not hoisted to root).
+# ── workspace manifests (for npm install) ────────────────────────────────────
 COPY package.json package-lock.json ./
 COPY libraries/components/package.json                          ./libraries/components/
-COPY libraries/components/m3/package.json                  ./libraries/components/m3/
-COPY config/package.json                              ./config/
+COPY libraries/components/m3/package.json                       ./libraries/components/m3/
+COPY config/package.json                                        ./config/
 COPY libraries/scss/package.json                                ./libraries/scss/
-COPY frontends/codegen/package.json                   ./frontends/codegen/
-COPY frontends/dbal/package.json                      ./frontends/dbal/
-COPY frontends/emailclient/package.json               ./frontends/emailclient/
-COPY frontends/exploded-diagrams/package.json         ./frontends/exploded-diagrams/
-COPY frontends/nextjs/package.json                    ./frontends/nextjs/
-COPY frontends/pastebin/package.json                  ./frontends/pastebin/
-COPY frontends/postgres/package.json                  ./frontends/postgres/
-COPY frontends/workflowui/package.json                ./frontends/workflowui/
+COPY frontends/codegen/package.json                             ./frontends/codegen/
+COPY frontends/dbal/package.json                                ./frontends/dbal/
+COPY frontends/emailclient/package.json                         ./frontends/emailclient/
+COPY frontends/exploded-diagrams/package.json                   ./frontends/exploded-diagrams/
+COPY frontends/nextjs/package.json                              ./frontends/nextjs/
+COPY frontends/pastebin/package.json                            ./frontends/pastebin/
+COPY frontends/postgres/package.json                            ./frontends/postgres/
+COPY frontends/workflowui/package.json                          ./frontends/workflowui/
 COPY libraries/hooks/package.json                               ./libraries/hooks/
 COPY libraries/interfaces/package.json                          ./libraries/interfaces/
 COPY libraries/redux/adapters/package.json                      ./libraries/redux/adapters/
@@ -50,7 +52,7 @@ COPY libraries/translations/package.json                        ./libraries/tran
 COPY libraries/types/package.json                               ./libraries/types/
 COPY libraries/workflow/package.json                            ./libraries/workflow/
 
-# Re-link workspaces. Probe host.docker.internal first, fall back to bridge gateway.
+# ── npm install (workspace symlinks) ─────────────────────────────────────────
 RUN set -e; \
     VERDACCIO_HOST="http://host.docker.internal:4873/"; \
     VERDACCIO_BRIDGE="http://172.17.0.1:4873/"; \
@@ -70,5 +72,43 @@ RUN set -e; \
       npm install --ignore-scripts; \
     fi
 
+# ── library source (redux/* + workflow — NOT in Next.js transpilePackages) ───
+# @metabuilder/m3 and @metabuilder/components ARE in transpilePackages so
+# Next.js compiles their TypeScript directly; they live in the app layer.
+COPY libraries/types/         ./libraries/types/
+COPY libraries/interfaces/    ./libraries/interfaces/
+COPY libraries/translations/  ./libraries/translations/
+COPY libraries/hooks/         ./libraries/hooks/
+COPY libraries/icons/         ./libraries/icons/
+COPY libraries/workflow/      ./libraries/workflow/
+COPY libraries/redux/core/          ./libraries/redux/core/
+COPY libraries/redux/slices/        ./libraries/redux/slices/
+COPY libraries/redux/hooks/         ./libraries/redux/hooks/
+COPY libraries/redux/adapters/      ./libraries/redux/adapters/
+COPY libraries/redux/api-clients/   ./libraries/redux/api-clients/
+COPY libraries/redux/core-hooks/    ./libraries/redux/core-hooks/
+COPY libraries/redux/email/         ./libraries/redux/email/
+COPY libraries/redux/hooks-async/   ./libraries/redux/hooks-async/
+COPY libraries/redux/hooks-auth/    ./libraries/redux/hooks-auth/
+COPY libraries/redux/hooks-canvas/  ./libraries/redux/hooks-canvas/
+COPY libraries/redux/hooks-data/    ./libraries/redux/hooks-data/
+COPY libraries/redux/hooks-forms/   ./libraries/redux/hooks-forms/
+COPY libraries/redux/hooks-utils/   ./libraries/redux/hooks-utils/
+COPY libraries/redux/middleware/    ./libraries/redux/middleware/
+COPY libraries/redux/persist/       ./libraries/redux/persist/
+COPY libraries/redux/services/      ./libraries/redux/services/
+COPY libraries/redux/timing-utils/  ./libraries/redux/timing-utils/
+
+# ── compile dist/ for redux/* and workflow ────────────────────────────────────
+RUN --mount=type=cache,target=/root/.cache/tsup \
+    for ws in \
+      libraries/redux/core libraries/redux/slices \
+      libraries/redux/hooks libraries/redux/adapters \
+      libraries/redux/hooks-async libraries/redux/api-clients \
+      libraries/redux/persist libraries/workflow; do \
+      npm run build -w "$ws" --if-present 2>&1 \
+        || { echo "ERROR: $ws build failed"; exit 1; }; \
+    done
+
 LABEL org.metabuilder.image="base-postgres-deps" \
-      org.metabuilder.description="Workspace deps re-linked for postgres dashboard"
+      org.metabuilder.description="Workspace deps + redux/workflow dist/ for postgres dashboard"
