@@ -1,1 +1,0 @@
-export { BlinkText } from './BlinkText';

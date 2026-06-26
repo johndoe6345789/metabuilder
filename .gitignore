@@ -122,6 +122,9 @@ bun.lockb
 .act-env
 /frontends/qt6/_build
 
+# Storybook build output (generated)
+frontends/storybook/storybook-static/
+
 # Local build-verification output dirs
 **/.next-verify/
 
