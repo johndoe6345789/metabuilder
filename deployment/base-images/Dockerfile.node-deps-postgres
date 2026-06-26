@@ -65,9 +65,9 @@ RUN set -e; \
       echo "No local registry — using public npm"; \
     fi; \
     if [ -n "$REG" ]; then \
-      npm install --ignore-scripts --legacy-peer-deps --registry "$REG"; \
+      npm install --ignore-scripts --registry "$REG"; \
     else \
-      npm install --ignore-scripts --legacy-peer-deps; \
+      npm install --ignore-scripts; \
     fi
 
 LABEL org.metabuilder.image="base-postgres-deps" \

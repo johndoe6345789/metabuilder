@@ -64,7 +64,7 @@ COPY frontends/nextjs/ ./frontends/nextjs/
 # source has been COPYed in, re-run the full workspace install so npm rebuilds
 # the complete node_modules/@metabuilder/* symlink tree (e.g. @metabuilder/types
 # for redux/slices, redux/adapters, redux/hooks-async, api-clients, persist).
-RUN npm install --ignore-scripts --legacy-peer-deps
+RUN npm install --ignore-scripts
 
 # Build workspace library packages
 RUN for ws in libraries/redux/core libraries/redux/slices \

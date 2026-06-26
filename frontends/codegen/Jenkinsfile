@@ -41,7 +41,7 @@ pipeline {
                         sh '''
                             node --version
                             npm --version
-                            npm install --legacy-peer-deps
+                            npm install
                         '''
                     }
                 }

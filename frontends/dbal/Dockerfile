@@ -19,7 +19,7 @@ FROM node:24-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY frontends/dbal/package.json ./
-RUN npm install --legacy-peer-deps
+RUN npm install
 
 FROM node:24-alpine AS nextjs-builder
 WORKDIR /app

@@ -55,7 +55,7 @@ COPY libraries/redux/timing-utils/ ./libraries/redux/timing-utils/
 # CodeForge IDE
 COPY frontends/codegen/ ./frontends/codegen/
 
-RUN npm install --ignore-scripts --legacy-peer-deps
+RUN npm install --ignore-scripts
 
 RUN for ws in libraries/redux/core libraries/redux/slices \
     libraries/redux/hooks libraries/redux/adapters \
