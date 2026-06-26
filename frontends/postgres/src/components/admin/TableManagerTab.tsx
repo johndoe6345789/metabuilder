@@ -40,10 +40,21 @@ export default function TableManagerTab({
     searchQuery, setSearchQuery, handlers,
   } = useTableManager();
 
-  const filteredTables = tables.filter(t =>
-    t.table_name.toLowerCase().includes(searchQuery.toLowerCase()),
+  const filteredTables = tables.filter(tbl =>
+    tbl.table_name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
-  const data = { feature, tables: filteredTables, canCreate, canDelete };
+  // Translated labels injected into the render context so the config-driven
+  // ComponentTreeRenderer (title + Create/Drop buttons) follows the locale via
+  // {{t.*}} templates.
+  const treeLabels = {
+    title: t('view.tableManager.title'),
+    description: t('view.tableManager.description'),
+    createTable: t('view.tableManager.createTable'),
+    dropTable: t('view.tableManager.dropTable'),
+  };
+  const data = {
+    feature, tables: filteredTables, canCreate, canDelete, t: treeLabels,
+  };
 
   return (
     <>

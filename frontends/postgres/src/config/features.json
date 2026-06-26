@@ -63,42 +63,42 @@
     "fr": {
       "features": {
         "database-crud": {
-          "name": "Op\u00e9rations CRUD de base de donn\u00e9es",
-          "description": "Cr\u00e9er, lire, mettre \u00e0 jour et supprimer des enregistrements de base de donn\u00e9es"
+          "name": "Opérations CRUD de base de données",
+          "description": "Créer, lire, mettre à jour et supprimer des enregistrements de base de données"
         },
         "table-management": {
           "name": "Gestion des tables",
-          "description": "Cr\u00e9er et g\u00e9rer des tables de base de donn\u00e9es"
+          "description": "Créer et gérer des tables de base de données"
         },
         "column-management": {
           "name": "Gestion des colonnes",
           "description": "Ajouter, modifier et supprimer des colonnes de table"
         },
         "sql-query": {
-          "name": "Interface de requ\u00eate SQL",
-          "description": "Ex\u00e9cuter des requ\u00eates SQL personnalis\u00e9es"
+          "name": "Interface de requête SQL",
+          "description": "Exécuter des requêtes SQL personnalisées"
         },
         "constraint-management": {
           "name": "Gestion des contraintes",
-          "description": "Ajouter et g\u00e9rer les contraintes de table (PRIMARY KEY, UNIQUE, CHECK)"
+          "description": "Ajouter et gérer les contraintes de table (PRIMARY KEY, UNIQUE, CHECK)"
         },
         "query-builder": {
-          "name": "Constructeur de requ\u00eates",
-          "description": "Constructeur de requ\u00eates visuel pour cr\u00e9er des requ\u00eates SELECT"
+          "name": "Constructeur de requêtes",
+          "description": "Constructeur de requêtes visuel pour créer des requêtes SELECT"
         },
         "index-management": {
           "name": "Gestion des index",
-          "description": "Cr\u00e9er et g\u00e9rer des index de base de donn\u00e9es pour l'optimisation des performances"
+          "description": "Créer et gérer des index de base de données pour l'optimisation des performances"
         }
       },
       "actions": {
-        "create": "Cr\u00e9er",
+        "create": "Créer",
         "read": "Lire",
-        "update": "Mettre \u00e0 jour",
+        "update": "Mettre à jour",
         "delete": "Supprimer",
         "add": "Ajouter",
         "modify": "Modifier",
-        "execute": "Ex\u00e9cuter",
+        "execute": "Exécuter",
         "list": "Lister",
         "build": "Construire"
       },
@@ -116,8 +116,8 @@
         "id": "ID",
         "name": "Nom",
         "email": "E-mail",
-        "created_at": "Cr\u00e9\u00e9 le",
-        "updated_at": "Mis \u00e0 jour le"
+        "created_at": "Créé le",
+        "updated_at": "Mis à jour le"
       }
     }
   },
@@ -1319,7 +1319,7 @@
           "props": {
             "variant": "h5",
             "gutterBottom": true,
-            "text": "{{feature.name}}"
+            "text": "{{t.title}}"
           }
         },
         {
@@ -1329,7 +1329,7 @@
             "variant": "body2",
             "color": "text.secondary",
             "gutterBottom": true,
-            "text": "{{feature.description}}"
+            "text": "{{t.description}}"
           }
         },
         {
@@ -1351,7 +1351,7 @@
                 "sx": {
                   "mr": 2
                 },
-                "text": "Create Table"
+                "text": "{{t.createTable}}"
               }
             },
             {
@@ -1362,7 +1362,7 @@
                 "color": "error",
                 "startIcon": "Delete",
                 "onClick": "openDropDialog",
-                "text": "Drop Table"
+                "text": "{{t.dropTable}}"
               }
             }
           ]
