@@ -167,30 +167,32 @@ export function TablesTab({
             />
           </Box>
 
-          <List dense disablePadding className={styles.list}>
-            {filteredTables.length > 0 ? (
-              filteredTables.map(table => (
-                <ListItem key={table.table_name} disablePadding>
-                  <ListItemButton
-                    selected={selectedTable === table.table_name}
-                    onClick={() => onTableClick(table.table_name)}
-                    className={styles.listItem}
-                  >
-                    <ListItemIcon>
-                      <TableChart />
-                    </ListItemIcon>
-                    <ListItemText primary={table.table_name} />
-                  </ListItemButton>
-                </ListItem>
-              ))
-            ) : (
-              <div className={styles.noMatch}>
-                <Typography variant="body2" color="text.secondary">
-                  {L.noMatch}
-                </Typography>
-              </div>
-            )}
-          </List>
+          <div className={styles.listWrapper}>
+            <List dense disablePadding className={styles.list}>
+              {filteredTables.length > 0 ? (
+                filteredTables.map(table => (
+                  <ListItem key={table.table_name} disablePadding>
+                    <ListItemButton
+                      selected={selectedTable === table.table_name}
+                      onClick={() => onTableClick(table.table_name)}
+                      className={styles.listItem}
+                    >
+                      <ListItemIcon>
+                        <TableChart />
+                      </ListItemIcon>
+                      <ListItemText primary={table.table_name} />
+                    </ListItemButton>
+                  </ListItem>
+                ))
+              ) : (
+                <div className={styles.noMatch}>
+                  <Typography variant="body2" color="text.secondary">
+                    {L.noMatch}
+                  </Typography>
+                </div>
+              )}
+            </List>
+          </div>
         </Paper>
 
         <Paper className={styles.panel}>
