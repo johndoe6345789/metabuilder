@@ -9,17 +9,18 @@ FROM ${BASE_REGISTRY}/base-postgres-deps:latest AS builder
 
 COPY package.json .npmrc ./
 
-# Only copy frequently-changed source — stable libs (redux/*, workflow) live
-# in the base image with their compiled dist/ already present.
-# @metabuilder/m3 and @metabuilder/components are in Next.js transpilePackages
-# so they're compiled from TypeScript source; no tsup build needed here.
+# Re-link workspace symlinks BEFORE source copies so this layer is cached on
+# source-only changes (scss/component/app edits never touch package.json).
+# --no-audit --prefer-offline make it fast when it does need to run.
+RUN --mount=type=cache,target=/root/.npm \
+    npm install --ignore-scripts --prefer-offline --no-audit
+
+# Source copies come after npm install — invalidate the next build layer but
+# NOT the npm step above. Workspace symlinks are path-based so they resolve
+# correctly once the directories are populated by these COPYs.
 COPY libraries/scss/       ./libraries/scss/
 COPY libraries/components/ ./libraries/components/
 COPY frontends/postgres/   ./frontends/postgres/
-
-# Re-link workspace symlinks after source copy.
-RUN --mount=type=cache,target=/root/.npm \
-    npm install --ignore-scripts
 
 # Build the app — cache mount preserves .next/cache across rebuilds so
 # turbopack only recompiles changed files (seconds for scss/component edits).
