@@ -368,7 +368,7 @@ export {
   SplitView,
   type SplitViewProps,
   type ViewMode,
-} from './Code'
+} from './code'
 
 // =============================================================================
 // TERMINAL COMPONENTS

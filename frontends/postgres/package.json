@@ -9,7 +9,7 @@
     "dev:spotlight": "npx @spotlightjs/spotlight",
     "dev:next": "next dev",
     "dev": "npm-run-all db-remote:neon db:migrate --parallel dev:*",
-    "build:next": "next build --webpack",
+    "build:next": "next build --turbopack",
     "build-local": "run-p db-server:memory build:next --race",
     "build": "run-s build:next",
     "start": "next start",

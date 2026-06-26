@@ -1,16 +1,16 @@
 @use '../../../../libraries/scss/theme.scss';
 
-:global(*) {
+* {
   box-sizing: border-box;
 }
 
-:global(html) {
+html {
   min-height: 100%;
   background: var(--mat-sys-surface);
   color: var(--mat-sys-on-surface);
 }
 
-:global(body) {
+body {
   min-height: 100vh;
   margin: 0;
   background: var(--mat-sys-surface);
@@ -19,11 +19,11 @@
   line-height: 1.5;
 }
 
-:global(a) {
+a {
   color: inherit;
 }
 
-:global(img) {
+img {
   display: block;
   max-width: 100%;
   height: auto;

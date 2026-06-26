@@ -55,10 +55,19 @@ const baseConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // Turbopack config (used by `next dev --turbopack`)
-  // webpack() callback below is still used by `next build`
+  // Keep heavy server-only deps external so they aren't bundled.
+  serverExternalPackages: ['better-sqlite3'],
+  // Turbopack config — now used by both `next dev` and `next build`. The
+  // m3 source alias must live here too (turbopack ignores the webpack()
+  // callback), otherwise @metabuilder/m3 fails to resolve to source.
   turbopack: {
     root: monorepoRoot,
+    resolveAlias: {
+      // Relative to this project dir (frontends/postgres); turbopack treats
+      // resolveAlias values as project-relative, not absolute.
+      '@metabuilder/components/m3': '../../libraries/components/m3',
+      '@metabuilder/m3': '../../libraries/components/m3',
+    },
   },
   experimental: {
     turbopackFileSystemCacheForDev: true,

@@ -38,7 +38,7 @@ COPY frontends/postgres/ ./frontends/postgres/
 
 # Re-link workspaces after copying source so npm sees the current root manifest
 # and rebuilds node_modules/@metabuilder/* workspace symlinks.
-RUN npm install --ignore-scripts --legacy-peer-deps
+RUN npm install --ignore-scripts
 
 # Build workspace libraries
 RUN for ws in libraries/redux/core libraries/redux/slices \
@@ -53,7 +53,7 @@ ENV SKIP_ENV_VALIDATION=true
 ENV JWT_SECRET=build-placeholder
 ENV NEXT_PUBLIC_SENTRY_DISABLED=true
 ENV NODE_OPTIONS="--max-old-space-size=3072"
-RUN cd frontends/postgres && npx next build --webpack
+RUN cd frontends/postgres && npx next build --turbopack
 
 # --- Runtime stage ---
 FROM node:24-alpine
