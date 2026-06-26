@@ -368,7 +368,9 @@ export {
   SplitView,
   type SplitViewProps,
   type ViewMode,
-} from './code'
+  // Explicit /index avoids the case-collision with the sibling Code.ts icon
+  // (turbopack resolves it, but esbuild/tsup would try ./code.ts and fail).
+} from './code/index'
 
 // =============================================================================
 // TERMINAL COMPONENTS

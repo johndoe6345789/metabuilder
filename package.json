@@ -98,6 +98,9 @@
     "@storybook/react-vite": {
       ".": "10.4.4",
       "vite": "^8.0.0"
+    },
+    "eslint-plugin-import": {
+      "eslint": "$eslint"
     }
   }
 }
