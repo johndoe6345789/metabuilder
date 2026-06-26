@@ -29,7 +29,7 @@ export interface MaterialIconProps extends React.HTMLAttributes<HTMLSpanElement>
  */
 export const MaterialIcon = ({
   name,
-  size = 24,
+  size,
   weight = 400,
   fill = 0,
   grade = 0,
@@ -42,7 +42,9 @@ export const MaterialIcon = ({
   const fontClass = `material-symbols-${variant}`
 
   const iconStyle: React.CSSProperties = {
-    fontSize: typeof size === 'number' ? `${size}px` : size,
+    ...(size !== undefined
+      ? { fontSize: typeof size === 'number' ? `${size}px` : size }
+      : {}),
     fontVariationSettings: `'FILL' ${fill}, 'wght' ${weight}, 'GRAD' ${grade}, 'opsz' ${opticalSize}`,
     ...style,
   }

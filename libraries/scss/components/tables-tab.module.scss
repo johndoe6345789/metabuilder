@@ -53,6 +53,12 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+
+  :global(.material-symbols-outlined),
+  :global(.material-symbols-rounded),
+  :global(.material-symbols-sharp) {
+    font-size: 20px;
+  }
 }
 
 .countRow {
@@ -78,9 +84,20 @@
 }
 
 .listItem {
-  border-radius: 12px;
+  border-radius: 12px !important;
   margin: 2px 8px;
-  padding-inline: 8px;
+  /* override mdc-list-item's 16px inline padding */
+  padding-inline: 8px !important;
+
+  :global(.material-symbols-outlined),
+  :global(.material-symbols-rounded),
+  :global(.material-symbols-sharp) {
+    font-size: 20px;
+  }
+}
+
+.noMatch {
+  padding: 16px;
 }
 
 .infoPanel {

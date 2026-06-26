@@ -97,7 +97,8 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
         return 0
 
     if command == "restart":
-        result = run_shell(docker_compose(*profiles, "restart", dev=dev))
+        targets = getattr(args, "services", []) or []
+        result = run_shell(docker_compose(*profiles, "restart", *targets, dev=dev))
         if result.returncode != 0:
             log_err("docker compose restart failed")
             return result.returncode
@@ -146,6 +147,17 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
         return 0
 
     if command in ("up", "start"):
+        targets = getattr(args, "services", []) or []
+        if targets:
+            # Targeted redeploy — skip pre-pull, just bring up named services
+            log_info(f"Redeploying: {' '.join(targets)}")
+            result = run_shell(docker_compose(*profiles, "up", "-d", *targets, dev=dev))
+            if result.returncode != 0:
+                log_err("docker compose up failed")
+                return result.returncode
+            log_ok(f"Done: {' '.join(targets)}")
+            return 0
+
         log_info(f"Starting MetaBuilder stack ({mode_label})...")
         _pull_external_images(profiles, config)
         result = run_shell(docker_compose(*profiles, "up", "-d", dev=dev))

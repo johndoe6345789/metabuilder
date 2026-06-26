@@ -14,7 +14,7 @@ import {
   ListItemText,
 } from '../../data-display';
 import { Button, InputAdornment, TextField } from '../../inputs';
-import { Storage } from '../../icons';
+import { TableChart } from '../../icons';
 import { useMemo, useState } from 'react';
 import styles from '../../../../scss/components/tables-tab.module.scss';
 
@@ -160,7 +160,7 @@ export function TablesTab({
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchIcon fontSize="small" />
+                    <SearchIcon />
                   </InputAdornment>
                 ),
               }}
@@ -177,18 +177,18 @@ export function TablesTab({
                     className={styles.listItem}
                   >
                     <ListItemIcon>
-                      <Storage />
+                      <TableChart />
                     </ListItemIcon>
                     <ListItemText primary={table.table_name} />
                   </ListItemButton>
                 </ListItem>
               ))
             ) : (
-              <Box sx={{ p: 2 }}>
+              <div className={styles.noMatch}>
                 <Typography variant="body2" color="text.secondary">
                   {L.noMatch}
                 </Typography>
-              </Box>
+              </div>
             )}
           </List>
         </Paper>

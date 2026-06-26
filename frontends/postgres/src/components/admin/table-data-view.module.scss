@@ -46,6 +46,12 @@
 
 .actionsCell {
   white-space: nowrap;
+
+  :global(.material-symbols-outlined),
+  :global(.material-symbols-rounded),
+  :global(.material-symbols-sharp) {
+    font-size: 18px;
+  }
 }
 
 .pagination {

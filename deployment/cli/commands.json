@@ -115,6 +115,7 @@
           "arguments": [
             { "name": "--force",      "action": "store_true", "help": "Rebuild even if images exist" },
             { "name": "--sequential", "action": "store_true", "help": "Build sequentially (less RAM)" },
+            { "name": "--list",       "action": "store_true", "help": "List buildable app services" },
             { "name": "apps",         "nargs": "*",           "help": "Apps to build (default: all)" }
           ]
         },
@@ -142,6 +143,7 @@
       "module": "cli.stack",
       "arguments": [
         { "name": "command",      "nargs": "?", "default": "up", "help": "Stack command (default: up)" },
+        { "name": "services",     "nargs": "*",                   "help": "Services to target (up/restart only; skips pre-pull)" },
         { "name": "--monitoring", "action": "store_true",         "help": "Include monitoring services" },
         { "name": "--media",      "action": "store_true",         "help": "Include media services" },
         { "name": "--all",        "action": "store_true", "dest": "all_profiles", "help": "Include all profiles" },

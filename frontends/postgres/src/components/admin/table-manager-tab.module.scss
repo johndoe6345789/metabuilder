@@ -8,6 +8,12 @@
 
 .search {
   margin-bottom: 8px;
+
+  :global(.material-symbols-outlined),
+  :global(.material-symbols-rounded),
+  :global(.material-symbols-sharp) {
+    font-size: 20px;
+  }
 }
 
 .tableRow {
@@ -21,6 +27,12 @@
 
 .tableIcon {
   min-width: 40px;
+
+  :global(.material-symbols-outlined),
+  :global(.material-symbols-rounded),
+  :global(.material-symbols-sharp) {
+    font-size: 20px;
+  }
 }
 
 .itemText :global(.MuiListItemText-primary) {

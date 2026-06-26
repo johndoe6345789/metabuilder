@@ -57,13 +57,13 @@ export default function TableDataGrid({
                         <Tooltip title="Edit row">
                           <IconButton size="small"
                             onClick={() => onEditRow(row)}>
-                            <EditIcon fontSize="small" />
+                            <EditIcon  />
                           </IconButton>
                         </Tooltip>
                         <Tooltip title="Delete row">
                           <IconButton size="small" color="error"
                             onClick={() => onDeleteRow(row)}>
-                            <DeleteIcon fontSize="small" />
+                            <DeleteIcon  />
                           </IconButton>
                         </Tooltip>
                       </>

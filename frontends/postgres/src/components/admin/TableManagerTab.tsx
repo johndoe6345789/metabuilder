@@ -75,7 +75,7 @@ export default function TableManagerTab({
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon fontSize="small" />
+                  <SearchIcon />
                 </InputAdornment>
               ),
             }}
@@ -94,7 +94,7 @@ export default function TableManagerTab({
                 onClick={() => onTableClick?.(table.table_name)}
                 disabled={!onTableClick}>
                 <ListItemIcon className={s.tableIcon}>
-                  <TableChartIcon fontSize="small" />
+                  <TableChartIcon />
                 </ListItemIcon>
                 <ListItemText
                   primary={
