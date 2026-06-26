@@ -1,5 +1,5 @@
 """
-FakeMUI Lab Module for PyQt6
+M3 Lab Module for PyQt6
 
 Provides experimental/lab components like LoadingButton, Timeline, TreeView, Masonry.
 """
@@ -13,7 +13,7 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, QTimer, pyqtSignal, QPropertyAnimation, QEasingCurve
 from PyQt6.QtGui import QFont, QColor
 
-from .base import FakeMUIWidget, StyleMixin
+from .base import M3Widget, StyleMixin
 
 
 # =============================================================================
@@ -62,17 +62,17 @@ class LoadingButton(QPushButton, StyleMixin):
     def _apply_classes(self):
         """Apply CSS classes based on properties."""
         self.clear_classes()
-        self.add_class("fakemui-loading-button")
-        self.add_class(f"fakemui-loading-button-{self._variant}")
-        self.add_class(f"fakemui-loading-button-{self._color}")
-        self.add_class(f"fakemui-loading-button-{self._size}")
+        self.add_class("m3-loading-button")
+        self.add_class(f"m3-loading-button-{self._variant}")
+        self.add_class(f"m3-loading-button-{self._color}")
+        self.add_class(f"m3-loading-button-{self._size}")
         
         if self._full_width:
-            self.add_class("fakemui-loading-button-fullwidth")
+            self.add_class("m3-loading-button-fullwidth")
             self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         
         if self._loading:
-            self.add_class("fakemui-loading-button-loading")
+            self.add_class("m3-loading-button-loading")
             self.setEnabled(False)
         
         self._apply_stylesheet()
@@ -225,8 +225,8 @@ class Timeline(QFrame, StyleMixin):
         self._layout.setSpacing(0)
         self._layout.setContentsMargins(0, 0, 0, 0)
         
-        self.add_class("fakemui-timeline")
-        self.add_class(f"fakemui-timeline-position-{position}")
+        self.add_class("m3-timeline")
+        self.add_class(f"m3-timeline-position-{position}")
         
         self.setStyleSheet("""
             QFrame {
@@ -258,9 +258,9 @@ class TimelineItem(QFrame, StyleMixin):
         self._separator: Optional[QWidget] = None
         self._content: Optional[QWidget] = None
         
-        self.add_class("fakemui-timeline-item")
+        self.add_class("m3-timeline-item")
         if position:
-            self.add_class(f"fakemui-timeline-item-position-{position}")
+            self.add_class(f"m3-timeline-item-position-{position}")
         
         self.setStyleSheet("""
             QFrame {
@@ -311,7 +311,7 @@ class TimelineSeparator(QFrame, StyleMixin):
         self._layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self._layout.setContentsMargins(8, 0, 8, 0)
         
-        self.add_class("fakemui-timeline-separator")
+        self.add_class("m3-timeline-separator")
         self.setFixedWidth(40)
     
     def add_widget(self, widget: QWidget):
@@ -326,7 +326,7 @@ class TimelineConnector(QFrame, StyleMixin):
         super().__init__(parent)
         StyleMixin.__init__(self)
         
-        self.add_class("fakemui-timeline-connector")
+        self.add_class("m3-timeline-connector")
         self.setFixedWidth(2)
         self.setMinimumHeight(20)
         
@@ -347,7 +347,7 @@ class TimelineContent(QFrame, StyleMixin):
         self._layout = QVBoxLayout(self)
         self._layout.setContentsMargins(8, 8, 8, 8)
         
-        self.add_class("fakemui-timeline-content")
+        self.add_class("m3-timeline-content")
     
     def add_widget(self, widget: QWidget):
         """Add a widget to the content."""
@@ -375,9 +375,9 @@ class TimelineDot(QFrame, StyleMixin):
         self._color = color
         self._variant = variant
         
-        self.add_class("fakemui-timeline-dot")
-        self.add_class(f"fakemui-timeline-dot-{variant}")
-        self.add_class(f"fakemui-timeline-dot-{color}")
+        self.add_class("m3-timeline-dot")
+        self.add_class(f"m3-timeline-dot-{variant}")
+        self.add_class(f"m3-timeline-dot-{color}")
         
         self.setFixedSize(12, 12)
         
@@ -421,7 +421,7 @@ class TimelineOppositeContent(QFrame, StyleMixin):
         self._layout.setContentsMargins(8, 8, 8, 8)
         self._layout.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignTop)
         
-        self.add_class("fakemui-timeline-opposite-content")
+        self.add_class("m3-timeline-opposite-content")
     
     def add_widget(self, widget: QWidget):
         """Add a widget."""
@@ -479,7 +479,7 @@ class TreeView(QTreeWidget, StyleMixin):
         self.itemCollapsed.connect(self._on_item_collapsed)
         self.itemClicked.connect(self._on_item_clicked)
         
-        self.add_class("fakemui-tree-view")
+        self.add_class("m3-tree-view")
         
         self.setStyleSheet("""
             QTreeWidget {
@@ -607,7 +607,7 @@ class Masonry(QScrollArea, StyleMixin):
         self.setWidgetResizable(True)
         self.setFrameShape(QFrame.Shape.NoFrame)
         
-        self.add_class("fakemui-masonry")
+        self.add_class("m3-masonry")
         
         self.setStyleSheet("""
             QScrollArea {

@@ -1,4 +1,4 @@
-"""Utility components for FakeMUI."""
+"""Utility components for M3."""
 
 from PyQt6.QtWidgets import (
     QWidget, QFrame, QDialog, QVBoxLayout, QHBoxLayout,
@@ -10,7 +10,7 @@ from PyQt6.QtCore import (
 )
 from PyQt6.QtGui import QColor
 
-from .base import FakeMUIWidget, FakeMUIContainer, StyleMixin, THEME_COLORS, DARK_THEME_COLORS
+from .base import M3Widget, M3Container, StyleMixin, THEME_COLORS, DARK_THEME_COLORS
 
 
 class Modal(QDialog, StyleMixin):
@@ -132,7 +132,7 @@ class DialogOverlay(QFrame, StyleMixin):
         self.clicked.emit()
 
 
-class DialogHeader(FakeMUIContainer):
+class DialogHeader(M3Container):
     """Dialog header section."""
     
     _base_class = 'dialog-header'
@@ -156,7 +156,7 @@ class DialogTitle(QLabel, StyleMixin):
         self.setFont(font)
 
 
-class DialogContent(FakeMUIContainer):
+class DialogContent(M3Container):
     """Dialog content section."""
     
     _base_class = 'dialog-content'
@@ -169,7 +169,7 @@ class DialogContent(FakeMUIContainer):
             self.add_modifier('dividers')
 
 
-class DialogActions(FakeMUIContainer):
+class DialogActions(M3Container):
     """Dialog actions section."""
     
     _base_class = 'dialog-actions'

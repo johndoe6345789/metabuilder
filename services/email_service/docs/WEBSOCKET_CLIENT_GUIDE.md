@@ -481,7 +481,7 @@ export const notificationClient = new NotificationClient()
 // components/NotificationPreferences.tsx
 import React, { useEffect, useState } from 'react'
 import { notificationClient } from '@/api/notificationClient'
-import { Button, Checkbox, Select, TextField } from '@metabuilder/fakemui'
+import { Button, Checkbox, Select, TextField } from '@metabuilder/m3'
 
 export const NotificationPreferences: React.FC = () => {
   const [preferences, setPreferences] = useState<any>(null)

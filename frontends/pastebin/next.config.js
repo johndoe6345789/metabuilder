@@ -62,11 +62,11 @@ const nextConfig = {
     config.resolve.alias['@metabuilder/components'] = join(componentsPath, 'index.tsx');
 
     // Add m3 alias to match workflowui pattern
-    const fakeMuiPath = resolve(__dirname, '../../libraries/components/m3');
-    config.resolve.alias['@metabuilder/m3'] = fakeMuiPath;
+    const m3Path = resolve(__dirname, '../../libraries/components/m3');
+    config.resolve.alias['@metabuilder/m3'] = m3Path;
 
     // Resolve @metabuilder/components/m3 subpath (used by migrated components)
-    config.resolve.alias['@metabuilder/components/m3'] = join(fakeMuiPath, 'index.ts');
+    config.resolve.alias['@metabuilder/components/m3'] = join(m3Path, 'index.ts');
 
     if (!isServer) {
       config.resolve.fallback = {

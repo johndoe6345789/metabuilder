@@ -80,7 +80,7 @@ def get_subproject_info():
         'dbal': 'Database Abstraction Layer',
         'workflow': 'DAG Workflow Engine',
         'workflowui': 'Workflow UI (Next.js)',
-        'fakemui': 'Material Design 3 Components',
+        'm3': 'Material Design 3 Components',
         'codegen': 'CodeForge IDE',
         'pastebin': 'Code Snippet Sharing',
         'postgres': 'PostgreSQL Admin Dashboard',

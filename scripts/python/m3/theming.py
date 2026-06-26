@@ -1,5 +1,5 @@
 """
-FakeMUI Theming Module for PyQt6
+M3 Theming Module for PyQt6
 
 Provides theme management, styled components, and sx prop processing.
 """
@@ -290,7 +290,7 @@ def create_theme(options: Optional[Dict[str, Any]] = None) -> Theme:
 
 class ThemeProvider(QObject):
     """
-    Provides theme context for FakeMUI components.
+    Provides theme context for M3 components.
     
     Usage:
         theme = create_theme({"palette": {"mode": "dark"}})
@@ -350,31 +350,31 @@ class ThemeProvider(QObject):
             }}
             
             /* Primary button */
-            .fakemui-button-primary {{
+            .m3-button-primary {{
                 background-color: {p.primary_main};
                 color: {p.primary_contrast_text};
                 border-radius: {s.border_radius}px;
             }}
-            .fakemui-button-primary:hover {{
+            .m3-button-primary:hover {{
                 background-color: {p.primary_dark};
             }}
             
             /* Secondary button */
-            .fakemui-button-secondary {{
+            .m3-button-secondary {{
                 background-color: {p.secondary_main};
                 color: {p.secondary_contrast_text};
                 border-radius: {s.border_radius}px;
             }}
             
             /* Error button */
-            .fakemui-button-error {{
+            .m3-button-error {{
                 background-color: {p.error_main};
                 color: {p.error_contrast_text};
                 border-radius: {s.border_radius}px;
             }}
             
             /* Paper/Card */
-            .fakemui-paper, .fakemui-card {{
+            .m3-paper, .m3-card {{
                 background-color: {p.background_paper};
                 border-radius: {s.border_radius}px;
             }}

@@ -1,13 +1,13 @@
 """
-FakeMUI Stylesheet - Material UI-inspired styles for PyQt6.
+M3 Stylesheet - Material UI-inspired styles for PyQt6.
 
-This stylesheet provides consistent styling across all FakeMUI components.
+This stylesheet provides consistent styling across all M3 components.
 Import and apply with QApplication.setStyleSheet() or use apply_theme().
 """
 
 LIGHT_STYLESHEET = """
 /* ============================================
-   FAKEMUI STYLESHEET - LIGHT THEME
+   M3 STYLESHEET - LIGHT THEME
    ============================================ */
 
 /* Base Typography */
@@ -607,7 +607,7 @@ QScrollBar::sub-line:horizontal {
 
 DARK_STYLESHEET = """
 /* ============================================
-   FAKEMUI STYLESHEET - DARK THEME
+   M3 STYLESHEET - DARK THEME
    ============================================ */
 
 /* Base Typography */

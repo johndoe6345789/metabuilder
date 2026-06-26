@@ -3,7 +3,7 @@
 /**
  * ToastContext - Re-exported from root hooks folder
  *
- * This provides toast notifications for FakeMUI components.
+ * This provides toast notifications for M3 components.
  * Direct import from root hooks folder bypasses the barrel export
  * to avoid pulling in hooks with project-specific dependencies.
  */

@@ -513,7 +513,7 @@ function renderNode(node: ComponentNode, data: any, handlers: any): JSX.Element 
 ```typescript
 import React from 'react';
 import { getComponentTree } from '@/utils/featureConfig';
-import { Box, Button, Typography, Dialog, TextField } from '@metabuilder/components/fakemui';
+import { Box, Button, Typography, Dialog, TextField } from '@metabuilder/components/m3';
 
 const componentMap = {
   Box, Button, Typography, Dialog, TextField,

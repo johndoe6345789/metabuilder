@@ -1,4 +1,4 @@
-# Fakemui Component Library - Complete Guide
+# M3 Component Library - Complete Guide
 
 **Last Updated**: 2026-01-23
 **Total Components**: 122+ (with intentional duplicates for different use cases)
@@ -8,7 +8,7 @@
 
 ## Component Organization
 
-Fakemui is organized into 10 categories:
+M3 is organized into 10 categories:
 
 | Category | Components | Use Case |
 |----------|-----------|----------|
@@ -33,7 +33,7 @@ Some components exist in multiple locations with different APIs for different us
 
 **TreeViewFlat** (`data-display/TreeView`)
 ```typescript
-import { TreeViewFlat } from '@/fakemui'
+import { TreeViewFlat } from '@/m3'
 
 // Array-based API - great for JSON trees
 <TreeViewFlat
@@ -56,7 +56,7 @@ import { TreeViewFlat } from '@/fakemui'
 
 **TreeViewComponent** (`lab/TreeView` + `lab/TreeItem`)
 ```typescript
-import { TreeView, TreeItem } from '@/fakemui'
+import { TreeView, TreeItem } from '@/m3'
 
 // Composition-based API - great for complex layouts
 <TreeView>
@@ -76,7 +76,7 @@ import { TreeView, TreeItem } from '@/fakemui'
 
 **DatePicker** (`inputs/DatePicker`)
 ```typescript
-import { DatePicker } from '@/fakemui'
+import { DatePicker } from '@/m3'
 
 // Simple HTML input-based
 <DatePicker
@@ -92,7 +92,7 @@ import { DatePicker } from '@/fakemui'
 
 **DatePickerAdvanced** (`x/DatePicker`)
 ```typescript
-import { DatePickerAdvanced } from '@/fakemui'
+import { DatePickerAdvanced } from '@/m3'
 
 // Advanced with calendar picker UI
 <DatePickerAdvanced
@@ -167,7 +167,7 @@ All components follow Material Design 3 principles:
 ### Using Design Tokens
 
 ```typescript
-import { Box, Button } from '@/fakemui'
+import { Box, Button } from '@/m3'
 
 <Box sx={{
   // MD3 color tokens
@@ -191,7 +191,7 @@ import { Box, Button } from '@/fakemui'
 ### Pattern 1: Simple Composition
 
 ```typescript
-import { Card, CardContent, CardActions, Button, Typography, Stack } from '@/fakemui'
+import { Card, CardContent, CardActions, Button, Typography, Stack } from '@/m3'
 
 export function MyCard() {
   return (
@@ -211,7 +211,7 @@ export function MyCard() {
 ### Pattern 2: Layout with Box & Stack
 
 ```typescript
-import { Box, Stack, Button, TextField } from '@/fakemui'
+import { Box, Stack, Button, TextField } from '@/m3'
 
 export function MyForm() {
   return (
@@ -232,7 +232,7 @@ export function MyForm() {
 ### Pattern 3: Data Display with Table
 
 ```typescript
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@/fakemui'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@/m3'
 
 export function MyTable() {
   return (
@@ -261,7 +261,7 @@ export function MyTable() {
 ### Pattern 4: Dialogs
 
 ```typescript
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@/fakemui'
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@/m3'
 import { useState } from 'react'
 
 export function MyDialog() {
@@ -286,7 +286,7 @@ export function MyDialog() {
 ### Pattern 5: Notifications with Toast
 
 ```typescript
-import { ToastProvider, useToast, Button } from '@/fakemui'
+import { ToastProvider, useToast, Button } from '@/m3'
 
 function MyComponent() {
   const { showToast } = useToast()
@@ -313,7 +313,7 @@ export function App() {
 
 ---
 
-## Migration Guide: Custom Styles → Fakemui
+## Migration Guide: Custom Styles → M3
 
 ### Before (Custom SCSS)
 
@@ -337,10 +337,10 @@ export function ProjectCanvas() {
 }
 ```
 
-### After (Fakemui)
+### After (M3)
 
 ```typescript
-import { Box, Stack, Button, Card, CardContent, Toolbar, AppBar } from '@/fakemui'
+import { Box, Stack, Button, Card, CardContent, Toolbar, AppBar } from '@/m3'
 
 export function ProjectCanvas() {
   return (
@@ -371,7 +371,7 @@ export function ProjectCanvas() {
 All components are fully typed:
 
 ```typescript
-import type { ButtonProps, CardProps, BoxProps } from '@/fakemui'
+import type { ButtonProps, CardProps, BoxProps } from '@/m3'
 
 interface MyComponentProps extends ButtonProps {
   custom?: string
@@ -430,7 +430,7 @@ When adding new components:
 
 ## Support & Resources
 
-- **GitHub**: `/fakemui` directory
-- **Storybook**: `npm run storybook` (in fakemui folder)
-- **Tests**: `npm test` in fakemui folder
+- **GitHub**: `/m3` directory
+- **Storybook**: `npm run storybook` (in m3 folder)
+- **Tests**: `npm test` in m3 folder
 - **Design System**: Material Design 3 docs at m3.material.io

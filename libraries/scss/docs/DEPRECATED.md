@@ -8,7 +8,7 @@ The styles in this folder use legacy CSS custom properties (`--color-*`, `--spac
 
 ### New Architecture
 
-All FakeMUI components should now use:
+All M3 components should now use:
 
 1. **`scss/theme.scss`** - Generates official M3 CSS custom properties (`--mat-sys-*`) from Google's Angular Material M3 SCSS
 2. **`components/_tokens.scss`** - SCSS variables that reference M3 CSS custom properties

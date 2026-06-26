@@ -454,7 +454,7 @@ describe('Error Repair', () => {
       relatedFiles
     )
     
-    expect(repaired.content).toContain('@metabuilder/components/fakemui')
+    expect(repaired.content).toContain('@metabuilder/components/m3')
   })
 })
 ```

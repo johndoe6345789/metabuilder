@@ -36,7 +36,7 @@ Workspace (top level)
 |-------|-----------|
 | Frontend | React 18 + Next.js 14.2 + TypeScript |
 | State Management | Redux Toolkit + IndexedDB |
-| UI Components | Material Design 3 (Fakemui) |
+| UI Components | Material Design 3 (M3) |
 | Backend | Flask + SQLAlchemy + SQLite (dev) |
 | Database | SQLite (dev), PostgreSQL (prod) |
 | Multi-tenancy | Tenant filtering on all queries |
@@ -484,7 +484,7 @@ Infrastructure ready for WebSocket integration:
 
 ### For UI Customization
 
-1. All UI from Fakemui components (Material Design 3)
+1. All UI from M3 components (Material Design 3)
 2. Styling: CSS modules in component folders
 3. Tokens: Material tokens in CSS custom properties
 4. Override: Modify component compositions, not fork

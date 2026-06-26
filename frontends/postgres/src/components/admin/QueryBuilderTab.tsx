@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * QueryBuilderTab - Postgres-specific wrapper around FakeMUI
+ * QueryBuilderTab - Postgres-specific wrapper around M3
  * QueryBuilderTab. Uses postgres-specific utilities and API calls.
  */
 

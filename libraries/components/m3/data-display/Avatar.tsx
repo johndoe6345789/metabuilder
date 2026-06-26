@@ -8,7 +8,7 @@ export interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
   alt?: string
   /** Test ID for automated testing */
   testId?: string
-  /** FakeMUI native sizes */
+  /** M3 native sizes */
   sm?: boolean
   md?: boolean
   lg?: boolean

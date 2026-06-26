@@ -1,4 +1,4 @@
-"""Navigation components for FakeMUI."""
+"""Navigation components for M3."""
 
 from PyQt6.QtWidgets import (
     QWidget, QFrame, QLabel, QVBoxLayout, QHBoxLayout,
@@ -8,10 +8,10 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, pyqtSignal, QSize
 from PyQt6.QtGui import QIcon, QCursor, QAction
 
-from .base import FakeMUIWidget, FakeMUIContainer, StyleMixin
+from .base import M3Widget, M3Container, StyleMixin
 
 
-class Breadcrumbs(FakeMUIContainer):
+class Breadcrumbs(M3Container):
     """Breadcrumb navigation component."""
     
     _base_class = 'breadcrumbs'
@@ -140,7 +140,7 @@ class MenuItem(QPushButton, StyleMixin):
         self.setCursor(Qt.CursorShape.PointingHandCursor)
 
 
-class MenuList(FakeMUIContainer):
+class MenuList(M3Container):
     """Container for menu items."""
     
     _base_class = 'menu-list'
@@ -206,7 +206,7 @@ class Tab(QPushButton, StyleMixin):
         self.setCursor(Qt.CursorShape.PointingHandCursor)
 
 
-class Pagination(FakeMUIContainer):
+class Pagination(M3Container):
     """Pagination component."""
     
     _base_class = 'pagination'
@@ -278,7 +278,7 @@ class Pagination(FakeMUIContainer):
         self._build_pagination(False, False)
 
 
-class Stepper(FakeMUIContainer):
+class Stepper(M3Container):
     """Step-by-step workflow component."""
     
     _base_class = 'stepper'
@@ -327,7 +327,7 @@ class Stepper(FakeMUIContainer):
             s.set_completed(i < step)
 
 
-class Step(FakeMUIContainer):
+class Step(M3Container):
     """Individual step in a stepper."""
     
     _base_class = 'step'
@@ -367,7 +367,7 @@ class Step(FakeMUIContainer):
             self.remove_modifier('completed')
 
 
-class StepLabel(FakeMUIContainer):
+class StepLabel(M3Container):
     """Label for a step."""
     
     _base_class = 'step-label'
@@ -394,7 +394,7 @@ class StepLabel(FakeMUIContainer):
         self.add_widget(self._icon_label)
         
         # Text content
-        text_container = FakeMUIContainer(layout_type='vertical')
+        text_container = M3Container(layout_type='vertical')
         label = QLabel(text)
         label.setObjectName('step-label-text')
         text_container.add_widget(label)
@@ -417,7 +417,7 @@ class StepLabel(FakeMUIContainer):
             self._icon_label.setText(str(number))
 
 
-class BottomNavigation(FakeMUIContainer):
+class BottomNavigation(M3Container):
     """Bottom navigation bar."""
     
     _base_class = 'bottom-navigation'

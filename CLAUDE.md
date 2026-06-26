@@ -28,17 +28,17 @@ cd docs && python3 docs.py list --category guides
 
 ## Completed Milestones (All ✅)
 
-- **Jun 25**: Root reorganised into category folders (`libraries/`, `frontends/`), `fakemui` renamed to `m3` (`@metabuilder/m3`), postgres dashboard migrated to SCSS modules (all sx props removed)
+- **Jun 25**: Root reorganised into category folders (`libraries/`, `frontends/`), component library renamed to `m3` (`@metabuilder/m3`), postgres dashboard migrated to SCSS modules (all sx props removed)
 - **Mar 4**: DBAL C++ event-driven workflow engine (`pastebin.User.created` → 15-node JSON workflow → seeded namespaces + snippets), full YAML→JSON migration (63 files, yaml-cpp removed), JWT auth + JSON ACL, declarative seed data (`dbal/shared/seeds/database/`), i18n (EN/ES) across all pastebin components, dark/light theme switcher
 - **Feb 7**: Game engine CLI args (`--bootstrap`, `--game`), 27/27 tests passing (100%)
 - **Feb 6**: 6 new DB backends (total 14), SQLite3 doc migration, Docker dev container, WorkflowUI E2E (92.6%)
 - **Feb 5**: WorkflowUI mock DBAL testing, Settings/Help pages, DBAL env var config
-- **Feb 4**: SQLiteAdapter generic refactoring, YAML Schema Spec 2.0, Dynamic entity loading (TS+C++), DBAL hooks integration, FakeMUI migration
+- **Feb 4**: SQLiteAdapter generic refactoring, YAML Schema Spec 2.0, Dynamic entity loading (TS+C++), DBAL hooks integration, M3 migration
 - **Feb 3**: Visual workflow editor (n8n-style), Dynamic plugin registry (152 nodes)
 - **Feb 2**: WorkflowUI migration to root packages (77% file reduction)
-- **Feb 1**: CodeQL search, FakeMUI organization, Email components (22)
+- **Feb 1**: CodeQL search, M3 organization, Email components (22)
 - **Jan 24**: Dependency fixes, testing library standardization
-- **Jan 23**: Email client (Phases 1-5), Mojo compiler, FakeMUI restructuring, dependency remediation
+- **Jan 23**: Email client (Phases 1-5), Mojo compiler, M3 restructuring, dependency remediation
 
 **Details**: Search `cd docs/txt && python3 reports.py search "topic"` for full completion reports.
 

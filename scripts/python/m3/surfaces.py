@@ -1,4 +1,4 @@
-"""Surface components for FakeMUI."""
+"""Surface components for M3."""
 
 from PyQt6.QtWidgets import (
     QWidget, QFrame, QLabel, QVBoxLayout, QHBoxLayout,
@@ -7,7 +7,7 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, pyqtSignal, QPropertyAnimation, QEasingCurve, QSize
 from PyQt6.QtGui import QPixmap, QIcon
 
-from .base import FakeMUIWidget, FakeMUIContainer, StyleMixin
+from .base import M3Widget, M3Container, StyleMixin
 
 
 class Paper(QFrame, StyleMixin):
@@ -69,7 +69,7 @@ class Card(Paper):
         super().mousePressEvent(event)
 
 
-class CardHeader(FakeMUIContainer):
+class CardHeader(M3Container):
     """Header section of a card."""
     
     _base_class = 'card-header'
@@ -93,7 +93,7 @@ class CardHeader(FakeMUIContainer):
             self.add_widget(avatar)
         
         # Content
-        content = FakeMUIContainer(layout_type='vertical')
+        content = M3Container(layout_type='vertical')
         content.setObjectName('card-header-content')
         if title:
             title_label = QLabel(title)
@@ -111,7 +111,7 @@ class CardHeader(FakeMUIContainer):
             self.add_widget(action)
 
 
-class CardContent(FakeMUIContainer):
+class CardContent(M3Container):
     """Content section of a card."""
     
     _base_class = 'card-content'
@@ -121,7 +121,7 @@ class CardContent(FakeMUIContainer):
         self.set_padding(16)
 
 
-class CardActions(FakeMUIContainer):
+class CardActions(M3Container):
     """Actions section of a card."""
     
     _base_class = 'card-actions'
@@ -186,7 +186,7 @@ class CardMedia(QLabel, StyleMixin):
             self.setPixmap(pixmap)
 
 
-class Accordion(FakeMUIContainer):
+class Accordion(M3Container):
     """Expandable panel component."""
     
     _base_class = 'accordion'
@@ -271,7 +271,7 @@ class AccordionSummary(QPushButton, StyleMixin):
         self._content.setText(text)
 
 
-class AccordionDetails(FakeMUIContainer):
+class AccordionDetails(M3Container):
     """Details/content of an accordion."""
     
     _base_class = 'accordion-details'
@@ -281,7 +281,7 @@ class AccordionDetails(FakeMUIContainer):
         self.set_padding(16)
 
 
-class AccordionActions(FakeMUIContainer):
+class AccordionActions(M3Container):
     """Actions section of an accordion."""
     
     _base_class = 'accordion-actions'
@@ -317,7 +317,7 @@ class AppBar(QFrame, StyleMixin):
         self._layout.addWidget(widget, stretch)
 
 
-class Toolbar(FakeMUIContainer):
+class Toolbar(M3Container):
     """Toolbar component."""
     
     _base_class = 'toolbar'

@@ -1,4 +1,4 @@
-"""Data display components for FakeMUI."""
+"""Data display components for M3."""
 
 from PyQt6.QtWidgets import (
     QWidget, QLabel, QFrame, QVBoxLayout, QHBoxLayout,
@@ -8,7 +8,7 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, pyqtSignal, QSize, QPoint
 from PyQt6.QtGui import QPixmap, QColor, QPainter, QBrush, QPen, QFont, QIcon
 
-from .base import FakeMUIWidget, FakeMUIContainer, StyleMixin
+from .base import M3Widget, M3Container, StyleMixin
 
 
 class Avatar(QLabel, StyleMixin):
@@ -57,7 +57,7 @@ class Avatar(QLabel, StyleMixin):
         self.setText(initials)
 
 
-class AvatarGroup(FakeMUIContainer):
+class AvatarGroup(M3Container):
     """Group of overlapping avatars."""
     
     _base_class = 'avatar-group'
@@ -75,7 +75,7 @@ class AvatarGroup(FakeMUIContainer):
             self.add_widget(avatar)
 
 
-class Badge(FakeMUIContainer):
+class Badge(M3Container):
     """Badge component to display status or count."""
     
     _base_class = 'badge'
@@ -241,7 +241,7 @@ class ListWidget(QFrame, StyleMixin):
         self._items.clear()
 
 
-class ListItem(FakeMUIContainer):
+class ListItem(M3Container):
     """List item component."""
     
     _base_class = 'list-item'
@@ -321,7 +321,7 @@ class ListItemIcon(QLabel, StyleMixin):
             self.setPixmap(icon.pixmap(24, 24))
 
 
-class ListItemText(FakeMUIContainer):
+class ListItemText(M3Container):
     """Text content for list item."""
     
     _base_class = 'list-item-text'

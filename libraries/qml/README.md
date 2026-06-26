@@ -1,6 +1,6 @@
 # QML Component Library
 
-Material Design 3 components for Qt6 desktop applications. These components mirror the React/TypeScript FakeMUI library, providing consistent UI across web and desktop platforms.
+Material Design 3 components for Qt6 desktop applications. These components mirror the React/TypeScript M3 library, providing consistent UI across web and desktop platforms.
 
 ## Structure
 
@@ -148,7 +148,7 @@ QML_IMPORT_PATH += $$PWD/qml
 
 ## Theming
 
-Components use the Material Design 3 color system. The theming system is located at `fakemui/theming/` and includes:
+Components use the Material Design 3 color system. The theming system is located at `m3/theming/` and includes:
 
 - `Theme.qml` - Main theme singleton
 - `StyleVariables.qml` - CSS-like variables
@@ -159,9 +159,9 @@ To customize themes, modify the theme files or create a custom `CThemeProvider`.
 
 ## Related
 
-- **React Components**: `fakemui/react/components/` - TypeScript/React equivalents
-- **SCSS Styles**: `fakemui/styles/` - Shared SCSS modules
-- **Icons**: `fakemui/icons/` - 421 SVG Material icons
+- **React Components**: `m3/react/components/` - TypeScript/React equivalents
+- **SCSS Styles**: `m3/styles/` - Shared SCSS modules
+- **Icons**: `m3/icons/` - 421 SVG Material icons
 - **Qt6 Frontend**: `frontends/qt6/` - Qt6 desktop application using these components
 
 ## Component Count

@@ -1,10 +1,10 @@
-# Fakemui Accessibility Integration Guide
+# M3 Accessibility Integration Guide
 
-This document explains how accessibility utilities are integrated throughout fakemui components, enabling data-testid and ARIA attributes automatically.
+This document explains how accessibility utilities are integrated throughout m3 components, enabling data-testid and ARIA attributes automatically.
 
 ## Overview
 
-All fakemui components now support:
+All m3 components now support:
 - **data-testid** attributes for reliable testing
 - **ARIA attributes** for screen reader support
 - **Keyboard navigation** utilities
@@ -15,7 +15,7 @@ All fakemui components now support:
 
 ### Location
 ```
-fakemui/src/utils/
+m3/src/utils/
 ├── accessibility.ts          # Core accessibility utilities
 ├── useAccessible.ts          # React hooks for accessibility
 └── index.ts                  # Barrel export
@@ -150,7 +150,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
 Generate test IDs and ARIA attributes for any component:
 
 ```tsx
-import { useAccessible } from '@metabuilder/fakemui'
+import { useAccessible } from '@metabuilder/m3'
 
 export function MyComponent() {
   const accessible = useAccessible({
@@ -176,7 +176,7 @@ export function MyComponent() {
 Handle keyboard events (Enter, Escape, Arrow keys, Tab):
 
 ```tsx
-import { useKeyboardNavigation } from '@metabuilder/fakemui'
+import { useKeyboardNavigation } from '@metabuilder/m3'
 
 export function ComboBox() {
   const keyboardProps = useKeyboardNavigation({
@@ -195,7 +195,7 @@ export function ComboBox() {
 Manage focus programmatically:
 
 ```tsx
-import { useFocusManagement } from '@metabuilder/fakemui'
+import { useFocusManagement } from '@metabuilder/m3'
 
 export function SearchBox() {
   const { focusRef, focus } = useFocusManagement()
@@ -214,7 +214,7 @@ export function SearchBox() {
 Announce messages to screen readers:
 
 ```tsx
-import { useLiveRegion } from '@metabuilder/fakemui'
+import { useLiveRegion } from '@metabuilder/m3'
 
 export function ItemList() {
   const { announce, liveRegionProps, message } = useLiveRegion('polite')
@@ -245,7 +245,7 @@ export function ItemList() {
 Trap focus within modals/dialogs:
 
 ```tsx
-import { useFocusTrap } from '@metabuilder/fakemui'
+import { useFocusTrap } from '@metabuilder/m3'
 
 export function Modal({ isOpen, onClose }) {
   const { focusTrapRef } = useFocusTrap(isOpen)
@@ -285,7 +285,7 @@ modal-close-dialog-close          // Close button in dialog
 The `testId` object provides 50+ preset generators:
 
 ```tsx
-import { testId } from '@metabuilder/fakemui'
+import { testId } from '@metabuilder/m3'
 
 // Form fields
 testId.button('Save')              // form-button-click-save
@@ -317,7 +317,7 @@ testId.tableRow('users', 'row-1')  // table-item-users-row-1
 The `aria` object provides ARIA attribute patterns:
 
 ```tsx
-import { aria } from '@metabuilder/fakemui'
+import { aria } from '@metabuilder/m3'
 
 // Button
 <button {...aria.button('Delete item')}>Delete</button>
@@ -350,7 +350,7 @@ import { aria } from '@metabuilder/fakemui'
 Handle keyboard events:
 
 ```tsx
-import { keyboard } from '@metabuilder/fakemui'
+import { keyboard } from '@metabuilder/m3'
 
 function handleKeyDown(e: React.KeyboardEvent) {
   if (keyboard.isActivation(e.key)) {
@@ -379,7 +379,7 @@ function handleKeyDown(e: React.KeyboardEvent) {
 ```tsx
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Button } from '@metabuilder/fakemui'
+import { Button } from '@metabuilder/m3'
 
 describe('Button', () => {
   it('should render with data-testid', () => {
@@ -410,7 +410,7 @@ describe('Button', () => {
 ```tsx
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { TextField } from '@metabuilder/fakemui'
+import { TextField } from '@metabuilder/m3'
 
 describe('TextField', () => {
   it('should have helper text announced', () => {
@@ -496,7 +496,7 @@ When integrating accessibility utilities into components:
 ## File Structure
 
 ```
-fakemui/
+m3/
 ├── src/utils/
 │   ├── accessibility.ts           # Core utilities (472 lines)
 │   ├── accessibility.module.scss  # Styling (180 lines)

@@ -1,4 +1,4 @@
-"""Atom components for FakeMUI - Higher-level composed components."""
+"""Atom components for M3 - Higher-level composed components."""
 
 from PyQt6.QtWidgets import (
     QWidget, QFrame, QLabel, QVBoxLayout, QHBoxLayout,
@@ -7,7 +7,7 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont, QIcon
 
-from .base import FakeMUIWidget, FakeMUIContainer, StyleMixin
+from .base import M3Widget, M3Container, StyleMixin
 from .feedback import Spinner
 
 
@@ -104,7 +104,7 @@ class Text(QLabel, StyleMixin):
         self.setWordWrap(wrap)
 
 
-class StatBadge(FakeMUIContainer):
+class StatBadge(M3Container):
     """Badge for displaying statistics."""
     
     _base_class = 'stat-badge'
@@ -139,7 +139,7 @@ class StatBadge(FakeMUIContainer):
         self.add_widget(label_widget)
 
 
-class Section(FakeMUIContainer):
+class Section(M3Container):
     """Section container with optional header."""
     
     _base_class = 'section'
@@ -178,7 +178,7 @@ class Section(FakeMUIContainer):
         self._content.add_widget(widget)
 
 
-class SectionHeader(FakeMUIContainer):
+class SectionHeader(M3Container):
     """Header for a section."""
     
     _base_class = 'section-header'
@@ -228,7 +228,7 @@ class SectionTitle(QLabel, StyleMixin):
         self.setFont(font)
 
 
-class SectionContent(FakeMUIContainer):
+class SectionContent(M3Container):
     """Content area of a section."""
     
     _base_class = 'section-content'
@@ -238,7 +238,7 @@ class SectionContent(FakeMUIContainer):
         self.set_spacing(8)
 
 
-class EmptyState(FakeMUIContainer):
+class EmptyState(M3Container):
     """Empty state placeholder."""
     
     _base_class = 'empty-state'
@@ -278,7 +278,7 @@ class EmptyState(FakeMUIContainer):
             self.add_widget(action)
 
 
-class LoadingState(FakeMUIContainer):
+class LoadingState(M3Container):
     """Loading state placeholder."""
     
     _base_class = 'loading-state'
@@ -304,7 +304,7 @@ class LoadingState(FakeMUIContainer):
             self.add_widget(msg_label)
 
 
-class ErrorState(FakeMUIContainer):
+class ErrorState(M3Container):
     """Error state placeholder."""
     
     _base_class = 'error-state'
@@ -341,7 +341,7 @@ class ErrorState(FakeMUIContainer):
             self.add_widget(retry_btn)
 
 
-class Panel(FakeMUIContainer):
+class Panel(M3Container):
     """Panel container with optional header and footer."""
     
     _base_class = 'panel'
@@ -358,14 +358,14 @@ class Panel(FakeMUIContainer):
         
         # Header
         if title:
-            header = FakeMUIContainer(layout_type='horizontal')
+            header = M3Container(layout_type='horizontal')
             header.setObjectName('panel-header')
             title_label = Title(title, level=4)
             header.add_widget(title_label)
             self.add_widget(header)
         
         # Content area
-        self._content = FakeMUIContainer(layout_type='vertical')
+        self._content = M3Container(layout_type='vertical')
         self._content.setObjectName('panel-content')
         self.add_widget(self._content, stretch=1)
     

@@ -29,9 +29,9 @@ Found 6 files that are larger than ideal and could be refactored into smaller mo
 ---
 
 ## 2. **app/project/[id]/page.tsx** (487 LOC) ⚠️ TOO LARGE
-**Status**: Just refactored, now 220 LOC with Fakemui
+**Status**: Just refactored, now 220 LOC with M3
 
-This was recently refactored to use Fakemui and is now much smaller. ✅
+This was recently refactored to use M3 and is now much smaller. ✅
 
 ---
 

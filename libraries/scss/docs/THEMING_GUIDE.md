@@ -1,10 +1,10 @@
-# Fakemui Theming Guide
+# M3 Theming Guide
 
-Complete guide to theming in Fakemui, including built-in themes, customization, and dynamic theme switching.
+Complete guide to theming in M3, including built-in themes, customization, and dynamic theme switching.
 
 ## Overview
 
-Fakemui's theming system is based on Material Design 3, providing a comprehensive design token system for consistent, accessible, and customizable user interfaces.
+M3's theming system is based on Material Design 3, providing a comprehensive design token system for consistent, accessible, and customizable user interfaces.
 
 **Key features**:
 - 9 built-in themes
@@ -88,7 +88,7 @@ interface Theme {
 ### Basic Theme Setup
 
 ```typescript
-import { ThemeProvider } from '@/fakemui/theming'
+import { ThemeProvider } from '@/m3/theming'
 import App from './App'
 
 export function Root() {
@@ -103,7 +103,7 @@ export function Root() {
 ### Reading Current Theme
 
 ```typescript
-import { useTheme } from '@/fakemui/theming'
+import { useTheme } from '@/m3/theming'
 
 export function ComponentWithTheme() {
   const { theme, palette } = useTheme()
@@ -119,7 +119,7 @@ export function ComponentWithTheme() {
 ### Accessing Theme in sx Prop
 
 ```typescript
-import { Box, Button } from '@/fakemui'
+import { Box, Button } from '@/m3'
 
 export function StyledComponent() {
   return (
@@ -150,7 +150,7 @@ export function StyledComponent() {
 ### Option 1: Extend Existing Theme
 
 ```typescript
-import { createTheme } from '@/fakemui/theming'
+import { createTheme } from '@/m3/theming'
 
 const customTheme = createTheme({
   palette: {
@@ -182,7 +182,7 @@ const customTheme = createTheme({
 ### Option 2: Full Theme Customization
 
 ```typescript
-import { createTheme } from '@/fakemui/theming'
+import { createTheme } from '@/m3/theming'
 
 const brandTheme = createTheme({
   palette: {
@@ -345,8 +345,8 @@ const brandTheme = createTheme({
 ### Basic Theme Switcher
 
 ```typescript
-import { Box, Button, Stack } from '@/fakemui'
-import { useTheme } from '@/fakemui/theming'
+import { Box, Button, Stack } from '@/m3'
+import { useTheme } from '@/m3/theming'
 
 export function ThemeSwitcher() {
   const { theme, setTheme } = useTheme()
@@ -375,8 +375,8 @@ export function ThemeSwitcher() {
 ### Theme Switcher in AppBar
 
 ```typescript
-import { AppBar, Toolbar, Box, Select } from '@/fakemui'
-import { useTheme } from '@/fakemui/theming'
+import { AppBar, Toolbar, Box, Select } from '@/m3'
+import { useTheme } from '@/m3/theming'
 
 export function Header() {
   const { theme, setTheme } = useTheme()
@@ -404,7 +404,7 @@ export function Header() {
 ### Persist Theme Preference
 
 ```typescript
-import { useTheme } from '@/fakemui/theming'
+import { useTheme } from '@/m3/theming'
 import { useEffect } from 'react'
 
 export function App() {
@@ -430,7 +430,7 @@ export function App() {
 ### System Preference Detection
 
 ```typescript
-import { useTheme } from '@/fakemui/theming'
+import { useTheme } from '@/m3/theming'
 import { useEffect } from 'react'
 
 export function App() {
@@ -482,7 +482,7 @@ outline       // Borders, dividers
 ### Using Colors in Components
 
 ```typescript
-import { Button, Card, Typography, Box } from '@/fakemui'
+import { Button, Card, Typography, Box } from '@/m3'
 
 export function ColorDemo() {
   return (
@@ -628,7 +628,7 @@ color: 'text.primary' // 87% opacity = 14:1 ratio
 
 ### Color Blindness Support
 
-Fakemui themes avoid red-green only differentiation:
+M3 themes avoid red-green only differentiation:
 
 ```typescript
 // ✅ Good - uses multiple visual cues
@@ -662,8 +662,8 @@ const highContrastTheme = createTheme({
 ### Dark Mode Toggle
 
 ```typescript
-import { IconButton, useTheme } from '@/fakemui'
-import { DarkModeIcon, LightModeIcon } from '@/fakemui/icons'
+import { IconButton, useTheme } from '@/m3'
+import { DarkModeIcon, LightModeIcon } from '@/m3/icons'
 
 export function DarkModeToggle() {
   const { theme, setTheme } = useTheme()
@@ -757,7 +757,7 @@ const { setTheme } = useTheme()
 setTheme('dark')
 
 // ❌ Don't set directly
-window.fakemui.theme = 'dark' // Won't work
+window.m3.theme = 'dark' // Won't work
 ```
 
 ### Custom theme not working

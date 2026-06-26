@@ -1,5 +1,5 @@
 /**
- * Header Actions - FakeMUI Component
+ * Header Actions - M3 Component
  * Action buttons for app header (notifications, theme toggle, user menu)
  */
 

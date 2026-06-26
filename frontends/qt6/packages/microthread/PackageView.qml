@@ -30,7 +30,7 @@ Rectangle {
         ListElement {
             postId: 3; username: "charlie_ui"; initials: "CH"; avatarColor: "#2ecc71"
             timestamp: "2026-03-18 22:45"
-            body: "FakeMUI hit 167 components today. Next milestone: full parity with Material UI core set."
+            body: "M3 hit 167 components today. Next milestone: full parity with Material UI core set."
             likes: 31; replies: 8; liked: false; following: false
         }
         ListElement {

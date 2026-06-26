@@ -1,7 +1,7 @@
 /**
- * FakeMUI Components - Material Design 3 React Component Library
+ * M3 Components - Material Design 3 React Component Library
  *
- * This barrel export provides all FakeMUI components from the centralized
+ * This barrel export provides all M3 components from the centralized
  * components/m3/ location. Components are organized by category.
  *
  * Usage:

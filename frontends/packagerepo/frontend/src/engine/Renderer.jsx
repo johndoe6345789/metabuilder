@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 /**
  * JSON-to-React Renderer
- * Interprets declarative component definitions and renders them using fakemui classes
+ * Interprets declarative component definitions and renders them using m3 classes
  */
 
 // Element type mappings to HTML/React elements

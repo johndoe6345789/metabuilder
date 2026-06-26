@@ -1,4 +1,4 @@
-# Fakemui Icon System
+# M3 Icon System
 
 **Status:** Active Development
 **Philosophy:** Zero dependencies, add icons as needed

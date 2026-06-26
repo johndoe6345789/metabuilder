@@ -1,4 +1,4 @@
-"""Layout components for FakeMUI."""
+"""Layout components for M3."""
 
 from PyQt6.QtWidgets import (
     QWidget, QFrame, QVBoxLayout, QHBoxLayout, QGridLayout,
@@ -7,7 +7,7 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, QSize
 from PyQt6.QtGui import QPixmap
 
-from .base import FakeMUIWidget, FakeMUIContainer, StyleMixin
+from .base import M3Widget, M3Container, StyleMixin
 
 
 class Box(QFrame, StyleMixin):

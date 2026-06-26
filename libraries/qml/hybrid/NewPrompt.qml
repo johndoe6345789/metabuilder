@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import contexts
-import Fakemui
+import M3
 
 /**
  * NewPrompt.qml - Create new task form

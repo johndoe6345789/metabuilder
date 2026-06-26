@@ -1,6 +1,6 @@
 # Email Client
 
-A full-featured email client built with Next.js, React, Redux, and FakeMUI components. Supports IMAP/POP3 for receiving emails and SMTP for sending.
+A full-featured email client built with Next.js, React, Redux, and M3 components. Supports IMAP/POP3 for receiving emails and SMTP for sending.
 
 ## Features
 

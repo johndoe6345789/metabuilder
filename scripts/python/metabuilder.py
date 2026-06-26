@@ -37,7 +37,7 @@ Project Structure:
   workflowui/           - Workflow UI (./workflowui/test-server/test-runner.py)
   dbal/                 - Database Abstraction Layer
   workflow/             - DAG workflow engine
-  fakemui/              - Material Design 3 components
+  m3/              - Material Design 3 components
   codegen/              - CodeForge IDE (./codegen/codegen.py)
   pastebin/             - Code snippet sharing (./pastebin/pastebin.py)
   gameengine/           - SDL3/bgfx engine (./gameengine/gameengine.py)

@@ -1,16 +1,16 @@
-# Fakemui Architecture & Design Decisions
+# M3 Architecture & Design Decisions
 
 ## Overview
 
-Fakemui is a Material Design 3 UI component library providing consistent component APIs across multiple platforms: React/TypeScript (web) and QML (desktop/embedded).
+M3 is a Material Design 3 UI component library providing consistent component APIs across multiple platforms: React/TypeScript (web) and QML (desktop/embedded).
 
 ## Philosophy & Core Design Decisions
 
 ### 1. Platform Parity, Not Code Sharing
 
-Fakemui maintains **separate implementations** for React and QML rather than attempting code sharing:
+M3 maintains **separate implementations** for React and QML rather than attempting code sharing:
 
-**React/TypeScript** (`/fakemui`):
+**React/TypeScript** (`/m3`):
 - 98 components
 - Full TypeScript support
 - Browser/Node.js targeting
@@ -200,7 +200,7 @@ const customTheme = {
 **No Tailwind or Utility Classes**: Follows MetaBuilder standards:
 - ✅ Material-UI sx prop
 - ❌ Tailwind className utilities
-- ❌ Radix UI (use Fakemui instead)
+- ❌ Radix UI (use M3 instead)
 
 **Why sx prop?**
 - Theme-aware by default
@@ -492,7 +492,7 @@ export const OldComponent = () => { /* ... */ }
 ## File Structure Overview
 
 ```
-fakemui/
+m3/
 ├── atoms/                    # Basic components
 ├── inputs/                   # Form controls (28 components)
 ├── surfaces/                 # Containers

@@ -1,7 +1,7 @@
 'use client'
 
 /**
- * Toast - Imperative toast notification system for FakeMUI
+ * Toast - Imperative toast notification system for M3
  *
  * Drop-in replacement for sonner with identical API surface:
  *   toast('message')

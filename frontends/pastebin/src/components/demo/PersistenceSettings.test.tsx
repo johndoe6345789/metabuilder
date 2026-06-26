@@ -78,7 +78,7 @@ describe('PersistenceSettings', () => {
     it('slice badges are rendered', () => {
       render(<PersistenceSettings />)
       const snippetsBadge = screen.getByText('snippets')
-      // Badge should be rendered (uses FakeMUI Chip component)
+      // Badge should be rendered (uses M3 Chip component)
       expect(snippetsBadge).toBeInTheDocument()
     })
   })

@@ -1,11 +1,11 @@
-# Fakemui Accessibility Status Report
+# M3 Accessibility Status Report
 
 **Date**: 2026-01-23
 **Status**: ✅ **Implementation Complete**
 
 ## Summary
 
-All fakemui components now have accessibility infrastructure in place with automatic `data-testid` and `aria-*` attribute generation through reusable React hooks.
+All m3 components now have accessibility infrastructure in place with automatic `data-testid` and `aria-*` attribute generation through reusable React hooks.
 
 ## What Was Completed
 
@@ -79,7 +79,7 @@ useFocusTrap()          // Focus trapping in modals
 ## File Structure
 
 ```
-fakemui/
+m3/
 ├── src/utils/
 │   ├── accessibility.ts              (472 lines - COMPLETE)
 │   ├── accessibility.module.scss    (180 lines - SCSS utilities)
@@ -154,7 +154,7 @@ announce('Item deleted successfully')
 ### With React Testing Library
 ```tsx
 import { render, screen } from '@testing-library/react'
-import { Button } from '@metabuilder/fakemui'
+import { Button } from '@metabuilder/m3'
 
 test('button has accessible test ID', () => {
   render(<Button>Submit</Button>)
@@ -266,13 +266,13 @@ All utilities follow WAI-ARIA and WCAG 2.1 guidelines:
 
 ### For Component Developers
 ```tsx
-import { useAccessible, useKeyboardNavigation } from '@metabuilder/fakemui'
+import { useAccessible, useKeyboardNavigation } from '@metabuilder/m3'
 // See ACCESSIBILITY_INTEGRATION.md for full examples
 ```
 
 ### For Test Writers
 ```tsx
-import { testId, validate } from '@metabuilder/fakemui'
+import { testId, validate } from '@metabuilder/m3'
 // Use testId helpers in your test data-testid queries
 // Use validate helpers to check accessibility
 ```
@@ -286,9 +286,9 @@ import { testId, validate } from '@metabuilder/fakemui'
 
 ## References
 
-- [Source]: fakemui/src/utils/accessibility.ts (core)
-- [Hooks]: fakemui/src/utils/useAccessible.ts (React integration)
-- [Docs]: fakemui/docs/ACCESSIBILITY_INTEGRATION.md (detailed guide)
+- [Source]: m3/src/utils/accessibility.ts (core)
+- [Hooks]: m3/src/utils/useAccessible.ts (React integration)
+- [Docs]: m3/docs/ACCESSIBILITY_INTEGRATION.md (detailed guide)
 - [WAI-ARIA]: https://www.w3.org/WAI/ARIA/apg/
 - [WCAG 2.1]: https://www.w3.org/WAI/WCAG21/quickref/
 

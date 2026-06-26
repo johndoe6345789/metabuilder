@@ -1,4 +1,4 @@
-"""Feedback components for FakeMUI."""
+"""Feedback components for M3."""
 
 from PyQt6.QtWidgets import (
     QWidget, QLabel, QFrame, QVBoxLayout, QHBoxLayout,
@@ -10,10 +10,10 @@ from PyQt6.QtCore import (
 )
 from PyQt6.QtGui import QColor, QPainter, QPen, QBrush, QIcon
 
-from .base import FakeMUIWidget, FakeMUIContainer, StyleMixin, THEME_COLORS
+from .base import M3Widget, M3Container, StyleMixin, THEME_COLORS
 
 
-class Alert(FakeMUIContainer):
+class Alert(M3Container):
     """Alert component for displaying messages."""
     
     _base_class = 'alert'
@@ -44,7 +44,7 @@ class Alert(FakeMUIContainer):
             self.add_widget(icon_label)
         
         # Content
-        content = FakeMUIContainer(layout_type='vertical')
+        content = M3Container(layout_type='vertical')
         content.setObjectName('alert-content')
         if title:
             title_label = QLabel(title)
@@ -240,7 +240,7 @@ class Skeleton(QFrame, StyleMixin):
         self._animation.start()
 
 
-class Snackbar(FakeMUIContainer):
+class Snackbar(M3Container):
     """Brief message at bottom of screen."""
     
     _base_class = 'snackbar'

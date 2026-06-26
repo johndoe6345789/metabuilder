@@ -1,6 +1,6 @@
 import React from 'react';
 
-// Comprehensive FakeMUI mock for testing
+// Comprehensive M3 mock for testing
 export const Box = ({ children, 'data-testid': testId, sx, ...props }: any) => (
   <div data-testid={testId} style={sx} {...props}>{children}</div>
 );
@@ -270,7 +270,7 @@ export const TableRow = ({ children, 'data-testid': testId, ...props }: any) => 
 
 export const TableCell = ({ children, ...props }: any) => <td {...props}>{children}</td>;
 
-// Icon exports (FakeMUI icon components used by various app components)
+// Icon exports (M3 icon components used by various app components)
 export const ArrowUp = (props: any) => <span data-icon="arrow-up" {...props} />;
 export const ArrowDown = (props: any) => <span data-icon="arrow-down" {...props} />;
 export const Plus = (props: any) => <span data-icon="plus" {...props} />;

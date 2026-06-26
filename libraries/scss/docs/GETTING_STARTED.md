@@ -1,27 +1,27 @@
-# Fakemui Getting Started Guide
+# M3 Getting Started Guide
 
-Fakemui is a Material Design 3-compliant UI component library providing 122+ components for consistent design across MetaBuilder frontends (React/Next.js and Qt6/QML).
+M3 is a Material Design 3-compliant UI component library providing 122+ components for consistent design across MetaBuilder frontends (React/Next.js and Qt6/QML).
 
 ## Quick Setup
 
 ### Installation
 
-Fakemui is available within the MetaBuilder monorepo. Import directly:
+M3 is available within the MetaBuilder monorepo. Import directly:
 
 ```typescript
-import { Button, Card, TextField, Box } from '@/fakemui'
+import { Button, Card, TextField, Box } from '@/m3'
 ```
 
 ### Basic Component Usage
 
 ```typescript
-import { Button, Card, Box, Typography } from '@/fakemui'
+import { Button, Card, Box, Typography } from '@/m3'
 
 export function MyComponent() {
   return (
     <Box sx={{ padding: 2 }}>
       <Card>
-        <Typography variant="h6">Hello, Fakemui!</Typography>
+        <Typography variant="h6">Hello, M3!</Typography>
         <Button variant="contained" color="primary">
           Click Me
         </Button>
@@ -45,7 +45,7 @@ import {
   Switch,
   DatePicker,
   FileUpload
-} from '@/fakemui'
+} from '@/m3'
 
 // Text input
 <TextField label="Enter name" value={value} onChange={handleChange} />
@@ -65,7 +65,7 @@ import {
 ### Containers & Layout
 
 ```typescript
-import { Card, Box, Stack, Grid, AppBar, Drawer } from '@/fakemui'
+import { Card, Box, Stack, Grid, AppBar, Drawer } from '@/m3'
 
 // Card for content grouping
 <Card>
@@ -93,7 +93,7 @@ import { Card, Box, Stack, Grid, AppBar, Drawer } from '@/fakemui'
 ### Data Display
 
 ```typescript
-import { Table, List, Avatar, Badge, Chip, Progress } from '@/fakemui'
+import { Table, List, Avatar, Badge, Chip, Progress } from '@/m3'
 
 // List with items
 <List>
@@ -117,7 +117,7 @@ import { Table, List, Avatar, Badge, Chip, Progress } from '@/fakemui'
 ### Feedback & Alerts
 
 ```typescript
-import { Alert, Dialog, Progress, Skeleton, Tooltip } from '@/fakemui'
+import { Alert, Dialog, Progress, Skeleton, Tooltip } from '@/m3'
 
 // Alert messages
 <Alert severity="success">Operation completed!</Alert>
@@ -144,7 +144,7 @@ import { Alert, Dialog, Progress, Skeleton, Tooltip } from '@/fakemui'
 ### Navigation
 
 ```typescript
-import { Tabs, TabPanel, Menu, Breadcrumbs } from '@/fakemui'
+import { Tabs, TabPanel, Menu, Breadcrumbs } from '@/m3'
 
 // Tabs
 <Tabs value={tab} onChange={setTab}>
@@ -171,7 +171,7 @@ import { Tabs, TabPanel, Menu, Breadcrumbs } from '@/fakemui'
 
 ### Built-in Themes
 
-Fakemui includes 9 Material Design 3 theme variants:
+M3 includes 9 Material Design 3 theme variants:
 
 - **default** - Primary blue theme
 - **light** - Light mode
@@ -186,7 +186,7 @@ Fakemui includes 9 Material Design 3 theme variants:
 ### Using Themes
 
 ```typescript
-import { ThemeProvider } from '@/fakemui/theming'
+import { ThemeProvider } from '@/m3/theming'
 
 export function App() {
   return (
@@ -200,7 +200,7 @@ export function App() {
 ### Switching Themes Dynamically
 
 ```typescript
-import { useTheme } from '@/fakemui/theming'
+import { useTheme } from '@/m3/theming'
 
 export function ThemeSwitcher() {
   const { setTheme } = useTheme()
@@ -223,7 +223,7 @@ export function ThemeSwitcher() {
 ### Form Handling
 
 ```typescript
-import { Button, TextField, Box, Alert } from '@/fakemui'
+import { Button, TextField, Box, Alert } from '@/m3'
 import { useState } from 'react'
 
 export function MyForm() {
@@ -268,7 +268,7 @@ export function MyForm() {
 ### Data Table with Actions
 
 ```typescript
-import { Table, IconButton, Menu, MenuItem } from '@/fakemui'
+import { Table, IconButton, Menu, MenuItem } from '@/m3'
 import { useState } from 'react'
 
 export function DataTable({ data }) {
@@ -306,7 +306,7 @@ export function DataTable({ data }) {
 ### Modal Dialog
 
 ```typescript
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@/fakemui'
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@/m3'
 import { useState } from 'react'
 
 export function ConfirmDialog() {
@@ -370,10 +370,10 @@ The `sx` prop provides Material Design 3-aware styling using theme values:
 
 ## Responsive Design
 
-Fakemui uses Material Design 3 breakpoints:
+M3 uses Material Design 3 breakpoints:
 
 ```typescript
-import { useMediaQuery } from '@/fakemui/hooks'
+import { useMediaQuery } from '@/m3/hooks'
 
 export function ResponsiveComponent() {
   const isMobile = useMediaQuery('(max-width: 600px)')
@@ -412,6 +412,6 @@ Or use Grid system:
 ## Resources
 
 - [Material Design 3 Spec](https://m3.material.io/)
-- Fakemui Component Index: `/fakemui/index.ts`
-- React Components: `/fakemui/` directory
-- QML Components: `/fakemui/qml/components/` directory
+- M3 Component Index: `/m3/index.ts`
+- React Components: `/m3/` directory
+- QML Components: `/m3/qml/components/` directory

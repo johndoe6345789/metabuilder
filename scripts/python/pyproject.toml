@@ -36,7 +36,7 @@ dev = [
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["fakemui*"]
+include = ["m3*"]
 
 [tool.mypy]
 python_version = "3.9"

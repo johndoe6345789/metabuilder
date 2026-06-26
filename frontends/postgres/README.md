@@ -22,6 +22,6 @@
 
 ---
 
-**Note**: FakeMUI is the active UI layer for this dashboard
+**Note**: M3 is the active UI layer for this dashboard
 
 **Documentation**: Run `./postgres.py --help`

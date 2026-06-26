@@ -5,7 +5,7 @@ import styles from '../../../scss/atoms/icon-button.module.scss'
 
 export interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children?: React.ReactNode
-  /** Size variant (FakeMUI native) */
+  /** Size variant (M3 native) */
   sm?: boolean
   lg?: boolean
   /** Size variant (MUI-style) */

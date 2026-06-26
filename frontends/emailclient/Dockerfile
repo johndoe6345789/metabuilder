@@ -21,7 +21,7 @@ COPY libraries/icons/ ./libraries/icons/
 # scss (Material 3 SCSS, theme, atoms — loaded by sassOptions)
 COPY libraries/scss/ ./libraries/scss/
 
-# components + FakeMUI (UI component library)
+# components + M3 (UI component library)
 COPY libraries/components/ ./libraries/components/
 
 # types (TypeScript type definitions — transitive dep via hooks)

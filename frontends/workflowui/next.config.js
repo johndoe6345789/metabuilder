@@ -31,7 +31,7 @@ const nextConfig = {
   turbopack: {
     root: resolve(__dirname, '../..'),
     resolveAlias: {
-      // FakeMUI
+      // M3
       '@metabuilder/m3': '../../libraries/components/m3',
       '@metabuilder/m3/scss': '../../libraries/components/m3/scss/index.scss',
       '@metabuilder/m3/icons': '../../libraries/components/m3/icons/index.ts',

@@ -1,5 +1,5 @@
 /**
- * Auth Form Layout - FakeMUI Component
+ * Auth Form Layout - M3 Component
  * Wrapper layout for authentication pages (login, register)
  */
 

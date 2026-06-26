@@ -1,6 +1,6 @@
 /**
  * Register Page
- * User registration with FakeMUI Material Design 3 components
+ * User registration with M3 Material Design 3 components
  */
 
 'use client';

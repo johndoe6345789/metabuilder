@@ -1,17 +1,17 @@
-# Fakemui
+# M3
 
 A Material-UI inspired component library for QML and React, providing 100+ components for building modern user interfaces.
 
 ## Overview
 
-Fakemui (Fakenham) is a comprehensive UI component library that implements Material Design principles in both QML and React/JavaScript. It provides a consistent, customizable, and accessible component system for rapid application development.
+M3 (Fakenham) is a comprehensive UI component library that implements Material Design principles in both QML and React/JavaScript. It provides a consistent, customizable, and accessible component system for rapid application development.
 
 ## Quick Start
 
 ### QML Usage
 
 ```qml
-import Fakemui 1.0
+import M3 1.0
 
 CButton {
     text: "Click Me"
@@ -34,7 +34,7 @@ CButton {
 Application-specific files and global configuration:
 
 ```
-fakemui/
+m3/
 ├── index.qml                 # QML module index
 ├── qmldir                    # Module definition
 ├── LICENSE                   # MIT License
@@ -150,12 +150,12 @@ Material-UI style component library with **104+ components** organized by catego
 - CClickAwayListener
 - CNoSsr
 
-### 📁 React/Python Components (`fakemui/`)
+### 📁 React/Python Components (`m3/`)
 
 JavaScript and Python component implementations organized by category:
 
 ```
-fakemui/
+m3/
 ├── atoms/              # Basic components
 ├── data-display/       # Data visualization
 ├── feedback/           # User feedback
@@ -225,10 +225,10 @@ CButton {
 
 ## Module Definition
 
-The `qmldir` file defines the Fakemui QML module, making all components available via:
+The `qmldir` file defines the M3 QML module, making all components available via:
 
 ```qml
-import Fakemui 1.0
+import M3 1.0
 ```
 
 ## Development

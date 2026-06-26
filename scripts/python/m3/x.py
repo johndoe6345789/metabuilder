@@ -1,5 +1,5 @@
 """
-FakeMUI X Module for PyQt6
+M3 X Module for PyQt6
 
 Provides advanced components like DataGrid and DatePicker.
 """
@@ -16,7 +16,7 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, pyqtSignal, QDate, QTime
 from PyQt6.QtGui import QFont, QColor, QAction
 
-from .base import FakeMUIWidget, StyleMixin
+from .base import M3Widget, StyleMixin
 
 
 # =============================================================================
@@ -180,8 +180,8 @@ class DataGrid(QFrame, StyleMixin):
         }
         row_height = row_heights.get(self._density, 52)
         
-        self.add_class("fakemui-data-grid")
-        self.add_class(f"fakemui-data-grid-density-{self._density}")
+        self.add_class("m3-data-grid")
+        self.add_class(f"m3-data-grid-density-{self._density}")
         
         self.setStyleSheet(f"""
             QFrame {{
@@ -520,11 +520,11 @@ class DatePicker(QFrame, StyleMixin):
     
     def _apply_styles(self):
         """Apply styles."""
-        self.add_class("fakemui-datepicker")
+        self.add_class("m3-datepicker")
         if self._error:
-            self.add_class("fakemui-datepicker-error")
+            self.add_class("m3-datepicker-error")
         if self._disabled:
-            self.add_class("fakemui-datepicker-disabled")
+            self.add_class("m3-datepicker-disabled")
         
         border_color = "#d32f2f" if self._error else "#c4c4c4"
         
@@ -644,7 +644,7 @@ class TimePicker(QFrame, StyleMixin):
     
     def _apply_styles(self):
         """Apply styles."""
-        self.add_class("fakemui-timepicker")
+        self.add_class("m3-timepicker")
         
         border_color = "#d32f2f" if self._error else "#c4c4c4"
         
@@ -745,7 +745,7 @@ class DateTimePicker(QFrame, StyleMixin):
         
         layout.addLayout(pickers)
         
-        self.add_class("fakemui-datetimepicker")
+        self.add_class("m3-datetimepicker")
     
     def _on_date_changed(self, new_date: Optional[date]):
         """Handle date change."""
@@ -813,7 +813,7 @@ class StaticDatePicker(QFrame, StyleMixin):
         
         layout.addWidget(self._calendar)
         
-        self.add_class("fakemui-static-datepicker")
+        self.add_class("m3-static-datepicker")
         
         self._calendar.setStyleSheet("""
             QCalendarWidget {
@@ -890,7 +890,7 @@ class ClockPicker(QFrame, StyleMixin):
         
         layout.addWidget(self._time_picker)
         
-        self.add_class("fakemui-clock-picker")
+        self.add_class("m3-clock-picker")
     
     def _on_time_changed(self, new_time: Optional[time]):
         """Handle time change."""

@@ -3,7 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import "components"
 import "contexts"
-import "fakemui"
+import "m3"
 
 /**
  * App.qml - Main application component

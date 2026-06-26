@@ -270,7 +270,7 @@ Total: 9 files, ~49 KB documentation + configuration
 This is the final infrastructure component of the 8-phase email client implementation:
 
 1. ✅ Phase 1: DBAL Schemas (EmailClient, EmailFolder, EmailMessage, EmailAttachment)
-2. ✅ Phase 2: FakeMUI Components (22 email-specific components)
+2. ✅ Phase 2: M3 Components (22 email-specific components)
 3. ✅ Phase 3: Redux State Management (email slices)
 4. ✅ Phase 4: Custom Hooks (6 email hooks)
 5. ✅ Phase 5: Email Package (declarative routes, workflows)
@@ -292,7 +292,7 @@ This is the final infrastructure component of the 8-phase email client implement
 
 **With Frontend (Next.js)**:
 - Redux hooks connect to Flask API
-- FakeMUI components display messages
+- M3 components display messages
 - Real-time IMAP sync via `useEmailSync()`
 
 **With Workflow Engine**:

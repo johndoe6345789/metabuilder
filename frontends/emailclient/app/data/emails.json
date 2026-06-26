@@ -53,7 +53,7 @@
     "testId": "5",
     "from": "Carol Wu",
     "to": ["you@metabuilder.io"],
-    "subject": "FakeMUI component audit results",
+    "subject": "M3 component audit results",
     "preview": "Finished the component audit — 167 components across 11 categories. All tests passing...",
     "isRead": true,
     "isStarred": true,

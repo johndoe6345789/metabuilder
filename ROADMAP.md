@@ -224,7 +224,7 @@ Multi-language DAG execution.
 
 - [x] 62 packages with auto-loading seed data
 - [x] WorkflowUI migrated to root packages (77% file reduction)
-- [x] FakeMUI restructured into M3 hierarchy
+- [x] M3 restructured into M3 hierarchy
 
 ---
 
@@ -244,7 +244,7 @@ Multi-language DAG execution.
 ### ✅ Phase 7.5: Monorepo Reorganisation + M3 (Complete — June 2026)
 
 - [x] Root reorganised into `libraries/` + `frontends/` category folders
-- [x] `fakemui` → `m3`, package renamed `@metabuilder/fakemui` → `@metabuilder/m3`
+- [x] component library renamed to `m3` (package `@metabuilder/m3`)
 - [x] Postgres dashboard fully migrated to SCSS modules (all sx props removed)
 - [x] All 534 import/reference sites updated
 
@@ -458,7 +458,7 @@ Multi-language DAG execution.
 
 | Version | Date | Highlights |
 |---------|------|-----------|
-| **0.9.0** | June 25, 2026 | Monorepo reorganisation (libraries/+frontends/), fakemui→m3, postgres SCSS migration |
+| **0.9.0** | June 25, 2026 | Monorepo reorganisation (libraries/+frontends/), m3 rename, postgres SCSS migration |
 | **0.8.8** | March 4, 2026 | C++ DBAL production, event-driven workflows, JWT auth, pastebin full-stack, i18n EN/ES |
 | **0.7.x** | February 2026 | Game engine Quake 3 support (BSP, pmove, 212 steps), 14 DB backends, WorkflowUI E2E |
 | **0.5.x** | February 2026 | Visual workflow editor, dynamic plugin registry (152 nodes), email client phases 1-5 |

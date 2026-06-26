@@ -1,10 +1,10 @@
-# Fakemui Component Mapping
+# M3 Component Mapping
 
 ## Overview
 
-This document maps fakemui components to the JSON component schema categories and identifies any gaps or integration needs.
+This document maps m3 components to the JSON component schema categories and identifies any gaps or integration needs.
 
-## Fakemui Component Inventory
+## M3 Component Inventory
 
 ### Inputs (Form Controls)
 
@@ -216,29 +216,29 @@ This document maps fakemui components to the JSON component schema categories an
 
 ### 1. Missing Drawer Component Export ❌
 
-**Location**: `/fakemui/fakemui/surfaces/Drawer.tsx`
+**Location**: `/m3/m3/surfaces/Drawer.tsx`
 **Issue**: Component exists but not exported from main index
 **Impact**: Modal/drawer patterns cannot use Drawer component
-**Fix**: Add `Drawer` export to `/fakemui/index.ts`
+**Fix**: Add `Drawer` export to `/m3/index.ts`
 
 ### 2. Alert Component Not Exported ❌
 
-**Location**: `/fakemui/fakemui/feedback/Alert.tsx`
+**Location**: `/m3/m3/feedback/Alert.tsx`
 **Issue**: Component exists but not exported
 **Impact**: Feedback/alert patterns missing
-**Fix**: Add `Alert` export to `/fakemui/index.ts`
+**Fix**: Add `Alert` export to `/m3/index.ts`
 
 ### 3. Backdrop Component Not Exported ❌
 
-**Location**: `/fakemui/fakemui/feedback/Backdrop.tsx`
+**Location**: `/m3/m3/feedback/Backdrop.tsx`
 **Issue**: Component exists but not exported
 **Impact**: Modal backdrop patterns missing
-**Fix**: Add `Backdrop` export to `/fakemui/index.ts`
+**Fix**: Add `Backdrop` export to `/m3/index.ts`
 
 ## Recommendations
 
 ### Phase 1: Fix Missing Exports (Quick Win)
-- Add `Drawer`, `Alert`, `Backdrop` to `/fakemui/index.ts`
+- Add `Drawer`, `Alert`, `Backdrop` to `/m3/index.ts`
 - No code changes needed - just export existing components
 
 ### Phase 2: Chart Components (Future)
@@ -247,31 +247,31 @@ This document maps fakemui components to the JSON component schema categories an
 - Would extend `category: "chart"` support
 
 ### Phase 3: Component Registry Integration
-- Create `/frontends/nextjs/src/lib/fakemui-registry.ts`
-- Maps all 131+ fakemui components to the JSON component schema
-- Enables JSON declarative components to render fakemui components
+- Create `/frontends/nextjs/src/lib/m3-registry.ts`
+- Maps all 131+ m3 components to the JSON component schema
+- Enables JSON declarative components to render m3 components
 - Example: `{ "type": "Button", "props": { "variant": "primary" } }` → `<Button variant="primary" />`
 
 ### Phase 4: Documentation
-- Create component examples for each fakemui component
+- Create component examples for each m3 component
 - Document props, events, and usage patterns for JSON declarations
 - Add to `/schemas/package-schemas/component.schema.json` if needed
 
 ## Integration Checklist
 
 - [ ] Fix missing exports (Drawer, Alert, Backdrop)
-- [ ] Create fakemui component registry
-- [ ] Update JSON renderer to use fakemui registry
+- [ ] Create m3 component registry
+- [ ] Update JSON renderer to use m3 registry
 - [ ] Create component definitions in package seed files
 - [ ] Document JSON component patterns for each category
-- [ ] Test end-to-end: JSON definition → Schema validation → Fakemui render
+- [ ] Test end-to-end: JSON definition → Schema validation → M3 render
 - [ ] Add chart library if needed
-- [ ] Update component.schema.json with fakemui component reference
+- [ ] Update component.schema.json with m3 component reference
 
 ## Next Steps
 
 1. **Immediate** (5 min): Fix 3 missing exports
-2. **Short-term** (30 min): Create fakemui component registry
+2. **Short-term** (30 min): Create m3 component registry
 3. **Medium-term** (1-2 hours): Integrate registry with JSON renderer
 4. **Testing** (1 hour): Create test components and verify rendering
 

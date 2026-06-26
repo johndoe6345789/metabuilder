@@ -1,7 +1,7 @@
 """
-FakeMUI Demo - Showcase all components.
+M3 Demo - Showcase all components.
 
-Run with: python -m codex_task_runner.ui.fakemui.demo
+Run with: python -m codex_task_runner.ui.m3.demo
 """
 
 import sys
@@ -46,12 +46,12 @@ from .stylesheet import get_stylesheet
 
 
 class DemoWindow(QMainWindow):
-    """Main demo window showcasing all FakeMUI components."""
+    """Main demo window showcasing all M3 components."""
     
     def __init__(self):
         super().__init__()
         
-        self.setWindowTitle("FakeMUI Demo - PyQt6 Material Components")
+        self.setWindowTitle("M3 Demo - PyQt6 Material Components")
         self.setMinimumSize(1200, 800)
         
         # Apply theme

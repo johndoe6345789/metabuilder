@@ -20,7 +20,7 @@ Implement empty state UI patterns and smooth animations to improve user experien
 **File**: `/frontends/nextjs/src/components/EmptyState.tsx`
 
 #### Features
-- **Multiple icon formats**: Emoji, React components, or FakeMUI icon names
+- **Multiple icon formats**: Emoji, React components, or M3 icon names
 - **Size variants**: compact, normal, large
 - **Optional hints**: Additional guidance text
 - **Action buttons**: Primary and secondary CTAs
@@ -121,7 +121,7 @@ Complete guide covering:
 
 ### Modified Files
 1. **EmptyState.tsx** (Rewritten)
-   - Added FakeMUI icon registry integration
+   - Added M3 icon registry integration
    - Added size variants
    - Added hint text support
    - Added animated prop
@@ -159,7 +159,7 @@ Complete guide covering:
 ### Configuration Files (Unchanged)
 - No breaking changes to existing configs
 - Animations use standard CSS @keyframes
-- Component works with existing FakeMUI registry
+- Component works with existing M3 registry
 
 ---
 
@@ -173,7 +173,7 @@ Complete guide covering:
 
 ### Rendering Performance
 - **CSS animations**: 60fps using transform/opacity (hardware accelerated)
-- **Component rendering**: Lazy-loaded FakeMUI icons via Suspense
+- **Component rendering**: Lazy-loaded M3 icons via Suspense
 - **Motion detection**: Runs once on mount, cached in memory
 - **No JavaScript**: Most animations are pure CSS
 
@@ -489,11 +489,11 @@ describe('animations', () => {
 
 ### Icon Not Displaying
 
-**Problem**: FakeMUI icon not rendering
+**Problem**: M3 icon not rendering
 
 **Solution**:
 1. Use valid emoji string: `"📭"` (not `":mailbox:"`)
-2. Check icon name exists in `FAKEMUI_REGISTRY`
+2. Check icon name exists in `M3_REGISTRY`
 3. Use `Suspense` wrapper for custom icons
 4. Fall back to emoji if icon name invalid
 
@@ -586,7 +586,7 @@ import {
 
 ✅ **Design Goals Met**
 - [x] Material Design compliance
-- [x] Consistent with FakeMUI components
+- [x] Consistent with M3 components
 - [x] Responsive across all screen sizes
 - [x] User preference respect (motion)
 - [x] No breaking changes

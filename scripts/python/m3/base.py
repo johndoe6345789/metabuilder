@@ -1,4 +1,4 @@
-"""Base classes and utilities for FakeMUI widgets."""
+"""Base classes and utilities for M3 widgets."""
 
 from PyQt6.QtWidgets import QWidget, QFrame, QVBoxLayout, QHBoxLayout
 from PyQt6.QtCore import Qt, pyqtSignal
@@ -32,8 +32,8 @@ class StyleMixin:
         self.setObjectName(current.replace(f" {self._base_class}--{modifier}", ""))
 
 
-class FakeMUIWidget(QFrame, StyleMixin):
-    """Base class for all FakeMUI widgets."""
+class M3Widget(QFrame, StyleMixin):
+    """Base class for all M3 widgets."""
     
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -49,7 +49,7 @@ class FakeMUIWidget(QFrame, StyleMixin):
         self.setStyleSheet(f"margin: {margin}px;")
 
 
-class FakeMUIContainer(FakeMUIWidget):
+class M3Container(M3Widget):
     """Base container with layout support."""
     
     def __init__(self, parent=None, layout_type='vertical'):

@@ -158,7 +158,7 @@ describe('SnippetCard', () => {
     it('should apply selected styling when isSelected is true', () => {
       render(<SnippetCard {...defaultProps} isSelected={true} />)
       const card = screen.getByTestId(`snippet-card-${mockSnippet.id}`)
-      // Verify card has FakeMUI Card class and selection styling is present
+      // Verify card has M3 Card class and selection styling is present
       expect(card).toBeInTheDocument()
       expect(card).toHaveAttribute('aria-selected', 'true')
     })
@@ -351,7 +351,7 @@ describe('SnippetCard', () => {
     it('should have interactive card styling applied', () => {
       render(<SnippetCard {...defaultProps} />)
       const card = screen.getByTestId(`snippet-card-${mockSnippet.id}`)
-      // Card uses FakeMUI Card component (mat-mdc-card) with inline styles applied
+      // Card uses M3 Card component (mat-mdc-card) with inline styles applied
       expect(card).toBeInTheDocument()
       expect(card).toHaveAttribute('role', 'article')
     })

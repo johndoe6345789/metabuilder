@@ -1,5 +1,5 @@
 """
-FakeMUI - Material UI-style widgets for PyQt6.
+M3 - Material UI-style widgets for PyQt6.
 Complete replacement for complex Qt styling with simple, composable components.
 """
 

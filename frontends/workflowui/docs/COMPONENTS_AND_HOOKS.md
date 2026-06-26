@@ -589,12 +589,12 @@ export function ProjectPage() {
 
 ---
 
-## Integration with Fakemui
+## Integration with M3
 
-All these components work seamlessly with Fakemui:
+All these components work seamlessly with M3:
 
 ```tsx
-import { Button, Stack, Card, Box } from '@/fakemui'
+import { Button, Stack, Card, Box } from '@/m3'
 import { Breadcrumbs, LoadingOverlay } from '@/components'
 import { useUI, useWorkflow } from '@/hooks'
 

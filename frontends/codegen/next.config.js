@@ -48,7 +48,7 @@ const nextConfig = {
     root,
     resolveAlias: {
       '@': './frontends/codegen/src',
-      // FakeMUI — root + subpath exports
+      // M3 — root + subpath exports
       '@metabuilder/m3': './components/m3',
       '@metabuilder/m3/scss': './components/m3/scss/index.scss',
       '@metabuilder/m3/icons': './components/m3/icons/index.ts',
@@ -77,7 +77,7 @@ const nextConfig = {
       '@metabuilder/interfaces/dashboard': './interfaces/dashboard.ts',
       '@metabuilder/interfaces/templates': './interfaces/templates.ts',
       '@metabuilder/interfaces/workspace': './interfaces/workspace.ts',
-      // Utils — maps to FakeMUI utils
+      // Utils — maps to M3 utils
       '@metabuilder/utils': './components/m3/utils',
       '@metabuilder/utils/accessibility': './components/m3/utils/accessibility',
       // SCSS — shared styles from monorepo root

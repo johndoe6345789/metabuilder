@@ -28,7 +28,7 @@ COPY libraries/scss/ ./libraries/scss/
 # translations (i18n strings)
 COPY libraries/translations/ ./libraries/translations/
 
-# components + FakeMUI
+# components + M3
 COPY libraries/components/ ./libraries/components/
 
 # workflow (DAG workflow engine)

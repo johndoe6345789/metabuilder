@@ -1,5 +1,5 @@
 /**
- * Password Strength Indicator - FakeMUI Component
+ * Password Strength Indicator - M3 Component
  * Shows visual feedback for password strength with progress bar and message
  */
 

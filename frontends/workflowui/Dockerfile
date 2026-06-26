@@ -28,7 +28,7 @@ COPY libraries/scss/ ./libraries/scss/
 # translations (i18n strings)
 COPY libraries/translations/ ./libraries/translations/
 
-# components + FakeMUI (UI component library)
+# components + M3 (UI component library)
 COPY libraries/components/ ./libraries/components/
 
 # ── Redux packages (all — small TS source, avoids transitive dep breakage) ───

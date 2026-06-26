@@ -1,4 +1,4 @@
-"""Input components for FakeMUI."""
+"""Input components for M3."""
 
 from PyQt6.QtWidgets import (
     QPushButton, QToolButton, QLineEdit, QTextEdit, QComboBox,
@@ -8,7 +8,7 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, pyqtSignal, QSize
 from PyQt6.QtGui import QIcon, QFont
 
-from .base import FakeMUIWidget, FakeMUIContainer, StyleMixin
+from .base import M3Widget, M3Container, StyleMixin
 
 
 class Button(QPushButton, StyleMixin):
@@ -352,7 +352,7 @@ class Slider(QSlider, StyleMixin):
         self.set_style_class(color)
 
 
-class FormGroup(FakeMUIContainer):
+class FormGroup(M3Container):
     """Container for form controls."""
     
     _base_class = 'form-group'
@@ -412,7 +412,7 @@ class FormHelperText(QLabel, StyleMixin):
         self.setFont(font)
 
 
-class TextField(FakeMUIContainer):
+class TextField(M3Container):
     """Complete text field with label and helper text."""
     
     _base_class = 'text-field'
@@ -543,7 +543,7 @@ class ToggleButton(QPushButton, StyleMixin):
         return self._value
 
 
-class ToggleButtonGroup(FakeMUIContainer):
+class ToggleButtonGroup(M3Container):
     """Group of toggle buttons with exclusive selection."""
     
     _base_class = 'toggle-btn-group'
