@@ -8,11 +8,14 @@ FROM ${BASE_REGISTRY}/base-postgres-deps:latest AS builder
 
 COPY package.json .npmrc ./
 
-# Copy all source (workspace libs + app)
+# Copy stable libraries first — these rarely change so their layers stay cached
+# across SCSS/component/app edits, keeping the library build loop fast.
+COPY libraries/types/ ./libraries/types/
+COPY libraries/interfaces/ ./libraries/interfaces/
+COPY libraries/translations/ ./libraries/translations/
 COPY libraries/hooks/ ./libraries/hooks/
 COPY libraries/icons/ ./libraries/icons/
-COPY libraries/scss/ ./libraries/scss/
-COPY libraries/components/ ./libraries/components/
+COPY libraries/workflow/ ./libraries/workflow/
 COPY libraries/redux/core/ ./libraries/redux/core/
 COPY libraries/redux/slices/ ./libraries/redux/slices/
 COPY libraries/redux/hooks/ ./libraries/redux/hooks/
@@ -30,30 +33,34 @@ COPY libraries/redux/middleware/ ./libraries/redux/middleware/
 COPY libraries/redux/persist/ ./libraries/redux/persist/
 COPY libraries/redux/services/ ./libraries/redux/services/
 COPY libraries/redux/timing-utils/ ./libraries/redux/timing-utils/
-COPY libraries/types/ ./libraries/types/
-COPY libraries/interfaces/ ./libraries/interfaces/
-COPY libraries/translations/ ./libraries/translations/
-COPY libraries/workflow/ ./libraries/workflow/
+# SCSS and components change frequently — copy last so above layers stay cached
+COPY libraries/scss/ ./libraries/scss/
+COPY libraries/components/ ./libraries/components/
+# App source last — changes most often
 COPY frontends/postgres/ ./frontends/postgres/
 
 # Re-link workspaces after copying source so npm sees the current root manifest
 # and rebuilds node_modules/@metabuilder/* workspace symlinks.
-RUN npm install --ignore-scripts
+RUN --mount=type=cache,target=/root/.npm \
+    npm install --ignore-scripts
 
 # Build workspace libraries
-RUN for ws in libraries/redux/core libraries/redux/slices \
+RUN --mount=type=cache,target=/root/.cache/tsup \
+    for ws in libraries/redux/core libraries/redux/slices \
     libraries/redux/hooks libraries/redux/adapters \
     libraries/redux/hooks-async libraries/redux/api-clients \
     libraries/redux/persist libraries/components libraries/workflow; do \
     npm run build -w "$ws" --if-present 2>&1 || { echo "ERROR: $ws build failed"; exit 1; }; \
 done
 
-# Build the app
+# Build the app — cache mount preserves .next/cache across rebuilds (turbopack
+# uses it for incremental compilation; near-instant on SCSS-only changes).
 ENV SKIP_ENV_VALIDATION=true
 ENV JWT_SECRET=build-placeholder
 ENV NEXT_PUBLIC_SENTRY_DISABLED=true
 ENV NODE_OPTIONS="--max-old-space-size=3072"
-RUN cd frontends/postgres && npx next build --turbopack
+RUN --mount=type=cache,target=/app/frontends/postgres/.next/cache \
+    cd frontends/postgres && npx next build --turbopack
 
 # --- Runtime stage ---
 FROM node:24-alpine
