@@ -1,5 +1,5 @@
 /**
- * Explicitly registered FakeMUI components.
+ * Explicitly registered M3 components.
  * Turbopack dev mode does not reliably resolve these via
  * require.context.
  */
@@ -38,7 +38,7 @@ import { SchemaEditorWorkspace } from
 
 const C = <T>(c: T) => c as unknown as ComponentType<any>
 
-export const fakeMuiExplicitComponents: UIComponentRegistry = {
+export const m3ExplicitComponents: UIComponentRegistry = {
   'conditional-group':
     React.Fragment as unknown as ComponentType<any>,
   Tabs: C(Tabs), Tab: C(Tab), TabPanel: C(TabPanel),

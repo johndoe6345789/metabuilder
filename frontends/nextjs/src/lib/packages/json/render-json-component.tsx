@@ -9,7 +9,7 @@
 import React from 'react'
 import type { JSONComponent } from './types'
 import type { JsonValue } from '@/types/utility-types'
-import { FAKEMUI_REGISTRY } from '@/lib/fakemui-registry'
+import { M3_REGISTRY } from '@/lib/m3-registry'
 
 export interface RenderContext {
   props: Record<string, JsonValue>
@@ -20,14 +20,14 @@ export interface RenderContext {
 /**
  * Render a JSON component definition to React
  *
- * By default, uses the FAKEMUI_REGISTRY to render components.
+ * By default, uses the M3_REGISTRY to render components.
  * Pass a custom ComponentRegistry to override specific components.
  * Pass allComponents to enable $ref resolution within the same package.
  */
 export function renderJSONComponent(
   component: JSONComponent,
   props: Record<string, JsonValue> = {},
-  ComponentRegistry: Record<string, React.ComponentType<Record<string, unknown>>> = FAKEMUI_REGISTRY,
+  ComponentRegistry: Record<string, React.ComponentType<Record<string, unknown>>> = M3_REGISTRY,
   allComponents?: JSONComponent[]
 ): React.ReactElement {
   if (component.render === undefined) {

@@ -1,7 +1,7 @@
 /**
  * navigationIconMap
  *
- * Maps JSON icon name strings to FakeMUI icon
+ * Maps JSON icon name strings to M3 icon
  * components used in global-search navigation items.
  */
 

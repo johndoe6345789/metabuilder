@@ -9,7 +9,7 @@
 ## Quick Start
 
 ```tsx
-import { Plus, Trash, Copy } from '@/fakemui'
+import { Plus, Trash, Copy } from '@/m3'
 
 function MyComponent() {
   return (
@@ -25,9 +25,9 @@ function MyComponent() {
 
 ## Available Icons
 
-This section highlights core, commonly used icons. For the complete set, refer to `fakemui/icons/index.ts`.
+This section highlights core, commonly used icons. For the complete set, refer to `m3/icons/index.ts`.
 
-Current icon count: **310 icons** (see `fakemui/icons/index.ts` for the full list)
+Current icon count: **310 icons** (see `m3/icons/index.ts` for the full list)
 
 ### Actions (5)
 - `Plus` - Add, create, new
@@ -113,7 +113,7 @@ interface IconProps extends React.SVGAttributes<SVGElement> {
 
 ### Step 2: Create the Component
 
-Create a new file in `fakemui/icons/IconName.tsx`:
+Create a new file in `m3/icons/IconName.tsx`:
 
 ```tsx
 import React from 'react'
@@ -135,7 +135,7 @@ export const IconName = (props: IconProps) => (
 
 ### Step 3: Export from index.ts
 
-Add to `fakemui/icons/index.ts`:
+Add to `m3/icons/index.ts`:
 
 ```ts
 export { IconName } from './IconName'
@@ -143,7 +143,7 @@ export { IconName } from './IconName'
 
 ### Step 4: Export from main barrel
 
-Add to `fakemui/index.ts`:
+Add to `m3/index.ts`:
 
 ```ts
 // Icons
@@ -176,7 +176,7 @@ Phosphor uses `viewBox="0 0 256 256"` - perfect for our system!
   <line x1="128" y1="40" x2="128" y2="216" />
 </svg>
 
-// fakemui component:
+// m3 component:
 export const Plus = (props: IconProps) => (
   <Icon {...props}>
     <line x1="40" y1="128" x2="216" y2="128" />
@@ -295,13 +295,13 @@ Add as needed based on component migration
 
 | Library | Size (full) | Size (10 icons) | Dependencies |
 |---------|-------------|-----------------|--------------|
-| **fakemui** | ~10KB | ~10KB | Zero |
+| **m3** | ~10KB | ~10KB | Zero |
 | Phosphor Icons | 500KB | ~50KB | React |
 | Lucide React | 300KB | ~30KB | React |
 | Heroicons | 200KB | ~20KB | React |
 | MUI Icons | 1MB+ | ~100KB | MUI, Emotion |
 
-**Winner:** fakemui - smallest bundle, zero deps, full control
+**Winner:** m3 - smallest bundle, zero deps, full control
 
 ---
 
