@@ -152,7 +152,7 @@ export function TablesTab({
               </Typography>
             </Box>
             <TextField
-              size="small"
+              fullWidth
               className={styles.search}
               placeholder={L.filter}
               value={searchQuery}
