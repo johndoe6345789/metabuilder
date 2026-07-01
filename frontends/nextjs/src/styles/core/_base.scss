@@ -14,15 +14,17 @@ html {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background);
+  color: var(--foreground);
 }
 
 body {
-  font-family: $font-family-body;
+  font-family: var(--font-sans, #{$font-family-body});
   font-size: $font-size-base;
   line-height: $line-height-normal;
-  color: $fg-primary;
-  background-color: $bg-secondary;
-  transition: background-color $transition-base;
+  color: var(--foreground, #{$fg-primary});
+  background-color: var(--background, #{$bg-secondary});
+  transition: background-color $transition-base, color $transition-base;
 }
 
 // ========================================

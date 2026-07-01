@@ -1,26 +1,28 @@
 'use client';
 
-import { Alert, Paper, Typography } from '@metabuilder/components/m3';
+import { useEffect } from 'react';
+import AddIcon from '@metabuilder/components/m3/Add';
+import { Alert, Button, Paper, Typography } from '@metabuilder/components/m3';
 import { useTranslations } from 'next-intl';
-import { getFeatureById, getIndexTypes } from '@/utils/featureConfig';
+import { getIndexTypes } from '@/utils/featureConfig';
 import s from './index-manager-tab.module.scss';
 import ConfirmDialog from './ConfirmDialog';
 import IndexCreateDialog from './IndexCreateDialog';
 import IndexList from './IndexList';
-import IndexTableSelector from './IndexTableSelector';
+import ResizablePanelLayout from './ResizablePanelLayout';
+import TableListPanel from './TableListPanel';
 import { useIndexManager } from './hooks/useIndexManager';
+import { useResizablePanel } from './hooks/useResizablePanel';
 
 type IndexManagerTabProps = {
   tables: Array<{ table_name: string }>;
   onRefresh: () => void;
 };
 
-export default function IndexManagerTab({
-  tables,
-  onRefresh,
-}: IndexManagerTabProps) {
+export default function IndexManagerTab(
+  { tables, onRefresh }: IndexManagerTabProps,
+) {
   const t = useTranslations('Admin');
-  const feature = getFeatureById('index-management');
   const INDEX_TYPES = getIndexTypes();
   const {
     selectedTable, indexes, availableColumns, loading,
@@ -29,42 +31,59 @@ export default function IndexManagerTab({
     deleteIndex, setDeleteIndex,
     handleCreateIndex, handleDeleteIndex,
   } = useIndexManager(onRefresh);
+  const { width: panelWidth, onMouseDown } = useResizablePanel('index');
+
+  useEffect(() => {
+    if (!selectedTable && tables.length) {
+      handleTableChange(tables[0].table_name);
+    }
+  }, [tables]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>
-      <Typography variant="h5" gutterBottom>
-        {t('view.indexes.title')}
-      </Typography>
-      <Typography variant="body2" color="text.secondary" gutterBottom>
-        {t('view.indexes.description')}
-      </Typography>
-      {success && (
-        <Alert severity="success" className={s.alert}>{success}</Alert>
-      )}
-      {error && (
-        <Alert severity="error" className={s.alert}>{error}</Alert>
-      )}
-      <IndexTableSelector
-        tables={tables}
-        selectedTable={selectedTable}
-        loading={loading}
-        onTableChange={handleTableChange}
-        onCreateClick={() => createActions.setOpen(true)}
-      />
-      {selectedTable && indexes.length > 0 && (
-        <IndexList
-          tableName={selectedTable}
-          indexes={indexes}
-          onDeleteIndex={setDeleteIndex}
-        />
-      )}
-      {selectedTable && !indexes.length && !loading && (
-        <Paper className={s.empty}>
-          <Typography color="text.secondary">
-            {t('view.indexes.noIndexes', { table: selectedTable })}
+      <ResizablePanelLayout
+        panel={
+          <TableListPanel tables={tables} selectedTable={selectedTable}
+            onSelect={handleTableChange} />
+        }
+        panelWidth={panelWidth}
+        onHandleMouseDown={onMouseDown}
+      >
+        <div className={s.contentHeader}>
+          <Typography variant="h6" className={s.tableTitle}>
+            {selectedTable || t('view.indexes.selectTable')}
           </Typography>
-        </Paper>
-      )}
+          {selectedTable && (
+            <Button variant="contained" startIcon={<AddIcon />}
+              onClick={() => createActions.setOpen(true)} disabled={loading}>
+              Create Index
+            </Button>
+          )}
+        </div>
+        {success && (
+          <Alert severity="success" className={s.alert}>{success}</Alert>
+        )}
+        {error && (
+          <Alert severity="error" className={s.alert}>{error}</Alert>
+        )}
+        {selectedTable && indexes.length > 0 && (
+          <IndexList indexes={indexes} onDeleteIndex={setDeleteIndex} />
+        )}
+        {selectedTable && !indexes.length && !loading && (
+          <Paper className={s.empty}>
+            <Typography color="text.secondary">
+              {t('view.indexes.noIndexes', { table: selectedTable })}
+            </Typography>
+          </Paper>
+        )}
+        {!selectedTable && (
+          <div className={s.emptyState}>
+            <Typography color="text.secondary">
+              Select a table to view its indexes
+            </Typography>
+          </div>
+        )}
+      </ResizablePanelLayout>
       {createForm.open && (
         <IndexCreateDialog
           selectedTable={selectedTable}
@@ -86,7 +105,9 @@ export default function IndexManagerTab({
       <ConfirmDialog
         open={!!deleteIndex}
         title={t('view.indexes.dropIndex')}
-        message={t('view.indexes.dropIndexConfirm', { name: deleteIndex ?? '' })}
+        message={t('view.indexes.dropIndexConfirm', {
+          name: deleteIndex ?? '',
+        })}
         onConfirm={handleDeleteIndex}
         onCancel={() => setDeleteIndex(null)}
       />

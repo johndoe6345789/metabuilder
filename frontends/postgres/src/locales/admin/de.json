@@ -24,7 +24,8 @@
       "columnManager": {
         "title": "Spaltenverwaltung",
         "selectTable": "Wählen Sie eine Tabelle, um ihre Spalten zu verwalten",
-        "loading": "Wird geladen…"
+        "loading": "Wird geladen…",
+        "description": "Tabellenspalten, Typen und Standardwerte prüfen und ändern"
       },
       "constraints": {
         "title": "Einschränkungsverwaltung",

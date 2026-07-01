@@ -1,0 +1,60 @@
+.dialogContent {
+  padding-top: 8px;
+}
+
+.propList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.propRow {
+  width: 100%;
+}
+
+.switchRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+
+.nativeSelect {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--md-sys-color-outline, #ccc);
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font-size: 0.875rem;
+  margin-top: 4px;
+  cursor: pointer;
+
+  &:focus {
+    outline: 2px solid var(--md-sys-color-primary, #6750a4);
+    outline-offset: 1px;
+  }
+}
+
+.styleList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.styleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.styleKey {
+  flex: 1;
+}
+
+.styleVal {
+  flex: 1.5;
+}

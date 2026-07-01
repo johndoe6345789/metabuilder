@@ -18,6 +18,7 @@ type Props = {
   tables: any[];
   selectedTable: string;
   onTableClick: (t: string) => void;
+  onSchemaTableClick: (t: string) => void;
   onBack: () => void;
   onExecuteQuery: (q: string) => Promise<void>;
   onExecuteBuiltQuery: (p: any) => Promise<any>;
@@ -70,10 +71,11 @@ export default function DashboardTabs(p: Props) {
           {item.id === 'table-manager' && (
             <TableManagerTab tables={p.tables}
               onCreateTable={p.onCreateTable} onDropTable={p.onDropTable}
-              onTableClick={p.onTableClick} />
+              onTableClick={p.onSchemaTableClick} />
           )}
           {item.id === 'column-manager' && (
             <ColumnManagerTab tables={p.tables}
+              initialTable={p.selectedTable}
               onAddColumn={p.onAddColumn} onModifyColumn={p.onModifyColumn}
               onDropColumn={p.onDropColumn} />
           )}

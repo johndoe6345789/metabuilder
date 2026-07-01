@@ -18,9 +18,19 @@ import { useTheme } from '@/app/providers'
 import { AppBarComponent } from './AppBar'
 import { Sidebar } from './Sidebar'
 import { DbalBanner } from './DbalBanner'
+import { PackageStyleLoader } from '@/components/PackageStyleLoader'
 import { getRoleLevel } from '@/lib/constants'
 import type { PackageNavItem } from '@/lib/packages/navigation'
 import { packageMetadataToNavItem } from '@/lib/packages/navigation'
+
+const LEVEL_PACKAGES: Record<number, string[]> = {
+  0: ['global'],
+  1: ['global'],
+  2: ['global', 'ui_level2'],
+  3: ['global', 'ui_level2'],
+  4: ['global', 'ui_level4'],
+  5: ['global', 'ui_level4'],
+}
 
 export interface AppShellProps {
   children: React.ReactNode
@@ -30,7 +40,7 @@ export interface AppShellProps {
 async function fetchNavigablePackages(): Promise<PackageNavItem[]> {
   try {
     const dbalUrl = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
-    const res = await fetch(`${dbalUrl}/system/core/package`, {
+    const res = await fetch(`${dbalUrl}/system/core/InstalledPackage`, {
       signal: AbortSignal.timeout(3000),
     })
     if (!res.ok) return []
@@ -57,7 +67,9 @@ export function AppShell({ children }: AppShellProps) {
   const auth = useAuthContext()
   const { toggleTheme, resolvedMode } = useTheme()
   const router = useRouter()
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(
+    typeof window !== 'undefined' ? window.innerWidth >= 768 : true
+  )
   const [dbalOffline, setDbalOffline] = useState(false)
   const [packages, setPackages] = useState<PackageNavItem[]>([])
 
@@ -90,6 +102,7 @@ export function AppShell({ children }: AppShellProps) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <PackageStyleLoader packages={LEVEL_PACKAGES[userLevel] ?? []} />
       {/* App Bar */}
       <AppBarComponent
         username={username}
@@ -109,14 +122,12 @@ export function AppShell({ children }: AppShellProps) {
       {/* Main area: Sidebar + Content */}
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         {/* Sidebar (only shown when authenticated, mirrors Qt6 visible: loggedIn) */}
-        {auth.isAuthenticated && (
+        {auth.isAuthenticated && sidebarOpen && (
           <Sidebar
             userLevel={userLevel}
             username={username}
             role={role}
             packages={packages}
-            open={sidebarOpen}
-            onClose={() => { setSidebarOpen(false) }}
           />
         )}
 
@@ -126,7 +137,8 @@ export function AppShell({ children }: AppShellProps) {
             flex: 1,
             overflow: 'auto',
             padding: '24px',
-            backgroundColor: 'var(--background, #fafafa)',
+            backgroundColor: 'var(--mat-sys-background, #f4f0f9)',
+            color: 'var(--mat-sys-on-background)',
           }}
         >
           {children}

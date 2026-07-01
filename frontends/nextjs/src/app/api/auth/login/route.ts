@@ -30,8 +30,9 @@ export async function POST(request: Request): Promise<NextResponse> {
 
     // Create a session token and persist it
     const sessionToken = crypto.randomUUID()
+    const sessionId = crypto.randomUUID()
     await db.sessions.create({
-      id: `sess_${sessionToken}`,
+      id: sessionId,
       userId: result.user.id ?? '',
       token: sessionToken,
       expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000,

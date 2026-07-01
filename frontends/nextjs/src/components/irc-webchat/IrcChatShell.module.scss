@@ -1,0 +1,51 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  border: 1px solid var(--m3-sys-light-outline-variant, #cac4d0);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--m3-sys-light-surface, #fffbfe);
+}
+
+.titleBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--m3-sys-light-outline-variant, #cac4d0);
+  background: var(
+    --m3-sys-light-surface-container,
+    #ece6f0
+  );
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+}
+
+.offlineBadge {
+  margin-left: auto;
+  color: var(--m3-sys-light-error, #b3261e) !important;
+  font-size: 0.72rem !important;
+  background: rgba(179, 38, 30, 0.08);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.loading {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

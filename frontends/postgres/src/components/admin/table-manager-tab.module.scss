@@ -1,9 +1,22 @@
 .paper {
-  margin-top: 12px;
-}
+  margin-top: 0;
 
-.inner {
-  padding: 12px;
+  .inner {
+    padding: 12px;
+
+    .tableRow {
+      border-radius: 4px;
+      padding: 4px 8px;
+    }
+
+    .tableIcon {
+      :global(.material-symbols-outlined),
+      :global(.material-symbols-rounded),
+      :global(.material-symbols-sharp) {
+        font-size: 20px;
+      }
+    }
+  }
 }
 
 .search {
@@ -16,23 +29,8 @@
   }
 }
 
-.tableRow {
-  border-radius: 4px !important;
-  padding: 4px 8px !important;
-}
-
 .tableHint {
   padding: 8px 4px;
-}
-
-.tableIcon {
-  min-width: 40px;
-
-  :global(.material-symbols-outlined),
-  :global(.material-symbols-rounded),
-  :global(.material-symbols-sharp) {
-    font-size: 20px;
-  }
 }
 
 .itemText :global(.MuiListItemText-primary) {

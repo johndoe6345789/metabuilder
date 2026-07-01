@@ -65,9 +65,30 @@ export async function login(identifier: string, password: string): Promise<Login
       }
     }
 
-    // Get credential for this user
-    const credResult = await db.credentials.list({ filter: { username: user.username } })
-    const credential = (credResult.data[0] as DbalCredentialRecord | undefined) ?? null
+    // Get credential — Credential entity lives in the 'access' package, not 'core'
+    const credUrl = `${
+      process.env.DBAL_API_URL ??
+      process.env.DBAL_ENDPOINT ??
+      'http://localhost:8080'
+    }/system/access/Credential?username=${encodeURIComponent(user.username)}`
+
+    let credential: DbalCredentialRecord | null = null
+    try {
+      const credRes = await fetch(credUrl, {
+        headers: { Accept: 'application/json' },
+        cache: 'no-store' as RequestCache,
+      })
+      if (credRes.ok) {
+        const raw = await credRes.json() as { data?: { data?: DbalCredentialRecord[] } }
+        credential = raw?.data?.data?.[0] ?? null
+      }
+    } catch {
+      // fallback: try via db.credentials (core package) in case routing changed
+      const credResult = await db.credentials.list({
+        filter: { username: user.username },
+      })
+      credential = (credResult.data[0] as DbalCredentialRecord | undefined) ?? null
+    }
 
     if (credential?.passwordHash === undefined) {
       return {

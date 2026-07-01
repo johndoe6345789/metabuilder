@@ -48,6 +48,11 @@
       "type": "string",
       "optional": true,
       "nullable": true
+    },
+    "tenantId": {
+      "type": "string",
+      "nullable": true,
+      "description": "Tenant scope for multi-tenant routing"
     }
   },
   "indexes": [

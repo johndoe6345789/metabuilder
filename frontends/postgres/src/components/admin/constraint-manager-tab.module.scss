@@ -1,9 +1,18 @@
-.stack {
-  margin-top: 16px;
-  margin-bottom: 16px;
-  max-width: 560px;
-  width: 100%;
+.contentHeader {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
   gap: 16px;
+  margin-bottom: 16px;
+}
+
+.tableTitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.emptyState {
+  padding: 32px 0;
 }

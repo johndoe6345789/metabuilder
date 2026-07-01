@@ -1,0 +1,45 @@
+.panel {
+  padding: 16px;
+  background-color: var(--mat-sys-surface-container-low);
+  border-color: var(--mat-sys-outline-variant);
+}
+
+.heading {
+  color: var(--mat-sys-on-surface);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.buttonRow {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.secondaryBtn {
+  background-color: var(--mat-sys-secondary-container) !important;
+  color: var(--mat-sys-on-secondary-container) !important;
+}
+
+.card {
+  background-color: var(--mat-sys-surface-container);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+}
+
+.cardText {
+  color: var(--mat-sys-on-surface);
+  font-weight: 500;
+}
+
+.cardSub {
+  color: var(--mat-sys-on-surface);
+  opacity: 0.7;
+}
+
+.errorText {
+  color: var(--mat-sys-error);
+  font-weight: 500;
+}

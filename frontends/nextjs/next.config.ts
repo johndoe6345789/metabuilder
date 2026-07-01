@@ -91,7 +91,12 @@ const nextConfig: NextConfig = {
   },
   // Environment variables exposed to browser
   env: {
-    NEXT_PUBLIC_DBAL_API_URL: process.env.DBAL_API_URL ?? 'http://localhost:8080',
+    // NEXT_PUBLIC_DBAL_API_URL: browser-visible URL set at build time via ARG
+    // Falls back to DBAL_API_URL (server-internal, unusable by browser)
+    NEXT_PUBLIC_DBAL_API_URL:
+      process.env.NEXT_PUBLIC_DBAL_API_URL ??
+      process.env.DBAL_API_URL ??
+      'http://localhost:8080',
     NEXT_PUBLIC_DBAL_WS_URL: process.env.DBAL_WS_URL ?? 'ws://localhost:50051',
     NEXT_PUBLIC_DBAL_API_KEY: process.env.DBAL_API_KEY ?? '',
   },

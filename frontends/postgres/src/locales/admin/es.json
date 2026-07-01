@@ -24,7 +24,8 @@
       "columnManager": {
         "title": "Gestión de columnas",
         "selectTable": "Selecciona una tabla para gestionar sus columnas",
-        "loading": "Cargando…"
+        "loading": "Cargando…",
+        "description": "Inspeccione y modifique columnas, tipos y valores predeterminados"
       },
       "constraints": {
         "title": "Gestión de restricciones",

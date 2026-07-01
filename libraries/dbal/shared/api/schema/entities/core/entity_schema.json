@@ -1,0 +1,62 @@
+{
+  "entity": "entity_schema",
+  "version": "1.0",
+  "description": "User-defined entity schemas created in the God Panel schema editor",
+  "fields": {
+    "id": {
+      "type": "string",
+      "description": "Unique schema identifier",
+      "required": true,
+      "unique": true
+    },
+    "tenantId": {
+      "type": "string",
+      "description": "Tenant isolation ID",
+      "optional": true,
+      "nullable": true
+    },
+    "name": {
+      "type": "string",
+      "description": "Model name (PascalCase)",
+      "required": true
+    },
+    "label": {
+      "type": "string",
+      "description": "Human-readable display label",
+      "optional": true,
+      "nullable": true
+    },
+    "labelPlural": {
+      "type": "string",
+      "description": "Plural display label",
+      "optional": true,
+      "nullable": true
+    },
+    "fields": {
+      "type": "text",
+      "description": "Serialized JSON array of FieldSchema objects",
+      "required": true
+    },
+    "createdAt": {
+      "type": "bigint",
+      "description": "Creation timestamp (ms)",
+      "optional": true,
+      "nullable": true
+    },
+    "updatedAt": {
+      "type": "bigint",
+      "description": "Last update timestamp (ms)",
+      "optional": true,
+      "nullable": true
+    }
+  },
+  "indexes": [
+    {
+      "fields": ["tenantId", "name"],
+      "unique": true
+    },
+    {
+      "fields": ["tenantId"]
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+.statusRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.dotOnline { background-color: #4caf50; }
+.dotOffline { background-color: #f44336; }
+
+.chipRow {
+  display: flex;
+  gap: 16px;
+}
+
+.toolsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.toolCard { text-align: center; cursor: pointer; }
+
+.summaryGrid { display: grid; gap: 8px; }
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+.summaryPaper {
+  margin-top: 24px;
+  padding: 24px;
+  background: linear-gradient(
+    135deg,
+    rgba(98, 0, 238, 0.08),
+    rgba(3, 218, 198, 0.08)
+  );
+  border: 2px dashed rgba(98, 0, 238, 0.3);
+  border-radius: 8px;
+}

@@ -3,6 +3,7 @@
     { "id": "dashboard",  "label": "Dashboard",   "icon": "dashboard",  "path": "/app/dashboard",  "level": 1 },
     { "id": "profile",    "label": "Profile",      "icon": "person",     "path": "/app/profile",    "level": 1 },
     { "id": "comments",   "label": "Comments",     "icon": "chat",       "path": "/app/comments",   "level": 1 },
+    { "id": "chat",       "label": "Chat",         "icon": "chat_bubble","path": "/app/chat",       "level": 1 },
     { "id": "admin",      "label": "Admin Panel",  "icon": "admin",      "path": "/app/admin",      "level": 2 },
     { "id": "god-panel",  "label": "God Panel",    "icon": "build",      "path": "/app/god-panel",  "level": 4 },
     { "id": "supergod",   "label": "Super God",    "icon": "crown",      "path": "/app/supergod",   "level": 5 }

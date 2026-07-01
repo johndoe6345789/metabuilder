@@ -1,0 +1,35 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.subtitle {
+  color: var(--mat-sys-on-surface-variant, var(--mat-sys-on-surface));
+  margin-top: -8px;
+}
+
+.tabs {
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.editor {
+  padding: 12px 16px;
+  background-color: var(--mat-sys-surface-container-low);
+  border-color: var(--mat-sys-outline-variant);
+  max-height: 380px;
+  overflow-y: auto;
+}
+
+.swatchList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}

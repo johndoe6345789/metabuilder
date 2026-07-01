@@ -1,0 +1,36 @@
+.node {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-family: monospace;
+  color: var(--mat-sys-on-surface);
+  white-space: nowrap;
+  user-select: none;
+
+  &:hover {
+    background: var(--mat-sys-surface-container-highest);
+  }
+}
+
+.nodeActive {
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+
+  &:hover {
+    background: var(--mat-sys-secondary-container);
+  }
+}
+
+.icon {
+  font-size: 0.65rem;
+  width: 10px;
+  display: inline-block;
+  text-align: center;
+}
+
+.indent {
+  margin-left: 16px;
+}

@@ -1,10 +1,123 @@
-.paper {
-  padding: 16px;
-  margin-top: 16px;
+.wrapper {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid color-mix(
+    in srgb,
+    var(--mat-sys-on-surface) 12%,
+    transparent
+  );
 }
 
-.nameRow {
+.table {
+  table-layout: fixed;
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 500px;
+  background: var(--mat-sys-surface);
+  border-radius: 8px;
+}
+
+.th {
+  position: relative;
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--mat-sys-on-surface-variant);
+  background: color-mix(
+    in srgb,
+    var(--mat-sys-surface-variant) 40%,
+    transparent
+  );
+  border-bottom: 1px solid color-mix(
+    in srgb,
+    var(--mat-sys-on-surface) 12%,
+    transparent
+  );
+  user-select: none;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.thLabel {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.handle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  cursor: col-resize;
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: 1px;
+    top: 20%;
+    bottom: 20%;
+    width: 2px;
+    border-radius: 1px;
+    background: color-mix(
+      in srgb,
+      var(--mat-sys-on-surface) 20%,
+      transparent
+    );
+  }
+
+  &:hover::after {
+    background: var(--mat-sys-primary);
+  }
+}
+
+.row {
+  &:hover {
+    background: color-mix(
+      in srgb,
+      var(--mat-sys-on-surface) 4%,
+      transparent
+    );
+  }
+
+  &:not(:last-child) td {
+    border-bottom: 1px solid color-mix(
+      in srgb,
+      var(--mat-sys-on-surface) 8%,
+      transparent
+    );
+  }
+}
+
+.td {
+  padding: 8px 12px;
+  font-size: 0.8125rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.nameCell {
   display: flex;
   align-items: center;
   gap: 8px;
+  overflow: hidden;
+
+  :global(.material-symbols-outlined),
+  :global(.material-symbols-rounded),
+  :global(.material-symbols-sharp) {
+    font-size: 16px;
+    color: var(--mat-sys-on-surface-variant);
+    flex-shrink: 0;
+  }
+}
+
+.chips {
+  display: flex;
+  gap: 4px;
 }

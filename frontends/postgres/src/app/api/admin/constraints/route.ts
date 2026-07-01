@@ -2,7 +2,10 @@ import { sql } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 import { db } from '@/utils/db';
 import { getSession } from '@/utils/session';
-import { isValidIdentifier } from '@/validations/DatabaseIdentifierValidation';
+import {
+  isValidIdentifier,
+  isValidTableName,
+} from '@/validations/DatabaseIdentifierValidation';
 
 // Validate table exists
 async function validateTable(tableName: string): Promise<boolean> {
@@ -37,8 +40,7 @@ export async function GET(request: Request) {
       );
     }
 
-    // Validate identifier
-    if (!isValidIdentifier(tableName)) {
+    if (!isValidTableName(tableName)) {
       return NextResponse.json(
         { error: 'Invalid table name format' },
         { status: 400 },
@@ -107,8 +109,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Validate identifiers
-    if (!isValidIdentifier(tableName) || !isValidIdentifier(constraintName)) {
+    if (!isValidTableName(tableName) || !isValidIdentifier(constraintName)) {
       return NextResponse.json(
         { error: 'Invalid table or constraint name format' },
         { status: 400 },
@@ -224,8 +225,7 @@ export async function DELETE(request: Request) {
       );
     }
 
-    // Validate identifiers
-    if (!isValidIdentifier(tableName) || !isValidIdentifier(constraintName)) {
+    if (!isValidTableName(tableName) || !isValidIdentifier(constraintName)) {
       return NextResponse.json(
         { error: 'Invalid table or constraint name format' },
         { status: 400 },

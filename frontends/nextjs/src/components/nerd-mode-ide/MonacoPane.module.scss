@@ -1,0 +1,15 @@
+.wrap {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+  font-family: monospace;
+}

@@ -3,13 +3,21 @@
 import AddIcon from '@metabuilder/components/m3/Add';
 import {
   Alert, Button, CircularProgress,
-  Dialog, DialogActions, DialogContent, DialogTitle, Typography,
+  Dialog, DialogActions, DialogContent, DialogTitle, Tooltip, Typography,
 } from '@metabuilder/components/m3';
 import { BASE_PATH } from '@/lib/app-config';
 import s from './table-data-view.module.scss';
 import TableDataGrid from './TableDataGrid';
 import RowFormDialog from './RowFormDialog';
 import { useTableDataView } from './hooks/useTableDataView';
+
+function dlFile(name: string, content: string, mime: string) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content], { type: mime }));
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
 
 type Props = { tableName: string; onBack: () => void };
 
@@ -43,6 +51,28 @@ export default function TableDataView({ tableName, onBack }: Props) {
       <div className={s.toolbar}>
         <Button variant="contained" size="small" startIcon={<AddIcon />}
           onClick={handleAddRow} disabled={!schema}>Add Row</Button>
+        {rows.length > 0 && (
+          <>
+            <Tooltip title="Export current page as CSV">
+              <Button size="small" variant="outlined" onClick={() => {
+                const hdr = fields.map(f => JSON.stringify(f.name)).join(',');
+                const body = rows.map(r =>
+                  fields.map(f => {
+                    const v = r[f.name];
+                    return v == null ? '' : JSON.stringify(String(v));
+                  }).join(','),
+                ).join('\n');
+                dlFile(`${tableName}.csv`, `${hdr}\n${body}`, 'text/csv');
+              }}>CSV</Button>
+            </Tooltip>
+            <Tooltip title="Export current page as JSON">
+              <Button size="small" variant="outlined" onClick={() =>
+                dlFile(`${tableName}.json`, JSON.stringify(rows, null, 2),
+                  'application/json')
+              }>JSON</Button>
+            </Tooltip>
+          </>
+        )}
         <Typography variant="caption" color="text.secondary">
           {countLabel}
         </Typography>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box } from '../../layout';
 import { Paper } from '../../surfaces';
 import { Typography, Chip } from '../../data-display';
@@ -106,6 +106,41 @@ export function QueryBuilderTab({
   const [generatedQuery, setGeneratedQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [sqlCopied, setSqlCopied] = useState(false);
+
+  // Live SQL preview — regenerate whenever any param changes
+  useEffect(() => {
+    if (!selectedTable) { setGeneratedQuery(''); return; }
+    const cols = selectedColumns.length > 0
+      ? selectedColumns.map(c => `"${c}"`).join(', ')
+      : '*';
+    let sql = `SELECT ${cols}\nFROM "${selectedTable}"`;
+    const conds = whereConditions.filter(c => c.column && c.operator);
+    if (conds.length > 0) {
+      const clauses = conds.map(c => {
+        if (c.operator === 'IS NULL' || c.operator === 'IS NOT NULL') {
+          return `"${c.column}" ${c.operator}`;
+        }
+        if (c.operator === 'IN') return `"${c.column}" IN (${c.value || ''})`;
+        return `"${c.column}" ${c.operator} '${c.value || ''}'`;
+      });
+      sql += `\nWHERE ${clauses.join('\n  AND ')}`;
+    }
+    if (orderByColumn) sql += `\nORDER BY "${orderByColumn}" ${orderByDirection}`;
+    if (limit) sql += `\nLIMIT ${limit}`;
+    if (offset) sql += `\nOFFSET ${offset}`;
+    setGeneratedQuery(sql + ';');
+  }, [selectedTable, selectedColumns, whereConditions,
+    orderByColumn, orderByDirection, limit, offset]);
+
+  // Auto-select first table when tables list first loads
+  useEffect(() => {
+    if (tables.length > 0 && !selectedTable) {
+      handleTableChange(tables[0].table_name);
+    }
+    // Only run when tables list changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tables]);
 
   const handleTableChange = async (tableName: string) => {
     setSelectedTable(tableName);
@@ -197,7 +232,7 @@ export function QueryBuilderTab({
 
       const data = await onExecuteQuery(params);
       setResult(data);
-      setGeneratedQuery(data.query || '');
+      if (data.query) setGeneratedQuery(data.query);
     } catch (err: unknown) {
       const message =
         err instanceof Error ? err.message : 'Query execution failed';
@@ -240,6 +275,7 @@ export function QueryBuilderTab({
         <FormControl fullWidth className={styles.section}>
           <InputLabel shrink>{selectTableLabel}</InputLabel>
           <Select
+            fullWidth
             value={selectedTable}
             label={selectTableLabel}
             displayEmpty
@@ -464,9 +500,18 @@ export function QueryBuilderTab({
       {/* Generated Query Display */}
       {generatedQuery && (
         <Paper className={styles.generatedQuery}>
-          <Typography variant="subtitle2" gutterBottom>
-            Generated SQL:
-          </Typography>
+          <Box className={styles.generatedQueryHeader}>
+            <Typography variant="subtitle2">Generated SQL</Typography>
+            <Button size="small" variant="outlined"
+              onClick={() => {
+                navigator.clipboard.writeText(generatedQuery).then(() => {
+                  setSqlCopied(true);
+                  setTimeout(() => setSqlCopied(false), 1500);
+                });
+              }}>
+              {sqlCopied ? '✓ Copied' : 'Copy'}
+            </Button>
+          </Box>
           <Box component="pre" className={styles.generatedQueryCode}>
             {generatedQuery}
           </Box>

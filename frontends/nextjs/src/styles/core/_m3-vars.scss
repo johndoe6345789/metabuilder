@@ -1,0 +1,59 @@
+// M3 alias layer — maps --mat-sys-* to the shadcn-style base vars.
+// All actual values come from packages/global/styles/tokens.json
+// via PackageStyleLoader. No hardcoded colors here.
+
+:root {
+  // Surface / background
+  --mat-sys-background:             var(--background);
+  --mat-sys-on-background:          var(--foreground);
+  --mat-sys-surface:                var(--card);
+  --mat-sys-on-surface:             var(--card-foreground);
+  --mat-sys-surface-container:      var(--muted);
+  --mat-sys-surface-container-high: var(--muted);
+  --mat-sys-surface-container-low:  var(--background);
+  --mat-sys-surface-variant:        var(--muted);
+  --mat-sys-on-surface-variant:     var(--muted-foreground);
+
+  // Primary / accent
+  --mat-sys-primary:                var(--primary);
+  --mat-sys-on-primary:             var(--primary-foreground);
+  --mat-sys-primary-container:      var(--muted);
+  --mat-sys-on-primary-container:   var(--foreground);
+
+  // Secondary
+  --mat-sys-secondary:              var(--secondary);
+  --mat-sys-on-secondary:           var(--secondary-foreground);
+  --mat-sys-secondary-container:    var(--muted);
+  --mat-sys-on-secondary-container: var(--foreground);
+
+  // Tertiary / accent
+  --mat-sys-tertiary:               var(--accent);
+  --mat-sys-on-tertiary:            var(--accent-foreground);
+  --mat-sys-tertiary-container:     var(--muted);
+  --mat-sys-on-tertiary-container:  var(--foreground);
+
+  // Error
+  --mat-sys-error:                  var(--destructive);
+  --mat-sys-on-error:               var(--destructive-foreground);
+  --mat-sys-error-container:        var(--muted);
+  --mat-sys-on-error-container:     var(--foreground);
+
+  // Outline / border
+  --mat-sys-outline:                var(--border);
+  --mat-sys-outline-variant:        var(--input);
+
+  // Inverse
+  --mat-sys-inverse-surface:        var(--foreground);
+  --mat-sys-inverse-on-surface:     var(--background);
+  --mat-sys-inverse-primary:        var(--primary-foreground);
+
+  // Sidebar aliases (used by Sidebar.module.scss)
+  --sidebar-bg:                     var(--sidebar);
+  --sidebar-fg:                     var(--sidebar-foreground);
+  --sidebar-active-bg:              var(--sidebar-accent);
+
+  // Typography
+  --mat-sys-body-font:    var(--font-sans, 'Space Grotesk', sans-serif);
+  --mat-sys-heading-font: var(--font-sans, 'Space Grotesk', sans-serif);
+  --mat-sys-mono-font:    var(--font-mono, 'JetBrains Mono', monospace);
+}

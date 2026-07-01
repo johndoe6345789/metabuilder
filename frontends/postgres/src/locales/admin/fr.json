@@ -24,7 +24,8 @@
       "columnManager": {
         "title": "Gestion des colonnes",
         "selectTable": "Sélectionnez une table pour gérer ses colonnes",
-        "loading": "Chargement…"
+        "loading": "Chargement…",
+        "description": "Inspectez et modifiez les colonnes, types et valeurs par défaut"
       },
       "constraints": {
         "title": "Gestion des contraintes",

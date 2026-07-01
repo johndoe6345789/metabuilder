@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import '@/styles/admin-global.scss';
 import styles from './admin.module.scss';
 import AdminI18nProvider from '@/components/admin/AdminI18nProvider';
+import { Providers } from '@/app/providers';
 
 export const metadata: Metadata = {
   title: 'Postgres Admin Panel',
@@ -41,7 +42,9 @@ export default function AdminLayout({
         />
       </head>
       <body className={styles.adminShell} suppressHydrationWarning>
-        <AdminI18nProvider>{children}</AdminI18nProvider>
+        <Providers>
+          <AdminI18nProvider>{children}</AdminI18nProvider>
+        </Providers>
       </body>
     </html>
   );

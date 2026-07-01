@@ -56,6 +56,10 @@ COPY libraries/redux/persist/ ./libraries/redux/persist/
 COPY libraries/redux/services/ ./libraries/redux/services/
 COPY libraries/redux/timing-utils/ ./libraries/redux/timing-utils/
 
+# ── Package design tokens (tokens.json drives all CSS vars) ─────────────────
+# Only styles subdirs needed; packages/ root contains large non-style assets
+COPY packages/ ./packages/
+
 # ── Frontend App (the app itself) ────────────────────────────────────────────
 COPY frontends/nextjs/ ./frontends/nextjs/
 
@@ -74,7 +78,9 @@ RUN for ws in libraries/redux/core libraries/redux/slices \
     npm run build -w "$ws" --if-present 2>&1 || { echo "ERROR: $ws build failed"; exit 1; }; \
 done
 
-# Build the app
+# Build the app (NEXT_PUBLIC_* vars baked into bundle at build time)
+ARG NEXT_PUBLIC_DBAL_API_URL=https://metabuilder.wardcrew.com/api/dbal
+ENV NEXT_PUBLIC_DBAL_API_URL=$NEXT_PUBLIC_DBAL_API_URL
 RUN cd frontends/nextjs && npx next build --turbopack
 
 # --- Runtime stage ---
@@ -83,6 +89,8 @@ WORKDIR /app
 
 COPY --from=builder /app/frontends/nextjs/.next/standalone ./
 COPY --from=builder /app/frontends/nextjs/.next/static ./frontends/nextjs/.next/static
+# Package tokens available at runtime for /api/packages/styles
+COPY --from=builder /app/packages ./packages
 
 ENV NODE_ENV=production
 ENV PORT=3000

@@ -4,6 +4,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { PostHogProvider } from '@/components/analytics/PostHogProvider';
 import { DemoBadge } from '@/components/DemoBadge';
+import { Providers } from '@/app/providers';
 import { routing } from '@/libs/I18nRouting';
 import '@/styles/global.scss';
 
@@ -52,11 +53,12 @@ export default async function RootLayout(props: {
     <html lang={locale}>
       <body>
         <NextIntlClientProvider>
-          <PostHogProvider>
-            {props.children}
-          </PostHogProvider>
-
-          <DemoBadge />
+          <Providers>
+            <PostHogProvider>
+              {props.children}
+            </PostHogProvider>
+            <DemoBadge />
+          </Providers>
         </NextIntlClientProvider>
       </body>
     </html>

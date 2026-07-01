@@ -1,63 +1,93 @@
 'use client'
 
-import { Container, Typography, Button, Stack, Paper, Chip, Avatar } from '@/m3'
+import s from './WelcomePage.module.scss'
 
-/**
- * WelcomePage - Level 1 Public Landing
- *
- * Mirrors old/src/components/Level1.tsx public landing page.
- * Shows the 5-level architecture overview and sign-in CTAs.
- */
+const LEVELS = [
+  {
+    level: 1, name: 'Public Website',
+    desc: 'Beautiful landing pages with responsive design and navigation',
+    detail: 'Perfect for marketing sites, portfolios, and public-facing content',
+    color: '#2196f3',
+  },
+  {
+    level: 2, name: 'User Area',
+    desc: 'Authenticated dashboards with profiles and comment systems',
+    detail: 'User registration, profile management, and interactive features',
+    color: '#4caf50',
+  },
+  {
+    level: 3, name: 'Admin Panel',
+    desc: 'Full data management with CRUD operations and filters',
+    detail: 'Complete control over data models with list views and editing',
+    color: '#ff9800',
+  },
+  {
+    level: 4, name: 'God Builder',
+    desc: 'Meta-builder with workflows, schemas, and Lua scripting',
+    detail: 'Design and generate entire applications declaratively',
+    color: '#9c27b0',
+  },
+  {
+    level: 5, name: 'Super God',
+    desc: 'Multi-tenant control and platform administration',
+    detail: 'Manage tenants, rotate credentials, and control the platform',
+    color: '#ffc107',
+  },
+]
+
 export function WelcomePage() {
   return (
-    <Container {...{ maxWidth: 'md', sx: { minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', py: 6 } } as Record<string, unknown>}>
-      <Paper elevation={0} sx={{ textAlign: 'center', p: 4, mb: 4, maxWidth: 600 }}>
-        <div style={{ width: 48, height: 48, borderRadius: 12, background: 'linear-gradient(135deg, var(--primary, #6200ee), var(--accent, #03dac6))', margin: '0 auto 16px' }} />
-        <Typography variant="h3" gutterBottom>
-          Build Anything, Visually
-        </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-          A 5-level meta-architecture for creating entire applications through visual workflows,
-          schema editors, and embedded scripting. No code required.
-        </Typography>
-        <Stack direction="row" spacing={2} sx={{ justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Button variant="contained" color="primary" href="/app">
-            Get Started
-          </Button>
-          <Button variant="outlined" href="/app/ui/login">
-            Sign In
-          </Button>
-          <Button variant="text" href="/dbal-daemon">
-            DBAL Status
-          </Button>
-        </Stack>
-      </Paper>
+    <div className={s.root}>
+      <nav className={s.nav}>
+        <div className={s.navInner}>
+          <a className={s.brand} href="#">
+            <div className={s.brandIcon} />
+            <span className={s.brandName}>MetaBuilder</span>
+          </a>
 
-      {/* Five levels of power (from Level1.tsx) */}
-      <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
-        Five Levels of Power
-      </Typography>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12, width: '100%', maxWidth: 700 }}>
-        {[
-          { level: 1, name: 'Public Website', desc: 'Landing pages and public content', color: '#2196f3' },
-          { level: 2, name: 'User Area', desc: 'Profiles, dashboards, comments', color: '#4caf50' },
-          { level: 3, name: 'Admin Panel', desc: 'Data management and CRUD', color: '#ff9800' },
-          { level: 4, name: 'God Builder', desc: 'Schemas, workflows, Lua', color: '#9c27b0' },
-          { level: 5, name: 'Super God', desc: 'Multi-tenant control', color: '#ffc107' },
-        ].map(item => (
-          <Paper key={item.level} sx={{ p: 2, borderTop: `3px solid ${item.color}` }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-              <Avatar sx={{ width: 28, height: 28, bgcolor: item.color, fontSize: '0.8rem' }}>
+          <div className={s.navLinks}>
+            <a className={s.navLink} href="#features">Features</a>
+            <a className={s.navLink} href="#levels">Levels</a>
+          </div>
+
+          <div className={s.navCtas}>
+            <a className={s.btnOutline} href="/app/ui/login">Sign In</a>
+            <a className={s.btnFilled} href="/app/app/dashboard">Dashboard</a>
+          </div>
+        </div>
+      </nav>
+
+      <section className={s.hero}>
+        <div className={s.heroLogo} />
+        <h1 className={s.heroHeadline}>Build Anything, Visually</h1>
+        <p className={s.heroSub}>
+          A 5-level meta-architecture for creating entire applications through
+          visual workflows, schema editors, and embedded scripting. No code
+          required.
+        </p>
+        <div className={s.heroCtas}>
+          <a className={s.ctaPrimary} href="/app/ui/login">Get Started</a>
+          <a className={s.ctaSecondary} href="/app/app/dashboard">Sign In</a>
+        </div>
+      </section>
+
+      <section id="levels" className={s.levels}>
+        <h2 className={s.levelsTitle}>Five Levels of Power</h2>
+        <div className={s.levelsGrid}>
+          {LEVELS.map(item => (
+            <div key={item.level} className={s.levelCard}
+              style={{ borderColor: `color-mix(in srgb, ${item.color} 40%, var(--border))` }}
+            >
+              <div className={s.levelBadge} style={{ background: item.color }}>
                 {item.level}
-              </Avatar>
-              <Typography variant="subtitle2">{item.name}</Typography>
+              </div>
+              <p className={s.levelName}>{item.name}</p>
+              <p className={s.levelDesc}>{item.desc}</p>
+              <p className={s.levelDetail}>{item.detail}</p>
             </div>
-            <Typography variant="caption" color="text.secondary">
-              {item.desc}
-            </Typography>
-          </Paper>
-        ))}
-      </div>
-    </Container>
+          ))}
+        </div>
+      </section>
+    </div>
   )
 }

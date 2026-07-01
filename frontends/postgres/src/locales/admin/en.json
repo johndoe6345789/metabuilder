@@ -23,20 +23,23 @@
     "view": {
       "columnManager": {
         "title": "Column Management",
+        "description": "Inspect and modify table columns, types, and defaults",
         "selectTable": "Select a table to manage its columns",
         "loading": "Loading…"
       },
       "constraints": {
         "title": "Constraint Management",
         "description": "Add and manage table constraints (PRIMARY KEY, UNIQUE, CHECK)",
-        "addConstraint": "Add Constraint"
+        "addConstraint": "Add Constraint",
+        "selectTable": "Select a table to view its constraints"
       },
       "indexes": {
         "title": "Index Management",
         "description": "Create and manage database indexes for performance optimization",
         "noIndexes": "No indexes found for table \"{table}\"",
         "dropIndex": "Drop Index",
-        "dropIndexConfirm": "Are you sure you want to drop the index \"{name}\"? This action cannot be undone."
+        "dropIndexConfirm": "Are you sure you want to drop the index \"{name}\"? This action cannot be undone.",
+        "selectTable": "Select a table to view its indexes"
       },
       "tableManager": {
         "title": "Table Management",

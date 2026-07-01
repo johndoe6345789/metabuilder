@@ -155,7 +155,7 @@ export interface ListItemIconProps extends React.HTMLAttributes<HTMLSpanElement>
 export const ListItemIcon: React.FC<ListItemIconProps> = ({ children, className = '', style, ...props }) => (
   <span
     className={`${s('mdc-list-item__start')} ${s('mat-mdc-list-item-icon')} ${className}`.trim()}
-    style={{ minWidth: 40, flexShrink: 0, display: 'flex', alignItems: 'center', ...style }}
+    style={{ flexShrink: 0, display: 'flex', alignItems: 'center', ...style }}
     {...props}
   >
     {children}

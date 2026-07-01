@@ -1,0 +1,288 @@
+.root {
+  min-height: 100vh;
+  // Subtle gradient tinted with primary/accent over background
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--primary, #6200ee) 8%, var(--background)) 0%,
+    var(--background) 50%,
+    color-mix(in srgb, var(--accent, #03dac6) 6%, var(--background)) 100%
+  );
+}
+
+// ── Navbar ────────────────────────────────────────────────────────────────────
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid var(--border);
+  background: oklch(from var(--card) l c h / 0.85);
+  backdrop-filter: blur(12px);
+}
+
+.navInner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 32px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--foreground);
+}
+
+.brandIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  flex-shrink: 0;
+}
+
+.brandName {
+  font-family: var(--mat-sys-heading-font, 'Space Grotesk', sans-serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navLink {
+  font-size: 0.875rem;
+  color: color-mix(in srgb, var(--foreground) 65%, transparent);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: color 150ms, background 150ms;
+
+  &:hover {
+    color: var(--foreground);
+    background: color-mix(in srgb, var(--foreground) 6%, transparent);
+  }
+}
+
+.navCtas {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btnOutline {
+  padding: 7px 20px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--foreground);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 150ms, border-color 150ms;
+
+  &:hover {
+    background: color-mix(in srgb, var(--foreground) 6%, transparent);
+    border-color: var(--primary);
+  }
+}
+
+.btnFilled {
+  padding: 7px 20px;
+  border-radius: 99px;
+  border: none;
+  background: var(--primary);
+  color: var(--primary-foreground, #fff);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: opacity 150ms, box-shadow 150ms;
+
+  &:hover {
+    opacity: 0.9;
+    box-shadow: 0 4px 16px color-mix(in srgb, var(--primary) 40%, transparent);
+  }
+}
+
+// ── Hero ─────────────────────────────────────────────────────────────────────
+
+.hero {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 96px 32px 80px;
+  text-align: center;
+}
+
+.heroLogo {
+  width: 80px;
+  height: 80px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  margin: 0 auto 32px;
+  box-shadow:
+    0 8px 32px color-mix(in srgb, var(--primary) 35%, transparent),
+    0 2px 8px color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+.heroHeadline {
+  font-family: var(--mat-sys-heading-font, 'Space Grotesk', sans-serif);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 0 0 20px;
+  background: linear-gradient(
+    135deg,
+    var(--primary) 0%,
+    var(--accent) 60%,
+    var(--primary) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.heroSub {
+  font-size: 1.2rem;
+  color: color-mix(in srgb, var(--foreground) 60%, transparent);
+  max-width: 600px;
+  margin: 0 auto 40px;
+  line-height: 1.6;
+}
+
+.heroCtas {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.ctaPrimary {
+  padding: 13px 32px;
+  border-radius: 99px;
+  border: none;
+  background: var(--primary);
+  color: var(--primary-foreground, #fff);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 150ms, transform 150ms, box-shadow 150ms;
+
+  &:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--primary) 40%, transparent);
+  }
+}
+
+.ctaSecondary {
+  padding: 13px 32px;
+  border-radius: 99px;
+  border: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
+  background: color-mix(in srgb, var(--card) 70%, transparent);
+  backdrop-filter: blur(8px);
+  color: var(--foreground);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 150ms, border-color 150ms;
+
+  &:hover {
+    background: var(--card);
+    border-color: color-mix(in srgb, var(--foreground) 35%, transparent);
+  }
+}
+
+// ── Levels section ────────────────────────────────────────────────────────────
+
+.levels {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 32px 96px;
+}
+
+.levelsTitle {
+  font-family: var(--mat-sys-heading-font, 'Space Grotesk', sans-serif);
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin: 0 0 48px;
+  color: var(--foreground);
+}
+
+.levelsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+
+  @media (max-width: 900px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 580px) { grid-template-columns: 1fr; }
+}
+
+.levelCard {
+  background: color-mix(in srgb, var(--card) 90%, transparent);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid color-mix(in srgb, var(--border) 60%, transparent);
+  border-radius: 24px;
+  padding: 28px;
+  transition: border-color 200ms, transform 200ms, box-shadow 200ms;
+  cursor: default;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px oklch(0 0 0 / 0.12);
+  }
+}
+
+.levelBadge {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 12px oklch(0 0 0 / 0.2);
+}
+
+.levelName {
+  font-family: var(--mat-sys-heading-font, 'Space Grotesk', sans-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: var(--foreground);
+}
+
+.levelDesc {
+  font-size: 0.875rem;
+  color: color-mix(in srgb, var(--foreground) 60%, transparent);
+  line-height: 1.5;
+  margin: 0 0 12px;
+}
+
+.levelDetail {
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--foreground) 45%, transparent);
+  line-height: 1.5;
+}

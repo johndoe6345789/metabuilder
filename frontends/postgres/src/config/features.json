@@ -1313,12 +1313,19 @@
     },
     "TableManagerTab": {
       "component": "Box",
+      "props": {
+        "sx": {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": 2,
+          "mb": 3
+        }
+      },
       "children": [
         {
           "component": "Typography",
           "props": {
             "variant": "h5",
-            "gutterBottom": true,
             "text": "{{t.title}}"
           }
         },
@@ -1328,7 +1335,6 @@
           "props": {
             "variant": "body2",
             "color": "text.secondary",
-            "gutterBottom": true,
             "text": "{{t.description}}"
           }
         },
@@ -1336,8 +1342,8 @@
           "component": "Box",
           "props": {
             "sx": {
-              "mt": 1.5,
-              "mb": 1.5
+              "display": "flex",
+              "gap": 2
             }
           },
           "children": [
@@ -1348,9 +1354,6 @@
                 "variant": "contained",
                 "startIcon": "Add",
                 "onClick": "openCreateDialog",
-                "sx": {
-                  "mr": 2
-                },
                 "text": "{{t.createTable}}"
               }
             },

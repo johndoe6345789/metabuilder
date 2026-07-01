@@ -1,10 +1,18 @@
+import { sql } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 import { db } from '@/utils/db';
 import { getSession } from '@/utils/session';
 
-// Validate identifier (table, column, or index name)
 function isValidIdentifier(name: string): boolean {
   return /^[a-z_][a-z0-9_]*$/i.test(name);
+}
+
+async function tableExists(tableName: string): Promise<boolean> {
+  const r = await db.execute(sql`
+    SELECT 1 FROM information_schema.tables
+    WHERE table_schema = 'public' AND table_name = ${tableName}
+  `);
+  return r.rows.length > 0;
 }
 
 // GET - List indexes for a table
@@ -29,15 +37,15 @@ export async function GET(request: Request) {
       );
     }
 
-    if (!isValidIdentifier(tableName)) {
+    if (!await tableExists(tableName)) {
       return NextResponse.json(
-        { error: 'Invalid table name format' },
-        { status: 400 },
+        { error: 'Table not found' },
+        { status: 404 },
       );
     }
 
     // Query PostgreSQL system catalogs for indexes
-    const result = await db.execute(`
+    const result = await db.execute(sql`
       SELECT
         i.relname AS index_name,
         a.attname AS column_name,
@@ -50,7 +58,7 @@ export async function GET(request: Request) {
       JOIN pg_class i ON i.oid = ix.indexrelid
       JOIN pg_am am ON i.relam = am.oid
       JOIN pg_attribute a ON a.attrelid = t.oid AND a.attnum = ANY(ix.indkey)
-      WHERE t.relname = '${tableName}'
+      WHERE t.relname = ${tableName}
         AND t.relkind = 'r'
         AND t.relnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public')
       ORDER BY i.relname, a.attnum
@@ -107,10 +115,10 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!isValidIdentifier(tableName)) {
+    if (!await tableExists(tableName)) {
       return NextResponse.json(
-        { error: 'Invalid table name format' },
-        { status: 400 },
+        { error: 'Table not found' },
+        { status: 404 },
       );
     }
 

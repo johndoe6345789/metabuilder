@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build --webpack",
+    "dev": "node scripts/compile-tokens.mjs && next dev --turbopack",
+    "build": "node scripts/compile-tokens.mjs && next build --webpack",
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

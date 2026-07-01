@@ -1,0 +1,30 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.userRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatarGod { background-color: #9c27b0; }
+.avatarSupergod { background-color: #ffc107; }
+
+.chipGod {
+  background-color: #9c27b0;
+  color: #fff;
+}
+
+.chipSupergod {
+  background-color: #ffc107;
+  color: #fff;
+}

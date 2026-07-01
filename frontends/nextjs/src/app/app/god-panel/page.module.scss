@@ -1,0 +1,9 @@
+.root { max-width: 1200px; margin: 0 auto; }
+.header { margin-bottom: 24px; }
+.headerRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.tabs { margin-bottom: 24px; }

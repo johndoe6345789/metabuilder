@@ -24,7 +24,8 @@
       "columnManager": {
         "title": "列管理",
         "selectTable": "选择一个表以管理其列",
-        "loading": "加载中…"
+        "loading": "加载中…",
+        "description": "检查和修改表列、类型和默认值"
       },
       "constraints": {
         "title": "约束管理",

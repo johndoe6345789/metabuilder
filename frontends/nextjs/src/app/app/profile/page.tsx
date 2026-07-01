@@ -1,56 +1,62 @@
-/**
- * Profile Page (Level 1+: User)
- *
- * Mirrors old/src/components/Level2.tsx profile tab
- * User can view and edit their profile information
- */
 'use client'
 
 import { useState } from 'react'
 import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
 import { LevelGate } from '@/components/layout/LevelGate'
-import {
-  Typography,
-  Paper,
-  Button,
-  TextField,
-  Avatar,
-  Divider,
-} from '@/m3'
+import { Typography, Paper, Button, TextField, Avatar, Divider } from '@/m3'
 import { getRoleLevel } from '@/lib/constants'
 import { getLevelColor } from '@/lib/packages/navigation'
+import s from './page.module.scss'
+
+const DBAL_URL =
+  process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
 function ProfileContent() {
   const auth = useAuthContext()
   const user = auth.user
-  const userLevel = getRoleLevel(user?.role ?? 'user')
-  const levelColor = getLevelColor(userLevel)
+  const levelColor = getLevelColor(getRoleLevel(user?.role ?? 'user'))
 
   const [editing, setEditing] = useState(false)
   const [bio, setBio] = useState(user?.bio ?? '')
   const [email, setEmail] = useState(user?.email ?? '')
+  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle')
 
   const handleSave = () => {
-    // In production, this would call the DBAL API to update the user
-    setEditing(false)
+    if (user?.id == null) return
+    fetch(`${DBAL_URL}/v1/default/core/user/${user.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ email, bio }),
+    })
+      .then(res => {
+        setStatus(res.ok ? 'success' : 'error')
+        if (res.ok) setEditing(false)
+      })
+      .catch(() => { setStatus('error') })
   }
 
   return (
-    <div style={{ maxWidth: 680, margin: '0 auto' }}>
-      <Typography variant="h4" gutterBottom>
-        Profile
-      </Typography>
-
-      <Paper sx={{ p: 3 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
+    <div className={s.root}>
+      <Typography variant="h4" gutterBottom>Profile</Typography>
+      <Paper>
+        <div className={s.cardHeader}>
           <Typography variant="h6">Profile Information</Typography>
           {!editing ? (
-            <Button variant="outlined" size="small" onClick={() => { setEditing(true) }}>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => { setEditing(true) }}
+            >
               Edit Profile
             </Button>
           ) : (
-            <div style={{ display: 'flex', gap: 8 }}>
-              <Button variant="outlined" size="small" onClick={() => { setEditing(false) }}>
+            <div className={s.editButtons}>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => { setEditing(false) }}
+              >
                 Cancel
               </Button>
               <Button variant="contained" size="small" onClick={handleSave}>
@@ -60,19 +66,31 @@ function ProfileContent() {
           )}
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24 }}>
-          <Avatar sx={{ width: 80, height: 80, bgcolor: levelColor, fontSize: '2rem' }}>
+        {status !== 'idle' && (
+          <div
+            className={`${s.statusMsg} ${
+              status === 'success' ? s.statusSuccess : s.statusError
+            }`}
+          >
+            {status === 'success'
+              ? 'Profile saved successfully.'
+              : 'Failed to save profile. Please try again.'}
+          </div>
+        )}
+
+        <div className={s.avatarRow}>
+          <Avatar style={{ backgroundColor: levelColor }}>
             {(user?.username ?? 'U').charAt(0).toUpperCase()}
           </Avatar>
           <div>
             <Typography variant="h6">{user?.username}</Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ textTransform: 'capitalize' }}>
+            <Typography variant="body2" color="text.secondary">
               {user?.role} Account
             </Typography>
           </div>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div className={s.fields}>
           <TextField
             label="Username"
             value={user?.username ?? ''}
@@ -84,7 +102,7 @@ function ProfileContent() {
             label="Email"
             type="email"
             value={editing ? email : (user?.email ?? '')}
-            onChange={(e) => { setEmail(e.target.value) }}
+            onChange={e => { setEmail(e.target.value) }}
             disabled={!editing}
             fullWidth
             size="small"
@@ -92,7 +110,7 @@ function ProfileContent() {
           <TextField
             label="Bio"
             value={editing ? bio : (user?.bio ?? '')}
-            onChange={(e) => { setBio(e.target.value) }}
+            onChange={e => { setBio(e.target.value) }}
             disabled={!editing}
             fullWidth
             multiline
@@ -100,24 +118,18 @@ function ProfileContent() {
             size="small"
             placeholder="Tell us about yourself..."
           />
-          <TextField
-            label="Account Created"
-            value="--"
-            disabled
-            fullWidth
-            size="small"
-          />
         </div>
 
-        <Divider sx={{ my: 3 }} />
-
-        <Typography variant="subtitle2" gutterBottom>
-          Security
-        </Typography>
+        <Divider />
+        <Typography variant="subtitle2" gutterBottom>Security</Typography>
         <Button variant="outlined" size="small">
           Request New Password via Email
         </Button>
-        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
+        <Typography
+          variant="caption"
+          color="text.secondary"
+          className={s.captionBlock}
+        >
           A new randomly generated password will be sent to your email address
         </Typography>
       </Paper>

@@ -50,6 +50,7 @@ export function useDashboardContent(section: string, table: string) {
   useEffect(() => { fetchTables(); }, [fetchTables]);
 
   const handleTableClick = (t: string) => navigate('tables', t);
+  const handleSchemaTableClick = (t: string) => navigate('column-manager', t);
 
   const handleLogout = async () => {
     try {
@@ -120,7 +121,8 @@ export function useDashboardContent(section: string, table: string) {
     tables, queryResult, loading, error, successMessage, mobileOpen,
     navItems, tabValue, selectedTable,
     setMobileOpen, setSuccessMessage, setError, navigate, fetchTables,
-    handleTableClick, handleExecuteQuery, handleExecuteBuiltQuery,
+    handleTableClick, handleSchemaTableClick,
+    handleExecuteQuery, handleExecuteBuiltQuery,
     handleLogout,
     handleCreateTable: makeHandler(tm, 'POST',
       (n, cols) => ({ tableName: n, columns: cols })),

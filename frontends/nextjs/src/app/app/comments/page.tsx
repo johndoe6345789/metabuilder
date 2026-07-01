@@ -1,23 +1,13 @@
-/**
- * Comments Page (Level 1+: User)
- *
- * Mirrors old/src/components/Level2.tsx comments tab
- * Community discussion with post/delete capabilities
- */
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
 import { LevelGate } from '@/components/layout/LevelGate'
-import {
-  Typography,
-  Paper,
-  Button,
-  TextField,
-  Avatar,
-  Divider,
-  Chip,
-} from '@/m3'
+import { Typography, Paper, Button, TextField, Avatar } from '@/m3'
+import s from './page.module.scss'
+
+const DBAL_URL =
+  process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
 interface Comment {
   id: string
@@ -27,82 +17,140 @@ interface Comment {
   createdAt: number
 }
 
+interface DbalComment {
+  id: string
+  createdBy: string
+  content: string
+  createdAt?: number
+}
+
 function CommentsContent() {
   const auth = useAuthContext()
   const user = auth.user
   const [newComment, setNewComment] = useState('')
-  const [comments, setComments] = useState<Comment[]>([
-    {
-      id: 'demo_1',
-      userId: 'demo',
-      username: 'demo',
-      content: 'Welcome to MetaBuilder! This is a sample comment.',
-      createdAt: Date.now() - 86400000,
-    },
-  ])
+  const [comments, setComments] = useState<Comment[]>([])
+
+  useEffect(() => {
+    fetch(`${DBAL_URL}/v1/default/core/profile_comment`, {
+      credentials: 'include',
+      signal: AbortSignal.timeout(5000),
+    })
+      .then(res => (res.ok ? res.json() : null))
+      .then((json: { data?: DbalComment[] } | null) => {
+        if (json?.data != null) {
+          setComments(
+            json.data.map(c => ({
+              id: c.id,
+              userId: c.createdBy,
+              username: c.createdBy,
+              content: c.content,
+              createdAt: c.createdAt ?? Date.now(),
+            })),
+          )
+        }
+      })
+      .catch(() => {
+        setComments([
+          {
+            id: 'demo_1',
+            userId: 'demo',
+            username: 'demo',
+            content: 'Welcome to MetaBuilder!',
+            createdAt: Date.now() - 86400000,
+          },
+        ])
+      })
+  }, [])
 
   const handlePost = () => {
     if (newComment.trim() === '') return
-    const comment: Comment = {
-      id: `comment_${Date.now()}`,
-      userId: user?.id ?? 'unknown',
-      username: user?.username ?? 'Anonymous',
-      content: newComment,
-      createdAt: Date.now(),
-    }
-    setComments(prev => [...prev, comment])
-    setNewComment('')
+    fetch(`${DBAL_URL}/v1/default/core/profile_comment`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        content: newComment,
+        createdBy: user?.id ?? 'unknown',
+      }),
+    })
+      .then(res => (res.ok ? res.json() : null))
+      .then((json: { data?: DbalComment } | null) => {
+        const id = json?.data?.id ?? `local_${Date.now()}`
+        setComments(prev => [
+          ...prev,
+          {
+            id,
+            userId: user?.id ?? 'unknown',
+            username: user?.username ?? 'Anonymous',
+            content: newComment,
+            createdAt: Date.now(),
+          },
+        ])
+        setNewComment('')
+      })
+      .catch(() => { /* noop — optimistic update skipped on error */ })
   }
 
   const handleDelete = (id: string) => {
-    setComments(prev => prev.filter(c => c.id !== id))
+    fetch(`${DBAL_URL}/v1/default/core/profile_comment/${id}`, {
+      method: 'DELETE',
+      credentials: 'include',
+    })
+      .then(() => {
+        setComments(prev => prev.filter(c => c.id !== id))
+      })
+      .catch(() => { /* noop */ })
   }
 
   const myComments = comments.filter(c => c.userId === user?.id)
 
   return (
-    <div style={{ maxWidth: 800, margin: '0 auto' }}>
-      <Typography variant="h4" gutterBottom>
-        Comments
-      </Typography>
+    <div className={s.root}>
+      <Typography variant="h4" gutterBottom>Comments</Typography>
 
-      {/* Post form */}
-      <Paper sx={{ p: 3, mb: 3 }}>
+      <Paper>
         <Typography variant="h6" gutterBottom>Post a Comment</Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+        <Typography variant="body2" color="text.secondary">
           Share your thoughts with the community
         </Typography>
-        <TextField
-          value={newComment}
-          onChange={(e) => { setNewComment(e.target.value) }}
-          placeholder="Write your comment here..."
-          fullWidth
-          multiline
-          rows={3}
-          size="small"
-          sx={{ mb: 2 }}
-        />
+        <div className={s.postField}>
+          <TextField
+            value={newComment}
+            onChange={e => { setNewComment(e.target.value) }}
+            placeholder="Write your comment here..."
+            fullWidth
+            multiline
+            rows={3}
+            size="small"
+          />
+        </div>
         <Button variant="contained" size="small" onClick={handlePost}>
           Post Comment
         </Button>
       </Paper>
 
-      {/* My comments */}
-      <Paper sx={{ p: 3, mb: 3 }}>
+      <Paper>
         <Typography variant="h6" gutterBottom>
           Your Comments ({myComments.length})
         </Typography>
         {myComments.length === 0 ? (
-          <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 4 }}>
-            You have not posted any comments yet
-          </Typography>
+          <div className={s.empty}>
+            <Typography variant="body2" color="text.secondary">
+              You have not posted any comments yet
+            </Typography>
+          </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div className={s.list}>
             {myComments.map(comment => (
-              <Paper key={comment.id} variant="outlined" sx={{ p: 2 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <Paper key={comment.id} variant="outlined">
+                <div className={s.commentRow}>
                   <Typography variant="body2">{comment.content}</Typography>
-                  <Button variant="text" size="small" color="error" onClick={() => { handleDelete(comment.id) }}>
+                  <Button
+                    variant="text"
+                    size="small"
+                    color="error"
+                    onClick={() => { handleDelete(comment.id) }}
+                  >
                     Delete
                   </Button>
                 </div>
@@ -115,26 +163,25 @@ function CommentsContent() {
         )}
       </Paper>
 
-      {/* All comments */}
-      <Paper sx={{ p: 3 }}>
+      <Paper>
         <Typography variant="h6" gutterBottom>
           All Comments ({comments.length})
         </Typography>
         {comments.length === 0 ? (
-          <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 4 }}>
-            No comments yet. Be the first to post!
-          </Typography>
+          <div className={s.empty}>
+            <Typography variant="body2" color="text.secondary">
+              No comments yet. Be the first to post!
+            </Typography>
+          </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div className={s.list}>
             {comments.map(comment => (
-              <Paper key={comment.id} variant="outlined" sx={{ p: 2 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                  <Avatar sx={{ width: 24, height: 24, fontSize: '0.7rem' }}>
+              <Paper key={comment.id} variant="outlined">
+                <div className={s.authorRow}>
+                  <Avatar>
                     {comment.username.charAt(0).toUpperCase()}
                   </Avatar>
-                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                    {comment.username}
-                  </Typography>
+                  <Typography variant="body2">{comment.username}</Typography>
                   <Typography variant="caption" color="text.secondary">
                     {new Date(comment.createdAt).toLocaleDateString()}
                   </Typography>
