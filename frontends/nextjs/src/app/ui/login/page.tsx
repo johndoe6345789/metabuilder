@@ -8,6 +8,19 @@ const BASE = typeof window !== 'undefined'
   ? (window.location.pathname.startsWith('/app') ? '/app' : '')
   : '/app'
 
+async function doLogin(
+  identifier: string,
+  password: string,
+): Promise<{ success: boolean; error?: string }> {
+  const res = await fetch(`${BASE}/api/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ identifier, password }),
+  })
+  return res.json() as Promise<{ success: boolean; error?: string }>
+}
+
 export default function LoginPage() {
   const router = useRouter()
   const [username, setUsername] = useState('')
@@ -20,13 +33,7 @@ export default function LoginPage() {
     setError('')
     setLoading(true)
     try {
-      const res = await fetch(`${BASE}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ identifier: username, password }),
-      })
-      const json = await res.json() as { success?: boolean; error?: string }
+      const json = await doLogin(username, password)
       if (!json.success) {
         setError(json.error ?? 'Invalid username or password.')
         return
@@ -34,6 +41,31 @@ export default function LoginPage() {
       router.replace('/app/dashboard')
     } catch {
       setError('Could not connect. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleTurboLogin = async () => {
+    setError('')
+    setLoading(true)
+    try {
+      const text = await navigator.clipboard.readText()
+      const payload = JSON.parse(text) as { user?: string; pass?: string }
+      if (!payload.user || !payload.pass) {
+        setError('Clipboard does not contain a valid Turbo Login payload.')
+        return
+      }
+      setUsername(payload.user)
+      setPassword(payload.pass)
+      const json = await doLogin(payload.user, payload.pass)
+      if (!json.success) {
+        setError(json.error ?? 'Invalid username or password.')
+        return
+      }
+      router.replace('/app/dashboard')
+    } catch {
+      setError('No valid Turbo Login payload in clipboard.')
     } finally {
       setLoading(false)
     }
@@ -81,6 +113,13 @@ export default function LoginPage() {
             {loading ? 'Signing in…' : 'Sign In'}
           </button>
         </form>
+
+        <div className={s.divider}><span>or</span></div>
+
+        <button className={s.turbo} type="button" disabled={loading}
+          onClick={() => { void handleTurboLogin() }}>
+          ⚡ Turbo Login
+        </button>
 
         <a className={s.back} href="/">← Back to home</a>
       </div>

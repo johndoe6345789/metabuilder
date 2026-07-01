@@ -112,6 +112,42 @@
   &:disabled { opacity: 0.6; cursor: not-allowed; }
 }
 
+.divider {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  margin-top: 4px;
+
+  &::before, &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+}
+
+.turbo {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  color: var(--primary);
+  border: 1.5px solid var(--primary);
+  border-radius: 8px;
+  font-family: var(--font-sans, inherit);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 150ms ease, opacity 150ms ease;
+
+  &:hover:not(:disabled) {
+    background: oklch(from var(--primary) l c h / 0.08);
+  }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
 .back {
   font-size: 0.8125rem;
   color: var(--muted-foreground);
