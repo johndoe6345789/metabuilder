@@ -12,7 +12,7 @@
       "profilePicture": null,
       "bio": "System Super Administrator (Level 5)",
       "createdAt": 0,
-      "tenantId": null,
+      "tenantId": "system",
       "passwordChangeTimestamp": null,
       "firstLogin": false
     },
@@ -25,7 +25,7 @@
       "profilePicture": null,
       "bio": "God Builder — application architect (Level 4)",
       "createdAt": 0,
-      "tenantId": null,
+      "tenantId": "system",
       "passwordChangeTimestamp": null,
       "firstLogin": false
     },
@@ -38,7 +38,7 @@
       "profilePicture": null,
       "bio": "System Administrator (Level 3)",
       "createdAt": 0,
-      "tenantId": null,
+      "tenantId": "system",
       "passwordChangeTimestamp": null,
       "firstLogin": false
     },
@@ -51,7 +51,7 @@
       "profilePicture": null,
       "bio": "Content moderator (Level 2)",
       "createdAt": 0,
-      "tenantId": null,
+      "tenantId": "system",
       "passwordChangeTimestamp": null,
       "firstLogin": false
     },
@@ -64,7 +64,7 @@
       "profilePicture": null,
       "bio": "Demo user account (Level 1)",
       "createdAt": 0,
-      "tenantId": null,
+      "tenantId": "system",
       "passwordChangeTimestamp": null,
       "firstLogin": false
     },
@@ -77,7 +77,7 @@
       "profilePicture": null,
       "bio": "Test user for E2E tests and development (Level 1)",
       "createdAt": 0,
-      "tenantId": null,
+      "tenantId": "system",
       "passwordChangeTimestamp": null,
       "firstLogin": false
     }

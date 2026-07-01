@@ -111,7 +111,9 @@ function createOps(entityName: string): EntityOps {
       const params = new URLSearchParams()
       if (options?.filter != null) {
         for (const [k, v] of Object.entries(options.filter)) {
-          if (v !== undefined && v !== null) params.set(k, String(v as string | number | boolean))
+          if (v !== undefined && v !== null) {
+            params.set(`filter.${k}`, String(v as string | number | boolean))
+          }
         }
       }
       if (options?.limit !== undefined) params.set('_limit', String(options.limit))

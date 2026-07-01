@@ -70,7 +70,7 @@ export async function login(identifier: string, password: string): Promise<Login
       process.env.DBAL_API_URL ??
       process.env.DBAL_ENDPOINT ??
       'http://localhost:8080'
-    }/system/access/Credential?username=${encodeURIComponent(user.username)}`
+    }/system/access/Credential?filter.username=${encodeURIComponent(user.username)}`
 
     let credential: DbalCredentialRecord | null = null
     try {
