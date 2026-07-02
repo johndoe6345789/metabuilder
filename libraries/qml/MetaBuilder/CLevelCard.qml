@@ -47,6 +47,7 @@ Rectangle {
 
     radius: 16
     clip: true
+    implicitHeight: cardLayout.implicitHeight + 32
     color: {
         if (level === 5)   return lvlMA.containsMouse ? surfaceAmber : surfaceAmber
         return lvlMA.containsMouse ? surfaceContainerHighest : surfaceContainerHigh
@@ -79,8 +80,9 @@ Rectangle {
     }
 
     ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: 16
+        id: cardLayout
+        anchors { left: parent.left; right: parent.right
+                  top: parent.top; margins: 16 }
         spacing: 8
 
         // 48×48 gradient icon square with white level number
