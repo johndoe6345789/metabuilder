@@ -8,7 +8,6 @@ CDialog {
     objectName: "dialog_add_dropdown"
     Accessible.role: Accessible.Dialog
     Accessible.name: title
-    activeFocusOnTab: true
     title: "Add New Dropdown"
 
     property string dropdownName: ""
@@ -35,7 +34,6 @@ CDialog {
                 "e.g. ticket_types"
             text: dropdownName
             Layout.fillWidth: true
-            activeFocusOnTab: true
             Accessible.role: Accessible.EditableText
             Accessible.name: "Dropdown Name"
             Accessible.description:
@@ -51,7 +49,6 @@ CDialog {
                 + "dropdown be used for?"
             text: dropdownDescription
             Layout.fillWidth: true
-            activeFocusOnTab: true
             Accessible.role: Accessible.EditableText
             Accessible.name: "Description"
             Accessible.description:
@@ -76,7 +73,6 @@ CDialog {
             CButton {
                 text: "Cancel"
                 variant: "ghost"
-                activeFocusOnTab: true
                 Accessible.role: Accessible.Button
                 Accessible.name: "Cancel"
                 Accessible.description:
@@ -109,7 +105,6 @@ CDialog {
                 variant: "primary"
                 enabled:
                     dropdownName.trim() !== ""
-                activeFocusOnTab: true
                 Accessible.role: Accessible.Button
                 Accessible.name: "Create dropdown"
                 Accessible.description:

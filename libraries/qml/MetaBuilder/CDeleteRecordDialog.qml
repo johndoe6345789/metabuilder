@@ -8,7 +8,6 @@ CDialog {
     objectName: "dialog_delete_record"
     Accessible.role: Accessible.Dialog
     Accessible.name: title
-    activeFocusOnTab: true
     title: "Delete " + entity
 
     property string entity: ""
@@ -35,7 +34,6 @@ CDialog {
                 text: "Cancel"
                 variant: "ghost"
                 size: "sm"
-                activeFocusOnTab: true
                 Accessible.role: Accessible.Button
                 Accessible.name: "Cancel"
                 Keys.onReturnPressed: cancelled()
@@ -46,7 +44,6 @@ CDialog {
                 text: "Delete"
                 variant: "danger"
                 size: "sm"
-                activeFocusOnTab: true
                 Accessible.role: Accessible.Button
                 Accessible.name: "Confirm delete"
                 Accessible.description:
