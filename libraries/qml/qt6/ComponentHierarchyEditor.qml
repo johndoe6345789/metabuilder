@@ -20,7 +20,7 @@ Rectangle {
             "qmllib/MetaBuilder/data/"
             + "component-tree-mock.json"
         )
-    )
+    ) || []
     property int selectedIndex: -1
     property int nextNodeId: 13
 
@@ -247,7 +247,7 @@ Rectangle {
                                     "type", type
                                 )
                             }
-                        onVisibleChanged:
+                        onVisibilityChanged:
                             function(vis) {
                                 root.updateNode(
                                     selectedIndex,

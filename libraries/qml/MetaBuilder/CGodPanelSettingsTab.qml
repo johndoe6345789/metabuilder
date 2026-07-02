@@ -76,7 +76,7 @@ Rectangle {
                     Loader {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
-                        source: "ThemeEditor.qml"
+                        source: "../../ThemeEditor.qml"
                     }
 }
             }
@@ -114,7 +114,7 @@ Rectangle {
                     Loader {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
-                        source: "SMTPConfigEditor.qml"
+                        source: "../../SMTPConfigEditor.qml"
                     }
 }
             }

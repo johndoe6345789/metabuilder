@@ -46,7 +46,7 @@ Rectangle {
         Rectangle {
             width: 64; height: 64; radius: 32
             gradient: Gradient {
-                orientation: Gradient.Diagonal
+                orientation: Gradient.Vertical
                 GradientStop { position: 0.0; color: grad.from }
                 GradientStop { position: 1.0; color: grad.to   }
             }

@@ -38,7 +38,7 @@ CCard {
 
         CText {
             variant: "caption"
-            text: root.schemas.length + " schemas total"
+            text: (root.schemas || []).length + " schemas total"
             color: Theme.border
         }
     }

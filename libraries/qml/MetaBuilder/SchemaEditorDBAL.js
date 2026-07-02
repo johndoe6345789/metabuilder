@@ -46,7 +46,7 @@ function loadSchemas(dbal, callback) {
 }
 
 function currentSchema(schemas, idx) {
-    return schemas[idx] || null
+    return (schemas || [])[idx] || null
 }
 
 function currentFields(schemas, idx) {
@@ -136,7 +136,9 @@ function loadJson(relativePath) {
     var xhr = new XMLHttpRequest()
     xhr.open("GET", relativePath, false)
     xhr.send()
-    if (xhr.status === 200 || xhr.status === 0)
-        return JSON.parse(xhr.responseText)
+    if (xhr.status === 200 || xhr.status === 0) {
+        try { return JSON.parse(xhr.responseText) }
+        catch(e) { return [] }
+    }
     return []
 }

@@ -8,6 +8,11 @@ Rectangle {
 
     required property var report
     property bool isDark: false
+    visible: root.report != null
+
+    readonly property var _r: root.report || {
+        type: "", content: "", reporter: "", status: ""
+    }
 
     signal dismiss()
     signal takeAction()
@@ -35,8 +40,8 @@ Rectangle {
             width: 4
             height: 36
             radius: 2
-            color: root.report.type === "spam" ? "#F43F5E" :
-                   root.report.type === "abuse" ? "#EF4444" :
+            color: root._r.type === "spam" ? "#F43F5E" :
+                   root._r.type === "abuse" ? "#EF4444" :
                    "#F59E0B"
         }
 
@@ -44,14 +49,14 @@ Rectangle {
             Layout.fillWidth: true
             spacing: 2
             CText {
-                text: root.report.content
+                text: root._r.content
                 font.pixelSize: 13
                 elide: Text.ElideRight
                 Layout.fillWidth: true
             }
             CText {
-                text: root.report.type + " \u00B7 " + root.report.user + "
-                    \u00B7 " + root.report.reported
+                text: root._r.type + " \u00B7 " + root._r.user + "
+                    \u00B7 " + root._r.reported
                 font.pixelSize: 11
                 color: root.onSurfaceVariant
             }

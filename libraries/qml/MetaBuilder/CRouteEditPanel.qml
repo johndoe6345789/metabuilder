@@ -79,7 +79,7 @@ CCard {
         CRoutePermissionSection {
             permissions: root.route ? root.route.permissions : ""
             level: root.route ? root.route.level : 1
-            onPermissionsChanged: function(
+            onPermissionsEdited: function(
                 value) { root.fieldChanged("permissions", value) }
         }
 

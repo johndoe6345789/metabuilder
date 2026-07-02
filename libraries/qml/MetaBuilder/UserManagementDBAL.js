@@ -12,7 +12,7 @@ function levelForRole(role) {
 }
 
 function countByRole(users, role) {
-    return users.filter(
+    return (users || []).filter(
         function(u) { return u.role === role }
     ).length
 }
@@ -20,7 +20,7 @@ function countByRole(users, role) {
 function filteredUsers(users, searchText,
                       activeRoleFilter) {
     var q = searchText.toLowerCase()
-    return users.filter(function(u) {
+    return (users || []).filter(function(u) {
         var matchesRole =
             activeRoleFilter === "all"
             || u.role === activeRoleFilter
@@ -111,6 +111,7 @@ function loadJson(relativePath) {
     xhr.open("GET", relativePath, false)
     xhr.send()
     if (xhr.status === 200 || xhr.status === 0)
-        return JSON.parse(xhr.responseText)
+        try { return JSON.parse(xhr.responseText) }
+        catch(e) { return [] }
     return []
 }

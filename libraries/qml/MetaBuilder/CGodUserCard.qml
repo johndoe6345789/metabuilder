@@ -11,6 +11,12 @@ CCard {
 
     required property var user
     property bool isDark: false
+    visible: root.user != null
+
+    readonly property var _u: root.user || {
+        username: "", initials: "", level: 0,
+        role: "", tenant: "", status: ""
+    }
 
     signal demote()
 
@@ -20,7 +26,7 @@ CCard {
         Layout.fillWidth: true
         spacing: 16
 
-        CAvatar { initials: root.user.initials }
+        CAvatar { initials: root._u.initials }
 
         ColumnLayout {
             spacing: 4
@@ -28,23 +34,23 @@ CCard {
 
             FlexRow {
                 spacing: 8
-                CText { variant: "subtitle1"; text: root.user.username }
-                CBadge { text: "L" + root.user.level
+                CText { variant: "subtitle1"; text: root._u.username }
+                CBadge { text: "L" + root._u.level
                 badgeColor: Theme.primary }
-                CBadge { text: root.user.role; badgeColor: Theme.secondary }
+                CBadge { text: root._u.role; badgeColor: Theme.secondary }
             }
 
             FlexRow {
                 spacing: 8
-                CText { variant: "caption"; text: "Tenant: " + root.user.tenant
+                CText { variant: "caption"; text: "Tenant: " + root._u.tenant
                 color: Theme.textSecondary }
             }
         }
 
         CStatusBadge {
-            status: root.user.status === "online"
-                ? "success" : root.user.status === "away" ? "warning" : "error"
-            text: root.user.status
+            status: root._u.status === "online"
+                ? "success" : root._u.status === "away" ? "warning" : "error"
+            text: root._u.status
         }
 
         CButton {
@@ -53,10 +59,10 @@ CCard {
             size: "sm"
             activeFocusOnTab: true
             Accessible.role: Accessible.Button
-            Accessible.name: "Manage " + root.user.username
+            Accessible.name: "Manage " + root._u.username
             Accessible.description:
                 "Open management options for "
-                + root.user.username
+                + root._u.username
             Keys.onReturnPressed: root.demote()
             Keys.onSpacePressed: root.demote()
             onClicked: root.demote()

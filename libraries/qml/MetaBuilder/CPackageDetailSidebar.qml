@@ -25,8 +25,9 @@ CCard {
                     variant: "h5"
                     text: {
                         var pkg = PackageLoader
-                            .getPackage(selectedPackageId)
-                        return pkg ? pkg.name : ""
+                            ? PackageLoader.getPackage(
+                                selectedPackageId) : null
+                        return pkg ? (pkg.name || "") : ""
                     }
                 }
                 CText {
@@ -35,9 +36,9 @@ CCard {
                     Layout.fillWidth: true
                     text: {
                         var pkg = PackageLoader
-                            .getPackage(selectedPackageId)
-                        return pkg
-                            ? pkg.description : ""
+                            ? PackageLoader.getPackage(
+                                selectedPackageId) : null
+                        return pkg ? (pkg.description || "") : ""
                     }
                 }
                 CDivider { Layout.fillWidth: true }
@@ -46,16 +47,17 @@ CCard {
                     variant: "body2"
                     text: {
                         var pkg = PackageLoader
-                            .getPackage(selectedPackageId)
-                        return pkg
-                            ? pkg.version : ""
+                            ? PackageLoader.getPackage(
+                                selectedPackageId) : null
+                        return pkg ? (pkg.version || "") : ""
                     }
                 }
                 CText { variant: "caption"; text: "Category" }
                 CBadge {
                     text: {
                         var pkg = PackageLoader
-                            .getPackage(selectedPackageId)
+                            ? PackageLoader.getPackage(
+                                selectedPackageId) : null
                         return pkg && pkg.category
                             ? pkg.category : "\u2014"
                     }
@@ -67,8 +69,8 @@ CCard {
                     Layout.fillWidth: true
                     text: {
                         var deps = PackageLoader
-                            .resolveDependencies(
-                                selectedPackageId)
+                            ? PackageLoader.resolveDependencies(
+                                selectedPackageId) : []
                         return deps.length > 0
                             ? deps.join(", ") : "None"
                     }

@@ -46,6 +46,7 @@ Rectangle {
             Repeater {
                 model: root.tenants
                 delegate: CTenantCard {
+                    required property var modelData
                     tenant: modelData
                     onEdit: root.editTenant(modelData)
                 }

@@ -54,11 +54,12 @@ Rectangle {
     // MD3 tonal background based on severity (12% opacity)
     readonly property color _bgColor: {
         if (variant === "outlined") return "transparent"
-        if (variant === "standard") return
-            Qt.rgba(_severityColor.r, _severityColor.g, _severityColor.b, 0.08)
+        if (variant === "standard") return (
+            Qt.rgba(_severityColor.r, _severityColor.g,
+                _severityColor.b, 0.08))
         // filled — MD3 tonal surface
-        return
-            Qt.rgba(_severityColor.r, _severityColor.g, _severityColor.b, 0.12)
+        return Qt.rgba(_severityColor.r, _severityColor.g,
+            _severityColor.b, 0.12)
     }
 
     readonly property color _accentColor: _severityColor

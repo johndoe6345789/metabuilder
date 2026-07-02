@@ -11,9 +11,6 @@ Rectangle {
     Accessible.description: root.status !== ""
         ? "Status: " + root.status
         : "Job is in progress"
-    Accessible.minimumValue: 0
-    Accessible.maximumValue: 100
-    Accessible.currentValue: root.progress
     Layout.fillWidth: true
     Layout.preferredHeight: 20
     color: "transparent"

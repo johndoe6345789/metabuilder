@@ -76,7 +76,7 @@ CCard {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 body: root.templateBody
-                onBodyChanged: function(value) { root.bodyChanged(value) }
+                onBodyEdited: function(value) { root.bodyChanged(value) }
             }
         }
     }

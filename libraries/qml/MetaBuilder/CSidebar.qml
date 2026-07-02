@@ -100,7 +100,8 @@ Rectangle {
         // Dynamic package nav items (from PackageLoader)
         Repeater {
             model: {
-                var navPkgs = PackageLoader.navigablePackages()
+                var navPkgs = PackageLoader
+                    ? PackageLoader.navigablePackages() : []
                 return navPkgs.filter(function(pkg) {
                     var lvl = pkg.level ? pkg.level : 2
                     return lvl <= root.currentLevel

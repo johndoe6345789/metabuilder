@@ -37,6 +37,7 @@ Rectangle {
             Repeater {
                 model: root.godUsers
                 delegate: CGodUserCard {
+                    required property var modelData
                     user: modelData
                     onDemote: root.manageUser(modelData)
                 }

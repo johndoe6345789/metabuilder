@@ -89,7 +89,7 @@ CCard {
         }
 
         CText {
-            visible: root.users.length === 0
+            visible: (root.users || []).length === 0
             Layout.fillWidth: true
             Layout.topMargin: 24
             variant: "body2"

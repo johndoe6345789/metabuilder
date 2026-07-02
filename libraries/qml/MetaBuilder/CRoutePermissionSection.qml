@@ -8,7 +8,7 @@ ColumnLayout {
     property string permissions: ""
     property int level: 1
 
-    signal permissionsChanged(string value)
+    signal permissionsEdited(string value)
 
     Layout.fillWidth: true
     spacing: 14

@@ -40,8 +40,8 @@ function viewIndex(app) {
     var view = app.currentView
     var staticIdx = app.staticViews.indexOf(view)
     if (staticIdx >= 0) return staticIdx
-    var navPkgs =
-        PackageLoader.navigablePackages()
+    var navPkgs = PackageLoader
+        ? PackageLoader.navigablePackages() : []
     for (var i = 0; i < navPkgs.length; i++) {
         var pkg = navPkgs[i]
         var viewName = packageViewName(pkg)

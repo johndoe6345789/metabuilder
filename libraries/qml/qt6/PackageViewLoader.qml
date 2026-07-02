@@ -16,7 +16,8 @@ Rectangle {
     Loader {
         id: viewLoader
         anchors.fill: parent
-        source: packageId !== "" ? PackageLoader.qmlPathUrl(packageId) : ""
+        source: (packageId !== "" && PackageLoader)
+            ? PackageLoader.qmlPathUrl(packageId) : ""
         onStatusChanged: {
             if (status === Loader.Error) {
                 console.warn("PackageViewLoader: failed to load", packageId,
@@ -56,7 +57,8 @@ Rectangle {
             CText {
                 variant: "body1"
                 text: {
-                    var meta = PackageLoader.getPackage(packageId)
+                    var meta = PackageLoader
+                        ? PackageLoader.getPackage(packageId) : null
                     return meta && meta.description
                         ? meta.description : "Package view for " + packageId
                 }
@@ -78,10 +80,11 @@ Rectangle {
                     "Load package: "
                     + formatTitle(packageId)
                 Keys.onReturnPressed:
-                    PackageLoader.install(
-                        packageId)
+                    if (PackageLoader)
+                        PackageLoader.install(packageId)
                 onClicked: {
-                    PackageLoader.install(packageId)
+                    if (PackageLoader)
+                        PackageLoader.install(packageId)
                     console.log(
                         "Installed package:",
                         packageId)

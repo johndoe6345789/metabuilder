@@ -70,6 +70,8 @@ Rectangle {
             Repeater {
                 model: root.pendingTransfers
                 delegate: CTransferCard {
+                    required property var modelData
+                    required property int index
                     transfer: modelData
                     onApprove: root.transferApproved(index)
                     onDeny: root.transferDenied(index)

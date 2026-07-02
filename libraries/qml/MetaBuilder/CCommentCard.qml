@@ -7,13 +7,19 @@ CCard {
     id: root
     objectName: "card_comment"
     Accessible.role: Accessible.Pane
-    Accessible.name: comment.username
-        ? comment.username + " comment"
+    Accessible.name: root._c.username
+        ? root._c.username + " comment"
         : "Comment"
 
     required property var comment
     property string currentUser: ""
     property bool isDark: false
+    visible: root.comment != null
+
+    readonly property var _c: root.comment || {
+        username: "", initials: "", timestamp: "",
+        body: "", likes: 0, liked: false, canDelete: false
+    }
 
     signal liked()
     signal deleted()
@@ -26,7 +32,7 @@ CCard {
         spacing: 12
 
         CAvatar {
-            initials: root.comment.initials
+            initials: root._c.initials
         }
 
         ColumnLayout {
@@ -37,19 +43,19 @@ CCard {
                 spacing: 8
                 CText {
                     variant: "subtitle1"
-                    text: root.comment.username
+                    text: root._c.username
                 }
                 CChip {
-                    text: root.comment.username === root.currentUser
+                    text: root._c.username === root.currentUser
                         ? "You" : ""
                     chipColor: Theme.primary
-                    visible: root.comment.username === root.currentUser
+                    visible: root._c.username === root.currentUser
                 }
             }
 
             CText {
                 variant: "caption"
-                text: root.comment.timestamp
+                text: root._c.timestamp
             }
         }
     }
@@ -58,7 +64,7 @@ CCard {
     CText {
         Layout.fillWidth: true
         variant: "body1"
-        text: root.comment.body
+        text: root._c.body
         wrapMode: Text.WordWrap
     }
 
@@ -70,18 +76,18 @@ CCard {
         spacing: 8
 
         CButton {
-            text: root.comment.liked
-                ? "Liked (" + root.comment.likes + ")"
-                : "Like (" + root.comment.likes + ")"
-            variant: root.comment.liked ? "primary" : "ghost"
+            text: root._c.liked
+                ? "Liked (" + root._c.likes + ")"
+                : "Like (" + root._c.likes + ")"
+            variant: root._c.liked ? "primary" : "ghost"
             size: "sm"
             activeFocusOnTab: true
             Accessible.role: Accessible.Button
-            Accessible.name: root.comment.liked
+            Accessible.name: root._c.liked
                 ? "Unlike comment, "
-                    + root.comment.likes + " likes"
+                    + root._c.likes + " likes"
                 : "Like comment, "
-                    + root.comment.likes + " likes"
+                    + root._c.likes + " likes"
             Keys.onReturnPressed: root.liked()
             Keys.onSpacePressed: root.liked()
             onClicked: root.liked()
@@ -93,11 +99,11 @@ CCard {
             text: "Delete"
             variant: "danger"
             size: "sm"
-            visible: root.comment.canDelete || false
+            visible: root._c.canDelete || false
             activeFocusOnTab: visible
             Accessible.role: Accessible.Button
             Accessible.name: "Delete comment by "
-                + (root.comment.username || "user")
+                + (root._c.username || "user")
             Keys.onReturnPressed: root.deleted()
             Keys.onSpacePressed: root.deleted()
             onClicked: root.deleted()

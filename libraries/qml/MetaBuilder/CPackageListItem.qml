@@ -31,7 +31,7 @@ CCard {
                     ? packageData.icon
                     : (packageData.name ? packageData.name.charAt(0) : "?")
                 variant: "subtitle1"
-                color: packageData.installed ? "#ffffff" : Theme.textPrimary
+                color: packageData.installed ? "#ffffff" : Theme.text
             }
         }
 

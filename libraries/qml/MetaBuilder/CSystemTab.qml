@@ -73,6 +73,7 @@ Rectangle {
                           value: root.systemMetrics.network }
                     ]
                     delegate: CSystemMetricCard {
+                        required property var modelData
                         label: modelData.label
                         value: modelData.value
                     }

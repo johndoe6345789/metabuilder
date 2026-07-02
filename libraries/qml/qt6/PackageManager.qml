@@ -14,7 +14,7 @@ Rectangle {
     property string selectedPackageId: ""
 
     function filteredPackages() {
-        var allPkgs = PackageLoader.packages
+        var allPkgs = PackageLoader ? PackageLoader.packages : []
         if (searchText === "")
             return allPkgs
         var lower = searchText.toLowerCase()
@@ -44,7 +44,8 @@ Rectangle {
             }
             CStatusBadge {
                 status: "success"
-                text: PackageLoader.packageCount
+                text: (PackageLoader
+                    ? PackageLoader.packageCount : 0)
                     + " packages"
             }
         }
@@ -56,9 +57,9 @@ Rectangle {
 
             CPackageDetailSidebar {
                 selectedPackageId:
-                    root.selectedPackageId
+                    pkgRoot.selectedPackageId
                 onRescanRequested:
-                    PackageLoader.scan()
+                    if (PackageLoader) PackageLoader.scan()
             }
 
             CCard {

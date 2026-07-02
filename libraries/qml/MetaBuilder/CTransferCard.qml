@@ -12,6 +12,11 @@ CCard {
     signal approve()
     signal deny()
 
+    visible: root.transfer != null
+
+    readonly property var _tr: root.transfer || {
+        from: "", to: "", expiry: "", reason: "", status: ""
+    }
     Layout.fillWidth: true
 
     FlexRow {
@@ -19,16 +24,16 @@ CCard {
         spacing: 10
 
         CText { variant: "subtitle1"
-        text: root.transfer.from + " -> " + root.transfer.to }
+        text: root._tr.from + " -> " + root._tr.to }
         CStatusBadge { status: "warning"; text: "Pending" }
         Item { Layout.fillWidth: true }
-        CText { variant: "caption"; text: "Expires: " + root.transfer.expiry
+        CText { variant: "caption"; text: "Expires: " + root._tr.expiry
         color: Theme.textSecondary }
     }
 
     CText {
         variant: "body2"
-        text: root.transfer.reason
+        text: root._tr.reason
         wrapMode: Text.Wrap
         Layout.fillWidth: true
     }

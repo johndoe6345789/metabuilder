@@ -15,7 +15,9 @@ import QmlComponents 1.0
 CCard {
     id: detailRoot
 
-    property var channel: ({
+    property var channel: null
+
+    readonly property var _ch: channel || ({
         name: "", status: "offline", listeners: 0,
         bitrate: "", currentTrack: "", playlist: []
     })
@@ -40,12 +42,12 @@ CCard {
                 Layout.fillWidth: true
                 spacing: 12
 
-                CText { variant: "h3"; text: detailRoot.channel.name }
+                CText { variant: "h3"; text: detailRoot._ch.name }
                 CStatusBadge {
-                    status: detailRoot.channel.status
+                    status: detailRoot._ch.status
                         === "live"
                         ? "success" : "error"
-                    text: detailRoot.channel.status
+                    text: detailRoot._ch.status
                         === "live"
                         ? "Live" : "Offline"
                 }
@@ -53,11 +55,11 @@ CCard {
                 Item { Layout.fillWidth: true }
 
                 CButton {
-                    text: detailRoot.channel.status
+                    text: detailRoot._ch.status
                         === "live"
                         ? "Stop Stream"
                         : "Start Stream"
-                    variant: detailRoot.channel.status
+                    variant: detailRoot._ch.status
                         === "live"
                         ? "danger" : "primary"
                     onClicked: detailRoot.toggleStream()
@@ -72,16 +74,16 @@ CCard {
 
                 CStatCell {
                     label: "Listeners"
-                    value: detailRoot.channel
-                        .listeners.toString()
+                    value: detailRoot._ch.listeners
+                        .toString()
                 }
                 CStatCell {
                     label: "Bitrate"
-                    value: detailRoot.channel.bitrate
+                    value: detailRoot._ch.bitrate
                 }
                 CStatCell {
                     label: "Now Playing"
-                    value: detailRoot.channel.currentTrack
+                    value: detailRoot._ch.currentTrack
                     valueVariant: "body2"
                 }
             }
@@ -90,11 +92,11 @@ CCard {
 
             MediaRadioPlaylist {
                 Layout.fillWidth: true
-                playlist: detailRoot.channel.playlist
+                playlist: detailRoot._ch.playlist
                 currentTrack: {
-                    return detailRoot.channel.currentTrack
+                    return detailRoot._ch.currentTrack
                 }
-                isLive: detailRoot.channel.status
+                isLive: detailRoot._ch.status
                     === "live"
             }
 

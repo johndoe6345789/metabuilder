@@ -21,7 +21,7 @@ Rectangle {
             "qmllib/MetaBuilder/data/"
             + "users-mock.json"
         )
-    )
+    ) || []
     property string searchText: ""
     property string activeRoleFilter: "all"
     property int nextUid: 5
@@ -37,8 +37,8 @@ Rectangle {
     function loadUsers() {
         UDBAL.loadUsers(dbal,
             function(parsed) {
-                users = parsed
-                nextUid = parsed.length + 1
+                users = parsed || []
+                nextUid = (parsed || []).length + 1
             }
         )
     }
