@@ -61,7 +61,7 @@ function packageViewName(pkg) {
 
 function autoLogin(app, dbalProvider) {
     app.appConfig = loadJson(
-        "config/app-config.json")
+        "../../config/app-config.json")
     if (typeof Theme.setTheme === "function")
         Theme.setTheme(app.currentTheme)
     if (app.authToken !== "") {
