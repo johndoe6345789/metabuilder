@@ -2,9 +2,16 @@ import type { NextConfig } from 'next'
 import type { Configuration } from 'webpack'
 import type webpack from 'webpack'
 import path from 'path'
+import fs from 'fs'
 
 const projectDir = process.cwd()
 const monorepoRoot = path.resolve(projectDir, '../..')
+
+// Read version from monorepo root package.json at build time
+const rootPkg = JSON.parse(
+  fs.readFileSync(path.join(monorepoRoot, 'package.json'), 'utf8'),
+) as { version?: string }
+const APP_VERSION = rootPkg.version ?? '0.1.0'
 
 const nextConfig: NextConfig = {
   basePath: '/app',
@@ -99,6 +106,8 @@ const nextConfig: NextConfig = {
       'http://localhost:8080',
     NEXT_PUBLIC_DBAL_WS_URL: process.env.DBAL_WS_URL ?? 'ws://localhost:50051',
     NEXT_PUBLIC_DBAL_API_KEY: process.env.DBAL_API_KEY ?? '',
+    NEXT_PUBLIC_APP_VERSION:
+      process.env.NEXT_PUBLIC_APP_VERSION ?? APP_VERSION,
   },
   // Turbopack config (used by `next dev --turbopack`)
   // webpack() callback below is still used by `next build`

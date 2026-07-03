@@ -6,8 +6,6 @@ import QmlComponents 1.0
 CDialog {
     id: deleteRecordDialog
     objectName: "dialog_delete_record"
-    Accessible.role: Accessible.Dialog
-    Accessible.name: title
     title: "Delete " + entity
 
     property string entity: ""

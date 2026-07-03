@@ -1,0 +1,203 @@
+.root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  background: var(--background);
+}
+
+.card {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.logo {
+  display: block;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  margin-bottom: 24px;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--foreground);
+  margin: 0 0 6px;
+  letter-spacing: -0.02em;
+}
+
+.sub {
+  font-size: 0.875rem;
+  color: var(--muted-foreground, #777);
+  margin: 0 0 28px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.input {
+  padding: 11px 14px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border, #ddd);
+  background: var(--card, #fff);
+  color: var(--foreground);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.15s;
+
+  &:focus {
+    border-color: var(--primary, #6750A4);
+  }
+
+  &::placeholder {
+    color: var(--muted-foreground, #aaa);
+  }
+}
+
+.hint {
+  font-size: 0.78rem;
+  color: var(--muted-foreground, #888);
+}
+
+.tierSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tierLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.tiers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.tier {
+  position: relative;
+  padding: 14px 10px 12px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border, #ddd);
+  background: var(--card, #fff);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+
+  &:hover {
+    border-color: var(--primary, #6750A4);
+  }
+}
+
+.tierSelected {
+  border-color: var(--primary, #6750A4);
+  background: color-mix(
+    in srgb, var(--primary, #6750A4) 6%, var(--card, #fff)
+  );
+}
+
+.tierBadge {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary, #6750A4);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.tierName {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.tierPrice {
+  font-size: 0.78rem;
+  color: var(--muted-foreground, #777);
+}
+
+.tierPkgs {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 2px;
+
+  :global(.material-symbols-rounded) {
+    font-size: 14px;
+    font-variation-settings: 'FILL' 1;
+  }
+}
+
+.error {
+  font-size: 0.85rem;
+  color: #c62828;
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 6px;
+  background: color-mix(in srgb, #c62828 8%, transparent);
+  border: 1px solid color-mix(in srgb, #c62828 30%, transparent);
+}
+
+.submit {
+  padding: 13px;
+  border-radius: 8px;
+  border: none;
+  background: var(--primary, #6750A4);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: opacity 0.15s;
+
+  &:hover:not(:disabled) { opacity: 0.88; }
+  &:disabled { opacity: 0.55; cursor: not-allowed; }
+}
+
+.signin {
+  font-size: 0.85rem;
+  color: var(--muted-foreground, #777);
+  text-align: center;
+  margin: 20px 0 0;
+}
+
+.link {
+  color: var(--primary, #6750A4);
+  font-weight: 500;
+  text-decoration: none;
+
+  &:hover { text-decoration: underline; }
+}

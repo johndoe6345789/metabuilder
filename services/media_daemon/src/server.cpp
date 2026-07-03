@@ -12,6 +12,7 @@
 #include "routes/radio_routes.hpp"
 #include "routes/tv_routes.hpp"
 #include "routes/plugin_routes.hpp"
+#include "routes/retro_routes.hpp"
 
 namespace media {
 
@@ -23,6 +24,7 @@ struct Server::Impl {
     std::unique_ptr<routes::RadioRoutes> radio;
     std::unique_ptr<routes::TvRoutes> tv;
     std::unique_ptr<routes::PluginRoutes> plugins;
+    std::unique_ptr<routes::RetroRoutes> retro;
 
     // Native HTTP audio broadcaster (replaces external Icecast)
     std::unique_ptr<StreamBroadcaster> broadcaster;
@@ -120,6 +122,7 @@ Result<void> Server::initialize(const ServerConfig& config) {
     impl_->radio->set_broadcaster(impl_->broadcaster.get());
     impl_->tv = std::make_unique<routes::TvRoutes>(*tv_engine_);
     impl_->plugins = std::make_unique<routes::PluginRoutes>(*plugin_manager_);
+    impl_->retro = std::make_unique<routes::RetroRoutes>(*job_queue_);
 
     // Set up Drogon
     setup_middleware();
@@ -439,6 +442,42 @@ void Server::setup_routes() {
                std::function<void(const drogon::HttpResponsePtr&)>&& cb,
                const std::string& id) {
             impl_->plugins->handle_reload_plugin(req, std::move(cb), id);
+        },
+        {drogon::Post}
+    );
+
+    // ========================================================================
+    // Retro gaming (libretro sessions)
+    // ========================================================================
+
+    drogon::app().registerHandler(
+        "/api/retro/sessions",
+        [this](const drogon::HttpRequestPtr& req,
+               std::function<void(const drogon::HttpResponsePtr&)>&& cb) {
+            if (req->method() == drogon::Post)
+                impl_->retro->handle_create_session(req, std::move(cb));
+            else
+                impl_->retro->handle_list_sessions(req, std::move(cb));
+        },
+        {drogon::Post, drogon::Get}
+    );
+
+    drogon::app().registerHandler(
+        "/api/retro/sessions/{id}",
+        [this](const drogon::HttpRequestPtr& req,
+               std::function<void(const drogon::HttpResponsePtr&)>&& cb,
+               const std::string& id) {
+            impl_->retro->handle_stop_session(req, std::move(cb), id);
+        },
+        {drogon::Delete}
+    );
+
+    drogon::app().registerHandler(
+        "/api/retro/sessions/{id}/input",
+        [this](const drogon::HttpRequestPtr& req,
+               std::function<void(const drogon::HttpResponsePtr&)>&& cb,
+               const std::string& id) {
+            impl_->retro->handle_send_input(req, std::move(cb), id);
         },
         {drogon::Post}
     );

@@ -18,7 +18,7 @@ CCard {
     signal sendRequested()
 
     ColumnLayout {
-        anchors.fill: parent
+        Layout.fillWidth: true
         anchors.margins: 16
         spacing: 12
 
@@ -61,7 +61,7 @@ CCard {
                 radius: 4
 
                 ScrollView {
-                    anchors.fill: parent
+                    Layout.fillWidth: true
                     anchors.margins: 8
 
                     TextArea {

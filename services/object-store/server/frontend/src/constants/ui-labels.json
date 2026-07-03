@@ -1,0 +1,59 @@
+{
+  "app": {
+    "title": "S3 Browser",
+    "subtitle": "Object Storage Management"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "buckets": "Buckets",
+    "logout": "Logout"
+  },
+  "login": {
+    "title": "Sign In",
+    "accessKey": "Access Key",
+    "secretKey": "Secret Key",
+    "submit": "Sign In",
+    "error": "Invalid credentials"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "buckets": "Buckets",
+    "objects": "Objects",
+    "storage": "Total Storage",
+    "viewBuckets": "View Buckets"
+  },
+  "buckets": {
+    "title": "Buckets",
+    "create": "Create Bucket",
+    "delete": "Delete",
+    "open": "Browse",
+    "empty": "No buckets yet",
+    "created": "Created"
+  },
+  "objects": {
+    "title": "Objects",
+    "upload": "Upload",
+    "download": "Download",
+    "delete": "Delete",
+    "refresh": "Refresh",
+    "filterPrefix": "Filter by prefix...",
+    "empty": "No objects in this bucket",
+    "key": "Key",
+    "size": "Size",
+    "lastModified": "Last Modified",
+    "etag": "ETag",
+    "actions": "Actions"
+  },
+  "dialogs": {
+    "createBucket": "Create Bucket",
+    "bucketName": "Bucket Name",
+    "cancel": "Cancel",
+    "create": "Create",
+    "confirm": "Confirm",
+    "uploadFile": "Upload File",
+    "objectKey": "Object Key",
+    "selectFile": "Select File",
+    "deleteBucket": "Delete bucket \"{name}\"?",
+    "deleteObject": "Delete object \"{key}\"?"
+  }
+}

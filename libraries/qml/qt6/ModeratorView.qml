@@ -59,7 +59,7 @@ Rectangle {
                 Layout.rightMargin: 24
                 currentIndex: currentTab
                 activeFocusOnTab: true
-                Accessible.role: Accessible.TabBar
+                Accessible.role: Accessible.PageTabList
                 Accessible.name: "Moderator tabs"
                 Keys.onLeftPressed:
                     currentTab = Math.max(

@@ -22,6 +22,7 @@ import {
   IconButton,
 } from '@/m3'
 import { getLevelLabel, getLevelColor } from '@/lib/packages/navigation'
+import { Logo } from '@/components/brand/Logo'
 
 export interface AppBarProps {
   username: string | null
@@ -100,17 +101,24 @@ export function AppBarComponent({
       )}
 
       {/* Branding */}
-      <Link href="/" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <div
-          style={{
-            width: 32,
-            height: 32,
-            borderRadius: 8,
-            background: 'linear-gradient(135deg, var(--primary, #6200ee), var(--accent, #03dac6))',
-          }}
-        />
-        <Typography variant="h6" noWrap sx={{ fontWeight: 700 }}>
+      <Link href="/" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', gap: '9px' }}>
+        <Logo size={32} />
+        <Typography variant="h6" noWrap sx={{ fontWeight: 700, letterSpacing: '-0.01em' }}>
           MetaBuilder
+        </Typography>
+        <Typography
+          variant="caption"
+          noWrap
+          sx={{
+            fontWeight: 500,
+            opacity: 0.45,
+            fontSize: '0.7rem',
+            letterSpacing: '0.01em',
+            alignSelf: 'flex-end',
+            mb: '3px',
+          }}
+        >
+          v{process.env.NEXT_PUBLIC_APP_VERSION ?? '0.1.0'}
         </Typography>
       </Link>
 

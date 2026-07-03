@@ -20,7 +20,7 @@ CCard {
     signal patternChanged(int index)
 
     ColumnLayout {
-        anchors.fill: parent; anchors.margins: 16; spacing: 12
+        Layout.fillWidth: true; spacing: 12
         CText { variant: "subtitle1"; text: "Environment Configuration" }
         CTextField { label: "DATABASE_URL"
         text: envConfig.databaseUrl

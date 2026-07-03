@@ -18,8 +18,7 @@ FlexRow {
 
         ColumnLayout {
             id: col1
-            anchors.fill: parent
-            anchors.margins: 16
+            Layout.fillWidth: true
             spacing: 4
             CText { variant: "caption"; text: "Total Users" }
             CText { variant: "h4"; text: String(root.totalUsers) }
@@ -32,8 +31,7 @@ FlexRow {
 
         ColumnLayout {
             id: col2
-            anchors.fill: parent
-            anchors.margins: 16
+            Layout.fillWidth: true
             spacing: 4
             CText { variant: "caption"; text: "Admins" }
             CText { variant: "h4"; text: String(root.adminCount) }
@@ -46,8 +44,7 @@ FlexRow {
 
         ColumnLayout {
             id: col3
-            anchors.fill: parent
-            anchors.margins: 16
+            Layout.fillWidth: true
             spacing: 4
             CText { variant: "caption"; text: "Gods" }
             CText { variant: "h4"; text: String(root.godCount) }
@@ -60,8 +57,7 @@ FlexRow {
 
         ColumnLayout {
             id: col4
-            anchors.fill: parent
-            anchors.margins: 16
+            Layout.fillWidth: true
             spacing: 4
             CText { variant: "caption"; text: "SuperGods" }
             CText { variant: "h4"; text: String(root.superGodCount) }

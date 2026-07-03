@@ -23,8 +23,8 @@ CCard {
     }
 
     Flickable {
-        anchors.fill: parent
-        anchors.margins: 16
+        Layout.fillWidth: true
+        height: channelDetail.height - 32
         contentHeight: detailCol.implicitHeight
         clip: true
 

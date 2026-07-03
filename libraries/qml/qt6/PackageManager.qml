@@ -67,8 +67,8 @@ Rectangle {
                 Layout.fillHeight: true
 
                 ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 16
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
                     spacing: 12
 
                     FlexRow {
@@ -92,8 +92,9 @@ Rectangle {
                             text:
                                 filteredPackages()
                                 .length + " / "
-                                + PackageLoader
-                                    .packageCount
+                                + (PackageLoader
+                                    ? PackageLoader.packageCount || 0
+                                    : 0)
                         }
                     }
 

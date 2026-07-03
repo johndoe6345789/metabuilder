@@ -5,8 +5,6 @@ import QmlComponents 1.0
 CDialog {
     id: root
     objectName: "dialog_delete_dropdown"
-    Accessible.role: Accessible.Dialog
-    Accessible.name: title
     title: "Delete Dropdown"
 
     property var dropdown: null

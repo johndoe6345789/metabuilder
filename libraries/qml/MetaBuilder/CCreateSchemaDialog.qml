@@ -6,8 +6,6 @@ import QmlComponents 1.0
 CDialog {
     id: dlg
     objectName: "dialog_create_schema"
-    Accessible.role: Accessible.Dialog
-    Accessible.name: title
     title: "Create New Schema"
     property string schemaName: ""
     property string schemaDescription: ""

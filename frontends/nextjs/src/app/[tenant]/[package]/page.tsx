@@ -10,6 +10,9 @@ import { join } from 'path'
 import { loadJSONPackage } from '@/lib/packages/json/functions/load-json-package'
 import { renderJSONComponent } from '@/lib/packages/json/render-json-component'
 import { getPackagesDir } from '@/lib/packages/unified/get-packages-dir'
+import { fetchTenantPage } from '@/lib/tenant/fetch-tenant-page'
+import { UIPageRenderer } from '@/components/ui-page-renderer/UIPageRenderer'
+import type { JSONComponent } from '@/lib/packages/json/types'
 
 interface PackagePageProps {
   params: Promise<{
@@ -40,9 +43,22 @@ export default async function PackagePage({ params }: PackagePageProps) {
 
     // Render the home component with tenant and package context
     return renderJSONComponent(homeComponent, { tenant, package: pkg }, {})
-  } catch (error) {
-    // Package doesn't exist or can't be loaded
-    console.error(`Failed to load package ${pkg}:`, error)
+  } catch {
+    // Not a filesystem package — check if it's a DBAL tenant page
+    const page = await fetchTenantPage(tenant, `/${pkg}`)
+    if (
+      page !== null &&
+      page.isActive &&
+      page.componentTree !== null &&
+      page.componentTree !== undefined
+    ) {
+      return (
+        <UIPageRenderer
+          layout={page.componentTree as JSONComponent}
+          actions={{}}
+        />
+      )
+    }
     notFound()
   }
 }

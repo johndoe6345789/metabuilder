@@ -57,7 +57,7 @@ Item {
         // ── Dropdown menu ──
         CDropdownMenu {
             id: dropdownMenu
-            Accessible.role: Accessible.Menu
+            Accessible.role: Accessible.PopupMenu
             Accessible.name: "User actions"
             visible: false
             anchors.top: parent.bottom

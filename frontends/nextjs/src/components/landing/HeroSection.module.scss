@@ -1,0 +1,108 @@
+.root {
+  padding: 100px 24px 80px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      ellipse 80% 60% at 50% 0%,
+      color-mix(in srgb, var(--primary, #6750A4) 12%, transparent),
+      transparent 70%
+    );
+    pointer-events: none;
+  }
+}
+
+.inner {
+  position: relative;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 999px;
+  border: 1px solid color-mix(
+    in srgb, var(--primary, #6750A4) 40%, transparent
+  );
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--primary, #6750A4);
+  margin-bottom: 28px;
+}
+
+.headline {
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--foreground);
+  margin: 0 0 24px;
+}
+
+.accent {
+  color: var(--primary, #6750A4);
+}
+
+.sub {
+  font-size: 1.1rem;
+  line-height: 1.65;
+  color: var(--muted-foreground, #666);
+  max-width: 560px;
+  margin: 0 auto 40px;
+}
+
+.ctas {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.primary {
+  display: inline-flex;
+  align-items: center;
+  padding: 14px 32px;
+  border-radius: 8px;
+  background: var(--primary, #6750A4);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: filter 0.15s;
+
+  &:hover { filter: brightness(1.1); }
+}
+
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  padding: 14px 32px;
+  border-radius: 8px;
+  border: 1px solid var(--border, #ddd);
+  color: var(--foreground);
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.15s;
+
+  &:hover {
+    background: color-mix(
+      in srgb, var(--foreground) 6%, transparent
+    );
+  }
+}
+
+.note {
+  font-size: 0.8rem;
+  color: var(--muted-foreground, #999);
+  margin: 0;
+}

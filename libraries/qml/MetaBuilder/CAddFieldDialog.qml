@@ -6,8 +6,6 @@ import QmlComponents 1.0
 CDialog {
     id: dlg
     objectName: "dialog_add_field"
-    Accessible.role: Accessible.Dialog
-    Accessible.name: title
     title: "Add New Field"
     property var fieldTypes: []
     property string fieldName: ""

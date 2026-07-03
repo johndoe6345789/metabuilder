@@ -6,8 +6,6 @@ import QmlComponents 1.0
 CDialog {
     id: addDropdownDialog
     objectName: "dialog_add_dropdown"
-    Accessible.role: Accessible.Dialog
-    Accessible.name: title
     title: "Add New Dropdown"
 
     property string dropdownName: ""

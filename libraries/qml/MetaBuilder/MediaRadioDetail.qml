@@ -28,8 +28,8 @@ CCard {
     Layout.fillHeight: true
 
     Flickable {
-        anchors.fill: parent
-        anchors.margins: 16
+        Layout.fillWidth: true
+        height: detailRoot.height - 32
         contentHeight: radioDetailCol.implicitHeight
         clip: true
 

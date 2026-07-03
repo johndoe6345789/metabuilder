@@ -14,7 +14,7 @@ CCard {
     signal themeSelected(string name)
 
     ColumnLayout {
-        anchors.fill: parent
+        Layout.fillWidth: true
         anchors.margins: 20
         spacing: 16
 
@@ -40,13 +40,13 @@ CCard {
                         ? Theme.primary : Theme.border
 
                     MouseArea {
-                        anchors.fill: parent
+                        Layout.fillWidth: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked: themeSelected(modelData.name)
                     }
 
                     ColumnLayout {
-                        anchors.fill: parent
+                        Layout.fillWidth: true
                         anchors.margins: 10
                         spacing: 8
 

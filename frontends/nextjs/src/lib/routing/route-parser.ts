@@ -9,7 +9,10 @@ export interface ParsedRoute {
   b_params: Record<string, string>
 }
 
-export const RESERVED_PATHS = ['api', 'admin', 'auth', '_next', 'static']
+export const RESERVED_PATHS = [
+  'api', 'admin', 'auth', '_next', 'static',
+  'app', 'ui', 'dbal-daemon', 'levels', 'public',
+]
 
 export function parseRoute(url: string): ParsedRoute {
   const result: ParsedRoute = { b_params: {} }

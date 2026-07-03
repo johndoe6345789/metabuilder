@@ -3,6 +3,7 @@
 #include <QQmlContext>
 #include <QUrl>
 #include <QDir>
+#include <QCoreApplication>
 
 #include "src/PackageRegistry.hpp"
 #include "src/ModPlayer.hpp"
@@ -11,7 +12,11 @@
 #include "src/NodeRegistry.hpp"
 
 int main(int argc, char *argv[]) {
+    qputenv("QML_XHR_ALLOW_FILE_READ", "1");
     QGuiApplication app(argc, argv);
+    app.setOrganizationName("MetaBuilder");
+    app.setOrganizationDomain("metabuilder.local");
+    app.setApplicationName("MetaBuilder");
     QQmlApplicationEngine engine;
 
     // QML import path: imports/QmlComponents is a symlink to

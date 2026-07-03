@@ -6,8 +6,6 @@ import QmlComponents 1.0
 CDialog {
     id: root
     objectName: "dialog_add_route"
-    Accessible.role: Accessible.Dialog
-    Accessible.name: title
 
     property string newPath: ""
     property string newTitle: ""

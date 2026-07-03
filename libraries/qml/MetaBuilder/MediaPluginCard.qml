@@ -16,8 +16,7 @@ CCard {
     variant: "outlined"
 
     ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: 16
+        Layout.fillWidth: true
         spacing: 10
 
         FlexRow {

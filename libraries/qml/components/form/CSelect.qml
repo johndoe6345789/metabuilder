@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QmlComponents 1.0
 
 /**
  * CSelect.qml - Material Design 3 outlined select (ComboBox wrapper)
@@ -250,10 +251,9 @@ ComboBox {
     Text {
         id: helperText
         parent: root.parent
-        anchors.top: root.bottom
-        anchors.topMargin: 4
-        anchors.left: root.left
-        anchors.leftMargin: 16
+        x: root.x + 16
+        y: root.y + root.height + 4
+        width: root.width - 16
         text: root.hasError
             ? root.errorText : root.helper
         font.pixelSize: 11

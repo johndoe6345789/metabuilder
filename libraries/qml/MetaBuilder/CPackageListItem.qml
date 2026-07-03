@@ -13,8 +13,7 @@ CCard {
     signal uninstallRequested()
 
     FlexRow {
-        anchors.fill: parent
-        anchors.margins: 16
+        Layout.fillWidth: true
         spacing: 16
 
         // Package icon badge

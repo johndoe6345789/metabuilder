@@ -1,0 +1,27 @@
+.tableWrap {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid var(--mat-sys-outline-variant);
+}
+
+.path {
+  font-family: var(--mat-sys-mono-font, 'JetBrains Mono', monospace);
+  font-size: 12px;
+  background: var(--mat-sys-surface-container);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.actions {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+.empty {
+  padding: 48px 24px;
+  text-align: center;
+  background: var(--mat-sys-surface-container-low);
+  border-radius: 8px;
+  border: 1px dashed var(--mat-sys-outline-variant);
+}

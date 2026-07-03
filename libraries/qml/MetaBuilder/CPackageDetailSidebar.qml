@@ -11,7 +11,7 @@ CCard {
     signal rescanRequested()
 
     ColumnLayout {
-        anchors.fill: parent; anchors.margins: 16
+        Layout.fillWidth: true
         spacing: 12
 
         CText { variant: "subtitle1"; text: "Package Details" }
@@ -20,7 +20,7 @@ CCard {
             Layout.fillWidth: true; Layout.fillHeight: true
             color: "transparent"; visible: selectedPackageId !== ""
             ColumnLayout {
-                anchors.fill: parent; spacing: 8
+                Layout.fillWidth: true; Layout.fillHeight: true; spacing: 8
                 CText {
                     variant: "h5"
                     text: {

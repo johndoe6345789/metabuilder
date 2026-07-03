@@ -3,10 +3,13 @@
 
 function loadJson(path) {
     var xhr = new XMLHttpRequest()
-    xhr.open("GET", Qt.resolvedUrl(path), false)
-    xhr.send()
-    return xhr.status === 200
-        ? JSON.parse(xhr.responseText) : null
+    try {
+        xhr.open("GET", Qt.resolvedUrl(path), false)
+        xhr.send()
+        if (xhr.status === 200 || xhr.status === 0)
+            return JSON.parse(xhr.responseText)
+    } catch(e) {}
+    return null
 }
 
 function resolveAccent(accentMap, key) {
