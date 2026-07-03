@@ -25,7 +25,8 @@ QtObject {
                 .split(".").pop().toLowerCase()
             const out = url.replace(
                 /\/([^/]+)$/, "/out-$1")
-            if (ext === "mp4" || ext === "mkv")
+            if (ext === "mp4" || ext === "mkv"
+                    || ext === "mov")
                 root.api.submitVideoJob(
                     url, out, "h264")
             else

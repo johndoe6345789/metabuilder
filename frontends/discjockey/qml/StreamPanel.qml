@@ -4,15 +4,13 @@ import QtQuick.Layouts
 
 Rectangle {
     id: root
-    color: "#161b22"
+    color: "#0f1117"
 
     required property string selectedFile
-    required property var uploader
+    required property var    jobModel
+    required property var    uploader
+
     signal stream()
-    signal mediaHostChanged(string host)
-    signal mediaPortChanged(int port)
-    signal s3HostChanged(string host)
-    signal s3PortChanged(int port)
 
     property int  uploadPct: 0
     property bool uploading: false
@@ -20,8 +18,7 @@ Rectangle {
     Connections {
         target: root.uploader
         function onUploadProgress(path, pct) {
-            if (path !== root.selectedFile)
-                return
+            if (path !== root.selectedFile) return
             root.uploadPct = pct
             root.uploading = true
         }
@@ -37,59 +34,51 @@ Rectangle {
 
     readonly property string fileName:
         selectedFile !== ""
-            ? selectedFile.split("/").pop()
-            : ""
+            ? selectedFile.split("/").pop() : ""
     readonly property string fileExt:
         fileName !== ""
-            ? fileName.split(".")
-                .pop().toLowerCase()
-            : ""
+            ? fileName.split(".").pop().toLowerCase() : ""
     readonly property bool isVideo:
-        fileExt === "mp4"
-            || fileExt === "mkv"
+        fileExt === "mp4" || fileExt === "mkv"
+            || fileExt === "mov"
 
     ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: 24
-        spacing: 16
+        anchors.fill: parent; spacing: 0
 
-        Item { Layout.fillHeight: true }
-
-        FileInfo {
+        Item {
             Layout.fillWidth: true
-            fileName: root.fileName
-            fileExt:  root.fileExt
-            isVideo:  root.isVideo
-        }
+            Layout.fillHeight: true
 
-        UploadProgress {
-            Layout.fillWidth: true
-            uploadPct: root.uploadPct
-            uploading: root.uploading
-            hasFile:
-                root.selectedFile !== ""
-            onStream: root.stream()
-        }
+            ColumnLayout {
+                anchors.centerIn: parent
+                width: Math.min(parent.width - 48, 480)
+                spacing: 16
 
-        Item { Layout.fillHeight: true }
+                FileInfo {
+                    Layout.fillWidth: true
+                    fileName: root.fileName
+                    fileExt:  root.fileExt
+                    isVideo:  root.isVideo
+                }
+
+                UploadProgress {
+                    Layout.fillWidth: true
+                    uploadPct: root.uploadPct
+                    uploading: root.uploading
+                    hasFile:   root.selectedFile !== ""
+                    onStream:  root.stream()
+                }
+            }
+        }
 
         Rectangle {
-            Layout.fillWidth: true
-            height: 1
-            color: "#30363d"
+            Layout.fillWidth: true; height: 1; color: "#30363d"
         }
 
-        ServerConfig {
+        JobQueue {
+            model: root.jobModel
             Layout.fillWidth: true
-            implicitHeight: 90
-            onMediaHostChanged: h =>
-                root.mediaHostChanged(h)
-            onMediaPortChanged: p =>
-                root.mediaPortChanged(p)
-            onS3HostChanged: h =>
-                root.s3HostChanged(h)
-            onS3PortChanged: p =>
-                root.s3PortChanged(p)
+            Layout.preferredHeight: 190
         }
     }
 }

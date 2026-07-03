@@ -1,10 +1,10 @@
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 
 Rectangle {
     id: root
-    height: 52
-    radius: 4
+    height: 52; radius: 4
 
     required property string filePath
     required property string fileName
@@ -13,6 +13,7 @@ Rectangle {
     required property bool   isSelected
 
     signal clicked(string path)
+    signal removed()
 
     color: isSelected ? "#21262d" : "transparent"
 
@@ -21,46 +22,55 @@ Rectangle {
         onClicked: root.clicked(root.filePath)
     }
 
-    ColumnLayout {
+    RowLayout {
         anchors {
-            left: parent.left
-            right: parent.right
+            left: parent.left; right: parent.right
             verticalCenter: parent.verticalCenter
-            margins: 8
+            leftMargin: 8; rightMargin: 4
         }
-        spacing: 2
+        spacing: 6
 
-        RowLayout {
-            Layout.fillWidth: true
-
+        Rectangle {
+            color: root.fileExt === "mp4"
+                || root.fileExt === "mkv"
+                || root.fileExt === "mov"
+                ? "#7c3aed" : "#0ea5e9"
+            radius: 3
+            width: extL.width + 10; height: 20
             Label {
-                text: root.fileName
-                color: "#e6edf3"
-                elide: Text.ElideMiddle
-                Layout.fillWidth: true
-                font.pixelSize: 12
-            }
-
-            Rectangle {
-                color: "#7c3aed"
-                radius: 3
-                width: extLabel.width + 8
-                height: 16
-
-                Label {
-                    id: extLabel
-                    text: root.fileExt.toUpperCase()
-                    color: "#e6edf3"
-                    font.pixelSize: 10
-                    anchors.centerIn: parent
-                }
+                id: extL
+                text: root.fileExt.toUpperCase()
+                color: "#e6edf3"; font.pixelSize: 10
+                anchors.centerIn: parent
             }
         }
 
-        Label {
-            text: root.fileSizeStr
-            color: "#8b949e"
-            font.pixelSize: 11
+        ColumnLayout {
+            Layout.fillWidth: true; spacing: 1
+            Label {
+                text: root.fileName; color: "#e6edf3"
+                elide: Text.ElideMiddle
+                Layout.fillWidth: true; font.pixelSize: 12
+            }
+            Label {
+                text: root.fileSizeStr
+                color: "#8b949e"; font.pixelSize: 11
+            }
+        }
+
+        Button {
+            implicitWidth: 24; implicitHeight: 24
+            onClicked: root.removed()
+            contentItem: Text {
+                text: "✕"; color: "#8b949e"
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                font.pixelSize: 11
+            }
+            background: Rectangle {
+                color: parent.hovered ? "#30363d" : "transparent"
+                radius: 3
+            }
         }
     }
 }

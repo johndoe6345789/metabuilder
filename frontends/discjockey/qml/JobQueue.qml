@@ -10,48 +10,53 @@ Rectangle {
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: 8
-        spacing: 4
+        anchors.margins: 10
+        spacing: 6
 
         RowLayout {
             Layout.fillWidth: true
             Label {
-                text: "Job Queue"
-                font.bold: true
-                font.pixelSize: 13
+                text: "Jobs"
+                font.bold: true; font.pixelSize: 13
                 color: "#e6edf3"
             }
             Item { Layout.fillWidth: true }
             Label {
-                text: root.model
-                    ? root.model.rowCount
-                        + " jobs"
+                text: jobList.count > 0
+                    ? jobList.count + " job"
+                        + (jobList.count !== 1 ? "s" : "")
                     : ""
-                color: "#8b949e"
-                font.pixelSize: 11
+                color: "#8b949e"; font.pixelSize: 11
             }
         }
 
         Rectangle {
-            Layout.fillWidth: true
-            height: 1
-            color: "#30363d"
+            Layout.fillWidth: true; height: 1; color: "#30363d"
         }
 
-        ListView {
-            id: jobList
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            model: root.model
-            clip: true
-            spacing: 4
+        Item {
+            Layout.fillWidth: true; Layout.fillHeight: true
 
-            delegate: JobItem {
-                width: jobList.width
-                jobFile:     model.jobFile
-                jobType:     model.jobType
-                jobStatus:   model.jobStatus
-                jobProgress: model.jobProgress
+            ListView {
+                id: jobList
+                anchors.fill: parent
+                model: root.model
+                clip: true; spacing: 4
+
+                delegate: JobItem {
+                    width: jobList.width
+                    jobFile:     model.jobFile
+                    jobType:     model.jobType
+                    jobStatus:   model.jobStatus
+                    jobProgress: model.jobProgress
+                }
+            }
+
+            Label {
+                visible: jobList.count === 0
+                anchors.centerIn: parent
+                text: "No jobs yet"
+                color: "#484f58"; font.pixelSize: 12
             }
         }
     }

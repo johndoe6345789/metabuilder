@@ -8,46 +8,70 @@ Rectangle {
     color: "#161b22"
 
     required property var model
-    signal fileSelected(string path)
     property string selectedFile: ""
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: 8
-        spacing: 6
+        anchors.margins: 10
+        spacing: 8
 
-        FileBrowserHeader {
+        RowLayout {
             Layout.fillWidth: true
-            onAddClicked: fileDialog.open()
+            Label {
+                text: "Queue"
+                font.bold: true; font.pixelSize: 14
+                color: "#e6edf3"; Layout.fillWidth: true
+            }
+            Button {
+                text: "+ Add"
+                implicitWidth: 64; implicitHeight: 28
+                onClicked: fileDialog.open()
+                contentItem: Text {
+                    text: parent.text; color: "#e6edf3"
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    font.pixelSize: 12
+                }
+                background: Rectangle { color: "#7c3aed"; radius: 4 }
+            }
         }
 
         Rectangle {
-            Layout.fillWidth: true
-            height: 1
-            color: "#30363d"
+            Layout.fillWidth: true; height: 1; color: "#30363d"
         }
 
-        ListView {
-            id: listView
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            model: root.model
-            clip: true
-            spacing: 2
+        Item {
+            Layout.fillWidth: true; Layout.fillHeight: true
 
-            delegate: FileItem {
-                width: listView.width
-                filePath:    model.filePath
-                fileName:    model.fileName
-                fileExt:     model.fileExt
-                fileSizeStr: model.fileSizeStr
-                isSelected:
-                    root.selectedFile
-                        === model.filePath
-                onClicked: path => {
-                    root.selectedFile = path
-                    root.fileSelected(path)
+            ListView {
+                id: lv
+                anchors.fill: parent
+                model: root.model
+                clip: true; spacing: 3
+
+                delegate: FileItem {
+                    width: lv.width
+                    filePath:    model.filePath
+                    fileName:    model.fileName
+                    fileExt:     model.fileExt
+                    fileSizeStr: model.fileSizeStr
+                    isSelected:  root.selectedFile === model.filePath
+                    onClicked: p => { root.selectedFile = p }
+                    onRemoved: {
+                        if (root.selectedFile === model.filePath)
+                            root.selectedFile = ""
+                        root.model.removeFile(index)
+                    }
                 }
+            }
+
+            Label {
+                visible: lv.count === 0
+                anchors.centerIn: parent
+                text: "Click + Add to queue files\n\n"
+                    + "mp3 · mp4 · mkv · flac · mov"
+                color: "#484f58"; font.pixelSize: 12
+                horizontalAlignment: Text.AlignHCenter
             }
         }
     }
@@ -57,13 +81,12 @@ Rectangle {
         title: "Add Media Files"
         fileMode: FileDialog.OpenFiles
         nameFilters: [
-            "Media files"
-            + " (*.mp3 *.mp4 *.mkv *.flac)"]
-        onAccepted: {
-            const paths = selectedFiles.map(
-                f => f.toString()
-                    .replace(/^file:\/\//, ""))
-            root.model.addFiles(paths)
-        }
+            "Media files (*.mp3 *.mp4 *.mkv *.flac *.mov)"
+        ]
+        onAccepted: root.model.addFiles(
+            selectedFiles.map(
+                f => f.toString().replace(/^file:\/\//, "")
+            )
+        )
     }
 }

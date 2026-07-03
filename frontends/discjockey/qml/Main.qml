@@ -6,22 +6,14 @@ import DiscJockey 1.0
 ApplicationWindow {
     id: root
     visible: true
-    width: 1100
-    height: 700
+    width: 1100; height: 700
     title: "DiscJockey"
     color: "#0f1117"
 
     FileModel    { id: fileModel }
     JobModel     { id: jobModel }
-    ApiClient    {
-        id: api
-        host: toolbar.mediaHost || "localhost"
-        port: parseInt(toolbar.mediaPort) || 8090
-    }
-    UploadClient {
-        id: uploader
-        bucket: "media-uploads"
-    }
+    ApiClient    { id: api }
+    UploadClient { id: uploader; bucket: "media-uploads" }
 
     JobWatcher {
         api:          api
@@ -30,13 +22,23 @@ ApplicationWindow {
         selectedFile: browser.selectedFile
     }
 
+    SettingsPopup {
+        id: settingsPopup
+        x: root.width - width - 16
+        y: toolbar.height + 8
+        onMediaHostChanged: h => { api.host = h }
+        onMediaPortChanged: p => { api.port = p }
+        onS3HostChanged:    h => { uploader.host = h }
+        onS3PortChanged:    p => { uploader.port = p }
+    }
+
     ColumnLayout {
-        anchors.fill: parent
-        spacing: 0
+        anchors.fill: parent; spacing: 0
 
         AppToolBar {
             id: toolbar
             Layout.fillWidth: true
+            onSettingsRequested: settingsPopup.open()
         }
 
         RowLayout {
@@ -47,33 +49,18 @@ ApplicationWindow {
             FileBrowser {
                 id: browser
                 model: fileModel
-                Layout.preferredWidth: 280
+                Layout.preferredWidth: 320
                 Layout.fillHeight: true
             }
 
             StreamPanel {
                 selectedFile: browser.selectedFile
-                uploader: uploader
+                jobModel:     jobModel
+                uploader:     uploader
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                onStream:
-                    uploader.upload(
-                        browser.selectedFile)
-                onMediaHostChanged:
-                    h => { api.host = h }
-                onMediaPortChanged:
-                    p => { api.port = p }
-                onS3HostChanged:
-                    h => { uploader.host = h }
-                onS3PortChanged:
-                    p => { uploader.port = p }
+                onStream: uploader.upload(browser.selectedFile)
             }
-        }
-
-        JobQueue {
-            model: jobModel
-            Layout.fillWidth: true
-            Layout.preferredHeight: 150
         }
     }
 }

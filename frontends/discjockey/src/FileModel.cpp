@@ -9,7 +9,7 @@ FileModel::FileModel(QObject *parent)
 
 bool FileModel::supported(const QString &ext) {
     static const QStringList exts{
-        "mp3", "mp4", "mkv", "flac"};
+        "mp3", "mp4", "mkv", "flac", "mov"};
     return exts.contains(ext.toLower());
 }
 

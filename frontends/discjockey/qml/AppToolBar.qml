@@ -4,53 +4,62 @@ import QtQuick.Layouts
 
 ToolBar {
     id: root
+    signal settingsRequested()
 
-    property alias mediaHost: hostField.text
-    property alias mediaPort: portField.text
-
-    background: Rectangle { color: "#161b22" }
+    background: Rectangle {
+        color: "#161b22"
+        Rectangle {
+            anchors {
+                left: parent.left; right: parent.right
+                bottom: parent.bottom
+            }
+            height: 1; color: "#30363d"
+        }
+    }
 
     RowLayout {
         anchors.fill: parent
-        anchors.margins: 8
-        spacing: 12
+        anchors.margins: 10
+        spacing: 10
+
+        Rectangle {
+            width: 30; height: 30; radius: 7
+            gradient: Gradient {
+                orientation: Gradient.Horizontal
+                GradientStop { position: 0.0; color: "#7c3aed" }
+                GradientStop { position: 1.0; color: "#0ea5e9" }
+            }
+            Text {
+                anchors.centerIn: parent
+                text: "DJ"
+                color: "white"
+                font.pixelSize: 11
+                font.bold: true
+            }
+        }
 
         Label {
             text: "DiscJockey"
-            font.pixelSize: 18
+            font.pixelSize: 17
             font.bold: true
-            color: "#7c3aed"
+            color: "#e6edf3"
         }
 
         Item { Layout.fillWidth: true }
 
-        Label {
-            text: "Media Host:"
-            color: "#8b949e"
-        }
-
-        TextField {
-            id: hostField
-            text: "localhost"
-            implicitWidth: 120
-            color: "#e6edf3"
-            background: Rectangle {
-                color: "#0f1117"
-                border.color: "#30363d"
-                radius: 4
+        Button {
+            text: "⚙  Settings"
+            onClicked: root.settingsRequested()
+            contentItem: Text {
+                text: parent.text
+                color: "#8b949e"
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                font.pixelSize: 13
             }
-        }
-
-        Label { text: ":"; color: "#8b949e" }
-
-        TextField {
-            id: portField
-            text: "8090"
-            implicitWidth: 60
-            color: "#e6edf3"
             background: Rectangle {
-                color: "#0f1117"
-                border.color: "#30363d"
+                color: parent.hovered
+                    ? "#21262d" : "transparent"
                 radius: 4
             }
         }

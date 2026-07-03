@@ -41,14 +41,13 @@ qt_add_resources(discjockey "qml"
     FILES
         qml/Main.qml
         qml/AppToolBar.qml
+        qml/SettingsPopup.qml
+        qml/ServerConfigGrid.qml
         qml/FileBrowser.qml
-        qml/FileBrowserHeader.qml
         qml/FileItem.qml
         qml/StreamPanel.qml
         qml/FileInfo.qml
         qml/UploadProgress.qml
-        qml/ServerConfig.qml
-        qml/ServerConfigGrid.qml
         qml/JobQueue.qml
         qml/JobItem.qml
         qml/JobWatcher.qml
