@@ -1,0 +1,6 @@
+/home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/_build/CMakeFiles/discjockey.dir
+/home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/_build/CMakeFiles/discjockey_qmlimportscan.dir
+/home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/_build/CMakeFiles/edit_cache.dir
+/home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/_build/CMakeFiles/rebuild_cache.dir
+/home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/_build/CMakeFiles/discjockey_autogen_timestamp_deps.dir
+/home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/_build/CMakeFiles/discjockey_autogen.dir

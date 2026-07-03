@@ -1,0 +1,18 @@
+<RCC>
+  <qresource prefix="/">
+    <file alias="qml/Main.qml">/home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/qml/Main.qml</file>
+    <file alias="qml/AppToolBar.qml">/home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/qml/AppToolBar.qml</file>
+    <file alias="qml/FileBrowser.qml">/home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/qml/FileBrowser.qml</file>
+    <file alias="qml/FileBrowserHeader.qml">/home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/qml/FileBrowserHeader.qml</file>
+    <file alias="qml/FileItem.qml">/home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/qml/FileItem.qml</file>
+    <file alias="qml/StreamPanel.qml">/home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/qml/StreamPanel.qml</file>
+    <file alias="qml/FileInfo.qml">/home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/qml/FileInfo.qml</file>
+    <file alias="qml/UploadProgress.qml">/home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/qml/UploadProgress.qml</file>
+    <file alias="qml/ServerConfig.qml">/home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/qml/ServerConfig.qml</file>
+    <file alias="qml/ServerConfigGrid.qml">/home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/qml/ServerConfigGrid.qml</file>
+    <file alias="qml/JobQueue.qml">/home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/qml/JobQueue.qml</file>
+    <file alias="qml/JobItem.qml">/home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/qml/JobItem.qml</file>
+    <file alias="qml/JobWatcher.qml">/home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/qml/JobWatcher.qml</file>
+  </qresource>
+</RCC>
+

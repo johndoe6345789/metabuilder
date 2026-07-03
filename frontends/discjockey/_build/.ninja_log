@@ -1,0 +1,19 @@
+# ninja log v6
+1	34	1783073044409700647	.qt/qml_imports/discjockey_build.cmake	17ac1d8ecb65cfc3
+1	34	1783073044409700647	/home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/_build/.qt/qml_imports/discjockey_build.cmake	17ac1d8ecb65cfc3
+34	336	1783073044701700078	discjockey_autogen/timestamp	989885c20ea868cf
+34	336	1783073044701700078	discjockey_autogen/mocs_compilation.cpp	989885c20ea868cf
+34	336	1783073044701700078	/home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/_build/discjockey_autogen/timestamp	989885c20ea868cf
+34	336	1783073044701700078	/home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/_build/discjockey_autogen/mocs_compilation.cpp	989885c20ea868cf
+336	346	1783073044721700039	.qt/rcc/qrc_qml.cpp	94708bfd7cbc192
+336	346	1783073044721700039	/home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/_build/.qt/rcc/qrc_qml.cpp	94708bfd7cbc192
+346	1844	1783073044721700039	CMakeFiles/discjockey.dir/src/ApiClientSubmit.cpp.o	9835b41eee203ba8
+346	1917	1783073044721700039	CMakeFiles/discjockey.dir/src/ApiClient.cpp.o	9b3e866364b2e2c8
+346	2054	1783073044721700039	CMakeFiles/discjockey.dir/discjockey_autogen/mocs_compilation.cpp.o	c031bdd1efad7f90
+346	2470	1783073044721700039	CMakeFiles/discjockey.dir/main.cpp.o	d8ac35549e1e7665
+1844	3355	1783073046217697122	CMakeFiles/discjockey.dir/src/ApiClientPoll.cpp.o	cc8c065f057efaec
+3355	3381	1783073047729694174	CMakeFiles/discjockey.dir/_build/.qt/rcc/qrc_qml.cpp.o	863d8afec6db4455
+1917	3503	1783073046293696974	CMakeFiles/discjockey.dir/src/UploadClient.cpp.o	5fea6e8d0637a5df
+2054	3835	1783073046429696709	CMakeFiles/discjockey.dir/src/FileModel.cpp.o	7a0a62827e5b454a
+2470	4082	1783073046845695897	CMakeFiles/discjockey.dir/src/JobModel.cpp.o	c9fef4511096880
+4082	4311	1783073048457692755	discjockey	c46d81ea5ba0a4f6
