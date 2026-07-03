@@ -4,6 +4,7 @@ import QtQuick.Layouts
 
 ToolBar {
     id: root
+    implicitHeight: 52
     signal settingsRequested()
 
     background: Rectangle {

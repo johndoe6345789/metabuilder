@@ -1,16 +1,15 @@
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Layouts
 
 Rectangle {
     id: root
     height: 52; radius: 4
 
-    required property string filePath
-    required property string fileName
-    required property string fileExt
-    required property string fileSizeStr
-    required property bool   isSelected
+    property string filePath:    ""
+    property string fileName:    ""
+    property string fileExt:     ""
+    property string fileSizeStr: ""
+    property bool   isSelected:  false
 
     signal clicked(string path)
     signal removed()
@@ -22,55 +21,59 @@ Rectangle {
         onClicked: root.clicked(root.filePath)
     }
 
-    RowLayout {
-        anchors {
-            left: parent.left; right: parent.right
-            verticalCenter: parent.verticalCenter
-            leftMargin: 8; rightMargin: 4
+    // ext badge
+    Rectangle {
+        id: badge
+        anchors.left: parent.left
+        anchors.leftMargin: 8
+        anchors.verticalCenter: parent.verticalCenter
+        width: extL.implicitWidth + 10
+        height: 20; radius: 3
+        color: root.fileExt === "mp4" || root.fileExt === "mkv"
+            || root.fileExt === "mov" ? "#7c3aed" : "#0ea5e9"
+        Text {
+            id: extL
+            text: root.fileExt.toUpperCase()
+            color: "#e6edf3"; font.pixelSize: 10
+            anchors.centerIn: parent
         }
-        spacing: 6
+    }
 
-        Rectangle {
-            color: root.fileExt === "mp4"
-                || root.fileExt === "mkv"
-                || root.fileExt === "mov"
-                ? "#7c3aed" : "#0ea5e9"
+    // remove button
+    Button {
+        id: rmBtn
+        anchors.right: parent.right; anchors.rightMargin: 4
+        anchors.verticalCenter: parent.verticalCenter
+        implicitWidth: 24; implicitHeight: 24
+        onClicked: root.removed()
+        contentItem: Text {
+            text: "✕"; color: "#8b949e"
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            font.pixelSize: 11
+        }
+        background: Rectangle {
+            color: parent.hovered ? "#30363d" : "transparent"
             radius: 3
-            width: extL.width + 10; height: 20
-            Label {
-                id: extL
-                text: root.fileExt.toUpperCase()
-                color: "#e6edf3"; font.pixelSize: 10
-                anchors.centerIn: parent
-            }
         }
+    }
 
-        ColumnLayout {
-            Layout.fillWidth: true; spacing: 1
-            Label {
-                text: root.fileName; color: "#e6edf3"
-                elide: Text.ElideMiddle
-                Layout.fillWidth: true; font.pixelSize: 12
-            }
-            Label {
-                text: root.fileSizeStr
-                color: "#8b949e"; font.pixelSize: 11
-            }
-        }
+    // filename
+    Text {
+        id: nameLbl
+        anchors.left: badge.right; anchors.leftMargin: 8
+        anchors.right: rmBtn.left; anchors.rightMargin: 4
+        anchors.top: parent.top; anchors.topMargin: 10
+        text: root.fileName; color: "#e6edf3"
+        font.pixelSize: 12; elide: Text.ElideMiddle
+        clip: true
+    }
 
-        Button {
-            implicitWidth: 24; implicitHeight: 24
-            onClicked: root.removed()
-            contentItem: Text {
-                text: "✕"; color: "#8b949e"
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                font.pixelSize: 11
-            }
-            background: Rectangle {
-                color: parent.hovered ? "#30363d" : "transparent"
-                radius: 3
-            }
-        }
+    // file size
+    Text {
+        anchors.left: badge.right; anchors.leftMargin: 8
+        anchors.top: nameLbl.bottom; anchors.topMargin: 2
+        text: root.fileSizeStr
+        color: "#8b949e"; font.pixelSize: 11
     }
 }

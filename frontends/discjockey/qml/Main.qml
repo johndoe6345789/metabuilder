@@ -44,13 +44,18 @@ ApplicationWindow {
         RowLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            spacing: 1
+            spacing: 0
 
             FileBrowser {
                 id: browser
                 model: fileModel
                 Layout.preferredWidth: 320
                 Layout.fillHeight: true
+            }
+
+            Rectangle {
+                width: 1; Layout.fillHeight: true
+                color: "#30363d"
             }
 
             StreamPanel {

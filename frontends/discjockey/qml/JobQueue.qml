@@ -54,7 +54,8 @@ Rectangle {
 
             Label {
                 visible: jobList.count === 0
-                anchors.centerIn: parent
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
                 text: "No jobs yet"
                 color: "#484f58"; font.pixelSize: 12
             }

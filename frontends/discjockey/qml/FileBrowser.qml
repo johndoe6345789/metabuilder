@@ -51,11 +51,12 @@ Rectangle {
 
                 delegate: FileItem {
                     width: lv.width
-                    filePath:    model.filePath
-                    fileName:    model.fileName
-                    fileExt:     model.fileExt
-                    fileSizeStr: model.fileSizeStr
-                    isSelected:  root.selectedFile === model.filePath
+                    filePath:    model.filePath    || ""
+                    fileName:    model.fileName    || ""
+                    fileExt:     model.fileExt     || ""
+                    fileSizeStr: model.fileSizeStr || ""
+                    isSelected:  root.selectedFile !== ""
+                        && root.selectedFile === model.filePath
                     onClicked: p => { root.selectedFile = p }
                     onRemoved: {
                         if (root.selectedFile === model.filePath)
