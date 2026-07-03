@@ -182,7 +182,13 @@ ApplicationWindow {
         AppToolBar {
             id: toolbar; Layout.fillWidth: true
             onSettingsRequested:       settingsPopup.open()
-            onMinimizeToTrayRequested: root.hide()
+            onMinimizeToTrayRequested: {
+                if (trayManager.available) {
+                    root.hide()
+                } else {
+                    root.showMinimized()
+                }
+            }
         }
 
         TabStrip {
