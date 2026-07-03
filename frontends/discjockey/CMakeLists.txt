@@ -9,7 +9,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 include(${CMAKE_BINARY_DIR}/conan_toolchain.cmake OPTIONAL)
 
 find_package(Qt6 6.4 REQUIRED COMPONENTS
-    Core Gui Quick Network)
+    Core Gui Quick Network Multimedia Widgets)
 
 qt_policy(SET QTP0001 NEW)
 
@@ -21,6 +21,9 @@ qt_add_executable(discjockey
     src/UploadClient.cpp
     src/FileModel.cpp
     src/JobModel.cpp
+    src/Session.cpp
+    src/TrayManager.cpp
+    src/AlbumArt.cpp
 )
 
 target_compile_definitions(discjockey PRIVATE
@@ -34,6 +37,15 @@ target_link_libraries(discjockey PRIVATE
     Qt6::Gui
     Qt6::Quick
     Qt6::Network
+    Qt6::Multimedia
+    Qt6::Widgets
+)
+
+qt_add_resources(discjockey "assets"
+    PREFIX "/"
+    FILES
+        icon.png
+        tray_icon.png
 )
 
 qt_add_resources(discjockey "qml"
@@ -45,10 +57,14 @@ qt_add_resources(discjockey "qml"
         qml/ServerConfigGrid.qml
         qml/FileBrowser.qml
         qml/FileItem.qml
-        qml/StreamPanel.qml
-        qml/FileInfo.qml
         qml/UploadProgress.qml
         qml/JobQueue.qml
         qml/JobItem.qml
         qml/JobWatcher.qml
+        qml/PlayerControls.qml
+        qml/TabStrip.qml
+        qml/TabItem.qml
+        qml/MusicPanel.qml
+        qml/VideoPanel.qml
+        qml/StreamingPanel.qml
 )

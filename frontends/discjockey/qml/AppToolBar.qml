@@ -6,6 +6,7 @@ ToolBar {
     id: root
     implicitHeight: 52
     signal settingsRequested()
+    signal minimizeToTrayRequested()
 
     background: Rectangle {
         color: "#161b22"
@@ -41,28 +42,38 @@ ToolBar {
 
         Label {
             text: "DiscJockey"
-            font.pixelSize: 17
-            font.bold: true
-            color: "#e6edf3"
+            font.pixelSize: 17; font.bold: true; color: "#e6edf3"
+        }
+        Label {
+            text: "v" + djVersion
+            font.pixelSize: 11; color: "#484f58"
+            anchors.baseline: undefined
         }
 
         Item { Layout.fillWidth: true }
 
         Button {
+            text: "⎗  Minimize to Tray"
+            onClicked: root.minimizeToTrayRequested()
+            contentItem: Text {
+                text: parent.text; color: "#8b949e"
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter; font.pixelSize: 13
+            }
+            background: Rectangle {
+                color: parent.hovered ? "#21262d" : "transparent"; radius: 4 }
+        }
+
+        Button {
             text: "⚙  Settings"
             onClicked: root.settingsRequested()
             contentItem: Text {
-                text: parent.text
-                color: "#8b949e"
+                text: parent.text; color: "#8b949e"
                 horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                font.pixelSize: 13
+                verticalAlignment: Text.AlignVCenter; font.pixelSize: 13
             }
             background: Rectangle {
-                color: parent.hovered
-                    ? "#21262d" : "transparent"
-                radius: 4
-            }
+                color: parent.hovered ? "#21262d" : "transparent"; radius: 4 }
         }
     }
 }
