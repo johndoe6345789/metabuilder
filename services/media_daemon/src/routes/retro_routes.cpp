@@ -47,23 +47,25 @@ void RetroRoutes::handle_create_session(
         return;
     }
 
-    // Build retro session job
-    JobRequest job;
-    job.type       = JobType::RetroSession;
-    job.input_path = rom_path;
-    job.params["system"]   = system;
-    job.params["rom_path"] = rom_path;
-    // Core will stream via RTMP; nginx converts to HLS
+    // Generate session ID before building params
     auto now = std::chrono::system_clock::now();
     auto t   = std::chrono::system_clock::to_time_t(now);
     std::ostringstream id_ss;
     id_ss << system << "_" << std::hex << t;
     const std::string session_id = id_ss.str();
-    job.params["session_id"] = session_id;
 
     const std::string stream_url =
         hls_base_url() + "/" + session_id + "/index.m3u8";
-    job.params["stream_url"] = stream_url;
+
+    // params is a variant — use the map<string,string> arm for custom jobs
+    JobRequest job;
+    job.type   = JobType::RetroSession;
+    job.params = std::map<std::string, std::string>{
+        {"system",     system},
+        {"rom_path",   rom_path},
+        {"session_id", session_id},
+        {"stream_url", stream_url},
+    };
 
     auto result = job_queue_.submit(std::move(job));
     if (result.is_error()) {
@@ -76,13 +78,14 @@ void RetroRoutes::handle_create_session(
         session_to_job_[session_id] = result.value();
     }
 
+    // camelCase keys match the RetroSession TS interface
     Json::Value resp;
-    resp["id"]         = session_id;
-    resp["system"]     = system;
-    resp["rom_path"]   = rom_path;
-    resp["stream_url"] = stream_url;
-    resp["job_id"]     = result.value();
-    resp["started_at"] =
+    resp["id"]        = session_id;
+    resp["system"]    = system;
+    resp["romPath"]   = rom_path;
+    resp["streamUrl"] = stream_url;
+    resp["jobId"]     = result.value();
+    resp["startedAt"] =
         std::to_string(std::chrono::duration_cast<std::chrono::seconds>(
             now.time_since_epoch()).count());
     cb(json_ok(resp));
