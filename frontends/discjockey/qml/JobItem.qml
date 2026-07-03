@@ -77,7 +77,7 @@ Rectangle {
             color: root.statusColor(
                 root.jobStatus)
             font.pixelSize: 11
-            implicitWidth: 80
+            Layout.preferredWidth: 80
         }
     }
 }

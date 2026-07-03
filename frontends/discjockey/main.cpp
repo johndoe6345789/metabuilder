@@ -11,6 +11,12 @@
 
 int main(int argc, char *argv[])
 {
+    // Fall back to xcb (X11) when no Wayland display is available
+    if (qEnvironmentVariable("QT_QPA_PLATFORM").isEmpty() &&
+        qEnvironmentVariable("WAYLAND_DISPLAY").isEmpty()) {
+        qputenv("QT_QPA_PLATFORM", "xcb");
+    }
+
     QGuiApplication app(argc, argv);
     app.setOrganizationName("MetaBuilder");
     app.setApplicationName("DiscJockey");

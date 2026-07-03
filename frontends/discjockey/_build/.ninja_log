@@ -17,3 +17,12 @@
 2054	3835	1783073046429696709	CMakeFiles/discjockey.dir/src/FileModel.cpp.o	7a0a62827e5b454a
 2470	4082	1783073046845695897	CMakeFiles/discjockey.dir/src/JobModel.cpp.o	c9fef4511096880
 4082	4311	1783073048457692755	discjockey	c46d81ea5ba0a4f6
+2	29	1783074227943475821	discjockey_autogen/timestamp	989885c20ea868cf
+2	29	1783074227943475821	discjockey_autogen/mocs_compilation.cpp	989885c20ea868cf
+2	29	1783074227943475821	/home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/_build/discjockey_autogen/timestamp	989885c20ea868cf
+2	29	1783074227943475821	/home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/_build/discjockey_autogen/mocs_compilation.cpp	989885c20ea868cf
+29	38	1783074227979475762	.qt/rcc/qrc_qml.cpp	94708bfd7cbc192
+29	38	1783074227979475762	/home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/_build/.qt/rcc/qrc_qml.cpp	94708bfd7cbc192
+38	63	1783074227979475762	CMakeFiles/discjockey.dir/_build/.qt/rcc/qrc_qml.cpp.o	863d8afec6db4455
+38	1996	1783074227979475762	CMakeFiles/discjockey.dir/main.cpp.o	d8ac35549e1e7665
+1996	2226	1783074229939472571	discjockey	c46d81ea5ba0a4f6
