@@ -14,7 +14,7 @@
 #include "TrayManager.hpp"
 #include "AlbumArt.hpp"
 
-static constexpr const char *DJ_VERSION = "0.3.2";
+static constexpr const char *DJ_VERSION = "0.3.3";
 
 int main(int argc, char *argv[])
 {

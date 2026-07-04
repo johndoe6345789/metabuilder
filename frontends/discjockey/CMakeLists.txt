@@ -9,7 +9,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 include(${CMAKE_BINARY_DIR}/conan_toolchain.cmake OPTIONAL)
 
 find_package(Qt6 6.4 REQUIRED COMPONENTS
-    Core Gui Quick Network Multimedia Widgets)
+    Core Gui Quick Network Multimedia Widgets DBus)
 
 qt_policy(SET QTP0001 NEW)
 
@@ -39,6 +39,7 @@ target_link_libraries(discjockey PRIVATE
     Qt6::Network
     Qt6::Multimedia
     Qt6::Widgets
+    Qt6::DBus
 )
 
 qt_add_resources(discjockey "assets"
