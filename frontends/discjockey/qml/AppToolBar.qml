@@ -71,5 +71,18 @@ ToolBar {
                 color: parent.hovered ? "#21262d" : "transparent"; radius: 4
             }
         }
+
+        Button {
+            text: "✕  Quit"
+            onClicked: Qt.quit()
+            contentItem: Text {
+                text: parent.text; color: parent.hovered ? "#f85149" : "#8b949e"
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter; font.pixelSize: 13
+            }
+            background: Rectangle {
+                color: parent.hovered ? "#21262d" : "transparent"; radius: 4
+            }
+        }
     }
 }
