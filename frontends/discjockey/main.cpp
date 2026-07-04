@@ -14,7 +14,7 @@
 #include "TrayManager.hpp"
 #include "AlbumArt.hpp"
 
-static constexpr const char *DJ_VERSION = "0.3.4";
+static constexpr const char *DJ_VERSION = "0.3.5";
 
 int main(int argc, char *argv[])
 {
@@ -22,13 +22,6 @@ int main(int argc, char *argv[])
         qEnvironmentVariable("WAYLAND_DISPLAY").isEmpty())
         qputenv("QT_QPA_PLATFORM", "xcb");
 
-    // Ensure the GTK3 platform theme is active on Linux so Qt6 registers
-    // the tray icon via StatusNotifierItem (SNI), which Ayatana/XFCE's
-    // indicator plugin hosts.  Only set if not already configured.
-#ifdef Q_OS_LINUX
-    if (qgetenv("QT_QPA_PLATFORMTHEME").isEmpty())
-        qputenv("QT_QPA_PLATFORMTHEME", "gtk3");
-#endif
 
     QApplication app(argc, argv);
     app.setOrganizationName("MetaBuilder");

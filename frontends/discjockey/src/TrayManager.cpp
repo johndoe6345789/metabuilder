@@ -8,6 +8,7 @@
 #include <QApplication>
 #ifdef Q_OS_LINUX
 #  include <QDBusInterface>
+#  include <QProcess>
 #endif
 
 static QIcon makeTrayIcon() {
@@ -65,33 +66,45 @@ TrayManager::TrayManager(QObject *parent) : QObject(parent) {
     tray_->setContextMenu(menu);
     tray_->show();
 
-    // Probe after 1 s to let the SNI host register our icon
-    QTimer::singleShot(1000, this, &TrayManager::probeTray);
+    QTimer::singleShot(800, this, &TrayManager::probeTray);
 }
 
 void TrayManager::probeTray() {
 #ifdef Q_OS_LINUX
-    // On Linux the icon may go via SNI (StatusNotifierItem).
-    // isSystemTrayAvailable() returns true whenever the SNI *watcher*
-    // is running — even when no panel *host* is actually rendering icons.
-    // Query the watcher's registered hosts list to be sure.
-    QDBusInterface watcher(
-        "org.kde.StatusNotifierWatcher",
-        "/StatusNotifierWatcher",
-        "org.kde.StatusNotifierWatcher",
-        QDBusConnection::sessionBus());
-
-    if (watcher.isValid()) {
-        QStringList hosts =
-            watcher.property("RegisteredStatusNotifierHosts").toStringList();
-        trayWorking_ = !hosts.isEmpty();
-    } else {
-        // No SNI watcher — XEmbed tray.  isSystemTrayAvailable() is
-        // reliable here (it checks _NET_SYSTEM_TRAY_S0 on the root window).
-        trayWorking_ = QSystemTrayIcon::isSystemTrayAvailable();
+    // Check 1 — SNI: any panel plugin registered as an SNI host?
+    {
+        QDBusInterface w("org.kde.StatusNotifierWatcher",
+                         "/StatusNotifierWatcher",
+                         "org.kde.StatusNotifierWatcher",
+                         QDBusConnection::sessionBus());
+        if (w.isValid()) {
+            QStringList hosts =
+                w.property("RegisteredStatusNotifierHosts").toStringList();
+            if (!hosts.isEmpty()) {
+                trayWorking_ = true;
+                emit trayWorkingChanged();
+                return;
+            }
+        }
     }
+
+    // Check 2 — XEmbed: _NET_SYSTEM_TRAY_S0 owned on the root window?
+    // xprop is available on any X11 desktop.
+    {
+        QProcess xprop;
+        xprop.start("xprop", {"-root", "_NET_SYSTEM_TRAY_S0"});
+        if (xprop.waitForFinished(500)) {
+            QByteArray out = xprop.readAllStandardOutput();
+            if (out.contains("_NET_SYSTEM_TRAY_S0")) {
+                trayWorking_ = true;
+                emit trayWorkingChanged();
+                return;
+            }
+        }
+    }
+
+    trayWorking_ = false;
 #else
-    // macOS / Windows: native tray always works when available
     trayWorking_ = QSystemTrayIcon::isSystemTrayAvailable();
 #endif
     emit trayWorkingChanged();
