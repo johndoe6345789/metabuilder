@@ -1,5 +1,6 @@
 [tool_requires]
 ninja/1.12.1
+cmake/[>=3.20]
 
 [generators]
 CMakeToolchain

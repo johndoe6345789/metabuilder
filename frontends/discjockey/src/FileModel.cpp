@@ -75,6 +75,12 @@ void FileModel::removeFile(int index) {
     endRemoveRows();
 }
 
+QStringList FileModel::allFilePaths() const {
+    QStringList out;
+    for (const auto &f : files_) out << f.path;
+    return out;
+}
+
 void FileModel::clear() {
     if (files_.empty()) return;
     beginResetModel();

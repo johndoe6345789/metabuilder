@@ -1,2 +1,0 @@
-set(__QT_DEPLOY_TARGET_discjockey_FILE /home/linuxuser/Documents/GitHub/metabuilder/frontends/discjockey/_build/discjockey)
-set(__QT_DEPLOY_TARGET_discjockey_TYPE EXECUTABLE)

@@ -8,7 +8,10 @@ Rectangle {
     color: "#161b22"
 
     required property var model
-    property string selectedFile: ""
+    property string activeFile: ""  // path of the currently active tab
+
+    signal fileOpenRequested(string path)
+    signal streamRequested(string path)
 
     ColumnLayout {
         anchors.fill: parent
@@ -36,9 +39,7 @@ Rectangle {
             }
         }
 
-        Rectangle {
-            Layout.fillWidth: true; height: 1; color: "#30363d"
-        }
+        Rectangle { Layout.fillWidth: true; height: 1; color: "#30363d" }
 
         Item {
             Layout.fillWidth: true; Layout.fillHeight: true
@@ -55,14 +56,11 @@ Rectangle {
                     fileName:    model.fileName    || ""
                     fileExt:     model.fileExt     || ""
                     fileSizeStr: model.fileSizeStr || ""
-                    isSelected:  root.selectedFile !== ""
-                        && root.selectedFile === model.filePath
-                    onClicked: p => { root.selectedFile = p }
-                    onRemoved: {
-                        if (root.selectedFile === model.filePath)
-                            root.selectedFile = ""
-                        root.model.removeFile(index)
-                    }
+                    isSelected:  root.activeFile !== ""
+                        && root.activeFile === model.filePath
+                    onClicked:         p => root.fileOpenRequested(p)
+                    onStreamRequested: p => root.streamRequested(p)
+                    onRemoved: root.model.removeFile(index)
                 }
             }
 
@@ -81,13 +79,9 @@ Rectangle {
         id: fileDialog
         title: "Add Media Files"
         fileMode: FileDialog.OpenFiles
-        nameFilters: [
-            "Media files (*.mp3 *.mp4 *.mkv *.flac *.mov)"
-        ]
+        nameFilters: [ "Media files (*.mp3 *.mp4 *.mkv *.flac *.mov)" ]
         onAccepted: root.model.addFiles(
-            selectedFiles.map(
-                f => f.toString().replace(/^file:\/\//, "")
-            )
+            selectedFiles.map(f => f.toString().replace(/^file:\/\//, ""))
         )
     }
 }

@@ -34,6 +34,7 @@ public:
     Q_INVOKABLE void addFiles(const QStringList &paths);
     Q_INVOKABLE void removeFile(int index);
     Q_INVOKABLE void clear();
+    Q_INVOKABLE QStringList allFilePaths() const;
 
 private:
     static bool supported(const QString &ext);

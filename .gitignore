@@ -121,6 +121,8 @@ bun.lockb
 .vscode/settings.json
 .act-env
 /frontends/qt6/_build
+# C++ CMake/Ninja build output (never commit build artifacts)
+**/_build/
 
 # Storybook build output (generated)
 frontends/storybook/storybook-static/
