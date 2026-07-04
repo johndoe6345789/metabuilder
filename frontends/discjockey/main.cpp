@@ -14,13 +14,24 @@
 #include "TrayManager.hpp"
 #include "AlbumArt.hpp"
 
-static constexpr const char *DJ_VERSION = "0.3.5";
+static constexpr const char *DJ_VERSION = "0.3.6";
 
 int main(int argc, char *argv[])
 {
     if (qEnvironmentVariable("QT_QPA_PLATFORM").isEmpty() &&
         qEnvironmentVariable("WAYLAND_DISPLAY").isEmpty())
         qputenv("QT_QPA_PLATFORM", "xcb");
+
+    // Linux tray icons go through StatusNotifierItem (SNI) on modern
+    // desktops (XFCE systray, KDE, ayatana/GNOME).  Qt6 only ships its
+    // SNI backend (QDBusTrayIcon) via the GTK3 platform theme, so force
+    // it on unless the user already configured a theme.  Verified: with
+    // gtk3 the item registers on org.kde.StatusNotifierWatcher and the
+    // XFCE systray plugin renders it.
+#ifdef Q_OS_LINUX
+    if (qgetenv("QT_QPA_PLATFORMTHEME").isEmpty())
+        qputenv("QT_QPA_PLATFORMTHEME", "gtk3");
+#endif
 
 
     QApplication app(argc, argv);

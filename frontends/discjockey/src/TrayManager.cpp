@@ -71,16 +71,18 @@ TrayManager::TrayManager(QObject *parent) : QObject(parent) {
 
 void TrayManager::probeTray() {
 #ifdef Q_OS_LINUX
-    // Check 1 — SNI: any panel plugin registered as an SNI host?
+    // Check 1 — SNI: is a host actually registered on the watcher?
+    // NB: the property is IsStatusNotifierHostRegistered (a bool).
+    // The older RegisteredStatusNotifierHosts list is NOT implemented by
+    // XFCE's watcher, so querying it always fails — that was the bug.
     {
         QDBusInterface w("org.kde.StatusNotifierWatcher",
                          "/StatusNotifierWatcher",
                          "org.kde.StatusNotifierWatcher",
                          QDBusConnection::sessionBus());
         if (w.isValid()) {
-            QStringList hosts =
-                w.property("RegisteredStatusNotifierHosts").toStringList();
-            if (!hosts.isEmpty()) {
+            QVariant reg = w.property("IsStatusNotifierHostRegistered");
+            if (reg.isValid() && reg.toBool()) {
                 trayWorking_ = true;
                 emit trayWorkingChanged();
                 return;
@@ -88,14 +90,13 @@ void TrayManager::probeTray() {
         }
     }
 
-    // Check 2 — XEmbed: _NET_SYSTEM_TRAY_S0 owned on the root window?
-    // xprop is available on any X11 desktop.
+    // Check 2 — XEmbed fallback: _NET_SYSTEM_TRAY_S0 owned on the root?
     {
         QProcess xprop;
         xprop.start("xprop", {"-root", "_NET_SYSTEM_TRAY_S0"});
         if (xprop.waitForFinished(500)) {
             QByteArray out = xprop.readAllStandardOutput();
-            if (out.contains("_NET_SYSTEM_TRAY_S0")) {
+            if (out.contains("# ") || out.contains("0x")) {
                 trayWorking_ = true;
                 emit trayWorkingChanged();
                 return;
