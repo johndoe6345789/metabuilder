@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import s from './HeroSection.module.scss'
 
 export function HeroSection() {
@@ -16,9 +17,9 @@ export function HeroSection() {
           — forums, blog, chat, email and more, all under your brand.
         </p>
         <div className={s.ctas}>
-          <a className={s.primary} href="/ui/signup">
+          <Link className={s.primary} href="/ui/signup">
             Start free trial
-          </a>
+          </Link>
           <a className={s.secondary} href="#packages">
             See what&apos;s included
           </a>

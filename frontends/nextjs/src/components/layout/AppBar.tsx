@@ -199,7 +199,7 @@ export function AppBarComponent({
         <Button
           variant="contained"
           size="small"
-          onClick={() => { router.push('/app/ui/login') }}
+          onClick={() => { router.push('/ui/login') }}
           sx={{ textTransform: 'none' }}
         >
           Login

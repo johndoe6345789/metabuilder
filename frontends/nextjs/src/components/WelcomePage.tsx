@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import s from './WelcomePage.module.scss'
 import { Logo } from '@/components/brand/Logo'
 import { HeroSection } from './landing/HeroSection'
@@ -9,17 +10,17 @@ export function WelcomePage() {
     <div className={s.root}>
       <nav className={s.nav}>
         <div className={s.navInner}>
-          <a className={s.brand} href="/">
+          <Link className={s.brand} href="/">
             <Logo size={30} />
             <span className={s.brandName}>MetaBuilder</span>
-          </a>
+          </Link>
           <div className={s.navLinks}>
             <a className={s.navLink} href="#packages">Features</a>
             <a className={s.navLink} href="#pricing">Pricing</a>
           </div>
           <div className={s.navCtas}>
-            <a className={s.btnOutline} href="/ui/login">Sign In</a>
-            <a className={s.btnFilled} href="/ui/signup">Start free</a>
+            <Link className={s.btnOutline} href="/ui/login">Sign In</Link>
+            <Link className={s.btnFilled} href="/ui/signup">Start free</Link>
           </div>
         </div>
       </nav>

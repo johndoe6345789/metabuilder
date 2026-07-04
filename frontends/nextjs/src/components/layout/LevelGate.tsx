@@ -66,7 +66,7 @@ export function LevelGate({
         </Typography>
         <Button
           variant="contained"
-          onClick={() => { router.push('/app/ui/login') }}
+          onClick={() => { router.push('/ui/login') }}
         >
           Sign In
         </Button>

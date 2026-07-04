@@ -1,12 +1,19 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
   PRODUCT_TIERS,
   PRODUCT_PACKAGES,
 } from '@/lib/packages/product-packages'
 import s from './page.module.scss'
+
+// basePath ('/app') is applied to Link/router but NOT to fetch(), so the
+// API base must be prefixed explicitly to reach /app/api/* endpoints.
+const BASE = typeof window !== 'undefined'
+  ? (window.location.pathname.startsWith('/app') ? '/app' : '')
+  : '/app'
 
 type TierId = 'starter' | 'creator' | 'studio'
 
@@ -37,7 +44,7 @@ export default function SignupPage() {
     }
     setLoading(true)
     try {
-      const res = await fetch('/api/auth/register', {
+      const res = await fetch(`${BASE}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -67,7 +74,7 @@ export default function SignupPage() {
   return (
     <div className={s.root}>
       <div className={s.card}>
-        <a href="/" className={s.logo} />
+        <Link href="/" className={s.logo} />
         <h1 className={s.title}>Create your community</h1>
         <p className={s.sub}>Free 14-day trial · No card needed</p>
 
@@ -186,7 +193,7 @@ export default function SignupPage() {
 
         <p className={s.signin}>
           Already have an account?{' '}
-          <a href="/ui/login" className={s.link}>Sign in</a>
+          <Link href="/ui/login" className={s.link}>Sign in</Link>
         </p>
       </div>
     </div>

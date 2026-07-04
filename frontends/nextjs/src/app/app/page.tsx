@@ -39,7 +39,7 @@ export default function AppRootPage() {
           Sign in to access the application builder, admin tools, and your dashboard.
         </Typography>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-          <Button variant="contained" onClick={() => { router.push('/app/ui/login') }}>
+          <Button variant="contained" onClick={() => { router.push('/ui/login') }}>
             Sign In
           </Button>
           <Button variant="outlined" onClick={() => { router.push('/') }}>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import s from './page.module.scss'
 
@@ -121,7 +122,7 @@ export default function LoginPage() {
           ⚡ Turbo Login
         </button>
 
-        <a className={s.back} href="/">← Back to home</a>
+        <Link className={s.back} href="/">← Back to home</Link>
       </div>
     </div>
   )
