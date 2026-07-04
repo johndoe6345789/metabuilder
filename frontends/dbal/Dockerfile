@@ -4,6 +4,10 @@ FROM ${BASE_REGISTRY}/base-conan-cli:latest AS cli-builder
 
 COPY frontends/cli/ /app/cli/
 WORKDIR /app/cli
+# The pkgrepo conan proxy does not serve libcurl's version listing, so
+# cpr's `libcurl/[>=7.78.0 <9]` range cannot be resolved from it. Enable
+# conancenter as a fallback so transitive deps (libcurl/openssl/zlib) resolve.
+RUN conan remote enable conancenter
 RUN conan install . \
       --output-folder=build \
       --build=missing \
