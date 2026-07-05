@@ -73,6 +73,11 @@
   border-left-color: var(--mat-sys-primary, #4493f8);
 }
 .rowName { flex: 1; }
+.grip {
+  cursor: grab; color: var(--mat-sys-outline, #6e7681); font-size: 13px;
+  user-select: none;
+  &:active { cursor: grabbing; }
+}
 .del {
   border: none; background: transparent; cursor: pointer;
   color: var(--mat-sys-on-surface-variant, #8b949e); font-size: 12px;

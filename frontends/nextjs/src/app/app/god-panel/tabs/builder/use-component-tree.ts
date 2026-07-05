@@ -34,6 +34,30 @@ function removeNode(node: TreeNode, id: string): TreeNode {
   }
 }
 
+function findNode(node: TreeNode, id: string): TreeNode | null {
+  if (node.id === id) return node
+  for (const c of node.children) {
+    const found = findNode(c, id)
+    if (found) return found
+  }
+  return null
+}
+
+function isDescendant(node: TreeNode, ancestorId: string, id: string): boolean {
+  const anc = findNode(node, ancestorId)
+  return anc ? findNode(anc, id) !== null && ancestorId !== id : false
+}
+
+function insertAfter(node: TreeNode, siblingId: string, child: TreeNode): TreeNode {
+  const idx = node.children.findIndex((c) => c.id === siblingId)
+  if (idx >= 0) {
+    const next = [...node.children]
+    next.splice(idx + 1, 0, child)
+    return { ...node, children: next }
+  }
+  return { ...node, children: node.children.map((c) => insertAfter(c, siblingId, child)) }
+}
+
 /** Component-tree state with the same stage→publish persistence as workflows. */
 export function useComponentTree() {
   const [tree, setTree] = useState<TreeNode>(root)
@@ -75,6 +99,21 @@ export function useComponentTree() {
     setSelectedId('root')
   }, [tree, commit])
 
+  // Drag a node onto a target: into it if it's a container, else after it.
+  const moveNode = useCallback((dragId: string, targetId: string) => {
+    if (dragId === 'root' || dragId === targetId) return
+    if (isDescendant(tree, dragId, targetId)) return // no dropping into own subtree
+    const dragged = findNode(tree, dragId)
+    if (!dragged) return
+    const without = removeNode(tree, dragId)
+    const target = findNode(without, targetId)
+    const asContainer = target && paletteItem(target.type)?.container
+    const next = asContainer
+      ? insertChild(without, targetId, dragged)
+      : insertAfter(without, targetId, dragged)
+    commit(next)
+  }, [tree, commit])
+
   // Publish the tree to a route (PageConfig.componentTree row) in the DBAL.
   const publish = useCallback(async (
     tenant = 'system', path = '/', title = 'Home',
@@ -102,6 +141,6 @@ export function useComponentTree() {
 
   return {
     tree, selected, selectedId, setSelectedId,
-    addNode, updateProps, deleteNode, dirty, publish, publishing,
+    addNode, updateProps, deleteNode, moveNode, dirty, publish, publishing,
   }
 }

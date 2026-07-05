@@ -7,9 +7,10 @@ import s from './ComponentTreeTab.module.scss'
 
 const CATEGORIES = ['Layout', 'Content', 'Inputs', 'Community', 'MetaBuilder'] as const
 
-function Outline({ node, depth, selectedId, onSelect, onDelete }: {
+function Outline({ node, depth, selectedId, onSelect, onDelete, onMove }: {
   node: TreeNode; depth: number; selectedId: string
   onSelect: (id: string) => void; onDelete: (id: string) => void
+  onMove: (dragId: string, targetId: string) => void
 }) {
   const item = paletteItem(node.type)
   return (
@@ -17,8 +18,17 @@ function Outline({ node, depth, selectedId, onSelect, onDelete }: {
       <div
         className={`${s.row} ${node.id === selectedId ? s.rowActive : ''}`}
         style={{ paddingLeft: 8 + depth * 16 }}
+        draggable={node.id !== 'root'}
         onClick={() => { onSelect(node.id) }}
+        onDragStart={(e) => { e.dataTransfer.setData('text/node-id', node.id) }}
+        onDragOver={(e) => { e.preventDefault() }}
+        onDrop={(e) => {
+          e.preventDefault()
+          const dragId = e.dataTransfer.getData('text/node-id')
+          if (dragId) onMove(dragId, node.id)
+        }}
       >
+        <span className={s.grip}>⠿</span>
         <span className="material-symbols-rounded">{item?.icon ?? 'widgets'}</span>
         <span className={s.rowName}>{item?.name ?? node.type}</span>
         {node.id !== 'root' && (
@@ -27,7 +37,7 @@ function Outline({ node, depth, selectedId, onSelect, onDelete }: {
       </div>
       {node.children.map((c) => (
         <Outline key={c.id} node={c} depth={depth + 1}
-          selectedId={selectedId} onSelect={onSelect} onDelete={onDelete} />
+          selectedId={selectedId} onSelect={onSelect} onDelete={onDelete} onMove={onMove} />
       ))}
     </>
   )
@@ -106,7 +116,7 @@ export function ComponentTreeTab() {
           <div className={s.paneTitle}>Tree</div>
           <div className={s.outline}>
             <Outline node={t.tree} depth={0} selectedId={t.selectedId}
-              onSelect={t.setSelectedId} onDelete={t.deleteNode} />
+              onSelect={t.setSelectedId} onDelete={t.deleteNode} onMove={t.moveNode} />
           </div>
           <div className={s.paneTitle}>Properties</div>
           <div className={s.props}>
