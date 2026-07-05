@@ -43,6 +43,9 @@
       "@/m3/*": [
         "../../libraries/components/m3/*"
       ],
+      "@/workflow-editor": [
+        "../../libraries/components/workflow-editor"
+      ],
       "@dbal-ui/*": [
         "../../libraries/dbal/shared/ui/*"
       ]
