@@ -20,12 +20,15 @@ import { ThemeTab } from './tabs/ThemeTab'
 import { CssClassesTab } from './tabs/styles/CssClassesTab'
 import { ConfigTab } from './tabs/config/ConfigTab'
 import { TestRunnerTab } from './tabs/test/TestRunnerTab'
+import { PlanTab } from './tabs/plan/PlanTab'
+import { DeployTab } from './tabs/deploy/DeployTab'
 import s from './page.module.scss'
 
 const TAB_ICON_MAP: Record<string, string> = {
   dashboard: 'O', database: 'D', workflow: 'W', package: 'P',
   pages: 'R', components: 'C', people: 'U', storage: 'S',
   key: 'K', palette: 'T', brush: 'Y', tune: 'G', science: 'X',
+  checklist: 'N', rocket_launch: 'Z',
 }
 
 const TAB_COMPONENTS: Record<string, React.FC> = {
@@ -42,6 +45,8 @@ const TAB_COMPONENTS: Record<string, React.FC> = {
   styles: CssClassesTab,
   config: ConfigTab,
   test: TestRunnerTab,
+  plan: PlanTab,
+  deploy: DeployTab,
 }
 
 function GodPanelContent() {

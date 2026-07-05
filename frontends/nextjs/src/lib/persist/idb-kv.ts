@@ -62,3 +62,31 @@ export async function idbSet<T>(key: string, value: T): Promise<void> {
     tx.onerror = () => resolve()
   })
 }
+
+/** Dump every key/value (for project export). */
+export async function idbDump(): Promise<Record<string, unknown>> {
+  const db = await openDb()
+  if (!db) return {}
+  return new Promise((resolve) => {
+    const out: Record<string, unknown> = {}
+    const tx = db.transaction(STORE, 'readonly')
+    const store = tx.objectStore(STORE)
+    const keysReq = store.getAllKeys()
+    keysReq.onsuccess = () => {
+      const valsReq = store.getAll()
+      valsReq.onsuccess = () => {
+        const keys = keysReq.result as IDBValidKey[]
+        const vals = valsReq.result as unknown[]
+        keys.forEach((k, i) => { out[String(k)] = vals[i] })
+        resolve(out)
+      }
+      valsReq.onerror = () => resolve(out)
+    }
+    keysReq.onerror = () => resolve(out)
+  })
+}
+
+/** Restore a dumped project (import). */
+export async function idbRestore(data: Record<string, unknown>): Promise<void> {
+  for (const [k, v] of Object.entries(data)) await idbSet(k, v)
+}

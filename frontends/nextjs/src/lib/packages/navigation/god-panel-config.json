@@ -7,6 +7,12 @@
       "description": "System health and quick actions"
     },
     {
+      "id": "plan",
+      "label": "Plan",
+      "icon": "checklist",
+      "description": "Plan features and tasks (kanban)"
+    },
+    {
       "id": "schemas",
       "label": "Schemas",
       "icon": "database",
@@ -77,6 +83,12 @@
       "label": "Tests",
       "icon": "science",
       "description": "Point-and-click unit testing"
+    },
+    {
+      "id": "deploy",
+      "label": "Deploy",
+      "icon": "rocket_launch",
+      "description": "Export, import and publish the project"
     }
   ],
   "tools": [
