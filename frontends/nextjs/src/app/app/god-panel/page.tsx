@@ -12,7 +12,7 @@ import { SchemasTab } from './tabs/SchemasTab'
 import { WorkflowsTab } from './tabs/WorkflowsTab'
 import { PackagesTab } from './tabs/PackagesTab'
 import { PageRoutesTab } from './tabs/PageRoutesTab'
-import { ComponentsTab } from './tabs/ComponentsTab'
+import { ComponentTreeTab } from './tabs/builder/ComponentTreeTab'
 import { UsersTab } from './tabs/UsersTab'
 import { DatabaseTab } from './tabs/DatabaseTab'
 import { CredentialsTab } from './tabs/CredentialsTab'
@@ -31,7 +31,7 @@ const TAB_COMPONENTS: Record<string, React.FC> = {
   workflows: WorkflowsTab,
   packages: PackagesTab,
   pages: PageRoutesTab,
-  components: ComponentsTab,
+  components: ComponentTreeTab,
   users: UsersTab,
   database: DatabaseTab,
   credentials: CredentialsTab,
