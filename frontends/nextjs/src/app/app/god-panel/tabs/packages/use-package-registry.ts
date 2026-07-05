@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import type { PackageContent, PackageManifest } from '@/lib/packages/core/package-types'
+import { idbGet, idbSet } from '@/lib/persist/idb-kv'
 
 /**
  * A package bundles a route→component-tree→workflow pipeline plus styles and
@@ -14,7 +15,7 @@ export interface RegistryPackage {
   archived: boolean
 }
 
-const STORAGE_KEY = 'metabuilder.god.packageRegistry'
+const STORAGE_KEY = 'god.packageRegistry'
 
 function emptyContent(): PackageContent {
   return {
@@ -40,15 +41,12 @@ export function usePackageRegistry() {
   const [packages, setPackages] = useState<RegistryPackage[]>([])
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY)
-      if (raw) setPackages(JSON.parse(raw) as RegistryPackage[])
-    } catch { /* empty */ }
+    void idbGet<RegistryPackage[]>(STORAGE_KEY).then((p) => { if (p) setPackages(p) })
   }, [])
 
   const persist = useCallback((next: RegistryPackage[]) => {
     setPackages(next)
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)) } catch { /* ignore */ }
+    void idbSet(STORAGE_KEY, next)
   }, [])
 
   const create = useCallback((name: string): string => {
