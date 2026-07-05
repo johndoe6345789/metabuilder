@@ -1,8 +1,10 @@
 'use client'
 
 import { Button } from '@/m3'
+import type { Workflow } from '@/workflow-editor'
 import { WorkflowEditor } from './workflow/WorkflowEditor'
 import { useGodWorkflow } from './workflow/use-god-workflow'
+import { VersionHistory } from '@/components/version-history/VersionHistory'
 import s from './WorkflowsTab.module.scss'
 
 export function WorkflowsTab() {
@@ -16,6 +18,7 @@ export function WorkflowsTab() {
           {dirty ? 'Staged changes — not yet published' : 'Published — up to date'}
         </span>
         <span className={s.spacer} />
+        <VersionHistory<Workflow> storageKey="god.workflow" onRevert={save} />
         <Button
           variant="contained"
           size="small"

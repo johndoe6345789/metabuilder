@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { Workflow } from '@/workflow-editor'
 import { idbGet, idbSet } from '@/lib/persist/idb-kv'
+import { snapshot } from '@/lib/persist/versions'
 
 const KEY = 'god.workflow'
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
@@ -47,6 +48,7 @@ export function useGodWorkflow(tenant = 'system') {
         signal: AbortSignal.timeout(6000),
       })
       if (!res.ok) return false
+      await snapshot(KEY, workflow, `Published ${workflow.name}`)
       setDirty(false)
       return true
     } catch {
