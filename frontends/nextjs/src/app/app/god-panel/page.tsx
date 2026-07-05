@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { LevelGate } from '@/components/layout/LevelGate'
 import { godPanelConfig } from '@/lib/packages/navigation'
 import type { GodPanelTab } from '@/lib/packages/navigation'
@@ -40,19 +41,30 @@ const TAB_COMPONENTS: Record<string, React.FC> = {
 function GodPanelContent() {
   const [activeTab, setActiveTab] = useState(0)
   const { isOpen, toggle, close } = useNerdMode()
+  const router = useRouter()
   const tabs = godPanelConfig.tabs
+
+  // Preview the lower levels (SDLC "review"): L1 public, L2 user, L3 admin.
+  const preview = (level: number) => {
+    router.push(level === 1 ? '/' : level === 2 ? '/app/profile' : '/app/admin')
+  }
 
   return (
     <div className={s.root}>
-      <div className={s.header}>
-        <div className={s.headerRow}>
-          <div>
-            <Typography variant="h4" gutterBottom>Application Builder</Typography>
-            <Typography variant="body1" color="text.secondary">
-              Design your application declaratively. Define schemas, create
-              workflows, manage packages and pages.
-            </Typography>
-          </div>
+      <header className={s.topbar}>
+        <div className={s.brand}>
+          <span className={s.logo} />
+          <span className={s.title}>God-Tier Builder</span>
+        </div>
+        <div className={s.actions}>
+          <Button variant="text" size="small" onClick={() => { router.push('/app') }}>
+            ⌂ Home
+          </Button>
+          <span className={s.previewLabel}>PREVIEW</span>
+          <Button variant="outlined" size="small" onClick={() => { preview(1) }}>L1</Button>
+          <Button variant="outlined" size="small" onClick={() => { preview(2) }}>L2</Button>
+          <Button variant="outlined" size="small" onClick={() => { preview(3) }}>L3</Button>
+          <span className={s.divider} />
           <Button
             variant={isOpen ? 'contained' : 'outlined'}
             size="small"
@@ -61,7 +73,7 @@ function GodPanelContent() {
             ⚡ Nerd Mode
           </Button>
         </div>
-      </div>
+      </header>
 
       <Tabs
         value={activeTab}
