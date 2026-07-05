@@ -59,6 +59,12 @@
       "label": "Theme",
       "icon": "palette",
       "description": "Theme and styling configuration"
+    },
+    {
+      "id": "styles",
+      "label": "Styles",
+      "icon": "brush",
+      "description": "Reusable CSS class manager"
     }
   ],
   "tools": [

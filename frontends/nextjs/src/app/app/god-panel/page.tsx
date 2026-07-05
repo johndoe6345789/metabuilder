@@ -17,12 +17,13 @@ import { UsersTab } from './tabs/UsersTab'
 import { DatabaseTab } from './tabs/DatabaseTab'
 import { CredentialsTab } from './tabs/CredentialsTab'
 import { ThemeTab } from './tabs/ThemeTab'
+import { CssClassesTab } from './tabs/styles/CssClassesTab'
 import s from './page.module.scss'
 
 const TAB_ICON_MAP: Record<string, string> = {
   dashboard: 'O', database: 'D', workflow: 'W', package: 'P',
   pages: 'R', components: 'C', people: 'U', storage: 'S',
-  key: 'K', palette: 'T',
+  key: 'K', palette: 'T', brush: 'Y',
 }
 
 const TAB_COMPONENTS: Record<string, React.FC> = {
@@ -36,6 +37,7 @@ const TAB_COMPONENTS: Record<string, React.FC> = {
   database: DatabaseTab,
   credentials: CredentialsTab,
   theme: ThemeTab,
+  styles: CssClassesTab,
 }
 
 function GodPanelContent() {
