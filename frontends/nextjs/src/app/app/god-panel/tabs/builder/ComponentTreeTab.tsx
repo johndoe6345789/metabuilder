@@ -45,8 +45,14 @@ function PropsEditor({ node, onChange }: {
   }
   if (node.type === 'button') {
     return (
-      <TextField size="small" fullWidth label="Label" value={String(p.label ?? '')}
-        onChange={(e) => { onChange({ label: e.target.value }) }} />
+      <div className={s.propCol}>
+        <TextField size="small" fullWidth label="Label" value={String(p.label ?? '')}
+          onChange={(e) => { onChange({ label: e.target.value }) }} />
+        <Button size="small" variant={p.runWorkflow ? 'contained' : 'outlined'}
+          onClick={() => { onChange({ runWorkflow: !p.runWorkflow }) }}>
+          {p.runWorkflow ? '✓ Runs workflow on click' : '⚡ Wire workflow on click'}
+        </Button>
+      </div>
     )
   }
   if (node.type === 'container') {

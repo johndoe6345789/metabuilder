@@ -83,6 +83,7 @@
 
 .props, .propRow { padding: 12px 14px; }
 .propRow { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.propCol { display: flex; flex-direction: column; gap: 8px; }
 
 /* live preview */
 .preview {
