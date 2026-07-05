@@ -65,6 +65,12 @@
       "label": "Styles",
       "icon": "brush",
       "description": "Reusable CSS class manager"
+    },
+    {
+      "id": "config",
+      "label": "Config",
+      "icon": "tune",
+      "description": "Dropdown lists and email (SMTP) settings"
     }
   ],
   "tools": [
