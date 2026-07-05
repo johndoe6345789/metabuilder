@@ -71,6 +71,12 @@
       "label": "Config",
       "icon": "tune",
       "description": "Dropdown lists and email (SMTP) settings"
+    },
+    {
+      "id": "test",
+      "label": "Tests",
+      "icon": "science",
+      "description": "Point-and-click unit testing"
     }
   ],
   "tools": [
