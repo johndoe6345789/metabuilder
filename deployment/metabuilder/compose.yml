@@ -765,8 +765,8 @@ services:
 
   dockerterminal:
     build:
-      context: ../../frontends/dockerterminal/frontend
-      dockerfile: Dockerfile
+      context: ../..
+      dockerfile: frontends/dockerterminal/frontend/Dockerfile
       args:
         NEXT_PUBLIC_API_URL: /terminal-api
     container_name: metabuilder-dockerterminal

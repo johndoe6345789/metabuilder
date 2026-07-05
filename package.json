@@ -18,6 +18,7 @@
     "libraries/components/m3",
     "libraries/scss",
     "frontends/*",
+    "frontends/*/frontend",
     "config"
   ],
   "devDependencies": {
