@@ -5,7 +5,7 @@ import { useComponentTree } from './use-component-tree'
 import { PALETTE, paletteItem, renderNode, type PaletteItem, type TreeNode } from './builder-registry'
 import s from './ComponentTreeTab.module.scss'
 
-const CATEGORIES = ['Layout', 'Content', 'Inputs', 'MetaBuilder'] as const
+const CATEGORIES = ['Layout', 'Content', 'Inputs', 'Community', 'MetaBuilder'] as const
 
 function Outline({ node, depth, selectedId, onSelect, onDelete }: {
   node: TreeNode; depth: number; selectedId: string

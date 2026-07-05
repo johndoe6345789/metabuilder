@@ -9,6 +9,7 @@
 
 import type { ReactNode } from 'react'
 import { Button, Card, Typography } from '@/m3'
+import { Webchat } from '@/components/webchat/Webchat'
 import { METABUILDER_BLOCKS } from '../../blocks/metabuilder-blocks'
 
 export interface TreeNode {
@@ -22,7 +23,7 @@ export interface PaletteItem {
   type: string
   name: string
   icon: string
-  category: 'Layout' | 'Content' | 'Inputs' | 'MetaBuilder'
+  category: 'Layout' | 'Content' | 'Inputs' | 'MetaBuilder' | 'Community'
   container: boolean
   defaults: Record<string, unknown>
 }
@@ -33,6 +34,7 @@ export const PALETTE: PaletteItem[] = [
   { type: 'heading', name: 'Heading', icon: 'title', category: 'Content', container: false, defaults: { text: 'Heading' } },
   { type: 'text', name: 'Text', icon: 'notes', category: 'Content', container: false, defaults: { text: 'Some text' } },
   { type: 'button', name: 'Button', icon: 'smart_button', category: 'Inputs', container: false, defaults: { label: 'Click me' } },
+  { type: 'pkg.webchat', name: 'Webchat', icon: 'chat', category: 'Community', container: false, defaults: { channel: '#general' } },
   ...METABUILDER_BLOCKS.map((b) => ({
     type: b.type, name: b.name, icon: b.icon,
     category: 'MetaBuilder' as const, container: false, defaults: {},
@@ -69,6 +71,8 @@ export function renderNode(node: TreeNode): ReactNode {
       return <Typography variant="body1">{String(p.text ?? '')}</Typography>
     case 'button':
       return <Button variant="contained">{String(p.label ?? 'Button')}</Button>
+    case 'pkg.webchat':
+      return <Webchat channel={String(p.channel ?? '#general')} />
     default: {
       const Comp = MB[node.type]
       return Comp ? <Comp /> : <em>Unknown: {node.type}</em>
