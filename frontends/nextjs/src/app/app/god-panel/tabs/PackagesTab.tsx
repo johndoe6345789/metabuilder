@@ -7,6 +7,7 @@ import {
   PRODUCT_PACKAGES,
   defaultComponentTree,
 } from '@/lib/packages/product-packages'
+import { PackageManager } from './packages/PackageManager'
 import s from './PackagesTab.module.scss'
 
 const DBAL =
@@ -176,6 +177,8 @@ export function PackagesTab() {
           )
         })}
       </div>
+
+      <PackageManager tenant={tenant} />
     </div>
   )
 }
