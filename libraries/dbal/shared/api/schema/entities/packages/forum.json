@@ -136,13 +136,13 @@
         "description": "Thread author"
       },
       "title": {
-        "type": "string",
+        "type": "text",
         "required": true,
         "max_length": 200,
         "description": "Thread title"
       },
       "content": {
-        "type": "string",
+        "type": "text",
         "required": true,
         "description": "First post content"
       },
@@ -290,7 +290,7 @@
         "description": "Post author"
       },
       "content": {
-        "type": "string",
+        "type": "text",
         "required": true,
         "description": "Post content"
       },

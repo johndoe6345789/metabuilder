@@ -84,7 +84,7 @@
           }
         }
       ],
-      "connections": {
+      "edges": {
         "node_trigger": {
           "main": {
             "0": [
@@ -213,7 +213,7 @@
           }
         }
       ],
-      "connections": {
+      "edges": {
         "node_schedule": {
           "main": {
             "0": [
@@ -352,7 +352,7 @@
           }
         }
       ],
-      "connections": {
+      "edges": {
         "node_content_in": {
           "main": {
             "0": [
