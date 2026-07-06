@@ -4,7 +4,7 @@
   "description": "Markdown comment posted on a user's profile wall (ModDB-style guestbook)",
   "fields": {
     "id": {
-      "type": "uuid",
+      "type": "string",
       "primary": true,
       "required": true,
       "description": "Unique comment identifier (client-generated UUID)"

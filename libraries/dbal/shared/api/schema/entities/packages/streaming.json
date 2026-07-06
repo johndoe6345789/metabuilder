@@ -109,7 +109,7 @@
         "description": "Last update timestamp"
       },
       "createdBy": {
-        "type": "uuid",
+        "type": "string",
         "required": true,
         "description": "Channel owner"
       }

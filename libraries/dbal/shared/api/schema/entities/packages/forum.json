@@ -130,7 +130,7 @@
         "description": "Parent category"
       },
       "authorId": {
-        "type": "uuid",
+        "type": "string",
         "required": true,
         "index": true,
         "description": "Thread author"
@@ -178,7 +178,7 @@
         "description": "Timestamp of last reply"
       },
       "lastReplyBy": {
-        "type": "uuid",
+        "type": "string",
         "nullable": true,
         "description": "User who last replied"
       },
@@ -284,7 +284,7 @@
         "description": "Parent thread"
       },
       "authorId": {
-        "type": "uuid",
+        "type": "string",
         "required": true,
         "index": true,
         "description": "Post author"

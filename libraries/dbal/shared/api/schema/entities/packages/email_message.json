@@ -15,13 +15,13 @@
       "index": true
     },
     "emailClientId": {
-      "type": "uuid",
+      "type": "string",
       "required": true,
       "index": true,
       "description": "FK to EmailClient"
     },
     "folderId": {
-      "type": "uuid",
+      "type": "string",
       "required": true,
       "index": true,
       "description": "FK to EmailFolder"
@@ -125,7 +125,7 @@
       "description": "Number of attachments"
     },
     "conversationId": {
-      "type": "uuid",
+      "type": "string",
       "nullable": true,
       "index": true,
       "description": "FK to conversation thread (for grouping)"

@@ -4,7 +4,7 @@
   "description": "Code snippet namespace for organisation within a user's workspace",
   "fields": {
     "id": {
-      "type": "uuid",
+      "type": "string",
       "primary": true,
       "required": true,
       "description": "Unique namespace identifier (client-generated UUID)"

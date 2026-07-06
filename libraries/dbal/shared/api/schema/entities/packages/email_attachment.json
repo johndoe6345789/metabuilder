@@ -15,7 +15,7 @@
       "index": true
     },
     "messageId": {
-      "type": "uuid",
+      "type": "string",
       "required": true,
       "index": true,
       "description": "FK to EmailMessage"

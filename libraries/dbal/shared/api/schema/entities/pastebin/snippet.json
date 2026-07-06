@@ -4,7 +4,7 @@
   "description": "Code snippet with syntax highlighting, Python runner, and React preview support",
   "fields": {
     "id": {
-      "type": "uuid",
+      "type": "string",
       "primary": true,
       "required": true,
       "description": "Unique snippet identifier (client-generated UUID)"

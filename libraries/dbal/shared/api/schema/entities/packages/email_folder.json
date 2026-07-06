@@ -15,7 +15,7 @@
       "index": true
     },
     "emailClientId": {
-      "type": "uuid",
+      "type": "string",
       "required": true,
       "index": true,
       "description": "FK to EmailClient"

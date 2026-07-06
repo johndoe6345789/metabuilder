@@ -4,12 +4,12 @@
   "description": "User session tracking and management",
   "fields": {
     "id": {
-      "type": "uuid",
+      "type": "string",
       "primary": true,
       "generated": true
     },
     "userId": {
-      "type": "uuid",
+      "type": "string",
       "required": true,
       "foreign_key": {
         "entity": "User",

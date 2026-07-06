@@ -4,7 +4,7 @@
   "description": "Page configuration and layout definition",
   "fields": {
     "id": {
-      "type": "uuid",
+      "type": "string",
       "primary": true,
       "generated": true
     },

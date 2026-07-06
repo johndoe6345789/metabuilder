@@ -4,7 +4,7 @@
   "description": "Declarative JSON-based UI page definitions",
   "fields": {
     "id": {
-      "type": "uuid",
+      "type": "string",
       "primary": true,
       "generated": true
     },
@@ -72,7 +72,7 @@
       "nullable": true
     },
     "createdBy": {
-      "type": "uuid",
+      "type": "string",
       "optional": true,
       "nullable": true,
       "foreign_key": {

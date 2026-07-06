@@ -17,7 +17,7 @@
       "description": "Tenant this notification belongs to"
     },
     "userId": {
-      "type": "uuid",
+      "type": "string",
       "required": true,
       "index": true,
       "description": "User to receive the notification"

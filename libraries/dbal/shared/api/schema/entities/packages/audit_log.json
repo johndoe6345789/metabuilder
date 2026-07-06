@@ -17,7 +17,7 @@
       "description": "Tenant this log belongs to"
     },
     "userId": {
-      "type": "uuid",
+      "type": "string",
       "nullable": true,
       "index": true,
       "description": "User who performed the action"
