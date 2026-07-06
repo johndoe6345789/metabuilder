@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { LevelGate } from '@/components/layout/LevelGate'
 import { godPanelConfig } from '@/lib/packages/navigation'
 import type { GodPanelTab } from '@/lib/packages/navigation'
-import { Typography, Tabs, Tab, TabPanel, Button } from '@/m3'
+import { Typography, TabPanel, Button } from '@/m3'
 import { NerdModeIde, useNerdMode } from '@/components/nerd-mode-ide'
 import { OverviewTab } from './tabs/OverviewTab'
 import { SchemasTab } from './tabs/SchemasTab'
@@ -79,27 +79,21 @@ function GodPanelContent() {
         </div>
       </header>
 
-      <div className={s.tabsWrap}>
-        <Tabs
-          value={activeTab}
-          onChange={(_e, v) => { setActiveTab(v as number) }}
-          variant="scrollable"
-          scrollButtons="auto"
-          className={s.tabs}
-        >
-          {tabs.map((tab: GodPanelTab) => (
-            <Tab
-              key={tab.id}
-              label={
-                <span className={s.tabLabel}>
-                  <span className="material-symbols-rounded">{tab.icon}</span>
-                  {tab.label}
-                </span>
-              }
-            />
-          ))}
-        </Tabs>
-      </div>
+      {/* Tabs wrap into rows by width: 1 row on ultrawide, 2 on 1080p, 3+ on
+          mobile — every tab always visible, no horizontal scroll. */}
+      <nav className={s.tabNav}>
+        {tabs.map((tab: GodPanelTab, index: number) => (
+          <button
+            key={tab.id}
+            type="button"
+            className={`${s.pill} ${index === activeTab ? s.pillActive : ''}`}
+            onClick={() => { setActiveTab(index) }}
+          >
+            <span className="material-symbols-rounded">{tab.icon}</span>
+            {tab.label}
+          </button>
+        ))}
+      </nav>
 
       {tabs.map((tab: GodPanelTab, index: number) => {
         const TabComponent = TAB_COMPONENTS[tab.id]
