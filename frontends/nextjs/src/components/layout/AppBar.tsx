@@ -79,12 +79,17 @@ export function AppBarComponent({
     <MuiAppBar
       position="sticky"
       sx={{
-        height: 56,
+        minHeight: 56,
         display: 'flex',
         flexDirection: 'row',
+        flexWrap: 'wrap',
         alignItems: 'center',
         px: 2,
-        gap: 1.5,
+        py: 0.5,
+        columnGap: 1.5,
+        rowGap: 0.5,
+        maxWidth: '100vw',
+        overflowX: 'clip',
         zIndex: 1200,
       }}
     >
