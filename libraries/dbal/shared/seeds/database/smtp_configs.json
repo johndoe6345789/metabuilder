@@ -1,0 +1,18 @@
+{
+  "entity": "SmtpConfig",
+  "version": "1.0",
+  "description": "Default outbound email (SMTP) settings per tenant",
+  "records": [
+    {
+      "id": "smtp_default",
+      "tenantId": "default",
+      "host": "",
+      "port": 587,
+      "secure": false,
+      "username": "",
+      "password": "",
+      "fromEmail": "",
+      "fromName": "MetaBuilder"
+    }
+  ]
+}
