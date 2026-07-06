@@ -18,27 +18,21 @@ export function OverviewTab() {
   const [dbalStatus, setDbalStatus] = useState<DbalStatus>({
     connected: false,
   })
-  const [entityCount, setEntityCount] = useState(0)
 
   useEffect(() => {
     fetch(`${DBAL_URL}/health`, { signal: AbortSignal.timeout(3000) })
       .then(res => (res.ok ? res.json() : null))
       .then((json: Record<string, string> | null) => {
-        if (json != null) {
-          setDbalStatus({
-            connected: true,
-            version: json.version ?? 'unknown',
-            uptime: json.uptime ?? 'unknown',
-          })
-        }
+        if (json != null) setDbalStatus(s => ({ ...s, connected: true }))
       })
       .catch(() => { setDbalStatus({ connected: false }) })
 
+    // The DBAL exposes its version at /version (not /health).
     fetch(`${DBAL_URL}/version`, { signal: AbortSignal.timeout(3000) })
       .then(res => (res.ok ? res.json() : null))
       .then((json: Record<string, unknown> | null) => {
-        if (typeof json?.entityCount === 'number') {
-          setEntityCount(json.entityCount as number)
+        if (json != null && typeof json.version === 'string') {
+          setDbalStatus(s => ({ ...s, version: json.version as string }))
         }
       })
       .catch(() => { /* ignore */ })
@@ -59,23 +53,10 @@ export function OverviewTab() {
             DBAL Daemon: {dbalStatus.connected ? 'Connected' : 'Offline'}
           </Typography>
         </div>
-        {dbalStatus.connected && (
+        {dbalStatus.connected && dbalStatus.version != null && (
           <div className={s.chipRow}>
-            {dbalStatus.version != null && (
-              <Chip label={`v${dbalStatus.version}`} size="small" />
-            )}
-            {dbalStatus.uptime != null && (
-              <Chip
-                label={`Up: ${dbalStatus.uptime}`}
-                size="small"
-                variant="outlined"
-              />
-            )}
-            <Chip
-              label={`${entityCount} entities`}
-              size="small"
-              variant="outlined"
-            />
+            <Chip label={`v${dbalStatus.version}`} size="small" />
+            <Chip label="running" size="small" variant="outlined" />
           </div>
         )}
       </Paper>
@@ -97,9 +78,11 @@ export function OverviewTab() {
         <div className={s.summaryGrid}>
           <div className={s.summaryRow}>
             <Typography variant="body2" color="text.secondary">
-              DBAL Entities:
+              DBAL Version:
             </Typography>
-            <Typography variant="body2">{entityCount}</Typography>
+            <Typography variant="body2">
+              {dbalStatus.version != null ? `v${dbalStatus.version}` : '—'}
+            </Typography>
           </div>
           <div className={s.summaryRow}>
             <Typography variant="body2" color="text.secondary">

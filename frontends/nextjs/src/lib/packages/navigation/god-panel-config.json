@@ -39,7 +39,7 @@
     {
       "id": "components",
       "label": "Components",
-      "icon": "components",
+      "icon": "widgets",
       "description": "Component hierarchy and JSON renderer"
     },
     {
