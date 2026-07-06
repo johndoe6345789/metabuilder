@@ -1,8 +1,8 @@
 .root {
-  // Builder-style: use the screen. This drives the tab-row wrapping the way the
-  // user wants — 1 row on 4K, ~2 on 1080p, 3+ on mobile (the pills wrap to the
-  // available width; a wide screen fits them all on one line).
-  max-width: 2400px;
+  // Normal screens keep the original comfortable, centred 1200px column so
+  // nothing stretches. On 4K+ (below) the root widens purely so the tab strip
+  // can collapse to a single row — content stays 1200.
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
   overflow-x: hidden;
@@ -10,11 +10,13 @@
   @media (max-width: 640px) { padding: 0 12px; }
 }
 
-// The topbar + tab strip span the full (wide) root so tabs wrap to 1 row on 4K,
-// but the tab CONTENT is capped so forms/lists/cards don't stretch across a 4K
-// screen (that stretch was the regression).
-.content {
-  max-width: 1200px;
+.content { max-width: 1200px; }
+
+// 4K+ : widen the root so the 15-tab strip fits on one line, but pin the topbar
+// and content to the 1200px column so forms/cards never sprawl across the screen.
+@media (min-width: 2300px) {
+  .root { max-width: 2200px; }
+  .topbar, .content { max-width: 1200px; }
 }
 
 .topbar {
