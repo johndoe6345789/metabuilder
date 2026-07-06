@@ -52,7 +52,7 @@ export function useCssClasses() {
     try {
       const res = await fetch(`${DBAL}/${tenant}/core/StyleClass`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tenantId: tenant, classes }),
+        body: JSON.stringify({ id: `styles_${tenant}`, tenantId: tenant, classes: JSON.stringify(classes) }),
         signal: AbortSignal.timeout(6000),
       })
       if (!res.ok) return false

@@ -29,7 +29,12 @@ export function useGodWorkflow(tenant = 'system') {
       const res = await fetch(`${DBAL}/${tenant}/core/Workflow`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...workflow, tenantId: tenant }),
+        body: JSON.stringify({
+          id: workflow.id, tenantId: tenant,
+          name: workflow.name, description: workflow.description,
+          nodes: JSON.stringify(workflow.nodes),
+          edges: JSON.stringify(workflow.connections),
+        }),
         signal: AbortSignal.timeout(6000),
       })
       if (!res.ok) return false

@@ -32,7 +32,7 @@ export function useSmtpConfig() {
     try {
       const res = await fetch(`${DBAL}/${tenant}/core/SmtpConfig`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tenantId: tenant, ...config }),
+        body: JSON.stringify({ id: `smtp_${tenant}`, tenantId: tenant, ...config }),
         signal: AbortSignal.timeout(6000),
       })
       if (!res.ok) return false
