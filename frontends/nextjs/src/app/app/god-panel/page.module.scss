@@ -10,6 +10,13 @@
   @media (max-width: 640px) { padding: 0 12px; }
 }
 
+// The topbar + tab strip span the full (wide) root so tabs wrap to 1 row on 4K,
+// but the tab CONTENT is capped so forms/lists/cards don't stretch across a 4K
+// screen (that stretch was the regression).
+.content {
+  max-width: 1440px;
+}
+
 .topbar {
   position: sticky;
   top: 8px;

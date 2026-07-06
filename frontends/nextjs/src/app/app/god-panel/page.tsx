@@ -95,18 +95,20 @@ function GodPanelContent() {
         ))}
       </nav>
 
-      {tabs.map((tab: GodPanelTab, index: number) => {
-        const TabComponent = TAB_COMPONENTS[tab.id]
-        return (
-          <TabPanel key={tab.id} value={activeTab} index={index}>
-            {TabComponent != null ? <TabComponent /> : (
-              <Typography variant="body2" color="text.secondary">
-                Tab &ldquo;{tab.label}&rdquo; is not yet implemented.
-              </Typography>
-            )}
-          </TabPanel>
-        )
-      })}
+      <div className={s.content}>
+        {tabs.map((tab: GodPanelTab, index: number) => {
+          const TabComponent = TAB_COMPONENTS[tab.id]
+          return (
+            <TabPanel key={tab.id} value={activeTab} index={index}>
+              {TabComponent != null ? <TabComponent /> : (
+                <Typography variant="body2" color="text.secondary">
+                  Tab &ldquo;{tab.label}&rdquo; is not yet implemented.
+                </Typography>
+              )}
+            </TabPanel>
+          )
+        })}
+      </div>
       {isOpen && <NerdModeIde onClose={close} />}
     </div>
   )
