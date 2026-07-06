@@ -47,7 +47,13 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
           rel="stylesheet"
         />
-      </head>
+        {/* Material Symbols — the whole app uses .material-symbols-rounded for
+            icons but the font was never loaded (icons rendered as literal
+            text like "dashboard"/"download"). */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block"
+          rel="stylesheet"
+        />
       <body>
         <Providers>{children}</Providers>
       </body>
