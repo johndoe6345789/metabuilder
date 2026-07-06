@@ -1,7 +1,10 @@
 .root {
-  max-width: 1200px;
+  // Builder-style: use the screen. This drives the tab-row wrapping the way the
+  // user wants — 1 row on 4K, ~2 on 1080p, 3+ on mobile (the pills wrap to the
+  // available width; a wide screen fits them all on one line).
+  max-width: 2400px;
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 0 24px;
   overflow-x: hidden;
 
   @media (max-width: 640px) { padding: 0 12px; }
