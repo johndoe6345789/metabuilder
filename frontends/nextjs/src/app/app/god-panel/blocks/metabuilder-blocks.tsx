@@ -15,16 +15,16 @@ import { useGodWorkflow } from '../tabs/workflow/use-god-workflow'
 import { PackageManager } from '../tabs/packages/PackageManager'
 import { SchemaEditor } from '@/components/schema-editor'
 
-function WorkflowEditorBlock() {
+export function WorkflowEditorBlock() {
   const { workflow, save } = useGodWorkflow()
   return <WorkflowEditor workflow={workflow} onChange={save} onSave={save} />
 }
 
-function PackageManagerBlock() {
+export function PackageManagerBlock() {
   return <PackageManager tenant="system" />
 }
 
-function SchemaEditorBlock() {
+export function SchemaEditorBlock() {
   return <SchemaEditor tenantId="system" />
 }
 
