@@ -1,12 +1,10 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import type { Workflow } from '@/workflow-editor'
-import { idbGet, idbSet } from '@/lib/persist/idb-kv'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { setTests } from '@/store/slices/god-slice'
 import { runWorkflow } from '@/lib/workflow/run-workflow'
-
-const KEY = 'god.testCases'
-const WF_KEY = 'god.workflow'
 
 export interface TestCase {
   id: string
@@ -22,32 +20,20 @@ export interface TestResult {
   message?: string
 }
 
-function seed(): TestCase[] {
-  return [{
-    id: 't1', name: 'returns email',
-    input: '{\n  "email": "a@b.com"\n}',
-    expected: '{\n  "email": "a@b.com"\n}',
-  }]
-}
-
 function subsetMatch(expected: Record<string, unknown>, actual: Record<string, unknown>): boolean {
   return Object.entries(expected).every(([k, v]) =>
     JSON.stringify(actual[k]) === JSON.stringify(v))
 }
 
-/** Point-and-click unit tests: run input→expected cases against the workflow. */
+/** Point-and-click unit tests run against the current workflow (from Redux). */
 export function useTestRunner() {
-  const [cases, setCases] = useState<TestCase[]>(seed)
+  const dispatch = useAppDispatch()
+  const cases: TestCase[] = useAppSelector((s) => s.god.tests)
+  const workflow: Workflow = useAppSelector((s) => s.god.workflow)
   const [results, setResults] = useState<Record<string, TestResult>>({})
   const [running, setRunning] = useState(false)
 
-  useEffect(() => {
-    void idbGet<TestCase[]>(KEY).then((c) => { if (c && c.length) setCases(c) })
-  }, [])
-
-  const persist = useCallback((next: TestCase[]) => {
-    setCases(next); void idbSet(KEY, next)
-  }, [])
+  const persist = useCallback((next: TestCase[]) => { dispatch(setTests(next)) }, [dispatch])
 
   const create = useCallback(() => {
     persist([...cases, { id: `t_${Date.now()}`, name: 'New test', input: '{}', expected: '{}' }])
@@ -61,7 +47,7 @@ export function useTestRunner() {
     persist(cases.filter((c) => c.id !== id))
   }, [cases, persist])
 
-  const runOne = useCallback(async (tc: TestCase): Promise<TestResult> => {
+  const runOne = useCallback((tc: TestCase): TestResult => {
     let input: Record<string, unknown>
     let expected: Record<string, unknown>
     try {
@@ -70,19 +56,17 @@ export function useTestRunner() {
     } catch {
       return { status: 'error', message: 'Input/expected is not valid JSON' }
     }
-    const wf = (await idbGet<Workflow>(WF_KEY))
-    if (!wf) return { status: 'error', message: 'No workflow to test' }
-    const res = runWorkflow(wf, input)
+    const res = runWorkflow(workflow, input)
     return {
       status: subsetMatch(expected, res.output) ? 'pass' : 'fail',
       actual: res.output, logs: res.logs,
     }
-  }, [])
+  }, [workflow])
 
   const runAll = useCallback(async () => {
     setRunning(true)
     const out: Record<string, TestResult> = {}
-    for (const tc of cases) out[tc.id] = await runOne(tc)
+    for (const tc of cases) out[tc.id] = runOne(tc)
     setResults(out); setRunning(false)
   }, [cases, runOne])
 

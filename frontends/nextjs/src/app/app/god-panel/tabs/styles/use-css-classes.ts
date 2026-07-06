@@ -1,9 +1,9 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
-import { idbGet, idbSet } from '@/lib/persist/idb-kv'
+import { useCallback, useState } from 'react'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { setCss, clearDirty } from '@/store/slices/god-slice'
 
-const KEY = 'god.cssClasses'
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
 export interface CssClass {
@@ -12,32 +12,14 @@ export interface CssClass {
   props: Record<string, string>
 }
 
-function seed(): CssClass[] {
-  return [
-    { id: 'c_card', name: 'card', props: {
-      padding: '16px', 'border-radius': '12px', background: '#161b22',
-      border: '1px solid #30363d',
-    } },
-    { id: 'c_pill', name: 'pill', props: {
-      padding: '4px 12px', 'border-radius': '999px', background: '#1f6feb', color: '#fff',
-      'font-size': '12px', 'font-weight': '600',
-    } },
-  ]
-}
-
-/** Named CSS class registry with IndexedDB persistence + stage→publish. */
+/** Named CSS class registry (persisted in Redux god slice). */
 export function useCssClasses() {
-  const [classes, setClasses] = useState<CssClass[]>(seed)
-  const [dirty, setDirty] = useState(false)
+  const dispatch = useAppDispatch()
+  const classes: CssClass[] = useAppSelector((s) => s.god.css)
+  const dirty = useAppSelector((s) => s.god.dirty.css)
   const [publishing, setPublishing] = useState(false)
 
-  useEffect(() => {
-    void idbGet<CssClass[]>(KEY).then((c) => { if (c && c.length) setClasses(c) })
-  }, [])
-
-  const persist = useCallback((next: CssClass[]) => {
-    setClasses(next); setDirty(true); void idbSet(KEY, next)
-  }, [])
+  const persist = useCallback((next: CssClass[]) => { dispatch(setCss(next)) }, [dispatch])
 
   const create = useCallback((name: string): string => {
     const id = `c_${Date.now()}`
@@ -50,8 +32,7 @@ export function useCssClasses() {
   }, [classes, persist])
 
   const setProp = useCallback((id: string, key: string, value: string) => {
-    persist(classes.map((c) => c.id === id
-      ? { ...c, props: { ...c.props, [key]: value } } : c))
+    persist(classes.map((c) => c.id === id ? { ...c, props: { ...c.props, [key]: value } } : c))
   }, [classes, persist])
 
   const removeProp = useCallback((id: string, key: string) => {
@@ -75,9 +56,9 @@ export function useCssClasses() {
         signal: AbortSignal.timeout(6000),
       })
       if (!res.ok) return false
-      setDirty(false); return true
+      dispatch(clearDirty('css')); return true
     } catch { return false } finally { setPublishing(false) }
-  }, [classes])
+  }, [classes, dispatch])
 
   return { classes, create, rename, setProp, removeProp, remove, dirty, publish, publishing }
 }

@@ -2,17 +2,22 @@
 
 import { useCallback, useState } from 'react'
 import { idbDump, idbRestore } from '@/lib/persist/idb-kv'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { rehydrate, type GodState } from '@/store/slices/god-slice'
 
 /** Project-level export/import ("deploy" = ship the whole declarative bundle). */
 export function useDeploy() {
+  const dispatch = useAppDispatch()
+  const god: GodState = useAppSelector((s) => s.god)
   const [flash, setFlash] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
 
   const exportProject = useCallback(async () => {
     setBusy(true)
     try {
-      const data = await idbDump()
-      const blob = new Blob([JSON.stringify({ kind: 'metabuilder-project', version: 1, data }, null, 2)],
+      const idb = await idbDump() // versions, webchat, etc.
+      const blob = new Blob([JSON.stringify(
+        { kind: 'metabuilder-project', version: 2, god, idb }, null, 2)],
         { type: 'application/json' })
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
@@ -22,20 +27,21 @@ export function useDeploy() {
       URL.revokeObjectURL(url)
       setFlash('Project exported.')
     } finally { setBusy(false) }
-  }, [])
+  }, [god])
 
   const importProject = useCallback(async (file: File) => {
     setBusy(true)
     try {
-      const text = await file.text()
-      const parsed = JSON.parse(text) as { data?: Record<string, unknown> }
-      await idbRestore(parsed.data ?? (parsed as Record<string, unknown>))
-      setFlash('Project imported — reloading…')
-      setTimeout(() => { window.location.reload() }, 700)
+      const parsed = JSON.parse(await file.text()) as {
+        god?: GodState; idb?: Record<string, unknown>
+      }
+      if (parsed.god) dispatch(rehydrate(parsed.god))
+      if (parsed.idb) await idbRestore(parsed.idb)
+      setFlash('Project imported.')
     } catch {
       setFlash('Import failed — not a valid project file.')
     } finally { setBusy(false) }
-  }, [])
+  }, [dispatch])
 
   return { flash, busy, exportProject, importProject, clearFlash: () => setFlash(null) }
 }

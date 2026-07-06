@@ -1,17 +1,14 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
-import { idbGet, idbSet } from '@/lib/persist/idb-kv'
+import { useCallback, useState } from 'react'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { setTree, clearDirty } from '@/store/slices/god-slice'
+import { snapshot } from '@/lib/persist/versions'
 import { paletteItem, type TreeNode } from './builder-registry'
 
-const KEY = 'god.componentTree'
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
 function nid(): string { return `n_${Date.now()}_${Math.random().toString(36).slice(2, 6)}` }
-
-function root(): TreeNode {
-  return { id: 'root', type: 'container', props: { direction: 'column', gap: 12 }, children: [] }
-}
 
 function walk(node: TreeNode, fn: (n: TreeNode) => void): void {
   fn(node); node.children.forEach((c) => { walk(c, fn) })
@@ -58,20 +55,15 @@ function insertAfter(node: TreeNode, siblingId: string, child: TreeNode): TreeNo
   return { ...node, children: node.children.map((c) => insertAfter(c, siblingId, child)) }
 }
 
-/** Component-tree state with the same stage→publish persistence as workflows. */
+/** Component-tree editor state — tree persisted in Redux (god slice). */
 export function useComponentTree() {
-  const [tree, setTree] = useState<TreeNode>(root)
+  const dispatch = useAppDispatch()
+  const tree: TreeNode = useAppSelector((s) => s.god.tree)
+  const dirty = useAppSelector((s) => s.god.dirty.tree)
   const [selectedId, setSelectedId] = useState<string>('root')
-  const [dirty, setDirty] = useState(false)
   const [publishing, setPublishing] = useState(false)
 
-  useEffect(() => {
-    void idbGet<TreeNode>(KEY).then((t) => { if (t) setTree(t) })
-  }, [])
-
-  const commit = useCallback((next: TreeNode) => {
-    setTree(next); setDirty(true); void idbSet(KEY, next)
-  }, [])
+  const commit = useCallback((next: TreeNode) => { dispatch(setTree(next)) }, [dispatch])
 
   const selected = ((): TreeNode => {
     let found = tree
@@ -83,7 +75,6 @@ export function useComponentTree() {
     const item = paletteItem(type)
     if (!item) return
     const node: TreeNode = { id: nid(), type, props: { ...item.defaults }, children: [] }
-    // Drop into the selected node if it's a container, else the root.
     const parent = paletteItem(selected.type)?.container ? selected.id : 'root'
     commit(insertChild(tree, parent, node))
     setSelectedId(node.id)
@@ -99,45 +90,33 @@ export function useComponentTree() {
     setSelectedId('root')
   }, [tree, commit])
 
-  // Drag a node onto a target: into it if it's a container, else after it.
   const moveNode = useCallback((dragId: string, targetId: string) => {
     if (dragId === 'root' || dragId === targetId) return
-    if (isDescendant(tree, dragId, targetId)) return // no dropping into own subtree
+    if (isDescendant(tree, dragId, targetId)) return
     const dragged = findNode(tree, dragId)
     if (!dragged) return
     const without = removeNode(tree, dragId)
     const target = findNode(without, targetId)
     const asContainer = target && paletteItem(target.type)?.container
-    const next = asContainer
-      ? insertChild(without, targetId, dragged)
-      : insertAfter(without, targetId, dragged)
-    commit(next)
+    commit(asContainer ? insertChild(without, targetId, dragged) : insertAfter(without, targetId, dragged))
   }, [tree, commit])
 
-  // Publish the tree to a route (PageConfig.componentTree row) in the DBAL.
   const publish = useCallback(async (
     tenant = 'system', path = '/', title = 'Home',
   ): Promise<boolean> => {
     setPublishing(true)
     try {
       const res = await fetch(`${DBAL}/${tenant}/core/PageConfig`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          path, title, isActive: true, level: 1, requiresAuth: false,
-          tenantId: tenant, componentTree: tree,
-        }),
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path, title, isActive: true, level: 1, requiresAuth: false, tenantId: tenant, componentTree: tree }),
         signal: AbortSignal.timeout(6000),
       })
       if (!res.ok) return false
-      setDirty(false)
+      await snapshot('god.componentTree', tree, 'Published page')
+      dispatch(clearDirty('tree'))
       return true
-    } catch {
-      return false
-    } finally {
-      setPublishing(false)
-    }
-  }, [tree])
+    } catch { return false } finally { setPublishing(false) }
+  }, [tree, dispatch])
 
   return {
     tree, selected, selectedId, setSelectedId,

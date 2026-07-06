@@ -1,43 +1,28 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import type { Workflow } from '@/workflow-editor'
-import { idbGet, idbSet } from '@/lib/persist/idb-kv'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { setWorkflow, clearDirty } from '@/store/slices/god-slice'
 import { snapshot } from '@/lib/persist/versions'
 
-const KEY = 'god.workflow'
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
-function seed(): Workflow {
-  const now = new Date().toISOString()
-  return {
-    id: 'wf_god_default', name: 'Untitled Workflow', description: '',
-    nodes: [], connections: [], createdAt: now, updatedAt: now,
-  }
-}
-
 /**
- * God-panel workflow with the stage→publish persistence model:
- *   edit -> staged in IndexedDB (dirty) -> Publish -> synced to DBAL rows.
+ * God-panel workflow. Persisted domain data lives in the Redux `god` slice
+ * (redux-persist → IndexedDB); publish syncs to DBAL rows and snapshots a
+ * version.
  */
 export function useGodWorkflow(tenant = 'system') {
-  const [workflow, setWorkflow] = useState<Workflow>(seed)
-  const [dirty, setDirty] = useState(false)
+  const dispatch = useAppDispatch()
+  const workflow: Workflow = useAppSelector((s) => s.god.workflow)
+  const dirty = useAppSelector((s) => s.god.dirty.workflow)
   const [publishing, setPublishing] = useState(false)
 
-  useEffect(() => {
-    void idbGet<Workflow>(KEY).then((w) => { if (w) setWorkflow(w) })
-  }, [])
-
-  // Stage a change locally (IndexedDB); marks it unpublished.
   const save = useCallback((wf: Workflow) => {
-    setWorkflow(wf)
-    setDirty(true)
-    void idbSet(KEY, wf)
-  }, [])
+    dispatch(setWorkflow(wf))
+  }, [dispatch])
 
-  // Publish staged changes to the DBAL (live). Falls back gracefully if the
-  // server is unreachable — the change stays staged.
   const publish = useCallback(async (): Promise<boolean> => {
     setPublishing(true)
     try {
@@ -48,15 +33,15 @@ export function useGodWorkflow(tenant = 'system') {
         signal: AbortSignal.timeout(6000),
       })
       if (!res.ok) return false
-      await snapshot(KEY, workflow, `Published ${workflow.name}`)
-      setDirty(false)
+      await snapshot('god.workflow', workflow, `Published ${workflow.name}`)
+      dispatch(clearDirty('workflow'))
       return true
     } catch {
       return false
     } finally {
       setPublishing(false)
     }
-  }, [workflow, tenant])
+  }, [workflow, tenant, dispatch])
 
   return { workflow, save, dirty, publish, publishing }
 }

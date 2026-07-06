@@ -1,9 +1,8 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
-import { idbGet, idbSet } from '@/lib/persist/idb-kv'
-
-const KEY = 'god.planBoard'
+import { useCallback, useState } from 'react'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { setPlan } from '@/store/slices/god-slice'
 
 export type Status = 'todo' | 'doing' | 'done'
 export interface Task { id: string; title: string; status: Status }
@@ -17,25 +16,13 @@ export const COLUMNS: Array<{ status: Status; label: string }> = [
 const NEXT: Record<Status, Status> = { todo: 'doing', doing: 'done', done: 'todo' }
 const PREV: Record<Status, Status> = { todo: 'done', doing: 'todo', done: 'doing' }
 
-function seed(): Task[] {
-  return [
-    { id: 'p1', title: 'Design the landing page', status: 'todo' },
-    { id: 'p2', title: 'Wire signup workflow', status: 'doing' },
-  ]
-}
-
-/** Simple SDLC planning board (kanban), IndexedDB-persisted. */
+/** SDLC planning board (kanban), persisted in Redux god slice. */
 export function usePlanBoard() {
-  const [tasks, setTasks] = useState<Task[]>(seed)
+  const dispatch = useAppDispatch()
+  const tasks: Task[] = useAppSelector((s) => s.god.plan)
   const [draft, setDraft] = useState('')
 
-  useEffect(() => {
-    void idbGet<Task[]>(KEY).then((t) => { if (t) setTasks(t) })
-  }, [])
-
-  const persist = useCallback((next: Task[]) => {
-    setTasks(next); void idbSet(KEY, next)
-  }, [])
+  const persist = useCallback((next: Task[]) => { dispatch(setPlan(next)) }, [dispatch])
 
   const add = useCallback(() => {
     if (!draft.trim()) return

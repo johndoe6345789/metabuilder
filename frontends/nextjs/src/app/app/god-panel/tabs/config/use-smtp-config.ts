@@ -1,9 +1,9 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
-import { idbGet, idbSet } from '@/lib/persist/idb-kv'
+import { useCallback, useState } from 'react'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { setSmtp, clearDirty } from '@/store/slices/god-slice'
 
-const KEY = 'god.smtpConfig'
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
 export interface SmtpConfig {
@@ -16,30 +16,16 @@ export interface SmtpConfig {
   fromName: string
 }
 
-function seed(): SmtpConfig {
-  return {
-    host: '', port: 587, secure: false, username: '', password: '',
-    fromEmail: '', fromName: 'MetaBuilder',
-  }
-}
-
-/** Outbound email (SMTP) settings, IndexedDB-staged + published to DBAL. */
+/** Outbound email (SMTP) settings, persisted in Redux + published to DBAL. */
 export function useSmtpConfig() {
-  const [config, setConfig] = useState<SmtpConfig>(seed)
-  const [dirty, setDirty] = useState(false)
+  const dispatch = useAppDispatch()
+  const config: SmtpConfig = useAppSelector((s) => s.god.smtp)
+  const dirty = useAppSelector((s) => s.god.dirty.smtp)
   const [publishing, setPublishing] = useState(false)
 
-  useEffect(() => {
-    void idbGet<SmtpConfig>(KEY).then((c) => { if (c) setConfig(c) })
-  }, [])
-
   const set = useCallback(<K extends keyof SmtpConfig>(key: K, value: SmtpConfig[K]) => {
-    setConfig((c) => {
-      const next = { ...c, [key]: value }
-      setDirty(true); void idbSet(KEY, next)
-      return next
-    })
-  }, [])
+    dispatch(setSmtp({ ...config, [key]: value }))
+  }, [config, dispatch])
 
   const publish = useCallback(async (tenant = 'system'): Promise<boolean> => {
     setPublishing(true)
@@ -50,9 +36,9 @@ export function useSmtpConfig() {
         signal: AbortSignal.timeout(6000),
       })
       if (!res.ok) return false
-      setDirty(false); return true
+      dispatch(clearDirty('smtp')); return true
     } catch { return false } finally { setPublishing(false) }
-  }, [config])
+  }, [config, dispatch])
 
   return { config, set, dirty, publish, publishing }
 }
