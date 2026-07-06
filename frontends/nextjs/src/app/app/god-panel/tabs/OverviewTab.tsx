@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Typography, Paper, Chip, Avatar } from '@/m3'
+import { Typography, Paper, Chip } from '@/m3'
 import { godPanelConfig } from '@/lib/packages/navigation'
 import s from './OverviewTab.module.scss'
 
@@ -86,7 +86,7 @@ export function OverviewTab() {
       <div className={s.toolsGrid}>
         {godPanelConfig.tools.map(tool => (
           <Paper key={tool.id} className={s.toolCard}>
-            <Avatar>{tool.icon.charAt(0).toUpperCase()}</Avatar>
+            <span className={`material-symbols-rounded ${s.toolIcon}`}>{tool.icon}</span>
             <Typography variant="body2">{tool.label}</Typography>
           </Paper>
         ))}

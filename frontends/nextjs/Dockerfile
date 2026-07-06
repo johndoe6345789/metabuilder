@@ -78,8 +78,11 @@ RUN for ws in libraries/redux/core libraries/redux/slices \
     npm run build -w "$ws" --if-present 2>&1 || { echo "ERROR: $ws build failed"; exit 1; }; \
 done
 
-# Build the app (NEXT_PUBLIC_* vars baked into bundle at build time)
-ARG NEXT_PUBLIC_DBAL_API_URL=https://metabuilder.wardcrew.com/api/dbal
+# Build the app (NEXT_PUBLIC_* vars baked into bundle at build time).
+# Relative /api/dbal so the browser reaches the DBAL same-origin via nginx on
+# any host (localhost, metabuilder.wardcrew.com, …). An absolute domain breaks
+# cross-origin everywhere else and was the cause of "DBAL Offline".
+ARG NEXT_PUBLIC_DBAL_API_URL=/api/dbal
 ENV NEXT_PUBLIC_DBAL_API_URL=$NEXT_PUBLIC_DBAL_API_URL
 RUN cd frontends/nextjs && npx next build --turbopack
 

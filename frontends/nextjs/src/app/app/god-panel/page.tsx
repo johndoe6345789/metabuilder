@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { LevelGate } from '@/components/layout/LevelGate'
 import { godPanelConfig } from '@/lib/packages/navigation'
 import type { GodPanelTab } from '@/lib/packages/navigation'
-import { Typography, Tabs, Tab, TabPanel, Avatar, Button } from '@/m3'
+import { Typography, Tabs, Tab, TabPanel, Button } from '@/m3'
 import { NerdModeIde, useNerdMode } from '@/components/nerd-mode-ide'
 import { OverviewTab } from './tabs/OverviewTab'
 import { SchemasTab } from './tabs/SchemasTab'
@@ -23,13 +23,6 @@ import { TestRunnerTab } from './tabs/test/TestRunnerTab'
 import { PlanTab } from './tabs/plan/PlanTab'
 import { DeployTab } from './tabs/deploy/DeployTab'
 import s from './page.module.scss'
-
-const TAB_ICON_MAP: Record<string, string> = {
-  dashboard: 'O', database: 'D', workflow: 'W', package: 'P',
-  pages: 'R', components: 'C', people: 'U', storage: 'S',
-  key: 'K', palette: 'T', brush: 'Y', tune: 'G', science: 'X',
-  checklist: 'N', rocket_launch: 'Z',
-}
 
 const TAB_COMPONENTS: Record<string, React.FC> = {
   overview: OverviewTab,
@@ -96,13 +89,12 @@ function GodPanelContent() {
         {tabs.map((tab: GodPanelTab) => (
           <Tab
             key={tab.id}
-            label={tab.label}
-            icon={
-              <Avatar>
-                {TAB_ICON_MAP[tab.icon] ?? tab.icon.charAt(0).toUpperCase()}
-              </Avatar>
+            label={
+              <span className={s.tabLabel}>
+                <span className="material-symbols-rounded">{tab.icon}</span>
+                {tab.label}
+              </span>
             }
-            iconPosition="start"
           />
         ))}
       </Tabs>

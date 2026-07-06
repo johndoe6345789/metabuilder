@@ -49,3 +49,16 @@
 }
 
 .tabs { margin-bottom: 24px; }
+
+.tabLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  text-transform: none;
+
+  :global(.material-symbols-rounded) {
+    font-size: 20px;
+    line-height: 1;
+  }
+}
