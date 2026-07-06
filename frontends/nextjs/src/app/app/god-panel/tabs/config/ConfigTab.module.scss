@@ -65,3 +65,8 @@
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 12px;
 }
+
+@media (max-width: 760px) {
+  .grid { grid-template-columns: 1fr; }
+  .smtpGrid { grid-template-columns: 1fr; }
+}

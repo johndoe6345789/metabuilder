@@ -1,4 +1,11 @@
-.root { max-width: 1200px; margin: 0 auto; }
+.root {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+  overflow-x: hidden;
+
+  @media (max-width: 640px) { padding: 0 12px; }
+}
 
 .topbar {
   position: sticky;
@@ -7,10 +14,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  height: 60px;
-  margin-bottom: 20px;
-  padding: 0 4px;
+  gap: 12px 16px;
+  flex-wrap: wrap;
+  min-height: 60px;
+  padding: 10px 4px;
+  margin-bottom: 16px;
   border-bottom: 1px solid var(--mat-sys-outline-variant, #30363d);
   background: var(--mat-sys-surface, #0d1117);
 }
@@ -48,7 +56,23 @@
   margin: 0 4px;
 }
 
-.tabs { margin-bottom: 24px; }
+// Clip the (wide) tab strip so it scrolls horizontally instead of blowing out
+// the page on narrow screens.
+.tabsWrap {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin-bottom: 24px;
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar { height: 6px; }
+  &::-webkit-scrollbar-thumb {
+    background: var(--mat-sys-outline-variant, #30363d);
+    border-radius: 3px;
+  }
+}
+
+.tabs { margin-bottom: 0; }
 
 .tabLabel {
   display: inline-flex;

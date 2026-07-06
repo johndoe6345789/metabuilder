@@ -45,3 +45,9 @@
   color: var(--mat-sys-on-surface-variant, #8b949e);
   font-size: 14px;
 }
+
+@media (max-width: 760px) {
+  .content { flex-direction: column; }
+  .editor { height: auto; min-height: 520px; }
+  .canvas { min-height: 320px; }
+}

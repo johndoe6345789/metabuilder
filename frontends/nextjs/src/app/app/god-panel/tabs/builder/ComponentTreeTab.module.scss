@@ -96,3 +96,8 @@
   min-height: 200px;
   background: var(--mat-sys-surface, #0d1117);
 }
+
+@media (max-width: 900px) {
+  .grid { grid-template-columns: 1fr; height: auto; }
+  .palette, .middle, .previewWrap { max-height: 340px; }
+}

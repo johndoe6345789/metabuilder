@@ -49,3 +49,7 @@
   }
 }
 .del:hover { color: var(--mat-sys-error, #f85149) !important; }
+
+@media (max-width: 700px) {
+  .board { grid-template-columns: 1fr; }
+}

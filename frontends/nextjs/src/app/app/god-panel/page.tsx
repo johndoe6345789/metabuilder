@@ -79,25 +79,27 @@ function GodPanelContent() {
         </div>
       </header>
 
-      <Tabs
-        value={activeTab}
-        onChange={(_e, v) => { setActiveTab(v as number) }}
-        variant="scrollable"
-        scrollButtons="auto"
-        className={s.tabs}
-      >
-        {tabs.map((tab: GodPanelTab) => (
-          <Tab
-            key={tab.id}
-            label={
-              <span className={s.tabLabel}>
-                <span className="material-symbols-rounded">{tab.icon}</span>
-                {tab.label}
-              </span>
-            }
-          />
-        ))}
-      </Tabs>
+      <div className={s.tabsWrap}>
+        <Tabs
+          value={activeTab}
+          onChange={(_e, v) => { setActiveTab(v as number) }}
+          variant="scrollable"
+          scrollButtons="auto"
+          className={s.tabs}
+        >
+          {tabs.map((tab: GodPanelTab) => (
+            <Tab
+              key={tab.id}
+              label={
+                <span className={s.tabLabel}>
+                  <span className="material-symbols-rounded">{tab.icon}</span>
+                  {tab.label}
+                </span>
+              }
+            />
+          ))}
+        </Tabs>
+      </div>
 
       {tabs.map((tab: GodPanelTab, index: number) => {
         const TabComponent = TAB_COMPONENTS[tab.id]

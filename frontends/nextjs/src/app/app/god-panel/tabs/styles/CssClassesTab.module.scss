@@ -75,3 +75,7 @@
   font-size: 12px; line-height: 1.5; overflow: auto;
   white-space: pre;
 }
+
+@media (max-width: 900px) {
+  .grid { grid-template-columns: 1fr; }
+}
