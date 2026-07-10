@@ -60,6 +60,7 @@ const { store, persistor } = createPersistedStore({
   ignoredPaths: [
     'asyncData.requests.*.promise',
     'canvas.canvasState.selectedItemIds',
+    'editor.selectedNodes',
   ],
 })
 
