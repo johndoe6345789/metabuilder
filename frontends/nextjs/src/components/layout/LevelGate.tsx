@@ -16,6 +16,7 @@ import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-co
 import { getRoleLevel } from '@/lib/constants'
 import { Typography, Button, Paper } from '@/m3'
 import { useRouter } from 'next/navigation'
+import s from './LevelGate.module.scss'
 
 export interface LevelGateProps {
   children: React.ReactNode
@@ -49,19 +50,11 @@ export function LevelGate({
   if (!auth.isAuthenticated) {
     if (silent) return null
     return (
-      <Paper
-        sx={{
-          p: 4,
-          textAlign: 'center',
-          maxWidth: 480,
-          mx: 'auto',
-          mt: 8,
-        }}
-      >
+      <Paper className={s.panel}>
         <Typography variant="h5" gutterBottom>
           Authentication Required
         </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+        <Typography variant="body1" color="text.secondary" className={s.copyLarge}>
           You need to sign in to access this area.
         </Typography>
         <Button
@@ -77,19 +70,11 @@ export function LevelGate({
   // Authenticated but insufficient level
   if (silent) return null
   return (
-    <Paper
-      sx={{
-        p: 4,
-        textAlign: 'center',
-        maxWidth: 480,
-        mx: 'auto',
-        mt: 8,
-      }}
-    >
+    <Paper className={s.panel}>
       <Typography variant="h5" gutterBottom>
         Access Denied
       </Typography>
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
+      <Typography variant="body1" color="text.secondary" className={s.copy}>
         {levelName != null
           ? `${levelName} access (Level ${minLevel}) is required to view this page.`
           : `Level ${minLevel} access is required to view this page.`}

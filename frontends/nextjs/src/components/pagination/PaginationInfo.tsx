@@ -2,6 +2,7 @@
 
 import { Typography } from '@/m3'
 import type { PaginationMetadata } from '@/lib/api/pagination'
+import s from './Pagination.module.scss'
 
 export interface PaginationInfoProps {
   metadata: PaginationMetadata
@@ -22,7 +23,7 @@ export function PaginationInfo({ metadata }: PaginationInfoProps) {
       <Typography 
         variant="body2" 
         color="text.secondary"
-        sx={{ fontFamily: 'IBM Plex Sans, sans-serif' }}
+        className={s.infoText}
       >
         No items found
       </Typography>
@@ -33,7 +34,7 @@ export function PaginationInfo({ metadata }: PaginationInfoProps) {
     <Typography 
       variant="body2" 
       color="text.secondary"
-      sx={{ fontFamily: 'IBM Plex Sans, sans-serif' }}
+      className={s.infoText}
     >
       Showing {start}-{end} of {metadata.total} items
     </Typography>

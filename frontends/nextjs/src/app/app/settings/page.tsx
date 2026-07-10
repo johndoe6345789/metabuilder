@@ -16,26 +16,27 @@ import {
   Divider,
   Chip,
 } from '@/m3'
+import s from './page.module.scss'
 
 function SettingsContent() {
   const auth = useAuthContext()
   const { mode, setMode, resolvedMode } = useTheme()
 
   return (
-    <div style={{ maxWidth: 680, margin: '0 auto' }}>
+    <div className={s.root}>
       <Typography variant="h4" gutterBottom>Settings</Typography>
 
       {/* Theme */}
-      <Paper sx={{ p: 3, mb: 2 }}>
+      <Paper className={s.panel}>
         <Typography variant="h6" gutterBottom>Appearance</Typography>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+        <div className={s.row}>
           <div>
             <Typography variant="body2">Theme Mode</Typography>
             <Typography variant="caption" color="text.secondary">
               Current: {resolvedMode} (preference: {mode})
             </Typography>
           </div>
-          <div style={{ display: 'flex', gap: 8 }}>
+          <div className={s.chipRow}>
             {(['light', 'dark', 'system'] as const).map(m => (
               <Chip
                 key={m}
@@ -43,7 +44,7 @@ function SettingsContent() {
                 size="small"
                 variant={mode === m ? 'filled' : 'outlined'}
                 onClick={() => { setMode(m) }}
-                sx={{ cursor: 'pointer', textTransform: 'capitalize' }}
+                className={s.clickableChip}
               />
             ))}
           </div>
@@ -51,25 +52,25 @@ function SettingsContent() {
       </Paper>
 
       {/* Account */}
-      <Paper sx={{ p: 3, mb: 2 }}>
+      <Paper className={s.panel}>
         <Typography variant="h6" gutterBottom>Account</Typography>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+        <div className={s.accountRow}>
           <Typography variant="body2">Username</Typography>
-          <Typography variant="body2" sx={{ fontWeight: 500 }}>
+          <Typography variant="body2" className={s.value}>
             {auth.user?.username ?? 'N/A'}
           </Typography>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+        <div className={s.accountRow}>
           <Typography variant="body2">Email</Typography>
-          <Typography variant="body2" sx={{ fontWeight: 500 }}>
+          <Typography variant="body2" className={s.value}>
             {auth.user?.email ?? 'N/A'}
           </Typography>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className={s.accountRow}>
           <Typography variant="body2">Role</Typography>
           <Chip label={auth.user?.role ?? 'user'} size="small" />
         </div>
-        <Divider sx={{ my: 2 }} />
+        <Divider className={s.divider} />
         <Button
           variant="outlined"
           color="error"
@@ -81,9 +82,9 @@ function SettingsContent() {
       </Paper>
 
       {/* DBAL */}
-      <Paper sx={{ p: 3 }}>
+      <Paper className={s.panel}>
         <Typography variant="h6" gutterBottom>DBAL Connection</Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+        <Typography variant="body2" color="text.secondary" className={s.dbalUrl}>
           API URL: {process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'}
         </Typography>
         <Typography variant="caption" color="text.secondary">

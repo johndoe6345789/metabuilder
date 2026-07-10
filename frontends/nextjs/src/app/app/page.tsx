@@ -10,6 +10,7 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
 import { Typography, Paper, Button } from '@/m3'
+import s from './page.module.scss'
 
 export default function AppRootPage() {
   const auth = useAuthContext()
@@ -30,15 +31,15 @@ export default function AppRootPage() {
   }
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
-      <Paper sx={{ p: 4, textAlign: 'center', maxWidth: 480 }}>
+    <div className={s.root}>
+      <Paper className={s.card}>
         <Typography variant="h4" gutterBottom>
           MetaBuilder
         </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+        <Typography variant="body1" color="text.secondary" className={s.copy}>
           Sign in to access the application builder, admin tools, and your dashboard.
         </Typography>
-        <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+        <div className={s.actions}>
           <Button variant="contained" onClick={() => { router.push('/ui/login') }}>
             Sign In
           </Button>

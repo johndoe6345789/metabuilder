@@ -18,6 +18,7 @@ import {
   Avatar,
   Divider,
 } from '@/m3'
+import s from './page.module.scss'
 
 const DBAL_URL = typeof process !== 'undefined'
   ? (process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080')
@@ -66,7 +67,7 @@ function PackageContent({ packageId }: { packageId: string }) {
 
   if (metadata == null) {
     return (
-      <Paper sx={{ p: 4, textAlign: 'center' }}>
+      <Paper className={s.emptyPanel}>
         <Typography variant="h6">Package Not Found</Typography>
         <Typography variant="body2" color="text.secondary">
           Package &ldquo;{packageId}&rdquo; could not be loaded.
@@ -76,16 +77,16 @@ function PackageContent({ packageId }: { packageId: string }) {
   }
 
   return (
-    <div style={{ maxWidth: 700, margin: '0 auto' }}>
+    <div className={s.root}>
       {/* Package header */}
-      <Paper sx={{ p: 3, mb: 3 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 16 }}>
-          <Avatar sx={{ width: 56, height: 56, fontSize: '1.5rem' }}>
+      <Paper className={s.panel}>
+        <div className={s.header}>
+          <Avatar className={s.avatar}>
             {metadata.icon}
           </Avatar>
           <div>
             <Typography variant="h5">{metadata.name}</Typography>
-            <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
+            <div className={s.chipRow}>
               <Chip label={`v${metadata.version}`} size="small" />
               <Chip label={metadata.category} size="small" variant="outlined" />
               <Chip label={`Level ${metadata.level}`} size="small" variant="outlined" />
@@ -99,9 +100,9 @@ function PackageContent({ packageId }: { packageId: string }) {
 
       {/* Dependencies */}
       {metadata.dependencies.length > 0 && (
-        <Paper sx={{ p: 3, mb: 3 }}>
+        <Paper className={s.panel}>
           <Typography variant="h6" gutterBottom>Dependencies</Typography>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <div className={s.chipRow}>
             {metadata.dependencies.map(dep => (
               <Chip key={dep} label={dep} size="small" variant="outlined" />
             ))}
@@ -110,16 +111,16 @@ function PackageContent({ packageId }: { packageId: string }) {
       )}
 
       {/* Package view placeholder */}
-      <Paper sx={{ p: 4, textAlign: 'center' }}>
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
+      <Paper className={s.emptyPanel}>
+        <Typography variant="body1" color="text.secondary" className={s.placeholderTitle}>
           Package view for &ldquo;{metadata.name}&rdquo;
         </Typography>
         <Typography variant="body2" color="text.secondary">
           Package-specific UI components are loaded dynamically.
           In Qt6, this maps to PackageViewLoader with packageId: &ldquo;{packageId}&rdquo;.
         </Typography>
-        <Divider sx={{ my: 2 }} />
-        <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
+        <Divider className={s.divider} />
+        <div className={s.centerChips}>
           <Chip label="Adaptive layout" size="small" />
           <Chip label="Realtime telemetry" size="small" />
           <Chip label={metadata.dependencies.length > 0 ? 'Dependency package' : 'Standalone'} size="small" />
@@ -135,7 +136,7 @@ export default function PackagePage() {
 
   if (packageId == null || packageId === '') {
     return (
-      <Paper sx={{ p: 4, textAlign: 'center' }}>
+      <Paper className={s.emptyPanel}>
         <Typography variant="h6">No Package Selected</Typography>
       </Paper>
     )

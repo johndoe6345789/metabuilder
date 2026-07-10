@@ -1,7 +1,8 @@
 'use client'
 
-import { Pagination, Box } from '@/m3'
+import { Pagination } from '@/m3'
 import type { PaginationMetadata } from '@/lib/api/pagination'
+import s from './Pagination.module.scss'
 
 export interface PaginationControlsProps {
   metadata: PaginationMetadata
@@ -27,14 +28,7 @@ export function PaginationControls({
   }
 
   return (
-    <Box 
-      sx={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center',
-        py: 2,
-      }}
-    >
+    <div className={s.controls}>
       <Pagination
         count={metadata.totalPages}
         page={metadata.page}
@@ -44,12 +38,8 @@ export function PaginationControls({
         showFirstButton
         showLastButton
         color="primary"
-        sx={{
-          '& .MuiPaginationItem-root': {
-            fontFamily: 'IBM Plex Sans, sans-serif',
-          },
-        }}
+        className={s.pagination}
       />
-    </Box>
+    </div>
   )
 }

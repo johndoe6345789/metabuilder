@@ -27,6 +27,7 @@ import {
   TableHead,
   TableRow,
 } from '@/m3'
+import s from './page.module.scss'
 
 interface UserRecord {
   id: string
@@ -91,8 +92,8 @@ function AdminContent() {
   }, [])
 
   return (
-    <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-      <div style={{ marginBottom: 24 }}>
+    <div className={s.root}>
+      <div className={s.header}>
         <Typography variant="h4" gutterBottom>Data Management</Typography>
         <Typography variant="body1" color="text.secondary">
           Manage all application data and users
@@ -100,21 +101,21 @@ function AdminContent() {
       </div>
 
       {/* Stats cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16, marginBottom: 24 }}>
+      <div className={s.statsGrid}>
         {stats.map(stat => (
-          <Paper key={stat.label} sx={{ p: 2 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+          <Paper key={stat.label} className={s.statCard}>
+            <div className={s.statHeader}>
               <Typography variant="body2" color="text.secondary">{stat.label}</Typography>
-              <Avatar sx={{ width: 24, height: 24, fontSize: '0.7rem' }}>{stat.icon}</Avatar>
+              <Avatar className={s.statAvatar}>{stat.icon}</Avatar>
             </div>
-            <Typography variant="h5" sx={{ fontWeight: 700 }}>{stat.count}</Typography>
+            <Typography variant="h5" className={s.statCount}>{stat.count}</Typography>
           </Paper>
         ))}
       </div>
 
       {/* Data tables */}
-      <Paper sx={{ p: 0 }}>
-        <div style={{ padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Paper className={s.tablePanel}>
+        <div className={s.tableHeader}>
           <div>
             <Typography variant="h6">Models</Typography>
             <Typography variant="body2" color="text.secondary">Browse and manage data models</Typography>
@@ -124,12 +125,12 @@ function AdminContent() {
             value={search}
             onChange={(e) => { setSearch(e.target.value) }}
             size="small"
-            sx={{ width: 256 }}
+            className={s.search}
           />
         </div>
         <Divider />
 
-        <div style={{ padding: '8px 16px 0' }}>
+        <div className={s.tabsWrap}>
           <Tabs value={activeTab} onChange={(_e, v) => { setActiveTab(v as number) }}>
             <Tab label={`Users (${users.length})`} />
             <Tab label="Comments (0)" />
@@ -152,14 +153,14 @@ function AdminContent() {
               <TableBody>
                 {filteredUsers.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} style={{ textAlign: 'center', paddingBlock: 32 }}>
+                    <TableCell colSpan={5} className={s.emptyCell}>
                       <Typography variant="body2" color="text.secondary">No users found</Typography>
                     </TableCell>
                   </TableRow>
                 ) : (
                   filteredUsers.map(u => (
                     <TableRow key={u.id}>
-                      <TableCell style={{ fontWeight: 500 }}>{u.username}</TableCell>
+                      <TableCell className={s.userName}>{u.username}</TableCell>
                       <TableCell>{u.email}</TableCell>
                       <TableCell>
                         <Chip
@@ -183,13 +184,13 @@ function AdminContent() {
         </TabPanel>
 
         <TabPanel value={activeTab} index={1}>
-          <Typography variant="body2" color="text.secondary" sx={{ py: 4, textAlign: 'center' }}>
+          <Typography variant="body2" color="text.secondary" className={s.emptyState}>
             No comments data available. Connect to DBAL to load comments.
           </Typography>
         </TabPanel>
 
         <TabPanel value={activeTab} index={2}>
-          <Typography variant="body2" color="text.secondary" sx={{ py: 4, textAlign: 'center' }}>
+          <Typography variant="body2" color="text.secondary" className={s.emptyState}>
             Entity schemas are loaded from DBAL at dbal/shared/api/schema/entities/. Connect to DBAL to browse entities.
           </Typography>
         </TabPanel>

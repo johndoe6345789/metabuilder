@@ -22,6 +22,7 @@ import {
 } from '@/m3'
 import { getLevelColor } from '@/lib/packages/navigation'
 import { Logo } from '@/components/brand/Logo'
+import s from './AppBar.module.scss'
 
 export interface AppBarProps {
   username: string | null
@@ -77,50 +78,30 @@ export function AppBarComponent({
   return (
     <MuiAppBar
       position="sticky"
-      sx={{
-        minHeight: 56,
-        display: 'flex',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        alignItems: 'center',
-        px: 2,
-        py: 0.5,
-        columnGap: 1.5,
-        rowGap: 0.5,
-        maxWidth: '100vw',
-        overflowX: 'clip',
-        zIndex: 1200,
-      }}
+      className={s.root}
     >
       {/* Menu toggle (for mobile) */}
       {isAuthenticated && onToggleSidebar != null && (
         <IconButton
           color="inherit"
           onClick={onToggleSidebar}
-          sx={{ display: { sm: 'none' }, mr: 0.5 }}
+          className={s.menuButton}
           aria-label="Toggle sidebar"
         >
-          <span style={{ fontSize: '1.25rem' }}>&#9776;</span>
+          <span className={s.menuIcon}>&#9776;</span>
         </IconButton>
       )}
 
       {/* Branding */}
-      <Link href="/" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', gap: '9px' }}>
+      <Link href="/" className={s.brand}>
         <Logo size={32} />
-        <Typography variant="h6" noWrap sx={{ fontWeight: 700, letterSpacing: '-0.01em' }}>
+        <Typography variant="h6" noWrap className={s.brandTitle}>
           MetaBuilder
         </Typography>
         <Typography
           variant="caption"
           noWrap
-          sx={{
-            fontWeight: 500,
-            opacity: 0.45,
-            fontSize: '0.7rem',
-            letterSpacing: '0.01em',
-            alignSelf: 'flex-end',
-            mb: '3px',
-          }}
+          className={s.version}
         >
           v{process.env.NEXT_PUBLIC_APP_VERSION ?? '0.1.0'}
         </Typography>
@@ -131,27 +112,18 @@ export function AppBarComponent({
         <Chip
           label={`Level ${userLevel}`}
           size="small"
-          sx={{
-            bgcolor: levelColor,
-            color: '#fff',
-            fontWeight: 600,
-            fontSize: '0.7rem',
-            height: 24,
-          }}
+          className={s.levelChip}
+          style={{ backgroundColor: levelColor }}
         />
       )}
 
       {/* DBAL connection status */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginLeft: 4 }}>
+      <div className={s.dbalStatus}>
         <div
-          style={{
-            width: 8,
-            height: 8,
-            borderRadius: 4,
-            backgroundColor: checkingDbal ? '#ff9800' : dbalStatus ? '#4caf50' : '#f44336',
-          }}
+          className={s.dbalDot}
+          style={{ backgroundColor: checkingDbal ? '#ff9800' : dbalStatus ? '#4caf50' : '#f44336' }}
         />
-        <Typography variant="caption" sx={{ opacity: 0.8 }}>
+        <Typography variant="caption" className={s.dbalText}>
           DBAL
         </Typography>
       </div>
@@ -162,17 +134,17 @@ export function AppBarComponent({
           variant="text"
           size="small"
           onClick={onToggleTheme}
-          sx={{ color: 'inherit', minWidth: 'auto', textTransform: 'none' }}
+          className={s.textButton}
         >
           {themeMode === 'dark' ? 'Light' : 'Dark'}
         </Button>
       )}
 
       {/* Spacer */}
-      <div style={{ flex: 1 }} />
+      <div className={s.spacer} />
 
       {/* Level navigation (mirrors Qt6 Repeater) */}
-      <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+      <div className={s.levelNav}>
         {levelNavItems
           .filter(item => isAuthenticated ? item.level <= userLevel : item.level <= 1)
           .map(item => (
@@ -181,14 +153,7 @@ export function AppBarComponent({
               variant="text"
               size="small"
               onClick={() => { router.push(item.path) }}
-              sx={{
-                color: 'inherit',
-                textTransform: 'none',
-                fontSize: '0.8rem',
-                opacity: 0.85,
-                '&:hover': { opacity: 1 },
-                display: { xs: 'none', md: 'inline-flex' },
-              }}
+              className={s.navButton}
             >
               {item.label}
             </Button>
@@ -196,7 +161,7 @@ export function AppBarComponent({
       </div>
 
       {/* Spacer */}
-      <div style={{ width: 8 }} />
+      <div className={s.smallSpacer} />
 
       {/* Auth controls */}
       {!isAuthenticated ? (
@@ -204,20 +169,20 @@ export function AppBarComponent({
           variant="contained"
           size="small"
           onClick={() => { router.push('/ui/login') }}
-          sx={{ textTransform: 'none' }}
+          className={s.textButton}
         >
           Login
         </Button>
       ) : (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <Typography variant="body2" sx={{ opacity: 0.85, display: { xs: 'none', sm: 'block' } }}>
+        <div className={s.authControls}>
+          <Typography variant="body2" className={s.userLabel}>
             {username} ({role})
           </Typography>
           <Button
             variant="text"
             size="small"
             onClick={onLogout}
-            sx={{ color: 'inherit', textTransform: 'none' }}
+            className={s.textButton}
           >
             Logout
           </Button>
