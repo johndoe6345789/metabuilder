@@ -8,7 +8,7 @@ const DEFAULT_TREE: FileNode[] = [
     name: 'src',
     type: 'folder',
     children: [
-      { name: 'main.lua', type: 'file', language: 'lua' },
+      { name: 'workflow.json', type: 'file', language: 'json' },
       { name: 'config.json', type: 'file', language: 'json' },
       { name: 'styles.css', type: 'file', language: 'css' },
     ],

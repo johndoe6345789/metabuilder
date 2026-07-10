@@ -39,7 +39,7 @@ export default function LoginPage() {
         setError(json.error ?? 'Invalid username or password.')
         return
       }
-      router.replace('/app/dashboard')
+      router.replace('/dashboard')
     } catch {
       setError('Could not connect. Please try again.')
     } finally {
@@ -64,7 +64,7 @@ export default function LoginPage() {
         setError(json.error ?? 'Invalid username or password.')
         return
       }
-      router.replace('/app/dashboard')
+      router.replace('/dashboard')
     } catch {
       setError('No valid Turbo Login payload in clipboard.')
     } finally {

@@ -1,0 +1,60 @@
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 8px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fieldLabel {
+  font-size: 11px;
+  color: var(--mat-sys-on-surface-variant);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 60px;
+  border-radius: 16px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  padding: 10px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  transition: border-color 0.15s;
+
+  &:focus {
+    outline: none;
+    border-color: var(--mat-sys-primary);
+    border-width: 2px;
+  }
+}
+
+.jsonEditor {
+  composes: textarea;
+  font-family: var(--mat-sys-mono-font, 'JetBrains Mono', monospace) !important;
+  font-size: 12px !important;
+  line-height: 1.6 !important;
+  min-height: 180px;
+}

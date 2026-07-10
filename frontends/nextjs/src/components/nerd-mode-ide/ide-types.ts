@@ -11,7 +11,7 @@ export type OpenFile = {
   content: string
 }
 
-export type ScriptEntry = {
+export type WorkflowJsonAsset = {
   id: string
   name: string
   code: string

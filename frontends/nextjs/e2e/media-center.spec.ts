@@ -7,7 +7,12 @@ async function mockAuth(route: Route) {
     contentType: 'application/json',
     body: JSON.stringify({
       success: true,
-      user: { id: 'test-1', username: 'tester', role: 'moderator', email: 't@test.com' },
+      user: {
+        id: 'test-1',
+        username: 'tester',
+        role: 'moderator',
+        email: 't@test.com',
+      },
     }),
   })
 }
@@ -35,12 +40,14 @@ async function mockRetroSession(route: Route) {
 test.describe('Media Centre', () => {
   test.beforeEach(async ({ page }) => {
     await page.route('**/api/auth/session', mockAuth)
-    await page.route('**/api/auth/logout', r => r.fulfill({ status: 200, body: '{}' }))
+    await page.route('**/api/auth/logout', r =>
+      r.fulfill({ status: 200, body: '{}' })
+    )
     await page.route('**/health**', mockDbal)
   })
 
   test('page loads with three tabs', async ({ page }) => {
-    await page.goto('/app/app/media-center')
+    await page.goto('/media-center')
     await expect(page.getByRole('tab', { name: 'Video' })).toBeVisible()
     await expect(page.getByRole('tab', { name: 'Audio' })).toBeVisible()
     await expect(page.getByRole('tab', { name: 'Retro Gaming' })).toBeVisible()
@@ -48,7 +55,7 @@ test.describe('Media Centre', () => {
   })
 
   test('video tab — enters URL and Load button appears', async ({ page }) => {
-    await page.goto('/app/app/media-center')
+    await page.goto('/media-center')
     await page.getByRole('tab', { name: 'Video' }).click()
 
     const input = page.getByPlaceholder(/localhost:9000.*mp4/i)
@@ -68,10 +75,11 @@ test.describe('Media Centre', () => {
       await route.fulfill({ status: 200, contentType: 'video/mp4', body: '' })
     })
 
-    await page.goto('/app/app/media-center')
+    await page.goto('/media-center')
     await page.getByRole('tab', { name: 'Video' }).click()
 
-    await page.getByPlaceholder(/localhost:9000.*mp4/i)
+    await page
+      .getByPlaceholder(/localhost:9000.*mp4/i)
       .fill('http://localhost:9000/media/demo.mp4')
     await page.getByRole('button', { name: 'Load' }).first().click()
 
@@ -82,29 +90,37 @@ test.describe('Media Centre', () => {
 
   test('audio tab — shows player when URL entered', async ({ page }) => {
     await page.route('**/track.mp3', r =>
-      r.fulfill({ status: 200, contentType: 'audio/mpeg', body: '' }),
+      r.fulfill({ status: 200, contentType: 'audio/mpeg', body: '' })
     )
 
-    await page.goto('/app/app/media-center')
+    await page.goto('/media-center')
     await page.getByRole('tab', { name: 'Audio' }).click()
 
-    await page.getByPlaceholder(/localhost:9000.*mp3/i)
+    await page
+      .getByPlaceholder(/localhost:9000.*mp3/i)
       .fill('http://localhost:9000/music/track.mp3')
     await page.getByRole('button', { name: 'Load' }).first().click()
 
     await expect(page.locator('audio')).toBeAttached()
-    await expect(page.locator('.material-symbols-rounded').filter({ hasText: 'play_arrow' })).toBeVisible()
+    await expect(
+      page
+        .locator('.material-symbols-rounded')
+        .filter({ hasText: 'play_arrow' })
+    ).toBeVisible()
   })
 
-  test('audio tab — LIVE badge shown for Icecast stream URL', async ({ page }) => {
+  test('audio tab — LIVE badge shown for Icecast stream URL', async ({
+    page,
+  }) => {
     await page.route('**/stream/radio1**', r =>
-      r.fulfill({ status: 200, contentType: 'audio/mpeg', body: '' }),
+      r.fulfill({ status: 200, contentType: 'audio/mpeg', body: '' })
     )
 
-    await page.goto('/app/app/media-center')
+    await page.goto('/media-center')
     await page.getByRole('tab', { name: 'Audio' }).click()
 
-    await page.getByPlaceholder(/localhost:9000.*mp3/i)
+    await page
+      .getByPlaceholder(/localhost:9000.*mp3/i)
       .fill('http://localhost:8090/stream/radio1')
     await page.getByRole('button', { name: 'Load' }).first().click()
 
@@ -112,10 +128,12 @@ test.describe('Media Centre', () => {
   })
 
   test('retro tab — shows system picker with 8 systems', async ({ page }) => {
-    await page.goto('/app/app/media-center')
+    await page.goto('/media-center')
     await page.getByRole('tab', { name: 'Retro Gaming' }).click()
 
-    await expect(page.getByRole('button', { name: 'NES 1983', exact: true })).toBeVisible()
+    await expect(
+      page.getByRole('button', { name: 'NES 1983', exact: true })
+    ).toBeVisible()
     await expect(page.getByRole('button', { name: /SNES/i })).toBeVisible()
     await expect(page.getByRole('button', { name: /GBA/i })).toBeVisible()
     await expect(page.getByRole('button', { name: /PS1/i })).toBeVisible()
@@ -123,8 +141,10 @@ test.describe('Media Centre', () => {
     await expect(page.getByRole('button', { name: /Arcade/i })).toBeVisible()
   })
 
-  test('retro tab — Launch button disabled until system + URL both set', async ({ page }) => {
-    await page.goto('/app/app/media-center')
+  test('retro tab — Launch button disabled until system + URL both set', async ({
+    page,
+  }) => {
+    await page.goto('/media-center')
     await page.getByRole('tab', { name: 'Retro Gaming' }).click()
 
     const launchBtn = page.getByRole('button', { name: /Launch/i })
@@ -135,22 +155,24 @@ test.describe('Media Centre', () => {
     await expect(launchBtn).toBeDisabled()
 
     // Add ROM URL — now enabled
-    await page.getByPlaceholder(/localhost:9000.*nes/i)
+    await page
+      .getByPlaceholder(/localhost:9000.*nes/i)
       .fill('http://localhost:9000/games/mario.nes')
     await expect(launchBtn).toBeEnabled()
   })
 
-  test('retro tab — Launch sends POST to media daemon and shows stream', async ({ page }) => {
+  test('retro tab — Launch sends POST to media daemon and shows stream', async ({
+    page,
+  }) => {
     await page.route('**/api/retro/sessions', mockRetroSession)
-    await page.route('**/index.m3u8', r =>
-      r.fulfill({ status: 404, body: '' }),
-    )
+    await page.route('**/index.m3u8', r => r.fulfill({ status: 404, body: '' }))
 
-    await page.goto('/app/app/media-center')
+    await page.goto('/media-center')
     await page.getByRole('tab', { name: 'Retro Gaming' }).click()
 
     await page.getByRole('button', { name: 'NES 1983', exact: true }).click()
-    await page.getByPlaceholder(/localhost:9000.*nes/i)
+    await page
+      .getByPlaceholder(/localhost:9000.*nes/i)
       .fill('http://localhost:9000/games/mario.nes')
 
     await page.getByRole('button', { name: /Launch NES/i }).click()
@@ -160,20 +182,23 @@ test.describe('Media Centre', () => {
     await expect(page.getByText(/NES — session nes_test/)).toBeVisible()
 
     // Stop session button should appear
-    await expect(page.getByRole('button', { name: 'Stop session' })).toBeVisible()
+    await expect(
+      page.getByRole('button', { name: 'Stop session' })
+    ).toBeVisible()
   })
 
   test('retro tab — Stop session clears the player', async ({ page }) => {
     await page.route('**/api/retro/sessions', mockRetroSession)
     await page.route('**/api/retro/sessions/**', r =>
-      r.fulfill({ status: 204, body: '' }),
+      r.fulfill({ status: 204, body: '' })
     )
     await page.route('**/index.m3u8', r => r.fulfill({ status: 404, body: '' }))
 
-    await page.goto('/app/app/media-center')
+    await page.goto('/media-center')
     await page.getByRole('tab', { name: 'Retro Gaming' }).click()
     await page.getByRole('button', { name: 'NES 1983', exact: true }).click()
-    await page.getByPlaceholder(/localhost:9000.*nes/i)
+    await page
+      .getByPlaceholder(/localhost:9000.*nes/i)
       .fill('http://localhost:9000/games/mario.nes')
     await page.getByRole('button', { name: /Launch NES/i }).click()
     await expect(page.locator('video')).toBeVisible({ timeout: 5000 })
@@ -181,7 +206,9 @@ test.describe('Media Centre', () => {
     await page.getByRole('button', { name: 'Stop session' }).click()
 
     // Back to system picker
-    await expect(page.getByRole('button', { name: 'NES 1983', exact: true })).toBeVisible()
+    await expect(
+      page.getByRole('button', { name: 'NES 1983', exact: true })
+    ).toBeVisible()
     await expect(page.locator('video')).not.toBeAttached()
   })
 })

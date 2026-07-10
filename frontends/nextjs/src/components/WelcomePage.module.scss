@@ -54,7 +54,7 @@
   color: color-mix(in srgb, var(--foreground) 65%, transparent);
   text-decoration: none;
   padding: 6px 12px;
-  border-radius: 6px;
+  border-radius: 12px;
   transition: color 150ms, background 150ms;
 
   &:hover {

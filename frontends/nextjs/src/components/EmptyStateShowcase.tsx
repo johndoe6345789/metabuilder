@@ -142,7 +142,7 @@ export function EmptyStateShowcase() {
           }}
           style={{
             backgroundColor: '#f8f9fa',
-            borderRadius: '8px',
+            borderRadius: '16px',
             border: '1px solid #dee2e6',
           }}
         />
@@ -186,7 +186,7 @@ export function EmptyStateShowcase() {
         style={{
           backgroundColor: '#f8f9fa',
           padding: '16px',
-          borderRadius: '8px',
+          borderRadius: '16px',
           marginBottom: '40px',
           border: '1px solid #dee2e6',
         }}
@@ -231,7 +231,7 @@ export function EmptyStateShowcase() {
               style={{
                 width: '100%',
                 padding: '8px',
-                borderRadius: '4px',
+                borderRadius: '10px',
                 border: '1px solid #dee2e6',
                 backgroundColor: '#ffffff',
                 fontSize: '14px',
@@ -295,7 +295,7 @@ export function EmptyStateShowcase() {
             key={item.id}
             style={{
               border: '1px solid #dee2e6',
-              borderRadius: '8px',
+              borderRadius: '16px',
               overflow: 'hidden',
               backgroundColor: '#ffffff',
               boxShadow: '0 1px 3px rgba(0, 0, 0, 0.08)',
@@ -348,7 +348,7 @@ export function EmptyStateShowcase() {
         style={{
           backgroundColor: '#e3f2fd',
           border: '1px solid #90caf9',
-          borderRadius: '8px',
+          borderRadius: '16px',
           padding: '16px',
         }}
       >

@@ -12,7 +12,7 @@
   width: 100%;
   max-width: 200px;
   aspect-ratio: 1;
-  border-radius: 8px;
+  border-radius: 16px;
   object-fit: cover;
   align-self: center;
 }
@@ -20,7 +20,7 @@
 .artworkPlaceholder {
   width: 100px;
   height: 100px;
-  border-radius: 8px;
+  border-radius: 16px;
   background: color-mix(
     in srgb, var(--primary, #6750A4) 12%, var(--card, #fff)
   );

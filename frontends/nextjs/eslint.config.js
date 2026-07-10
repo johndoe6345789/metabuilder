@@ -115,6 +115,32 @@ export default tseslint.config(
       'no-var': 'error',
       'eqeqeq': ['error', 'always', { null: 'ignore' }],
       'no-throw-literal': 'error',
+      'max-len': ['warn', {
+        code: 80,
+        tabWidth: 2,
+        ignoreUrls: true,
+        ignoreStrings: true,
+        ignoreTemplateLiterals: true,
+        ignoreRegExpLiterals: true,
+      }],
+    },
+  },
+
+  // ============================================================================
+  // Component Size Guardrails
+  // ============================================================================
+  // Existing large components are being split progressively. Warn on new drift.
+  {
+    files: [
+      'src/components/**/*.tsx',
+      'src/app/**/*.tsx',
+    ],
+    rules: {
+      'max-lines': ['warn', {
+        max: 80,
+        skipBlankLines: true,
+        skipComments: true,
+      }],
     },
   },
 

@@ -1,0 +1,60 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  height: 72vh;
+  min-height: 480px;
+  border: 1px solid var(--mat-sys-outline-variant, #30363d);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--mat-sys-surface, #0d1117);
+}
+
+.content {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.canvas {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  background-color: var(--mat-sys-surface-container-lowest, #010409);
+  background-image: radial-gradient(
+    circle,
+    var(--mat-sys-outline-variant, #30363d) 1px,
+    transparent 1px
+  );
+}
+
+.transform {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+  font-size: 14px;
+}
+
+@media (max-width: 760px) {
+  .content {
+    flex-direction: column;
+  }
+  .editor {
+    height: auto;
+    min-height: 520px;
+  }
+  .canvas {
+    min-height: 320px;
+  }
+}

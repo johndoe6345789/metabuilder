@@ -72,7 +72,7 @@
   width: 100%;
   padding: 10px 14px;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 16px;
   background: var(--background);
   color: var(--foreground);
   font-size: 0.9375rem;
@@ -100,7 +100,7 @@
   background: var(--primary);
   color: var(--primary-foreground);
   border: none;
-  border-radius: 8px;
+  border-radius: 16px;
   font-family: var(--font-sans, inherit);
   font-size: 0.9375rem;
   font-weight: 600;
@@ -135,7 +135,7 @@
   background: transparent;
   color: var(--primary);
   border: 1.5px solid var(--primary);
-  border-radius: 8px;
+  border-radius: 16px;
   font-family: var(--font-sans, inherit);
   font-size: 0.9375rem;
   font-weight: 600;

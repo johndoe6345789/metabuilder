@@ -11,6 +11,8 @@ import type { JSONComponent } from './types'
 import type { JsonValue } from '@/types/utility-types'
 import { M3_REGISTRY } from '@/lib/m3-registry'
 
+const SOFT_RADIUS = '1rem'
+
 export interface RenderContext {
   props: Record<string, JsonValue>
   state: Record<string, JsonValue>
@@ -32,7 +34,7 @@ export function renderJSONComponent(
 ): React.ReactElement {
   if (component.render === undefined) {
     return (
-      <div style={{ padding: '1rem', border: '1px solid red', borderRadius: '0.25rem' }}>
+      <div style={{ padding: '1rem', border: '1px solid red', borderRadius: SOFT_RADIUS }}>
         <strong>Error:</strong> Component {component.name} has no render definition
       </div>
     )
@@ -52,7 +54,7 @@ export function renderJSONComponent(
     const template = component.render.template
     if (template === undefined) {
       return (
-        <div style={{ padding: '1rem', border: '1px solid yellow', borderRadius: '0.25rem' }}>
+        <div style={{ padding: '1rem', border: '1px solid yellow', borderRadius: SOFT_RADIUS }}>
           <strong>Warning:</strong> Component {component.name} has no template
         </div>
       )
@@ -60,7 +62,7 @@ export function renderJSONComponent(
     return renderTemplate(template, context, ComponentRegistry, componentRegistry)
   } catch (error) {
     return (
-      <div style={{ padding: '1rem', border: '1px solid red', borderRadius: '0.25rem' }}>
+      <div style={{ padding: '1rem', border: '1px solid red', borderRadius: SOFT_RADIUS }}>
         <strong>Error rendering {component.name}:</strong>{' '}
         {error instanceof Error ? error.message : String(error)}
       </div>
@@ -96,7 +98,7 @@ function renderTemplate(
       return renderTemplate(referencedComponent.render.template, context, ComponentRegistry, componentRegistry)
     } else {
       return (
-        <div style={{ padding: '0.5rem', border: '1px dashed orange', borderRadius: '0.25rem' }}>
+        <div style={{ padding: '0.5rem', border: '1px dashed orange', borderRadius: SOFT_RADIUS }}>
           <strong>Warning:</strong> Component reference "${nodeObj.$ref}" not found
         </div>
       )

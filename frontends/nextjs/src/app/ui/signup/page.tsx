@@ -63,7 +63,7 @@ export default function SignupPage() {
         setError(json.error ?? 'Registration failed. Please try again.')
         return
       }
-      router.replace('/app/dashboard')
+      router.replace('/dashboard')
     } catch {
       setError('Could not connect. Please try again.')
     } finally {

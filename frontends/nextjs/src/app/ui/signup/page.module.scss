@@ -55,7 +55,7 @@
 
 .input {
   padding: 11px 14px;
-  border-radius: 8px;
+  border-radius: 16px;
   border: 1.5px solid var(--border, #ddd);
   background: var(--card, #fff);
   color: var(--foreground);
@@ -166,14 +166,14 @@
   color: #c62828;
   margin: 0;
   padding: 10px 14px;
-  border-radius: 6px;
+  border-radius: 12px;
   background: color-mix(in srgb, #c62828 8%, transparent);
   border: 1px solid color-mix(in srgb, #c62828 30%, transparent);
 }
 
 .submit {
   padding: 13px;
-  border-radius: 8px;
+  border-radius: 16px;
   border: none;
   background: var(--primary, #6750A4);
   color: #fff;

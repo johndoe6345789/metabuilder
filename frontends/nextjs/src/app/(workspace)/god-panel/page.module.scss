@@ -1,0 +1,538 @@
+.root {
+  // Normal screens keep the original comfortable, centred 1200px column so
+  // nothing stretches. On 4K+ (below) the root widens purely so the tab strip
+  // can collapse to a single row — content stays 1200.
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  overflow-x: hidden;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+
+  :global(.paper) {
+    border-radius: 14px;
+    border: 1px solid
+      color-mix(
+        in srgb,
+        var(--mat-sys-outline-variant, #30363d) 82%,
+        transparent
+      );
+    background: linear-gradient(
+      180deg,
+      color-mix(
+        in srgb,
+        var(--mat-sys-surface-container, #161b22) 96%,
+        #ffffff 4%
+      ),
+      var(--mat-sys-surface-container, #161b22)
+    );
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.16);
+  }
+
+  :global(button[class*='mat-mdc-button-base']) {
+    min-height: 42px;
+    border-radius: 999px;
+    padding-inline: 16px;
+    font-size: 1rem;
+    font-weight: 750;
+    transition:
+      transform 150ms ease,
+      background 150ms ease,
+      border-color 150ms ease,
+      box-shadow 150ms ease;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
+    }
+  }
+
+  :global(button[class*='mat-mdc-outlined-button']) {
+    border-color: color-mix(
+      in srgb,
+      var(--mat-sys-outline-variant, #30363d) 74%,
+      transparent
+    );
+    background: color-mix(
+      in srgb,
+      var(--mat-sys-surface-container, #161b22) 62%,
+      transparent
+    );
+  }
+
+  :global(input),
+  :global(textarea),
+  :global(select) {
+    border-radius: 12px;
+    font-size: 0.95rem;
+  }
+
+  :global(h1),
+  :global(h2),
+  :global(h3),
+  :global(h4),
+  :global(h5),
+  :global(h6) {
+    letter-spacing: 0;
+  }
+
+  @media (max-width: 640px) {
+    padding: 0 12px;
+  }
+}
+
+.content {
+  max-width: 1200px;
+  padding-bottom: 48px;
+}
+
+// 4K+ : widen the root so the 15-tab strip fits on one line, but pin the topbar
+// and content to the 1200px column so forms/cards never sprawl across the screen.
+@media (min-width: 2300px) {
+  .root {
+    max-width: 2200px;
+  }
+  .topbar,
+  .content {
+    max-width: 1200px;
+  }
+}
+
+.topbar {
+  position: sticky;
+  top: 8px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 16px;
+  flex-wrap: wrap;
+  min-height: 60px;
+  padding: 14px 18px;
+  margin-bottom: 18px;
+  border: 1px solid
+    color-mix(in srgb, var(--mat-sys-outline-variant, #30363d) 75%, transparent);
+  border-radius: 22px;
+  background:
+    linear-gradient(135deg, rgba(68, 147, 248, 0.12), rgba(46, 160, 67, 0.07)),
+    var(--mat-sys-surface-container-low, #161b22);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(18px);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, #ffffff 0 8%, transparent 9%),
+    linear-gradient(135deg, #56d364 0%, #4493f8 52%, #d2a8ff 100%);
+  box-shadow:
+    0 0 0 5px rgba(68, 147, 248, 0.12),
+    0 8px 22px rgba(68, 147, 248, 0.28);
+}
+
+.title {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: var(--mat-sys-on-surface, #e6edf3);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.previewLabel {
+  font-size: 0.875rem;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+  margin-left: 6px;
+}
+
+.divider {
+  width: 1px;
+  height: 22px;
+  background: var(--mat-sys-outline-variant, #30363d);
+  margin: 0 4px;
+}
+
+// Tabs as pills that wrap into rows by width — every tab always visible,
+// no horizontal scroll. 1 row on ultrawide, ~2 on 1080p, 3+ on mobile.
+.tabNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px solid
+    color-mix(in srgb, var(--mat-sys-outline-variant, #30363d) 82%, transparent);
+  border-radius: 999px;
+  background: color-mix(
+    in srgb,
+    var(--mat-sys-surface-container, #161b22) 72%,
+    transparent
+  );
+  color: color-mix(
+    in srgb,
+    var(--mat-sys-on-surface, #e6edf3) 78%,
+    transparent
+  );
+  font-size: 1rem;
+  font-weight: 750;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  transition:
+    transform 0.14s ease,
+    background 0.14s ease,
+    color 0.14s ease,
+    border-color 0.14s ease,
+    box-shadow 0.14s ease;
+
+  :global(.material-symbols-rounded) {
+    font-size: 1.35rem;
+    line-height: 1;
+  }
+
+  &:hover {
+    background: var(--mat-sys-surface-container-high, #21262d);
+    color: var(--mat-sys-on-surface, #e6edf3);
+    border-color: var(--mat-sys-outline, #6e7681);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 18px rgba(0, 0, 0, 0.14);
+  }
+}
+
+.contextBar {
+  max-width: 1200px;
+  margin: 0 0 20px;
+  padding: 14px 16px;
+  border: 1px solid
+    color-mix(in srgb, var(--mat-sys-outline-variant, #30363d) 70%, transparent);
+  border-radius: 20px;
+  background: color-mix(
+    in srgb,
+    var(--mat-sys-surface-container-low, #161b22) 82%,
+    transparent
+  );
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.contextBar > div {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.contextBar :global(.material-symbols-rounded) {
+  width: 38px;
+  height: 38px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  background: color-mix(
+    in srgb,
+    var(--mat-sys-primary, #4493f8) 14%,
+    transparent
+  );
+  color: var(--mat-sys-primary, #4493f8);
+  font-size: 1.25rem;
+}
+
+.contextBar strong {
+  display: block;
+  color: var(--mat-sys-on-surface, #e6edf3);
+  font-size: 1.1rem;
+}
+
+.contextBar p {
+  margin: 2px 0 0;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+
+.contextAction,
+.iconButton,
+.walkStep {
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.contextAction {
+  flex: 0 0 auto;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: color-mix(
+    in srgb,
+    var(--mat-sys-primary, #4493f8) 12%,
+    transparent
+  );
+  color: var(--mat-sys-primary, #4493f8);
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.walkMe {
+  max-width: 1200px;
+  margin: 0 0 20px;
+  padding: 18px;
+  border: 1px solid
+    color-mix(
+      in srgb,
+      var(--mat-sys-primary, #4493f8) 30%,
+      var(--mat-sys-outline-variant, #30363d)
+    );
+  border-radius: 26px;
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--mat-sys-primary, #4493f8) 10%, transparent),
+      transparent 45%
+    ),
+    color-mix(
+      in srgb,
+      var(--mat-sys-surface-container, #161b22) 92%,
+      transparent
+    );
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.16);
+}
+
+.walkHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.walkEyebrow {
+  color: var(--mat-sys-primary, #4493f8);
+  font-size: 0.9rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.walkHeader h2 {
+  margin: 4px 0 4px;
+  color: var(--mat-sys-on-surface, #e6edf3);
+  font-size: clamp(1.45rem, 2.5vw, 2rem);
+}
+
+.walkHeader p {
+  max-width: 760px;
+  margin: 0;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.iconButton {
+  width: 36px;
+  height: 36px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(
+    in srgb,
+    var(--mat-sys-surface-container-high, #21262d) 92%,
+    transparent
+  );
+  color: var(--mat-sys-on-surface, #e6edf3);
+}
+
+.iconButton :global(.material-symbols-rounded) {
+  font-size: 1.15rem;
+}
+
+.walkSteps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.walkStep {
+  min-height: 54px;
+  padding: 9px 10px;
+  border: 1px solid
+    color-mix(in srgb, var(--mat-sys-outline-variant, #30363d) 72%, transparent);
+  border-radius: 18px;
+  background: color-mix(
+    in srgb,
+    var(--mat-sys-surface-container-low, #161b22) 78%,
+    transparent
+  );
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+}
+
+.walkStep span {
+  width: 26px;
+  height: 26px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  background: color-mix(
+    in srgb,
+    var(--mat-sys-primary, #4493f8) 12%,
+    transparent
+  );
+  color: var(--mat-sys-primary, #4493f8);
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.walkStep strong {
+  font-size: 0.98rem;
+  overflow-wrap: anywhere;
+}
+
+.walkStepActive {
+  border-color: var(--mat-sys-primary, #4493f8);
+  background: color-mix(
+    in srgb,
+    var(--mat-sys-primary, #4493f8) 16%,
+    var(--mat-sys-surface-container, #161b22)
+  );
+  color: var(--mat-sys-on-surface, #e6edf3);
+}
+
+.walkActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+@media (max-width: 720px) {
+  .root {
+    padding: 0;
+  }
+
+  .topbar {
+    position: static;
+    gap: 10px;
+    min-height: 0;
+    padding: 12px;
+    margin-bottom: 14px;
+  }
+
+  .brand {
+    width: 100%;
+  }
+
+  .title {
+    font-size: 1.3rem;
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+    gap: 8px;
+  }
+
+  .actions :global(button[class*='mat-mdc-button-base']) {
+    width: 100%;
+    min-height: 34px;
+    font-size: 0.95rem;
+    padding-inline: 12px;
+  }
+
+  .previewLabel,
+  .divider {
+    display: none;
+  }
+
+  .tabNav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .pill {
+    justify-content: center;
+    min-width: 0;
+    padding: 9px 12px;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .pill :global(.material-symbols-rounded) {
+    display: none;
+  }
+
+  .contextBar,
+  .walkHeader {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .contextBar {
+    gap: 12px;
+    padding: 12px;
+    margin-bottom: 16px;
+  }
+
+  .contextAction,
+  .walkActions {
+    width: 100%;
+  }
+
+  .walkActions {
+    justify-content: stretch;
+  }
+}
+
+@media (max-width: 420px) {
+  .actions,
+  .tabNav {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pillActive {
+  background: linear-gradient(135deg, var(--mat-sys-primary, #4493f8), #2ea043);
+  border-color: var(--mat-sys-primary, #4493f8);
+  color: var(--mat-sys-on-primary, #fff);
+  box-shadow: 0 12px 28px rgba(68, 147, 248, 0.28);
+
+  &:hover {
+    background: linear-gradient(
+      135deg,
+      var(--mat-sys-primary, #4493f8),
+      #2ea043
+    );
+    color: var(--mat-sys-on-primary, #fff);
+  }
+}

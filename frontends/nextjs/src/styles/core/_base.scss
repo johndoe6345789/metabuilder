@@ -11,7 +11,7 @@
 }
 
 html {
-  font-size: 16px;
+  font-size: 17px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--background);
@@ -24,14 +24,21 @@ body {
   line-height: $line-height-normal;
   color: var(--foreground, #{$fg-primary});
   background-color: var(--background, #{$bg-secondary});
-  transition: background-color $transition-base, color $transition-base;
+  transition:
+    background-color $transition-base,
+    color $transition-base;
 }
 
 // ========================================
 // Typography Elements
 // ========================================
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: $font-family-heading;
   font-weight: $font-weight-bold;
   line-height: $line-height-tight;
@@ -87,11 +94,13 @@ a {
   }
 }
 
-strong, b {
+strong,
+b {
   font-weight: $font-weight-bold;
 }
 
-em, i {
+em,
+i {
   font-style: italic;
 }
 
@@ -125,7 +134,9 @@ pre {
 // Form Elements
 // ========================================
 
-input, textarea, select {
+input,
+textarea,
+select {
   font-family: inherit;
   font-size: inherit;
   color: inherit;
@@ -186,7 +197,8 @@ button {
 // List Elements
 // ========================================
 
-ul, ol {
+ul,
+ol {
   margin-bottom: $space-4;
   padding-left: $space-8;
 

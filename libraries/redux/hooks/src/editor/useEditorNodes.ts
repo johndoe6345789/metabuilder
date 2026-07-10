@@ -3,17 +3,17 @@
  * Manages editor node selection state and node-related actions
  */
 
-import { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@metabuilder/redux-slices';
+import { useCallback, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@metabuilder/redux-slices";
 import {
   selectNode,
   addNodeToSelection,
   removeNodeFromSelection,
   toggleNodeSelection,
   clearSelection,
-  setSelection
-} from '@metabuilder/redux-slices/editorSlice';
+  setSelection,
+} from "@metabuilder/redux-slices/editorSlice";
 
 export interface UseEditorNodesReturn {
   selectedNodes: Set<string>;
@@ -27,34 +27,40 @@ export interface UseEditorNodesReturn {
 
 export function useEditorNodes(): UseEditorNodesReturn {
   const dispatch = useDispatch();
-  const selectedNodes = useSelector((state: RootState) => state.editor.selectedNodes);
+  const selectedNodeIds = useSelector(
+    (state: RootState) => state.editor.selectedNodes,
+  );
+  const selectedNodes = useMemo(
+    () => new Set(selectedNodeIds),
+    [selectedNodeIds],
+  );
 
   const selectNodeAction = useCallback(
     (nodeId: string) => {
       dispatch(selectNode(nodeId));
     },
-    [dispatch]
+    [dispatch],
   );
 
   const addToNodeSelection = useCallback(
     (nodeId: string) => {
       dispatch(addNodeToSelection(nodeId));
     },
-    [dispatch]
+    [dispatch],
   );
 
   const removeFromNodeSelection = useCallback(
     (nodeId: string) => {
       dispatch(removeNodeFromSelection(nodeId));
     },
-    [dispatch]
+    [dispatch],
   );
 
   const toggleNode = useCallback(
     (nodeId: string) => {
       dispatch(toggleNodeSelection(nodeId));
     },
-    [dispatch]
+    [dispatch],
   );
 
   const clearNodeSelection = useCallback(() => {
@@ -65,7 +71,7 @@ export function useEditorNodes(): UseEditorNodesReturn {
     (nodes: string[], edges?: string[]) => {
       dispatch(setSelection({ nodes, edges }));
     },
-    [dispatch]
+    [dispatch],
   );
 
   return {
@@ -75,7 +81,7 @@ export function useEditorNodes(): UseEditorNodesReturn {
     removeNodeFromSelection: removeFromNodeSelection,
     toggleNodeSelection: toggleNode,
     clearSelection: clearNodeSelection,
-    setNodeSelection
+    setNodeSelection,
   };
 }
 

@@ -3,7 +3,7 @@
  * Manages canvas state: zoom, pan, selection, drawing
  */
 
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface EditorState {
   zoom: number;
@@ -11,8 +11,8 @@ export interface EditorState {
     x: number;
     y: number;
   };
-  selectedNodes: Set<string>;
-  selectedEdges: Set<string>;
+  selectedNodes: string[];
+  selectedEdges: string[];
   isDrawing: boolean;
   contextMenu: {
     visible: boolean;
@@ -29,22 +29,22 @@ export interface EditorState {
 const initialState: EditorState = {
   zoom: 1,
   pan: { x: 0, y: 0 },
-  selectedNodes: new Set(),
-  selectedEdges: new Set(),
+  selectedNodes: [],
+  selectedEdges: [],
   isDrawing: false,
   contextMenu: {
     visible: false,
     x: 0,
-    y: 0
+    y: 0,
   },
   canvasSize: {
     width: 0,
-    height: 0
-  }
+    height: 0,
+  },
 };
 
 export const editorSlice = createSlice({
-  name: 'editor',
+  name: "editor",
   initialState,
   reducers: {
     // Zoom management
@@ -70,7 +70,7 @@ export const editorSlice = createSlice({
       action: PayloadAction<{
         x: number;
         y: number;
-      }>
+      }>,
     ) => {
       state.pan = action.payload;
     },
@@ -80,7 +80,7 @@ export const editorSlice = createSlice({
       action: PayloadAction<{
         dx: number;
         dy: number;
-      }>
+      }>,
     ) => {
       state.pan.x += action.payload.dx;
       state.pan.y += action.payload.dy;
@@ -92,28 +92,34 @@ export const editorSlice = createSlice({
 
     // Node selection
     selectNode: (state, action: PayloadAction<string>) => {
-      state.selectedNodes = new Set([action.payload]);
+      state.selectedNodes = [action.payload];
     },
 
     addNodeToSelection: (state, action: PayloadAction<string>) => {
-      state.selectedNodes.add(action.payload);
+      if (!state.selectedNodes.includes(action.payload)) {
+        state.selectedNodes.push(action.payload);
+      }
     },
 
     removeNodeFromSelection: (state, action: PayloadAction<string>) => {
-      state.selectedNodes.delete(action.payload);
+      state.selectedNodes = state.selectedNodes.filter(
+        (nodeId) => nodeId !== action.payload,
+      );
     },
 
     toggleNodeSelection: (state, action: PayloadAction<string>) => {
-      if (state.selectedNodes.has(action.payload)) {
-        state.selectedNodes.delete(action.payload);
+      if (state.selectedNodes.includes(action.payload)) {
+        state.selectedNodes = state.selectedNodes.filter(
+          (nodeId) => nodeId !== action.payload,
+        );
       } else {
-        state.selectedNodes.add(action.payload);
+        state.selectedNodes.push(action.payload);
       }
     },
 
     clearSelection: (state) => {
-      state.selectedNodes.clear();
-      state.selectedEdges.clear();
+      state.selectedNodes = [];
+      state.selectedEdges = [];
     },
 
     setSelection: (
@@ -121,27 +127,31 @@ export const editorSlice = createSlice({
       action: PayloadAction<{
         nodes?: string[];
         edges?: string[];
-      }>
+      }>,
     ) => {
       if (action.payload.nodes) {
-        state.selectedNodes = new Set(action.payload.nodes);
+        state.selectedNodes = action.payload.nodes;
       }
       if (action.payload.edges) {
-        state.selectedEdges = new Set(action.payload.edges);
+        state.selectedEdges = action.payload.edges;
       }
     },
 
     // Edge selection
     selectEdge: (state, action: PayloadAction<string>) => {
-      state.selectedEdges = new Set([action.payload]);
+      state.selectedEdges = [action.payload];
     },
 
     addEdgeToSelection: (state, action: PayloadAction<string>) => {
-      state.selectedEdges.add(action.payload);
+      if (!state.selectedEdges.includes(action.payload)) {
+        state.selectedEdges.push(action.payload);
+      }
     },
 
     removeEdgeFromSelection: (state, action: PayloadAction<string>) => {
-      state.selectedEdges.delete(action.payload);
+      state.selectedEdges = state.selectedEdges.filter(
+        (edgeId) => edgeId !== action.payload,
+      );
     },
 
     // Drawing state
@@ -156,11 +166,11 @@ export const editorSlice = createSlice({
         x: number;
         y: number;
         nodeId?: string;
-      }>
+      }>,
     ) => {
       state.contextMenu = {
         visible: true,
-        ...action.payload
+        ...action.payload,
       };
     },
 
@@ -174,7 +184,7 @@ export const editorSlice = createSlice({
       action: PayloadAction<{
         width: number;
         height: number;
-      }>
+      }>,
     ) => {
       state.canvasSize = action.payload;
     },
@@ -182,8 +192,8 @@ export const editorSlice = createSlice({
     // Reset
     resetEditor: (state) => {
       return initialState;
-    }
-  }
+    },
+  },
 });
 
 export const {
@@ -207,7 +217,7 @@ export const {
   showContextMenu,
   hideContextMenu,
   setCanvasSize,
-  resetEditor
+  resetEditor,
 } = editorSlice.actions;
 
 export default editorSlice.reducer;

@@ -3,14 +3,14 @@
  * Manages combined node and edge selection state and unified selection actions
  */
 
-import { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@metabuilder/redux-slices';
+import { useCallback, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@metabuilder/redux-slices";
 import {
   clearSelection,
   setSelection,
-  setDrawing
-} from '@metabuilder/redux-slices/editorSlice';
+  setDrawing,
+} from "@metabuilder/redux-slices/editorSlice";
 
 export interface UseEditorSelectionReturn {
   selectedNodes: Set<string>;
@@ -23,9 +23,21 @@ export interface UseEditorSelectionReturn {
 
 export function useEditorSelection(): UseEditorSelectionReturn {
   const dispatch = useDispatch();
-  const selectedNodes = useSelector((state: RootState) => state.editor.selectedNodes);
-  const selectedEdges = useSelector((state: RootState) => state.editor.selectedEdges);
+  const selectedNodeIds = useSelector(
+    (state: RootState) => state.editor.selectedNodes,
+  );
+  const selectedEdgeIds = useSelector(
+    (state: RootState) => state.editor.selectedEdges,
+  );
   const isDrawing = useSelector((state: RootState) => state.editor.isDrawing);
+  const selectedNodes = useMemo(
+    () => new Set(selectedNodeIds),
+    [selectedNodeIds],
+  );
+  const selectedEdges = useMemo(
+    () => new Set(selectedEdgeIds),
+    [selectedEdgeIds],
+  );
 
   const clearCurrentSelection = useCallback(() => {
     dispatch(clearSelection());
@@ -35,14 +47,14 @@ export function useEditorSelection(): UseEditorSelectionReturn {
     (nodes?: string[], edges?: string[]) => {
       dispatch(setSelection({ nodes, edges }));
     },
-    [dispatch]
+    [dispatch],
   );
 
   const setIsDrawing = useCallback(
     (drawing: boolean) => {
       dispatch(setDrawing(drawing));
     },
-    [dispatch]
+    [dispatch],
   );
 
   return {
@@ -51,7 +63,7 @@ export function useEditorSelection(): UseEditorSelectionReturn {
     isDrawing,
     clearSelection: clearCurrentSelection,
     setSelection: setCurrentSelection,
-    setDrawing: setIsDrawing
+    setDrawing: setIsDrawing,
   };
 }
 
