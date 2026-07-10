@@ -2,7 +2,7 @@
 
 .bar { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
 .summary {
-  font-size: 13px; font-weight: 600;
+  font-size: 14px; font-weight: 700;
   color: var(--mat-sys-primary, #4493f8);
 }
 .spacer { flex: 1; }
@@ -12,15 +12,15 @@
 
 .case {
   border: 1px solid var(--mat-sys-outline-variant, #30363d);
-  border-radius: 12px;
-  padding: 14px;
+  border-radius: 18px;
+  padding: 16px;
   background: var(--mat-sys-surface-container-lowest, #0d1117);
 }
 
 .caseHead { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
 
 .badge {
-  font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px;
+  font-size: 13px; font-weight: 750; padding: 4px 11px; border-radius: 999px;
   background: var(--mat-sys-surface-container-high, #21262d);
   color: var(--mat-sys-on-surface-variant, #8b949e);
 }
@@ -30,28 +30,28 @@
 
 .del {
   margin-left: auto; border: none; background: transparent; cursor: pointer;
-  color: var(--mat-sys-on-surface-variant, #8b949e); font-size: 13px;
+  color: var(--mat-sys-on-surface-variant, #8b949e); font-size: 15px;
   &:hover { color: var(--mat-sys-error, #f85149); }
 }
 
 .io { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .field { display: flex; flex-direction: column; gap: 4px; }
 .field label {
-  font-size: 11px; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase;
+  font-size: 12px; font-weight: 750; letter-spacing: 0.04em; text-transform: uppercase;
   color: var(--mat-sys-on-surface-variant, #8b949e);
 }
 .code {
   min-height: 88px; resize: vertical;
-  padding: 10px; border-radius: 8px;
+  padding: 12px; border-radius: 16px;
   background: #010409; color: #c9d1d9;
   border: 1px solid var(--mat-sys-outline-variant, #30363d);
-  font-family: monospace; font-size: 12px; line-height: 1.5;
+  font-family: monospace; font-size: 13px; line-height: 1.55;
 }
 
 .msg {
-  margin-top: 10px; font-size: 13px; color: #e3b341;
+  margin-top: 10px; font-size: 14px; color: #e3b341;
 }
 .actual {
-  margin: 10px 0 0; padding: 8px 10px; border-radius: 8px;
-  background: #010409; color: #8b949e; font-size: 12px; overflow: auto;
+  margin: 10px 0 0; padding: 10px 12px; border-radius: 16px;
+  background: #010409; color: #8b949e; font-size: 13px; overflow: auto;
 }

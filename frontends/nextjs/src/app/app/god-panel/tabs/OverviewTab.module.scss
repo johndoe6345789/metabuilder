@@ -17,7 +17,8 @@
 
 .chipRow {
   display: flex;
-  gap: 16px;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .alert {
@@ -30,28 +31,33 @@
 
 .toolsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 14px;
 }
 
 .toolCard {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: 16px;
+  gap: 10px;
+  min-height: 118px;
+  padding: 18px;
   text-align: center;
   cursor: pointer;
   border: 1px solid var(--mat-sys-outline-variant, #30363d);
-  border-radius: 8px;
-  background: var(--mat-sys-surface-container, #161b22);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--mat-sys-surface-container, #161b22) 94%, #ffffff 6%), var(--mat-sys-surface-container, #161b22));
   color: inherit;
   font: inherit;
-  transition: background 0.12s;
+  transition: transform 0.16s ease, background 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
 
   &:hover,
   &:focus-visible {
     background: var(--mat-sys-surface-container-high, #21262d);
+    border-color: color-mix(in srgb, var(--mat-sys-primary, #4493f8) 70%, var(--mat-sys-outline-variant, #30363d));
+    box-shadow: 0 16px 28px rgba(0, 0, 0, 0.18);
+    transform: translateY(-2px);
   }
 
   &:focus-visible {
@@ -61,7 +67,7 @@
 }
 
 .toolIcon {
-  font-size: 28px;
+  font-size: 32px;
   color: var(--mat-sys-primary, #4493f8);
 }
 
@@ -80,6 +86,6 @@
     rgba(98, 0, 238, 0.08),
     rgba(3, 218, 198, 0.08)
   );
-  border: 2px dashed rgba(98, 0, 238, 0.3);
-  border-radius: 8px;
+  border: 1px solid rgba(68, 147, 248, 0.3);
+  border-radius: 18px;
 }

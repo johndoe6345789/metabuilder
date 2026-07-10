@@ -20,14 +20,15 @@
 .backend {
   display: grid;
   gap: 6px;
-  min-height: 96px;
-  padding: 16px;
+  min-height: 108px;
+  padding: 18px;
   text-align: left;
   border: 1px solid var(--mat-sys-outline-variant, #30363d);
-  border-radius: 8px;
+  border-radius: 18px;
   background: var(--mat-sys-surface-container, #161b22);
   color: inherit;
   cursor: pointer;
+  transition: transform 150ms ease, background 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
 }
 
 .backend:hover,
@@ -35,6 +36,8 @@
 .selected {
   border-color: var(--mat-sys-primary, #4493f8);
   background: var(--mat-sys-surface-container-high, #21262d);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.16);
+  transform: translateY(-2px);
 }
 
 .backend:focus-visible {
@@ -50,7 +53,7 @@
     display: inline-block;
     width: fit-content;
     padding: 4px 8px;
-    border-radius: 6px;
+    border-radius: 12px;
     background: var(--mat-sys-surface-container-low, #0d1117);
   }
 }

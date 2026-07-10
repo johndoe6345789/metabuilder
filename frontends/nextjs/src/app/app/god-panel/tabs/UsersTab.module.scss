@@ -36,14 +36,15 @@
 
 .headerRow {
   color: var(--mat-sys-on-surface-variant, #8b949e);
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 750;
   text-transform: uppercase;
   background: var(--mat-sys-surface-container-low, #0d1117);
 }
 
 .row {
   border-top: 1px solid var(--mat-sys-outline-variant, #30363d);
+  font-size: 15px;
 }
 
 @media (max-width: 720px) {
