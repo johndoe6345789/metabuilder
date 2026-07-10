@@ -1,128 +1,65 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import { TabPanel, Typography } from '@/m3'
-import { NerdModeIde, useNerdMode } from '@/components/nerd-mode-ide'
-import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
-import {
-  normalizeTenantId,
-  tenantGodPanelPath,
-} from '@/lib/tenant/workspace-paths'
-import { godPanelConfig } from '@/lib/packages/navigation'
+import { NerdModeIde } from '@/components/nerd-mode-ide'
 import { GodPanelTopBar } from './GodPanelTopBar'
 import { GodPanelTabNav } from './GodPanelTabNav'
 import { GodPanelContextBar } from './GodPanelContextBar'
 import { GodPanelWalkMe } from './GodPanelWalkMe'
-import {
-  TAB_COMPONENTS,
-  WALK_ME_STEPS,
-  getTabById,
-} from './tabs/god-panel-config'
+import { GodPanelPanels } from './GodPanelPanels'
+import { WALK_ME_STEPS } from './tabs/god-panel-config'
+import { useGodPanelState } from './use-god-panel-state'
 import s from './page.module.scss'
 
 export function GodPanelShell() {
-  const [activeTab, setActiveTab] = useState(0)
-  const [guideOpen, setGuideOpen] = useState(false)
-  const [guideStep, setGuideStep] = useState(0)
-  const { isOpen, toggle, close } = useNerdMode()
-  const router = useRouter()
-  const auth = useAuthContext()
-  const params = useParams<{ tenantSlug?: string }>()
-  const routeTenantId = params.tenantSlug
-  const tenantId = normalizeTenantId(routeTenantId ?? auth.user?.tenantId)
-  const tabs = godPanelConfig.tabs
-  const activeTabConfig = tabs[activeTab] ?? tabs[0]
-
-  useEffect(() => {
-    if (routeTenantId !== undefined || auth.isLoading) return
-    router.replace(tenantGodPanelPath(tenantId))
-  }, [auth.isLoading, routeTenantId, router, tenantId])
-
-  const currentStep = WALK_ME_STEPS[guideStep]
-
-  const openTabById = useMemo(
-    () => (tabId: string) => {
-      const index = tabs.findIndex(tab => tab.id === tabId)
-      if (index >= 0) setActiveTab(index)
-    },
-    [tabs]
-  )
-
-  const preview = (level: number) => {
-    router.push(level === 1 ? '/' : level === 2 ? '/profile' : '/admin')
-  }
-
-  const handleBack = () => {
-    const nextStep = Math.max(guideStep - 1, 0)
-    setGuideStep(nextStep)
-    openTabById(WALK_ME_STEPS[nextStep].tabId)
-  }
-
-  const handleNext = () => {
-    const nextStep = Math.min(guideStep + 1, WALK_ME_STEPS.length - 1)
-    setGuideStep(nextStep)
-    openTabById(WALK_ME_STEPS[nextStep].tabId)
-  }
+  const state = useGodPanelState()
 
   return (
     <div className={s.root}>
       <GodPanelTopBar
-        guideOpen={guideOpen}
-        nerdOpen={isOpen}
+        guideOpen={state.guideOpen}
+        nerdOpen={state.nerd.isOpen}
         onHome={() => {
-          router.push('/')
+          state.preview(1)
         }}
-        onPreview={preview}
+        onPreview={state.preview}
         onToggleGuide={() => {
-          setGuideOpen(open => !open)
+          state.setGuideOpen(open => !open)
         }}
-        onToggleNerd={toggle}
+        onToggleNerd={state.nerd.toggle}
       />
       <GodPanelTabNav
-        tabs={tabs}
-        activeTab={activeTab}
-        onSelectTab={setActiveTab}
+        tabs={state.tabs}
+        activeTab={state.activeTab}
+        onSelectTab={state.setActiveTab}
       />
       <GodPanelContextBar
-        tab={activeTabConfig}
+        tab={state.activeTabConfig}
         onShowGuide={() => {
-          setGuideOpen(true)
+          state.setGuideOpen(true)
         }}
       />
       <GodPanelWalkMe
-        open={guideOpen && currentStep !== undefined}
-        currentStep={guideStep}
+        open={state.guideOpen && state.currentStep !== undefined}
+        currentStep={state.guideStep}
         steps={WALK_ME_STEPS}
-        tabs={tabs}
+        tabs={state.tabs}
         onClose={() => {
-          setGuideOpen(false)
+          state.setGuideOpen(false)
         }}
-        onBack={handleBack}
-        onNext={handleNext}
+        onBack={() => {
+          const nextStep = Math.max(state.guideStep - 1, 0)
+          state.moveGuide(nextStep)
+        }}
+        onNext={() => {
+          const nextStep = Math.min(state.guideStep + 1, 8)
+          state.moveGuide(nextStep)
+        }}
         onSelectStep={index => {
-          setGuideStep(index)
-          const step = WALK_ME_STEPS[index]
-          if (step !== undefined) openTabById(step.tabId)
+          state.moveGuide(index)
         }}
       />
-      <div className={s.content}>
-        {tabs.map((tab, index) => {
-          const TabComponent = TAB_COMPONENTS[tab.id]
-          return (
-            <TabPanel key={tab.id} value={activeTab} index={index}>
-              {TabComponent != null ? (
-                <TabComponent />
-              ) : (
-                <Typography variant="body2" color="text.secondary">
-                  Tab &ldquo;{tab.label}&rdquo; is not yet implemented.
-                </Typography>
-              )}
-            </TabPanel>
-          )
-        })}
-      </div>
-      {isOpen && <NerdModeIde onClose={close} />}
+      <GodPanelPanels tabs={state.tabs} activeTab={state.activeTab} />
+      {state.nerd.isOpen && <NerdModeIde onClose={state.nerd.close} />}
     </div>
   )
 }

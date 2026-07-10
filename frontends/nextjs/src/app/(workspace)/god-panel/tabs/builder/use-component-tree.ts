@@ -5,74 +5,18 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { setTree, clearDirty } from '@/store/slices/god-slice'
 import { snapshot } from '@/lib/persist/versions'
 import { paletteItem, type TreeNode } from './builder-registry'
+import {
+  findNode,
+  insertAfter,
+  insertChild,
+  isDescendant,
+  mapTree,
+  nid,
+  removeNode,
+  walk,
+} from './component-tree-utils'
 
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
-
-function nid(): string {
-  return `n_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`
-}
-
-function walk(node: TreeNode, fn: (n: TreeNode) => void): void {
-  fn(node)
-  node.children.forEach(c => {
-    walk(c, fn)
-  })
-}
-
-function mapTree(node: TreeNode, fn: (n: TreeNode) => TreeNode): TreeNode {
-  const next = fn(node)
-  return { ...next, children: next.children.map(c => mapTree(c, fn)) }
-}
-
-function insertChild(
-  node: TreeNode,
-  parentId: string,
-  child: TreeNode
-): TreeNode {
-  return mapTree(node, n =>
-    n.id === parentId ? { ...n, children: [...n.children, child] } : n
-  )
-}
-
-function removeNode(node: TreeNode, id: string): TreeNode {
-  return {
-    ...node,
-    children: node.children
-      .filter(c => c.id !== id)
-      .map(c => removeNode(c, id)),
-  }
-}
-
-function findNode(node: TreeNode, id: string): TreeNode | null {
-  if (node.id === id) return node
-  for (const c of node.children) {
-    const found = findNode(c, id)
-    if (found) return found
-  }
-  return null
-}
-
-function isDescendant(node: TreeNode, ancestorId: string, id: string): boolean {
-  const anc = findNode(node, ancestorId)
-  return anc ? findNode(anc, id) !== null && ancestorId !== id : false
-}
-
-function insertAfter(
-  node: TreeNode,
-  siblingId: string,
-  child: TreeNode
-): TreeNode {
-  const idx = node.children.findIndex(c => c.id === siblingId)
-  if (idx >= 0) {
-    const next = [...node.children]
-    next.splice(idx + 1, 0, child)
-    return { ...node, children: next }
-  }
-  return {
-    ...node,
-    children: node.children.map(c => insertAfter(c, siblingId, child)),
-  }
-}
 
 /** Component-tree editor state — tree persisted in Redux (god slice). */
 export function useComponentTree() {

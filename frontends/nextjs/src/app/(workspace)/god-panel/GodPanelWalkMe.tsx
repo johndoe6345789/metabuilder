@@ -2,7 +2,7 @@
 
 import { Button } from '@/m3'
 import type { GodPanelTab } from '@/lib/packages/navigation'
-import type { WalkStep } from './tabs/god-panel-config'
+import type { WalkStep } from './tabs/walk-me-steps'
 import s from './page.module.scss'
 
 type Props = {
