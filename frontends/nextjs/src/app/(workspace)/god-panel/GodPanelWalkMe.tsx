@@ -3,6 +3,7 @@
 import { Button } from '@/m3'
 import type { GodPanelTab } from '@/lib/packages/navigation'
 import type { WalkStep } from './tabs/walk-me-steps'
+import { GodPanelWalkMeSteps } from './GodPanelWalkMeSteps'
 import s from './page.module.scss'
 
 type Props = {
@@ -47,26 +48,19 @@ export function GodPanelWalkMe({
           <span className="material-symbols-rounded">close</span>
         </button>
       </div>
-      <div className={s.walkSteps}>
-        {steps.map((item, index) => {
-          const tab = tabs.find(candidate => candidate.id === item.tabId)
-          return (
-            <button
-              key={item.tabId}
-              type="button"
-              className={`${s.walkStep} ${index === currentStep ? s.walkStepActive : ''}`}
-              onClick={() => {
-                onSelectStep(index)
-              }}
-            >
-              <span>{index + 1}</span>
-              <strong>{tab?.label ?? item.title}</strong>
-            </button>
-          )
-        })}
-      </div>
+      <GodPanelWalkMeSteps
+        steps={steps}
+        tabs={tabs}
+        currentStep={currentStep}
+        onSelectStep={onSelectStep}
+      />
       <div className={s.walkActions}>
-        <Button variant="outlined" size="small" disabled={currentStep === 0} onClick={onBack}>
+        <Button
+          variant="outlined"
+          size="small"
+          disabled={currentStep === 0}
+          onClick={onBack}
+        >
           Back
         </Button>
         <Button variant="contained" size="small" onClick={onNext}>

@@ -73,6 +73,8 @@ export function insertAfter(
   }
   return {
     ...node,
-    children: node.children.map(current => insertAfter(current, siblingId, child)),
+    children: node.children.map(current =>
+      insertAfter(current, siblingId, child)
+    ),
   }
 }

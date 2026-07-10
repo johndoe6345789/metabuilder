@@ -44,7 +44,9 @@ export function ComponentTreeOutline({
         }}
       >
         <span className={s.grip}>⠿</span>
-        <span className="material-symbols-rounded">{item?.icon ?? 'widgets'}</span>
+        <span className="material-symbols-rounded">
+          {item?.icon ?? 'widgets'}
+        </span>
         <span className={s.rowName}>{item?.name ?? node.type}</span>
         {node.id !== 'root' && (
           <button

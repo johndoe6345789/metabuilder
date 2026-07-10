@@ -2,7 +2,10 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { normalizeTenantId, tenantGodPanelPath } from '@/lib/tenant/workspace-paths'
+import {
+  normalizeTenantId,
+  tenantGodPanelPath,
+} from '@/lib/tenant/workspace-paths'
 
 export function useGodPanelRedirect(
   tenantSlug: string | undefined,

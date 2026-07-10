@@ -18,7 +18,8 @@ export function GodPanelPanels({ tabs, activeTab }: Props) {
   return (
     <div className={s.content}>
       {tabs.map((tab, index) => {
-        const TabComponent = TAB_COMPONENTS[tab.id as keyof typeof TAB_COMPONENTS]
+        const TabComponent =
+          TAB_COMPONENTS[tab.id as keyof typeof TAB_COMPONENTS]
         return (
           <TabPanel key={tab.id} value={activeTab} index={index}>
             {TabComponent != null ? (

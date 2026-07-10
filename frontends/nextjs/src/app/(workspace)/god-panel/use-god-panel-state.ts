@@ -3,7 +3,9 @@
 import { useCallback, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useNerdMode } from '@/components/nerd-mode-ide'
-import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
+import {
+  useAuthContext,
+} from '@/app/_components/auth-provider/auth-provider-component'
 import { godPanelConfig } from '@/lib/packages/navigation'
 import { useGodPanelRedirect } from './use-god-panel-redirect'
 import { WALK_ME_STEPS } from './tabs/god-panel-config'
