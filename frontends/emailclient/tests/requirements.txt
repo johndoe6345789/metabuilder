@@ -30,7 +30,7 @@ hiredis==2.2.3
 celery==5.4.0
 
 # IMAP/SMTP
-aiosmtplib==3.0.1
+aiosmtplib==5.1.1
 aioimaplib==1.0.1
 
 # HTTP client
