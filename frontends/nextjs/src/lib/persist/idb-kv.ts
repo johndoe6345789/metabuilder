@@ -77,7 +77,14 @@ export async function idbDump(): Promise<Record<string, unknown>> {
       valsReq.onsuccess = () => {
         const keys = keysReq.result as IDBValidKey[]
         const vals = valsReq.result as unknown[]
-        keys.forEach((k, i) => { out[String(k)] = vals[i] })
+        keys.forEach((k, i) => {
+          const key = typeof k === 'string' || typeof k === 'number'
+            ? String(k)
+            : k instanceof Date
+              ? k.toISOString()
+              : JSON.stringify(k)
+          out[key] = vals[i]
+        })
         resolve(out)
       }
       valsReq.onerror = () => resolve(out)

@@ -129,11 +129,13 @@ function AdminContent() {
         </div>
         <Divider />
 
-        <Tabs value={activeTab} onChange={(_e, v) => { setActiveTab(v as number) }} sx={{ px: 2, pt: 1 }}>
-          <Tab label={`Users (${users.length})`} />
-          <Tab label="Comments (0)" />
-          <Tab label="Entities" />
-        </Tabs>
+        <div style={{ padding: '8px 16px 0' }}>
+          <Tabs value={activeTab} onChange={(_e, v) => { setActiveTab(v as number) }}>
+            <Tab label={`Users (${users.length})`} />
+            <Tab label="Comments (0)" />
+            <Tab label="Entities" />
+          </Tabs>
+        </div>
 
         <TabPanel value={activeTab} index={0}>
           <TableContainer>
@@ -150,14 +152,14 @@ function AdminContent() {
               <TableBody>
                 {filteredUsers.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} sx={{ textAlign: 'center', py: 4 }}>
+                    <TableCell colSpan={5} style={{ textAlign: 'center', paddingBlock: 32 }}>
                       <Typography variant="body2" color="text.secondary">No users found</Typography>
                     </TableCell>
                   </TableRow>
                 ) : (
                   filteredUsers.map(u => (
                     <TableRow key={u.id}>
-                      <TableCell sx={{ fontWeight: 500 }}>{u.username}</TableCell>
+                      <TableCell style={{ fontWeight: 500 }}>{u.username}</TableCell>
                       <TableCell>{u.email}</TableCell>
                       <TableCell>
                         <Chip

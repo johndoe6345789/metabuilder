@@ -24,7 +24,7 @@ export function useWebchat(sender: string) {
   const [draft, setDraft] = useState('')
 
   useEffect(() => {
-    void idbGet<ChatMessage[]>(KEY).then((m) => { if (m && m.length) setMessages(m) })
+    void idbGet<ChatMessage[]>(KEY).then((m) => { if (m?.length) setMessages(m) })
   }, [])
 
   const send = useCallback(() => {

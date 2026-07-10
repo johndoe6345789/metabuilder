@@ -35,14 +35,14 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
       filter: { token: sessionToken.value }
     })
 
-    const session = sessions.data[0] as DbalSessionRecord | undefined
+    const session = sessions.data[0] as unknown as DbalSessionRecord | undefined
 
     if (session == null) {
       return null
     }
 
     // Get user from database using DBAL
-    const user = await db.users.read(session.userId) as DbalUserRecord | null
+    const user = await db.users.read(session.userId) as unknown as DbalUserRecord | null
 
     if (user == null) {
       return null

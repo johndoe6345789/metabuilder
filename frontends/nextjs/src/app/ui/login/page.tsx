@@ -79,7 +79,7 @@ export default function LoginPage() {
         <h1 className={s.title}>Sign in to MetaBuilder</h1>
         <p className={s.subtitle}>Enter your credentials to continue</p>
 
-        <form className={s.form} onSubmit={handleSubmit}>
+        <form className={s.form} onSubmit={(event) => { void handleSubmit(event) }}>
           <div className={s.field}>
             <label className={s.label} htmlFor="username">Username</label>
             <input

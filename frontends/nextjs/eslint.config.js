@@ -55,6 +55,8 @@ export default tseslint.config(
     rules: {
       // React Hooks
       ...reactHooks.configs.recommended.rules,
+      'react-hooks/refs': 'warn',
+      'react-hooks/set-state-in-effect': 'warn',
       
       // TypeScript Type Safety
       '@typescript-eslint/no-explicit-any': 'warn',

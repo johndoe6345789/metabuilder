@@ -68,6 +68,11 @@ const m = (type: string, name: string, icon: string, category: BlockCategory,
   container: boolean, defaults: Record<string, unknown> = {}): PaletteItem =>
   ({ type, name, icon, category, container, defaults })
 
+const propText = (value: unknown, fallback = ''): string =>
+  typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean'
+    ? String(value)
+    : fallback
+
 const DEFS: BlockDef[] = [
   { meta: m('container', 'Container', 'grid_view', 'Layout', true, { direction: 'column', gap: 12 }),
     render: (p, kids) => (
@@ -76,13 +81,13 @@ const DEFS: BlockDef[] = [
   { meta: m('card', 'Card', 'crop_square', 'Layout', true),
     render: (_p, kids) => <Card style={{ padding: 16 }}>{kids}</Card> },
   { meta: m('heading', 'Heading', 'title', 'Content', false, { text: 'Heading' }),
-    render: (p) => <Typography variant="h5">{String(p.text ?? 'Heading')}</Typography> },
+    render: (p) => <Typography variant="h5">{propText(p.text, 'Heading')}</Typography> },
   { meta: m('text', 'Text', 'notes', 'Content', false, { text: 'Some text' }),
-    render: (p) => <Typography variant="body1">{String(p.text ?? '')}</Typography> },
+    render: (p) => <Typography variant="body1">{propText(p.text)}</Typography> },
   { meta: m('button', 'Button', 'smart_button', 'Inputs', false, { label: 'Click me' }),
-    render: (p) => <Button variant="contained" onClick={p.runWorkflow ? () => { fireWorkflow() } : undefined}>{String(p.label ?? 'Button')}</Button> },
+    render: (p) => <Button variant="contained" onClick={p.runWorkflow ? () => { fireWorkflow() } : undefined}>{propText(p.label, 'Button')}</Button> },
   { meta: m('pkg.webchat', 'Webchat', 'chat', 'Community', false, { channel: '#general' }),
-    render: (p) => <Webchat channel={String(p.channel ?? '#general')} /> },
+    render: (p) => <Webchat channel={propText(p.channel, '#general')} /> },
   { meta: m('mb.WorkflowEditor', 'Workflow Editor', 'account_tree', 'MetaBuilder', false),
     render: () => <WorkflowEditorBlock /> },
   { meta: m('mb.PackageManager', 'Package Manager', 'deployed_code', 'MetaBuilder', false),

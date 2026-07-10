@@ -18,10 +18,9 @@ import {
   Typography,
   Button,
   Chip,
-  Avatar,
   IconButton,
 } from '@/m3'
-import { getLevelLabel, getLevelColor } from '@/lib/packages/navigation'
+import { getLevelColor } from '@/lib/packages/navigation'
 import { Logo } from '@/components/brand/Logo'
 
 export interface AppBarProps {

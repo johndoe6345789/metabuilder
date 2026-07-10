@@ -17,7 +17,6 @@ import {
   Chip,
   Avatar,
   Divider,
-  Button,
 } from '@/m3'
 
 const DBAL_URL = typeof process !== 'undefined'

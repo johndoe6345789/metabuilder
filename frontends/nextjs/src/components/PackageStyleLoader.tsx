@@ -8,7 +8,7 @@ interface PackageStyleLoaderProps {
 
 export function PackageStyleLoader({ packages }: PackageStyleLoaderProps): null {
   useEffect(() => {
-    packages.forEach(async (id) => {
+    const loadPackageStyle = async (id: string) => {
       if (document.querySelector(`style[data-pkg="${id}"]`)) return
       try {
         const res = await fetch(`/app/api/packages/styles?id=${id}`)
@@ -20,6 +20,10 @@ export function PackageStyleLoader({ packages }: PackageStyleLoaderProps): null 
         el.textContent = css
         document.head.appendChild(el)
       } catch { /* silent */ }
+    }
+
+    packages.forEach((id) => {
+      void loadPackageStyle(id)
     })
   }, [packages])
 

@@ -1,4 +1,4 @@
-import type { ComponentType, ReactElement } from 'react'
+import type { ReactElement, SVGAttributes } from 'react'
 
 import {
   AccountCircle,
@@ -10,7 +10,6 @@ import {
   CropPortrait,
   FormatAlignLeft,
   GridView,
-  type IconProps,
   LocalOffer,
   LooksOne,
   Minus,
@@ -25,31 +24,39 @@ import {
   WarningAmber,
 } from '@/m3/icons'
 
-const iconMap: Record<string, ComponentType<IconProps>> = {
-  Article,
-  Card: CropPortrait,
-  Chat,
-  CheckSquare: Checkbox,
-  CircleNotch: Autorenew,
-  Columns: ViewColumn,
-  CursorClick: TouchApp,
-  FrameCorners: CropFree,
-  GridFour: GridView,
-  Minus,
-  Seal: Verified,
-  SlidersHorizontal: Tune,
-  Stack: ViewStream,
-  Table: TableChart,
-  Tag: LocalOffer,
-  TextAlignLeft: FormatAlignLeft,
-  TextHOne: LooksOne,
-  TextT: TextFields,
-  ToggleRight: ToggleOn,
-  UserCircle: AccountCircle,
-  Warning: WarningAmber,
+type ComponentIconProps = Omit<SVGAttributes<SVGElement>, 'fill'> & {
+  fill?: string | number
+  weight?: string
+}
+type ComponentIcon = (props: ComponentIconProps) => ReactElement
+
+const asComponentIcon = (icon: unknown): ComponentIcon => icon as ComponentIcon
+
+const iconMap: Record<string, ComponentIcon> = {
+  Article: asComponentIcon(Article),
+  Card: asComponentIcon(CropPortrait),
+  Chat: asComponentIcon(Chat),
+  CheckSquare: asComponentIcon(Checkbox),
+  CircleNotch: asComponentIcon(Autorenew),
+  Columns: asComponentIcon(ViewColumn),
+  CursorClick: asComponentIcon(TouchApp),
+  FrameCorners: asComponentIcon(CropFree),
+  GridFour: asComponentIcon(GridView),
+  Minus: asComponentIcon(Minus),
+  Seal: asComponentIcon(Verified),
+  SlidersHorizontal: asComponentIcon(Tune),
+  Stack: asComponentIcon(ViewStream),
+  Table: asComponentIcon(TableChart),
+  Tag: asComponentIcon(LocalOffer),
+  TextAlignLeft: asComponentIcon(FormatAlignLeft),
+  TextHOne: asComponentIcon(LooksOne),
+  TextT: asComponentIcon(TextFields),
+  ToggleRight: asComponentIcon(ToggleOn),
+  UserCircle: asComponentIcon(AccountCircle),
+  Warning: asComponentIcon(WarningAmber),
 }
 
-export function getComponentIcon(iconName: string, props?: IconProps): ReactElement | null {
+export function getComponentIcon(iconName: string, props?: ComponentIconProps): ReactElement | null {
   const Icon = iconMap[iconName]
   return Icon !== undefined ? <Icon {...props} /> : null
 }

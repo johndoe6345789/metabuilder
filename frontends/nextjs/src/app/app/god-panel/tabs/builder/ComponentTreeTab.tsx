@@ -7,6 +7,11 @@ import s from './ComponentTreeTab.module.scss'
 
 const CATEGORIES = ['Layout', 'Content', 'Inputs', 'Community', 'MetaBuilder'] as const
 
+const propText = (value: unknown, fallback = ''): string =>
+  typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean'
+    ? String(value)
+    : fallback
+
 function Outline({ node, depth, selectedId, onSelect, onDelete, onMove }: {
   node: TreeNode; depth: number; selectedId: string
   onSelect: (id: string) => void; onDelete: (id: string) => void
@@ -49,14 +54,14 @@ function PropsEditor({ node, onChange }: {
   const p = node.props
   if (node.type === 'heading' || node.type === 'text') {
     return (
-      <TextField size="small" fullWidth label="Text" value={String(p.text ?? '')}
+      <TextField size="small" fullWidth label="Text" value={propText(p.text)}
         onChange={(e) => { onChange({ text: e.target.value }) }} />
     )
   }
   if (node.type === 'button') {
     return (
       <div className={s.propCol}>
-        <TextField size="small" fullWidth label="Label" value={String(p.label ?? '')}
+        <TextField size="small" fullWidth label="Label" value={propText(p.label)}
           onChange={(e) => { onChange({ label: e.target.value }) }} />
         <Button size="small" variant={p.runWorkflow ? 'contained' : 'outlined'}
           onClick={() => { onChange({ runWorkflow: !p.runWorkflow }) }}>
@@ -72,7 +77,7 @@ function PropsEditor({ node, onChange }: {
           onClick={() => { onChange({ direction: 'row' }) }}>Row</Button>
         <Button size="small" variant={p.direction !== 'row' ? 'contained' : 'outlined'}
           onClick={() => { onChange({ direction: 'column' }) }}>Column</Button>
-        <TextField size="small" label="Gap" value={String(p.gap ?? 12)}
+        <TextField size="small" label="Gap" value={propText(p.gap, '12')}
           onChange={(e) => { onChange({ gap: Number(e.target.value) || 0 }) }} />
       </div>
     )

@@ -45,7 +45,7 @@ export async function login(identifier: string, password: string): Promise<Login
       }
     })
 
-    let user = users.data[0] as DbalUserRecord | undefined
+    let user = users.data[0] as unknown as DbalUserRecord | undefined
 
     // If not found by username, try email
     if (user === undefined) {
@@ -54,7 +54,7 @@ export async function login(identifier: string, password: string): Promise<Login
           email: identifier
         }
       })
-      user = usersByEmail.data[0] as DbalUserRecord | undefined
+      user = usersByEmail.data[0] as unknown as DbalUserRecord | undefined
     }
 
     if (user === undefined) {
@@ -87,7 +87,7 @@ export async function login(identifier: string, password: string): Promise<Login
       const credResult = await db.credentials.list({
         filter: { username: user.username },
       })
-      credential = (credResult.data[0] as DbalCredentialRecord | undefined) ?? null
+      credential = (credResult.data[0] as unknown as DbalCredentialRecord | undefined) ?? null
     }
 
     if (credential?.passwordHash === undefined) {

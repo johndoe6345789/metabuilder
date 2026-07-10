@@ -164,6 +164,7 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ notification
       const timer = setTimeout(onClose, duration)
       return () => clearTimeout(timer)
     }
+    return undefined
   }, [duration, onClose])
 
   return (

@@ -11,6 +11,11 @@ type Props = {
   onChange: (name: string, value: unknown) => void
 }
 
+const fieldText = (value: unknown): string =>
+  typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean'
+    ? String(value)
+    : ''
+
 export function PropFieldEditor({ field, value, onChange }: Props) {
   if (field.type === 'boolean') {
     return (
@@ -31,7 +36,7 @@ export function PropFieldEditor({ field, value, onChange }: Props) {
         <InputLabel>{field.name}</InputLabel>
         <select
           className={s.nativeSelect}
-          value={String(value ?? '')}
+          value={fieldText(value)}
           onChange={e => { onChange(field.name, e.target.value) }}
           aria-label={field.name}
         >
@@ -49,7 +54,7 @@ export function PropFieldEditor({ field, value, onChange }: Props) {
       size="small"
       label={field.name}
       type={field.type === 'number' ? 'number' : 'text'}
-      value={String(value ?? '')}
+      value={fieldText(value)}
       onChange={e => {
         const v = field.type === 'number'
           ? Number(e.target.value)
