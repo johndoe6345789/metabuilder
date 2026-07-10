@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Typography, Paper, Chip } from '@/m3'
+import { useState, useEffect, useRef } from 'react'
+import { Typography, Paper, Chip, Alert } from '@/m3'
 import { godPanelConfig } from '@/lib/packages/navigation'
+import { BASE_PATH } from '@/lib/app-config'
 import s from './OverviewTab.module.scss'
 
 const DBAL_URL =
@@ -14,7 +15,12 @@ interface DbalStatus {
   uptime?: string
 }
 
+type Flash = { severity: 'success' | 'info' | 'warning'; message: string }
+type QuickTool = (typeof godPanelConfig.tools)[number]
+
 export function OverviewTab() {
+  const importRef = useRef<HTMLInputElement | null>(null)
+  const [flash, setFlash] = useState<Flash | null>(null)
   const [dbalStatus, setDbalStatus] = useState<DbalStatus>({
     connected: false,
   })
@@ -38,9 +44,124 @@ export function OverviewTab() {
       .catch(() => { /* ignore */ })
   }, [])
 
+  const downloadJson = (name: string, data: unknown) => {
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: 'application/json',
+    })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = name
+    link.click()
+    URL.revokeObjectURL(url)
+  }
+
+  const exportDatabase = async () => {
+    const resources = [
+      ['users', '/system/core/User'],
+      ['workflows', '/system/core/Workflow'],
+      ['pages', '/system/core/PageConfig'],
+      ['styleClasses', '/system/core/StyleClass'],
+    ] as const
+
+    const exported: Record<string, unknown> = {}
+    for (const [key, path] of resources) {
+      const res = await fetch(`${DBAL_URL}${path}`, {
+        signal: AbortSignal.timeout(8000),
+      })
+      exported[key] = res.ok ? await res.json() : { error: `HTTP ${res.status}` }
+    }
+
+    downloadJson(`metabuilder-export-${new Date().toISOString()}.json`, {
+      exportedAt: new Date().toISOString(),
+      dbalVersion: dbalStatus.version ?? null,
+      data: exported,
+    })
+    setFlash({ severity: 'success', message: 'Database export downloaded.' })
+  }
+
+  const handleImportFile = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0]
+    event.target.value = ''
+    if (file == null) return
+
+    try {
+      const raw = await file.text()
+      const parsed = JSON.parse(raw) as Record<string, unknown>
+      const data = parsed.data
+      const collections =
+        data !== null && typeof data === 'object'
+          ? Object.keys(data).length
+          : 0
+      setFlash({
+        severity: 'info',
+        message: `Import file validated (${collections} collections). Apply imports from Deploy when you are ready to mutate data.`,
+      })
+    } catch {
+      setFlash({
+        severity: 'warning',
+        message: 'Import file is not valid MetaBuilder JSON.',
+      })
+    }
+  }
+
+  const handleTool = (tool: QuickTool) => {
+    setFlash(null)
+    const { action } = tool
+    if (action === 'exportDatabase') {
+      void exportDatabase().catch(() => {
+        setFlash({
+          severity: 'warning',
+          message: 'Database export failed. Check DBAL connectivity.',
+        })
+      })
+      return
+    }
+
+    if (action === 'importDatabase') {
+      importRef.current?.click()
+      return
+    }
+
+    const origin = window.location.origin
+    const previewTarget: Record<number, string> = {
+      1: `${origin}${BASE_PATH}/`,
+      2: `${origin}${BASE_PATH}/app/profile`,
+      3: `${origin}${BASE_PATH}/app/admin`,
+    }
+
+    const level =
+      tool.params !== undefined &&
+      'level' in tool.params &&
+      typeof tool.params.level === 'number'
+        ? tool.params.level
+        : 1
+    const target = action === 'previewLevel' ? previewTarget[level] : undefined
+    if (target !== undefined) {
+      window.location.assign(target)
+      return
+    }
+
+    setFlash({ severity: 'info', message: 'Tool action is not configured.' })
+  }
+
   return (
     <div>
       <Typography variant="h6" gutterBottom>System Overview</Typography>
+      {flash !== null && (
+        <Alert severity={flash.severity} className={s.alert}>
+          {flash.message}
+        </Alert>
+      )}
+      <input
+        ref={importRef}
+        type="file"
+        accept="application/json"
+        className={s.fileInput}
+        onChange={event => { void handleImportFile(event) }}
+      />
 
       <Paper>
         <div className={s.statusRow}>
@@ -66,10 +187,15 @@ export function OverviewTab() {
       </Typography>
       <div className={s.toolsGrid}>
         {godPanelConfig.tools.map(tool => (
-          <Paper key={tool.id} className={s.toolCard}>
+          <button
+            key={tool.id}
+            type="button"
+            className={s.toolCard}
+            onClick={() => { handleTool(tool) }}
+          >
             <span className={`material-symbols-rounded ${s.toolIcon}`}>{tool.icon}</span>
             <Typography variant="body2">{tool.label}</Typography>
-          </Paper>
+          </button>
         ))}
       </div>
 

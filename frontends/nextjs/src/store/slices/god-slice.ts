@@ -26,6 +26,26 @@ export interface GodState {
 
 const now = () => new Date().toISOString()
 
+const normalizeCssProps = (state: GodState): GodState => ({
+  ...state,
+  css: state.css.map(cssClass => {
+    const props = { ...cssClass.props }
+    if ('border-radius' in props) {
+      props.borderRadius = props['border-radius']
+      delete props['border-radius']
+    }
+    if ('font-size' in props) {
+      props.fontSize = props['font-size']
+      delete props['font-size']
+    }
+    if ('font-weight' in props) {
+      props.fontWeight = props['font-weight']
+      delete props['font-weight']
+    }
+    return { ...cssClass, props }
+  }),
+})
+
 const initialState: GodState = {
   workflow: {
     id: 'wf_god_default', name: 'Untitled Workflow', description: '',
@@ -34,8 +54,8 @@ const initialState: GodState = {
   tree: { id: 'root', type: 'container', props: { direction: 'column', gap: 12 }, children: [] },
   packages: [],
   css: [
-    { id: 'c_card', name: 'card', props: { padding: '16px', 'border-radius': '12px', background: '#161b22', border: '1px solid #30363d' } },
-    { id: 'c_pill', name: 'pill', props: { padding: '4px 12px', 'border-radius': '999px', background: '#1f6feb', color: '#fff', 'font-size': '12px', 'font-weight': '600' } },
+    { id: 'c_card', name: 'card', props: { padding: '16px', borderRadius: '8px', background: '#161b22', border: '1px solid #30363d' } },
+    { id: 'c_pill', name: 'pill', props: { padding: '4px 12px', borderRadius: '999px', background: '#1f6feb', color: '#fff', fontSize: '12px', fontWeight: '600' } },
   ],
   dropdowns: [
     { id: 'd_status', name: 'status', options: [
@@ -65,7 +85,7 @@ const godSlice = createSlice({
     setTests: (s, a: PayloadAction<TestCase[]>) => { s.tests = a.payload; s.dirty.tests = true },
     setPlan: (s, a: PayloadAction<Task[]>) => { s.plan = a.payload; s.dirty.plan = true },
     clearDirty: (s, a: PayloadAction<GodDomain>) => { s.dirty[a.payload] = false },
-    rehydrate: (_s, a: PayloadAction<GodState>) => a.payload,
+    rehydrate: (_s, a: PayloadAction<GodState>) => normalizeCssProps(a.payload),
   },
 })
 

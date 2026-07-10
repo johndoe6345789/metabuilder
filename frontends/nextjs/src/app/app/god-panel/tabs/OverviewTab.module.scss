@@ -20,6 +20,14 @@
   gap: 16px;
 }
 
+.alert {
+  margin-bottom: 16px;
+}
+
+.fileInput {
+  display: none;
+}
+
 .toolsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -34,10 +42,22 @@
   padding: 16px;
   text-align: center;
   cursor: pointer;
-  border-radius: 12px;
+  border: 1px solid var(--mat-sys-outline-variant, #30363d);
+  border-radius: 8px;
+  background: var(--mat-sys-surface-container, #161b22);
+  color: inherit;
+  font: inherit;
   transition: background 0.12s;
 
-  &:hover { background: var(--mat-sys-surface-container-high, #21262d); }
+  &:hover,
+  &:focus-visible {
+    background: var(--mat-sys-surface-container-high, #21262d);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary, #4493f8);
+    outline-offset: 2px;
+  }
 }
 
 .toolIcon {

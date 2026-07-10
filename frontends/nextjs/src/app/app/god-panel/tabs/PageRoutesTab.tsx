@@ -10,6 +10,7 @@ import {
 } from '@/m3'
 import { usePageRoutes } from '@/hooks/usePageRoutes'
 import type { PageRoute, PageRouteInput } from '@/hooks/usePageRoutes'
+import { BASE_PATH } from '@/lib/app-config'
 import { PageList } from './page-routes/PageList'
 import { PageFormDialog } from './page-routes/PageFormDialog'
 import { DeletePageDialog } from './page-routes/DeletePageDialog'
@@ -49,7 +50,11 @@ export function PageRoutesTab() {
   }
 
   const openPreview = (page: PageRoute) => {
-    window.open(`/${tenant}${page.path}`, '_blank', 'noopener')
+    const path = page.path.startsWith('/') ? page.path : `/${page.path}`
+    const previewUrl = page.path.startsWith('http')
+      ? page.path
+      : `${window.location.origin}${BASE_PATH}/${tenant}${path}`
+    window.open(previewUrl, '_blank', 'noopener')
   }
 
   const applyTenant = () => {

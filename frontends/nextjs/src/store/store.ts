@@ -57,7 +57,10 @@ const { store, persistor } = createPersistedStore({
   },
   devTools: getDevToolsConfig() as boolean | object,
   ignoredActions: ['asyncData/fetchAsyncData/pending'],
-  ignoredPaths: ['asyncData.requests.*.promise'],
+  ignoredPaths: [
+    'asyncData.requests.*.promise',
+    'canvas.canvasState.selectedItemIds',
+  ],
 })
 
 export { store, persistor }
