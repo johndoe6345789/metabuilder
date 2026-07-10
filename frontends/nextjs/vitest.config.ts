@@ -25,8 +25,8 @@ export default defineConfig({
     dedupe: ['react', 'react-dom'],
     alias: [
       // m3 aliases must be first (more specific matches first)
-      { find: /^@\/m3\/(.+)$/, replacement: resolve(__dirname, '../../components/m3/$1') },
-      { find: /^@\/m3$/, replacement: resolve(__dirname, '../../components/m3/index.ts') },
+      { find: /^@\/m3\/(.+)$/, replacement: resolve(__dirname, '../../libraries/components/m3/$1') },
+      { find: /^@\/m3$/, replacement: resolve(__dirname, '../../libraries/components/m3/index.ts') },
       // dbal-ui alias for shared UI components
       { find: /^@dbal-ui\/(.+)$/, replacement: resolve(__dirname, '../../dbal/shared/ui/$1') },
       { find: /^@dbal-ui$/, replacement: resolve(__dirname, '../../dbal/shared/ui') },
