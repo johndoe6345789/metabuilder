@@ -163,6 +163,193 @@
   }
 }
 
+.contextBar {
+  max-width: 1200px;
+  margin: -8px 0 18px;
+  padding: 14px 16px;
+  border: 1px solid color-mix(in srgb, var(--mat-sys-outline-variant, #30363d) 70%, transparent);
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--mat-sys-surface-container-low, #161b22) 82%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.contextBar > div {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.contextBar :global(.material-symbols-rounded) {
+  width: 38px;
+  height: 38px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  background: color-mix(in srgb, var(--mat-sys-primary, #4493f8) 14%, transparent);
+  color: var(--mat-sys-primary, #4493f8);
+  font-size: 1.25rem;
+}
+
+.contextBar strong {
+  display: block;
+  color: var(--mat-sys-on-surface, #e6edf3);
+  font-size: 0.95rem;
+}
+
+.contextBar p {
+  margin: 2px 0 0;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+  font-size: 0.86rem;
+  line-height: 1.35;
+}
+
+.contextAction,
+.iconButton,
+.walkStep {
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.contextAction {
+  flex: 0 0 auto;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--mat-sys-primary, #4493f8) 12%, transparent);
+  color: var(--mat-sys-primary, #4493f8);
+  font-size: 0.84rem;
+  font-weight: 750;
+}
+
+.walkMe {
+  max-width: 1200px;
+  margin: 0 0 20px;
+  padding: 18px;
+  border: 1px solid color-mix(in srgb, var(--mat-sys-primary, #4493f8) 30%, var(--mat-sys-outline-variant, #30363d));
+  border-radius: 26px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--mat-sys-primary, #4493f8) 10%, transparent), transparent 45%),
+    color-mix(in srgb, var(--mat-sys-surface-container, #161b22) 92%, transparent);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.16);
+}
+
+.walkHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.walkEyebrow {
+  color: var(--mat-sys-primary, #4493f8);
+  font-size: 0.76rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.walkHeader h2 {
+  margin: 4px 0 4px;
+  color: var(--mat-sys-on-surface, #e6edf3);
+  font-size: clamp(1.15rem, 2vw, 1.55rem);
+}
+
+.walkHeader p {
+  max-width: 760px;
+  margin: 0;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+  line-height: 1.5;
+}
+
+.iconButton {
+  width: 36px;
+  height: 36px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--mat-sys-surface-container-high, #21262d) 92%, transparent);
+  color: var(--mat-sys-on-surface, #e6edf3);
+}
+
+.iconButton :global(.material-symbols-rounded) {
+  font-size: 1.15rem;
+}
+
+.walkSteps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.walkStep {
+  min-height: 54px;
+  padding: 9px 10px;
+  border: 1px solid color-mix(in srgb, var(--mat-sys-outline-variant, #30363d) 72%, transparent);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--mat-sys-surface-container-low, #161b22) 78%, transparent);
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+}
+
+.walkStep span {
+  width: 26px;
+  height: 26px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  background: color-mix(in srgb, var(--mat-sys-primary, #4493f8) 12%, transparent);
+  color: var(--mat-sys-primary, #4493f8);
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.walkStep strong {
+  font-size: 0.86rem;
+  overflow-wrap: anywhere;
+}
+
+.walkStepActive {
+  border-color: var(--mat-sys-primary, #4493f8);
+  background: color-mix(in srgb, var(--mat-sys-primary, #4493f8) 16%, var(--mat-sys-surface-container, #161b22));
+  color: var(--mat-sys-on-surface, #e6edf3);
+}
+
+.walkActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+@media (max-width: 720px) {
+  .contextBar,
+  .walkHeader {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .contextAction,
+  .walkActions {
+    width: 100%;
+  }
+
+  .walkActions {
+    justify-content: stretch;
+  }
+}
+
 .pillActive {
   background: linear-gradient(135deg, var(--mat-sys-primary, #4493f8), #2ea043);
   border-color: var(--mat-sys-primary, #4493f8);
