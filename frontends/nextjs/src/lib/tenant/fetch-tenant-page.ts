@@ -27,17 +27,20 @@ export async function fetchTenantPage(
   try {
     const params = new URLSearchParams({
       'filter.path': path,
-      'filter.isActive': 'true',
     })
     const url =
       `${DBAL}/${tenant}/core/PageConfig?${params.toString()}`
-    const res = await fetch(url, {
-      next: { revalidate: 30, tags: [`tenant-${tenant}-page`] },
-    })
+    const res = await fetch(url, { cache: 'no-store' })
     if (!res.ok) return null
     const raw = await res.json() as unknown
-    const arr = extractArray(raw)
-    const first = arr[0]
+    const arr = extractArray(unwrap(raw))
+    const first = arr.find(page => {
+      const active =
+        (page.isActive as boolean | undefined) ??
+        (page.isPublished as boolean | undefined) ??
+        true
+      return active === true
+    })
     if (first === undefined) return null
     return normalize(first)
   } catch {
@@ -53,10 +56,20 @@ export async function fetchTenantPages(
     const res = await fetch(url, { cache: 'no-store' })
     if (!res.ok) return []
     const raw = await res.json() as unknown
-    return extractArray(raw).map(normalize)
+    return extractArray(unwrap(raw)).map(normalize)
   } catch {
     return []
   }
+}
+
+function unwrap(raw: unknown): unknown {
+  if (raw !== null && typeof raw === 'object') {
+    const envelope = raw as Record<string, unknown>
+    if ('success' in envelope && 'data' in envelope) {
+      return envelope.data
+    }
+  }
+  return raw
 }
 
 function extractArray(raw: unknown): Record<string, unknown>[] {
@@ -83,7 +96,10 @@ function normalize(p: Record<string, unknown>): TenantPage {
       (p.requiredRole as string | null | undefined) ?? null,
     componentTree:
       typeof tree === 'string' ? JSON.parse(tree) : (tree ?? null),
-    isActive: (p.isActive as boolean | undefined) ?? true,
+    isActive:
+      (p.isActive as boolean | undefined) ??
+      (p.isPublished as boolean | undefined) ??
+      true,
     tenantId: p.tenantId as string | null | undefined,
     packageId: p.packageId as string | null | undefined,
     description: p.description as string | null | undefined,

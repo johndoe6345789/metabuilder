@@ -34,6 +34,7 @@ export function ComponentTreePropsEditor({ node, onChange }: Props) {
     return (
       <ComponentTreeButtonProps
         label={propText(p.label)}
+        href={propText(p.href)}
         runWorkflow={Boolean(p.runWorkflow)}
         onChange={onChange}
       />

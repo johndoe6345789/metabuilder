@@ -28,14 +28,13 @@ export default async function PackagePage({ params }: PackagePageProps) {
   try {
     const packageData = await loadJSONPackage(join(getPackagesDir(), pkg))
 
-    // Find home component: prioritize 'home_page', then 'HomePage', then 'Home', then first component
+    // Prefer home_page, then HomePage, then Home, then the first component.
     const homeComponent =
       packageData.components?.find(
         c => c.id === 'home_page' || c.name === 'HomePage' || c.name === 'Home'
       ) ?? packageData.components?.[0]
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (homeComponent === null || homeComponent === undefined) {
+    if (homeComponent == null) {
       // Package exists but has no components
       notFound()
     }
@@ -72,18 +71,28 @@ export async function generateMetadata({ params }: PackagePageProps) {
   // Try to load package metadata
   try {
     const packageData = await loadJSONPackage(join(getPackagesDir(), pkg))
-    return {
+      return {
       title: `${packageData.metadata.name} - ${tenantSlug} | MetaBuilder`,
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       description:
-        packageData.metadata.description !== null &&
-        packageData.metadata.description !== undefined &&
         packageData.metadata.description.length > 0
           ? packageData.metadata.description
           : `${packageData.metadata.name} package for tenant ${tenantSlug}`,
     }
   } catch {
     // Fallback if package can't be loaded
+    const page = await fetchTenantPage(tenantSlug, `/${pkg}`)
+    if (page !== null && page.isActive && page.title.length > 0) {
+      return {
+        title: `${page.title} | ${tenantSlug} | MetaBuilder`,
+        description:
+          page.description !== null &&
+          page.description !== undefined &&
+          page.description.length > 0
+            ? page.description
+            : `${page.title} for tenant ${tenantSlug}`,
+      }
+    }
+
     return {
       title: `${pkg} - ${tenantSlug} | MetaBuilder`,
       description: `${pkg} package for tenant ${tenantSlug}`,
