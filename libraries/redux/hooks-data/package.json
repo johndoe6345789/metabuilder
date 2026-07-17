@@ -20,7 +20,7 @@
     "@metabuilder/types": "*"
   },
   "devDependencies": {
-    "@types/node": "^25.1.0",
+    "@types/node": "^26.0.1",
     "@types/react": "^19.2.8",
     "typescript": "^5.9.3"
   }
