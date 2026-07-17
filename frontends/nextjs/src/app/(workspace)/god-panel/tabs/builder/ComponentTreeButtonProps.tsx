@@ -5,12 +5,14 @@ import s from './ComponentTreeTab.module.scss'
 
 type Props = {
   label: string
+  href: string
   runWorkflow: boolean
   onChange: (patch: Record<string, unknown>) => void
 }
 
 export function ComponentTreeButtonProps({
   label,
+  href,
   runWorkflow,
   onChange,
 }: Props) {
@@ -23,6 +25,16 @@ export function ComponentTreeButtonProps({
         value={label}
         onChange={event => {
           onChange({ label: event.target.value })
+        }}
+      />
+      <TextField
+        size="small"
+        fullWidth
+        label="Link URL"
+        placeholder="/app/demo-site/contact"
+        value={href}
+        onChange={event => {
+          onChange({ href: event.target.value })
         }}
       />
       <Button

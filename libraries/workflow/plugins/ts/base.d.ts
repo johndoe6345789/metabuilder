@@ -2,42 +2,52 @@
  * Base types and interfaces for TypeScript workflow plugins.
  * @packageDocumentation
  */
+/** A JSON-compatible primitive value. */
+export type JsonPrimitive = string | number | boolean | null;
+/** A JSON-compatible value used at workflow boundaries. */
+export type JsonValue = JsonPrimitive | JsonObject | JsonValue[];
+/** A JSON-compatible object used for parameters, variables, and state. */
+export interface JsonObject {
+    [key: string]: JsonValue;
+}
+/** Runtime capabilities exposed to workflow plugins. */
+export interface WorkflowRuntime {
+    log?: (level: 'debug' | 'info' | 'warn' | 'error', message: string, data?: JsonObject) => void;
+}
 /**
  * Input data passed to plugin execute methods.
  */
-export interface ExecuteInputs {
+export interface ExecuteInputs<TParameters extends JsonObject = JsonObject> {
     /** The workflow node being executed */
     node: {
         id: string;
         name: string;
         type: string;
         nodeType: string;
-        parameters: Record<string, any>;
+        parameters: TParameters;
     };
     /** Workflow execution context */
     context: {
         executionId: string;
         tenantId: string;
         userId: string;
-        triggerData: Record<string, any>;
-        variables: Record<string, any>;
+        triggerData: JsonObject;
+        variables: JsonObject;
     };
     /** Current execution state with results from previous nodes */
-    state: Record<string, any>;
+    state: JsonObject;
 }
 /**
  * Result returned from plugin execute methods.
  */
-export interface ExecuteResult {
+export interface ExecuteResult<TResult extends JsonValue = JsonValue> extends JsonObject {
     /** Primary result value */
-    result?: any;
-    /** Additional output data */
-    [key: string]: any;
+    result?: TResult;
 }
 /**
  * Interface that all node executor plugins must implement.
  */
-export interface NodeExecutor {
+export interface NodeExecutor<TParameters extends JsonObject = JsonObject, TResult extends JsonValue = JsonValue> {
     /** Unique node type identifier (e.g., 'string.concat', 'math.add') */
     readonly nodeType: string;
     /** Category for grouping (e.g., 'string', 'math', 'logic') */
@@ -46,18 +56,18 @@ export interface NodeExecutor {
     readonly description: string;
     /**
      * Execute the plugin logic.
-     * @param inputs - Input data including node, context, and state
-     * @param runtime - Optional runtime services (logging, etc.)
-     * @returns The execution result
+     *
+     * Synchronous plugins remain supported, while I/O-bound plugins can return
+     * a Promise without weakening the shared contract.
      */
-    execute(inputs: ExecuteInputs, runtime?: any): ExecuteResult;
+    execute(inputs: ExecuteInputs<TParameters>, runtime?: WorkflowRuntime): ExecuteResult<TResult> | Promise<ExecuteResult<TResult>>;
 }
 /**
  * Helper to create a context object for template interpolation.
  */
-export declare function createTemplateContext(inputs: ExecuteInputs): Record<string, any>;
+export declare function createTemplateContext(inputs: ExecuteInputs): JsonObject;
 /**
  * Helper to resolve template values.
  */
-export declare function resolveValue(value: any, ctx: Record<string, any>, interpolate: (template: string, ctx: any) => any): any;
+export declare function resolveValue<T>(value: T, ctx: JsonObject, interpolate: (template: string, ctx: JsonObject) => JsonValue): T | JsonValue;
 //# sourceMappingURL=base.d.ts.map

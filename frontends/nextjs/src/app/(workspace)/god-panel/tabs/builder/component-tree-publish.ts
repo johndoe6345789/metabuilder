@@ -8,6 +8,11 @@ import type { TreeNode } from './builder-registry'
 
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
+function pageId(tenant: string, path: string): string {
+  const slug = path.replace(/^\/+/, '').replace(/[^a-z0-9]+/gi, '_')
+  return `page_${tenant}_${slug.length > 0 ? slug : 'home'}`
+}
+
 export function useComponentTreePublish(tree: TreeNode) {
   const dispatch = useAppDispatch()
   const [publishing, setPublishing] = useState(false)
@@ -16,20 +21,34 @@ export function useComponentTreePublish(tree: TreeNode) {
     async (tenant = 'system', path = '/', title = 'Home'): Promise<boolean> => {
       setPublishing(true)
       try {
-        const res = await fetch(`${DBAL}/${tenant}/core/PageConfig`, {
+        const id = pageId(tenant, path)
+        const payload = {
+          id,
+          path,
+          title,
+          packageId: 'god_builder',
+          component: 'component_tree',
+          isPublished: true,
+          level: 1,
+          requiresAuth: false,
+          tenantId: tenant,
+          componentTree: JSON.stringify(tree),
+          updatedAt: Date.now(),
+        }
+        let res = await fetch(`${DBAL}/${tenant}/core/PageConfig`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            path,
-            title,
-            isActive: true,
-            level: 1,
-            requiresAuth: false,
-            tenantId: tenant,
-            componentTree: tree,
-          }),
+          body: JSON.stringify({ ...payload, createdAt: Date.now() }),
           signal: AbortSignal.timeout(6000),
         })
+        if (res.status === 409) {
+          res = await fetch(`${DBAL}/${tenant}/core/PageConfig/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+            signal: AbortSignal.timeout(6000),
+          })
+        }
         if (!res.ok) return false
         await snapshot('god.componentTree', tree, 'Published page')
         dispatch(clearDirty('tree'))
