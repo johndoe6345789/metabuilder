@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Button } from '@metabuilder/m3';
-import styles from '@/../../../scss/atoms/notifications.module.scss';
+import styles from '@scss/atoms/notifications.module.scss';
 import type { FilterType } from './hooks/useNotifications';
 
 const FILTERS: FilterType[] = [

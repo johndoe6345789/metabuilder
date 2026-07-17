@@ -5,7 +5,7 @@ import QmlComponents 1.0
 ColumnLayout {
     id: root
     objectName: "selector_encryption"
-    Accessible.role: Accessible.RadioGroup
+    Accessible.role: Accessible.Grouping
     Accessible.name: "Encryption"
 
     property var options: ["None", "TLS", "SSL"]

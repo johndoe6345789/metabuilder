@@ -5,9 +5,6 @@ import QmlComponents 1.0
 CDialog {
     id: root
     objectName: "dialog_delete_dropdown"
-    Accessible.role: Accessible.Dialog
-    Accessible.name: title
-    activeFocusOnTab: true
     title: "Delete Dropdown"
 
     property var dropdown: null
@@ -44,7 +41,6 @@ CDialog {
             CButton {
                 text: "Cancel"
                 variant: "ghost"
-                activeFocusOnTab: true
                 Accessible.role: Accessible.Button
                 Accessible.name: "Cancel"
                 Keys.onReturnPressed:
@@ -56,7 +52,6 @@ CDialog {
             CButton {
                 text: "Delete"
                 variant: "danger"
-                activeFocusOnTab: true
                 Accessible.role: Accessible.Button
                 Accessible.name: "Confirm delete"
                 Accessible.description:

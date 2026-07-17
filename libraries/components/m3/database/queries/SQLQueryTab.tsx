@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Box } from '../../layout';
 import { Paper } from '../../surfaces';
 import { Typography } from '../../data-display';
@@ -13,8 +13,14 @@ export type SQLQueryTabProps = {
   title?: string;
   description?: string;
   placeholder?: string;
+  label?: string;
+  executeLabel?: string;
+  hint?: string;
   testId?: string;
 };
+
+const HISTORY_KEY = 'pg-sql-history';
+const MAX_HISTORY = 10;
 
 function esc(s: string) {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -56,21 +62,51 @@ function highlightSQL(text: string): string {
   }).join('\n');
 }
 
+function loadHistory(): string[] {
+  if (typeof window === 'undefined') return [];
+  try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch { return []; }
+}
+
+function saveHistory(query: string, prev: string[]): string[] {
+  const next = [query, ...prev.filter(h => h !== query)].slice(0, MAX_HISTORY);
+  try { localStorage.setItem(HISTORY_KEY, JSON.stringify(next)); } catch {}
+  return next;
+}
+
 export function SQLQueryTab({
   onExecuteQuery,
   title = 'SQL Query Interface',
   description,
   placeholder = 'SELECT * FROM your_table LIMIT 10;',
+  label = 'SQL Query (SELECT only)',
+  executeLabel = 'Execute Query',
+  hint = 'Type a query above to execute',
   testId,
 }: SQLQueryTabProps) {
   const [queryText, setQueryText] = useState('');
   const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [history, setHistory] = useState<string[]>([]);
+  const [showHistory, setShowHistory] = useState(false);
   const preRef = useRef<HTMLPreElement>(null);
+
+  useEffect(() => { setHistory(loadHistory()); }, []);
 
   const handleExecute = async () => {
     if (!queryText.trim()) return;
     setLoading(true);
-    try { await onExecuteQuery(queryText); } finally { setLoading(false); }
+    try {
+      await onExecuteQuery(queryText);
+      setHistory(prev => saveHistory(queryText.trim(), prev));
+    } finally { setLoading(false); }
+  };
+
+  const handleCopy = () => {
+    if (!queryText) return;
+    navigator.clipboard.writeText(queryText).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    });
   };
 
   const syncScroll = (ta: HTMLTextAreaElement) => {
@@ -84,50 +120,59 @@ export function SQLQueryTab({
     <Box data-testid={testId} className={styles.root}>
       <Typography variant="h5" gutterBottom>{title}</Typography>
       {description && (
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          gutterBottom
-          className={styles.description}
-        >
+        <Typography variant="body2" color="text.secondary" gutterBottom
+          className={styles.description}>
           {description}
         </Typography>
       )}
       <Paper className={styles.card}>
         <Box className={styles.editorBlock}>
-          <label className={styles.editorLabel}>
-            SQL Query (SELECT only)
-          </label>
+          <div className={styles.editorHeader}>
+            <label className={styles.editorLabel}>{label}</label>
+            <Button size="small" variant="outlined" onClick={handleCopy}
+              disabled={!queryText}>
+              {copied ? '✓ Copied' : 'Copy'}
+            </Button>
+          </div>
           <div className="sql-editor-wrap">
-            <pre
-              ref={preRef}
-              className="sql-pre"
-              aria-hidden="true"
+            <pre ref={preRef} className="sql-pre" aria-hidden="true"
               /* eslint-disable-next-line react/no-danger */
-              dangerouslySetInnerHTML={{ __html: highlightSQL(queryText) + '\n' }}
-            />
-            <textarea
-              className="sql-ta"
-              value={queryText}
+              dangerouslySetInnerHTML={{ __html: highlightSQL(queryText) + '\n' }} />
+            <textarea className="sql-ta" value={queryText}
               onChange={e => setQueryText(e.target.value)}
               onScroll={e => syncScroll(e.currentTarget)}
-              placeholder={placeholder}
-              spellCheck={false}
-              rows={8}
-              style={{ width: '100%', boxSizing: 'border-box' }}
-            />
+              placeholder={placeholder} spellCheck={false} rows={8}
+              style={{ width: '100%', boxSizing: 'border-box' }} />
           </div>
         </Box>
         <Box className={styles.actions}>
-          <Button variant="contained" onClick={handleExecute} disabled={loading || !queryText.trim()}>
-            {loading ? <CircularProgress size={24} /> : 'Execute Query'}
+          <Button variant="contained" onClick={handleExecute}
+            disabled={loading || !queryText.trim()}>
+            {loading ? <CircularProgress size={24} /> : executeLabel}
           </Button>
+          {history.length > 0 && (
+            <Button size="small" variant="outlined"
+              onClick={() => setShowHistory(v => !v)}>
+              History ({history.length})
+            </Button>
+          )}
           {!queryText.trim() && !loading && (
-            <Typography variant="caption" color="text.secondary" className={styles.hint}>
-              Type a query above to execute
-            </Typography>
+            <Typography variant="caption" color="text.secondary"
+              className={styles.hint}>{hint}</Typography>
           )}
         </Box>
+        {showHistory && (
+          <Box className={styles.history}>
+            <Typography variant="caption" color="text.secondary"
+              className={styles.historyLabel}>Recent queries</Typography>
+            {history.map((q, i) => (
+              <button key={i} className={styles.historyItem}
+                onClick={() => { setQueryText(q); setShowHistory(false); }}>
+                {q.length > 80 ? q.slice(0, 80) + '…' : q}
+              </button>
+            ))}
+          </Box>
+        )}
       </Paper>
     </Box>
   );

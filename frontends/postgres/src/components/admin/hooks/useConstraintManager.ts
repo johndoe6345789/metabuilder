@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { BASE_PATH } from '@/lib/app-config';
 
 type DialogState = { open: boolean; mode: 'add' | 'delete' };
 
@@ -23,7 +24,7 @@ export function useConstraintManager(
   const fetchConstraints = useCallback(async () => {
     try {
       const response = await fetch(
-        `/api/admin/constraints?tableName=${selectedTable}`,
+        `${BASE_PATH}/api/admin/constraints?tableName=${encodeURIComponent(selectedTable)}`,
         { method: 'GET' },
       );
       if (response.ok) {

@@ -3,12 +3,12 @@
 // Synchronous JSON loader for Qt resource files
 function loadJson(path) {
     var xhr = new XMLHttpRequest()
-    xhr.open("GET", path, false)  // synchronous
-    xhr.send()
-    if (xhr.status === 200 || xhr.status === 0) {  // status 0 for local/qrc files
-        return JSON.parse(xhr.responseText)
-    }
-    console.warn("GodPanelConfig: failed to load", path, "status:", xhr.status)
+    try {
+        xhr.open("GET", path, false)
+        xhr.send()
+        if (xhr.status === 200 || xhr.status === 0)
+            return JSON.parse(xhr.responseText)
+    } catch(e) {}
     return []
 }
 

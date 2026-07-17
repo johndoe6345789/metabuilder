@@ -1,0 +1,35 @@
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 0;
+}
+
+.swatch {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 12px;
+  border: 1px solid color-mix(
+    in srgb,
+    var(--mat-sys-outline) 40%,
+    transparent
+  );
+}
+
+.label {
+  flex: 0 0 180px;
+  font-size: 0.8125rem;
+  color: var(--mat-sys-on-surface-variant, var(--mat-sys-on-surface));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  font-family: monospace;
+  font-size: 0.8125rem;
+}

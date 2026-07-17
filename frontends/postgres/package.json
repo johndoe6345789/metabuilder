@@ -1,7 +1,6 @@
 {
-  "name": "next-js-boilerplate",
-  "version": "1.0.24",
-  "author": "Ixartz (https://github.com/ixartz)",
+  "name": "postgres-dashboard",
+  "version": "1.6.7",
   "engines": {
     "node": ">=20"
   },
@@ -9,7 +8,7 @@
     "dev:spotlight": "npx @spotlightjs/spotlight",
     "dev:next": "next dev",
     "dev": "npm-run-all db-remote:neon db:migrate --parallel dev:*",
-    "build:next": "next build --webpack",
+    "build:next": "next build --turbopack",
     "build-local": "run-p db-server:memory build:next --race",
     "build": "run-s build:next",
     "start": "next start",
@@ -43,8 +42,12 @@
     "@clerk/nextjs": "^6.38.0",
     "@hookform/resolvers": "^5.2.2",
     "@logtape/logtape": "^2.0.2",
-    "@metabuilder/components": "file:../../components",
-    "@metabuilder/hooks": "file:../../hooks",
+    "@metabuilder/components": "file:../../libraries/components",
+    "@metabuilder/hooks": "file:../../libraries/hooks",
+    "@metabuilder/m3": "file:../../libraries/components/m3",
+    "@metabuilder/redux-persist": "file:../../libraries/redux/persist",
+    "@reduxjs/toolkit": "^2.11.2",
+    "react-redux": "^9.2.0",
     "@t3-oss/env-nextjs": "^0.13.10",
     "bcryptjs": "^3.0.3",
     "drizzle-orm": "^0.45.1",

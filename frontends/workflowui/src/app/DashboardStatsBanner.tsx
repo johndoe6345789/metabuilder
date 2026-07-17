@@ -10,8 +10,8 @@ import {
   PlayIcon,
   ErrorIcon,
   TimerIcon,
-} from '@/../../../icons/react';
-import styles from '@/../../../scss/atoms/dashboard.module.scss';
+} from '@icons/react';
+import styles from '@scss/atoms/dashboard.module.scss';
 import DashboardAchievementPreview from './DashboardAchievementPreview';
 
 const TODAY_STATS = {

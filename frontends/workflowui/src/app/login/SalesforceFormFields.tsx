@@ -4,7 +4,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import styles from '@/../../../scss/components/layout/salesforce-login.module.scss';
+import styles from '@scss/components/layout/salesforce-login.module.scss';
 import SalesforceCredentialFields from './SalesforceCredentialFields';
 
 interface SalesforceFormFieldsProps {

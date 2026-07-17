@@ -11,6 +11,11 @@ from cli.helpers import (
 
 
 def run_cmd(args: argparse.Namespace, config: dict) -> int:
+    if getattr(args, "list", False):
+        for svc in get_buildable_services():
+            print(f"  {svc}")
+        return 0
+
     defs = config["definitions"]
     base_images = defs["base_images"]
 

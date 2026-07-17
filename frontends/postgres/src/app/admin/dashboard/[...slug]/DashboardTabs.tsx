@@ -8,6 +8,8 @@ import SQLQueryTab from '@/components/admin/SQLQueryTab';
 import TableDataView from '@/components/admin/TableDataView';
 import TableManagerTab from '@/components/admin/TableManagerTab';
 import TablesTab from '@/components/admin/TablesTab';
+import { useTranslations } from 'next-intl';
+import { useBrowseLabels } from '@/hooks';
 import type { AdminNavItem } from '@/components/admin/AdminDrawerContent';
 
 type Props = {
@@ -16,6 +18,7 @@ type Props = {
   tables: any[];
   selectedTable: string;
   onTableClick: (t: string) => void;
+  onSchemaTableClick: (t: string) => void;
   onBack: () => void;
   onExecuteQuery: (q: string) => Promise<void>;
   onExecuteBuiltQuery: (p: any) => Promise<any>;
@@ -42,6 +45,8 @@ function TabPanel(
 }
 
 export default function DashboardTabs(p: Props) {
+  const browseLabels = useBrowseLabels();
+  const t = useTranslations('Admin');
   return (
     <>
       {p.navItems.map((item, i) => (
@@ -50,10 +55,14 @@ export default function DashboardTabs(p: Props) {
             p.selectedTable
               ? <TableDataView tableName={p.selectedTable} onBack={p.onBack} />
               : <TablesTab tables={p.tables} selectedTable={p.selectedTable}
-                  onTableClick={p.onTableClick} />
+                  onTableClick={p.onTableClick}
+                  title={browseLabels.title} labels={browseLabels} />
           )}
           {item.id === 'query' && (
-            <SQLQueryTab onExecuteQuery={p.onExecuteQuery} />
+            <SQLQueryTab onExecuteQuery={p.onExecuteQuery}
+              title={t('sqlQuery.title')} label={t('sqlQuery.label')}
+              placeholder={t('sqlQuery.placeholder')}
+              executeLabel={t('sqlQuery.execute')} hint={t('sqlQuery.hint')} />
           )}
           {item.id === 'query-builder' && (
             <QueryBuilderTab tables={p.tables}
@@ -62,10 +71,11 @@ export default function DashboardTabs(p: Props) {
           {item.id === 'table-manager' && (
             <TableManagerTab tables={p.tables}
               onCreateTable={p.onCreateTable} onDropTable={p.onDropTable}
-              onTableClick={p.onTableClick} />
+              onTableClick={p.onSchemaTableClick} />
           )}
           {item.id === 'column-manager' && (
             <ColumnManagerTab tables={p.tables}
+              initialTable={p.selectedTable}
               onAddColumn={p.onAddColumn} onModifyColumn={p.onModifyColumn}
               onDropColumn={p.onDropColumn} />
           )}

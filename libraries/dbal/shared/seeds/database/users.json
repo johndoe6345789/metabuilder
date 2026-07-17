@@ -1,7 +1,7 @@
 {
   "entity": "User",
   "version": "1.0",
-  "description": "Default system users created during bootstrap",
+  "description": "Default system users created during bootstrap — one per role level (0-5)",
   "records": [
     {
       "id": "user_supergod_system",
@@ -10,9 +10,22 @@
       "role": "supergod",
       "isInstanceOwner": true,
       "profilePicture": null,
-      "bio": "System Super Administrator",
+      "bio": "System Super Administrator (Level 5)",
       "createdAt": 0,
-      "tenantId": null,
+      "tenantId": "system",
+      "passwordChangeTimestamp": null,
+      "firstLogin": false
+    },
+    {
+      "id": "user_god_system",
+      "username": "god",
+      "email": "god@metabuilder.local",
+      "role": "god",
+      "isInstanceOwner": false,
+      "profilePicture": null,
+      "bio": "God Builder — application architect (Level 4)",
+      "createdAt": 0,
+      "tenantId": "system",
       "passwordChangeTimestamp": null,
       "firstLogin": false
     },
@@ -23,9 +36,35 @@
       "role": "admin",
       "isInstanceOwner": false,
       "profilePicture": null,
-      "bio": "System Administrator",
+      "bio": "System Administrator (Level 3)",
       "createdAt": 0,
-      "tenantId": null,
+      "tenantId": "system",
+      "passwordChangeTimestamp": null,
+      "firstLogin": false
+    },
+    {
+      "id": "user_moderator_system",
+      "username": "moderator",
+      "email": "moderator@metabuilder.local",
+      "role": "moderator",
+      "isInstanceOwner": false,
+      "profilePicture": null,
+      "bio": "Content moderator (Level 2)",
+      "createdAt": 0,
+      "tenantId": "system",
+      "passwordChangeTimestamp": null,
+      "firstLogin": false
+    },
+    {
+      "id": "user_demo_system",
+      "username": "demo",
+      "email": "demo@metabuilder.local",
+      "role": "user",
+      "isInstanceOwner": false,
+      "profilePicture": null,
+      "bio": "Demo user account (Level 1)",
+      "createdAt": 0,
+      "tenantId": "system",
       "passwordChangeTimestamp": null,
       "firstLogin": false
     },
@@ -36,9 +75,9 @@
       "role": "user",
       "isInstanceOwner": false,
       "profilePicture": null,
-      "bio": "Test user for E2E tests and development",
+      "bio": "Test user for E2E tests and development (Level 1)",
       "createdAt": 0,
-      "tenantId": null,
+      "tenantId": "system",
       "passwordChangeTimestamp": null,
       "firstLogin": false
     }

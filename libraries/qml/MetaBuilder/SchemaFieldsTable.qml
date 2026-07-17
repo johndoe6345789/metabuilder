@@ -15,7 +15,7 @@ CCard {
     signal removeFieldClicked()
 
     ColumnLayout {
-        anchors.fill: parent
+        Layout.fillWidth: true
         anchors.margins: 16
         spacing: 12
 
@@ -50,7 +50,7 @@ CCard {
             radius: 4
 
             RowLayout {
-                anchors.fill: parent
+                Layout.fillWidth: true
                 anchors.leftMargin: 12
                 anchors.rightMargin: 12
                 spacing: 8

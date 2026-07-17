@@ -118,7 +118,7 @@ describe('FavoriteWorkflowFilters', () => {
   it('calls setSortBy when sort changes', () => {
     const setSortBy = jest.fn();
     render(<FavoriteWorkflowFilters {...props} setSortBy={setSortBy} />);
-    // The select is a native <select> in fakeMuiMock
+    // The select is a native <select> in m3Mock
     const select = document.querySelector('select') as HTMLSelectElement;
     if (select) {
       fireEvent.change(select, { target: { value: 'name' } });

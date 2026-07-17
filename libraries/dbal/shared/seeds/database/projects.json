@@ -8,7 +8,7 @@
       "id": "proj_ecommerce_dash",
       "tenantId": "default",
       "name": "E-Commerce Dashboard",
-      "description": "Full-featured admin dashboard for the e-commerce package with product management, order tracking, inventory alerts, and sales analytics. Built with JSON-defined components and FakeMUI.",
+      "description": "Full-featured admin dashboard for the e-commerce package with product management, order tracking, inventory alerts, and sales analytics. Built with JSON-defined components and M3.",
       "version": "2.1.0",
       "status": "active",
       "createdBy": "user_testuser",

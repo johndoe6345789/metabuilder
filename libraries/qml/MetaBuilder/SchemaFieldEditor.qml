@@ -12,7 +12,7 @@ CCard {
     signal fieldUpdated(string key, var value)
 
     ColumnLayout {
-        anchors.fill: parent
+        Layout.fillWidth: true
         anchors.margins: 16
         spacing: 14
 

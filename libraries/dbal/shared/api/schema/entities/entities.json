@@ -5,6 +5,7 @@
     { "$ref": "./core/workflow.json" },
     { "$ref": "./core/package.json" },
     { "$ref": "./core/ui_page.json" },
+    { "$ref": "./core/entity_schema.json" },
     { "$ref": "./workspace.json" },
     { "$ref": "./access/credential.json" },
     { "$ref": "./access/component_node.json" },

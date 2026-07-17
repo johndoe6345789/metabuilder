@@ -1,0 +1,55 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 24px 8px;
+  min-width: 320px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.fullRow {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.toggleRow {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.toggleItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+
+.choicesSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.choiceRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.choiceAdd {
+  margin-top: 4px;
+}
+
+.label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  opacity: 0.75;
+  margin-bottom: 2px;
+}

@@ -5,10 +5,11 @@ import styles from '../../../scss/atoms/form.module.scss'
 export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   testId?: string
   error?: boolean
+  fullWidth?: boolean
 }
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ error, testId, className = '', ...props }, ref) => (
+  ({ error, testId, fullWidth: _fullWidth, className = '', ...props }, ref) => (
     <textarea
       ref={ref}
       className={classNames(styles.textarea, error && styles.textareaError, className)}

@@ -89,12 +89,19 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
 
     if command in ("down", "stop"):
         log_info(f"Stopping MetaBuilder stack ({mode_label})...")
-        run_shell(docker_compose(*profiles, "down", dev=dev))
+        result = run_shell(docker_compose(*profiles, "down", dev=dev))
+        if result.returncode != 0:
+            log_err("docker compose down failed")
+            return result.returncode
         log_ok("Stack stopped")
         return 0
 
     if command == "restart":
-        run_shell(docker_compose(*profiles, "restart", dev=dev))
+        targets = getattr(args, "services", []) or []
+        result = run_shell(docker_compose(*profiles, "restart", *targets, dev=dev))
+        if result.returncode != 0:
+            log_err("docker compose restart failed")
+            return result.returncode
         log_ok("Stack restarted")
         return 0
 
@@ -132,14 +139,35 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
             log_ok(f"{node_tag} ready")
 
         _pull_external_images(profiles, config)
-        run_shell(docker_compose(*profiles, "up", "-d", "--build", dev=dev))
+        result = run_shell(docker_compose(*profiles, "up", "-d", "--build", dev=dev))
+        if result.returncode != 0:
+            log_err("docker compose build/up failed — stack may be partially deployed")
+            return result.returncode
         log_ok("Stack built and started")
         return 0
 
     if command in ("up", "start"):
+        targets = getattr(args, "services", []) or []
+        if targets:
+            # Targeted redeploy — skip pre-pull, just bring up named services
+            log_info(f"Redeploying: {' '.join(targets)}")
+            result = run_shell(docker_compose(*profiles, "up", "-d", *targets, dev=dev))
+            if result.returncode != 0:
+                log_err("docker compose up failed")
+                return result.returncode
+            log_ok(f"Done: {' '.join(targets)}")
+            return 0
+
         log_info(f"Starting MetaBuilder stack ({mode_label})...")
         _pull_external_images(profiles, config)
-        run_shell(docker_compose(*profiles, "up", "-d", dev=dev))
+        result = run_shell(docker_compose(*profiles, "up", "-d", dev=dev))
+        if result.returncode != 0:
+            # A non-zero exit means at least one service failed to (re)create —
+            # e.g. an image pull error or a container-name conflict. Fail loudly
+            # so the deploy job goes red instead of leaving stale containers
+            # running behind a green build.
+            log_err("docker compose up failed — stack may be partially deployed")
+            return result.returncode
         print(f"\n{GREEN}Stack started!{NC}\n")
         _wait_for_healthy(profiles, args)
         return 0

@@ -3,7 +3,7 @@
  * Re-exports from component-registry-m3.ts and component-registry-subcomponents.ts.
  */
 export {
-  fakeMuiExplicitComponents,
+  m3ExplicitComponents,
 } from './component-registry-m3'
 export {
   componentTreeSubComponents,

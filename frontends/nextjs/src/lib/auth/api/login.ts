@@ -45,7 +45,7 @@ export async function login(identifier: string, password: string): Promise<Login
       }
     })
 
-    let user = users.data[0] as DbalUserRecord | undefined
+    let user = users.data[0] as unknown as DbalUserRecord | undefined
 
     // If not found by username, try email
     if (user === undefined) {
@@ -54,7 +54,7 @@ export async function login(identifier: string, password: string): Promise<Login
           email: identifier
         }
       })
-      user = usersByEmail.data[0] as DbalUserRecord | undefined
+      user = usersByEmail.data[0] as unknown as DbalUserRecord | undefined
     }
 
     if (user === undefined) {
@@ -65,9 +65,30 @@ export async function login(identifier: string, password: string): Promise<Login
       }
     }
 
-    // Get credential for this user
-    const credResult = await db.credentials.list({ filter: { username: user.username } })
-    const credential = (credResult.data[0] as DbalCredentialRecord | undefined) ?? null
+    // Get credential — Credential entity lives in the 'access' package, not 'core'
+    const credUrl = `${
+      process.env.DBAL_API_URL ??
+      process.env.DBAL_ENDPOINT ??
+      'http://localhost:8080'
+    }/system/access/Credential?filter.username=${encodeURIComponent(user.username)}`
+
+    let credential: DbalCredentialRecord | null = null
+    try {
+      const credRes = await fetch(credUrl, {
+        headers: { Accept: 'application/json' },
+        cache: 'no-store' as RequestCache,
+      })
+      if (credRes.ok) {
+        const raw = await credRes.json() as { data?: { data?: DbalCredentialRecord[] } }
+        credential = raw?.data?.data?.[0] ?? null
+      }
+    } catch {
+      // fallback: try via db.credentials (core package) in case routing changed
+      const credResult = await db.credentials.list({
+        filter: { username: user.username },
+      })
+      credential = (credResult.data[0] as unknown as DbalCredentialRecord | undefined) ?? null
+    }
 
     if (credential?.passwordHash === undefined) {
       return {

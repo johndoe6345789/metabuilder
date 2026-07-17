@@ -1,0 +1,32 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+  border: 1px solid var(--border, #222);
+}
+
+.titleBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: color-mix(in srgb, #000 80%, var(--card));
+  font-size: 0.85rem;
+  color: #ddd;
+
+  :global(.material-symbols-rounded) {
+    font-size: 16px;
+    font-variation-settings: 'FILL' 1;
+    color: var(--primary, #6750A4);
+  }
+}
+
+.video {
+  width: 100%;
+  display: block;
+  background: #000;
+  max-height: 480px;
+}

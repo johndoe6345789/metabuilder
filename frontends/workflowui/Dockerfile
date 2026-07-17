@@ -7,6 +7,8 @@
 ARG BASE_REGISTRY=metabuilder
 FROM ${BASE_REGISTRY}/base-node-deps:latest AS builder
 
+COPY package.json .npmrc ./
+
 # ── Shared packages (resolved by transpilePackages + turbopack resolveAlias) ──
 # Each COPY targets only the source tree that workflowui actually imports.
 #
@@ -26,7 +28,7 @@ COPY libraries/scss/ ./libraries/scss/
 # translations (i18n strings)
 COPY libraries/translations/ ./libraries/translations/
 
-# components + FakeMUI (UI component library)
+# components + M3 (UI component library)
 COPY libraries/components/ ./libraries/components/
 
 # ── Redux packages (all — small TS source, avoids transitive dep breakage) ───
@@ -59,7 +61,7 @@ COPY frontends/workflowui/ ./frontends/workflowui/
 # source has been COPYed in, re-run the full workspace install so npm rebuilds
 # the complete node_modules/@metabuilder/* symlink tree (e.g. @metabuilder/types
 # for redux/slices, redux/adapters, redux/hooks-async, api-clients, persist).
-RUN npm install --ignore-scripts --legacy-peer-deps
+RUN npm install --ignore-scripts
 
 # Build workspace library packages
 RUN for ws in libraries/redux/core libraries/redux/slices \

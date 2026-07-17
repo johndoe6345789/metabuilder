@@ -13,14 +13,14 @@ Rectangle {
     property string nfName: ""; property string nfType: "string"
     property bool nfR: false; property string nfDv: ""; property string nfDc: ""
     property var schemas: SDBAL.loadJson(Qt.resolvedUrl(
-        "qmllib/MetaBuilder/data/schema-mock.json"))
+        "qmllib/MetaBuilder/data/schema-mock.json")) || []
     property var fieldTypes: ["string","integer","number",
         "boolean","text","json","enum","datetime","date","uuid","array"]
     function cs() { return SDBAL.currentSchema(schemas, selSch) }
     function cf() { return SDBAL.currentFields(schemas, selSch) }
     function loadSchemas() {
         SDBAL.loadSchemas(dbal, function(p) {
-            schemas = p; selSch = 0; selFld = -1 })
+            schemas = p || []; selSch = 0; selFld = -1 })
     }
     Component.onCompleted: loadSchemas()
     function addField() {

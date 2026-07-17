@@ -42,6 +42,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onClo
       const timer = setTimeout(() => onClose(id), duration)
       return () => clearTimeout(timer)
     }
+    return undefined
   }, [id, duration, onClose])
 
   const rootClass = classNames(

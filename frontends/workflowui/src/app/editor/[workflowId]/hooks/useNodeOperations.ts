@@ -5,7 +5,7 @@
 
 'use client';
 
-import type { Workflow } from '@/../../../components/workflow-editor';
+import type { Workflow } from '@metabuilder/components/workflow-editor';
 import type { DrawingConnection } from './useCanvasInteraction';
 import { useNodeDrag } from './useNodeDrag';
 import { useNodeConnections } from './useNodeConnections';

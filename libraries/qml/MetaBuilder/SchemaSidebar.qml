@@ -12,7 +12,7 @@ CCard {
     signal itemClicked(int index)
 
     ColumnLayout {
-        anchors.fill: parent
+        Layout.fillWidth: true
         anchors.margins: 16
         spacing: 10
 
@@ -38,7 +38,7 @@ CCard {
 
         CText {
             variant: "caption"
-            text: root.schemas.length + " schemas total"
+            text: (root.schemas || []).length + " schemas total"
             color: Theme.border
         }
     }

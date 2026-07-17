@@ -25,13 +25,15 @@ Rectangle {
     property bool isDirty: false
     function loadSeedData() {
         var xhr = new XMLHttpRequest()
-        xhr.open("GET", Qt.resolvedUrl(
-            "config/smtp-templates.json"), false)
-        xhr.send()
-        if (xhr.status === 200) {
-            var d = JSON.parse(xhr.responseText)
-            emailTemplates = d.emailTemplates
-            encryptionOptions = d.encryptionOptions }
+        try {
+            xhr.open("GET", Qt.resolvedUrl(
+                "config/smtp-templates.json"), false)
+            xhr.send()
+            if (xhr.status === 200 || xhr.status === 0) {
+                var d = JSON.parse(xhr.responseText)
+                emailTemplates = d.emailTemplates
+                encryptionOptions = d.encryptionOptions }
+        } catch(e) {}
     }
     Component.onCompleted: loadSeedData()
     Timer { id: connTimer; interval: 1500; repeat: false
@@ -68,7 +70,7 @@ Rectangle {
             CCard {
                 Layout.fillWidth: true
                 ColumnLayout {
-                    anchors.fill: parent; anchors.margins: 16; spacing: 12
+                    Layout.fillWidth: true; spacing: 12
                     CText { variant: "h4"; text: "Status" }
                     FlexRow {
                         Layout.fillWidth: true; spacing: 16

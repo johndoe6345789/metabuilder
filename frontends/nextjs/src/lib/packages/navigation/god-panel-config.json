@@ -7,6 +7,18 @@
       "description": "System health and quick actions"
     },
     {
+      "id": "rendition",
+      "label": "Rendition",
+      "icon": "architecture",
+      "description": "Tenant shell and control panel designer"
+    },
+    {
+      "id": "plan",
+      "label": "Plan",
+      "icon": "checklist",
+      "description": "Plan features and tasks (kanban)"
+    },
+    {
       "id": "schemas",
       "label": "Schemas",
       "icon": "database",
@@ -33,7 +45,7 @@
     {
       "id": "components",
       "label": "Components",
-      "icon": "components",
+      "icon": "widgets",
       "description": "Component hierarchy and JSON renderer"
     },
     {
@@ -59,6 +71,30 @@
       "label": "Theme",
       "icon": "palette",
       "description": "Theme and styling configuration"
+    },
+    {
+      "id": "styles",
+      "label": "Styles",
+      "icon": "brush",
+      "description": "Reusable CSS class manager"
+    },
+    {
+      "id": "config",
+      "label": "Config",
+      "icon": "tune",
+      "description": "Dropdown lists and email (SMTP) settings"
+    },
+    {
+      "id": "test",
+      "label": "Tests",
+      "icon": "science",
+      "description": "Point-and-click unit testing"
+    },
+    {
+      "id": "deploy",
+      "label": "Deploy",
+      "icon": "rocket_launch",
+      "description": "Export, import and publish the project"
     }
   ],
   "tools": [

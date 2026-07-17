@@ -14,7 +14,7 @@ CCard {
     signal radiusLargeEdited(int value)
 
     ColumnLayout {
-        anchors.fill: parent; anchors.margins: 20
+        Layout.fillWidth: true
         spacing: 16
 
         CText { variant: "h4"; text: "Border Radius" }

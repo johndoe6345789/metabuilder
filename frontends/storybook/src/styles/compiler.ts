@@ -151,7 +151,7 @@ export class StylesCompiler {
     const { predicate } = selector;
     let css = '';
 
-    // Map component types to FakeMUI classes
+    // Map component types to M3 classes
     const typeMap: Record<string, string> = {
       'Text': '.text',
       'Button': '.button',

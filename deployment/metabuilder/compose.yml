@@ -289,7 +289,7 @@ services:
   # DBAL Daemon - C++ backend
   dbal:
     build:
-      context: ../../dbal
+      context: ../../libraries/dbal
       dockerfile: production/build-config/Dockerfile
       args:
         BUILD_TYPE: Release
@@ -765,8 +765,8 @@ services:
 
   dockerterminal:
     build:
-      context: ../../frontends/dockerterminal/frontend
-      dockerfile: Dockerfile
+      context: ../..
+      dockerfile: frontends/dockerterminal/frontend/Dockerfile
       args:
         NEXT_PUBLIC_API_URL: /terminal-api
     container_name: metabuilder-dockerterminal

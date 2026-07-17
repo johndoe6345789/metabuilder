@@ -10,7 +10,7 @@ import { Button } from '@metabuilder/m3';
 import {
   EditIcon,
   DeleteIcon,
-} from '@/../../../icons/react';
+} from '@icons/react';
 
 interface WorkflowCardActionsProps {
   workflowId: string;

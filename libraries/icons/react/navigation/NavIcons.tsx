@@ -1,6 +1,6 @@
 /**
  * Navigation Icons - All navigation icons for sidebar
- * Icons moved from FakeMUI to consolidate in project root /icons/
+ * Icons moved from M3 to consolidate in project root /icons/
  */
 
 import React from 'react';
@@ -9,7 +9,7 @@ import type { IconProps } from '../m3/Icon';
 // Re-export IconProps for consumers
 export type { IconProps };
 
-// Standard Material Design icons (imported from FakeMUI)
+// Standard Material Design icons (imported from M3)
 export { Home as HomeIcon } from '../m3/Home';
 export { Workflow as WorkflowIcon } from '../m3/Workflow';
 export { Star as StarIcon } from '../m3/Star';

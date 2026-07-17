@@ -85,7 +85,7 @@ export const darkTheme = {
 
   // Layout
   '--spacing-unit': `${layout.spacing}px`,
-  '--border-radius': '8px',
+  '--border-radius': '16px',
   '--border-radius-none': `${layout.borderRadius.none}px`,
   '--border-radius-sm': `${layout.borderRadius.sm}px`,
   '--border-radius-md': `${layout.borderRadius.md}px`,

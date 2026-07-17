@@ -65,12 +65,24 @@
 }
 
 .scrollable {
+  .mat-mdc-tab-header {
+    // Angular Material clips the header; allow children to scroll horizontally.
+    overflow: visible !important;
+  }
+  .mat-mdc-tab-label-container {
+    // Angular Material sets overflow:hidden via paginated-tab-header-container mixin.
+    // Override to enable native horizontal scroll when tabs exceed container width.
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+  }
   .mat-mdc-tab {
     flex-shrink: 0;
   }
 }
 
-// Secondary tabs (pill style) - FakeMUI variant not in Angular Material
+// Secondary tabs (pill style) - M3 variant not in Angular Material
 .secondary {
   border-bottom: none;
   background: var(--mat-sys-surface-container);
@@ -137,6 +149,16 @@
 
 // Tab panel animation
 .tabPanel {
+  // Angular Material's tab-body.module sets position:absolute via @mixin fill,
+  // which escapes the normal flow when no positioned ancestor wraps tab panels.
+  // Override so tab panels stay in-flow in React's non-animation tab pattern.
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  height: auto !important;
+  overflow: visible !important;
   animation: tabFadeIn var(--mat-sys-motion-duration-short4, 200ms) var(--mat-sys-motion-easing-emphasized-decelerate, cubic-bezier(0.2, 0, 0, 1));
 }
 

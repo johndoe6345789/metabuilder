@@ -15,7 +15,7 @@ CCard {
     signal channelSelected(int index)
 
     ColumnLayout {
-        anchors.fill: parent
+        Layout.fillWidth: true
         anchors.margins: 16
         spacing: 12
 

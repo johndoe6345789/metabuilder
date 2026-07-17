@@ -6,9 +6,6 @@ import QmlComponents 1.0
 CDialog {
     id: dlg
     objectName: "dialog_create_schema"
-    Accessible.role: Accessible.Dialog
-    Accessible.name: title
-    activeFocusOnTab: true
     title: "Create New Schema"
     property string schemaName: ""
     property string schemaDescription: ""
@@ -22,7 +19,6 @@ CDialog {
             placeholderText: "e.g. Invoice"
             text: dlg.schemaName
             Layout.fillWidth: true
-            activeFocusOnTab: true
             Accessible.role: Accessible.EditableText
             Accessible.name: "Schema Name"
             onTextChanged:
@@ -34,7 +30,6 @@ CDialog {
                 + " of this schema"
             text: dlg.schemaDescription
             Layout.fillWidth: true
-            activeFocusOnTab: true
             Accessible.role: Accessible.EditableText
             Accessible.name: "Schema Description"
             onTextChanged:
@@ -46,7 +41,6 @@ CDialog {
             CButton {
                 text: "Cancel"
                 variant: "ghost"
-                activeFocusOnTab: true
                 Accessible.role: Accessible.Button
                 Accessible.name: "Cancel"
                 Keys.onReturnPressed: {
@@ -70,7 +64,6 @@ CDialog {
                 variant: "primary"
                 enabled:
                     dlg.schemaName.trim() !== ""
-                activeFocusOnTab: true
                 Accessible.role: Accessible.Button
                 Accessible.name: "Create schema"
                 Keys.onReturnPressed: {

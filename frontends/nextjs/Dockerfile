@@ -7,6 +7,8 @@
 ARG BASE_REGISTRY=metabuilder
 FROM ${BASE_REGISTRY}/base-node-deps:latest AS builder
 
+COPY package.json .npmrc ./
+
 # ── Shared packages (resolved by transpilePackages + webpack aliases) ────────
 # Each COPY targets only the source tree that nextjs actually imports.
 #
@@ -19,7 +21,7 @@ COPY libraries/icons/ ./libraries/icons/
 # scss (Material 3 SCSS, theme, atoms — loaded by sassOptions)
 COPY libraries/scss/ ./libraries/scss/
 
-# components + FakeMUI (UI component library)
+# components + M3 (UI component library)
 COPY libraries/components/ ./libraries/components/
 
 # workflow (DAG engine — type imports + components package)
@@ -54,6 +56,10 @@ COPY libraries/redux/persist/ ./libraries/redux/persist/
 COPY libraries/redux/services/ ./libraries/redux/services/
 COPY libraries/redux/timing-utils/ ./libraries/redux/timing-utils/
 
+# ── Package design tokens (tokens.json drives all CSS vars) ─────────────────
+# Only styles subdirs needed; packages/ root contains large non-style assets
+COPY packages/ ./packages/
+
 # ── Frontend App (the app itself) ────────────────────────────────────────────
 COPY frontends/nextjs/ ./frontends/nextjs/
 
@@ -62,7 +68,7 @@ COPY frontends/nextjs/ ./frontends/nextjs/
 # source has been COPYed in, re-run the full workspace install so npm rebuilds
 # the complete node_modules/@metabuilder/* symlink tree (e.g. @metabuilder/types
 # for redux/slices, redux/adapters, redux/hooks-async, api-clients, persist).
-RUN npm install --ignore-scripts --legacy-peer-deps
+RUN npm install --ignore-scripts
 
 # Build workspace library packages
 RUN for ws in libraries/redux/core libraries/redux/slices \
@@ -72,7 +78,12 @@ RUN for ws in libraries/redux/core libraries/redux/slices \
     npm run build -w "$ws" --if-present 2>&1 || { echo "ERROR: $ws build failed"; exit 1; }; \
 done
 
-# Build the app
+# Build the app (NEXT_PUBLIC_* vars baked into bundle at build time).
+# Relative /api/dbal so the browser reaches the DBAL same-origin via nginx on
+# any host (localhost, metabuilder.wardcrew.com, …). An absolute domain breaks
+# cross-origin everywhere else and was the cause of "DBAL Offline".
+ARG NEXT_PUBLIC_DBAL_API_URL=/api/dbal
+ENV NEXT_PUBLIC_DBAL_API_URL=$NEXT_PUBLIC_DBAL_API_URL
 RUN cd frontends/nextjs && npx next build --turbopack
 
 # --- Runtime stage ---
@@ -81,6 +92,8 @@ WORKDIR /app
 
 COPY --from=builder /app/frontends/nextjs/.next/standalone ./
 COPY --from=builder /app/frontends/nextjs/.next/static ./frontends/nextjs/.next/static
+# Package tokens available at runtime for /api/packages/styles
+COPY --from=builder /app/packages ./packages
 
 ENV NODE_ENV=production
 ENV PORT=3000

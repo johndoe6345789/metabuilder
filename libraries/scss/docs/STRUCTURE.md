@@ -1,11 +1,11 @@
-# FakeMUI Directory Structure
+# M3 Directory Structure
 
 **Organized by implementation type** - all code preserved and well-organized
 
 ## Directory Map
 
 ```
-fakemui/
+m3/
 ├── react/                          # React TypeScript Components (Production)
 │   └── components/                 # 145 React components + Python bindings
 │       ├── atoms/                  # Basic building blocks (9)
@@ -123,15 +123,15 @@ fakemui/
 ### For Web (React)
 ```typescript
 // Main export with all components
-import { Button, Dialog, TextField } from '@metabuilder/fakemui'
+import { Button, Dialog, TextField } from '@metabuilder/m3'
 
 // Direct imports (when tree-shaking enabled)
-import { Button } from '@metabuilder/fakemui/react/components/inputs'
+import { Button } from '@metabuilder/m3/react/components/inputs'
 ```
 
 ### For Desktop (QML)
 ```qml
-import FakeMUI 1.0
+import M3 1.0
 
 Button {
     text: "Click me"
@@ -140,8 +140,8 @@ Button {
 
 ### For Python
 ```python
-from fakemui.inputs import Button
-from fakemui.surfaces import Card
+from m3.inputs import Button
+from m3.surfaces import Card
 ```
 
 ## File Organization Principles

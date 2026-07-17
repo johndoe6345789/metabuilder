@@ -14,7 +14,7 @@ Complete technical architecture for the WorkflowUI visual workflow editor.
 │  ├─────────────────────────────────────────────────────┤   │
 │  │                                                     │   │
 │  │  ┌────────────────────────────────────────────┐    │   │
-│  │  │  Pages & Components (FakeMUI)             │    │   │
+│  │  │  Pages & Components (M3)             │    │   │
 │  │  │  - Dashboard                               │    │   │
 │  │  │  - Editor (Canvas + Panels)               │    │   │
 │  │  │  - Properties Panel                        │    │   │
@@ -94,7 +94,7 @@ app/
 - `Editor/NodePanel`: Add nodes to canvas
 - `Editor/Properties`: Edit selected node parameters
 
-**UI Components (FakeMUI):**
+**UI Components (M3):**
 - `Button`, `Input`, `Modal`, `Dialog`
 - `Sidebar`, `Tabs`, `Tooltip`
 - `Card`, `List`, `Grid`

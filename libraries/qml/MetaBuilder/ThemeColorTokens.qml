@@ -58,8 +58,7 @@ CCard {
     ]
 
     ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: 20
+        Layout.fillWidth: true
         spacing: 16
 
         FlexRow {

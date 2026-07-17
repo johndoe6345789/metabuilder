@@ -175,9 +175,9 @@ Three core workflows handle async operations:
 
 ## Integration with Other Packages
 
-### FakeMUI Components
+### M3 Components
 
-The email client uses FakeMUI components from `@metabuilder/fakemui`:
+The email client uses M3 components from `@metabuilder/m3`:
 
 ```typescript
 import {
@@ -189,10 +189,10 @@ import {
   MailboxLayout,
   SyncStatusBadge,
   AccountTabs
-} from '@metabuilder/fakemui'
+} from '@metabuilder/m3'
 ```
 
-For full FakeMUI email component library, see `fakemui/react/components/email/`.
+For full M3 email component library, see `m3/react/components/email/`.
 
 ### Redux State Management
 
@@ -312,10 +312,10 @@ Users configure email accounts via the Settings page:
 4. Register in `package.json` exports
 
 **New Component?**
-1. Create in `@metabuilder/fakemui` under `react/components/email/`
+1. Create in `@metabuilder/m3` under `react/components/email/`
 2. Follow component categories (atoms, inputs, surfaces, data-display, feedback, layout, navigation)
 3. Include ARIA labels and accessibility attributes
-4. Export from `fakemui/index.ts`
+4. Export from `m3/index.ts`
 5. Document props and behavior
 
 **New Database Field?**
@@ -416,7 +416,7 @@ packages/email_client/
 ## References
 
 - **DBAL Entities**: `dbal/shared/api/schema/entities/packages/email_*.yaml`
-- **FakeMUI Components**: `fakemui/react/components/email/`
+- **M3 Components**: `m3/react/components/email/`
 - **Redux Integration**: `redux/hooks-forms/` (for form handling)
 - **Workflow Engine**: `workflow/executor/` and `workflow/plugins/`
 - **API Patterns**: `/docs/RATE_LIMITING_GUIDE.md`

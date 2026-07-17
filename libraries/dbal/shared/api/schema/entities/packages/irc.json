@@ -73,7 +73,7 @@
         "description": "Creation timestamp"
       },
       "createdBy": {
-        "type": "uuid",
+        "type": "string",
         "nullable": true,
         "description": "Creator user ID"
       }
@@ -151,7 +151,7 @@
         "description": "Channel this message belongs to"
       },
       "userId": {
-        "type": "uuid",
+        "type": "string",
         "required": true,
         "index": true,
         "description": "User who sent the message"
@@ -258,7 +258,7 @@
         "description": "Channel ID"
       },
       "userId": {
-        "type": "uuid",
+        "type": "string",
         "required": true,
         "index": true,
         "description": "User ID"

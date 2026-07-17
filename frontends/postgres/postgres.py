@@ -30,7 +30,7 @@ Features:
 Tech Stack:
   - Next.js 14+
   - React 18/19
-  - Material UI (migrate to FakeMUI planned)
+  - Material UI (migrate to M3 planned)
   - PostgreSQL client
 
 Examples:

@@ -6,8 +6,8 @@
 
 import React from 'react';
 import { Button } from '@metabuilder/m3';
-import { FolderIcon, AddIcon } from '@/../../../icons/react';
-import styles from '@/../../../scss/atoms/dashboard.module.scss';
+import { FolderIcon, AddIcon } from '@icons/react';
+import styles from '@scss/atoms/dashboard.module.scss';
 
 interface WorkspaceEmptyStateProps {
   onCreateWorkspace: () => void;

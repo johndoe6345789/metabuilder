@@ -2,7 +2,7 @@ pragma Singleton
 import QtQuick
 
 /**
- * Theme.qml - Unified theme system for fakemui components
+ * Theme.qml - Unified theme system for m3 components
  * Combines Material-UI style properties with React app's multi-theme support
  * 
  * This singleton provides themed colors while StyleVariables provides

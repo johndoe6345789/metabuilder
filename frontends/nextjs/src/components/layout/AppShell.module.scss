@@ -1,0 +1,83 @@
+.shell {
+  --app-sidebar-width: 240px;
+
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  grid-template-columns: 0 minmax(0, 1fr);
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--mat-sys-primary) 5%, transparent),
+      transparent 280px
+    ),
+    var(--mat-sys-background);
+  transition: grid-template-columns 180ms ease;
+}
+
+.sidebarOpen {
+  grid-template-columns: var(--app-sidebar-width) minmax(0, 1fr);
+}
+
+.sidebarSlot {
+  grid-row: 1 / 4;
+  grid-column: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  z-index: 1300;
+}
+
+.sidebarSlot :global(aside) {
+  height: 100%;
+}
+
+.appBarSlot {
+  grid-row: 1;
+  grid-column: 2;
+  container-type: inline-size;
+  min-width: 0;
+  z-index: 1200;
+}
+
+.bannerSlot {
+  grid-row: 2;
+  grid-column: 2;
+  min-width: 0;
+}
+
+.body {
+  grid-row: 3;
+  grid-column: 2;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+  padding: 24px;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--mat-sys-surface-tint) 4%, transparent),
+      transparent 340px
+    ),
+    var(--mat-sys-background, #f4f0f9);
+  color: var(--mat-sys-on-background);
+  scrollbar-gutter: stable;
+}
+
+@media (max-width: 900px) {
+  .main {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  .main {
+    padding: 12px;
+  }
+}

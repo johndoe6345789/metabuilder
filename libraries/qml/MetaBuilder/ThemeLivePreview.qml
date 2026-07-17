@@ -24,7 +24,7 @@ CCard {
     property int radiusMedium: 8
 
     ColumnLayout {
-        anchors.fill: parent
+        Layout.fillWidth: true
         anchors.margins: 20
         spacing: 16
 
@@ -51,7 +51,7 @@ CCard {
             border.color: customBorder
 
             ColumnLayout {
-                anchors.fill: parent
+                Layout.fillWidth: true
                 anchors.margins: 20
                 spacing: 14
 

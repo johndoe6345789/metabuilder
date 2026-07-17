@@ -106,7 +106,7 @@ const tabContent: Record<string, TabDoc> = {
       + ' JSON to SCSS variable maps and injects them into the global'
       + ' theme layer, enabling per-tenant theming at runtime by swapping'
       + ' a single CSS class on the root element.',
-      'FakeMUI is the in-house Material UI clone that consumes these'
+      'M3 is the in-house Material UI clone that consumes these'
       + ' tokens. It provides 145 core components and 22 email-specific'
       + ' components across 11 categories, all backed by SCSS modules'
       + ' with no runtime CSS-in-JS overhead.',

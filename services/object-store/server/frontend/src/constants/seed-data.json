@@ -1,0 +1,45 @@
+{
+  "buckets": [
+    { "name": "packagerepo", "creationDate": "2026-01-15T08:30:00Z" },
+    { "name": "backups", "creationDate": "2026-02-10T14:20:00Z" },
+    { "name": "logs", "creationDate": "2026-03-01T09:00:00Z" },
+    { "name": "static-assets", "creationDate": "2026-01-20T11:00:00Z" },
+    { "name": "ci-artifacts", "creationDate": "2026-02-28T16:00:00Z" }
+  ],
+  "objects": {
+    "packagerepo": [
+      { "key": "conan/drogon/1.9.3/conanmanifest.txt", "size": 1024, "etag": "\"a1b2c3\"", "lastModified": "2026-03-20T10:00:00Z" },
+      { "key": "conan/spdlog/1.13.0/conanmanifest.txt", "size": 512, "etag": "\"d4e5f6\"", "lastModified": "2026-03-21T11:30:00Z" },
+      { "key": "npm/nextra-frontend/1.0.0.tgz", "size": 204800, "etag": "\"g7h8i9\"", "lastModified": "2026-03-22T09:15:00Z" },
+      { "key": "docker/nextra-backend/1.0.0.tar", "size": 52428800, "etag": "\"j0k1l2\"", "lastModified": "2026-03-25T16:45:00Z" }
+    ],
+    "backups": [
+      { "key": "db/nextra-2026-03-27.sql.gz", "size": 10485760, "etag": "\"m3n4o5\"", "lastModified": "2026-03-27T02:00:00Z" },
+      { "key": "db/nextra-2026-03-26.sql.gz", "size": 10200000, "etag": "\"p6q7r8\"", "lastModified": "2026-03-26T02:00:00Z" },
+      { "key": "db/nextra-2026-03-25.sql.gz", "size": 10150000, "etag": "\"s9t0u1\"", "lastModified": "2026-03-25T02:00:00Z" },
+      { "key": "config/nextra-env-2026-03-27.tar.gz", "size": 8192, "etag": "\"v2w3x4\"", "lastModified": "2026-03-27T02:15:00Z" },
+      { "key": "redis/dump-2026-03-27.rdb", "size": 5242880, "etag": "\"y5z6a7\"", "lastModified": "2026-03-27T03:00:00Z" }
+    ],
+    "logs": [
+      { "key": "api/2026-03-28.log", "size": 2048000, "etag": "\"b8c9d0\"", "lastModified": "2026-03-28T00:00:00Z" },
+      { "key": "api/2026-03-27.log", "size": 3145728, "etag": "\"e1f2g3\"", "lastModified": "2026-03-27T00:00:00Z" },
+      { "key": "api/2026-03-26.log", "size": 2890000, "etag": "\"h4i5j6\"", "lastModified": "2026-03-26T00:00:00Z" },
+      { "key": "nginx/access-2026-03-28.log", "size": 4194304, "etag": "\"k7l8m9\"", "lastModified": "2026-03-28T00:00:00Z" },
+      { "key": "nginx/error-2026-03-28.log", "size": 51200, "etag": "\"n0o1p2\"", "lastModified": "2026-03-28T00:00:00Z" }
+    ],
+    "static-assets": [
+      { "key": "images/logo.svg", "size": 4096, "etag": "\"q3r4s5\"", "lastModified": "2026-01-20T12:00:00Z" },
+      { "key": "images/hero-banner.webp", "size": 245760, "etag": "\"t6u7v8\"", "lastModified": "2026-02-15T14:30:00Z" },
+      { "key": "fonts/inter-variable.woff2", "size": 102400, "etag": "\"w9x0y1\"", "lastModified": "2026-01-20T12:00:00Z" },
+      { "key": "css/main.min.css", "size": 32768, "etag": "\"z2a3b4\"", "lastModified": "2026-03-20T08:00:00Z" },
+      { "key": "js/app.bundle.js", "size": 524288, "etag": "\"c5d6e7\"", "lastModified": "2026-03-20T08:00:00Z" }
+    ],
+    "ci-artifacts": [
+      { "key": "builds/nextra-backend-7d60064.tar.gz", "size": 31457280, "etag": "\"f8g9h0\"", "lastModified": "2026-03-28T06:30:00Z" },
+      { "key": "builds/nextra-frontend-7d60064.tar.gz", "size": 15728640, "etag": "\"i1j2k3\"", "lastModified": "2026-03-28T06:45:00Z" },
+      { "key": "coverage/backend-lcov.info", "size": 65536, "etag": "\"l4m5n6\"", "lastModified": "2026-03-28T06:35:00Z" },
+      { "key": "coverage/frontend-lcov.info", "size": 81920, "etag": "\"o7p8q9\"", "lastModified": "2026-03-28T06:50:00Z" },
+      { "key": "test-reports/junit-backend.xml", "size": 16384, "etag": "\"r0s1t2\"", "lastModified": "2026-03-28T06:36:00Z" }
+    ]
+  }
+}

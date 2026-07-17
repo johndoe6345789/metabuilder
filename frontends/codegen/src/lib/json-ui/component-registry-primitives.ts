@@ -1,5 +1,5 @@
 /**
- * Primitive HTML element and FakeMUI component registry entries.
+ * Primitive HTML element and M3 component registry entries.
  */
 import React, { ComponentType } from 'react'
 import type { UIComponentRegistry } from './component-registry-types'
@@ -73,10 +73,10 @@ export const primitiveComponents: UIComponentRegistry = {
   td: 'td' as any,
 }
 
-// FakeMUI primitives — registered explicitly to prevent collisions
+// M3 primitives — registered explicitly to prevent collisions
 // with icon names (e.g. "Stack" icon = createMaterialIcon('layers'))
 // and to break circular JSON stub definitions.
-export const fakeMuiComponents: UIComponentRegistry = {
+export const m3Components: UIComponentRegistry = {
   Paragraph: 'p' as unknown as ComponentType<any>,
   Div: 'div' as unknown as ComponentType<any>,
   Stack: Stack as unknown as ComponentType<any>,

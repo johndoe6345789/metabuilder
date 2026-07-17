@@ -328,7 +328,7 @@ INTEGRATION WITH EMAIL CLIENT
 This is Phase 8 (final infrastructure) of the 8-phase email client implementation:
 
 Phase 1: ✅ DBAL Schemas (EmailClient, EmailFolder, EmailMessage, EmailAttachment)
-Phase 2: ✅ FakeMUI Components (22 email-specific UI components)
+Phase 2: ✅ M3 Components (22 email-specific UI components)
 Phase 3: ✅ Redux State Management (email slices)
 Phase 4: ✅ Custom Hooks (6 email operation hooks)
 Phase 5: ✅ Email Package (declarative routes, workflows)
@@ -339,7 +339,7 @@ Phase 8: ✅ Dovecot Container (THIS IMPLEMENTATION)
 Integration Points:
 - Postfix (Phase 7) → LMTP delivery via Unix socket
 - Flask API → REST endpoints for mailbox operations
-- Frontend (Next.js) → Redux hooks + FakeMUI components
+- Frontend (Next.js) → Redux hooks + M3 components
 - Workflow Engine → IMAP sync, search, parsing plugins
 
 ================================================================================

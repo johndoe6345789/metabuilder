@@ -1,0 +1,57 @@
+.row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 1px 0;
+  font-family: 'Roboto Mono', 'Courier New', monospace;
+  font-size: 0.8rem;
+  line-height: 1.4;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.03);
+  }
+}
+
+.ts {
+  color: var(--m3-sys-light-outline, #79747e);
+  flex-shrink: 0;
+  min-width: 42px;
+  font-size: 0.75rem;
+}
+
+.nick {
+  color: var(--m3-sys-light-primary, #6750a4);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.text {
+  word-break: break-word;
+  flex: 1;
+}
+
+.systemText {
+  color: var(--m3-sys-light-outline, #79747e);
+  font-style: italic;
+  flex: 1;
+}
+
+.meText {
+  color: var(--m3-sys-light-tertiary, #7d5260);
+  font-style: italic;
+  flex: 1;
+}
+
+.system {
+  flex: 1;
+  font-style: italic;
+  font-size: 0.78rem;
+}
+
+.join {
+  color: #2e7d32;
+}
+
+.leave {
+  color: #e65100;
+}

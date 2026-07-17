@@ -28,17 +28,17 @@ cd docs && python3 docs.py list --category guides
 
 ## Completed Milestones (All ✅)
 
-- **Jun 25**: Root reorganised into category folders (`libraries/`, `frontends/`), `fakemui` renamed to `m3` (`@metabuilder/m3`), postgres dashboard migrated to SCSS modules (all sx props removed)
+- **Jun 25**: Root reorganised into category folders (`libraries/`, `frontends/`), component library renamed to `m3` (`@metabuilder/m3`), postgres dashboard migrated to SCSS modules (all sx props removed)
 - **Mar 4**: DBAL C++ event-driven workflow engine (`pastebin.User.created` → 15-node JSON workflow → seeded namespaces + snippets), full YAML→JSON migration (63 files, yaml-cpp removed), JWT auth + JSON ACL, declarative seed data (`dbal/shared/seeds/database/`), i18n (EN/ES) across all pastebin components, dark/light theme switcher
 - **Feb 7**: Game engine CLI args (`--bootstrap`, `--game`), 27/27 tests passing (100%)
 - **Feb 6**: 6 new DB backends (total 14), SQLite3 doc migration, Docker dev container, WorkflowUI E2E (92.6%)
 - **Feb 5**: WorkflowUI mock DBAL testing, Settings/Help pages, DBAL env var config
-- **Feb 4**: SQLiteAdapter generic refactoring, YAML Schema Spec 2.0, Dynamic entity loading (TS+C++), DBAL hooks integration, FakeMUI migration
+- **Feb 4**: SQLiteAdapter generic refactoring, YAML Schema Spec 2.0, Dynamic entity loading (TS+C++), DBAL hooks integration, M3 migration
 - **Feb 3**: Visual workflow editor (n8n-style), Dynamic plugin registry (152 nodes)
 - **Feb 2**: WorkflowUI migration to root packages (77% file reduction)
-- **Feb 1**: CodeQL search, FakeMUI organization, Email components (22)
+- **Feb 1**: CodeQL search, M3 organization, Email components (22)
 - **Jan 24**: Dependency fixes, testing library standardization
-- **Jan 23**: Email client (Phases 1-5), Mojo compiler, FakeMUI restructuring, dependency remediation
+- **Jan 23**: Email client (Phases 1-5), Mojo compiler, M3 restructuring, dependency remediation
 
 **Details**: Search `cd docs/txt && python3 reports.py search "topic"` for full completion reports.
 
@@ -60,7 +60,7 @@ cd docs && python3 docs.py list --category guides
 | `libraries/pcbgenerator/` | PCB design automation (Python) |
 | `libraries/qml/` | Qt6 QML components |
 | `libraries/sparkos/` | Minimal Linux distro (C++/Qt6) |
-| `frontends/gameengine/` | SDL3/bgfx C++ game engine — Quake 3 playable, **212 workflow steps** |
+| `frontends/gameengine/` | SDL3 GPU C++ game engine — Quake 3 playable, **212 workflow steps** |
 | `frontends/pastebin/` | Code snippet sharing (Next.js + Flask + DBAL) |
 | `frontends/codegen/` | CodeForge IDE (React + Monaco) |
 | `frontends/workflowui/` | Visual workflow editor (n8n-style, 152+ plugin nodes) |
@@ -178,7 +178,7 @@ Multi-language: executors (TS, Python, C++), plugins (7 runtimes: TS, Python, C+
 
 ### Game Engine (`frontends/gameengine/`)
 
-SDL3/bgfx C++ engine — **Quake 3 fully playable** (BSP, lightmaps, pmove, weapons, bots, HUD, menus). 212 registered workflow steps covering rendering (deferred, TAA, SSAO, Bloom), Q3 gameplay (42 steps), physics (AABB, gravity, friction), audio (3D positional, Opus), scene, camera, input, math, logic. 12 game packages including `quake3`, `quake3_screenshot`, `materialx`. CLI: `--bootstrap bootstrap_linux --game quake3`.
+SDL3 GPU C++ engine — **Quake 3 fully playable** (BSP, lightmaps, pmove, weapons, bots, HUD, menus). 212 registered workflow steps covering rendering (deferred, TAA, SSAO, Bloom), Q3 gameplay (42 steps), physics (AABB, gravity, friction), audio (3D positional, Opus), scene, camera, input, math, logic. 12 game packages including `quake3`, `quake3_screenshot`, `materialx`. CLI: `--bootstrap bootstrap_linux --game quake3`.
 
 ### CodeForge IDE (`frontends/codegen/`)
 
@@ -296,6 +296,41 @@ Pre-commit: `npm run build && npm run typecheck && npm run lint && npm run test:
 
 ### Declarative-First
 Ask: Could this be JSON config? Could a generic renderer handle this? Is it filtering by tenantId?
+
+---
+
+## CI/CD Infrastructure (sibling repo)
+
+Both the build pipeline and credential manager are in `../jenkins/`
+(`github.com/johndoe6345789/jenkins`) — a **separate repo in the same GitHub
+folder**, not inside metabuilder.
+
+### Jenkins (`../jenkins/`)
+
+Docker Compose: controller + nginx + 8 SSH agents + `registry:2` (no-auth, `:5001`).
+
+**Jobs:**
+- `metabuilder-base-images` — builds apt/node/pip/conan base images (serial: build→push→prune)
+- `metabuilder-base-heavy` — big conan bases (dbal/qt6/gameengine), disk-gated, run rarely
+- `metabuilder-apps` — pulls last-good bases, builds & pushes app images; runs every commit
+- `metabuilder` — orchestrator (base-images → apps)
+- `metabuilder-deploy` — pulls images, retags to `deployment-<svc>:latest`, runs `deployment.py stack up`
+
+Build and deploy are fully split. Management CLI: `../jenkins/scripts/setup.py`.
+Secrets in `../jenkins/secrets/` (gitignored). Bootstrap: `setup.py secrets ...`.
+
+### Vault (`../jenkins/scripts/vault/`)
+
+Drogon C++ credential manager — stores and **rotates** all secrets across the stack.
+- `vault-backend` on `:5055`, `vault-frontend` on `:4100`, `vault-db` (PostgreSQL)
+- 8 rotation adapters: `env_var`, `db_sha512`, `db_werkzeug`, `db_bcrypt`,
+  `db_bcrypt_sqlite`, `pyracms_pbkdf2`, `grafana_api`, `keycloak_realm`, `caprover`
+- Secrets it manages live in `../jenkins/secrets/*.env` — **never commit these**
+  (`pastebin.env`, `vault.env`, `pkgrepo-registry.env`, `postgres-dashboard.env`, etc.)
+
+```bash
+cd ../jenkins/scripts/vault && docker compose up -d   # UI: http://localhost:4100
+```
 
 ---
 

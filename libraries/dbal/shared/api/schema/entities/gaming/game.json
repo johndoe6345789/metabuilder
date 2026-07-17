@@ -1,5 +1,6 @@
 {
-  "name": "Game",
+  "entity": "Game",
+  "name": "game",
   "displayName": "Arcade Game",
   "description": "A playable retro arcade game",
   "pluralName": "Games",

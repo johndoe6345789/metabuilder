@@ -95,7 +95,7 @@ export { JSONComponentRenderer } from './JSONComponentRenderer'
 // UI Page Renderer (depends on @/lib/packages/json)
 export { UIPageRenderer, useAction, useUIPageActions } from './ui-page-renderer'
 
-// Pagination (uses FakeMUI components)
+// Pagination (uses M3 components)
 export {
   PaginationControls,
   PaginationInfo,

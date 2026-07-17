@@ -1,0 +1,82 @@
+.root {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 24px;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.statCard {
+  padding: 16px;
+}
+
+.statHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.statAvatar {
+  width: 24px;
+  height: 24px;
+  font-size: 0.7rem;
+}
+
+.statCount {
+  font-weight: 700;
+}
+
+.tablePanel {
+  padding: 0;
+}
+
+.tableHeader {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.search {
+  width: 256px;
+}
+
+.tabsWrap {
+  padding: 8px 16px 0;
+}
+
+.emptyCell {
+  text-align: center;
+  padding-block: 32px;
+}
+
+.userName {
+  font-weight: 500;
+}
+
+.emptyState {
+  padding: 32px 0;
+  text-align: center;
+}
+
+@media (max-width: 700px) {
+  .tableHeader {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .search {
+    width: 100%;
+  }
+}

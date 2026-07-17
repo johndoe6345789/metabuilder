@@ -3,7 +3,7 @@ import { sxToStyle } from '../utils/sx'
 import styles from '../../../scss/atoms/mat-chip.module.scss'
 
 export interface ChipProps extends React.HTMLAttributes<HTMLSpanElement> {
-  /** Chip content (FakeMUI native) */
+  /** Chip content (M3 native) */
   children?: React.ReactNode
   /** Chip label text (MUI-compatible alias for children) */
   label?: React.ReactNode

@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import { NotFoundState } from '@/../../../components/feedback';
+import { NotFoundState } from '@metabuilder/components/feedback';
 
 export default function NotFound() {
   return (

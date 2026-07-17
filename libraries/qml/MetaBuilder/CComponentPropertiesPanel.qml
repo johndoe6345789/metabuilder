@@ -19,7 +19,7 @@ ColumnLayout {
 
     signal nameChanged(string name)
     signal typeChanged(string type)
-    signal visibleChanged(bool visible)
+    signal visibilityChanged(bool visible)
     signal addProp()
     signal removeProp(int index)
 

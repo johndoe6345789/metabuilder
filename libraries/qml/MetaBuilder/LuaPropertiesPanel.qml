@@ -22,7 +22,7 @@ Rectangle {
 
     signal nameChanged(string name)
     signal descriptionChanged(string desc)
-    signal returnTypeChanged(string rt)
+    signal returnTypeEdited(string rt)
     signal paramAdded()
 
     ScrollView {
@@ -69,7 +69,7 @@ Rectangle {
                     Accessible.role: Accessible.EditableText
                     Accessible.name: "Return type"
                     text: returnType
-                    onTextChanged: returnTypeChanged(text)
+                    onTextChanged: returnTypeEdited(text)
                 }
 
                 CDivider { Layout.fillWidth: true }

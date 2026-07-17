@@ -1,10 +1,10 @@
 # MetaBuilder Python Packages
 
-Python packages for MetaBuilder, including FakeMUI - a PyQt6-based Material UI component library.
+Python packages for MetaBuilder, including M3 - a PyQt6-based Material UI component library.
 
 ## Packages
 
-### fakemui
+### m3
 
 Material UI-style widgets for PyQt6. A complete replacement for complex Qt styling with simple, composable components.
 
@@ -40,7 +40,7 @@ pip install PyQt6>=6.4.0
 ## Usage
 
 ```python
-from fakemui import (
+from m3 import (
     Button, TextField, Card, CardContent,
     Box, Stack, Typography, ThemeProvider,
     create_theme
@@ -57,7 +57,7 @@ with ThemeProvider(theme):
         Card(
             CardContent(
                 Stack(spacing=2, children=[
-                    Typography("Hello FakeMUI!", variant="h4"),
+                    Typography("Hello M3!", variant="h4"),
                     TextField(label="Name", variant="outlined"),
                     Button("Submit", variant="contained", color="primary")
                 ])
@@ -78,7 +78,7 @@ pip install -e ./python[dev]
 pytest
 
 # Type checking
-mypy fakemui
+mypy m3
 ```
 
 ## License

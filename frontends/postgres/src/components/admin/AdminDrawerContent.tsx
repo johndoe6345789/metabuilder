@@ -8,6 +8,7 @@ import StorageIcon from '@metabuilder/components/m3/Storage';
 import TableChartIcon from '@metabuilder/components/m3/TableChart';
 import ViewColumnIcon from '@metabuilder/components/m3/ViewColumn';
 import type { ComponentType } from 'react';
+import { useTranslations } from 'next-intl';
 import {
   Box,
   Divider,
@@ -54,14 +55,9 @@ export default function AdminDrawerContent({
   onNavigate,
   version,
 }: Props) {
+  const t = useTranslations('Admin');
   return (
     <>
-      <Box className={styles.section}>
-        <Typography variant="caption" className={styles.label}>
-          Browse
-        </Typography>
-      </Box>
-      <Divider />
       <List disablePadding>
         {navItems.map((item, index) => (
           <ListItem key={item.id} disablePadding>
@@ -72,7 +68,7 @@ export default function AdminDrawerContent({
               <ListItemIcon>
                 {getIcon(item.icon)}
               </ListItemIcon>
-              <ListItemText primary={item.label} />
+              <ListItemText primary={t(`nav.${item.id}`)} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -80,7 +76,7 @@ export default function AdminDrawerContent({
       <Divider />
       <Box className={styles.section}>
         <Typography variant="caption" className={styles.labelWide}>
-          PostgreSQL Admin
+          {t('footer.title')}
         </Typography>
         <Typography variant="caption" className={styles.version}>
           v{version}

@@ -417,10 +417,10 @@ export function useEmailAttachments(messageId: string) {
 }
 ```
 
-### FakeMUI Component for Attachment List
+### M3 Component for Attachment List
 
 ```typescript
-// fakemui/react/components/email/AttachmentListComponent.tsx
+// m3/react/components/email/AttachmentListComponent.tsx
 import React from 'react';
 import {
   List,
@@ -431,7 +431,7 @@ import {
   Box,
   Typography,
   Chip
-} from '@metabuilder/fakemui';
+} from '@metabuilder/m3';
 
 export function AttachmentListComponent({
   attachments,

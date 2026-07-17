@@ -30,7 +30,7 @@ Navigate to: **http://localhost:3005**
 - Configure node properties
 - Real-time preview
 
-### Project Canvas (NEW - Uses Fakemui!)
+### Project Canvas (NEW - Uses M3!)
 - Infinite canvas with workflow cards
 - Drag-and-drop card positioning
 - Zoom in/out controls
@@ -60,7 +60,7 @@ The system comes with example workflows:
 ## Technology Stack
 
 - **Frontend**: Next.js 14.2, React 18, TypeScript
-- **UI Components**: Fakemui (Material Design 3)
+- **UI Components**: M3 (Material Design 3)
 - **State Management**: Redux + Custom Hooks
 - **Data**: IndexedDB (offline-first) + Backend API
 - **Workflow Engine**: Multi-language execution (TS, Python, Go, Rust, etc.)
@@ -248,8 +248,8 @@ npm run dev
 
 ## Documentation
 
-- **Fakemui Components**: See `/fakemui/COMPONENT_GUIDE.md`
-- **Migration Summary**: See `/fakemui/MIGRATION_SUMMARY.md`
+- **M3 Components**: See `/m3/COMPONENT_GUIDE.md`
+- **Migration Summary**: See `/m3/MIGRATION_SUMMARY.md`
 - **Architecture**: See `CLAUDE.md` in root
 - **Workflow Engine**: See `/workflow/README.md`
 

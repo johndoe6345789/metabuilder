@@ -23,8 +23,7 @@ FlexRow {
         Accessible.name: "Total Records: " + root.totalRecords
 
         ColumnLayout {
-            anchors.fill: parent
-            anchors.margins: 12
+            Layout.fillWidth: true
             spacing: 4
             CText { variant: "caption"; text: "Total Records" }
             CText { variant: "h4"; text: root.totalRecords }
@@ -38,8 +37,7 @@ FlexRow {
         Accessible.name: "Total Size: " + root.totalSize
 
         ColumnLayout {
-            anchors.fill: parent
-            anchors.margins: 12
+            Layout.fillWidth: true
             spacing: 4
             CText { variant: "caption"; text: "Total Size" }
             CText { variant: "h4"; text: root.totalSize }
@@ -53,8 +51,7 @@ FlexRow {
         Accessible.name: "Active Backend: " + root.activeBackend
 
         ColumnLayout {
-            anchors.fill: parent
-            anchors.margins: 12
+            Layout.fillWidth: true
             spacing: 4
             CText { variant: "caption"; text: "Active Backend" }
             CText { variant: "h4"; text: root.activeBackend }
@@ -68,8 +65,7 @@ FlexRow {
         Accessible.name: "Adapter Pattern: " + root.adapterPattern
 
         ColumnLayout {
-            anchors.fill: parent
-            anchors.margins: 12
+            Layout.fillWidth: true
             spacing: 4
             CText { variant: "caption"; text: "Adapter Pattern" }
             CText { variant: "h4"; text: root.adapterPattern }

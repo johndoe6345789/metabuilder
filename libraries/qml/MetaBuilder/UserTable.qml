@@ -13,7 +13,7 @@ CCard {
     signal deleteClicked(int uid)
 
     ColumnLayout {
-        anchors.fill: parent
+        Layout.fillWidth: true
         anchors.margins: 16
         spacing: 0
 
@@ -24,7 +24,7 @@ CCard {
             radius: 4
 
             RowLayout {
-                anchors.fill: parent
+                Layout.fillWidth: true
                 anchors.leftMargin: 12
                 anchors.rightMargin: 12
                 spacing: 8
@@ -89,7 +89,7 @@ CCard {
         }
 
         CText {
-            visible: root.users.length === 0
+            visible: (root.users || []).length === 0
             Layout.fillWidth: true
             Layout.topMargin: 24
             variant: "body2"

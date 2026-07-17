@@ -20,7 +20,7 @@ Rectangle {
             "qmllib/MetaBuilder/data/"
             + "component-tree-mock.json"
         )
-    )
+    ) || []
     property int selectedIndex: -1
     property int nextNodeId: 13
 
@@ -102,8 +102,8 @@ Rectangle {
                 Layout.preferredWidth: 420
                 Layout.fillHeight: true
                 ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 16
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
                     spacing: 10
                     FlexRow {
                         Layout.fillWidth: true
@@ -193,8 +193,8 @@ Rectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 16
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
                     spacing: 12
                     CText {
                         variant: "h4"
@@ -247,7 +247,7 @@ Rectangle {
                                     "type", type
                                 )
                             }
-                        onVisibleChanged:
+                        onVisibilityChanged:
                             function(vis) {
                                 root.updateNode(
                                     selectedIndex,

@@ -316,7 +316,7 @@ upstream: $upstream_addr req_time: $request_time
 - Email sync plugin runs independently
 - Nginx load balances API calls to email-service
 
-### Phase 4: FakeMUI Components
+### Phase 4: M3 Components
 - All components delivered gzipped
 - Static assets cached aggressively
 

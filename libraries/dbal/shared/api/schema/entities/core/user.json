@@ -4,7 +4,7 @@
   "description": "User account entity with authentication and role management",
   "fields": {
     "id": {
-      "type": "uuid",
+      "type": "string",
       "primary": true,
       "generated": true,
       "description": "Unique user identifier"

@@ -57,560 +57,560 @@ qt_add_executable(metabuilder-qt6
 target_compile_definitions(metabuilder-qt6 PRIVATE SRCDIR="${CMAKE_CURRENT_SOURCE_DIR}")
 
 # Map extracted files to their original QRC paths
-set_source_files_properties(../../qml/qt6/AdminCrud.js PROPERTIES QT_RESOURCE_ALIAS AdminCrud.js)
-set_source_files_properties(../../qml/qt6/AdminView.qml PROPERTIES QT_RESOURCE_ALIAS AdminView.qml)
-set_source_files_properties(../../qml/qt6/App.qml PROPERTIES QT_RESOURCE_ALIAS App.qml)
-set_source_files_properties(../../qml/qt6/CommentsDBAL.js PROPERTIES QT_RESOURCE_ALIAS CommentsDBAL.js)
-set_source_files_properties(../../qml/qt6/CommentsView.qml PROPERTIES QT_RESOURCE_ALIAS CommentsView.qml)
-set_source_files_properties(../../qml/qt6/ComponentHierarchyEditor.qml PROPERTIES QT_RESOURCE_ALIAS ComponentHierarchyEditor.qml)
-set_source_files_properties(../../qml/qt6/CssClassManager.qml PROPERTIES QT_RESOURCE_ALIAS CssClassManager.qml)
-set_source_files_properties(../../qml/qt6/DashboardView.qml PROPERTIES QT_RESOURCE_ALIAS DashboardView.qml)
-set_source_files_properties(../../qml/qt6/DatabaseManager.qml PROPERTIES QT_RESOURCE_ALIAS DatabaseManager.qml)
-set_source_files_properties(../../qml/qt6/DropdownConfigManager.qml PROPERTIES QT_RESOURCE_ALIAS DropdownConfigManager.qml)
-set_source_files_properties(../../qml/qt6/DropdownCrud.js PROPERTIES QT_RESOURCE_ALIAS DropdownCrud.js)
-set_source_files_properties(../../qml/qt6/FrontPage.qml PROPERTIES QT_RESOURCE_ALIAS FrontPage.qml)
-set_source_files_properties(../../qml/qt6/GodPanel.qml PROPERTIES QT_RESOURCE_ALIAS GodPanel.qml)
-set_source_files_properties(../../qml/qt6/LoginDBAL.js PROPERTIES QT_RESOURCE_ALIAS LoginDBAL.js)
-set_source_files_properties(../../qml/qt6/LoginView.qml PROPERTIES QT_RESOURCE_ALIAS LoginView.qml)
-set_source_files_properties(../../qml/qt6/LuaEditor.qml PROPERTIES QT_RESOURCE_ALIAS LuaEditor.qml)
-set_source_files_properties(../../qml/qt6/MaterialLanding.qml PROPERTIES QT_RESOURCE_ALIAS MaterialLanding.qml)
-set_source_files_properties(../../qml/qt6/MediaServiceCrud.js PROPERTIES QT_RESOURCE_ALIAS MediaServiceCrud.js)
-set_source_files_properties(../../qml/qt6/MediaServicePanel.qml PROPERTIES QT_RESOURCE_ALIAS MediaServicePanel.qml)
-set_source_files_properties(../../qml/qt6/ModPlayerPanel.qml PROPERTIES QT_RESOURCE_ALIAS ModPlayerPanel.qml)
-set_source_files_properties(../../qml/qt6/ModeratorData.js PROPERTIES QT_RESOURCE_ALIAS ModeratorData.js)
-set_source_files_properties(../../qml/qt6/ModeratorView.qml PROPERTIES QT_RESOURCE_ALIAS ModeratorView.qml)
-set_source_files_properties(../../qml/qt6/NotificationsDBAL.js PROPERTIES QT_RESOURCE_ALIAS NotificationsDBAL.js)
-set_source_files_properties(../../qml/qt6/NotificationsPanel.qml PROPERTIES QT_RESOURCE_ALIAS NotificationsPanel.qml)
-set_source_files_properties(../../qml/qt6/PackageManager.qml PROPERTIES QT_RESOURCE_ALIAS PackageManager.qml)
-set_source_files_properties(../../qml/qt6/PackageViewLoader.qml PROPERTIES QT_RESOURCE_ALIAS PackageViewLoader.qml)
-set_source_files_properties(../../qml/qt6/PageRoutesDBAL.js PROPERTIES QT_RESOURCE_ALIAS PageRoutesDBAL.js)
-set_source_files_properties(../../qml/qt6/PageRoutesManager.qml PROPERTIES QT_RESOURCE_ALIAS PageRoutesManager.qml)
-set_source_files_properties(../../qml/qt6/ProfileView.qml PROPERTIES QT_RESOURCE_ALIAS ProfileView.qml)
-set_source_files_properties(../../qml/qt6/SMTPConfigEditor.qml PROPERTIES QT_RESOURCE_ALIAS SMTPConfigEditor.qml)
-set_source_files_properties(../../qml/qt6/SchemaEditor.qml PROPERTIES QT_RESOURCE_ALIAS SchemaEditor.qml)
-set_source_files_properties(../../qml/qt6/SettingsView.qml PROPERTIES QT_RESOURCE_ALIAS SettingsView.qml)
-set_source_files_properties(../../qml/qt6/Storybook.qml PROPERTIES QT_RESOURCE_ALIAS Storybook.qml)
-set_source_files_properties(../../qml/qt6/SuperGodCrud.js PROPERTIES QT_RESOURCE_ALIAS SuperGodCrud.js)
-set_source_files_properties(../../qml/qt6/SuperGodPanel.qml PROPERTIES QT_RESOURCE_ALIAS SuperGodPanel.qml)
-set_source_files_properties(../../qml/qt6/ThemeEditor.qml PROPERTIES QT_RESOURCE_ALIAS ThemeEditor.qml)
-set_source_files_properties(../../qml/qt6/UserManagement.qml PROPERTIES QT_RESOURCE_ALIAS UserManagement.qml)
-set_source_files_properties(../../qml/qt6/WorkflowEditor.qml PROPERTIES QT_RESOURCE_ALIAS WorkflowEditor.qml)
-set_source_files_properties(../../qml/Material/MaterialAccordion.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialAccordion.qml)
-set_source_files_properties(../../qml/Material/MaterialAlert.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialAlert.qml)
-set_source_files_properties(../../qml/Material/MaterialAppBar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialAppBar.qml)
-set_source_files_properties(../../qml/Material/MaterialAvatar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialAvatar.qml)
-set_source_files_properties(../../qml/Material/MaterialBadge.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialBadge.qml)
-set_source_files_properties(../../qml/Material/MaterialBox.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialBox.qml)
-set_source_files_properties(../../qml/Material/MaterialButton.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialButton.qml)
-set_source_files_properties(../../qml/Material/MaterialCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialCard.qml)
-set_source_files_properties(../../qml/Material/MaterialCheckbox.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialCheckbox.qml)
-set_source_files_properties(../../qml/Material/MaterialChip.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialChip.qml)
-set_source_files_properties(../../qml/Material/MaterialCircularProgress.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialCircularProgress.qml)
-set_source_files_properties(../../qml/Material/MaterialCollapse.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialCollapse.qml)
-set_source_files_properties(../../qml/Material/MaterialContainer.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialContainer.qml)
-set_source_files_properties(../../qml/Material/MaterialDialog.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialDialog.qml)
-set_source_files_properties(../../qml/Material/MaterialDivider.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialDivider.qml)
-set_source_files_properties(../../qml/Material/MaterialDividerProps.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialDividerProps.qml)
-set_source_files_properties(../../qml/Material/MaterialGrid.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialGrid.qml)
-set_source_files_properties(../../qml/Material/MaterialIconButton.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialIconButton.qml)
-set_source_files_properties(../../qml/Material/MaterialLinearProgress.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialLinearProgress.qml)
-set_source_files_properties(../../qml/Material/MaterialLink.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialLink.qml)
-set_source_files_properties(../../qml/Material/MaterialMenu.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialMenu.qml)
-set_source_files_properties(../../qml/Material/MaterialMenuItem.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialMenuItem.qml)
-set_source_files_properties(../../qml/Material/MaterialMenuProps.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialMenuProps.qml)
-set_source_files_properties(../../qml/Material/MaterialPalette.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialPalette.qml)
-set_source_files_properties(../../qml/Material/MaterialPaper.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialPaper.qml)
-set_source_files_properties(../../qml/Material/MaterialPopover.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialPopover.qml)
-set_source_files_properties(../../qml/Material/MaterialPopoverProps.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialPopoverProps.qml)
-set_source_files_properties(../../qml/Material/MaterialSkeleton.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialSkeleton.qml)
-set_source_files_properties(../../qml/Material/MaterialSnackbar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialSnackbar.qml)
-set_source_files_properties(../../qml/Material/MaterialSurface.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialSurface.qml)
-set_source_files_properties(../../qml/Material/MaterialSwitch.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialSwitch.qml)
-set_source_files_properties(../../qml/Material/MaterialTextField.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialTextField.qml)
-set_source_files_properties(../../qml/Material/MaterialToolbar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialToolbar.qml)
-set_source_files_properties(../../qml/Material/MaterialTypography.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialTypography.qml)
-set_source_files_properties(../../qml/MetaBuilder/AppLogic.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/AppLogic.js)
-set_source_files_properties(../../qml/MetaBuilder/CActivityList.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CActivityList.qml)
-set_source_files_properties(../../qml/MetaBuilder/CAdapterPatternSelector.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CAdapterPatternSelector.qml)
-set_source_files_properties(../../qml/MetaBuilder/CAddDropdownDialog.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CAddDropdownDialog.qml)
-set_source_files_properties(../../qml/MetaBuilder/CAddFieldDialog.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CAddFieldDialog.qml)
-set_source_files_properties(../../qml/MetaBuilder/CAddRouteDialog.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CAddRouteDialog.qml)
-set_source_files_properties(../../qml/MetaBuilder/CAdminContentPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CAdminContentPanel.qml)
-set_source_files_properties(../../qml/MetaBuilder/CAdminDialogs.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CAdminDialogs.qml)
-set_source_files_properties(../../qml/MetaBuilder/CAdminStatsBar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CAdminStatsBar.qml)
-set_source_files_properties(../../qml/MetaBuilder/CAdminToolbar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CAdminToolbar.qml)
-set_source_files_properties(../../qml/MetaBuilder/CBackendConnectionSection.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CBackendConnectionSection.qml)
-set_source_files_properties(../../qml/MetaBuilder/CBackendDetailPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CBackendDetailPanel.qml)
-set_source_files_properties(../../qml/MetaBuilder/CBackendListSidebar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CBackendListSidebar.qml)
-set_source_files_properties(../../qml/MetaBuilder/CCanvasGrid.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CCanvasGrid.qml)
-set_source_files_properties(../../qml/MetaBuilder/CCanvasInteractionArea.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CCanvasInteractionArea.qml)
-set_source_files_properties(../../qml/MetaBuilder/CCanvasViewport.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CCanvasViewport.qml)
-set_source_files_properties(../../qml/MetaBuilder/CCanvasZoomOverlay.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CCanvasZoomOverlay.qml)
-set_source_files_properties(../../qml/MetaBuilder/CCommentCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CCommentCard.qml)
-set_source_files_properties(../../qml/MetaBuilder/CCommentInput.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CCommentInput.qml)
-set_source_files_properties(../../qml/MetaBuilder/CComponentPropertiesPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CComponentPropertiesPanel.qml)
-set_source_files_properties(../../qml/MetaBuilder/CComponentPropsList.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CComponentPropsList.qml)
-set_source_files_properties(../../qml/MetaBuilder/CComponentTreeRow.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CComponentTreeRow.qml)
-set_source_files_properties(../../qml/MetaBuilder/CComponentTypeLegend.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CComponentTypeLegend.qml)
-set_source_files_properties(../../qml/MetaBuilder/CConfigStatCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CConfigStatCard.qml)
-set_source_files_properties(../../qml/MetaBuilder/CConnectionLayer.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CConnectionLayer.qml)
-set_source_files_properties(../../qml/MetaBuilder/CConnectionTest.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CConnectionTest.qml)
-set_source_files_properties(../../qml/MetaBuilder/CCreateSchemaDialog.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CCreateSchemaDialog.qml)
-set_source_files_properties(../../qml/MetaBuilder/CDataTable.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CDataTable.qml)
-set_source_files_properties(../../qml/MetaBuilder/CDatabaseEnvConfig.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CDatabaseEnvConfig.qml)
-set_source_files_properties(../../qml/MetaBuilder/CDatabaseStatsRow.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CDatabaseStatsRow.qml)
-set_source_files_properties(../../qml/MetaBuilder/CDeleteConfirmDialog.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CDeleteConfirmDialog.qml)
-set_source_files_properties(../../qml/MetaBuilder/CDeleteDropdownDialog.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CDeleteDropdownDialog.qml)
-set_source_files_properties(../../qml/MetaBuilder/CDeleteRecordDialog.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CDeleteRecordDialog.qml)
-set_source_files_properties(../../qml/MetaBuilder/CDropdownEditorPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CDropdownEditorPanel.qml)
-set_source_files_properties(../../qml/MetaBuilder/CDropdownMenu.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CDropdownMenu.qml)
-set_source_files_properties(../../qml/MetaBuilder/CDropdownMenuItem.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CDropdownMenuItem.qml)
-set_source_files_properties(../../qml/MetaBuilder/CEncryptionSelector.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CEncryptionSelector.qml)
-set_source_files_properties(../../qml/MetaBuilder/CEntityForm.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CEntityForm.qml)
-set_source_files_properties(../../qml/MetaBuilder/CEntitySidebar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CEntitySidebar.qml)
-set_source_files_properties(../../qml/MetaBuilder/CExecutionStatusDot.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CExecutionStatusDot.qml)
-set_source_files_properties(../../qml/MetaBuilder/CFrontPageFooter.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CFrontPageFooter.qml)
-set_source_files_properties(../../qml/MetaBuilder/CGodPanelGuideTab.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CGodPanelGuideTab.qml)
-set_source_files_properties(../../qml/MetaBuilder/CGodPanelHeader.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CGodPanelHeader.qml)
-set_source_files_properties(../../qml/MetaBuilder/CGodPanelSettingsTab.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CGodPanelSettingsTab.qml)
-set_source_files_properties(../../qml/MetaBuilder/CGodUserCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CGodUserCard.qml)
-set_source_files_properties(../../qml/MetaBuilder/CGodUsersTab.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CGodUsersTab.qml)
-set_source_files_properties(../../qml/MetaBuilder/CHeroSection.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CHeroSection.qml)
-set_source_files_properties(../../qml/MetaBuilder/CJobProgressBar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CJobProgressBar.qml)
-set_source_files_properties(../../qml/MetaBuilder/CKeyboardShortcuts.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CKeyboardShortcuts.qml)
-set_source_files_properties(../../qml/MetaBuilder/CLanguageSelector.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CLanguageSelector.qml)
-set_source_files_properties(../../qml/MetaBuilder/CLevelCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CLevelCard.qml)
-set_source_files_properties(../../qml/MetaBuilder/CLevelReferenceCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CLevelReferenceCard.qml)
-set_source_files_properties(../../qml/MetaBuilder/CLevelTagFlow.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CLevelTagFlow.qml)
-set_source_files_properties(../../qml/MetaBuilder/CLoginForm.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CLoginForm.qml)
-set_source_files_properties(../../qml/MetaBuilder/CMediaHeader.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CMediaHeader.qml)
-set_source_files_properties(../../qml/MetaBuilder/CMediaJobsTab.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CMediaJobsTab.qml)
-set_source_files_properties(../../qml/MetaBuilder/CModActionCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CModActionCard.qml)
-set_source_files_properties(../../qml/MetaBuilder/CModStatsRow.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CModStatsRow.qml)
-set_source_files_properties(../../qml/MetaBuilder/CModeratorHeader.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CModeratorHeader.qml)
-set_source_files_properties(../../qml/MetaBuilder/CNavBar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNavBar.qml)
-set_source_files_properties(../../qml/MetaBuilder/CNodePalette.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNodePalette.qml)
-set_source_files_properties(../../qml/MetaBuilder/CNodePaletteItem.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNodePaletteItem.qml)
-set_source_files_properties(../../qml/MetaBuilder/CNodeParameterList.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNodeParameterList.qml)
-set_source_files_properties(../../qml/MetaBuilder/CNodePortColumn.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNodePortColumn.qml)
-set_source_files_properties(../../qml/MetaBuilder/CNodePorts.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNodePorts.qml)
-set_source_files_properties(../../qml/MetaBuilder/CNodePortsDisplay.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNodePortsDisplay.qml)
-set_source_files_properties(../../qml/MetaBuilder/CNodePropertiesPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNodePropertiesPanel.qml)
-set_source_files_properties(../../qml/MetaBuilder/CNotificationBell.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNotificationBell.qml)
-set_source_files_properties(../../qml/MetaBuilder/CNotificationContent.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNotificationContent.qml)
-set_source_files_properties(../../qml/MetaBuilder/CNotificationEmptyState.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNotificationEmptyState.qml)
-set_source_files_properties(../../qml/MetaBuilder/CNotificationIconBadge.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNotificationIconBadge.qml)
-set_source_files_properties(../../qml/MetaBuilder/CNotificationItem.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNotificationItem.qml)
-set_source_files_properties(../../qml/MetaBuilder/CNotificationToggles.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNotificationToggles.qml)
-set_source_files_properties(../../qml/MetaBuilder/CPackageDetailSidebar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CPackageDetailSidebar.qml)
-set_source_files_properties(../../qml/MetaBuilder/CPackageListItem.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CPackageListItem.qml)
-set_source_files_properties(../../qml/MetaBuilder/CProfileConnectedAccounts.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CProfileConnectedAccounts.qml)
-set_source_files_properties(../../qml/MetaBuilder/CProfileForm.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CProfileForm.qml)
-set_source_files_properties(../../qml/MetaBuilder/CProfileHeader.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CProfileHeader.qml)
-set_source_files_properties(../../qml/MetaBuilder/CProfilePasswordCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CProfilePasswordCard.qml)
-set_source_files_properties(../../qml/MetaBuilder/CQuickActions.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CQuickActions.qml)
-set_source_files_properties(../../qml/MetaBuilder/CQuickLoginCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CQuickLoginCard.qml)
-set_source_files_properties(../../qml/MetaBuilder/CReportCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CReportCard.qml)
-set_source_files_properties(../../qml/MetaBuilder/CRouteEditPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CRouteEditPanel.qml)
-set_source_files_properties(../../qml/MetaBuilder/CRoutePermissionSection.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CRoutePermissionSection.qml)
-set_source_files_properties(../../qml/MetaBuilder/CRouteTableHeader.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CRouteTableHeader.qml)
-set_source_files_properties(../../qml/MetaBuilder/CRouteTableRow.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CRouteTableRow.qml)
-set_source_files_properties(../../qml/MetaBuilder/CServiceConnectionRow.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CServiceConnectionRow.qml)
-set_source_files_properties(../../qml/MetaBuilder/CServiceStatus.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CServiceStatus.qml)
-set_source_files_properties(../../qml/MetaBuilder/CSettingsAbout.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CSettingsAbout.qml)
-set_source_files_properties(../../qml/MetaBuilder/CSettingsSection.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CSettingsSection.qml)
-set_source_files_properties(../../qml/MetaBuilder/CSidebar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CSidebar.qml)
-set_source_files_properties(../../qml/MetaBuilder/CSmtpBodyEditor.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CSmtpBodyEditor.qml)
-set_source_files_properties(../../qml/MetaBuilder/CSmtpSenderForm.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CSmtpSenderForm.qml)
-set_source_files_properties(../../qml/MetaBuilder/CSmtpServerForm.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CSmtpServerForm.qml)
-set_source_files_properties(../../qml/MetaBuilder/CSmtpTemplateEditor.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CSmtpTemplateEditor.qml)
-set_source_files_properties(../../qml/MetaBuilder/CSmtpTemplateList.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CSmtpTemplateList.qml)
-set_source_files_properties(../../qml/MetaBuilder/CSmtpTestEmailForm.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CSmtpTestEmailForm.qml)
-set_source_files_properties(../../qml/MetaBuilder/CStatCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CStatCard.qml)
-set_source_files_properties(../../qml/MetaBuilder/CStatCell.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CStatCell.qml)
-set_source_files_properties(../../qml/MetaBuilder/CStatsStrip.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CStatsStrip.qml)
-set_source_files_properties(../../qml/MetaBuilder/CSuperGodDialogs.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CSuperGodDialogs.qml)
-set_source_files_properties(../../qml/MetaBuilder/CSuperGodHeader.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CSuperGodHeader.qml)
-set_source_files_properties(../../qml/MetaBuilder/CSystemMetricCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CSystemMetricCard.qml)
-set_source_files_properties(../../qml/MetaBuilder/CSystemTab.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CSystemTab.qml)
-set_source_files_properties(../../qml/MetaBuilder/CTableEmptyState.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CTableEmptyState.qml)
-set_source_files_properties(../../qml/MetaBuilder/CTableHeader.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CTableHeader.qml)
-set_source_files_properties(../../qml/MetaBuilder/CTablePagination.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CTablePagination.qml)
-set_source_files_properties(../../qml/MetaBuilder/CTableRowDelegate.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CTableRowDelegate.qml)
-set_source_files_properties(../../qml/MetaBuilder/CTechCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CTechCard.qml)
-set_source_files_properties(../../qml/MetaBuilder/CTenantCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CTenantCard.qml)
-set_source_files_properties(../../qml/MetaBuilder/CTenantTab.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CTenantTab.qml)
-set_source_files_properties(../../qml/MetaBuilder/CThemePicker.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CThemePicker.qml)
-set_source_files_properties(../../qml/MetaBuilder/CTransferCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CTransferCard.qml)
-set_source_files_properties(../../qml/MetaBuilder/CTransferForm.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CTransferForm.qml)
-set_source_files_properties(../../qml/MetaBuilder/CTransferTab.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CTransferTab.qml)
-set_source_files_properties(../../qml/MetaBuilder/CUserMenu.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CUserMenu.qml)
-set_source_files_properties(../../qml/MetaBuilder/CVersionPill.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CVersionPill.qml)
-set_source_files_properties(../../qml/MetaBuilder/CWelcomeCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CWelcomeCard.qml)
-set_source_files_properties(../../qml/MetaBuilder/CWorkflowCanvas.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CWorkflowCanvas.qml)
-set_source_files_properties(../../qml/MetaBuilder/CWorkflowNodeDelegate.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CWorkflowNodeDelegate.qml)
-set_source_files_properties(../../qml/MetaBuilder/CWorkflowOutputLog.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CWorkflowOutputLog.qml)
-set_source_files_properties(../../qml/MetaBuilder/CWorkflowSidebar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CWorkflowSidebar.qml)
-set_source_files_properties(../../qml/MetaBuilder/CWorkflowState.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CWorkflowState.qml)
-set_source_files_properties(../../qml/MetaBuilder/CWorkflowTestPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CWorkflowTestPanel.qml)
-set_source_files_properties(../../qml/MetaBuilder/CWorkflowToolbar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CWorkflowToolbar.qml)
-set_source_files_properties(../../qml/MetaBuilder/ComponentTreeDBAL.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ComponentTreeDBAL.js)
-set_source_files_properties(../../qml/MetaBuilder/ContactForm.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ContactForm.qml)
-set_source_files_properties(../../qml/MetaBuilder/CssClassLogic.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CssClassLogic.js)
-set_source_files_properties(../../qml/MetaBuilder/CssClassPreview.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CssClassPreview.qml)
-set_source_files_properties(../../qml/MetaBuilder/CssClassSidebar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CssClassSidebar.qml)
-set_source_files_properties(../../qml/MetaBuilder/CssPropertyEditor.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CssPropertyEditor.qml)
-set_source_files_properties(../../qml/MetaBuilder/CssPropertyRow.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CssPropertyRow.qml)
-set_source_files_properties(../../qml/MetaBuilder/CssSuggestionPopup.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CssSuggestionPopup.qml)
-set_source_files_properties(../../qml/MetaBuilder/DashboardDBAL.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/DashboardDBAL.js)
-set_source_files_properties(../../qml/MetaBuilder/DatabaseLogic.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/DatabaseLogic.js)
-set_source_files_properties(../../qml/MetaBuilder/DropdownExpandedList.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/DropdownExpandedList.qml)
-set_source_files_properties(../../qml/MetaBuilder/DropdownGeneralForm.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/DropdownGeneralForm.qml)
-set_source_files_properties(../../qml/MetaBuilder/DropdownOptionsEditor.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/DropdownOptionsEditor.qml)
-set_source_files_properties(../../qml/MetaBuilder/DropdownPreview.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/DropdownPreview.qml)
-set_source_files_properties(../../qml/MetaBuilder/DropdownSidebar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/DropdownSidebar.qml)
-set_source_files_properties(../../qml/MetaBuilder/FeatureCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/FeatureCard.qml)
-set_source_files_properties(../../qml/MetaBuilder/FrontPageLogic.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/FrontPageLogic.js)
-set_source_files_properties(../../qml/MetaBuilder/HeroSection.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/HeroSection.qml)
-set_source_files_properties(../../qml/MetaBuilder/LuaCodeEditor.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaCodeEditor.qml)
-set_source_files_properties(../../qml/MetaBuilder/LuaEditorLogic.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaEditorLogic.js)
-set_source_files_properties(../../qml/MetaBuilder/LuaEditorStatusBar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaEditorStatusBar.qml)
-set_source_files_properties(../../qml/MetaBuilder/LuaOutputConsole.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaOutputConsole.qml)
-set_source_files_properties(../../qml/MetaBuilder/LuaOutputPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaOutputPanel.qml)
-set_source_files_properties(../../qml/MetaBuilder/LuaPropertiesPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaPropertiesPanel.qml)
-set_source_files_properties(../../qml/MetaBuilder/LuaScriptInfoSection.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaScriptInfoSection.qml)
-set_source_files_properties(../../qml/MetaBuilder/LuaScriptSidebar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaScriptSidebar.qml)
-set_source_files_properties(../../qml/MetaBuilder/LuaSecurityPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaSecurityPanel.qml)
-set_source_files_properties(../../qml/MetaBuilder/LuaTestInputPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaTestInputPanel.qml)
-set_source_files_properties(../../qml/MetaBuilder/MediaChannelDetail.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaChannelDetail.qml)
-set_source_files_properties(../../qml/MetaBuilder/MediaChannelList.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaChannelList.qml)
-set_source_files_properties(../../qml/MetaBuilder/MediaChannelSchedule.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaChannelSchedule.qml)
-set_source_files_properties(../../qml/MetaBuilder/MediaJobForm.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaJobForm.qml)
-set_source_files_properties(../../qml/MetaBuilder/MediaJobRow.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaJobRow.qml)
-set_source_files_properties(../../qml/MetaBuilder/MediaJobTable.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaJobTable.qml)
-set_source_files_properties(../../qml/MetaBuilder/MediaPluginCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaPluginCard.qml)
-set_source_files_properties(../../qml/MetaBuilder/MediaPluginsTab.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaPluginsTab.qml)
-set_source_files_properties(../../qml/MetaBuilder/MediaRadioDetail.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaRadioDetail.qml)
-set_source_files_properties(../../qml/MetaBuilder/MediaRadioPlaylist.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaRadioPlaylist.qml)
-set_source_files_properties(../../qml/MetaBuilder/MediaRadioTab.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaRadioTab.qml)
-set_source_files_properties(../../qml/MetaBuilder/MediaTvTab.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaTvTab.qml)
-set_source_files_properties(../../qml/MetaBuilder/NavBar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/NavBar.qml)
-set_source_files_properties(../../qml/MetaBuilder/ProfileDBAL.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ProfileDBAL.js)
-set_source_files_properties(../../qml/MetaBuilder/SchemaEditorDBAL.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/SchemaEditorDBAL.js)
-set_source_files_properties(../../qml/MetaBuilder/SchemaFieldEditor.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/SchemaFieldEditor.qml)
-set_source_files_properties(../../qml/MetaBuilder/SchemaFieldRow.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/SchemaFieldRow.qml)
-set_source_files_properties(../../qml/MetaBuilder/SchemaFieldsTable.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/SchemaFieldsTable.qml)
-set_source_files_properties(../../qml/MetaBuilder/SchemaSidebar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/SchemaSidebar.qml)
-set_source_files_properties(../../qml/MetaBuilder/SettingsLogic.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/SettingsLogic.js)
-set_source_files_properties(../../qml/MetaBuilder/SmtpLogic.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/SmtpLogic.js)
-set_source_files_properties(../../qml/MetaBuilder/StatusCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/StatusCard.qml)
-set_source_files_properties(../../qml/MetaBuilder/StorybookSamples.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/StorybookSamples.qml)
-set_source_files_properties(../../qml/MetaBuilder/StorybookSidebar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/StorybookSidebar.qml)
-set_source_files_properties(../../qml/MetaBuilder/ThemeColorField.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ThemeColorField.qml)
-set_source_files_properties(../../qml/MetaBuilder/ThemeColorTokens.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ThemeColorTokens.qml)
-set_source_files_properties(../../qml/MetaBuilder/ThemeEditorLogic.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ThemeEditorLogic.js)
-set_source_files_properties(../../qml/MetaBuilder/ThemeLivePreview.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ThemeLivePreview.qml)
-set_source_files_properties(../../qml/MetaBuilder/ThemePresetGrid.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ThemePresetGrid.qml)
-set_source_files_properties(../../qml/MetaBuilder/ThemePreviewActivityCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ThemePreviewActivityCard.qml)
-set_source_files_properties(../../qml/MetaBuilder/ThemePreviewCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ThemePreviewCard.qml)
-set_source_files_properties(../../qml/MetaBuilder/ThemePreviewForm.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ThemePreviewForm.qml)
-set_source_files_properties(../../qml/MetaBuilder/ThemePreviewStatusCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ThemePreviewStatusCard.qml)
-set_source_files_properties(../../qml/MetaBuilder/ThemeRadiusEditor.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ThemeRadiusEditor.qml)
-set_source_files_properties(../../qml/MetaBuilder/ThemeSpacingEditor.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ThemeSpacingEditor.qml)
-set_source_files_properties(../../qml/MetaBuilder/ThemeSpacingRadius.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ThemeSpacingRadius.qml)
-set_source_files_properties(../../qml/MetaBuilder/ThemeTypography.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ThemeTypography.qml)
-set_source_files_properties(../../qml/MetaBuilder/UserFormDialog.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/UserFormDialog.qml)
-set_source_files_properties(../../qml/MetaBuilder/UserManagementDBAL.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/UserManagementDBAL.js)
-set_source_files_properties(../../qml/MetaBuilder/UserSearchFilter.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/UserSearchFilter.qml)
-set_source_files_properties(../../qml/MetaBuilder/UserStatsBar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/UserStatsBar.qml)
-set_source_files_properties(../../qml/MetaBuilder/UserTable.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/UserTable.qml)
-set_source_files_properties(../../qml/MetaBuilder/UserTableRow.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/UserTableRow.qml)
-set_source_files_properties(../../qml/MetaBuilder/WorkflowConnectionState.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/WorkflowConnectionState.js)
-set_source_files_properties(../../qml/MetaBuilder/WorkflowDBAL.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/WorkflowDBAL.js)
-set_source_files_properties(../../qml/MetaBuilder/WorkflowMutations.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/WorkflowMutations.js)
-set_source_files_properties(../../qml/MetaBuilder/WorkflowNode.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/WorkflowNode.qml)
-set_source_files_properties(../../qml/dbal/DBALProvider.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/dbal/DBALProvider.qml)
-set_source_files_properties(../../qml/Material/qmldir PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/qmldir)
-set_source_files_properties(../../qml/MetaBuilder/qmldir PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/qmldir)
-set_source_files_properties(../../qml/dbal/qmldir PROPERTIES QT_RESOURCE_ALIAS qmllib/dbal/qmldir)
+set_source_files_properties(../../libraries/qml/qt6/AdminCrud.js PROPERTIES QT_RESOURCE_ALIAS AdminCrud.js)
+set_source_files_properties(../../libraries/qml/qt6/AdminView.qml PROPERTIES QT_RESOURCE_ALIAS AdminView.qml)
+set_source_files_properties(../../libraries/qml/qt6/App.qml PROPERTIES QT_RESOURCE_ALIAS App.qml)
+set_source_files_properties(../../libraries/qml/qt6/CommentsDBAL.js PROPERTIES QT_RESOURCE_ALIAS CommentsDBAL.js)
+set_source_files_properties(../../libraries/qml/qt6/CommentsView.qml PROPERTIES QT_RESOURCE_ALIAS CommentsView.qml)
+set_source_files_properties(../../libraries/qml/qt6/ComponentHierarchyEditor.qml PROPERTIES QT_RESOURCE_ALIAS ComponentHierarchyEditor.qml)
+set_source_files_properties(../../libraries/qml/qt6/CssClassManager.qml PROPERTIES QT_RESOURCE_ALIAS CssClassManager.qml)
+set_source_files_properties(../../libraries/qml/qt6/DashboardView.qml PROPERTIES QT_RESOURCE_ALIAS DashboardView.qml)
+set_source_files_properties(../../libraries/qml/qt6/DatabaseManager.qml PROPERTIES QT_RESOURCE_ALIAS DatabaseManager.qml)
+set_source_files_properties(../../libraries/qml/qt6/DropdownConfigManager.qml PROPERTIES QT_RESOURCE_ALIAS DropdownConfigManager.qml)
+set_source_files_properties(../../libraries/qml/qt6/DropdownCrud.js PROPERTIES QT_RESOURCE_ALIAS DropdownCrud.js)
+set_source_files_properties(../../libraries/qml/qt6/FrontPage.qml PROPERTIES QT_RESOURCE_ALIAS FrontPage.qml)
+set_source_files_properties(../../libraries/qml/qt6/GodPanel.qml PROPERTIES QT_RESOURCE_ALIAS GodPanel.qml)
+set_source_files_properties(../../libraries/qml/qt6/LoginDBAL.js PROPERTIES QT_RESOURCE_ALIAS LoginDBAL.js)
+set_source_files_properties(../../libraries/qml/qt6/LoginView.qml PROPERTIES QT_RESOURCE_ALIAS LoginView.qml)
+set_source_files_properties(../../libraries/qml/qt6/LuaEditor.qml PROPERTIES QT_RESOURCE_ALIAS LuaEditor.qml)
+set_source_files_properties(../../libraries/qml/qt6/MaterialLanding.qml PROPERTIES QT_RESOURCE_ALIAS MaterialLanding.qml)
+set_source_files_properties(../../libraries/qml/qt6/MediaServiceCrud.js PROPERTIES QT_RESOURCE_ALIAS MediaServiceCrud.js)
+set_source_files_properties(../../libraries/qml/qt6/MediaServicePanel.qml PROPERTIES QT_RESOURCE_ALIAS MediaServicePanel.qml)
+set_source_files_properties(../../libraries/qml/qt6/ModPlayerPanel.qml PROPERTIES QT_RESOURCE_ALIAS ModPlayerPanel.qml)
+set_source_files_properties(../../libraries/qml/qt6/ModeratorData.js PROPERTIES QT_RESOURCE_ALIAS ModeratorData.js)
+set_source_files_properties(../../libraries/qml/qt6/ModeratorView.qml PROPERTIES QT_RESOURCE_ALIAS ModeratorView.qml)
+set_source_files_properties(../../libraries/qml/qt6/NotificationsDBAL.js PROPERTIES QT_RESOURCE_ALIAS NotificationsDBAL.js)
+set_source_files_properties(../../libraries/qml/qt6/NotificationsPanel.qml PROPERTIES QT_RESOURCE_ALIAS NotificationsPanel.qml)
+set_source_files_properties(../../libraries/qml/qt6/PackageManager.qml PROPERTIES QT_RESOURCE_ALIAS PackageManager.qml)
+set_source_files_properties(../../libraries/qml/qt6/PackageViewLoader.qml PROPERTIES QT_RESOURCE_ALIAS PackageViewLoader.qml)
+set_source_files_properties(../../libraries/qml/qt6/PageRoutesDBAL.js PROPERTIES QT_RESOURCE_ALIAS PageRoutesDBAL.js)
+set_source_files_properties(../../libraries/qml/qt6/PageRoutesManager.qml PROPERTIES QT_RESOURCE_ALIAS PageRoutesManager.qml)
+set_source_files_properties(../../libraries/qml/qt6/ProfileView.qml PROPERTIES QT_RESOURCE_ALIAS ProfileView.qml)
+set_source_files_properties(../../libraries/qml/qt6/SMTPConfigEditor.qml PROPERTIES QT_RESOURCE_ALIAS SMTPConfigEditor.qml)
+set_source_files_properties(../../libraries/qml/qt6/SchemaEditor.qml PROPERTIES QT_RESOURCE_ALIAS SchemaEditor.qml)
+set_source_files_properties(../../libraries/qml/qt6/SettingsView.qml PROPERTIES QT_RESOURCE_ALIAS SettingsView.qml)
+set_source_files_properties(../../libraries/qml/qt6/Storybook.qml PROPERTIES QT_RESOURCE_ALIAS Storybook.qml)
+set_source_files_properties(../../libraries/qml/qt6/SuperGodCrud.js PROPERTIES QT_RESOURCE_ALIAS SuperGodCrud.js)
+set_source_files_properties(../../libraries/qml/qt6/SuperGodPanel.qml PROPERTIES QT_RESOURCE_ALIAS SuperGodPanel.qml)
+set_source_files_properties(../../libraries/qml/qt6/ThemeEditor.qml PROPERTIES QT_RESOURCE_ALIAS ThemeEditor.qml)
+set_source_files_properties(../../libraries/qml/qt6/UserManagement.qml PROPERTIES QT_RESOURCE_ALIAS UserManagement.qml)
+set_source_files_properties(../../libraries/qml/qt6/WorkflowEditor.qml PROPERTIES QT_RESOURCE_ALIAS WorkflowEditor.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialAccordion.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialAccordion.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialAlert.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialAlert.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialAppBar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialAppBar.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialAvatar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialAvatar.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialBadge.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialBadge.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialBox.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialBox.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialButton.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialButton.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialCard.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialCheckbox.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialCheckbox.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialChip.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialChip.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialCircularProgress.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialCircularProgress.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialCollapse.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialCollapse.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialContainer.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialContainer.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialDialog.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialDialog.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialDivider.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialDivider.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialDividerProps.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialDividerProps.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialGrid.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialGrid.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialIconButton.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialIconButton.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialLinearProgress.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialLinearProgress.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialLink.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialLink.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialMenu.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialMenu.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialMenuItem.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialMenuItem.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialMenuProps.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialMenuProps.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialPalette.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialPalette.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialPaper.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialPaper.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialPopover.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialPopover.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialPopoverProps.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialPopoverProps.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialSkeleton.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialSkeleton.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialSnackbar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialSnackbar.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialSurface.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialSurface.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialSwitch.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialSwitch.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialTextField.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialTextField.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialToolbar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialToolbar.qml)
+set_source_files_properties(../../libraries/qml/Material/MaterialTypography.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/MaterialTypography.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/AppLogic.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/AppLogic.js)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CActivityList.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CActivityList.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CAdapterPatternSelector.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CAdapterPatternSelector.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CAddDropdownDialog.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CAddDropdownDialog.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CAddFieldDialog.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CAddFieldDialog.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CAddRouteDialog.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CAddRouteDialog.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CAdminContentPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CAdminContentPanel.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CAdminDialogs.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CAdminDialogs.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CAdminStatsBar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CAdminStatsBar.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CAdminToolbar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CAdminToolbar.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CBackendConnectionSection.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CBackendConnectionSection.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CBackendDetailPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CBackendDetailPanel.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CBackendListSidebar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CBackendListSidebar.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CCanvasGrid.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CCanvasGrid.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CCanvasInteractionArea.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CCanvasInteractionArea.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CCanvasViewport.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CCanvasViewport.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CCanvasZoomOverlay.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CCanvasZoomOverlay.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CCommentCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CCommentCard.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CCommentInput.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CCommentInput.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CComponentPropertiesPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CComponentPropertiesPanel.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CComponentPropsList.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CComponentPropsList.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CComponentTreeRow.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CComponentTreeRow.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CComponentTypeLegend.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CComponentTypeLegend.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CConfigStatCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CConfigStatCard.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CConnectionLayer.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CConnectionLayer.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CConnectionTest.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CConnectionTest.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CCreateSchemaDialog.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CCreateSchemaDialog.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CDataTable.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CDataTable.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CDatabaseEnvConfig.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CDatabaseEnvConfig.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CDatabaseStatsRow.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CDatabaseStatsRow.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CDeleteConfirmDialog.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CDeleteConfirmDialog.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CDeleteDropdownDialog.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CDeleteDropdownDialog.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CDeleteRecordDialog.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CDeleteRecordDialog.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CDropdownEditorPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CDropdownEditorPanel.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CDropdownMenu.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CDropdownMenu.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CDropdownMenuItem.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CDropdownMenuItem.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CEncryptionSelector.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CEncryptionSelector.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CEntityForm.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CEntityForm.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CEntitySidebar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CEntitySidebar.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CExecutionStatusDot.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CExecutionStatusDot.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CFrontPageFooter.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CFrontPageFooter.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CGodPanelGuideTab.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CGodPanelGuideTab.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CGodPanelHeader.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CGodPanelHeader.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CGodPanelSettingsTab.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CGodPanelSettingsTab.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CGodUserCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CGodUserCard.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CGodUsersTab.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CGodUsersTab.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CHeroSection.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CHeroSection.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CJobProgressBar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CJobProgressBar.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CKeyboardShortcuts.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CKeyboardShortcuts.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CLanguageSelector.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CLanguageSelector.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CLevelCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CLevelCard.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CLevelReferenceCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CLevelReferenceCard.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CLevelTagFlow.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CLevelTagFlow.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CLoginForm.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CLoginForm.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CMediaHeader.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CMediaHeader.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CMediaJobsTab.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CMediaJobsTab.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CModActionCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CModActionCard.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CModStatsRow.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CModStatsRow.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CModeratorHeader.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CModeratorHeader.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CNavBar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNavBar.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CNodePalette.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNodePalette.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CNodePaletteItem.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNodePaletteItem.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CNodeParameterList.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNodeParameterList.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CNodePortColumn.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNodePortColumn.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CNodePorts.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNodePorts.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CNodePortsDisplay.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNodePortsDisplay.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CNodePropertiesPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNodePropertiesPanel.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CNotificationBell.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNotificationBell.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CNotificationContent.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNotificationContent.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CNotificationEmptyState.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNotificationEmptyState.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CNotificationIconBadge.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNotificationIconBadge.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CNotificationItem.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNotificationItem.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CNotificationToggles.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CNotificationToggles.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CPackageDetailSidebar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CPackageDetailSidebar.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CPackageListItem.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CPackageListItem.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CProfileConnectedAccounts.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CProfileConnectedAccounts.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CProfileForm.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CProfileForm.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CProfileHeader.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CProfileHeader.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CProfilePasswordCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CProfilePasswordCard.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CQuickActions.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CQuickActions.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CQuickLoginCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CQuickLoginCard.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CReportCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CReportCard.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CRouteEditPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CRouteEditPanel.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CRoutePermissionSection.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CRoutePermissionSection.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CRouteTableHeader.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CRouteTableHeader.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CRouteTableRow.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CRouteTableRow.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CServiceConnectionRow.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CServiceConnectionRow.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CServiceStatus.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CServiceStatus.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CSettingsAbout.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CSettingsAbout.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CSettingsSection.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CSettingsSection.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CSidebar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CSidebar.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CSmtpBodyEditor.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CSmtpBodyEditor.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CSmtpSenderForm.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CSmtpSenderForm.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CSmtpServerForm.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CSmtpServerForm.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CSmtpTemplateEditor.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CSmtpTemplateEditor.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CSmtpTemplateList.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CSmtpTemplateList.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CSmtpTestEmailForm.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CSmtpTestEmailForm.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CStatCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CStatCard.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CStatCell.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CStatCell.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CStatsStrip.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CStatsStrip.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CSuperGodDialogs.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CSuperGodDialogs.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CSuperGodHeader.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CSuperGodHeader.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CSystemMetricCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CSystemMetricCard.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CSystemTab.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CSystemTab.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CTableEmptyState.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CTableEmptyState.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CTableHeader.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CTableHeader.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CTablePagination.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CTablePagination.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CTableRowDelegate.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CTableRowDelegate.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CTechCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CTechCard.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CTenantCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CTenantCard.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CTenantTab.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CTenantTab.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CThemePicker.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CThemePicker.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CTransferCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CTransferCard.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CTransferForm.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CTransferForm.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CTransferTab.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CTransferTab.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CUserMenu.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CUserMenu.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CVersionPill.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CVersionPill.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CWelcomeCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CWelcomeCard.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CWorkflowCanvas.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CWorkflowCanvas.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CWorkflowNodeDelegate.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CWorkflowNodeDelegate.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CWorkflowOutputLog.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CWorkflowOutputLog.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CWorkflowSidebar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CWorkflowSidebar.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CWorkflowState.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CWorkflowState.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CWorkflowTestPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CWorkflowTestPanel.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CWorkflowToolbar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CWorkflowToolbar.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/ComponentTreeDBAL.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ComponentTreeDBAL.js)
+set_source_files_properties(../../libraries/qml/MetaBuilder/ContactForm.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ContactForm.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CssClassLogic.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CssClassLogic.js)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CssClassPreview.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CssClassPreview.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CssClassSidebar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CssClassSidebar.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CssPropertyEditor.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CssPropertyEditor.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CssPropertyRow.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CssPropertyRow.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/CssSuggestionPopup.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CssSuggestionPopup.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/DashboardDBAL.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/DashboardDBAL.js)
+set_source_files_properties(../../libraries/qml/MetaBuilder/DatabaseLogic.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/DatabaseLogic.js)
+set_source_files_properties(../../libraries/qml/MetaBuilder/DropdownExpandedList.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/DropdownExpandedList.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/DropdownGeneralForm.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/DropdownGeneralForm.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/DropdownOptionsEditor.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/DropdownOptionsEditor.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/DropdownPreview.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/DropdownPreview.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/DropdownSidebar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/DropdownSidebar.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/FeatureCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/FeatureCard.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/FrontPageLogic.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/FrontPageLogic.js)
+set_source_files_properties(../../libraries/qml/MetaBuilder/HeroSection.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/HeroSection.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/LuaCodeEditor.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaCodeEditor.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/LuaEditorLogic.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaEditorLogic.js)
+set_source_files_properties(../../libraries/qml/MetaBuilder/LuaEditorStatusBar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaEditorStatusBar.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/LuaOutputConsole.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaOutputConsole.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/LuaOutputPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaOutputPanel.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/LuaPropertiesPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaPropertiesPanel.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/LuaScriptInfoSection.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaScriptInfoSection.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/LuaScriptSidebar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaScriptSidebar.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/LuaSecurityPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaSecurityPanel.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/LuaTestInputPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaTestInputPanel.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/MediaChannelDetail.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaChannelDetail.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/MediaChannelList.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaChannelList.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/MediaChannelSchedule.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaChannelSchedule.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/MediaJobForm.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaJobForm.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/MediaJobRow.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaJobRow.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/MediaJobTable.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaJobTable.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/MediaPluginCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaPluginCard.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/MediaPluginsTab.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaPluginsTab.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/MediaRadioDetail.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaRadioDetail.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/MediaRadioPlaylist.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaRadioPlaylist.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/MediaRadioTab.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaRadioTab.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/MediaTvTab.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaTvTab.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/NavBar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/NavBar.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/ProfileDBAL.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ProfileDBAL.js)
+set_source_files_properties(../../libraries/qml/MetaBuilder/SchemaEditorDBAL.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/SchemaEditorDBAL.js)
+set_source_files_properties(../../libraries/qml/MetaBuilder/SchemaFieldEditor.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/SchemaFieldEditor.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/SchemaFieldRow.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/SchemaFieldRow.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/SchemaFieldsTable.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/SchemaFieldsTable.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/SchemaSidebar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/SchemaSidebar.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/SettingsLogic.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/SettingsLogic.js)
+set_source_files_properties(../../libraries/qml/MetaBuilder/SmtpLogic.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/SmtpLogic.js)
+set_source_files_properties(../../libraries/qml/MetaBuilder/StatusCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/StatusCard.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/StorybookSamples.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/StorybookSamples.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/StorybookSidebar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/StorybookSidebar.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/ThemeColorField.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ThemeColorField.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/ThemeColorTokens.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ThemeColorTokens.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/ThemeEditorLogic.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ThemeEditorLogic.js)
+set_source_files_properties(../../libraries/qml/MetaBuilder/ThemeLivePreview.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ThemeLivePreview.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/ThemePresetGrid.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ThemePresetGrid.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/ThemePreviewActivityCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ThemePreviewActivityCard.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/ThemePreviewCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ThemePreviewCard.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/ThemePreviewForm.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ThemePreviewForm.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/ThemePreviewStatusCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ThemePreviewStatusCard.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/ThemeRadiusEditor.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ThemeRadiusEditor.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/ThemeSpacingEditor.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ThemeSpacingEditor.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/ThemeSpacingRadius.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ThemeSpacingRadius.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/ThemeTypography.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/ThemeTypography.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/UserFormDialog.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/UserFormDialog.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/UserManagementDBAL.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/UserManagementDBAL.js)
+set_source_files_properties(../../libraries/qml/MetaBuilder/UserSearchFilter.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/UserSearchFilter.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/UserStatsBar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/UserStatsBar.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/UserTable.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/UserTable.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/UserTableRow.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/UserTableRow.qml)
+set_source_files_properties(../../libraries/qml/MetaBuilder/WorkflowConnectionState.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/WorkflowConnectionState.js)
+set_source_files_properties(../../libraries/qml/MetaBuilder/WorkflowDBAL.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/WorkflowDBAL.js)
+set_source_files_properties(../../libraries/qml/MetaBuilder/WorkflowMutations.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/WorkflowMutations.js)
+set_source_files_properties(../../libraries/qml/MetaBuilder/WorkflowNode.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/WorkflowNode.qml)
+set_source_files_properties(../../libraries/qml/dbal/DBALProvider.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/dbal/DBALProvider.qml)
+set_source_files_properties(../../libraries/qml/Material/qmldir PROPERTIES QT_RESOURCE_ALIAS qmllib/Material/qmldir)
+set_source_files_properties(../../libraries/qml/MetaBuilder/qmldir PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/qmldir)
+set_source_files_properties(../../libraries/qml/dbal/qmldir PROPERTIES QT_RESOURCE_ALIAS qmllib/dbal/qmldir)
 
 qt_add_qml_module(metabuilder-qt6
     URI DBALObservatory
     VERSION 1.0
     QML_FILES
-        ../../qml/qt6/AdminCrud.js
-        ../../qml/qt6/AdminView.qml
-        ../../qml/qt6/App.qml
-        ../../qml/qt6/CommentsDBAL.js
-        ../../qml/qt6/CommentsView.qml
-        ../../qml/qt6/ComponentHierarchyEditor.qml
-        ../../qml/qt6/CssClassManager.qml
-        ../../qml/qt6/DashboardView.qml
-        ../../qml/qt6/DatabaseManager.qml
-        ../../qml/qt6/DropdownConfigManager.qml
-        ../../qml/qt6/DropdownCrud.js
-        ../../qml/qt6/FrontPage.qml
-        ../../qml/qt6/GodPanel.qml
-        ../../qml/qt6/LoginDBAL.js
-        ../../qml/qt6/LoginView.qml
-        ../../qml/qt6/LuaEditor.qml
-        ../../qml/qt6/MaterialLanding.qml
-        ../../qml/qt6/MediaServiceCrud.js
-        ../../qml/qt6/MediaServicePanel.qml
-        ../../qml/qt6/ModPlayerPanel.qml
-        ../../qml/qt6/ModeratorData.js
-        ../../qml/qt6/ModeratorView.qml
-        ../../qml/qt6/NotificationsDBAL.js
-        ../../qml/qt6/NotificationsPanel.qml
-        ../../qml/qt6/PackageManager.qml
-        ../../qml/qt6/PackageViewLoader.qml
-        ../../qml/qt6/PageRoutesDBAL.js
-        ../../qml/qt6/PageRoutesManager.qml
-        ../../qml/qt6/ProfileView.qml
-        ../../qml/qt6/SMTPConfigEditor.qml
-        ../../qml/qt6/SchemaEditor.qml
-        ../../qml/qt6/SettingsView.qml
-        ../../qml/qt6/Storybook.qml
-        ../../qml/qt6/SuperGodCrud.js
-        ../../qml/qt6/SuperGodPanel.qml
-        ../../qml/qt6/ThemeEditor.qml
-        ../../qml/qt6/UserManagement.qml
-        ../../qml/qt6/WorkflowEditor.qml
-        ../../qml/Material/MaterialAccordion.qml
-        ../../qml/Material/MaterialAlert.qml
-        ../../qml/Material/MaterialAppBar.qml
-        ../../qml/Material/MaterialAvatar.qml
-        ../../qml/Material/MaterialBadge.qml
-        ../../qml/Material/MaterialBox.qml
-        ../../qml/Material/MaterialButton.qml
-        ../../qml/Material/MaterialCard.qml
-        ../../qml/Material/MaterialCheckbox.qml
-        ../../qml/Material/MaterialChip.qml
-        ../../qml/Material/MaterialCircularProgress.qml
-        ../../qml/Material/MaterialCollapse.qml
-        ../../qml/Material/MaterialContainer.qml
-        ../../qml/Material/MaterialDialog.qml
-        ../../qml/Material/MaterialDivider.qml
-        ../../qml/Material/MaterialDividerProps.qml
-        ../../qml/Material/MaterialGrid.qml
-        ../../qml/Material/MaterialIconButton.qml
-        ../../qml/Material/MaterialLinearProgress.qml
-        ../../qml/Material/MaterialLink.qml
-        ../../qml/Material/MaterialMenu.qml
-        ../../qml/Material/MaterialMenuItem.qml
-        ../../qml/Material/MaterialMenuProps.qml
-        ../../qml/Material/MaterialPalette.qml
-        ../../qml/Material/MaterialPaper.qml
-        ../../qml/Material/MaterialPopover.qml
-        ../../qml/Material/MaterialPopoverProps.qml
-        ../../qml/Material/MaterialSkeleton.qml
-        ../../qml/Material/MaterialSnackbar.qml
-        ../../qml/Material/MaterialSurface.qml
-        ../../qml/Material/MaterialSwitch.qml
-        ../../qml/Material/MaterialTextField.qml
-        ../../qml/Material/MaterialToolbar.qml
-        ../../qml/Material/MaterialTypography.qml
-        ../../qml/MetaBuilder/AppLogic.js
-        ../../qml/MetaBuilder/CActivityList.qml
-        ../../qml/MetaBuilder/CAdapterPatternSelector.qml
-        ../../qml/MetaBuilder/CAddDropdownDialog.qml
-        ../../qml/MetaBuilder/CAddFieldDialog.qml
-        ../../qml/MetaBuilder/CAddRouteDialog.qml
-        ../../qml/MetaBuilder/CAdminContentPanel.qml
-        ../../qml/MetaBuilder/CAdminDialogs.qml
-        ../../qml/MetaBuilder/CAdminStatsBar.qml
-        ../../qml/MetaBuilder/CAdminToolbar.qml
-        ../../qml/MetaBuilder/CBackendConnectionSection.qml
-        ../../qml/MetaBuilder/CBackendDetailPanel.qml
-        ../../qml/MetaBuilder/CBackendListSidebar.qml
-        ../../qml/MetaBuilder/CCanvasGrid.qml
-        ../../qml/MetaBuilder/CCanvasInteractionArea.qml
-        ../../qml/MetaBuilder/CCanvasViewport.qml
-        ../../qml/MetaBuilder/CCanvasZoomOverlay.qml
-        ../../qml/MetaBuilder/CCommentCard.qml
-        ../../qml/MetaBuilder/CCommentInput.qml
-        ../../qml/MetaBuilder/CComponentPropertiesPanel.qml
-        ../../qml/MetaBuilder/CComponentPropsList.qml
-        ../../qml/MetaBuilder/CComponentTreeRow.qml
-        ../../qml/MetaBuilder/CComponentTypeLegend.qml
-        ../../qml/MetaBuilder/CConfigStatCard.qml
-        ../../qml/MetaBuilder/CConnectionLayer.qml
-        ../../qml/MetaBuilder/CConnectionTest.qml
-        ../../qml/MetaBuilder/CCreateSchemaDialog.qml
-        ../../qml/MetaBuilder/CDataTable.qml
-        ../../qml/MetaBuilder/CDatabaseEnvConfig.qml
-        ../../qml/MetaBuilder/CDatabaseStatsRow.qml
-        ../../qml/MetaBuilder/CDeleteConfirmDialog.qml
-        ../../qml/MetaBuilder/CDeleteDropdownDialog.qml
-        ../../qml/MetaBuilder/CDeleteRecordDialog.qml
-        ../../qml/MetaBuilder/CDropdownEditorPanel.qml
-        ../../qml/MetaBuilder/CDropdownMenu.qml
-        ../../qml/MetaBuilder/CDropdownMenuItem.qml
-        ../../qml/MetaBuilder/CEncryptionSelector.qml
-        ../../qml/MetaBuilder/CEntityForm.qml
-        ../../qml/MetaBuilder/CEntitySidebar.qml
-        ../../qml/MetaBuilder/CExecutionStatusDot.qml
-        ../../qml/MetaBuilder/CFrontPageFooter.qml
-        ../../qml/MetaBuilder/CGodPanelGuideTab.qml
-        ../../qml/MetaBuilder/CGodPanelHeader.qml
-        ../../qml/MetaBuilder/CGodPanelSettingsTab.qml
-        ../../qml/MetaBuilder/CGodUserCard.qml
-        ../../qml/MetaBuilder/CGodUsersTab.qml
-        ../../qml/MetaBuilder/CHeroSection.qml
-        ../../qml/MetaBuilder/CJobProgressBar.qml
-        ../../qml/MetaBuilder/CKeyboardShortcuts.qml
-        ../../qml/MetaBuilder/CLanguageSelector.qml
-        ../../qml/MetaBuilder/CLevelCard.qml
-        ../../qml/MetaBuilder/CLevelReferenceCard.qml
-        ../../qml/MetaBuilder/CLevelTagFlow.qml
-        ../../qml/MetaBuilder/CLoginForm.qml
-        ../../qml/MetaBuilder/CMediaHeader.qml
-        ../../qml/MetaBuilder/CMediaJobsTab.qml
-        ../../qml/MetaBuilder/CModActionCard.qml
-        ../../qml/MetaBuilder/CModStatsRow.qml
-        ../../qml/MetaBuilder/CModeratorHeader.qml
-        ../../qml/MetaBuilder/CNavBar.qml
-        ../../qml/MetaBuilder/CNodePalette.qml
-        ../../qml/MetaBuilder/CNodePaletteItem.qml
-        ../../qml/MetaBuilder/CNodeParameterList.qml
-        ../../qml/MetaBuilder/CNodePortColumn.qml
-        ../../qml/MetaBuilder/CNodePorts.qml
-        ../../qml/MetaBuilder/CNodePortsDisplay.qml
-        ../../qml/MetaBuilder/CNodePropertiesPanel.qml
-        ../../qml/MetaBuilder/CNotificationBell.qml
-        ../../qml/MetaBuilder/CNotificationContent.qml
-        ../../qml/MetaBuilder/CNotificationEmptyState.qml
-        ../../qml/MetaBuilder/CNotificationIconBadge.qml
-        ../../qml/MetaBuilder/CNotificationItem.qml
-        ../../qml/MetaBuilder/CNotificationToggles.qml
-        ../../qml/MetaBuilder/CPackageDetailSidebar.qml
-        ../../qml/MetaBuilder/CPackageListItem.qml
-        ../../qml/MetaBuilder/CProfileConnectedAccounts.qml
-        ../../qml/MetaBuilder/CProfileForm.qml
-        ../../qml/MetaBuilder/CProfileHeader.qml
-        ../../qml/MetaBuilder/CProfilePasswordCard.qml
-        ../../qml/MetaBuilder/CQuickActions.qml
-        ../../qml/MetaBuilder/CQuickLoginCard.qml
-        ../../qml/MetaBuilder/CReportCard.qml
-        ../../qml/MetaBuilder/CRouteEditPanel.qml
-        ../../qml/MetaBuilder/CRoutePermissionSection.qml
-        ../../qml/MetaBuilder/CRouteTableHeader.qml
-        ../../qml/MetaBuilder/CRouteTableRow.qml
-        ../../qml/MetaBuilder/CServiceConnectionRow.qml
-        ../../qml/MetaBuilder/CServiceStatus.qml
-        ../../qml/MetaBuilder/CSettingsAbout.qml
-        ../../qml/MetaBuilder/CSettingsSection.qml
-        ../../qml/MetaBuilder/CSidebar.qml
-        ../../qml/MetaBuilder/CSmtpBodyEditor.qml
-        ../../qml/MetaBuilder/CSmtpSenderForm.qml
-        ../../qml/MetaBuilder/CSmtpServerForm.qml
-        ../../qml/MetaBuilder/CSmtpTemplateEditor.qml
-        ../../qml/MetaBuilder/CSmtpTemplateList.qml
-        ../../qml/MetaBuilder/CSmtpTestEmailForm.qml
-        ../../qml/MetaBuilder/CStatCard.qml
-        ../../qml/MetaBuilder/CStatCell.qml
-        ../../qml/MetaBuilder/CStatsStrip.qml
-        ../../qml/MetaBuilder/CSuperGodDialogs.qml
-        ../../qml/MetaBuilder/CSuperGodHeader.qml
-        ../../qml/MetaBuilder/CSystemMetricCard.qml
-        ../../qml/MetaBuilder/CSystemTab.qml
-        ../../qml/MetaBuilder/CTableEmptyState.qml
-        ../../qml/MetaBuilder/CTableHeader.qml
-        ../../qml/MetaBuilder/CTablePagination.qml
-        ../../qml/MetaBuilder/CTableRowDelegate.qml
-        ../../qml/MetaBuilder/CTechCard.qml
-        ../../qml/MetaBuilder/CTenantCard.qml
-        ../../qml/MetaBuilder/CTenantTab.qml
-        ../../qml/MetaBuilder/CThemePicker.qml
-        ../../qml/MetaBuilder/CTransferCard.qml
-        ../../qml/MetaBuilder/CTransferForm.qml
-        ../../qml/MetaBuilder/CTransferTab.qml
-        ../../qml/MetaBuilder/CUserMenu.qml
-        ../../qml/MetaBuilder/CVersionPill.qml
-        ../../qml/MetaBuilder/CWelcomeCard.qml
-        ../../qml/MetaBuilder/CWorkflowCanvas.qml
-        ../../qml/MetaBuilder/CWorkflowNodeDelegate.qml
-        ../../qml/MetaBuilder/CWorkflowOutputLog.qml
-        ../../qml/MetaBuilder/CWorkflowSidebar.qml
-        ../../qml/MetaBuilder/CWorkflowState.qml
-        ../../qml/MetaBuilder/CWorkflowTestPanel.qml
-        ../../qml/MetaBuilder/CWorkflowToolbar.qml
-        ../../qml/MetaBuilder/ComponentTreeDBAL.js
-        ../../qml/MetaBuilder/ContactForm.qml
-        ../../qml/MetaBuilder/CssClassLogic.js
-        ../../qml/MetaBuilder/CssClassPreview.qml
-        ../../qml/MetaBuilder/CssClassSidebar.qml
-        ../../qml/MetaBuilder/CssPropertyEditor.qml
-        ../../qml/MetaBuilder/CssPropertyRow.qml
-        ../../qml/MetaBuilder/CssSuggestionPopup.qml
-        ../../qml/MetaBuilder/DashboardDBAL.js
-        ../../qml/MetaBuilder/DatabaseLogic.js
-        ../../qml/MetaBuilder/DropdownExpandedList.qml
-        ../../qml/MetaBuilder/DropdownGeneralForm.qml
-        ../../qml/MetaBuilder/DropdownOptionsEditor.qml
-        ../../qml/MetaBuilder/DropdownPreview.qml
-        ../../qml/MetaBuilder/DropdownSidebar.qml
-        ../../qml/MetaBuilder/FeatureCard.qml
-        ../../qml/MetaBuilder/FrontPageLogic.js
-        ../../qml/MetaBuilder/HeroSection.qml
-        ../../qml/MetaBuilder/LuaCodeEditor.qml
-        ../../qml/MetaBuilder/LuaEditorLogic.js
-        ../../qml/MetaBuilder/LuaEditorStatusBar.qml
-        ../../qml/MetaBuilder/LuaOutputConsole.qml
-        ../../qml/MetaBuilder/LuaOutputPanel.qml
-        ../../qml/MetaBuilder/LuaPropertiesPanel.qml
-        ../../qml/MetaBuilder/LuaScriptInfoSection.qml
-        ../../qml/MetaBuilder/LuaScriptSidebar.qml
-        ../../qml/MetaBuilder/LuaSecurityPanel.qml
-        ../../qml/MetaBuilder/LuaTestInputPanel.qml
-        ../../qml/MetaBuilder/MediaChannelDetail.qml
-        ../../qml/MetaBuilder/MediaChannelList.qml
-        ../../qml/MetaBuilder/MediaChannelSchedule.qml
-        ../../qml/MetaBuilder/MediaJobForm.qml
-        ../../qml/MetaBuilder/MediaJobRow.qml
-        ../../qml/MetaBuilder/MediaJobTable.qml
-        ../../qml/MetaBuilder/MediaPluginCard.qml
-        ../../qml/MetaBuilder/MediaPluginsTab.qml
-        ../../qml/MetaBuilder/MediaRadioDetail.qml
-        ../../qml/MetaBuilder/MediaRadioPlaylist.qml
-        ../../qml/MetaBuilder/MediaRadioTab.qml
-        ../../qml/MetaBuilder/MediaTvTab.qml
-        ../../qml/MetaBuilder/NavBar.qml
-        ../../qml/MetaBuilder/ProfileDBAL.js
-        ../../qml/MetaBuilder/SchemaEditorDBAL.js
-        ../../qml/MetaBuilder/SchemaFieldEditor.qml
-        ../../qml/MetaBuilder/SchemaFieldRow.qml
-        ../../qml/MetaBuilder/SchemaFieldsTable.qml
-        ../../qml/MetaBuilder/SchemaSidebar.qml
-        ../../qml/MetaBuilder/SettingsLogic.js
-        ../../qml/MetaBuilder/SmtpLogic.js
-        ../../qml/MetaBuilder/StatusCard.qml
-        ../../qml/MetaBuilder/StorybookSamples.qml
-        ../../qml/MetaBuilder/StorybookSidebar.qml
-        ../../qml/MetaBuilder/ThemeColorField.qml
-        ../../qml/MetaBuilder/ThemeColorTokens.qml
-        ../../qml/MetaBuilder/ThemeEditorLogic.js
-        ../../qml/MetaBuilder/ThemeLivePreview.qml
-        ../../qml/MetaBuilder/ThemePresetGrid.qml
-        ../../qml/MetaBuilder/ThemePreviewActivityCard.qml
-        ../../qml/MetaBuilder/ThemePreviewCard.qml
-        ../../qml/MetaBuilder/ThemePreviewForm.qml
-        ../../qml/MetaBuilder/ThemePreviewStatusCard.qml
-        ../../qml/MetaBuilder/ThemeRadiusEditor.qml
-        ../../qml/MetaBuilder/ThemeSpacingEditor.qml
-        ../../qml/MetaBuilder/ThemeSpacingRadius.qml
-        ../../qml/MetaBuilder/ThemeTypography.qml
-        ../../qml/MetaBuilder/UserFormDialog.qml
-        ../../qml/MetaBuilder/UserManagementDBAL.js
-        ../../qml/MetaBuilder/UserSearchFilter.qml
-        ../../qml/MetaBuilder/UserStatsBar.qml
-        ../../qml/MetaBuilder/UserTable.qml
-        ../../qml/MetaBuilder/UserTableRow.qml
-        ../../qml/MetaBuilder/WorkflowConnectionState.js
-        ../../qml/MetaBuilder/WorkflowDBAL.js
-        ../../qml/MetaBuilder/WorkflowMutations.js
-        ../../qml/MetaBuilder/WorkflowNode.qml
-        ../../qml/dbal/DBALProvider.qml
+        ../../libraries/qml/qt6/AdminCrud.js
+        ../../libraries/qml/qt6/AdminView.qml
+        ../../libraries/qml/qt6/App.qml
+        ../../libraries/qml/qt6/CommentsDBAL.js
+        ../../libraries/qml/qt6/CommentsView.qml
+        ../../libraries/qml/qt6/ComponentHierarchyEditor.qml
+        ../../libraries/qml/qt6/CssClassManager.qml
+        ../../libraries/qml/qt6/DashboardView.qml
+        ../../libraries/qml/qt6/DatabaseManager.qml
+        ../../libraries/qml/qt6/DropdownConfigManager.qml
+        ../../libraries/qml/qt6/DropdownCrud.js
+        ../../libraries/qml/qt6/FrontPage.qml
+        ../../libraries/qml/qt6/GodPanel.qml
+        ../../libraries/qml/qt6/LoginDBAL.js
+        ../../libraries/qml/qt6/LoginView.qml
+        ../../libraries/qml/qt6/LuaEditor.qml
+        ../../libraries/qml/qt6/MaterialLanding.qml
+        ../../libraries/qml/qt6/MediaServiceCrud.js
+        ../../libraries/qml/qt6/MediaServicePanel.qml
+        ../../libraries/qml/qt6/ModPlayerPanel.qml
+        ../../libraries/qml/qt6/ModeratorData.js
+        ../../libraries/qml/qt6/ModeratorView.qml
+        ../../libraries/qml/qt6/NotificationsDBAL.js
+        ../../libraries/qml/qt6/NotificationsPanel.qml
+        ../../libraries/qml/qt6/PackageManager.qml
+        ../../libraries/qml/qt6/PackageViewLoader.qml
+        ../../libraries/qml/qt6/PageRoutesDBAL.js
+        ../../libraries/qml/qt6/PageRoutesManager.qml
+        ../../libraries/qml/qt6/ProfileView.qml
+        ../../libraries/qml/qt6/SMTPConfigEditor.qml
+        ../../libraries/qml/qt6/SchemaEditor.qml
+        ../../libraries/qml/qt6/SettingsView.qml
+        ../../libraries/qml/qt6/Storybook.qml
+        ../../libraries/qml/qt6/SuperGodCrud.js
+        ../../libraries/qml/qt6/SuperGodPanel.qml
+        ../../libraries/qml/qt6/ThemeEditor.qml
+        ../../libraries/qml/qt6/UserManagement.qml
+        ../../libraries/qml/qt6/WorkflowEditor.qml
+        ../../libraries/qml/Material/MaterialAccordion.qml
+        ../../libraries/qml/Material/MaterialAlert.qml
+        ../../libraries/qml/Material/MaterialAppBar.qml
+        ../../libraries/qml/Material/MaterialAvatar.qml
+        ../../libraries/qml/Material/MaterialBadge.qml
+        ../../libraries/qml/Material/MaterialBox.qml
+        ../../libraries/qml/Material/MaterialButton.qml
+        ../../libraries/qml/Material/MaterialCard.qml
+        ../../libraries/qml/Material/MaterialCheckbox.qml
+        ../../libraries/qml/Material/MaterialChip.qml
+        ../../libraries/qml/Material/MaterialCircularProgress.qml
+        ../../libraries/qml/Material/MaterialCollapse.qml
+        ../../libraries/qml/Material/MaterialContainer.qml
+        ../../libraries/qml/Material/MaterialDialog.qml
+        ../../libraries/qml/Material/MaterialDivider.qml
+        ../../libraries/qml/Material/MaterialDividerProps.qml
+        ../../libraries/qml/Material/MaterialGrid.qml
+        ../../libraries/qml/Material/MaterialIconButton.qml
+        ../../libraries/qml/Material/MaterialLinearProgress.qml
+        ../../libraries/qml/Material/MaterialLink.qml
+        ../../libraries/qml/Material/MaterialMenu.qml
+        ../../libraries/qml/Material/MaterialMenuItem.qml
+        ../../libraries/qml/Material/MaterialMenuProps.qml
+        ../../libraries/qml/Material/MaterialPalette.qml
+        ../../libraries/qml/Material/MaterialPaper.qml
+        ../../libraries/qml/Material/MaterialPopover.qml
+        ../../libraries/qml/Material/MaterialPopoverProps.qml
+        ../../libraries/qml/Material/MaterialSkeleton.qml
+        ../../libraries/qml/Material/MaterialSnackbar.qml
+        ../../libraries/qml/Material/MaterialSurface.qml
+        ../../libraries/qml/Material/MaterialSwitch.qml
+        ../../libraries/qml/Material/MaterialTextField.qml
+        ../../libraries/qml/Material/MaterialToolbar.qml
+        ../../libraries/qml/Material/MaterialTypography.qml
+        ../../libraries/qml/MetaBuilder/AppLogic.js
+        ../../libraries/qml/MetaBuilder/CActivityList.qml
+        ../../libraries/qml/MetaBuilder/CAdapterPatternSelector.qml
+        ../../libraries/qml/MetaBuilder/CAddDropdownDialog.qml
+        ../../libraries/qml/MetaBuilder/CAddFieldDialog.qml
+        ../../libraries/qml/MetaBuilder/CAddRouteDialog.qml
+        ../../libraries/qml/MetaBuilder/CAdminContentPanel.qml
+        ../../libraries/qml/MetaBuilder/CAdminDialogs.qml
+        ../../libraries/qml/MetaBuilder/CAdminStatsBar.qml
+        ../../libraries/qml/MetaBuilder/CAdminToolbar.qml
+        ../../libraries/qml/MetaBuilder/CBackendConnectionSection.qml
+        ../../libraries/qml/MetaBuilder/CBackendDetailPanel.qml
+        ../../libraries/qml/MetaBuilder/CBackendListSidebar.qml
+        ../../libraries/qml/MetaBuilder/CCanvasGrid.qml
+        ../../libraries/qml/MetaBuilder/CCanvasInteractionArea.qml
+        ../../libraries/qml/MetaBuilder/CCanvasViewport.qml
+        ../../libraries/qml/MetaBuilder/CCanvasZoomOverlay.qml
+        ../../libraries/qml/MetaBuilder/CCommentCard.qml
+        ../../libraries/qml/MetaBuilder/CCommentInput.qml
+        ../../libraries/qml/MetaBuilder/CComponentPropertiesPanel.qml
+        ../../libraries/qml/MetaBuilder/CComponentPropsList.qml
+        ../../libraries/qml/MetaBuilder/CComponentTreeRow.qml
+        ../../libraries/qml/MetaBuilder/CComponentTypeLegend.qml
+        ../../libraries/qml/MetaBuilder/CConfigStatCard.qml
+        ../../libraries/qml/MetaBuilder/CConnectionLayer.qml
+        ../../libraries/qml/MetaBuilder/CConnectionTest.qml
+        ../../libraries/qml/MetaBuilder/CCreateSchemaDialog.qml
+        ../../libraries/qml/MetaBuilder/CDataTable.qml
+        ../../libraries/qml/MetaBuilder/CDatabaseEnvConfig.qml
+        ../../libraries/qml/MetaBuilder/CDatabaseStatsRow.qml
+        ../../libraries/qml/MetaBuilder/CDeleteConfirmDialog.qml
+        ../../libraries/qml/MetaBuilder/CDeleteDropdownDialog.qml
+        ../../libraries/qml/MetaBuilder/CDeleteRecordDialog.qml
+        ../../libraries/qml/MetaBuilder/CDropdownEditorPanel.qml
+        ../../libraries/qml/MetaBuilder/CDropdownMenu.qml
+        ../../libraries/qml/MetaBuilder/CDropdownMenuItem.qml
+        ../../libraries/qml/MetaBuilder/CEncryptionSelector.qml
+        ../../libraries/qml/MetaBuilder/CEntityForm.qml
+        ../../libraries/qml/MetaBuilder/CEntitySidebar.qml
+        ../../libraries/qml/MetaBuilder/CExecutionStatusDot.qml
+        ../../libraries/qml/MetaBuilder/CFrontPageFooter.qml
+        ../../libraries/qml/MetaBuilder/CGodPanelGuideTab.qml
+        ../../libraries/qml/MetaBuilder/CGodPanelHeader.qml
+        ../../libraries/qml/MetaBuilder/CGodPanelSettingsTab.qml
+        ../../libraries/qml/MetaBuilder/CGodUserCard.qml
+        ../../libraries/qml/MetaBuilder/CGodUsersTab.qml
+        ../../libraries/qml/MetaBuilder/CHeroSection.qml
+        ../../libraries/qml/MetaBuilder/CJobProgressBar.qml
+        ../../libraries/qml/MetaBuilder/CKeyboardShortcuts.qml
+        ../../libraries/qml/MetaBuilder/CLanguageSelector.qml
+        ../../libraries/qml/MetaBuilder/CLevelCard.qml
+        ../../libraries/qml/MetaBuilder/CLevelReferenceCard.qml
+        ../../libraries/qml/MetaBuilder/CLevelTagFlow.qml
+        ../../libraries/qml/MetaBuilder/CLoginForm.qml
+        ../../libraries/qml/MetaBuilder/CMediaHeader.qml
+        ../../libraries/qml/MetaBuilder/CMediaJobsTab.qml
+        ../../libraries/qml/MetaBuilder/CModActionCard.qml
+        ../../libraries/qml/MetaBuilder/CModStatsRow.qml
+        ../../libraries/qml/MetaBuilder/CModeratorHeader.qml
+        ../../libraries/qml/MetaBuilder/CNavBar.qml
+        ../../libraries/qml/MetaBuilder/CNodePalette.qml
+        ../../libraries/qml/MetaBuilder/CNodePaletteItem.qml
+        ../../libraries/qml/MetaBuilder/CNodeParameterList.qml
+        ../../libraries/qml/MetaBuilder/CNodePortColumn.qml
+        ../../libraries/qml/MetaBuilder/CNodePorts.qml
+        ../../libraries/qml/MetaBuilder/CNodePortsDisplay.qml
+        ../../libraries/qml/MetaBuilder/CNodePropertiesPanel.qml
+        ../../libraries/qml/MetaBuilder/CNotificationBell.qml
+        ../../libraries/qml/MetaBuilder/CNotificationContent.qml
+        ../../libraries/qml/MetaBuilder/CNotificationEmptyState.qml
+        ../../libraries/qml/MetaBuilder/CNotificationIconBadge.qml
+        ../../libraries/qml/MetaBuilder/CNotificationItem.qml
+        ../../libraries/qml/MetaBuilder/CNotificationToggles.qml
+        ../../libraries/qml/MetaBuilder/CPackageDetailSidebar.qml
+        ../../libraries/qml/MetaBuilder/CPackageListItem.qml
+        ../../libraries/qml/MetaBuilder/CProfileConnectedAccounts.qml
+        ../../libraries/qml/MetaBuilder/CProfileForm.qml
+        ../../libraries/qml/MetaBuilder/CProfileHeader.qml
+        ../../libraries/qml/MetaBuilder/CProfilePasswordCard.qml
+        ../../libraries/qml/MetaBuilder/CQuickActions.qml
+        ../../libraries/qml/MetaBuilder/CQuickLoginCard.qml
+        ../../libraries/qml/MetaBuilder/CReportCard.qml
+        ../../libraries/qml/MetaBuilder/CRouteEditPanel.qml
+        ../../libraries/qml/MetaBuilder/CRoutePermissionSection.qml
+        ../../libraries/qml/MetaBuilder/CRouteTableHeader.qml
+        ../../libraries/qml/MetaBuilder/CRouteTableRow.qml
+        ../../libraries/qml/MetaBuilder/CServiceConnectionRow.qml
+        ../../libraries/qml/MetaBuilder/CServiceStatus.qml
+        ../../libraries/qml/MetaBuilder/CSettingsAbout.qml
+        ../../libraries/qml/MetaBuilder/CSettingsSection.qml
+        ../../libraries/qml/MetaBuilder/CSidebar.qml
+        ../../libraries/qml/MetaBuilder/CSmtpBodyEditor.qml
+        ../../libraries/qml/MetaBuilder/CSmtpSenderForm.qml
+        ../../libraries/qml/MetaBuilder/CSmtpServerForm.qml
+        ../../libraries/qml/MetaBuilder/CSmtpTemplateEditor.qml
+        ../../libraries/qml/MetaBuilder/CSmtpTemplateList.qml
+        ../../libraries/qml/MetaBuilder/CSmtpTestEmailForm.qml
+        ../../libraries/qml/MetaBuilder/CStatCard.qml
+        ../../libraries/qml/MetaBuilder/CStatCell.qml
+        ../../libraries/qml/MetaBuilder/CStatsStrip.qml
+        ../../libraries/qml/MetaBuilder/CSuperGodDialogs.qml
+        ../../libraries/qml/MetaBuilder/CSuperGodHeader.qml
+        ../../libraries/qml/MetaBuilder/CSystemMetricCard.qml
+        ../../libraries/qml/MetaBuilder/CSystemTab.qml
+        ../../libraries/qml/MetaBuilder/CTableEmptyState.qml
+        ../../libraries/qml/MetaBuilder/CTableHeader.qml
+        ../../libraries/qml/MetaBuilder/CTablePagination.qml
+        ../../libraries/qml/MetaBuilder/CTableRowDelegate.qml
+        ../../libraries/qml/MetaBuilder/CTechCard.qml
+        ../../libraries/qml/MetaBuilder/CTenantCard.qml
+        ../../libraries/qml/MetaBuilder/CTenantTab.qml
+        ../../libraries/qml/MetaBuilder/CThemePicker.qml
+        ../../libraries/qml/MetaBuilder/CTransferCard.qml
+        ../../libraries/qml/MetaBuilder/CTransferForm.qml
+        ../../libraries/qml/MetaBuilder/CTransferTab.qml
+        ../../libraries/qml/MetaBuilder/CUserMenu.qml
+        ../../libraries/qml/MetaBuilder/CVersionPill.qml
+        ../../libraries/qml/MetaBuilder/CWelcomeCard.qml
+        ../../libraries/qml/MetaBuilder/CWorkflowCanvas.qml
+        ../../libraries/qml/MetaBuilder/CWorkflowNodeDelegate.qml
+        ../../libraries/qml/MetaBuilder/CWorkflowOutputLog.qml
+        ../../libraries/qml/MetaBuilder/CWorkflowSidebar.qml
+        ../../libraries/qml/MetaBuilder/CWorkflowState.qml
+        ../../libraries/qml/MetaBuilder/CWorkflowTestPanel.qml
+        ../../libraries/qml/MetaBuilder/CWorkflowToolbar.qml
+        ../../libraries/qml/MetaBuilder/ComponentTreeDBAL.js
+        ../../libraries/qml/MetaBuilder/ContactForm.qml
+        ../../libraries/qml/MetaBuilder/CssClassLogic.js
+        ../../libraries/qml/MetaBuilder/CssClassPreview.qml
+        ../../libraries/qml/MetaBuilder/CssClassSidebar.qml
+        ../../libraries/qml/MetaBuilder/CssPropertyEditor.qml
+        ../../libraries/qml/MetaBuilder/CssPropertyRow.qml
+        ../../libraries/qml/MetaBuilder/CssSuggestionPopup.qml
+        ../../libraries/qml/MetaBuilder/DashboardDBAL.js
+        ../../libraries/qml/MetaBuilder/DatabaseLogic.js
+        ../../libraries/qml/MetaBuilder/DropdownExpandedList.qml
+        ../../libraries/qml/MetaBuilder/DropdownGeneralForm.qml
+        ../../libraries/qml/MetaBuilder/DropdownOptionsEditor.qml
+        ../../libraries/qml/MetaBuilder/DropdownPreview.qml
+        ../../libraries/qml/MetaBuilder/DropdownSidebar.qml
+        ../../libraries/qml/MetaBuilder/FeatureCard.qml
+        ../../libraries/qml/MetaBuilder/FrontPageLogic.js
+        ../../libraries/qml/MetaBuilder/HeroSection.qml
+        ../../libraries/qml/MetaBuilder/LuaCodeEditor.qml
+        ../../libraries/qml/MetaBuilder/LuaEditorLogic.js
+        ../../libraries/qml/MetaBuilder/LuaEditorStatusBar.qml
+        ../../libraries/qml/MetaBuilder/LuaOutputConsole.qml
+        ../../libraries/qml/MetaBuilder/LuaOutputPanel.qml
+        ../../libraries/qml/MetaBuilder/LuaPropertiesPanel.qml
+        ../../libraries/qml/MetaBuilder/LuaScriptInfoSection.qml
+        ../../libraries/qml/MetaBuilder/LuaScriptSidebar.qml
+        ../../libraries/qml/MetaBuilder/LuaSecurityPanel.qml
+        ../../libraries/qml/MetaBuilder/LuaTestInputPanel.qml
+        ../../libraries/qml/MetaBuilder/MediaChannelDetail.qml
+        ../../libraries/qml/MetaBuilder/MediaChannelList.qml
+        ../../libraries/qml/MetaBuilder/MediaChannelSchedule.qml
+        ../../libraries/qml/MetaBuilder/MediaJobForm.qml
+        ../../libraries/qml/MetaBuilder/MediaJobRow.qml
+        ../../libraries/qml/MetaBuilder/MediaJobTable.qml
+        ../../libraries/qml/MetaBuilder/MediaPluginCard.qml
+        ../../libraries/qml/MetaBuilder/MediaPluginsTab.qml
+        ../../libraries/qml/MetaBuilder/MediaRadioDetail.qml
+        ../../libraries/qml/MetaBuilder/MediaRadioPlaylist.qml
+        ../../libraries/qml/MetaBuilder/MediaRadioTab.qml
+        ../../libraries/qml/MetaBuilder/MediaTvTab.qml
+        ../../libraries/qml/MetaBuilder/NavBar.qml
+        ../../libraries/qml/MetaBuilder/ProfileDBAL.js
+        ../../libraries/qml/MetaBuilder/SchemaEditorDBAL.js
+        ../../libraries/qml/MetaBuilder/SchemaFieldEditor.qml
+        ../../libraries/qml/MetaBuilder/SchemaFieldRow.qml
+        ../../libraries/qml/MetaBuilder/SchemaFieldsTable.qml
+        ../../libraries/qml/MetaBuilder/SchemaSidebar.qml
+        ../../libraries/qml/MetaBuilder/SettingsLogic.js
+        ../../libraries/qml/MetaBuilder/SmtpLogic.js
+        ../../libraries/qml/MetaBuilder/StatusCard.qml
+        ../../libraries/qml/MetaBuilder/StorybookSamples.qml
+        ../../libraries/qml/MetaBuilder/StorybookSidebar.qml
+        ../../libraries/qml/MetaBuilder/ThemeColorField.qml
+        ../../libraries/qml/MetaBuilder/ThemeColorTokens.qml
+        ../../libraries/qml/MetaBuilder/ThemeEditorLogic.js
+        ../../libraries/qml/MetaBuilder/ThemeLivePreview.qml
+        ../../libraries/qml/MetaBuilder/ThemePresetGrid.qml
+        ../../libraries/qml/MetaBuilder/ThemePreviewActivityCard.qml
+        ../../libraries/qml/MetaBuilder/ThemePreviewCard.qml
+        ../../libraries/qml/MetaBuilder/ThemePreviewForm.qml
+        ../../libraries/qml/MetaBuilder/ThemePreviewStatusCard.qml
+        ../../libraries/qml/MetaBuilder/ThemeRadiusEditor.qml
+        ../../libraries/qml/MetaBuilder/ThemeSpacingEditor.qml
+        ../../libraries/qml/MetaBuilder/ThemeSpacingRadius.qml
+        ../../libraries/qml/MetaBuilder/ThemeTypography.qml
+        ../../libraries/qml/MetaBuilder/UserFormDialog.qml
+        ../../libraries/qml/MetaBuilder/UserManagementDBAL.js
+        ../../libraries/qml/MetaBuilder/UserSearchFilter.qml
+        ../../libraries/qml/MetaBuilder/UserStatsBar.qml
+        ../../libraries/qml/MetaBuilder/UserTable.qml
+        ../../libraries/qml/MetaBuilder/UserTableRow.qml
+        ../../libraries/qml/MetaBuilder/WorkflowConnectionState.js
+        ../../libraries/qml/MetaBuilder/WorkflowDBAL.js
+        ../../libraries/qml/MetaBuilder/WorkflowMutations.js
+        ../../libraries/qml/MetaBuilder/WorkflowNode.qml
+        ../../libraries/qml/dbal/DBALProvider.qml
         packages/analytics/PackageView.qml
         packages/blog/PackageView.qml
         packages/breakout/PackageView.qml
@@ -660,9 +660,9 @@ qt_add_qml_module(metabuilder-qt6
         config/supergod-tenants.json
         config/supergod-transfers.json
         config/workflow-mock-data.json
-        ../../qml/Material/qmldir
-        ../../qml/MetaBuilder/qmldir
-        ../../qml/dbal/qmldir
+        ../../libraries/qml/Material/qmldir
+        ../../libraries/qml/MetaBuilder/qmldir
+        ../../libraries/qml/dbal/qmldir
 )
 
 # SVG assets

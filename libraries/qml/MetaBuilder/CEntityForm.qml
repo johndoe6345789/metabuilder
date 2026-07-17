@@ -19,9 +19,6 @@ import QmlComponents 1.0
 CDialog {
     id: root
     objectName: "dialog_entity_form"
-    Accessible.role: Accessible.Dialog
-    Accessible.name: title
-    activeFocusOnTab: true
 
     property string entity: ""     // Entity type name (e.g. "User")
     property var fields: []        // Array of { field, label, value? }

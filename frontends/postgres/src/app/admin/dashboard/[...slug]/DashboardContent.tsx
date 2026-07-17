@@ -17,7 +17,7 @@ export default function DashboardContent({ section, table }: Props) {
     tables, queryResult, loading, error, successMessage, mobileOpen,
     navItems, tabValue, selectedTable,
     setMobileOpen, setSuccessMessage, setError,
-    navigate, fetchTables, handleTableClick, handleLogout,
+    navigate, fetchTables, handleTableClick, handleSchemaTableClick, handleLogout,
     handleExecuteQuery, handleExecuteBuiltQuery,
     handleCreateTable, handleDropTable,
     handleAddColumn, handleModifyColumn, handleDropColumn,
@@ -37,7 +37,9 @@ export default function DashboardContent({ section, table }: Props) {
         <DashboardTabs
           navItems={navItems} tabValue={tabValue}
           tables={tables} selectedTable={selectedTable}
-          onTableClick={handleTableClick} onBack={() => navigate('tables')}
+          onTableClick={handleTableClick}
+          onSchemaTableClick={handleSchemaTableClick}
+          onBack={() => navigate('tables')}
           onExecuteQuery={handleExecuteQuery}
           onExecuteBuiltQuery={handleExecuteBuiltQuery}
           onCreateTable={handleCreateTable} onDropTable={handleDropTable}

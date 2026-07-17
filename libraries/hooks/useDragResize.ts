@@ -128,6 +128,7 @@ export const useDragResize = ({
         document.removeEventListener('mouseup', handleDragEndInternal);
       };
     }
+    return undefined;
   }, [isDragging, handleDragMove, handleDragEndInternal]);
 
   useEffect(() => {
@@ -139,6 +140,7 @@ export const useDragResize = ({
         document.removeEventListener('mouseup', handleResizeEndInternal);
       };
     }
+    return undefined;
   }, [isResizing, handleResizeMove, handleResizeEndInternal]);
 
   const handleDragStartInternal = useCallback(

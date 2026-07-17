@@ -7,7 +7,7 @@ import {
   type WorkflowNode,
   type Workflow,
   generateNodeId,
-} from '@/../../../components/workflow-editor';
+} from '@metabuilder/components/workflow-editor';
 import {
   updateNodeConfig,
   updateNodeName,

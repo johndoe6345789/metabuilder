@@ -19,6 +19,7 @@ import {
   documentationSlice,
   workflowsSlice,
 } from '@metabuilder/redux-slices'
+import godReducer from './slices/god-slice'
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -38,10 +39,11 @@ const { store, persistor } = createPersistedStore({
     realtime: realtimeSlice.reducer,
     documentation: documentationSlice.reducer,
     workflows: workflowsSlice.reducer,
+    god: godReducer,
   },
   persist: {
     key: 'nextjs-frontend',
-    whitelist: ['auth', 'ui', 'workspace', 'project', 'workflows'],
+    whitelist: ['auth', 'ui', 'workspace', 'project', 'workflows', 'god'],
   },
   middleware: (base: Middleware[]) => {
     const middlewares: Middleware[] = [...base]
@@ -55,7 +57,10 @@ const { store, persistor } = createPersistedStore({
   },
   devTools: getDevToolsConfig() as boolean | object,
   ignoredActions: ['asyncData/fetchAsyncData/pending'],
-  ignoredPaths: ['asyncData.requests.*.promise'],
+  ignoredPaths: [
+    'asyncData.requests.*.promise',
+    'canvas.canvasState.selectedItemIds',
+  ],
 })
 
 export { store, persistor }

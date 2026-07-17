@@ -25,7 +25,7 @@ const customJestConfig = {
 
     // Handle module aliases
     '^@/(.*)$': '<rootDir>/src/$1',
-    '^@metabuilder/fakemui$': '<rootDir>/__mocks__/fakeMuiMock.tsx',
+    '^@metabuilder/m3$': '<rootDir>/__mocks__/m3Mock.tsx',
     '@/\\.\\./\\.\\./\\.\\./icons/react': '<rootDir>/__mocks__/iconsMock.tsx',
     '@/\\.\\./\\.\\./\\.\\./scss/(.*)$': 'identity-obj-proxy',
     // Fallback for icon mocks

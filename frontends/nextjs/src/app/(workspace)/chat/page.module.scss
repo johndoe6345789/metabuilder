@@ -1,0 +1,13 @@
+/* Chat page — viewport-fit, no page scroll.
+ * AppBar is ~64px; DBAL banner adds ~36px when visible.
+ * Use a fixed calc height so the shell fills the visible area. */
+.wrapper {
+  /* 64px appbar + 32px banner headroom + 16px padding top */
+  height: calc(100vh - 128px);
+  max-height: calc(100vh - 128px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+  box-sizing: border-box;
+}

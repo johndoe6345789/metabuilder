@@ -138,7 +138,7 @@ Rectangle {
                     wfState.completeConnection(
                         nId, port)
                 }
-                onZoomChanged: function(z) {
+                onZoomUpdated: function(z) {
                     wfState.setZoom(z)
                 }
             }

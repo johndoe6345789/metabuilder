@@ -130,19 +130,19 @@
         "description": "Parent category"
       },
       "authorId": {
-        "type": "uuid",
+        "type": "string",
         "required": true,
         "index": true,
         "description": "Thread author"
       },
       "title": {
-        "type": "string",
+        "type": "text",
         "required": true,
         "max_length": 200,
         "description": "Thread title"
       },
       "content": {
-        "type": "string",
+        "type": "text",
         "required": true,
         "description": "First post content"
       },
@@ -178,7 +178,7 @@
         "description": "Timestamp of last reply"
       },
       "lastReplyBy": {
-        "type": "uuid",
+        "type": "string",
         "nullable": true,
         "description": "User who last replied"
       },
@@ -284,13 +284,13 @@
         "description": "Parent thread"
       },
       "authorId": {
-        "type": "uuid",
+        "type": "string",
         "required": true,
         "index": true,
         "description": "Post author"
       },
       "content": {
-        "type": "string",
+        "type": "text",
         "required": true,
         "description": "Post content"
       },

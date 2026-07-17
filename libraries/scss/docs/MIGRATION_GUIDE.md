@@ -1,8 +1,8 @@
-# Fakemui Migration Guide
+# M3 Migration Guide
 
-Guide for migrating from custom CSS, Tailwind, or other UI libraries to Fakemui.
+Guide for migrating from custom CSS, Tailwind, or other UI libraries to M3.
 
-## Why Migrate to Fakemui?
+## Why Migrate to M3?
 
 | Benefit | Impact |
 |---------|--------|
@@ -20,10 +20,10 @@ Guide for migrating from custom CSS, Tailwind, or other UI libraries to Fakemui.
 
 Replace components one by one while keeping existing code working:
 
-**Step 1: Add Fakemui to your project**
+**Step 1: Add M3 to your project**
 ```bash
 # Already available in MetaBuilder monorepo
-import { Button, Card } from '@/fakemui'
+import { Button, Card } from '@/m3'
 ```
 
 **Step 2: Replace one component at a time**
@@ -64,9 +64,9 @@ export function MyComponent() {
 }
 ```
 
-After (Fakemui):
+After (M3):
 ```tsx
-import { Card, Typography, Button } from '@/fakemui'
+import { Card, Typography, Button } from '@/m3'
 
 export function MyComponent() {
   return (
@@ -86,16 +86,16 @@ export function MyComponent() {
 
 ### Strategy 2: Page-by-Page Replacement
 
-Rewrite entire pages to use Fakemui:
+Rewrite entire pages to use M3:
 
 **Step 1: Pick a new page or low-traffic page**
 ```tsx
 // pages/settings.tsx - Less critical, good for testing
 ```
 
-**Step 2: Rewrite using Fakemui**
+**Step 2: Rewrite using M3**
 ```tsx
-import { Box, TextField, Button, Card, Stack, Typography } from '@/fakemui'
+import { Box, TextField, Button, Card, Stack, Typography } from '@/m3'
 
 export function SettingsPage() {
   return (
@@ -125,14 +125,14 @@ export function SettingsPage() {
 
 ### Strategy 3: New Features Only
 
-Use Fakemui exclusively for new features:
+Use M3 exclusively for new features:
 
 ```tsx
 // Old code with custom CSS (leave as-is)
 <div className="legacy-component">...</div>
 
-// New features use Fakemui
-import { Dialog, Button } from '@/fakemui'
+// New features use M3
+import { Dialog, Button } from '@/m3'
 
 export function NewFeatureDialog() {
   return <Dialog>New feature content</Dialog>
@@ -142,7 +142,7 @@ export function NewFeatureDialog() {
 **Benefits**:
 - Zero risk to existing code
 - Natural migration over time
-- Team learns Fakemui gradually
+- Team learns M3 gradually
 
 ## Common Migration Patterns
 
@@ -158,9 +158,9 @@ export function NewFeatureDialog() {
 </div>
 ```
 
-**After (Fakemui)**:
+**After (M3)**:
 ```tsx
-import { Box, Grid, Stack } from '@/fakemui'
+import { Box, Grid, Stack } from '@/m3'
 
 <Box sx={{ p: 3, maxWidth: 600, mx: 'auto' }}>
   <Stack spacing={2}>
@@ -173,7 +173,7 @@ import { Box, Grid, Stack } from '@/fakemui'
 ```
 
 **Key mappings**:
-| Tailwind | Fakemui |
+| Tailwind | M3 |
 |----------|---------|
 | `flex` | `<Stack>` or `sx={{ display: 'flex' }}` |
 | `flex-col` | `<Stack direction="column">` |
@@ -209,9 +209,9 @@ import { Box, Grid, Stack } from '@/fakemui'
 }
 ```
 
-**After (Fakemui)**:
+**After (M3)**:
 ```tsx
-import { Button } from '@/fakemui'
+import { Button } from '@/m3'
 
 <Button variant="contained" color="primary" size="large">
   Submit
@@ -219,7 +219,7 @@ import { Button } from '@/fakemui'
 ```
 
 **Button variant mapping**:
-| Custom | Fakemui |
+| Custom | M3 |
 |--------|---------|
 | Primary button | `<Button variant="contained" color="primary">` |
 | Secondary button | `<Button variant="outlined">` |
@@ -266,9 +266,9 @@ import { Button } from '@/fakemui'
 }
 ```
 
-**After (Fakemui)**:
+**After (M3)**:
 ```tsx
-import { TextField, Button, Box } from '@/fakemui'
+import { TextField, Button, Box } from '@/m3'
 import { useState } from 'react'
 
 export function MyForm() {
@@ -305,7 +305,7 @@ export function MyForm() {
 ```
 
 **Form component mapping**:
-| Custom | Fakemui |
+| Custom | M3 |
 |--------|---------|
 | Text input | `<TextField>` |
 | Select dropdown | `<Select>` |
@@ -354,9 +354,9 @@ export function MyForm() {
 }
 ```
 
-**After (Fakemui)**:
+**After (M3)**:
 ```tsx
-import { Card, CardHeader, CardContent, CardActions, Typography, Button, Box } from '@/fakemui'
+import { Card, CardHeader, CardContent, CardActions, Typography, Button, Box } from '@/m3'
 
 <Card>
   <CardHeader title="Title" />
@@ -421,9 +421,9 @@ return (
 }
 ```
 
-**After (Fakemui)**:
+**After (M3)**:
 ```tsx
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@/fakemui'
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@/m3'
 import { useState } from 'react'
 
 const [isOpen, setIsOpen] = useState(false)
@@ -472,9 +472,9 @@ return (
 }
 ```
 
-**After (Fakemui)**:
+**After (M3)**:
 ```tsx
-import { Alert } from '@/fakemui'
+import { Alert } from '@/m3'
 
 <Alert severity="success">Success!</Alert>
 <Alert severity="error">Error occurred</Alert>
@@ -494,9 +494,9 @@ import { Alert } from '@/fakemui'
 </div>
 ```
 
-**After (Fakemui sx prop)**:
+**After (M3 sx prop)**:
 ```tsx
-import { Box, Typography } from '@/fakemui'
+import { Box, Typography } from '@/m3'
 
 <Box sx={{
   display: 'flex',
@@ -514,7 +514,7 @@ import { Box, Typography } from '@/fakemui'
 ```
 
 **Spacing conversion**:
-| Tailwind | Fakemui | Pixels |
+| Tailwind | M3 | Pixels |
 |----------|---------|--------|
 | `p-1` | `sx={{ p: 0.5 }}` | 4px |
 | `p-2` | `sx={{ p: 1 }}` | 8px |
@@ -543,9 +543,9 @@ export function MyButton() {
 }
 ```
 
-**After (Fakemui)**:
+**After (M3)**:
 ```tsx
-import { Button } from '@/fakemui'
+import { Button } from '@/m3'
 
 export function MyButton() {
   return (
@@ -566,11 +566,11 @@ screen.getByTestId('submit-button')
 screen.getByClass('form-error')
 ```
 
-### After (Fakemui role-based)
+### After (M3 role-based)
 
 ```tsx
 import { render, screen } from '@testing-library/react'
-import { Button, TextField } from '@/fakemui'
+import { Button, TextField } from '@/m3'
 
 it('should submit form', () => {
   render(
@@ -600,9 +600,9 @@ styles.css: 150KB
 Total: 400KB
 ```
 
-**After**: Fakemui (tree-shaken)
+**After**: M3 (tree-shaken)
 ```
-App.js: 200KB (Fakemui imported components)
+App.js: 200KB (M3 imported components)
 Total: 200KB (50% reduction!)
 ```
 
@@ -629,7 +629,7 @@ const customStyles = calculateStyles(props)
 
 ## Migration Checklist
 
-- [ ] Familiarize with Fakemui components
+- [ ] Familiarize with M3 components
 - [ ] Pick migration strategy (incremental, page-by-page, new features)
 - [ ] Start with low-risk components (buttons, alerts, cards)
 - [ ] Update tests to use role-based selectors
@@ -645,7 +645,7 @@ const customStyles = calculateStyles(props)
 - [GETTING_STARTED.md](./GETTING_STARTED.md) - Basic component usage
 - [ARCHITECTURE.md](./ARCHITECTURE.md) - Design decisions and patterns
 - Material Design 3 spec: https://m3.material.io/
-- Fakemui components: `/fakemui/index.ts`
+- M3 components: `/m3/index.ts`
 
 ## Common Issues & Solutions
 

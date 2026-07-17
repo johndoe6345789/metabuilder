@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Box, Divider } from '@metabuilder/m3';
-import styles from '@/../../../scss/atoms/help.module.scss';
+import styles from '@scss/atoms/help.module.scss';
 import { useHelp } from './hooks/useHelp';
 import HelpPageHeader from './HelpPageHeader';
 import HelpFAQSection from './HelpFAQSection';

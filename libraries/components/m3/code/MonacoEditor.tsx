@@ -2,7 +2,7 @@
 
 import { lazy, Suspense, type ComponentType } from 'react'
 // Use a simple skeleton div instead of the Skeleton component for cleaner loading state
-import type { Monaco } from '@monaco-editor/react'
+type MonacoApi = typeof import('monaco-editor')
 
 // Lazy load Monaco Editor for better performance
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,7 +45,7 @@ export function getMonacoLanguage(language: string): string {
 /**
  * Configure TypeScript support in Monaco Editor
  */
-export function configureMonacoTypeScript(monaco: Monaco) {
+export function configureMonacoTypeScript(monaco: MonacoApi) {
   if (monaco.languages.typescript) {
     monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true)
   }
@@ -67,7 +67,7 @@ export interface MonacoEditorProps {
   /** Custom Monaco options */
   options?: Record<string, unknown>
   /** Called before Monaco mounts (for custom configuration) */
-  beforeMount?: (monaco: Monaco) => void
+  beforeMount?: (monaco: MonacoApi) => void
   /** Test ID for the component */
   testId?: string
 }
@@ -111,7 +111,7 @@ export function MonacoEditor({
 }: MonacoEditorProps) {
   const monacoLanguage = getMonacoLanguage(language)
 
-  const handleBeforeMount = (monaco: Monaco) => {
+  const handleBeforeMount = (monaco: MonacoApi) => {
     configureMonacoTypeScript(monaco)
     beforeMount?.(monaco)
   }

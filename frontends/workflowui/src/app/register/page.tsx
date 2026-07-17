@@ -1,6 +1,6 @@
 /**
  * Register Page
- * User registration with FakeMUI Material Design 3 components
+ * User registration with M3 Material Design 3 components
  */
 
 'use client';
@@ -11,7 +11,7 @@ import {
   Alert,
   Box,
 } from '@metabuilder/m3';
-import { AuthFormLayout } from '@/../../../components/layout';
+import { AuthFormLayout } from '@metabuilder/components/layout';
 import { useRegisterPage } from './hooks/useRegisterPage';
 import RegisterFormFields from './RegisterFormFields';
 

@@ -3,12 +3,12 @@
 ## Import Everything
 
 ```tsx
-// Fakemui Components (122+)
+// M3 Components (122+)
 import {
   Button, Stack, Card, Box, TextField, Alert,
   Modal, Dialog, Table, Chip, Avatar,
   AppBar, Toolbar, Grid, Tooltip, Badge
-} from '@/fakemui'
+} from '@/m3'
 
 // Custom Components (<150 LOC)
 import {
@@ -40,7 +40,7 @@ import {
 
 ### Build a Page with Breadcrumbs + Loading + UI State
 ```tsx
-import { Box, Stack } from '@/fakemui'
+import { Box, Stack } from '@/m3'
 import { Breadcrumbs, LoadingOverlay } from '@/components'
 import { useUI } from '@/hooks'
 
@@ -89,7 +89,7 @@ export function SaveButton() {
 ### Manage Workflows
 ```tsx
 import { useWorkflow } from '@/hooks'
-import { Button, Stack } from '@/fakemui'
+import { Button, Stack } from '@/m3'
 
 export function WorkflowActions() {
   const { currentWorkflow, update, create, delete: deleteWF } = useWorkflow()
@@ -259,7 +259,7 @@ interface RootState {
 
 ### Create Page Layout
 ```tsx
-import { Box, AppBar, Toolbar, Button } from '@/fakemui'
+import { Box, AppBar, Toolbar, Button } from '@/m3'
 import { Breadcrumbs } from '@/components'
 
 export default function Page() {
@@ -282,7 +282,7 @@ export default function Page() {
 
 ### Create Form
 ```tsx
-import { Stack, TextField, Button } from '@/fakemui'
+import { Stack, TextField, Button } from '@/m3'
 
 export function MyForm() {
   const [formData, setFormData] = useState({ name: '', email: '' })
@@ -320,7 +320,7 @@ export function MyForm() {
 
 ### Create Modal
 ```tsx
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@/fakemui'
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@/m3'
 import { useUI } from '@/hooks'
 
 export function MyModal() {
@@ -439,7 +439,7 @@ console.log('Socket connected?', isConnected)
 
 1. **Use `useUI()` everywhere** - For global notifications and modals
 2. **Compose hooks** - Mix and match hooks to build features
-3. **Use Fakemui** - Never write custom CSS, use `sx` prop
+3. **Use M3** - Never write custom CSS, use `sx` prop
 4. **Small components** - Keep components under 150 LOC
 5. **Export from index** - Keep everything importable from `@/components` and `@/hooks`
 
@@ -450,7 +450,7 @@ console.log('Socket connected?', isConnected)
 You now have:
 - ✅ 6 small reusable React components (<150 LOC)
 - ✅ 10 custom hooks for state management
-- ✅ 122+ Fakemui components for UI
+- ✅ 122+ M3 components for UI
 - ✅ Material Design 3 theming
 - ✅ Full TypeScript support
 - ✅ Real-time collaboration ready

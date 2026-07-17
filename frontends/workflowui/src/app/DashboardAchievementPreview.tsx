@@ -10,8 +10,8 @@ import {
   NodeIcon,
   TrophyIcon,
   StarIcon,
-} from '@/../../../icons/react';
-import styles from '@/../../../scss/atoms/dashboard.module.scss';
+} from '@icons/react';
+import styles from '@scss/atoms/dashboard.module.scss';
 
 const ACHIEVEMENTS = [
   {

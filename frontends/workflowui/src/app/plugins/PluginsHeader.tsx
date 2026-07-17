@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { Box, Typography } from '@metabuilder/m3';
-import styles from '@/../../../scss/atoms/plugins.module.scss';
+import styles from '@scss/atoms/plugins.module.scss';
 import PluginStats from './PluginStats';
 
 interface PluginsHeaderProps {

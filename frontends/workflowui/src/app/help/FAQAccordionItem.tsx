@@ -13,7 +13,7 @@ import {
   AccordionSummary,
   AccordionDetails,
 } from '@metabuilder/m3';
-import { ChevronDownIcon } from '@/../../../icons/react';
+import { ChevronDownIcon } from '@icons/react';
 
 interface FAQ {
   id: string;

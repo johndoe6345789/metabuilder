@@ -12,10 +12,10 @@ import {
 } from './component-registry-types'
 import {
   primitiveComponents,
-  fakeMuiComponents,
+  m3Components,
 } from './component-registry-primitives'
 import {
-  fakeMuiExplicitComponents,
+  m3ExplicitComponents,
   componentTreeSubComponents,
 } from './component-registry-explicit'
 import {
@@ -55,8 +55,8 @@ export const uiComponentRegistry: UIComponentRegistry = {
   ...customComponents,
   ...componentsComponents,
   ...componentTreeSubComponents,
-  ...fakeMuiComponents,
-  ...fakeMuiExplicitComponents,
+  ...m3Components,
+  ...m3ExplicitComponents,
 }
 
 export function registerComponent(

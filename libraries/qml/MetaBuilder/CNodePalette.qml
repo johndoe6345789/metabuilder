@@ -35,7 +35,8 @@ ColumnLayout {
         CText { variant: "h4"; text: "Node Palette" }
         CText {
             variant: "caption"
-            text: NodeRegistry.nodeCount + " types"
+            text: (NodeRegistry ? NodeRegistry.nodeCount || 0 : 0)
+                + " types"
         }
     }
 
@@ -61,7 +62,7 @@ ColumnLayout {
             }
         }
         Repeater {
-            model: NodeRegistry.groups
+            model: NodeRegistry ? (NodeRegistry.groups || []) : []
             CChip {
                 text: modelData
                 selected: root.selectedGroup === modelData
@@ -85,11 +86,12 @@ ColumnLayout {
         spacing: 2
 
         model: {
+            if (!NodeRegistry) return []
             var nodes = root.searchText
-                ? NodeRegistry.searchNodes(root.searchText)
+                ? (NodeRegistry.searchNodes(root.searchText) || [])
                 : (root.selectedGroup
-                    ? NodeRegistry.nodesByGroup(root.selectedGroup)
-                    : NodeRegistry.nodeTypes)
+                    ? (NodeRegistry.nodesByGroup(root.selectedGroup) || [])
+                    : (NodeRegistry.nodeTypes || []))
             return nodes
         }
 

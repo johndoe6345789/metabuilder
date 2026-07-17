@@ -2,7 +2,7 @@
   "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
   "package": "workflowui-templates",
   "version": "1.0.0",
-  "description": "E2E tests for templates pages after FakeMUI migration",
+  "description": "E2E tests for templates pages after M3 migration",
   "tests": [
     {
       "name": "should display templates listing page",

@@ -1,0 +1,68 @@
+.row {
+  display: grid;
+  grid-template-columns: 1fr 90px 44px 44px 90px 64px;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+  min-width: 0;
+
+  &:hover {
+    background: color-mix(
+      in srgb,
+      var(--mat-sys-on-surface) 4%,
+      transparent
+    );
+  }
+}
+
+.name {
+  font-family: monospace;
+  font-size: 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.type {
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+  background: color-mix(
+    in srgb,
+    var(--mat-sys-primary) 12%,
+    transparent
+  );
+  text-align: center;
+  white-space: nowrap;
+}
+
+.toggle {
+  display: flex;
+  justify-content: center;
+}
+
+.toggleOn {
+  color: var(--mat-sys-primary);
+  font-weight: 700;
+}
+
+.toggleOff {
+  opacity: 0.3;
+}
+
+.default {
+  font-size: 0.72rem;
+  font-family: monospace;
+  opacity: 0.65;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  gap: 2px;
+  justify-content: flex-end;
+}

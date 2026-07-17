@@ -6,9 +6,6 @@ import QmlComponents 1.0
 CDialog {
     id: dlg
     objectName: "dialog_add_field"
-    Accessible.role: Accessible.Dialog
-    Accessible.name: title
-    activeFocusOnTab: true
     title: "Add New Field"
     property var fieldTypes: []
     property string fieldName: ""
@@ -30,7 +27,6 @@ CDialog {
             placeholderText: "e.g. quantity"
             text: dlg.fieldName
             Layout.fillWidth: true
-            activeFocusOnTab: true
             Accessible.role: Accessible.EditableText
             Accessible.name: "Field Name"
             onTextChanged: dlg.fieldName = text
@@ -46,7 +42,6 @@ CDialog {
                     dlg.fieldTypes.indexOf(
                         dlg.fieldType)
                 Layout.fillWidth: true
-                activeFocusOnTab: true
                 Accessible.role: Accessible.ComboBox
                 Accessible.name: "Field Type"
                 onCurrentIndexChanged:
@@ -57,7 +52,6 @@ CDialog {
         CSwitch {
             text: "Required"
             checked: dlg.fieldRequired
-            activeFocusOnTab: true
             Accessible.role: Accessible.CheckBox
             Accessible.name: "Required field"
             Accessible.description:
@@ -71,7 +65,6 @@ CDialog {
             placeholderText: "Optional default"
             text: dlg.fieldDefault
             Layout.fillWidth: true
-            activeFocusOnTab: true
             Accessible.role: Accessible.EditableText
             Accessible.name: "Default Value"
             onTextChanged:
@@ -83,7 +76,6 @@ CDialog {
                 "What this field represents"
             text: dlg.fieldDescription
             Layout.fillWidth: true
-            activeFocusOnTab: true
             Accessible.role: Accessible.EditableText
             Accessible.name: "Field Description"
             onTextChanged:
@@ -95,7 +87,6 @@ CDialog {
             CButton {
                 text: "Cancel"
                 variant: "ghost"
-                activeFocusOnTab: true
                 Accessible.role: Accessible.Button
                 Accessible.name: "Cancel"
                 Keys.onReturnPressed:
@@ -109,7 +100,6 @@ CDialog {
                 variant: "primary"
                 enabled:
                     dlg.fieldName.trim() !== ""
-                activeFocusOnTab: true
                 Accessible.role: Accessible.Button
                 Accessible.name: "Add Field"
                 Keys.onReturnPressed: {

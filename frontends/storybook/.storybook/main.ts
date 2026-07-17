@@ -20,9 +20,9 @@ const config: StorybookConfig = {
   },
   staticDirs: [
     // Serve JSON packages from root
-    { from: '../../packages', to: '/packages' },
+    { from: '../../../packages', to: '/packages' },
     // Serve schemas for validation
-    { from: '../../schemas', to: '/schemas' },
+    { from: '../../../libraries/schemas', to: '/schemas' },
     // Serve public folder
     { from: '../public', to: '/' },
   ],

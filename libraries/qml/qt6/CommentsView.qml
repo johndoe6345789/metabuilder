@@ -88,35 +88,42 @@ Rectangle {
             Repeater {
                 model: commentsModel
                 delegate: Meta.CCommentCard {
-                    comment: ({
-                        username: model.username,
-                        initials: model.initials,
-                        timestamp: model.timestamp,
-                        body: model.body,
-                        likes: model.likes,
-                        liked: model.liked,
+                    required property int index
+                    readonly property var _item:
+                        commentsModel.get(index)
+                    comment: _item ? ({
+                        username: _item.username,
+                        initials: _item.initials,
+                        timestamp: _item.timestamp,
+                        body: _item.body,
+                        likes: _item.likes,
+                        liked: _item.liked,
                         canDelete:
-                            canDelete(model.username)
-                    })
+                            canDelete(_item.username)
+                    }) : null
                     currentUser:
                         appWindow.currentUser
                     onLiked: {
-                        var newLikes = model.liked
-                            ? model.likes - 1
-                            : model.likes + 1
+                        var item = commentsModel.get(
+                            index)
+                        if (!item) return
+                        var newLikes = item.liked
+                            ? item.likes - 1
+                            : item.likes + 1
                         commentsModel.setProperty(
                             index, "likes", newLikes)
                         commentsModel.setProperty(
-                            index, "liked",
-                            !model.liked)
+                            index, "liked", !item.liked)
                         DBAL.likeComment(
-                            dbal,
-                            model.commentId,
+                            dbal, item.commentId,
                             newLikes)
                     }
                     onDeleted: {
+                        var item = commentsModel.get(
+                            index)
+                        if (!item) return
                         DBAL.deleteComment(
-                            dbal, model.commentId)
+                            dbal, item.commentId)
                         commentsModel.remove(index)
                     }
                 }

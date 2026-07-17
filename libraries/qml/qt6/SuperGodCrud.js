@@ -2,11 +2,12 @@
 
 function loadJsonSync(path) {
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", Qt.resolvedUrl(path), false);
-    xhr.send();
-    if (xhr.status === 200 ||
-        xhr.status === 0) return JSON.parse(xhr.responseText);
-    console.warn("Failed to load JSON:", path, xhr.status);
+    try {
+        xhr.open("GET", Qt.resolvedUrl(path), false);
+        xhr.send();
+        if (xhr.status === 200 || xhr.status === 0)
+            return JSON.parse(xhr.responseText);
+    } catch(e) {}
     return null;
 }
 

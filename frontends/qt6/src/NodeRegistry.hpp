@@ -63,7 +63,7 @@ public slots:
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
             m_lastError =
                 QStringLiteral("Cannot open registry file: ") + path;
-            qWarning() << "NodeRegistry:" << m_lastError;
+            qDebug() << "NodeRegistry:" << m_lastError;
             emit errorOccurred(m_lastError);
             return;
         }
@@ -77,7 +77,7 @@ public slots:
             m_lastError =
                 QStringLiteral("JSON parse error: ")
                 + parseErr.errorString();
-            qWarning() << "NodeRegistry:" << m_lastError;
+            qDebug() << "NodeRegistry:" << m_lastError;
             emit errorOccurred(m_lastError);
             return;
         }

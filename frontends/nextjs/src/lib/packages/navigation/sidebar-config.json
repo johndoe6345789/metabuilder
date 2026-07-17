@@ -1,14 +1,70 @@
 {
   "staticItems": [
-    { "id": "dashboard",  "label": "Dashboard",   "icon": "dashboard",  "path": "/app/dashboard",  "level": 1 },
-    { "id": "profile",    "label": "Profile",      "icon": "person",     "path": "/app/profile",    "level": 1 },
-    { "id": "comments",   "label": "Comments",     "icon": "chat",       "path": "/app/comments",   "level": 1 },
-    { "id": "admin",      "label": "Admin Panel",  "icon": "admin",      "path": "/app/admin",      "level": 2 },
-    { "id": "god-panel",  "label": "God Panel",    "icon": "build",      "path": "/app/god-panel",  "level": 4 },
-    { "id": "supergod",   "label": "Super God",    "icon": "crown",      "path": "/app/supergod",   "level": 5 }
+    {
+      "id": "dashboard",
+      "label": "Dashboard",
+      "icon": "dashboard",
+      "path": "/dashboard",
+      "level": 1
+    },
+    {
+      "id": "profile",
+      "label": "Profile",
+      "icon": "person",
+      "path": "/profile",
+      "level": 1
+    },
+    {
+      "id": "comments",
+      "label": "Comments",
+      "icon": "chat",
+      "path": "/comments",
+      "level": 1
+    },
+    {
+      "id": "vault",
+      "label": "Vault",
+      "icon": "key",
+      "path": "/vault",
+      "level": 1
+    },
+    {
+      "id": "chat",
+      "label": "Chat",
+      "icon": "chat_bubble",
+      "path": "/chat",
+      "level": 1
+    },
+    {
+      "id": "admin",
+      "label": "Admin Panel",
+      "icon": "admin",
+      "path": "/admin",
+      "level": 2
+    },
+    {
+      "id": "god-panel",
+      "label": "God Panel",
+      "icon": "build",
+      "path": "/god-panel",
+      "level": 4
+    },
+    {
+      "id": "supergod",
+      "label": "Super God",
+      "icon": "crown",
+      "path": "/super-god-panel",
+      "level": 5
+    }
   ],
   "bottomItems": [
-    { "id": "settings",   "label": "Settings",     "icon": "settings",   "path": "/app/settings",   "level": 1 }
+    {
+      "id": "settings",
+      "label": "Settings",
+      "icon": "settings",
+      "path": "/settings",
+      "level": 1
+    }
   ],
   "levelLabels": {
     "0": "Public",
@@ -19,10 +75,10 @@
     "5": "Super God"
   },
   "levelColors": {
-    "1": "#2196f3",
-    "2": "#4caf50",
-    "3": "#ff9800",
-    "4": "#9c27b0",
-    "5": "#ffc107"
+    "1": "#4f6f9f",
+    "2": "#4f7f64",
+    "3": "#a97932",
+    "4": "#5f6f8f",
+    "5": "#8a7752"
   }
 }

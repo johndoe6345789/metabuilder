@@ -16,8 +16,7 @@ CCard {
 
     ColumnLayout {
         id: filterCol
-        anchors.fill: parent
-        anchors.margins: 16
+        Layout.fillWidth: true
         spacing: 12
 
         CTextField {

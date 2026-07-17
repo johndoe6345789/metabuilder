@@ -59,7 +59,7 @@ Rectangle {
                 Layout.rightMargin: 24
                 currentIndex: currentTab
                 activeFocusOnTab: true
-                Accessible.role: Accessible.TabBar
+                Accessible.role: Accessible.PageTabList
                 Accessible.name: "Moderator tabs"
                 Keys.onLeftPressed:
                     currentTab = Math.max(
@@ -90,6 +90,7 @@ Rectangle {
                     Repeater {
                         model: reportQueue
                         delegate: Meta.CReportCard {
+                            required property var modelData
                             report: modelData
                             isDark: modView.isDark
                         }
@@ -105,6 +106,7 @@ Rectangle {
                         model: recentActions
                         delegate:
                             Meta.CModActionCard {
+                            required property var modelData
                             action: modelData
                             isDark: modView.isDark
                         }

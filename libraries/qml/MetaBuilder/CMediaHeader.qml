@@ -20,7 +20,7 @@ CCard {
     signal refreshClicked()
 
     ColumnLayout {
-        anchors.fill: parent; anchors.margins: 20; spacing: 12
+        Layout.fillWidth: true; spacing: 12
 
         FlexRow {
             Layout.fillWidth: true; spacing: 12

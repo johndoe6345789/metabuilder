@@ -6,9 +6,6 @@ import QmlComponents 1.0
 CDialog {
     id: root
     objectName: "dialog_add_route"
-    Accessible.role: Accessible.Dialog
-    Accessible.name: title
-    activeFocusOnTab: true
 
     property string newPath: ""
     property string newTitle: ""
@@ -37,7 +34,6 @@ CDialog {
             Layout.fillWidth: true
             placeholderText: "/new-page"
             text: root.newPath
-            activeFocusOnTab: true
             Accessible.role: Accessible.EditableText
             Accessible.name: "Route path"
             onTextChanged: root.newPath = text
@@ -50,7 +46,6 @@ CDialog {
             Layout.fillWidth: true
             placeholderText: "New Page"
             text: root.newTitle
-            activeFocusOnTab: true
             Accessible.role: Accessible.EditableText
             Accessible.name: "Page title"
             onTextChanged: root.newTitle = text
@@ -64,7 +59,6 @@ CDialog {
             Layout.fillWidth: true
             model: root.levelOptions
             currentIndex: root.newLevel - 1
-            activeFocusOnTab: true
             Accessible.role: Accessible.ComboBox
             Accessible.name: "Required access level"
             onCurrentIndexChanged:
@@ -80,7 +74,6 @@ CDialog {
             currentIndex:
                 root.layoutOptions.indexOf(
                     root.newLayout)
-            activeFocusOnTab: true
             Accessible.role: Accessible.ComboBox
             Accessible.name: "Layout type"
             onCurrentIndexChanged:
@@ -95,7 +88,6 @@ CDialog {
             CButton {
                 text: "Cancel"
                 variant: "ghost"
-                activeFocusOnTab: true
                 Accessible.role: Accessible.Button
                 Accessible.name: "Cancel"
                 Keys.onReturnPressed: {
@@ -118,7 +110,6 @@ CDialog {
                 enabled:
                     root.newPath.length > 0 &&
                     root.newTitle.length > 0
-                activeFocusOnTab: true
                 Accessible.role: Accessible.Button
                 Accessible.name: "Add route"
                 Keys.onReturnPressed: {

@@ -5,7 +5,7 @@
 import React from 'react';
 import { Box, Typography, Button } from '@metabuilder/m3';
 import type { ProjectTemplate } from '@metabuilder/types';
-import styles from '@/../../../scss/atoms/template-detail.module.scss';
+import styles from '@scss/atoms/template-detail.module.scss';
 import TemplateWorkflowsList from './TemplateWorkflowsList';
 import TemplateTagsSection from './TemplateTagsSection';
 import TemplateRelatedSection from './TemplateRelatedSection';

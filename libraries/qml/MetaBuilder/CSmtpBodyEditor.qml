@@ -7,7 +7,7 @@ ColumnLayout {
     id: root
 
     property string body: ""
-    signal bodyChanged(string value)
+    signal bodyEdited(string value)
 
     Layout.fillWidth: true
     Layout.fillHeight: true
@@ -45,7 +45,7 @@ ColumnLayout {
                 font.pixelSize: 13
                 font.family: "monospace"
                 background: null
-                onTextChanged: root.bodyChanged(text)
+                onTextChanged: root.bodyEdited(text)
             }
         }
     }

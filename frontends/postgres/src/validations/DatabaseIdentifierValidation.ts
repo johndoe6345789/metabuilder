@@ -52,3 +52,16 @@ export function isValidIdentifier(name: string): boolean {
 export function areValidIdentifiers(identifiers: string[]): boolean {
   return identifiers.every(id => isValidIdentifier(id));
 }
+
+/**
+ * Validates a PostgreSQL table name for use in double-quoted DDL/DML.
+ * Less strict than isValidIdentifier — allows spaces and mixed case because
+ * PostgreSQL permits any character in quoted identifiers. The only character
+ * that can break out of a `"name"` quoting is a literal double-quote, so we
+ * block that specifically.
+ */
+export function isValidTableName(name: string): boolean {
+  if (!name || typeof name !== 'string') return false;
+  if (name.length === 0 || name.length > 63) return false;
+  return !name.includes('"');
+}

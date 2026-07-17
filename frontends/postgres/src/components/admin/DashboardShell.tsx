@@ -1,22 +1,11 @@
 'use client';
 
-import MenuIcon from '@metabuilder/components/m3/Menu';
-import LogoutIcon from '@metabuilder/components/m3/Logout';
-import StorageIcon from '@metabuilder/components/m3/Storage';
-import {
-  AppBar,
-  Box,
-  Button,
-  Drawer,
-  IconButton,
-  Toolbar,
-  Typography,
-  useMediaQuery,
-} from '@metabuilder/components/m3';
-import useTheme from '@metabuilder/components/m3/utils/useTheme';
+import { Box, Drawer, Toolbar } from '@metabuilder/components/m3';
 import type { ReactNode } from 'react';
+import { useDrawer } from '@/hooks';
 import styles from './dashboard-shell.module.scss';
 import AdminDrawerContent, { type AdminNavItem } from './AdminDrawerContent';
+import DashboardAppBar from './DashboardAppBar';
 
 type Props = {
   navItems: AdminNavItem[];
@@ -31,29 +20,29 @@ type Props = {
 };
 
 export default function DashboardShell({
-  navItems,
-  selectedIndex,
-  onNavigate,
-  onLogout,
-  mobileOpen,
-  onMobileOpen,
-  onMobileClose,
-  children,
-  version,
+  navItems, selectedIndex, onNavigate, onLogout, mobileOpen,
+  onMobileOpen, onMobileClose, children, version,
 }: Props) {
-  const theme = useTheme();
-  const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
+  const { desktopOpen, toggleDesktop } = useDrawer();
 
-  const drawerContent = (
+  const handleMenuClick = () => {
+    // Desktop: collapse/expand the permanent drawer; mobile: toggle it.
+    if (typeof window !== 'undefined' && window.innerWidth >= 900) {
+      toggleDesktop();
+    } else if (mobileOpen) {
+      onMobileClose();
+    } else {
+      onMobileOpen();
+    }
+  };
+
+  const drawer = (
     <>
       <Toolbar />
       <AdminDrawerContent
         navItems={navItems}
         selectedIndex={selectedIndex}
-        onNavigate={id => {
-          onNavigate(id);
-          onMobileClose();
-        }}
+        onNavigate={id => { onNavigate(id); onMobileClose(); }}
         version={version}
       />
     </>
@@ -61,40 +50,26 @@ export default function DashboardShell({
 
   return (
     <Box className={styles.root}>
-      <AppBar position="fixed">
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            onClick={onMobileOpen}
-            className={styles.hamburger}
-            aria-label="Open navigation drawer"
-          >
-            <MenuIcon />
-          </IconButton>
-          <StorageIcon className={styles.barIcon} />
-          <Typography variant="h6" noWrap component="div" className={styles.title}>
-            Postgres Admin
-          </Typography>
-          <Button color="inherit" onClick={onLogout} startIcon={<LogoutIcon />}>
-            Logout
-          </Button>
-        </Toolbar>
-      </AppBar>
-
+      <DashboardAppBar onMenuClick={handleMenuClick} onLogout={onLogout} />
       <Drawer
-        variant={isDesktop ? 'permanent' : 'temporary'}
-        open={isDesktop || mobileOpen}
+        variant="permanent"
+        open
+        className={`${styles.drawer} ${styles.desktopDrawer} ${
+          desktopOpen ? '' : styles.drawerCollapsed
+        }`}
+      >
+        {drawer}
+      </Drawer>
+      <Drawer
+        variant="temporary"
+        open={mobileOpen}
         onClose={onMobileClose}
         ModalProps={{ keepMounted: true }}
-        className={styles.drawer}
+        className={`${styles.drawer} ${styles.mobileDrawer}`}
       >
-        {drawerContent}
+        {drawer}
       </Drawer>
-
-      <Box
-        component="main"
-        className={styles.main}
-      >
+      <Box component="main" className={styles.main}>
         <Toolbar />
         {children}
       </Box>

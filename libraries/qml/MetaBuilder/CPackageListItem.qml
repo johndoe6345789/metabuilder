@@ -13,8 +13,7 @@ CCard {
     signal uninstallRequested()
 
     FlexRow {
-        anchors.fill: parent
-        anchors.margins: 16
+        Layout.fillWidth: true
         spacing: 16
 
         // Package icon badge
@@ -31,7 +30,7 @@ CCard {
                     ? packageData.icon
                     : (packageData.name ? packageData.name.charAt(0) : "?")
                 variant: "subtitle1"
-                color: packageData.installed ? "#ffffff" : Theme.textPrimary
+                color: packageData.installed ? "#ffffff" : Theme.text
             }
         }
 

@@ -96,7 +96,7 @@ export async function GET(request: NextRequest) {
                 {
                   type: 'Typography',
                   props: { variant: 'h6' },
-                  children: ['✅ Phase 2: FakeMUI Components']
+                  children: ['✅ Phase 2: M3 Components']
                 },
                 {
                   type: 'Typography',

@@ -4,8 +4,8 @@
 Scans QML files, C++ sources, SVG/audio assets, and package metadata to produce
 a complete CMakeLists.txt for the Qt6 DBAL Observatory frontend.
 
-Supports extracted component layout where QML files live in ../../qml/ and are
-referenced via relative paths with QT_RESOURCE_ALIAS for correct QRC URIs.
+Supports extracted component layout where QML files live in ../../libraries/qml/
+and are referenced via relative paths with QT_RESOURCE_ALIAS for correct QRC URIs.
 
 Usage:
     python3 generate_cmake.py                     # Write CMakeLists.txt
@@ -54,9 +54,9 @@ def find_root_qml_files(root_dir: Path) -> list[tuple[str, Optional[str]]]:
         if fn.endswith((".qml", ".js")) and os.path.isfile(root_dir / fn):
             result.append((fn, None))
 
-    # Extracted files in ../../qml/qt6/
+    # Extracted files in ../../libraries/qml/qt6/
     local_names = {t[0] for t in result}
-    extracted_dir = root_dir.parent.parent / "qml" / "qt6"
+    extracted_dir = root_dir.parent.parent / "libraries" / "qml" / "qt6"
     if extracted_dir.exists():
         for fn in sorted(os.listdir(str(extracted_dir))):
             if fn.endswith((".qml", ".js")) and fn not in local_names:
@@ -81,8 +81,8 @@ def find_qmllib_files(root_dir: Path) -> dict[str, list[tuple[str, Optional[str]
     if qmllib_dir.exists():
         dirs_to_scan.append((qmllib_dir, "qmllib"))
 
-    # Extracted ../../qml/{MetaBuilder,Material,dbal}
-    extracted_qml = root_dir.parent.parent / "qml"
+    # Extracted ../../libraries/qml/{MetaBuilder,Material,dbal}
+    extracted_qml = root_dir.parent.parent / "libraries" / "qml"
     if extracted_qml.exists():
         for module in ["MetaBuilder", "Material", "dbal"]:
             candidate = extracted_qml / module

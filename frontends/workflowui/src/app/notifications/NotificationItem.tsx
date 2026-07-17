@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { IconButton } from '@metabuilder/m3';
-import styles from '@/../../../scss/atoms/notifications.module.scss';
+import styles from '@scss/atoms/notifications.module.scss';
 
 const TYPE_COLORS: Record<string, string> = {
   workflow: 'var(--mat-sys-primary)',

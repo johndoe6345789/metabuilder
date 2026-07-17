@@ -513,7 +513,7 @@ This plugin is **Phase 6** of email client implementation:
 1. Phase 1: Email entity schemas (DBAL)
 2. Phase 2: Redux state slices
 3. Phase 3: Custom hooks
-4. Phase 4: FakeMUI components
+4. Phase 4: M3 components
 5. Phase 5: IMAP sync & search
 6. **Phase 6: Attachment handling** ← You are here
 7. Phase 7: Email compose & send

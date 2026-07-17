@@ -100,8 +100,7 @@ Rectangle {
     }
 
     ScrollView {
-        anchors.fill: parent
-        anchors.margins: 20
+        Layout.fillWidth: true
         clip: true
 
         ColumnLayout {
@@ -113,8 +112,7 @@ Rectangle {
                 Layout.fillWidth: true
 
                 ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 20
+                    Layout.fillWidth: true
                     spacing: 12
 
                     FlexRow {
@@ -172,8 +170,7 @@ Rectangle {
                         Layout.preferredWidth: 200
 
                         ColumnLayout {
-                            anchors.fill: parent
-                            anchors.margins: 16
+                            Layout.fillWidth: true
                             spacing: 8
 
                             FlexRow {
@@ -230,8 +227,7 @@ Rectangle {
                 Layout.fillWidth: true
 
                 ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 20
+                    Layout.fillWidth: true
                     spacing: 16
 
                     CText { variant: "h3"; text: "System Metrics" }
@@ -321,8 +317,7 @@ Rectangle {
                 Layout.fillWidth: true
 
                 ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 20
+                    Layout.fillWidth: true
                     spacing: 12
 
                     FlexRow {

@@ -10,6 +10,8 @@ FROM ${BASE_REGISTRY}/base-node-deps:latest AS builder
 ARG NEXT_PUBLIC_AI_ENABLED
 ENV NEXT_PUBLIC_AI_ENABLED=${NEXT_PUBLIC_AI_ENABLED}
 
+COPY package.json .npmrc ./
+
 # types + interfaces (TS type definitions)
 COPY libraries/types/ ./libraries/types/
 COPY libraries/interfaces/ ./libraries/interfaces/
@@ -26,7 +28,7 @@ COPY libraries/scss/ ./libraries/scss/
 # translations (i18n strings)
 COPY libraries/translations/ ./libraries/translations/
 
-# components + FakeMUI
+# components + M3
 COPY libraries/components/ ./libraries/components/
 
 # workflow (DAG workflow engine)
@@ -53,7 +55,7 @@ COPY libraries/redux/timing-utils/ ./libraries/redux/timing-utils/
 # CodeForge IDE
 COPY frontends/codegen/ ./frontends/codegen/
 
-RUN npm install --ignore-scripts --legacy-peer-deps
+RUN npm install --ignore-scripts
 
 RUN for ws in libraries/redux/core libraries/redux/slices \
     libraries/redux/hooks libraries/redux/adapters \

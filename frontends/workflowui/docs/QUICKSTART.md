@@ -217,7 +217,7 @@ export function useMyFeature() {
 ### Add a New Component
 ```typescript
 // src/components/MyComponent/MyComponent.tsx
-import { Box, Button } from '@metabuilder/components/fakemui';
+import { Box, Button } from '@metabuilder/components/m3';
 import styles from './MyComponent.module.scss';
 
 export function MyComponent() {

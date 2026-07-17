@@ -15,12 +15,56 @@
   margin-bottom: 16px;
 }
 
-.editorLabel {
-  display: block;
+.editorHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 6px;
+}
+
+.editorLabel {
   color: var(--mat-sys-on-surface-variant);
   font-size: 0.75rem;
   font-weight: 500;
+}
+
+.history {
+  margin-top: 12px;
+  border-top: 1px solid color-mix(in srgb, var(--mat-sys-on-surface) 10%, transparent);
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.historyLabel {
+  display: block;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.6875rem;
+}
+
+.historyItem {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 5px 8px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--mat-sys-on-surface);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &:hover {
+    background: color-mix(in srgb, var(--mat-sys-primary) 8%, transparent);
+    color: var(--mat-sys-primary);
+  }
 }
 
 .actions {

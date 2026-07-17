@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import styles from '@/../../../scss/atoms/dashboard.module.scss';
+import styles from '@scss/atoms/dashboard.module.scss';
 
 const WORKSPACE_COLORS = [
   '#6750A4',

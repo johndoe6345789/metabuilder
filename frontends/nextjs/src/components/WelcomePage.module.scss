@@ -1,0 +1,139 @@
+.root {
+  min-height: 100vh;
+  background: var(--background);
+}
+
+// ── Navbar ──────────────────────────────────────────────────────────────────
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid var(--border);
+  background: oklch(from var(--card) l c h / 0.85);
+  backdrop-filter: blur(12px);
+}
+
+.navInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--foreground);
+
+  &:hover .brandName { opacity: 0.8; }
+}
+
+.brandName {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  transition: opacity 150ms;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  @media (max-width: 600px) { display: none; }
+}
+
+.navLink {
+  font-size: 0.875rem;
+  color: color-mix(in srgb, var(--foreground) 65%, transparent);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 12px;
+  transition: color 150ms, background 150ms;
+
+  &:hover {
+    color: var(--foreground);
+    background: color-mix(in srgb, var(--foreground) 6%, transparent);
+  }
+}
+
+.navCtas {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btnOutline {
+  padding: 7px 18px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--foreground);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: background 150ms;
+
+  &:hover {
+    background: color-mix(in srgb, var(--foreground) 6%, transparent);
+  }
+}
+
+.btnFilled {
+  padding: 7px 18px;
+  border-radius: 99px;
+  background: var(--primary);
+  color: var(--primary-foreground, #fff);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: opacity 150ms;
+
+  &:hover { opacity: 0.88; }
+}
+
+// ── Footer ──────────────────────────────────────────────────────────────────
+
+.footer {
+  border-top: 1px solid var(--border, #e5e7eb);
+  padding: 28px 24px;
+}
+
+.footerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  @media (max-width: 500px) {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+.footerBrand {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--foreground);
+  letter-spacing: -0.01em;
+}
+
+.footerCopy {
+  font-size: 0.8rem;
+  color: var(--muted-foreground, #999);
+}

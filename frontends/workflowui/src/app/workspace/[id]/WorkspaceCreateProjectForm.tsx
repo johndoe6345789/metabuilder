@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { Button, TextField } from '@metabuilder/m3';
-import styles from '@/../../../scss/atoms/workspace.module.scss';
+import styles from '@scss/atoms/workspace.module.scss';
 
 interface WorkspaceCreateProjectFormProps {
   newProjectName: string;

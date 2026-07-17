@@ -1,0 +1,28 @@
+{
+  "entity": "SmtpConfig",
+  "name": "smtp_config",
+  "displayName": "SMTP Config",
+  "description": "Outbound email (SMTP) settings per tenant, authored in the god-panel Config tab.",
+  "tenantId": true,
+  "fields": {
+    "id": {
+      "type": "string",
+      "description": "Stable per-tenant SMTP config id (e.g. smtp_<tenant>)",
+      "required": true,
+      "unique": true
+    },
+    "tenantId": {
+      "type": "string",
+      "description": "Tenant isolation ID",
+      "optional": true,
+      "nullable": true
+    },
+    "host": { "type": "string", "description": "SMTP host", "optional": true },
+    "port": { "type": "number", "description": "SMTP port", "optional": true },
+    "secure": { "type": "boolean", "description": "Use TLS/SSL", "optional": true },
+    "username": { "type": "string", "description": "SMTP username", "optional": true },
+    "password": { "type": "string", "description": "SMTP password", "optional": true },
+    "fromEmail": { "type": "string", "description": "Default From address", "optional": true },
+    "fromName": { "type": "string", "description": "Default From display name", "optional": true }
+  }
+}

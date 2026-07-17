@@ -7,8 +7,10 @@ function loadJson(path, callback) {
         if (xhr.readyState === XMLHttpRequest.DONE
             && (xhr.status === 200
                 || xhr.status === 0))
-            callback(JSON.parse(
-                xhr.responseText));
+            try {
+                callback(JSON.parse(
+                    xhr.responseText));
+            } catch(e) { callback(null); }
     };
     xhr.open("GET", path, true);
     xhr.send();
@@ -94,8 +96,8 @@ function buildFormFields(entityFields,
                          entityColumns, entity,
                          editingRecord,
                          includeValues) {
-    var fields = entityFields[entity] || [];
-    var cols = entityColumns[entity] || [];
+    var fields = (entityFields || {})[entity] || [];
+    var cols = (entityColumns || {})[entity] || [];
     var result = [];
     for (var i = 1; i < fields.length; i++) {
         var entry = {

@@ -1,0 +1,47 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.offlineBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  background: color-mix(
+    in srgb,
+    var(--mat-sys-error) 12%,
+    transparent
+  );
+  color: var(--mat-sys-error);
+  font-weight: 500;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 0;
+  border: 1px solid
+    color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 480px;
+  max-height: calc(100vh - 240px);
+}
+
+.leftPanel {
+  border-right: 1px solid
+    color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.rightPanel {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}

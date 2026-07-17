@@ -11,7 +11,7 @@ import {
   Typography,
   LinearProgress,
 } from '@metabuilder/m3';
-import styles from '@/../../../scss/atoms/mat-card.module.scss';
+import styles from '@scss/atoms/mat-card.module.scss';
 
 interface AchievementPointsCardProps {
   totalPoints: number;

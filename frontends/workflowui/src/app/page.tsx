@@ -8,8 +8,8 @@
 import React from 'react';
 import { Button, CircularProgress } from '@metabuilder/m3';
 import { useDashboardLogic } from '../hooks';
-import { AddIcon } from '@/../../../icons/react';
-import styles from '@/../../../scss/atoms/dashboard.module.scss';
+import { AddIcon } from '@icons/react';
+import styles from '@scss/atoms/dashboard.module.scss';
 import DashboardStatsBanner from './DashboardStatsBanner';
 import WorkspaceCard from './WorkspaceCard';
 import WorkspaceEmptyState from './WorkspaceEmptyState';

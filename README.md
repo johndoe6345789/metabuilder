@@ -1,23 +1,25 @@
 # MetaBuilder
 
-A universal platform monorepo. One codebase. Every domain.
+A meta-application platform. Define your application in JSON. MetaBuilder runs it.
 
 **Scale**: 27,826+ files | ~540K LOC | 16 frontends | 16 libraries | 84 packages  
 **Philosophy**: 95% JSON config, 5% TypeScript/C++ infrastructure  
-**Status**: Production-ready — Quake 3 fully playable on custom engine ✅
+**Status**: Production-ready platform — multi-tenant, schema-driven, workflow-executed
 
 ---
 
 ## What Is MetaBuilder?
 
-MetaBuilder is a monorepo that covers an unusually wide surface area — not by sprawl, but by design. Every system is driven by the same JSON-first architecture: entities, workflows, UI components, and game logic are all data. C++ and TypeScript are thin infrastructure that execute it.
+MetaBuilder is a **platform for building applications from JSON**. Entities, workflows, UI components, permissions, pages, and game logic are all data — TypeScript and C++ are thin infrastructure that execute it. You define what your application does; MetaBuilder runs it.
+
+The same JSON workflow engine that powers a Quake 3-compatible game loop also powers the web frontends, the DBAL event system, and the visual workflow editor. It is one architecture applied consistently across every domain.
 
 | Domain | What's Built |
 |--------|-------------|
-| **Game Engine** | SDL3/bgfx C++ engine — Quake 3 playable (BSP, physics, weapons, bots, HUD) |
-| **Platform** | Multi-tenant Next.js + C++ DBAL REST API, 8 database backends |
-| **Component Library** | M3 — 241-component Material Design 3 clone (`@metabuilder/m3`) |
-| **Workflow Engine** | Multi-language DAG execution (TS/Python/C++/Rust/Go/Mojo) |
+| **Platform** | `frontends/nextjs` — thin runtime shell; all features live in `packages/` (84 packages). 6-level permissions (Public→SuperGod), God Panel, `/{tenant}/{package}/{entity}` routing, JSON workflows. Same architecture as the game engine. |
+| **Workflow Engine** | Multi-language DAG execution (TS/Python/C++/Rust/Go/Mojo) — runs everything |
+| **Component Library** | M3 — 241-component Material Design 3 implementation (`@metabuilder/m3`) |
+| **Game Engine** | JSON workflow game engine (SDL3 GPU C++) — Quake 3 proof of concept, any game possible |
 | **IDE** | CodeForge — in-browser code generation studio (React + Monaco) |
 | **Email Client** | Full IMAP/SMTP client (Next.js, phases 1–5 complete) |
 | **Package Registry** | Multi-format: PyPI, Maven, Go modules, Cargo, Ruby, Nuget |
@@ -28,9 +30,11 @@ MetaBuilder is a monorepo that covers an unusually wide surface area — not by 
 
 ---
 
-## Headline Achievement: Quake 3 on a Custom Engine
+## The JSON Workflow Game Engine
 
-The game engine (`frontends/gameengine/`) is a C++ engine built on SDL3/bgfx where **every game system is a composable JSON workflow step** — the same engine that drives the UI platform also drives the game.
+The game engine (`frontends/gameengine/`) demonstrates the full power of the workflow architecture: a **game-agnostic C++ engine** built on SDL3 GPU where every game system — rendering, physics, audio, input, AI, gameplay logic — is a composable JSON workflow step. There is no hardcoded game logic. A game is just a JSON file that wires steps together.
+
+Quake 3 is the current proof of concept (fully playable), but the architecture is open: loading a GTA5 map, a Doom level, or a completely original game is a matter of authoring the right workflow steps, not changing the engine.
 
 ```bash
 cd frontends/gameengine
@@ -40,8 +44,8 @@ cmake --build _build/Release --target sdl3_app
 
 | Subsystem | Implementation |
 |-----------|---------------|
-| Rendering | bgfx (Vulkan/Metal/DX12), deferred pipeline, shadow maps, TAA, SSAO, Bloom |
-| BSP loading | Full Quake 3 BSP: lightmap atlas, portal rendering, collision trees |
+| Rendering | SDL3 GPU (Vulkan/Metal/DX12), deferred pipeline, shadow maps, TAA, SSAO, Bloom |
+| Level loading | BSP (Quake 3 maps today — extensible to any format via workflow steps) |
 | Physics | AABB collision, gravity, jump, friction — pmove implementation |
 | Audio | 3D positional audio (OpenAL + Opus codec) |
 | Gameplay | Weapons, ammo, damage, bots, pickups, movers, triggers, HUD, menus |
@@ -51,6 +55,8 @@ cmake --build _build/Release --target sdl3_app
 **Game packages** (12): `quake3`, `quake3_screenshot`, `seed`, `standalone_cubes`, `bootstrap_linux`, `bootstrap_mac`, `bootstrap_windows`, `engine_tester`, `asset_loader`, `materialx`, `soundboard`, `assets`
 
 **Performance**: 52+ FPS | ~3–5 ns per workflow step | 545 C++ files (289 .hpp + 256 .cpp)
+
+> **Planned**: The `qt6` frontend is the natural launcher for the game engine — both are C++, both live in this monorepo. A Qt6 game browser that discovers installed game packages and launches the engine is a straightforward integration.
 
 ---
 
@@ -109,7 +115,7 @@ metabuilder/
 │   ├── qml/                # Qt6 QML components
 │   └── sparkos/            # Minimal Linux distro (C++/Qt6)
 ├── frontends/              # 16 application frontends
-│   ├── gameengine/         # SDL3/bgfx C++ game engine (Quake 3 ✅)
+│   ├── gameengine/         # SDL3 GPU C++ game engine (Quake 3 ✅)
 │   ├── pastebin/           # Code snippet sharing (Next.js + Flask + DBAL)
 │   ├── codegen/            # CodeForge IDE (React + Monaco)
 │   ├── workflowui/         # Visual workflow editor (n8n-style)
@@ -142,7 +148,7 @@ metabuilder/
 | Frontend | Stack | Status | Description |
 |----------|-------|--------|-------------|
 | `pastebin` | Next.js + Flask + DBAL C++ | Production | Multi-tenant code snippet manager. JWT auth, Redux + IndexedDB, 3 seeded accounts, event-driven user seeding via DBAL workflows. |
-| `nextjs` | Next.js 16, React 19, App Router | Functional | Primary web UI. Schema-driven CRUD, RSC, ISR, multi-tenant package rendering. |
+| `nextjs` | Next.js 16, React 19, App Router | Active | **The platform runtime** — thin shell that loads from `packages/`. 6-level permission system (Public→SuperGod), `/{tenant}/{package}/{entity}` routing, JSON workflow execution, God Panel. Almost no feature code lives here — behaviour comes from the 84 packages it loads. Same JSON-workflow architecture as the game engine, applied to web. |
 | `workflowui` | React, n8n-style DAG editor | Functional | Visual workflow editor with 152+ plugin nodes. 92.6% Playwright E2E pass rate. |
 | `codegen` | React + Monaco Editor | Functional | CodeForge IDE — in-browser code generation studio. Schema → component mapping, live preview. |
 | `postgres` | Next.js + M3 | Functional | PostgreSQL admin dashboard. Fully migrated to `@metabuilder/m3` SCSS modules (no MUI). |
@@ -157,9 +163,9 @@ metabuilder/
 
 | Frontend | Stack | Status | Description |
 |----------|-------|--------|-------------|
-| `gameengine` | C++20, SDL3, bgfx | Production | Custom game engine — Quake 3 fully playable. 212 JSON workflow steps. See section below. |
+| `gameengine` | C++20, SDL3 GPU | Production | Custom game engine — Quake 3 fully playable. 212 JSON workflow steps. See section below. |
 | `cli` | C++, Lua runtime | Functional | Command-line interface targeting MetaBuilder services via HTTP. Lua scripting for package execution. Conan + CMake. |
-| `qt6` | Qt6, QML | Functional | Desktop app — Qt Quick replica of the MetaBuilder landing page. Platform-native look via QML. |
+| `qt6` | Qt6, QML | Functional | Desktop app — Qt Quick replica of the MetaBuilder landing page. Platform-native look via QML. Natural future launcher for the game engine (both C++, same monorepo). |
 
 ### Mobile (Android)
 
@@ -425,6 +431,80 @@ python3 libraries/dbal/shared/tools/codegen/gen_types.py
 # Deploy Flask backend (separate from Next.js build)
 docker compose -f deployment/compose.yml build pastebin-backend
 docker compose -f deployment/compose.yml up -d pastebin-backend
+```
+
+---
+
+## CI/CD Infrastructure
+
+Both the CI stack and credential manager live in a **sibling repo** at
+`../jenkins/` (`github.com/johndoe6345789/jenkins`).
+
+### Jenkins (`../jenkins/`)
+
+Docker Compose stack: Jenkins controller + nginx + 8 SSH build agents + `registry:2`.
+
+| Service | URL | Purpose |
+|---------|-----|---------|
+| Jenkins UI | `:8081` | Pipeline dashboard |
+| Docker registry | `:5001` | Internal image registry (no-auth) |
+| Nexus UI | `:8083` | Nexus 3 (package repos) |
+
+**Pipeline jobs** (4 MetaBuilder jobs):
+
+| Job | Frequency | What it does |
+|-----|-----------|-------------|
+| `metabuilder-base-images` | Occasional | Builds apt/node-deps/pip-deps/conan base images, serial build→push→prune per image |
+| `metabuilder-base-heavy` | Rare | Big conan bases (dbal, qt6, gameengine) — disk-gated |
+| `metabuilder-apps` | Every commit | Pulls last-good bases from registry, builds & pushes app images |
+| `metabuilder` | Release | Orchestrator: runs base-images then apps |
+| `metabuilder-deploy` | Auto after apps | Pulls images, retags to `deployment-<svc>:latest`, runs `deployment.py stack up` |
+
+Build and deploy are fully split — build jobs never deploy, deploy jobs never build.
+
+**Key paths:**
+```bash
+../jenkins/Jenkinsfile.nextjs          # Next.js pipeline definition
+../jenkins/Jenkinsfile.cpp             # C++ pipeline definition
+../jenkins/jobs/                       # Jenkins job XML configs
+../jenkins/scripts/setup.py           # Management CLI (doctor, secrets, up/down)
+../jenkins/secrets/                    # gitignored — credentials.yaml, *.env
+../jenkins/secrets.example/           # Templates to bootstrap secrets/
+```
+
+**First-time setup / recovery after host wipe:**
+```bash
+cd ../jenkins
+scripts/setup.py secrets --import-ssh-key <key> --nexus-password <pw>
+scripts/setup.py up
+scripts/setup.py doctor
+# If volumes lost too:
+scripts/setup.py secrets --rotate-ssh-key   # generates new key
+# then rebuild agents and update JENKINS_AGENT_SSH_PUBKEY in docker-compose.yml
+```
+
+### Vault (`../jenkins/scripts/vault/`)
+
+Credential manager — stores, serves, and **rotates** all secrets across the
+entire stack. Written in **Drogon C++** (ported from Flask), Postgres-backed.
+
+| Service | Port | Purpose |
+|---------|------|---------|
+| `vault-backend` | `:5055` | C++ REST API — CRUD + rotation engine |
+| `vault-frontend` | `:4100` | React UI |
+| `vault-db` | internal | PostgreSQL credential store |
+
+**8 rotation adapters**: `env_var`, `db_sha512`, `db_werkzeug`, `db_bcrypt`,
+`db_bcrypt_sqlite`, `pyracms_pbkdf2`, `grafana_api`, `keycloak_realm`, `caprover`.
+
+The vault stores every secret that other services read from `../jenkins/secrets/*.env`
+(e.g. `pastebin.env`, `vault.env`, `pkgrepo-registry.env`, `postgres-dashboard.env`).
+Those files are **gitignored in both repos** — never commit them.
+
+```bash
+cd ../jenkins/scripts/vault
+docker compose up -d          # starts vault-db, vault-backend, vault-frontend
+# UI at http://localhost:4100
 ```
 
 ---

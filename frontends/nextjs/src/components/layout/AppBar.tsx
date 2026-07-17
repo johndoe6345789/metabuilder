@@ -13,20 +13,17 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import {
-  AppBar as MuiAppBar,
-  Typography,
-  Button,
-  Chip,
-  Avatar,
-  IconButton,
-} from '@/m3'
-import { getLevelLabel, getLevelColor } from '@/lib/packages/navigation'
+import { AppBar as MuiAppBar, Typography, Button, Chip, IconButton } from '@/m3'
+import { getLevelColor } from '@/lib/packages/navigation'
+import { Logo } from '@/components/brand/Logo'
+import { tenantGodPanelPath } from '@/lib/tenant/workspace-paths'
+import s from './AppBar.module.scss'
 
 export interface AppBarProps {
   username: string | null
   role: string
   userLevel: number
+  tenantId: string
   isAuthenticated: boolean
   onLogout: () => void
   onToggleSidebar?: () => void
@@ -37,17 +34,18 @@ export interface AppBarProps {
 
 /** Level navigation mapping (mirrors Qt6 App.qml Repeater model) */
 const levelNavItems = [
-  { label: 'Public',    level: 1, path: '/' },
-  { label: 'User',      level: 1, path: '/app/dashboard' },
-  { label: 'Admin',     level: 2, path: '/app/admin' },
-  { label: 'God',       level: 4, path: '/app/god-panel' },
-  { label: 'Super God', level: 5, path: '/app/supergod' },
+  { label: 'Public', level: 1, path: '/' },
+  { label: 'User', level: 1, path: '/dashboard' },
+  { label: 'Admin', level: 2, path: '/admin' },
+  { label: 'God', level: 4, path: '/god-panel' },
+  { label: 'Super God', level: 5, path: '/super-god-panel' },
 ]
 
 export function AppBarComponent({
   username,
   role,
   userLevel,
+  tenantId,
   isAuthenticated,
   onLogout,
   onToggleSidebar,
@@ -60,7 +58,8 @@ export function AppBarComponent({
   const [dbalStatus, setDbalStatus] = useState(dbalConnected)
 
   useEffect(() => {
-    const dbalUrl = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
+    const dbalUrl =
+      process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
     fetch(`${dbalUrl}/health`, { signal: AbortSignal.timeout(3000) })
       .then(res => {
         setDbalStatus(res.ok)
@@ -73,44 +72,34 @@ export function AppBarComponent({
   }, [])
 
   const levelColor = getLevelColor(userLevel)
+  const levelItems = levelNavItems.map(item =>
+    item.path === '/god-panel'
+      ? { ...item, path: tenantGodPanelPath(tenantId) }
+      : item
+  )
 
   return (
-    <MuiAppBar
-      position="sticky"
-      sx={{
-        height: 56,
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        px: 2,
-        gap: 1.5,
-        zIndex: 1200,
-      }}
-    >
+    <MuiAppBar position="sticky" className={s.root}>
       {/* Menu toggle (for mobile) */}
       {isAuthenticated && onToggleSidebar != null && (
         <IconButton
           color="inherit"
           onClick={onToggleSidebar}
-          sx={{ display: { sm: 'none' }, mr: 0.5 }}
+          className={s.menuButton}
           aria-label="Toggle sidebar"
         >
-          <span style={{ fontSize: '1.25rem' }}>&#9776;</span>
+          <span className={s.menuIcon}>&#9776;</span>
         </IconButton>
       )}
 
       {/* Branding */}
-      <Link href="/" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <div
-          style={{
-            width: 32,
-            height: 32,
-            borderRadius: 8,
-            background: 'linear-gradient(135deg, var(--primary, #6200ee), var(--accent, #03dac6))',
-          }}
-        />
-        <Typography variant="h6" noWrap sx={{ fontWeight: 700 }}>
+      <Link href="/" className={s.brand}>
+        <Logo size={32} />
+        <Typography variant="h6" noWrap className={s.brandTitle}>
           MetaBuilder
+        </Typography>
+        <Typography variant="caption" noWrap className={s.version}>
+          v{process.env.NEXT_PUBLIC_APP_VERSION ?? '0.1.0'}
         </Typography>
       </Link>
 
@@ -119,27 +108,24 @@ export function AppBarComponent({
         <Chip
           label={`Level ${userLevel}`}
           size="small"
-          sx={{
-            bgcolor: levelColor,
-            color: '#fff',
-            fontWeight: 600,
-            fontSize: '0.7rem',
-            height: 24,
-          }}
+          className={s.levelChip}
+          style={{ backgroundColor: levelColor }}
         />
       )}
 
       {/* DBAL connection status */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginLeft: 4 }}>
+      <div className={s.dbalStatus}>
         <div
+          className={s.dbalDot}
           style={{
-            width: 8,
-            height: 8,
-            borderRadius: 4,
-            backgroundColor: checkingDbal ? '#ff9800' : dbalStatus ? '#4caf50' : '#f44336',
+            backgroundColor: checkingDbal
+              ? '#ff9800'
+              : dbalStatus
+                ? '#4caf50'
+                : '#f44336',
           }}
         />
-        <Typography variant="caption" sx={{ opacity: 0.8 }}>
+        <Typography variant="caption" className={s.dbalText}>
           DBAL
         </Typography>
       </div>
@@ -150,33 +136,30 @@ export function AppBarComponent({
           variant="text"
           size="small"
           onClick={onToggleTheme}
-          sx={{ color: 'inherit', minWidth: 'auto', textTransform: 'none' }}
+          className={s.textButton}
         >
           {themeMode === 'dark' ? 'Light' : 'Dark'}
         </Button>
       )}
 
       {/* Spacer */}
-      <div style={{ flex: 1 }} />
+      <div className={s.spacer} />
 
       {/* Level navigation (mirrors Qt6 Repeater) */}
-      <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
-        {levelNavItems
-          .filter(item => isAuthenticated ? item.level <= userLevel : item.level <= 1)
+      <div className={s.levelNav}>
+        {levelItems
+          .filter(item =>
+            isAuthenticated ? item.level <= userLevel : item.level <= 1
+          )
           .map(item => (
             <Button
               key={item.path}
               variant="text"
               size="small"
-              onClick={() => { router.push(item.path) }}
-              sx={{
-                color: 'inherit',
-                textTransform: 'none',
-                fontSize: '0.8rem',
-                opacity: 0.85,
-                '&:hover': { opacity: 1 },
-                display: { xs: 'none', md: 'inline-flex' },
+              onClick={() => {
+                router.push(item.path)
               }}
+              className={s.navButton}
             >
               {item.label}
             </Button>
@@ -184,28 +167,30 @@ export function AppBarComponent({
       </div>
 
       {/* Spacer */}
-      <div style={{ width: 8 }} />
+      <div className={s.smallSpacer} />
 
       {/* Auth controls */}
       {!isAuthenticated ? (
         <Button
           variant="contained"
           size="small"
-          onClick={() => { router.push('/app/ui/login') }}
-          sx={{ textTransform: 'none' }}
+          onClick={() => {
+            router.push('/ui/login')
+          }}
+          className={s.textButton}
         >
           Login
         </Button>
       ) : (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <Typography variant="body2" sx={{ opacity: 0.85, display: { xs: 'none', sm: 'block' } }}>
+        <div className={s.authControls}>
+          <Typography variant="body2" className={s.userLabel}>
             {username} ({role})
           </Typography>
           <Button
             variant="text"
             size="small"
             onClick={onLogout}
-            sx={{ color: 'inherit', textTransform: 'none' }}
+            className={s.textButton}
           >
             Logout
           </Button>

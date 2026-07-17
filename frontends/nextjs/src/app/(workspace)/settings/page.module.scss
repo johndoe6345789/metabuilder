@@ -1,0 +1,68 @@
+.root {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.panel {
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.row,
+.accountRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.row {
+  margin-bottom: 12px;
+}
+
+.accountRow {
+  margin-bottom: 8px;
+}
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.clickableChip {
+  cursor: pointer;
+  text-transform: capitalize;
+}
+
+.value {
+  font-weight: 500;
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+
+.divider {
+  margin: 16px 0;
+}
+
+.dbalUrl {
+  margin-bottom: 8px;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 560px) {
+  .row,
+  .accountRow {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .chipRow {
+    justify-content: flex-start;
+  }
+
+  .value {
+    text-align: left;
+  }
+}

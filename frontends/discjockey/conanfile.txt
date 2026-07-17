@@ -1,0 +1,9 @@
+[tool_requires]
+ninja/1.12.1
+
+[generators]
+CMakeToolchain
+CMakeDeps
+
+[layout]
+cmake_layout

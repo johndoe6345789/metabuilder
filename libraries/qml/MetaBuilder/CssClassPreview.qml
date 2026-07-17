@@ -41,8 +41,7 @@ CCard {
     }
 
     ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: 16
+        Layout.fillWidth: true
         spacing: 10
 
         CText { variant: "h4"; text: "Preview" }
@@ -56,7 +55,7 @@ CCard {
             border.width: 1
 
             Grid {
-                anchors.fill: parent
+                Layout.fillWidth: true
                 rows: Math.ceil(height / 12)
                 columns: Math.ceil(width / 12)
                 clip: true

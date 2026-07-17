@@ -3,11 +3,14 @@
 
 function loadJson(relativePath) {
     var xhr = new XMLHttpRequest()
-    xhr.open("GET", Qt.resolvedUrl(relativePath),
-        false)
-    xhr.send()
-    return xhr.status === 200
-        ? JSON.parse(xhr.responseText) : null
+    try {
+        xhr.open("GET", Qt.resolvedUrl(relativePath),
+            false)
+        xhr.send()
+        if (xhr.status === 200 || xhr.status === 0)
+            return JSON.parse(xhr.responseText)
+    } catch(e) {}
+    return null
 }
 
 function login(app, username, password) {
@@ -40,8 +43,8 @@ function viewIndex(app) {
     var view = app.currentView
     var staticIdx = app.staticViews.indexOf(view)
     if (staticIdx >= 0) return staticIdx
-    var navPkgs =
-        PackageLoader.navigablePackages()
+    var navPkgs = PackageLoader
+        ? PackageLoader.navigablePackages() : []
     for (var i = 0; i < navPkgs.length; i++) {
         var pkg = navPkgs[i]
         var viewName = packageViewName(pkg)
@@ -61,7 +64,7 @@ function packageViewName(pkg) {
 
 function autoLogin(app, dbalProvider) {
     app.appConfig = loadJson(
-        "config/app-config.json")
+        "../../config/app-config.json")
     if (typeof Theme.setTheme === "function")
         Theme.setTheme(app.currentTheme)
     if (app.authToken !== "") {

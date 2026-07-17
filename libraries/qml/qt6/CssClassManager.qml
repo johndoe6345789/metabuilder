@@ -100,7 +100,7 @@ Rectangle {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     visible:
-                        selectedClass() !== null
+                        root.selectedClass() !== null
                     selectedClass:
                         root.selectedClass()
                     propertySuggestions:
@@ -140,7 +140,7 @@ Rectangle {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 160
                     visible:
-                        selectedClass() !== null
+                        root.selectedClass() !== null
                     selectedClass:
                         root.selectedClass()
                 }

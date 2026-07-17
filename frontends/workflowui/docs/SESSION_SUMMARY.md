@@ -140,7 +140,7 @@ http://localhost:3001/workspace/testing-qa
 - ✅ Infinite canvas with zoom/pan
 - ✅ Workspace and Project management
 - ✅ Workflow cards with drag-and-drop
-- ✅ Material Design 3 UI (Fakemui)
+- ✅ Material Design 3 UI (M3)
 - ✅ 28 API endpoints
 - ✅ Multi-tenant support
 - ✅ Redux state management
@@ -227,7 +227,7 @@ Workspace (top level)
 
 ### Technology Stack
 - **Frontend**: React 18 + Next.js 14.2 + TypeScript
-- **UI Components**: Material Design 3 (Fakemui)
+- **UI Components**: Material Design 3 (M3)
 - **State Management**: Redux Toolkit + IndexedDB
 - **Backend**: Flask + SQLAlchemy + SQLite (dev) / PostgreSQL (prod)
 - **Testing**: Workflow-based (meta-testing!)

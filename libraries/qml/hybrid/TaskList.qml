@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import contexts
-import Fakemui
+import M3
 
 /**
  * TaskList.qml - Task list component

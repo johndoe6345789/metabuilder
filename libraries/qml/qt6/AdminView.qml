@@ -44,12 +44,17 @@ Rectangle {
                 Crud.parseLiveData(res.items || [], entFlds[selEnt] || [])) }) }
     Component.onCompleted: {
         Crud.loadJson("config/admin-entities.json", function(d) {
-            entities = d.entities; entIcons = d.icons; entCols = d.columns
-            entFlds = d.fields; idPfx = d.idPrefixes; configLoaded = true })
+            if (!d) return
+            entities = d.entities || []
+            entIcons = d.icons || ({})
+            entCols = d.columns || ({})
+            entFlds = d.fields || ({})
+            idPfx = d.idPrefixes || ({})
+            configLoaded = true })
         Crud.loadJson(
             "config/admin-mock-data.json",
             function(d) {
-                if (!useLiveData) records = d })
+                if (!useLiveData && d) records = d })
         if (useLiveData) loadData() }
     onUseLiveDataChanged: if (useLiveData) loadData()
     onSelEntChanged: {

@@ -2,9 +2,16 @@ import type { NextConfig } from 'next'
 import type { Configuration } from 'webpack'
 import type webpack from 'webpack'
 import path from 'path'
+import fs from 'fs'
 
 const projectDir = process.cwd()
 const monorepoRoot = path.resolve(projectDir, '../..')
+
+// Read version from monorepo root package.json at build time
+const rootPkg = JSON.parse(
+  fs.readFileSync(path.join(monorepoRoot, 'package.json'), 'utf8')
+) as { version?: string }
+const APP_VERSION = rootPkg.version ?? '0.1.0'
 
 const nextConfig: NextConfig = {
   basePath: '/app',
@@ -16,21 +23,25 @@ const nextConfig: NextConfig = {
   // Configure page extensions
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
 
-  // Resolve SCSS @use 'cdk' from m3 components
-  // loadPaths = Turbopack (Dart Sass modern API); includePaths = webpack fallback
+  // Resolve SCSS @use 'cdk' from m3 components.
+  // loadPaths is for Turbopack; includePaths is the webpack fallback.
   sassOptions: {
     loadPaths: [
-      path.join(monorepoRoot, 'scss/m3-scss'),
-      path.join(monorepoRoot, 'scss'),
+      path.join(monorepoRoot, 'libraries/scss/m3-scss'),
+      path.join(monorepoRoot, 'libraries/scss'),
     ],
     includePaths: [
-      path.join(monorepoRoot, 'scss/m3-scss'),
-      path.join(monorepoRoot, 'scss'),
+      path.join(monorepoRoot, 'libraries/scss/m3-scss'),
+      path.join(monorepoRoot, 'libraries/scss'),
     ],
     silenceDeprecations: ['legacy-js-api', 'import'],
   },
-  transpilePackages: ['@metabuilder/m3', '@metabuilder/redux-persist', '@metabuilder/service-adapters'],
-  
+  transpilePackages: [
+    '@metabuilder/m3',
+    '@metabuilder/redux-persist',
+    '@metabuilder/service-adapters',
+  ],
+
   // Experimental features
   experimental: {
     // Enable React Server Components
@@ -39,14 +50,9 @@ const nextConfig: NextConfig = {
       allowedOrigins: ['localhost:3000'],
     },
     // Optimize package imports - reduces bundle size significantly
-    optimizePackageImports: [
-      'recharts',
-      'd3',
-      'lodash-es',
-      'date-fns',
-    ],
+    optimizePackageImports: ['recharts', 'd3', 'lodash-es', 'date-fns'],
   },
-  
+
   // Image optimization configuration
   images: {
     formats: ['image/avif', 'image/webp'],
@@ -64,12 +70,19 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  
-  // Redirects for old routes (if needed)
+
+  // Canonical workspace URLs live directly under basePath (/app/god-panel).
+  // Keep old /app/app/* links working while removing the duplicated segment.
   redirects() {
-    return []
+    return [
+      {
+        source: '/app/:path*',
+        destination: '/:path*',
+        permanent: false,
+      },
+    ]
   },
-  
+
   // Headers for security and CORS
   headers() {
     return [
@@ -78,35 +91,54 @@ const nextConfig: NextConfig = {
         headers: [
           { key: 'Access-Control-Allow-Credentials', value: 'true' },
           { key: 'Access-Control-Allow-Origin', value: '*' },
-          { key: 'Access-Control-Allow-Methods', value: 'GET,DELETE,PATCH,POST,PUT' },
-          { key: 'Access-Control-Allow-Headers', value: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version' },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET,DELETE,PATCH,POST,PUT',
+          },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value:
+              'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version',
+          },
         ],
       },
     ]
   },
-  
+
   // TypeScript configuration
   typescript: {
     ignoreBuildErrors: true,
   },
   // Environment variables exposed to browser
   env: {
-    NEXT_PUBLIC_DBAL_API_URL: process.env.DBAL_API_URL ?? 'http://localhost:8080',
+    // NEXT_PUBLIC_DBAL_API_URL: browser-visible URL set at build time via ARG
+    // Falls back to DBAL_API_URL (server-internal, unusable by browser)
+    NEXT_PUBLIC_DBAL_API_URL:
+      process.env.NEXT_PUBLIC_DBAL_API_URL ??
+      process.env.DBAL_API_URL ??
+      'http://localhost:8080',
     NEXT_PUBLIC_DBAL_WS_URL: process.env.DBAL_WS_URL ?? 'ws://localhost:50051',
     NEXT_PUBLIC_DBAL_API_KEY: process.env.DBAL_API_KEY ?? '',
+    NEXT_PUBLIC_APP_VERSION: process.env.NEXT_PUBLIC_APP_VERSION ?? APP_VERSION,
   },
   // Turbopack config (used by `next dev --turbopack`)
   // webpack() callback below is still used by `next build`
   turbopack: {
     root: path.resolve(projectDir, '../..'),
     resolveAlias: {
-      '@metabuilder/components': path.resolve(projectDir, 'src/lib/components-shim.ts'),
+      '@metabuilder/components': path.resolve(
+        projectDir,
+        'src/lib/components-shim.ts'
+      ),
       '@dbal-ui': path.resolve(projectDir, '../../dbal/shared/ui'),
     },
   },
-  webpack(config: Configuration, { isServer, webpack: wp }: { isServer: boolean; webpack: typeof webpack }) {
-    // Stub ALL external SCSS module imports with an actual .module.scss
-    // so they go through the CSS module pipeline (css-loader sets .default correctly)
+  webpack(
+    config: Configuration,
+    { isServer, webpack: wp }: { isServer: boolean; webpack: typeof webpack }
+  ) {
+    // Stub external SCSS modules with an actual .module.scss so
+    // css-loader sets `.default` correctly.
     const stubScss = path.resolve(projectDir, 'src/lib/empty.module.scss')
     config.plugins ??= []
     config.plugins.push(
@@ -127,10 +159,16 @@ const nextConfig: NextConfig = {
     if (config.resolve != null) {
       config.resolve.alias = {
         ...(config.resolve.alias as Record<string, string>),
-        '@metabuilder/components': path.resolve(projectDir, 'src/lib/components-shim.ts'),
+        '@metabuilder/components': path.resolve(
+          projectDir,
+          'src/lib/components-shim.ts'
+        ),
         '@dbal-ui': path.resolve(projectDir, '../../dbal/shared/ui'),
         // Resolve service-adapters to source (dist/ is not pre-built)
-        '@metabuilder/service-adapters': path.resolve(monorepoRoot, 'redux/adapters/src'),
+        '@metabuilder/service-adapters': path.resolve(
+          monorepoRoot,
+          'redux/adapters/src'
+        ),
       }
     }
 

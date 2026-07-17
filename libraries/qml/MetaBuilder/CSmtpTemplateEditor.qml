@@ -19,7 +19,7 @@ CCard {
     signal saveRequested()
 
     ColumnLayout {
-        anchors.fill: parent
+        Layout.fillWidth: true
         anchors.margins: 16
         spacing: 12
 
@@ -76,7 +76,7 @@ CCard {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 body: root.templateBody
-                onBodyChanged: function(value) { root.bodyChanged(value) }
+                onBodyEdited: function(value) { root.bodyChanged(value) }
             }
         }
     }

@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import Qt.labs.settings 1.0
+import QtCore
 import QmlComponents 1.0
 import "qmllib/dbal"
 import "qmllib/MetaBuilder"
@@ -13,8 +13,6 @@ ApplicationWindow {
     visible: true; width: 1400; height: 900
     title: "MetaBuilder Observatory"
     color: Theme.background
-    Accessible.role: Accessible.Window
-    Accessible.name: "MetaBuilder"
 
     DBALProvider { id: dbalProvider }
 
@@ -165,7 +163,8 @@ ApplicationWindow {
                 CommentsView {}
                 Repeater {
                     model: PackageLoader
-                        .navigablePackages()
+                        ? PackageLoader.navigablePackages()
+                        : []
                     delegate: PackageViewLoader {
                         packageId:
                             modelData.packageId

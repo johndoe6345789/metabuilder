@@ -7,7 +7,7 @@ import type { Metadata, Viewport } from 'next';
 import React from 'react';
 import RootLayoutClient from '../components/Layout/RootLayoutClient';
 // All styles from shared scss folder
-import '../../../../scss/index.scss';
+import '@scss/index.scss';
 
 export const metadata: Metadata = {
   title: 'WorkflowUI - Visual Workflow Editor',

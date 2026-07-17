@@ -14,10 +14,13 @@ export async function GET() {
     }
 
     const result = await db.execute(`
-      SELECT table_name 
-      FROM information_schema.tables 
-      WHERE table_schema = 'public' 
-      ORDER BY table_name
+      SELECT t.table_name,
+             COALESCE(s.n_live_tup, 0)::bigint AS row_count
+      FROM information_schema.tables t
+      LEFT JOIN pg_stat_user_tables s
+        ON s.relname = t.table_name AND s.schemaname = 'public'
+      WHERE t.table_schema = 'public'
+      ORDER BY t.table_name
     `);
 
     return NextResponse.json({ tables: result.rows });

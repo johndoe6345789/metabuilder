@@ -5,7 +5,7 @@
 import React from 'react';
 import { usePathname } from 'next/navigation';
 import { testId } from '../../utils/accessibility';
-import styles from '@/../../../scss/atoms/layout.module.scss';
+import styles from '@scss/atoms/layout.module.scss';
 import {
   HomeIcon, WorkflowIcon, RecentIcon, StarIcon,
   TemplatesIcon, PluginsIcon, SettingsIcon,

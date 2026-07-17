@@ -22,6 +22,25 @@ Rectangle {
         Theme.mode === "dark"
     property var cfg: ({})
 
+    // Five levels definition (mirrors Next.js dashboard)
+    readonly property var levelDefs: [
+        { level: 1, name: "Public Website",
+          desc: "Landing pages, public content",
+          roleNeeded: 0 },
+        { level: 2, name: "User Area",
+          desc: "Profiles, comments, chat",
+          roleNeeded: 1 },
+        { level: 3, name: "Admin Panel",
+          desc: "CRUD, user management",
+          roleNeeded: 3 },
+        { level: 4, name: "God Builder",
+          desc: "Schemas, workflows, Lua",
+          roleNeeded: 4 },
+        { level: 5, name: "Super God",
+          desc: "Multi-tenant control",
+          roleNeeded: 5 },
+    ]
+
     Component.onCompleted: {
         var xhr = new XMLHttpRequest()
         xhr.open("GET",
@@ -98,7 +117,43 @@ Rectangle {
                 }
             }
 
-            Item { Layout.preferredHeight: 16 }
+            Item { Layout.preferredHeight: 28 }
+
+            // ── Five Levels of Power ─────────────────────────────
+            CText {
+                Layout.leftMargin: 24
+                Layout.bottomMargin: 14
+                variant: "h4"
+                text: "Five Levels of Power"
+                color: Theme.text
+            }
+
+            FlexRow {
+                Layout.fillWidth: true
+                Layout.leftMargin: 24
+                Layout.rightMargin: 24
+                spacing: 14
+
+                Repeater {
+                    model: dashRoot.levelDefs
+                    delegate: CLevelCard {
+                        Layout.fillWidth: true
+                        level:  modelData.level
+                        name:   modelData.name
+                        desc:   modelData.desc
+                        locked: appWindow.currentLevel
+                            < modelData.roleNeeded
+                        isDark: dashRoot.isDark
+                        onClicked: {
+                            if (!locked)
+                                appWindow.currentView
+                                    = "level_" + level
+                        }
+                    }
+                }
+            }
+
+            Item { Layout.preferredHeight: 28 }
 
             CActivityList {
                 Layout.fillWidth: true

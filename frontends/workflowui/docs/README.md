@@ -16,7 +16,7 @@ WorkflowUI is a full-featured workflow editor with:
 
 ```
 Frontend (Next.js + React)
-  ├─ UI Components (FakeMUI)
+  ├─ UI Components (M3)
   ├─ Redux Store (state management)
   ├─ React Flow (DAG visualization)
   └─ IndexedDB (offline storage)
@@ -41,7 +41,7 @@ MetaBuilder DAG Executor
 | Layer | Technology | Purpose |
 |-------|-----------|---------|
 | **Frontend** | Next.js 14 | Server-side rendering, API routes |
-| **UI Framework** | FakeMUI | Material UI compatible components |
+| **UI Framework** | M3 | Material UI compatible components |
 | **State** | Redux + Redux Toolkit | Centralized state management |
 | **Flow Editor** | React Flow | DAG visualization and manipulation |
 | **Styling** | SCSS | Component scoped styles |

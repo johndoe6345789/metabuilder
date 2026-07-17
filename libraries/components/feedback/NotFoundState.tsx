@@ -1,5 +1,5 @@
 /**
- * Not Found State - FakeMUI Component
+ * Not Found State - M3 Component
  * 404 error page with fail whale illustration
  */
 

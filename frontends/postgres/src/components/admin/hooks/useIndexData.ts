@@ -21,7 +21,7 @@ export function useIndexData() {
       setLoading(true);
       setError('');
       const response = await fetch(
-        `${BASE_PATH}/api/admin/indexes?tableName=${tableName}`,
+        `${BASE_PATH}/api/admin/indexes?tableName=${encodeURIComponent(tableName)}`,
       );
       const data = await response.json();
       if (response.ok) {

@@ -7,6 +7,8 @@
 ARG BASE_REGISTRY=metabuilder
 FROM ${BASE_REGISTRY}/base-node-deps:latest AS builder
 
+COPY package.json .npmrc ./
+
 # ── Shared packages (resolved by transpilePackages + webpack aliases) ────────
 # Each COPY targets only the source tree that emailclient actually imports.
 #
@@ -19,7 +21,7 @@ COPY libraries/icons/ ./libraries/icons/
 # scss (Material 3 SCSS, theme, atoms — loaded by sassOptions)
 COPY libraries/scss/ ./libraries/scss/
 
-# components + FakeMUI (UI component library)
+# components + M3 (UI component library)
 COPY libraries/components/ ./libraries/components/
 
 # types (TypeScript type definitions — transitive dep via hooks)
@@ -60,7 +62,7 @@ COPY frontends/emailclient/ ./frontends/emailclient/
 # source has been COPYed in, re-run the full workspace install so npm rebuilds
 # the complete node_modules/@metabuilder/* symlink tree (e.g. @metabuilder/types
 # for redux/slices, redux/adapters, redux/hooks-async, api-clients, persist).
-RUN npm install --ignore-scripts --legacy-peer-deps
+RUN npm install --ignore-scripts
 
 # Build workspace library packages
 RUN for ws in libraries/redux/core libraries/redux/slices \

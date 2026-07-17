@@ -531,7 +531,7 @@ The Schema Editor integrates with:
 - **DBAL**: `POST /api/v1/supergod/schema_editor/entities` to save
 - **DBALClient**: Uses `getDBALClient()` to access database
 - **Prisma**: Auto-triggers `codegen:prisma` after new entity
-- **FakeMUI**: All components use Material Design from FakeMUI
+- **M3**: All components use Material Design from M3
 
 ### Security
 

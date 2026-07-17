@@ -36,7 +36,7 @@ This document covers the Phase 5.3 implementation of empty states and smooth ani
 The `EmptyState` component displays helpful UI when lists, tables, or collections are empty. It provides context and suggests actionable next steps.
 
 **Features:**
-- Multiple icon display methods (emoji, React components, FakeMUI icons)
+- Multiple icon display methods (emoji, React components, M3 icons)
 - Three size variants (compact, normal, large)
 - Optional hints and secondary text
 - Primary and secondary action buttons
@@ -91,7 +91,7 @@ The component supports three icon formats:
 <EmptyState icon={<CustomIcon />} title="No items" description="..." />
 ```
 
-3. **FakeMUI Icon Names** (lazy-loaded)
+3. **M3 Icon Names** (lazy-loaded)
 ```typescript
 <EmptyState icon="Plus" title="Create item" description="..." />
 ```
@@ -719,7 +719,7 @@ All animations automatically disable when user has set `prefers-reduced-motion: 
 | CSS Transitions | ✅ All | ✅ All | ✅ All | ✅ All |
 | prefers-reduced-motion | ✅ 74+ | ✅ 63+ | ✅ 10.1+ | ✅ 79+ |
 | emoji support | ✅ All | ✅ All | ✅ All | ✅ All |
-| FakeMUI icons | ✅ All | ✅ All | ✅ All | ✅ All |
+| M3 icons | ✅ All | ✅ All | ✅ All | ✅ All |
 
 **Note**: Older browsers (IE 11) don't support animations but content still displays correctly.
 
@@ -727,7 +727,7 @@ All animations automatically disable when user has set `prefers-reduced-motion: 
 
 ## Implementation Checklist
 
-- [x] Enhanced EmptyState component with FakeMUI integration
+- [x] Enhanced EmptyState component with M3 integration
 - [x] Animation utilities module with accessibility support
 - [x] SCSS animations (fade-in, slide, scale, bounce, etc.)
 - [x] Empty state preset variants (NoDataFound, ErrorState, etc.)

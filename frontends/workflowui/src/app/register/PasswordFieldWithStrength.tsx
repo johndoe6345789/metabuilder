@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { Box, TextField } from '@metabuilder/m3';
-import { PasswordStrengthIndicator } from '@/../../../components/feedback';
+import { PasswordStrengthIndicator } from '@metabuilder/components/feedback';
 
 interface PasswordFieldWithStrengthProps {
   password: string;

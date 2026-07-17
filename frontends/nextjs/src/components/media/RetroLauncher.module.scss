@@ -1,0 +1,115 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.romLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.romInput {
+  padding: 10px 14px;
+  border-radius: 16px;
+  border: 1.5px solid var(--border, #ddd);
+  background: var(--card, #fff);
+  color: var(--foreground);
+  font-size: 0.875rem;
+  font-family: monospace;
+  outline: none;
+
+  &:focus { border-color: var(--primary, #6750A4); }
+}
+
+.error {
+  font-size: 0.85rem;
+  color: #c62828;
+  margin: 0;
+  padding: 8px 12px;
+  background: color-mix(in srgb, #c62828 8%, transparent);
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, #c62828 25%, transparent);
+}
+
+.launch {
+  padding: 12px 24px;
+  border-radius: 16px;
+  border: none;
+  background: var(--primary, #6750A4);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: opacity 0.15s;
+
+  &:hover:not(:disabled) { opacity: 0.88; }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+.keyHint {
+  font-size: 0.75rem;
+  color: var(--muted-foreground, #888);
+  margin: 0;
+  font-family: monospace;
+}
+
+.pad {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 12px;
+  background: color-mix(
+    in srgb, var(--foreground, #000) 5%, transparent
+  );
+  border-radius: 10px;
+}
+
+.padBtn {
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border, #555);
+  background: var(--card, #333);
+  color: var(--foreground);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.1s;
+
+  &:active {
+    background: var(--primary, #6750A4);
+    color: #fff;
+    border-color: var(--primary, #6750A4);
+  }
+}
+
+.stopBtn {
+  padding: 9px 20px;
+  border-radius: 16px;
+  border: 1.5px solid #c62828;
+  background: transparent;
+  color: #c62828;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background 0.15s;
+
+  &:hover {
+    background: color-mix(in srgb, #c62828 10%, transparent);
+  }
+}

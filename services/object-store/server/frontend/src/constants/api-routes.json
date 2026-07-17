@@ -1,0 +1,7 @@
+{
+  "health": "/api/s3/health",
+  "buckets": "/api/s3/buckets",
+  "bucket": "/api/s3/buckets/{bucket}",
+  "listObjects": "/api/s3/list/{bucket}",
+  "object": "/api/s3/objects/{bucket}/{key}"
+}

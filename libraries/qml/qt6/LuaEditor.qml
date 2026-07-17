@@ -11,19 +11,21 @@ Rectangle {
     property string testOutput: ""
     property string scanResult: ""
     property var scripts: Logic.loadJson(
-        Qt.resolvedUrl("qmllib/MetaBuilder/data/lua-scripts.json"))
+        Qt.resolvedUrl("qmllib/MetaBuilder/data/lua-scripts.json")) || []
     property var snippets: Logic.loadJson(
-        Qt.resolvedUrl("qmllib/MetaBuilder/data/lua-snippets.json"))
+        Qt.resolvedUrl("qmllib/MetaBuilder/data/lua-snippets.json")) || []
     property var examples: Logic.loadJson(
-        Qt.resolvedUrl("qmllib/MetaBuilder/data/lua-examples.json"))
+        Qt.resolvedUrl("qmllib/MetaBuilder/data/lua-examples.json")) || []
     property int selExIdx: 0
-    property string curCode: scripts[selIdx].code
-    property string curName: scripts[selIdx].name
-    property string curDesc: scripts[selIdx].description
-    property string curRet: scripts[selIdx].returnType
-    property var curParams: Logic.buildParams(scripts[selIdx].params)
+    readonly property var _curScript: scripts.length > 0 ? scripts[selIdx] : null
+    property string curCode: _curScript ? _curScript.code : ""
+    property string curName: _curScript ? _curScript.name : ""
+    property string curDesc: _curScript ? _curScript.description : ""
+    property string curRet: _curScript ? _curScript.returnType : ""
+    property var curParams: _curScript ? Logic.buildParams(_curScript.params) : []
     onSelIdxChanged: {
-        var s = scripts[selIdx]
+        var s = scripts.length > 0 ? scripts[selIdx] : null
+        if (!s) return
         curCode = s.code; curName = s.name
         curDesc = s.description; curRet = s.returnType
         curParams = Logic.buildParams(s.params)
@@ -116,7 +118,7 @@ Rectangle {
                     currentCode: root.curCode
                     onNameChanged: function(n) { curName = n }
                     onDescriptionChanged: function(d) { curDesc = d }
-                    onReturnTypeChanged: function(rt) { curRet = rt }
+                    onReturnTypeEdited: function(rt) { curRet = rt }
                     onParamAdded: {
                         var p = curParams.slice()
                         p.push({

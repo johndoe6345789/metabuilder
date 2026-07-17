@@ -12,7 +12,7 @@ CCard {
     signal baseSpacingEdited(int value)
 
     ColumnLayout {
-        anchors.fill: parent
+        Layout.fillWidth: true
         anchors.margins: 20
         spacing: 16
 

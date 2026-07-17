@@ -38,6 +38,7 @@ std::vector<std::string> SeedLoaderAction::getSeedLoadOrder() {
     return {
         "users.json",
         "credentials.json",
+        "test_logins.json",
         "workspaces.json",
         "installed_packages.json",
         "projects.json",

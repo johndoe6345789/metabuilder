@@ -1,0 +1,120 @@
+.root {
+  display: flex;
+  flex-direction: column;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.summary {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--mat-sys-primary, #4493f8);
+}
+.spacer {
+  flex: 1;
+}
+.hint {
+  margin-bottom: 16px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.case {
+  border: 1px solid var(--mat-sys-outline-variant, #30363d);
+  border-radius: 18px;
+  padding: 16px;
+  background: var(--mat-sys-surface-container-lowest, #0d1117);
+}
+
+.caseHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.badge {
+  font-size: 13px;
+  font-weight: 750;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: var(--mat-sys-surface-container-high, #21262d);
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+}
+.pass {
+  background: color-mix(in srgb, #2ea043 25%, transparent);
+  color: #56d364;
+}
+.fail {
+  background: color-mix(in srgb, #f85149 25%, transparent);
+  color: #ff7b72;
+}
+.err {
+  background: color-mix(in srgb, #d29922 25%, transparent);
+  color: #e3b341;
+}
+
+.del {
+  margin-left: auto;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+  font-size: 15px;
+  &:hover {
+    color: var(--mat-sys-error, #f85149);
+  }
+}
+
+.io {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.field label {
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+}
+.code {
+  min-height: 88px;
+  resize: vertical;
+  padding: 12px;
+  border-radius: 16px;
+  background: #010409;
+  color: #c9d1d9;
+  border: 1px solid var(--mat-sys-outline-variant, #30363d);
+  font-family: monospace;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.msg {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #e3b341;
+}
+.actual {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: #010409;
+  color: #8b949e;
+  font-size: 13px;
+  overflow: auto;
+}

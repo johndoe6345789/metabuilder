@@ -15,7 +15,7 @@ import {
   Divider,
 } from '@metabuilder/m3';
 import { AccessTime } from '@metabuilder/m3';
-import styles from '@/../../../scss/atoms/mat-card.module.scss';
+import styles from '@scss/atoms/mat-card.module.scss';
 import { useRecentWorkflows } from './hooks/useRecentWorkflows';
 import RecentWorkflowItem from './RecentWorkflowItem';
 

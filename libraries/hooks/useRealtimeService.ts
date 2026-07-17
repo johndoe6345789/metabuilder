@@ -86,7 +86,7 @@ export function useRealtimeService(options: UseRealtimeServiceOptions) {
   // Initialize realtime connection on mount
   useEffect(() => {
     if (!enabled || !user || !projectId) {
-      return;
+      return undefined;
     }
 
     try {
@@ -164,6 +164,7 @@ export function useRealtimeService(options: UseRealtimeServiceOptions) {
       console.error('Failed to initialize realtime service:', err);
       onError?.(err);
     }
+    return undefined;
   }, [projectId, user, enabled, dispatch, onError, realtimeService, actions]);
 
   // Broadcast canvas item updates

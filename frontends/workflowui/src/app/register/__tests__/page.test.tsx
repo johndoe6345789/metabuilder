@@ -6,7 +6,7 @@ jest.mock('../hooks/useRegisterPage', () => ({
   useRegisterPage: jest.fn(),
 }))
 
-// The path @/../../../components/layout resolves to the monorepo components folder
+// The path @metabuilder/components/layout resolves to the monorepo components folder
 // which has ESM transitive deps — mock it directly
 jest.mock('../../../../../../components/layout', () => ({
   AuthFormLayout: ({ children, title, subtitle, footerLinkText }: any) => (
@@ -126,7 +126,7 @@ describe('RegisterPage', () => {
     // The Box component has component="form" - find the form and submit it
     const form = screen.getByTestId('register-button').closest('form') || document.querySelector('form')
     if (form) fireEvent.submit(form)
-    // Alternatively, if FakeMUI Box doesn't render as form, just verify button exists
+    // Alternatively, if M3 Box doesn't render as form, just verify button exists
     expect(screen.getByTestId('register-button')).toBeInTheDocument()
   })
 

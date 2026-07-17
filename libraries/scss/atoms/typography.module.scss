@@ -93,6 +93,8 @@
 .typographyCaption {
   font: var(--mat-sys-body-small-font);
   color: var(--mat-sys-on-surface-variant);
+  font-size: max(0.9rem, 14px);
+  line-height: 1.45;
 }
 
 // Overline

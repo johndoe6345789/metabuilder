@@ -2,7 +2,9 @@
   min-height: 100vh;
   background-color: var(--mat-sys-surface);
   color: var(--mat-sys-on-surface);
-  font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: Roboto, 'Noto Sans CJK SC', 'Noto Sans CJK JP', 'PingFang SC',
+    'Microsoft YaHei', 'Hiragino Sans GB', 'Source Han Sans CN',
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 1rem;
   line-height: 1.5;
 
@@ -428,8 +430,9 @@
     margin-bottom: 8px;
   }
 
-  :global([class*='matList']),
-  :global([class*='mdc-list']) {
+  :global(ul[class*='matList']),
+  :global(ul[class*='mdc-list']),
+  :global(li[class*='mdc-list']) {
     list-style: none !important;
     padding: 0 !important;
     margin: 0 !important;

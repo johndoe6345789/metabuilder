@@ -1,53 +1,35 @@
-# Multi-stage build — source + build only, no npm install.
-# Deps are pre-baked into base-postgres-deps (immutable, rebuilt on package.json changes).
+# Multi-stage build — scss + components + app source only.
+# redux/workflow dist/ are pre-built in base-postgres-deps; this layer only
+# pays for npm workspace re-link + Next.js compilation (fast with cache mount).
 # Context: monorepo root (..)
 
 # --- Build stage ---
 ARG BASE_REGISTRY=metabuilder
 FROM ${BASE_REGISTRY}/base-postgres-deps:latest AS builder
 
-# Copy all source (workspace libs + app)
-COPY libraries/hooks/ ./libraries/hooks/
-COPY libraries/icons/ ./libraries/icons/
-COPY libraries/scss/ ./libraries/scss/
+COPY package.json .npmrc ./
+
+# Re-link workspace symlinks BEFORE source copies so this layer is cached on
+# source-only changes (scss/component/app edits never touch package.json).
+# --no-audit --prefer-offline make it fast when it does need to run.
+RUN --mount=type=cache,target=/root/.npm \
+    npm install --ignore-scripts --prefer-offline --no-audit
+
+# Source copies come after npm install — invalidate the next build layer but
+# NOT the npm step above. Workspace symlinks are path-based so they resolve
+# correctly once the directories are populated by these COPYs.
+COPY libraries/scss/       ./libraries/scss/
 COPY libraries/components/ ./libraries/components/
-COPY libraries/redux/core/ ./libraries/redux/core/
-COPY libraries/redux/slices/ ./libraries/redux/slices/
-COPY libraries/redux/hooks/ ./libraries/redux/hooks/
-COPY libraries/redux/adapters/ ./libraries/redux/adapters/
-COPY libraries/redux/api-clients/ ./libraries/redux/api-clients/
-COPY libraries/redux/core-hooks/ ./libraries/redux/core-hooks/
-COPY libraries/redux/email/ ./libraries/redux/email/
-COPY libraries/redux/hooks-async/ ./libraries/redux/hooks-async/
-COPY libraries/redux/hooks-auth/ ./libraries/redux/hooks-auth/
-COPY libraries/redux/hooks-canvas/ ./libraries/redux/hooks-canvas/
-COPY libraries/redux/hooks-data/ ./libraries/redux/hooks-data/
-COPY libraries/redux/hooks-forms/ ./libraries/redux/hooks-forms/
-COPY libraries/redux/hooks-utils/ ./libraries/redux/hooks-utils/
-COPY libraries/redux/middleware/ ./libraries/redux/middleware/
-COPY libraries/redux/persist/ ./libraries/redux/persist/
-COPY libraries/redux/services/ ./libraries/redux/services/
-COPY libraries/redux/timing-utils/ ./libraries/redux/timing-utils/
-COPY libraries/types/ ./libraries/types/
-COPY libraries/interfaces/ ./libraries/interfaces/
-COPY libraries/translations/ ./libraries/translations/
-COPY libraries/workflow/ ./libraries/workflow/
-COPY frontends/postgres/ ./frontends/postgres/
+COPY frontends/postgres/   ./frontends/postgres/
 
-# Build workspace libraries
-RUN for ws in libraries/redux/core libraries/redux/slices \
-    libraries/redux/hooks libraries/redux/adapters \
-    libraries/redux/hooks-async libraries/redux/api-clients \
-    libraries/redux/persist libraries/components libraries/workflow; do \
-    npm run build -w "$ws" --if-present 2>&1 || { echo "ERROR: $ws build failed"; exit 1; }; \
-done
-
-# Build the app
+# Build the app — cache mount preserves .next/cache across rebuilds so
+# turbopack only recompiles changed files (seconds for scss/component edits).
 ENV SKIP_ENV_VALIDATION=true
 ENV JWT_SECRET=build-placeholder
 ENV NEXT_PUBLIC_SENTRY_DISABLED=true
 ENV NODE_OPTIONS="--max-old-space-size=3072"
-RUN cd frontends/postgres && npx next build --webpack
+RUN --mount=type=cache,target=/app/frontends/postgres/.next/cache \
+    cd frontends/postgres && npx next build --turbopack
 
 # --- Runtime stage ---
 FROM node:24-alpine

@@ -1,7 +1,7 @@
 /**
- * FakeMUI Components - Material Design 3 React Component Library
+ * M3 Components - Material Design 3 React Component Library
  *
- * This barrel export provides all FakeMUI components from the centralized
+ * This barrel export provides all M3 components from the centralized
  * components/m3/ location. Components are organized by category.
  *
  * Usage:
@@ -368,7 +368,9 @@ export {
   SplitView,
   type SplitViewProps,
   type ViewMode,
-} from './Code'
+  // Explicit /index avoids the case-collision with the sibling Code.ts icon
+  // (turbopack resolves it, but esbuild/tsup would try ./code.ts and fail).
+} from './code/index'
 
 // =============================================================================
 // TERMINAL COMPONENTS

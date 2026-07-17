@@ -10,6 +10,8 @@ FROM ${BASE_REGISTRY}/base-node-deps:latest AS builder
 ARG NEXT_PUBLIC_FLASK_BACKEND_URL
 ENV NEXT_PUBLIC_FLASK_BACKEND_URL=${NEXT_PUBLIC_FLASK_BACKEND_URL}
 
+COPY package.json .npmrc ./
+
 # ── Shared packages (resolved by transpilePackages + webpack aliases) ────────
 # Each COPY targets only the source tree that pastebin actually imports.
 #
@@ -27,7 +29,7 @@ COPY libraries/icons/ ./libraries/icons/
 # scss (Material 3 SCSS, theme, atoms — loaded by sassOptions)
 COPY libraries/scss/ ./libraries/scss/
 
-# components + FakeMUI (UI component library)
+# components + M3 (UI component library)
 COPY libraries/components/ ./libraries/components/
 
 # ── Redux packages (all — small TS source, avoids transitive dep breakage) ───
@@ -60,7 +62,7 @@ COPY frontends/pastebin/ ./frontends/pastebin/
 # source has been COPYed in, re-run the full workspace install so npm rebuilds
 # the complete node_modules/@metabuilder/* symlink tree (e.g. @metabuilder/types
 # for redux/slices, redux/adapters, redux/hooks-async, api-clients, persist).
-RUN npm install --ignore-scripts --legacy-peer-deps
+RUN npm install --ignore-scripts
 
 # Build workspace library packages
 RUN for ws in libraries/redux/core libraries/redux/slices \

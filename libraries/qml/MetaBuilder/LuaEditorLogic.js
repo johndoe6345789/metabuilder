@@ -80,6 +80,7 @@ function updateParamValue(params, index, value) {
 }
 
 function exampleLabels(examples) {
+    if (!examples) return [];
     var labels = [];
     for (var i = 0; i < examples.length; i++)
         labels.push(examples[i].label);
@@ -106,7 +107,9 @@ function loadJson(relativePath) {
     var xhr = new XMLHttpRequest()
     xhr.open("GET", relativePath, false)
     xhr.send()
-    if (xhr.status === 200 || xhr.status === 0)
-        return JSON.parse(xhr.responseText)
+    if (xhr.status === 200 || xhr.status === 0) {
+        try { return JSON.parse(xhr.responseText) }
+        catch(e) { return [] }
+    }
     return []
 }

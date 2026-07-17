@@ -14,7 +14,7 @@ const breakpoints = {
 
 const baseTheme = {
   palette: {
-    mode: 'light' as const,
+    mode: 'light' as 'light' | 'dark',
     primary: {
       main: '#6750a4',
     },

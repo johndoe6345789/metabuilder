@@ -5,7 +5,7 @@
   "tenantId": true,
   "fields": {
     "id": {
-      "type": "uuid",
+      "type": "string",
       "primary": true,
       "generated": true,
       "description": "Unique file identifier"

@@ -7,7 +7,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useWorkflows } from '@metabuilder/hooks';
-import type { Workflow } from '@/../../../components/workflow-editor';
+import type { Workflow } from '@metabuilder/components/workflow-editor';
 import {
   defaultWorkflow,
   buildSavePayload,

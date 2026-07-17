@@ -626,7 +626,7 @@ The current JSON Script format provides:
 - **Workflows**: Scripts called from workflow definitions
 - **Automation**: Scheduled script execution
 - **Webhooks**: Scripts triggered by external events
-- **UI Components**: Built with FakeMUI 151+ components
+- **UI Components**: Built with M3 151+ components
 
 ### Security
 

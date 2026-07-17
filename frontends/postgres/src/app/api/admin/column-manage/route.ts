@@ -3,9 +3,12 @@ import { NextResponse } from 'next/server';
 import { db } from '@/utils/db';
 import { getSession } from '@/utils/session';
 
-// Validate identifier format (prevent SQL injection)
 function isValidIdentifier(name: string): boolean {
   return /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(name);
+}
+
+function isValidTableName(name: string): boolean {
+  return !!name && name.length <= 63 && !name.includes('"');
 }
 
 // Validate table exists
@@ -41,7 +44,7 @@ export async function POST(request: Request) {
     }
 
     // Validate identifiers
-    if (!isValidIdentifier(tableName) || !isValidIdentifier(columnName)) {
+    if (!isValidTableName(tableName) || !isValidIdentifier(columnName)) {
       return NextResponse.json(
         { error: 'Invalid table or column name format' },
         { status: 400 },
@@ -107,7 +110,7 @@ export async function DELETE(request: Request) {
     }
 
     // Validate identifiers
-    if (!isValidIdentifier(tableName) || !isValidIdentifier(columnName)) {
+    if (!isValidTableName(tableName) || !isValidIdentifier(columnName)) {
       return NextResponse.json(
         { error: 'Invalid table or column name format' },
         { status: 400 },
@@ -160,7 +163,7 @@ export async function PUT(request: Request) {
     }
 
     // Validate identifiers
-    if (!isValidIdentifier(tableName) || !isValidIdentifier(columnName)) {
+    if (!isValidTableName(tableName) || !isValidIdentifier(columnName)) {
       return NextResponse.json(
         { error: 'Invalid table or column name format' },
         { status: 400 },

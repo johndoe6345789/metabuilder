@@ -1,27 +1,47 @@
 export const colors = {
   primary: {
-    light: { main: '#8b5cf6', light: '#a78bfa', dark: '#7c3aed', contrastText: '#ffffff' },
-    dark: { main: '#a78bfa', light: '#c4b5fd', dark: '#8b5cf6', contrastText: '#ffffff' },
+    light: {
+      main: '#4f6f9f',
+      light: '#7890b8',
+      dark: '#365174',
+      contrastText: '#ffffff',
+    },
+    dark: {
+      main: '#8fa6c8',
+      light: '#b4c3d8',
+      dark: '#6f88ad',
+      contrastText: '#101820',
+    },
   },
   secondary: {
-    light: { main: '#f59e0b', light: '#fbbf24', dark: '#d97706', contrastText: '#ffffff' },
-    dark: { main: '#fbbf24', light: '#fcd34d', dark: '#f59e0b', contrastText: '#000000' },
+    light: {
+      main: '#64748b',
+      light: '#94a3b8',
+      dark: '#475569',
+      contrastText: '#ffffff',
+    },
+    dark: {
+      main: '#9ca3af',
+      light: '#cbd5e1',
+      dark: '#6b7280',
+      contrastText: '#111827',
+    },
   },
   error: {
-    light: { main: '#ef4444', light: '#f87171', dark: '#dc2626' },
-    dark: { main: '#f87171', light: '#fca5a5', dark: '#ef4444' },
+    light: { main: '#b64d4d', light: '#d47a7a', dark: '#8f3434' },
+    dark: { main: '#d98989', light: '#e7aaaa', dark: '#b96868' },
   },
   warning: {
-    light: { main: '#f59e0b', light: '#fbbf24', dark: '#d97706' },
-    dark: { main: '#fbbf24', light: '#fcd34d', dark: '#f59e0b' },
+    light: { main: '#a97932', light: '#c99b55', dark: '#7f5620' },
+    dark: { main: '#caa46f', light: '#dec49a', dark: '#a47f4d' },
   },
   info: {
-    light: { main: '#06b6d4', light: '#22d3ee', dark: '#0891b2' },
-    dark: { main: '#22d3ee', light: '#67e8f9', dark: '#06b6d4' },
+    light: { main: '#4f7f91', light: '#79a2b0', dark: '#356271' },
+    dark: { main: '#8db5c2', light: '#b3d0d8', dark: '#6994a3' },
   },
   success: {
-    light: { main: '#10b981', light: '#34d399', dark: '#059669' },
-    dark: { main: '#34d399', light: '#6ee7b7', dark: '#10b981' },
+    light: { main: '#4f7f64', light: '#7ba28a', dark: '#376247' },
+    dark: { main: '#8ab89a', light: '#b3d0bc', dark: '#6b9478' },
   },
   neutral: {
     50: '#fafafa',

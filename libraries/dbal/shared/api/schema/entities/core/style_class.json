@@ -1,0 +1,26 @@
+{
+  "entity": "StyleClass",
+  "name": "style_class",
+  "displayName": "Style Class Set",
+  "description": "Reusable named CSS classes for a tenant, authored in the god-panel Styles tab. Stored as a serialized JSON set.",
+  "tenantId": true,
+  "fields": {
+    "id": {
+      "type": "string",
+      "description": "Stable per-tenant style set id (e.g. styles_<tenant>)",
+      "required": true,
+      "unique": true
+    },
+    "tenantId": {
+      "type": "string",
+      "description": "Tenant isolation ID",
+      "optional": true,
+      "nullable": true
+    },
+    "classes": {
+      "type": "text",
+      "description": "Serialized JSON array of { id, name, props } CSS classes",
+      "required": true
+    }
+  }
+}

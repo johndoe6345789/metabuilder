@@ -4,7 +4,7 @@
 
 'use client';
 
-import type { Workflow } from '@/../../../components/workflow-editor';
+import type { Workflow } from '@metabuilder/components/workflow-editor';
 
 interface EditorToolbarActionsParams {
   router: { back: () => void };

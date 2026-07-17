@@ -7,10 +7,10 @@
 'use client'
 
 import { createContext, useContext, type ReactNode } from 'react'
-import { useAuth, type AuthState } from './use-auth'
+import { useAuth, type UseAuthReturn } from './use-auth'
 import { getRoleLevel } from '@/lib/constants'
 
-export interface AuthContextValue extends AuthState {
+export interface AuthContextValue extends UseAuthReturn {
   /** Check if user has at least the specified role level */
   hasLevel: (minLevel: number) => boolean
   /** Check if user has the specified role */

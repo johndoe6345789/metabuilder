@@ -32,4 +32,13 @@
 .queryHeader {
   padding: 8px 16px;
   border-bottom: 1px solid color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.exportRow {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
 }

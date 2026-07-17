@@ -1,0 +1,29 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.createRow {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tenantRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.placeholder {
+  padding: 32px;
+  text-align: center;
+}

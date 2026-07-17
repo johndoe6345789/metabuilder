@@ -46,6 +46,22 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(
       .filter(Boolean)
       .join(' ')
 
+    // Wire each Tab child with onClick→onChange and selected state by index
+    const wiredChildren = React.Children.map(children, (child, index) => {
+      if (!React.isValidElement(child)) return child
+      const tabValue = (child.props as Record<string, unknown>).value ?? index
+      const isSelected = value !== undefined ? value === tabValue : false
+      return React.cloneElement(child as React.ReactElement<Record<string, unknown>>, {
+        selected: isSelected,
+        onClick: (e: React.MouseEvent) => {
+          onChange?.(e, tabValue)
+          onValueChange?.(tabValue)
+          const origOnClick = (child.props as Record<string, unknown>).onClick
+          if (typeof origOnClick === 'function') origOnClick(e)
+        },
+      })
+    })
+
     return (
       <div
         ref={ref}
@@ -59,7 +75,7 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(
           <div className={s('mat-mdc-tab-label-container')}>
             <div className={s('mat-mdc-tab-list')}>
               <div className={s('mat-mdc-tab-labels')}>
-                {children}
+                {wiredChildren}
               </div>
             </div>
           </div>

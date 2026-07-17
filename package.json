@@ -18,8 +18,8 @@
     "libraries/components/m3",
     "libraries/scss",
     "frontends/*",
-    "config",
-    "packages/*"
+    "frontends/*/frontend",
+    "config"
   ],
   "devDependencies": {
     "@chromatic-com/playwright": "^0.12.8",
@@ -68,10 +68,10 @@
     "hono": "^4.12.0",
     "@storybook/builder-vite": {
       ".": "10.4.4",
-      "vite": "^7.3.1"
+      "vite": "^8.0.0"
     },
     "@joshwooding/vite-plugin-react-docgen-typescript": {
-      "vite": "^7.3.1"
+      "vite": "^8.0.0"
     },
     "minimatch": "10.2.4",
     "tar": "7.5.11",
@@ -98,7 +98,10 @@
     },
     "@storybook/react-vite": {
       ".": "10.4.4",
-      "vite": "^7.3.1"
+      "vite": "^8.0.0"
+    },
+    "eslint-plugin-import": {
+      "eslint": "$eslint"
     }
   }
 }

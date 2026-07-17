@@ -10,7 +10,7 @@ This document describes how the Template Manager plugin integrates with the over
 ┌─────────────────────────────────────────────────────────┐
 │         Email Client Frontend (Next.js/React)           │
 ├─────────────────────────────────────────────────────────┤
-│  Templates UI Components (FakeMUI)                       │
+│  Templates UI Components (M3)                       │
 │  - TemplateListView                                     │
 │  - TemplateEditorView                                   │
 │  - TemplatePreviewView                                  │
@@ -407,11 +407,11 @@ export function useTemplateCompose() {
 }
 ```
 
-## FakeMUI Components
+## M3 Components
 
 ### TemplateListView Component
 ```typescript
-// fakemui/react/components/email/TemplateListView.tsx
+// m3/react/components/email/TemplateListView.tsx
 export function TemplateListView() {
   const { templates, loading, filters, pagination, deleteTemplate } = useEmailTemplates();
 
@@ -456,7 +456,7 @@ export function TemplateListView() {
 
 ### TemplateEditorView Component
 ```typescript
-// fakemui/react/components/email/TemplateEditorView.tsx
+// m3/react/components/email/TemplateEditorView.tsx
 export function TemplateEditorView({ template }: { template: EmailTemplate }) {
   const [formData, setFormData] = useState(template);
   const [preview, setPreview] = useState<ExpandedTemplate | null>(null);
@@ -528,7 +528,7 @@ export function TemplateEditorView({ template }: { template: EmailTemplate }) {
 
 ### TemplateSharingDialog Component
 ```typescript
-// fakemui/react/components/email/TemplateSharingDialog.tsx
+// m3/react/components/email/TemplateSharingDialog.tsx
 export function TemplateSharingDialog({
   template,
   open,
@@ -692,7 +692,7 @@ export const EMAIL_PLUGINS = {
 
 ### 1. Create Template
 ```
-User → FakeMUI TemplateEditorView → Redux → useEmailTemplates Hook →
+User → M3 TemplateEditorView → Redux → useEmailTemplates Hook →
 TemplateManagerExecutor (create) → DBAL → Database → Success
 ```
 
@@ -770,7 +770,7 @@ DBAL → Database → Template Usage Entity → Analytics
 - [Phase 6 Email Client Plan](../../../../docs/plans/2026-01-23-email-client-implementation.md)
 - [DBAL Entity Schemas](../../../../dbal/shared/api/schema/entities/packages/)
 - [Redux Email Slices](../../../../redux/email/)
-- [FakeMUI Components](../../../../fakemui/react/components/email/)
+- [M3 Components](../../../../m3/react/components/email/)
 
 ---
 

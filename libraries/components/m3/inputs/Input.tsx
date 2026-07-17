@@ -78,14 +78,17 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const id = idProp ?? generatedId
     const helperId = `${id}-helper`
     const errorId = `${id}-error`
+    const sizeClass = getSizeClass(props).replace('input--', 'input')
 
-    const classes = classNames(
-      styles.input,
-      getSizeClass(props) && styles[getSizeClass(props).replace('input--', 'input')],
-      error && styles.inputError,
-      fullWidth && styles.inputFullWidth,
-      className
-    )
+		const classes = classNames(
+			styles.input,
+			sizeClass ? styles[sizeClass] : undefined,
+			error ? styles.inputError : undefined,
+			fullWidth ? styles.inputFullWidth : undefined,
+			startAdornment != null ? styles.inputWithStartAdornment : undefined,
+			endAdornment != null ? styles.inputWithEndAdornment : undefined,
+			className
+		)
 
     // Build aria-describedby
     const describedByParts: string[] = []

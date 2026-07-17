@@ -17,8 +17,7 @@ CCard {
     signal backendSelected(int index)
 
     ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: 16
+        Layout.fillWidth: true
         spacing: 8
 
         CText { variant: "subtitle1"

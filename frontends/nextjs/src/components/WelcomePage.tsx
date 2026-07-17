@@ -1,63 +1,45 @@
-'use client'
+import Link from 'next/link'
+import s from './WelcomePage.module.scss'
+import { Logo } from '@/components/brand/Logo'
+import { HeroSection } from './landing/HeroSection'
+import { PackagesSection } from './landing/PackagesSection'
+import { PricingSection } from './landing/PricingSection'
 
-import { Container, Typography, Button, Stack, Paper, Chip, Avatar } from '@/m3'
-
-/**
- * WelcomePage - Level 1 Public Landing
- *
- * Mirrors old/src/components/Level1.tsx public landing page.
- * Shows the 5-level architecture overview and sign-in CTAs.
- */
 export function WelcomePage() {
   return (
-    <Container {...{ maxWidth: 'md', sx: { minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', py: 6 } } as Record<string, unknown>}>
-      <Paper elevation={0} sx={{ textAlign: 'center', p: 4, mb: 4, maxWidth: 600 }}>
-        <div style={{ width: 48, height: 48, borderRadius: 12, background: 'linear-gradient(135deg, var(--primary, #6200ee), var(--accent, #03dac6))', margin: '0 auto 16px' }} />
-        <Typography variant="h3" gutterBottom>
-          Build Anything, Visually
-        </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-          A 5-level meta-architecture for creating entire applications through visual workflows,
-          schema editors, and embedded scripting. No code required.
-        </Typography>
-        <Stack direction="row" spacing={2} sx={{ justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Button variant="contained" color="primary" href="/app">
-            Get Started
-          </Button>
-          <Button variant="outlined" href="/app/ui/login">
-            Sign In
-          </Button>
-          <Button variant="text" href="/dbal-daemon">
-            DBAL Status
-          </Button>
-        </Stack>
-      </Paper>
+    <div className={s.root}>
+      <nav className={s.nav}>
+        <div className={s.navInner}>
+          <Link className={s.brand} href="/">
+            <Logo size={30} />
+            <span className={s.brandName}>MetaBuilder</span>
+          </Link>
+          <div className={s.navLinks}>
+            <a className={s.navLink} href="#packages">Features</a>
+            <a className={s.navLink} href="#pricing">Pricing</a>
+          </div>
+          <div className={s.navCtas}>
+            <Link className={s.btnOutline} href="/ui/login">Sign In</Link>
+            <Link className={s.btnFilled} href="/ui/signup">Start free</Link>
+          </div>
+        </div>
+      </nav>
 
-      {/* Five levels of power (from Level1.tsx) */}
-      <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
-        Five Levels of Power
-      </Typography>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12, width: '100%', maxWidth: 700 }}>
-        {[
-          { level: 1, name: 'Public Website', desc: 'Landing pages and public content', color: '#2196f3' },
-          { level: 2, name: 'User Area', desc: 'Profiles, dashboards, comments', color: '#4caf50' },
-          { level: 3, name: 'Admin Panel', desc: 'Data management and CRUD', color: '#ff9800' },
-          { level: 4, name: 'God Builder', desc: 'Schemas, workflows, Lua', color: '#9c27b0' },
-          { level: 5, name: 'Super God', desc: 'Multi-tenant control', color: '#ffc107' },
-        ].map(item => (
-          <Paper key={item.level} sx={{ p: 2, borderTop: `3px solid ${item.color}` }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-              <Avatar sx={{ width: 28, height: 28, bgcolor: item.color, fontSize: '0.8rem' }}>
-                {item.level}
-              </Avatar>
-              <Typography variant="subtitle2">{item.name}</Typography>
-            </div>
-            <Typography variant="caption" color="text.secondary">
-              {item.desc}
-            </Typography>
-          </Paper>
-        ))}
-      </div>
-    </Container>
+      <HeroSection />
+      <PackagesSection />
+      <PricingSection />
+
+      <footer className={s.footer}>
+        <div className={s.footerInner}>
+          <div className={s.footerBrand}>
+            <Logo size={18} />
+            <span>MetaBuilder</span>
+          </div>
+          <span className={s.footerCopy}>
+            © {new Date().getFullYear()} · Your platform, your rules.
+          </span>
+        </div>
+      </footer>
+    </div>
   )
 }

@@ -54,7 +54,7 @@ The bootloader (`app/page.tsx`) does three things:
 
 1. **Load Package Metadata** - Fetches `packages/email_client/package.json`
 2. **Load Page Config** - Fetches `packages/email_client/page-config/`
-3. **Render Components** - Maps JSON config to FakeMUI components
+3. **Render Components** - Maps JSON config to M3 components
 
 Example flow:
 
@@ -94,7 +94,7 @@ Email slices to add in Phase 3:
 
 ### 4. Component Hierarchy
 
-Components are imported from `@metabuilder/fakemui`:
+Components are imported from `@metabuilder/m3`:
 
 ```typescript
 // Email-specific components (created in Phase 2)
@@ -105,9 +105,9 @@ import {
   ComposeWindow,
   SyncStatusBadge,
   AttachmentList
-} from '@metabuilder/fakemui'
+} from '@metabuilder/m3'
 
-// Core FakeMUI components
+// Core M3 components
 import {
   Box,
   Button,
@@ -116,7 +116,7 @@ import {
   Drawer,
   Tab,
   Tabs
-} from '@metabuilder/fakemui'
+} from '@metabuilder/m3'
 ```
 
 ## Service Architecture
@@ -275,7 +275,7 @@ export function SyncEmails({ accountId }) {
 
 ## Component Pattern
 
-All email components use FakeMUI + data-testid for accessibility:
+All email components use M3 + data-testid for accessibility:
 
 ```typescript
 // Email card component
@@ -509,4 +509,4 @@ After bootloader (Phase 8.1) is complete:
 - [Packages Guide](../../docs/PACKAGES_INVENTORY.md) - Package system
 - [DBAL Guide](../../dbal/CLAUDE.md) - Database layer
 - [Workflow Guide](../../workflow/README.md) - Workflow engine
-- [FakeMUI Guide](../../fakemui/STRUCTURE.md) - Component library
+- [M3 Guide](../../m3/STRUCTURE.md) - Component library

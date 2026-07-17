@@ -1,6 +1,7 @@
 'use client'
 
-import { FormControl, FormLabel, Select, Box } from '@/m3'
+import { FormControl, FormLabel, Select } from '@/m3'
+import s from './Pagination.module.scss'
 
 export interface ItemsPerPageSelectorProps {
   value: number
@@ -30,14 +31,8 @@ export function ItemsPerPageSelector({
   }
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 2,
-      }}
-    >
-      <FormControl disabled={disabled} sx={{ minWidth: 120 }}>
+    <div className={s.pageSize}>
+      <FormControl disabled={disabled} className={s.pageSizeControl}>
         <FormLabel htmlFor="items-per-page-select">{label}</FormLabel>
         <Select
           native
@@ -45,9 +40,7 @@ export function ItemsPerPageSelector({
           onChange={handleChange as never}
           disabled={disabled}
           inputProps={{ id: 'items-per-page-select' }}
-          sx={{
-            fontFamily: 'IBM Plex Sans, sans-serif',
-          }}
+          className={s.pageSizeSelect}
         >
           {options.map((option) => (
             <option key={option} value={option}>
@@ -56,6 +49,6 @@ export function ItemsPerPageSelector({
           ))}
         </Select>
       </FormControl>
-    </Box>
+    </div>
   )
 }

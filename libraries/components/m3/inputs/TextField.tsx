@@ -5,6 +5,7 @@ import { FormLabel } from './FormLabel'
 import { FormHelperText } from './FormHelperText'
 import { Input, InputProps } from './Input'
 import { Select } from './Select'
+import { Textarea } from './Textarea'
 import { useAccessible } from '../../../hooks/useAccessible'
 import { sxToStyle } from '../utils/sx'
 
@@ -18,14 +19,24 @@ export interface TextFieldProps extends Omit<InputProps, 'size' | 'label' | 'hel
   children?: React.ReactNode
   /** Input size */
   size?: 'small' | 'medium'
+  /** Render a textarea instead of a single-line input */
+  multiline?: boolean
+  /** Textarea rows when multiline is enabled */
+  rows?: number
   /** Unique identifier for testing and accessibility */
   testId?: string
   /** MUI sx prop for styling */
   sx?: Record<string, unknown>
+  /** MUI-compatible input slot props */
+  InputProps?: {
+    startAdornment?: React.ReactNode
+    endAdornment?: React.ReactNode
+    [key: string]: unknown
+  }
 }
 
-export const TextField = forwardRef<HTMLInputElement | HTMLDivElement, TextFieldProps>(
-  ({ label, helperText, error, className = '', id: providedId, select, children, size, testId: customTestId, sx, style, ...props }, ref) => {
+export const TextField = forwardRef<HTMLInputElement | HTMLTextAreaElement | HTMLDivElement, TextFieldProps>(
+  ({ label, helperText, error, className = '', id: providedId, select, children, size, multiline = false, rows, testId: customTestId, sx, style, InputProps: muiInputProps, ...props }, ref) => {
     const generatedId = useId()
     const id = providedId ?? generatedId
     const helperTextId = `${id}-helper-text`
@@ -68,16 +79,31 @@ export const TextField = forwardRef<HTMLInputElement | HTMLDivElement, TextField
             {children}
           </Select>
         ) : (
-          <Input
-            ref={ref as React.Ref<HTMLInputElement>}
-            id={id}
-            error={error}
-            size={inputSize}
-            data-testid={accessible['data-testid']}
-            aria-invalid={error}
-            aria-describedby={helperText ? helperTextId : undefined}
-            {...props}
-          />
+          multiline ? (
+            <Textarea
+              ref={ref as React.Ref<HTMLTextAreaElement>}
+              id={id}
+              error={error}
+              rows={rows}
+              data-testid={accessible['data-testid']}
+              aria-invalid={error}
+              aria-describedby={helperText ? helperTextId : undefined}
+              {...(props as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
+            />
+          ) : (
+            <Input
+              ref={ref as React.Ref<HTMLInputElement>}
+              id={id}
+              error={error}
+              size={inputSize}
+              startAdornment={muiInputProps?.startAdornment}
+              endAdornment={muiInputProps?.endAdornment}
+              data-testid={accessible['data-testid']}
+              aria-invalid={error}
+              aria-describedby={helperText ? helperTextId : undefined}
+              {...props}
+            />
+          )
         )}
         {helperText && (
           <FormHelperText error={error} id={helperTextId} role="status">

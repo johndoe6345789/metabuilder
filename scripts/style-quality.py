@@ -6,7 +6,7 @@ Scores 0-100 per dimension, then a weighted overall score.
 
 Dimensions:
   inline_style   — style={{}} props in JSX (bad)
-  sx_prop        — sx={{}} MUI/FakeMUI inline styles (bad)
+  sx_prop        — sx={{}} MUI/M3 inline styles (bad)
   color_tokens   — % of color usage that comes from CSS vars vs hardcoded hex
   important      — !important usage (bad)
   px_magic       — hardcoded pixel values in JSX (bad)

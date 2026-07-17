@@ -1,0 +1,12 @@
+{
+  "entity": "StyleClass",
+  "version": "1.0",
+  "description": "Default reusable CSS classes for the god-panel Styles tab",
+  "records": [
+    {
+      "id": "styles_default",
+      "tenantId": "default",
+      "classes": "[{\"id\":\"c_card\",\"name\":\"card\",\"props\":{\"padding\":\"16px\",\"border-radius\":\"12px\",\"background\":\"#161b22\",\"border\":\"1px solid #30363d\"}},{\"id\":\"c_pill\",\"name\":\"pill\",\"props\":{\"padding\":\"4px 12px\",\"border-radius\":\"999px\",\"background\":\"#1f6feb\",\"color\":\"#fff\",\"font-size\":\"12px\",\"font-weight\":\"600\"}}]"
+    }
+  ]
+}

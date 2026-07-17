@@ -54,12 +54,12 @@ export interface CustomThemeOptions {
 /**
  * Extended theme interface for m3
  */
-export interface FakeMuiTheme {
+export interface M3Theme {
   mode: 'light' | 'dark'
   custom: CustomThemeProperties
 }
 
-export interface FakeMuiThemeOptions {
+export interface M3ThemeOptions {
   mode?: 'light' | 'dark'
   custom?: CustomThemeOptions
 }

@@ -21,7 +21,9 @@
   white-space: nowrap;
   cursor: default;
   user-select: none;
-  transition: background-color 200ms ease, box-shadow 200ms ease;
+  transition:
+    background-color 200ms ease,
+    box-shadow 200ms ease;
 }
 
 // Legacy wrapper class
@@ -55,15 +57,19 @@
   border: 1px solid var(--mat-sys-outline, #79747e);
 
   &:hover {
-    background-color: var(--mat-sys-surface-container-lowest, rgba(0, 0, 0, 0.04));
+    background-color: var(
+      --mat-sys-surface-container-lowest,
+      rgba(0, 0, 0, 0.04)
+    );
   }
 }
 
 // Size variants
 .chipSmall {
-  --mat-chip-container-height: 24px;
-  padding: 0 12px;
-  font-size: 12px;
+  --mat-chip-container-height: 30px;
+  padding: 0 14px;
+  font-size: 0.9rem;
+  font-weight: 700;
 }
 
 .chipMedium {
@@ -136,7 +142,9 @@
   color: inherit;
   cursor: pointer;
   opacity: 0.7;
-  transition: opacity 200ms ease, background-color 200ms ease;
+  transition:
+    opacity 200ms ease,
+    background-color 200ms ease;
 
   &:hover {
     opacity: 1;

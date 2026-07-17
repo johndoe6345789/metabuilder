@@ -14,12 +14,12 @@ jest.mock('framer-motion', () => ({
   },
 }))
 
-const mockFakeMUIToast = {
+const mockM3Toast = {
   success: jest.fn(),
   error: jest.fn(),
 }
 jest.mock('@metabuilder/components/m3', () => ({
-  toast: mockFakeMUIToast,
+  toast: mockM3Toast,
 }))
 
 jest.mock('@/components/demo/PersistenceSettings', () => ({
@@ -392,7 +392,7 @@ describe('App Pages', () => {
       fireEvent.click(screen.getByTestId('atoms-section'))
 
       await waitFor(() => {
-        expect(mockFakeMUIToast.success).toHaveBeenCalled()
+        expect(mockM3Toast.success).toHaveBeenCalled()
       })
     })
 
@@ -408,7 +408,7 @@ describe('App Pages', () => {
       fireEvent.click(screen.getByTestId('atoms-section'))
 
       await waitFor(() => {
-        expect(mockFakeMUIToast.error).toHaveBeenCalled()
+        expect(mockM3Toast.error).toHaveBeenCalled()
       })
     })
 
@@ -494,7 +494,7 @@ describe('App Pages', () => {
       fireEvent.click(screen.getByTestId('molecules-section'))
 
       await waitFor(() => {
-        expect(mockFakeMUIToast.success).toHaveBeenCalled()
+        expect(mockM3Toast.success).toHaveBeenCalled()
       })
     })
 
@@ -562,7 +562,7 @@ describe('App Pages', () => {
       fireEvent.click(screen.getByTestId('organisms-section'))
 
       await waitFor(() => {
-        expect(mockFakeMUIToast.success).toHaveBeenCalled()
+        expect(mockM3Toast.success).toHaveBeenCalled()
       })
     })
 
@@ -630,7 +630,7 @@ describe('App Pages', () => {
       fireEvent.click(screen.getByTestId('templates-section'))
 
       await waitFor(() => {
-        expect(mockFakeMUIToast.success).toHaveBeenCalled()
+        expect(mockM3Toast.success).toHaveBeenCalled()
       })
     })
 
@@ -729,7 +729,7 @@ describe('App Pages', () => {
       fireEvent.click(screen.getByTestId('atoms-section'))
 
       await waitFor(() => {
-        expect(mockFakeMUIToast.error).toHaveBeenCalledWith(
+        expect(mockM3Toast.error).toHaveBeenCalledWith(
           'Failed to save snippet',
         )
       })
@@ -766,20 +766,20 @@ describe('App Pages', () => {
       fireEvent.click(screen.getByTestId('atoms-section'))
 
       await waitFor(() => {
-        expect(mockFakeMUIToast.error).toHaveBeenCalled()
+        expect(mockM3Toast.error).toHaveBeenCalled()
       })
 
       // Reset mock and rerender
       db.createSnippet.mockResolvedValueOnce(undefined)
-      mockFakeMUIToast.error.mockClear()
-      mockFakeMUIToast.success.mockClear()
+      mockM3Toast.error.mockClear()
+      mockM3Toast.success.mockClear()
 
       rerender(<AtomsPage />)
 
       fireEvent.click(screen.getByTestId('atoms-section'))
 
       await waitFor(() => {
-        expect(mockFakeMUIToast.success).toHaveBeenCalled()
+        expect(mockM3Toast.success).toHaveBeenCalled()
       })
     })
   })

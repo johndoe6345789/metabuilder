@@ -11,8 +11,8 @@ import {
   AddIcon,
   SearchIcon,
   FolderIcon,
-} from '@/../../../icons/react';
-import styles from '@/../../../scss/atoms/dashboard.module.scss';
+} from '@icons/react';
+import styles from '@scss/atoms/dashboard.module.scss';
 
 interface WorkflowEmptyStateProps {
   hasFilters: boolean;

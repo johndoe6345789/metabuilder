@@ -1,5 +1,5 @@
 /**
- * FakeMUI Palette Type Definitions
+ * M3 Palette Type Definitions
  * 
  * This file defines the color palette types used by the m3 theme system.
  * These replace MUI's palette augmentation with standalone types.

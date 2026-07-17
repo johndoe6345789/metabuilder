@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QmlComponents 1.0
 
 /**
  * CTextField.qml - Material Design 3 outlined text field
@@ -204,10 +205,8 @@ TextField {
     Text {
         id: helperText
         parent: control.parent
-        anchors.top: control.bottom
-        anchors.topMargin: 4
-        anchors.left: control.left
-        anchors.leftMargin: 16
+        x: control.x + 16
+        y: control.y + control.height + 4
         text: control.hasError
             ? control.errorText
             : control.helper

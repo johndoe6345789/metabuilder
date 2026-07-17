@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import styles from '@/../../../scss/atoms/layout.module.scss';
+import styles from '@scss/atoms/layout.module.scss';
 import { testId } from '../../utils/accessibility';
 
 interface SidebarMobileDrawerProps {

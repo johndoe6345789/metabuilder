@@ -101,8 +101,8 @@ Rectangle {
                 Layout.fillHeight: true
                 Layout.preferredWidth: 580
                 ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 16
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
                     spacing: 0
                     CRouteTableHeader { }
                     CDivider {
@@ -159,8 +159,8 @@ Rectangle {
                 Layout.fillHeight: true
                 visible: !hasSel
                 ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 16
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
                     spacing: 12
                     Item { Layout.fillHeight: true }
                     CText {

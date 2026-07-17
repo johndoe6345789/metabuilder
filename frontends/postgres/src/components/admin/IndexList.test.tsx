@@ -28,114 +28,75 @@ const indexes = [
 ];
 
 describe('IndexList', () => {
-  it('should render without crashing', () => {
+  it('renders without crashing', () => {
     const { container } = render(
-      <IndexList tableName="users" indexes={indexes} onDeleteIndex={vi.fn()} />,
+      <IndexList indexes={indexes} onDeleteIndex={vi.fn()} />,
     );
-    expect(container).toBeDefined();
+    expect(container.querySelector('table')).toBeDefined();
   });
 
-  it('should render the table name in the heading', () => {
-    render(
-      <IndexList tableName="users" indexes={indexes} onDeleteIndex={vi.fn()} />,
-    );
-    const headings = screen.getAllByText(/Indexes on/);
-    expect(headings.length).toBeGreaterThan(0);
-    expect(headings[0]!.textContent).toContain('users');
-  });
-
-  it('should render all index names', () => {
-    render(
-      <IndexList tableName="users" indexes={indexes} onDeleteIndex={vi.fn()} />,
-    );
+  it('renders all index names', () => {
+    render(<IndexList indexes={indexes} onDeleteIndex={vi.fn()} />);
     expect(screen.getAllByText('pk_users').length).toBeGreaterThan(0);
     expect(screen.getAllByText('idx_email').length).toBeGreaterThan(0);
     expect(screen.getAllByText('idx_name_created').length).toBeGreaterThan(0);
   });
 
-  it('should show PRIMARY KEY chip for primary indexes', () => {
-    render(
-      <IndexList tableName="users" indexes={indexes} onDeleteIndex={vi.fn()} />,
-    );
+  it('shows PRIMARY KEY chip for primary indexes', () => {
+    render(<IndexList indexes={indexes} onDeleteIndex={vi.fn()} />);
     expect(screen.getAllByText('PRIMARY KEY').length).toBeGreaterThan(0);
   });
 
-  it('should show UNIQUE chip for unique non-primary indexes', () => {
-    render(
-      <IndexList tableName="users" indexes={indexes} onDeleteIndex={vi.fn()} />,
-    );
+  it('shows UNIQUE chip for unique non-primary indexes', () => {
+    render(<IndexList indexes={indexes} onDeleteIndex={vi.fn()} />);
     expect(screen.getAllByText('UNIQUE').length).toBeGreaterThan(0);
   });
 
-  it('should render BTREE index type chips', () => {
-    render(
-      <IndexList tableName="users" indexes={indexes} onDeleteIndex={vi.fn()} />,
-    );
+  it('renders BTREE index type', () => {
+    render(<IndexList indexes={indexes} onDeleteIndex={vi.fn()} />);
     expect(screen.getAllByText('BTREE').length).toBeGreaterThan(0);
   });
 
-  it('should render columns in secondary text', () => {
-    render(
-      <IndexList tableName="users" indexes={indexes} onDeleteIndex={vi.fn()} />,
+  it('renders columns as comma-separated list', () => {
+    render(<IndexList indexes={indexes} onDeleteIndex={vi.fn()} />);
+    expect(screen.getAllByText('id').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('name, created_at').length).toBeGreaterThan(0);
+  });
+
+  it('primary index has no drop button', () => {
+    const { container } = render(
+      <IndexList indexes={[indexes[0]!]} onDeleteIndex={vi.fn()} />,
     );
-    expect(screen.getAllByText('Columns: id').length).toBeGreaterThan(0);
     expect(
-      screen.getAllByText('Columns: name, created_at').length,
-    ).toBeGreaterThan(0);
+      container.querySelector('button[aria-label="Drop index"]'),
+    ).toBeNull();
   });
 
-  it('should have more buttons for non-primary indexes than primary', () => {
-    // Non-primary indexes show a delete icon button in addition to
-    // any navigation/icon buttons already in the list.
-    const { container: primaryContainer } = render(
-      <IndexList
-        tableName="users"
-        indexes={[indexes[0]!]}
-        onDeleteIndex={vi.fn()}
-      />,
+  it('non-primary index has a drop button', () => {
+    const { container } = render(
+      <IndexList indexes={[indexes[1]!]} onDeleteIndex={vi.fn()} />,
     );
-    // Primary key: no IconButton delete button
-    const primaryBtns = primaryContainer.querySelectorAll(
-      'button.MuiIconButton-root',
-    );
-
-    const { container: nonPrimaryContainer } = render(
-      <IndexList
-        tableName="users"
-        indexes={[indexes[1]!]}
-        onDeleteIndex={vi.fn()}
-      />,
-    );
-    const nonPrimaryBtns = nonPrimaryContainer.querySelectorAll(
-      'button.MuiIconButton-root',
-    );
-
-    // Non-primary has 1 delete icon button, primary has 0
-    expect(nonPrimaryBtns.length).toBeGreaterThan(primaryBtns.length);
+    expect(
+      container.querySelector('button[aria-label="Drop index"]'),
+    ).not.toBeNull();
   });
 
-  it('should call onDeleteIndex via the MuiIconButton', async () => {
+  it('calls onDeleteIndex when drop button is clicked', async () => {
     const user = userEvent.setup();
     const onDeleteIndex = vi.fn();
-
     const { container } = render(
-      <IndexList
-        tableName="users"
-        indexes={[indexes[1]!]}
-        onDeleteIndex={onDeleteIndex}
-      />,
+      <IndexList indexes={[indexes[1]!]} onDeleteIndex={onDeleteIndex} />,
     );
-
-    const iconBtn = container.querySelector('button.MuiIconButton-root');
-    expect(iconBtn).not.toBeNull();
-    await user.click(iconBtn!);
+    const btn = container.querySelector('button[aria-label="Drop index"]');
+    expect(btn).not.toBeNull();
+    await user.click(btn!);
     expect(onDeleteIndex).toHaveBeenCalledWith('idx_email');
   });
 
-  it('should render empty state without errors', () => {
+  it('renders empty state without errors', () => {
     const { container } = render(
-      <IndexList tableName="users" indexes={[]} onDeleteIndex={vi.fn()} />,
+      <IndexList indexes={[]} onDeleteIndex={vi.fn()} />,
     );
-    expect(container.querySelector('ul')).toBeDefined();
+    expect(container.querySelector('table')).toBeDefined();
   });
 });

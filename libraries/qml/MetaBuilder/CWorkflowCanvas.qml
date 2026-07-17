@@ -23,7 +23,7 @@ Rectangle {
         string srcId, string srcPort,
         string dstId, string dstPort)
     signal nodeDropped(string type, real x, real y)
-    signal zoomChanged(real zoom)
+    signal zoomUpdated(real zoom)
     signal canvasClicked()
     signal connectionDragStarted(
         string nodeId, string portName,

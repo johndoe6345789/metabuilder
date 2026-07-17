@@ -175,7 +175,7 @@ describe('DemoFeatureCards', () => {
       expect(cards).toHaveLength(3)
     })
 
-    it('cards are rendered with FakeMUI styling', () => {
+    it('cards are rendered with M3 styling', () => {
       render(<DemoFeatureCards />)
       const realTimeCard = screen.getByTestId('feature-card-realtime')
       expect(realTimeCard).toBeInTheDocument()

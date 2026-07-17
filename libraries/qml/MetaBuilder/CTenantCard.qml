@@ -8,6 +8,11 @@ CCard {
 
     required property var tenant
     property bool isDark: false
+    visible: root.tenant != null
+
+    readonly property var _t: root.tenant || {
+        name: "", status: "", owner: "", homepage: "", created: ""
+    }
 
     signal edit()
     signal remove()
@@ -18,10 +23,10 @@ CCard {
         Layout.fillWidth: true
         spacing: 10
 
-        CText { variant: "h4"; text: root.tenant.name }
+        CText { variant: "h4"; text: root._t.name }
         CStatusBadge {
-            status: root.tenant.status === "active" ? "success" : "warning"
-            text: root.tenant.status
+            status: root._t.status === "active" ? "success" : "warning"
+            text: root._t.status
         }
         Item { Layout.fillWidth: true }
         CBadge { text: "Tenant"; badgeColor: Theme.primary }
@@ -37,19 +42,19 @@ CCard {
             spacing: 4
             CText { variant: "caption"; text: "Owner"
             color: Theme.textSecondary }
-            CText { variant: "body1"; text: root.tenant.owner }
+            CText { variant: "body1"; text: root._t.owner }
         }
         ColumnLayout {
             spacing: 4
             CText { variant: "caption"; text: "Homepage"
             color: Theme.textSecondary }
-            CText { variant: "body1"; text: root.tenant.homepage }
+            CText { variant: "body1"; text: root._t.homepage }
         }
         ColumnLayout {
             spacing: 4
             CText { variant: "caption"; text: "Created"
             color: Theme.textSecondary }
-            CText { variant: "body1"; text: root.tenant.created }
+            CText { variant: "body1"; text: root._t.created }
         }
         Item { Layout.fillWidth: true }
         CButton {

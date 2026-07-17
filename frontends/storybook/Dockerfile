@@ -40,7 +40,7 @@ RUN sed -i '/@esbuild-kit:registry/d; /localhost:4873/d' .npmrc \
     && npm config set fetch-retries 5 \
     && npm config set fetch-retry-mintimeout 20000 \
     && npm config set maxsockets 5 \
-    && npm install --ignore-scripts --legacy-peer-deps
+    && npm install --ignore-scripts
 
 
 # --- Build stage ---
@@ -58,7 +58,11 @@ RUN sed -i '/@esbuild-kit:registry/d; /localhost:4873/d' .npmrc
 # rebuilds the complete node_modules/@metabuilder/* symlink tree and hoists
 # workspace-local bins. No `2>/dev/null || true` — install failures must fail
 # the build instead of being silently swallowed.
-RUN npm install --ignore-scripts --legacy-peer-deps
+RUN npm install --ignore-scripts
+
+# @vitejs/plugin-react imports this at config-load time; install it explicitly
+# here so stale dependency-layer cache cannot leave Storybook without it.
+RUN npm install @rolldown/pluginutils@^1.0.1 --ignore-scripts
 
 # Build only core workspace libs needed by storybook components
 RUN for ws in libraries/redux/core libraries/redux/slices \
