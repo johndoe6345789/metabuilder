@@ -5,6 +5,11 @@ import {
   makeVaultEntry,
   type VaultRecord,
 } from '../../vault-records'
+import {
+  deleteFallbackVaultEntry,
+  readFallbackVaultEntry,
+  upsertFallbackVaultEntry,
+} from '../../vault-fallback-store'
 import { hasValidVaultSession } from '../../vault-session'
 
 function isObject(value: unknown): value is Record<string, unknown> {
@@ -47,17 +52,16 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
     return NextResponse.json({ error: 'Missing login id' }, { status: 400 })
   }
 
-  const current = await db.entity('InstalledPackage').read(id)
-  if (current === null || !isObject(current)) {
-    return NextResponse.json({ error: 'Login not found' }, { status: 404 })
-  }
-
   const body = await request.json().catch(() => null)
   if (!isObject(body)) {
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
   }
 
-  const currentVault = makeVaultEntry(normalizeInstalledPackage(current))
+  const current = await db.entity('InstalledPackage').read(id)
+  const currentVault = current !== null && isObject(current)
+    ? makeVaultEntry(normalizeInstalledPackage(current))
+    : readFallbackVaultEntry(id)
+
   if (currentVault === null) {
     return NextResponse.json({ error: 'Login not found' }, { status: 404 })
   }
@@ -81,16 +85,33 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
     return NextResponse.json({ error: 'Slug, title, username, and password are required' }, { status: 400 })
   }
 
-  const updated = await db.entity('InstalledPackage').update(id, {
-    packageId: id,
-    version: String(current.version ?? '1.0.0'),
-    enabled: Boolean(current.enabled ?? true),
-    config: encodeConfig(nextEntry, currentVault.createdAt, updatedAt),
-    tenantId: 'system',
-    installedAt: Number(currentVault.createdAt),
-  })
+  let normalized = null
+  if (current !== null && isObject(current)) {
+    try {
+      const updated = await db.entity('InstalledPackage').update(id, {
+        packageId: id,
+        version: String(current.version ?? '1.0.0'),
+        enabled: Boolean(current.enabled ?? true),
+        config: encodeConfig(nextEntry, currentVault.createdAt, updatedAt),
+        tenantId: 'system',
+        installedAt: Number(currentVault.createdAt),
+      })
+      normalized = makeVaultEntry(normalizeInstalledPackage(updated))
+    } catch {
+      normalized = upsertFallbackVaultEntry(
+        nextEntry,
+        currentVault.createdAt,
+        updatedAt
+      )
+    }
+  } else {
+    normalized = upsertFallbackVaultEntry(
+      nextEntry,
+      currentVault.createdAt,
+      updatedAt
+    )
+  }
 
-  const normalized = makeVaultEntry(normalizeInstalledPackage(updated))
   if (normalized === null) {
     return NextResponse.json({ error: 'Login not found' }, { status: 404 })
   }
@@ -109,7 +130,9 @@ export async function DELETE(
     return NextResponse.json({ error: 'Missing login id' }, { status: 400 })
   }
 
-  const removed = await db.entity('InstalledPackage').remove(id)
+  const removed =
+    await db.entity('InstalledPackage').remove(id) || deleteFallbackVaultEntry(id)
+
   if (!removed) {
     return NextResponse.json({ error: 'Login not found' }, { status: 404 })
   }

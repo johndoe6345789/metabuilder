@@ -95,6 +95,54 @@
   flex-wrap: wrap;
 }
 
+.detailActions :global(button[class*='mat-mdc-button-base']) {
+  border-radius: 999px;
+  font-weight: 750;
+  letter-spacing: 0;
+  transition:
+    transform 150ms ease,
+    background-color 150ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.detailActions :global(button[class*='mat-mdc-button-base']:hover) {
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
+  transform: translateY(-1px);
+}
+
+.detailActions :global(button[class*='mat-mdc-outlined-button']:not(:disabled)) {
+  background-color: var(--mat-sys-surface, #fff);
+  border-color: color-mix(
+    in srgb,
+    var(--mat-sys-primary, currentColor) 54%,
+    transparent
+  );
+  color: var(--mat-sys-primary, currentColor);
+}
+
+.detailActions :global(button[class*='mat-mdc-outlined-button']:not(:disabled):hover) {
+  background-color: color-mix(
+    in srgb,
+    var(--mat-sys-primary, currentColor) 16%,
+    var(--mat-sys-surface, #fff)
+  );
+  border-color: color-mix(
+    in srgb,
+    var(--mat-sys-primary, currentColor) 72%,
+    transparent
+  );
+  color: var(--mat-sys-primary, currentColor);
+}
+
+.detailActions :global(button[class*='mat-mdc-unelevated-button']:not(:disabled):hover) {
+  background-color: color-mix(
+    in srgb,
+    var(--mat-sys-primary, currentColor) 82%,
+    #000
+  );
+}
+
 .alert {
   max-width: 52rem;
 }

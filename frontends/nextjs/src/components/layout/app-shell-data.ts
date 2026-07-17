@@ -1,7 +1,8 @@
 import type { PackageNavItem } from '@/lib/packages/navigation'
 import { packageMetadataToNavItem } from '@/lib/packages/navigation'
+import { BASE_PATH } from '@/lib/app-config'
 
-const DBAL_URL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
+const DBAL_PROXY_URL = `${BASE_PATH}/api/dbal`
 
 type PackageRecord = {
   packageId: string
@@ -24,7 +25,7 @@ export const LEVEL_PACKAGES: Record<number, string[]> = {
 
 export async function fetchDbalHealth(): Promise<boolean> {
   try {
-    const res = await fetch(`${DBAL_URL}/health`, {
+    const res = await fetch(`${DBAL_PROXY_URL}/health`, {
       signal: AbortSignal.timeout(3000),
     })
     return !res.ok
@@ -35,7 +36,7 @@ export async function fetchDbalHealth(): Promise<boolean> {
 
 export async function fetchNavigablePackages(): Promise<PackageNavItem[]> {
   try {
-    const res = await fetch(`${DBAL_URL}/system/core/InstalledPackage`, {
+    const res = await fetch(`${DBAL_PROXY_URL}/system/core/InstalledPackage`, {
       signal: AbortSignal.timeout(3000),
     })
     if (!res.ok) return []
