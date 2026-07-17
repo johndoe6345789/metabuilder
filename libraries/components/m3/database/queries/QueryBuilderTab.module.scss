@@ -21,6 +21,19 @@
   gap: 4px;
 }
 
+.columnChip {
+  margin-right: 8px;
+}
+
+.grow {
+  min-width: 0;
+  flex: 1 1 0;
+}
+
+.clearSelection {
+  margin-top: 4px;
+}
+
 .conditionHeader {
   display: flex;
   justify-content: space-between;

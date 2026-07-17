@@ -1,7 +1,7 @@
 import { EmptyState } from '@/components/features/snippet-display/EmptyState'
 // eslint-disable-next-line max-len
 import { NamespaceSelector } from '@/components/features/namespace-manager/NamespaceSelector'
-import { SnippetDialog } from '@/components/features/snippet-editor/SnippetDialog'
+// eslint-disable-next-line max-len
 import { SnippetViewer } from '@/components/features/snippet-viewer/SnippetViewer'
 import { SnippetTemplate } from '@/lib/types'
 import templatesData from '@/data/templates.json'
@@ -125,13 +125,6 @@ export function SnippetManagerRedux() {
           </div>
         </div>
       )}
-
-      <SnippetDialog
-        open={vm.dialogOpen}
-        onOpenChange={vm.handleDialogClose}
-        onSave={vm.handleSaveSnippet}
-        editingSnippet={vm.editingSnippet}
-      />
 
       <SnippetViewer
         open={vm.viewerOpen}

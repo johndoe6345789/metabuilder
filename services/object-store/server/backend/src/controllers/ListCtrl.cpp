@@ -17,7 +17,8 @@ void ListCtrl::listObjects(const HttpRequestPtr& req,
                            std::function<void(const HttpResponsePtr&)>&& cb,
                            const std::string& bucket)
 {
-    int bid = BucketStore::getId(bucket);
+    int bid = BucketStore::getId(
+        bucket, req->attributes()->get<std::string>("owner"));
     if (bid == 0) {
         auto r = HttpResponse::newHttpResponse();
         r->setStatusCode(k404NotFound);

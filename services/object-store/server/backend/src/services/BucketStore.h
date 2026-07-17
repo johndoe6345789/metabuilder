@@ -29,7 +29,8 @@ class BucketStore
      *         unexpected DB errors.
      */
     static bool create(const std::string& name,
-                       const std::string& region);
+                       const std::string& region,
+                       const std::string& owner);
 
     /**
      * @brief Get bucket metadata by name.
@@ -37,24 +38,27 @@ class BucketStore
      * @return Json::Value with id/name/region/created_at,
      *         or Json::nullValue if not found.
      */
-    static Json::Value get(const std::string& name);
+    static Json::Value get(const std::string& name,
+                           const std::string& owner);
 
     /// @brief List all buckets ordered by name.
-    static std::vector<Json::Value> list();
+    static std::vector<Json::Value> list(const std::string& owner);
 
     /**
      * @brief Delete a bucket (cascade deletes objects).
      * @param name Bucket name.
      * @return true if a row was deleted.
      */
-    static bool remove(const std::string& name);
+    static bool remove(const std::string& name,
+                       const std::string& owner);
 
     /**
      * @brief Get bucket ID by name.
      * @param name Bucket name.
      * @return Positive integer ID, or 0 if not found.
      */
-    static int getId(const std::string& name);
+    static int getId(const std::string& name,
+                     const std::string& owner);
 
   private:
     /// @brief Map a DB row to a Json::Value.

@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, RefObject } from 'react'
 
 export interface DropdownState {
   open: boolean
-  ref: RefObject<HTMLDivElement>
+  ref: RefObject<HTMLDivElement | null>
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 

@@ -1,4 +1,6 @@
-@use './m3-scss/material' as mat;
+// Resolve from libraries/scss/m3-scss through next.config.js loadPaths.
+// Keeping one vendored Material source prevents frontend-specific drift.
+@use 'material' as mat;
 
 $theme: mat.define-theme((
   color: (theme-type: light),

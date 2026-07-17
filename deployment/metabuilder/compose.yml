@@ -703,6 +703,7 @@ services:
       NODE_ENV: production
       PORT: 3000
       HOSTNAME: "0.0.0.0"
+      METABUILDER_INTERNAL_URL: http://127.0.0.1:3000/app
       DBAL_API_URL: http://dbal:8080
       DBAL_WS_URL: ws://dbal:50051
     depends_on:

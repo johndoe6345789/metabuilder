@@ -1,4 +1,4 @@
-import { configureStore, combineReducers, isPlain, Reducer, Middleware } from '@reduxjs/toolkit'
+import { configureStore, combineReducers, isPlain, Reducer } from '@reduxjs/toolkit'
 import { persistReducer, persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist'
 import { createPersistConfig, type MetaPersistOptions } from './createPersistConfig'
 
@@ -8,7 +8,7 @@ export interface PersistedStoreOptions {
   /** Persistence configuration */
   persist?: MetaPersistOptions
   /** Additional middleware to append after the default middleware */
-  middleware?: (base: ReturnType<ReturnType<typeof configureStore>['dispatch'] extends any ? any : never>) => any
+  middleware?: (base: any) => any
   /** Redux DevTools configuration */
   devTools?: boolean | object
   /** Preloaded state */
@@ -36,14 +36,14 @@ export function createPersistedStore(options: PersistedStoreOptions) {
     middleware: (getDefaultMiddleware) => {
       const base = getDefaultMiddleware({
         serializableCheck: {
-          isSerializable: (value) =>
+          isSerializable: (value: unknown) =>
             value instanceof Map ||
             value instanceof Set ||
             value instanceof Date ||
             isPlain(value),
           ignoredActions: [...PERSIST_ACTIONS, ...extraIgnoredActions],
           ignoredPaths: extraIgnoredPaths,
-        },
+        } as any,
       })
       return options.middleware ? options.middleware(base) : base
     },

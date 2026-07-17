@@ -23,10 +23,10 @@ export interface UseEditorSelectionReturn {
 
 export function useEditorSelection(): UseEditorSelectionReturn {
   const dispatch = useDispatch();
-  const selectedNodeIds = useSelector(
+  const selectedNodeIds = useSelector<RootState, string[]>(
     (state: RootState) => state.editor.selectedNodes,
   );
-  const selectedEdgeIds = useSelector(
+  const selectedEdgeIds = useSelector<RootState, string[]>(
     (state: RootState) => state.editor.selectedEdges,
   );
   const isDrawing = useSelector((state: RootState) => state.editor.isDrawing);

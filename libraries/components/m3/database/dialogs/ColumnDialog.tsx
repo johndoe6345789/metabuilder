@@ -15,6 +15,7 @@ import {
   Checkbox,
   FormControlLabel,
 } from '../../inputs';
+import styles from './DatabaseDialog.module.scss';
 
 export type ColumnInfo = {
   column_name: string;
@@ -127,14 +128,14 @@ export function ColumnDialog({
               label="Column Name"
               value={columnName}
               onChange={(e) => setColumnName(e.target.value)}
-              sx={{ mt: 2, mb: 2 }}
+              className={styles.fieldSpaced}
             />
             <Select
               native
               fullWidth
               value={columnType}
               onChange={(e) => setColumnType(e.target.value as string)}
-              sx={{ mb: 2 }}
+              className={styles.field}
             >
               {dataTypes.map((type) => (
                 <option key={type} value={type}>
@@ -150,7 +151,7 @@ export function ColumnDialog({
                 />
               }
               label="Nullable"
-              sx={{ mb: 2 }}
+              className={styles.field}
             />
             <TextField
               fullWidth
@@ -167,7 +168,7 @@ export function ColumnDialog({
               value={selectedColumn}
               onChange={(e) => setSelectedColumn(e.target.value as string)}
               displayEmpty
-              sx={{ mt: 2, mb: 2 }}
+              className={styles.fieldSpaced}
             >
               <option value="">
                 Select a column
@@ -186,7 +187,7 @@ export function ColumnDialog({
                   fullWidth
                   value={columnType}
                   onChange={(e) => setColumnType(e.target.value as string)}
-                  sx={{ mb: 2 }}
+                  className={styles.field}
                 >
                   {dataTypes.map((type) => (
                     <option key={type} value={type}>

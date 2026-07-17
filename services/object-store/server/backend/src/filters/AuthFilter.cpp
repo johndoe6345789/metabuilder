@@ -23,31 +23,56 @@ void AuthFilter::doFilter(const HttpRequestPtr& req, FilterCallback&& cb,
         return;
     }
 
-    // Accept "AWS access_key:sig" or "Bearer key"
+    // The web client uses an intentionally small internal credential scheme:
+    // "AWS access_key:secret_key". This is not AWS Signature V4, so reject
+    // ambiguous bearer credentials instead of pretending they are equivalent.
     std::string key;
+    std::string suppliedSecret;
     if (auth.starts_with("AWS ")) {
         auto colon = auth.find(':', 4);
-        key = (colon != std::string::npos) ? auth.substr(4, colon - 4)
-                                           : auth.substr(4);
-    } else if (auth.starts_with("Bearer ")) {
-        key = auth.substr(7);
+        if (colon == std::string::npos) {
+            auto r = HttpResponse::newHttpResponse();
+            r->setStatusCode(k403Forbidden);
+            r->setBody("InvalidAuthorizationHeader");
+            cb(r);
+            return;
+        }
+        key = auth.substr(4, colon - 4);
+        suppliedSecret = auth.substr(colon + 1);
     } else {
-        key = auth;
+        auto r = HttpResponse::newHttpResponse();
+        r->setStatusCode(k403Forbidden);
+        r->setBody("InvalidAuthorizationHeader");
+        cb(r);
+        return;
     }
 
     try {
         auto rows =
-            DbPool::get()->execSqlSync("SELECT access_key, permissions "
+            DbPool::get()->execSqlSync("SELECT access_key, secret_key, owner, permissions "
                                        "FROM api_keys WHERE access_key=$1",
                                        key);
-        if (rows.empty()) {
+        if (rows.empty() || rows[0]["secret_key"].as<std::string>() != suppliedSecret) {
             auto r = HttpResponse::newHttpResponse();
             r->setStatusCode(k403Forbidden);
             r->setBody("InvalidAccessKeyId");
             cb(r);
             return;
         }
+        const auto permissions = rows[0]["permissions"].as<std::string>();
+        const bool isRead = req->getMethod() == Get || req->getMethod() == Head;
+        const auto required = isRead ? "read" : "write";
+        if (permissions.find(required) == std::string::npos &&
+            permissions.find("admin") == std::string::npos) {
+            auto r = HttpResponse::newHttpResponse();
+            r->setStatusCode(k403Forbidden);
+            r->setBody("AccessDenied");
+            cb(r);
+            return;
+        }
         req->attributes()->insert("access_key", key);
+        req->attributes()->insert(
+            "owner", rows[0]["owner"].as<std::string>());
         ccb();
     } catch (...) {
         auto r = HttpResponse::newHttpResponse();

@@ -17,7 +17,8 @@ void ObjectCtrl::getObject(const HttpRequestPtr& req,
                            std::function<void(const HttpResponsePtr&)>&& cb,
                            const std::string& bucket, const std::string& key)
 {
-    int bid = BucketStore::getId(bucket);
+    int bid = BucketStore::getId(
+        bucket, req->attributes()->get<std::string>("owner"));
     if (bid == 0) {
         auto r = HttpResponse::newHttpResponse();
         r->setStatusCode(k404NotFound);
@@ -49,7 +50,8 @@ void ObjectCtrl::headObject(const HttpRequestPtr& req,
                             std::function<void(const HttpResponsePtr&)>&& cb,
                             const std::string& bucket, const std::string& key)
 {
-    int bid = BucketStore::getId(bucket);
+    int bid = BucketStore::getId(
+        bucket, req->attributes()->get<std::string>("owner"));
     auto meta = (bid > 0) ? ObjectStore::get(bid, key) : Json::nullValue;
     auto r = HttpResponse::newHttpResponse();
     if (meta.isNull()) {

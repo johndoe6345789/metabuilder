@@ -4,6 +4,7 @@
 #include <thread>
 #include <chrono>
 #include <cpr/cpr.h>
+#include <nlohmann/json.hpp>
 
 namespace media {
 
@@ -58,21 +59,22 @@ Result<void> DbalClient::send_notification(const Notification& notification) {
         return Result<void>::ok();  // Gracefully skip if DBAL not configured
     }
 
-    // Build JSON body
-    std::ostringstream body;
-    body << "{"
-         << "\"tenant_id\":\"" << notification.tenant_id << "\","
-         << "\"user_id\":\"" << notification.user_id << "\","
-         << "\"type\":" << static_cast<int>(notification.type) << ","
-         << "\"title\":\"" << notification.title << "\","
-         << "\"message\":\"" << notification.message << "\","
-         << "\"icon\":\"" << notification.icon << "\""
-         << "}";
+    // Serialize through a JSON library so user-controlled titles/messages
+    // cannot produce malformed request bodies.
+    const nlohmann::json body{
+        {"tenantId", notification.tenant_id},
+        {"userId", notification.user_id},
+        {"type", static_cast<int>(notification.type)},
+        {"title", notification.title},
+        {"message", notification.message},
+        {"icon", notification.icon},
+        {"data", notification.data},
+    };
 
     auto result = make_request(
         "POST",
         "/" + notification.tenant_id + "/media/notification",
-        body.str()
+        body.dump()
     );
 
     if (result.is_error()) {

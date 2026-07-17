@@ -8,6 +8,7 @@ import {
   DialogActions,
 } from '../../utils';
 import { Button, TextField } from '../../inputs';
+import styles from './DatabaseDialog.module.scss';
 
 export type FormField = {
   name: string;
@@ -91,7 +92,7 @@ export function FormDialog({
             }
             onChange={(e) => handleChange(field.name, e.target.value)}
             disabled={loading}
-            sx={{ mb: 2 }}
+            className={styles.field}
           />
         ))}
       </DialogContent>

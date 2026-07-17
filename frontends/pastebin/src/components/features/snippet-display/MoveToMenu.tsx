@@ -10,7 +10,7 @@ import styles from './snippet-card-actions.module.scss'
 
 interface MoveToMenuProps {
   open: boolean
-  anchorEl: Element | null
+  anchorEl: HTMLElement | null
   isMoving: boolean
   availableNamespaces: Namespace[]
   onClose: () => void

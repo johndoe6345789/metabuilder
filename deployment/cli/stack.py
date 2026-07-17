@@ -37,6 +37,32 @@ def _pull_external_images(profiles: list[str], config: dict) -> None:
         log_ok("All images ready.")
 
 
+def _ensure_core_base_images(config: dict) -> bool:
+    """Build every local base image referenced by the core Compose stack."""
+    base_images = config["definitions"]["base_images"]
+    required = ("apt", "conan-cli", "node-deps", "postgres-deps")
+
+    for name in required:
+        image = base_images[name]
+        tag = image["tag"]
+        if docker_image_exists(tag):
+            log_ok(f"Base image {tag} exists")
+            continue
+
+        log_warn(f"{tag} not found — building it first...")
+        result = run_shell([
+            "docker", "build", "--network=host",
+            "-f", str(BASE_DIR / image["dockerfile"]),
+            "-t", tag, str(PROJECT_ROOT),
+        ])
+        if result.returncode != 0:
+            log_err(f"Failed to build {tag} — cannot proceed")
+            return False
+        log_ok(f"{tag} ready")
+
+    return True
+
+
 def _wait_for_healthy(profiles: list[str], args: argparse.Namespace) -> None:
     core_count = 23
     profile_info = "core"
@@ -123,20 +149,8 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
     if command == "build":
         log_info(f"Building MetaBuilder stack ({mode_label})...")
 
-        # Ensure base-node-deps exists before compose tries to build app images
-        base_images = config["definitions"]["base_images"]
-        node_tag = base_images["node-deps"]["tag"]
-        if not docker_image_exists(node_tag):
-            log_warn(f"{node_tag} not found — building it first...")
-            result = run_shell([
-                "docker", "build", "--network=host",
-                "-f", str(BASE_DIR / base_images["node-deps"]["dockerfile"]),
-                "-t", node_tag, str(PROJECT_ROOT),
-            ])
-            if result.returncode != 0:
-                log_err("Failed to build base-node-deps — cannot proceed")
-                return 1
-            log_ok(f"{node_tag} ready")
+        if not _ensure_core_base_images(config):
+            return 1
 
         _pull_external_images(profiles, config)
         result = run_shell(docker_compose(*profiles, "up", "-d", "--build", dev=dev))

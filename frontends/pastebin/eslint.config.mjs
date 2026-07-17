@@ -9,7 +9,7 @@ export default [
   {
     ignores: [
       'node_modules', '.next', 'dist', 'coverage',
-      'src/styles/m3-scss/**', 'scripts/**',
+      'scripts/**',
       'public/**',
     ],
   },

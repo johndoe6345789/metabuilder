@@ -1,12 +1,16 @@
 import { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { useAppDispatch } from '@/store/hooks'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { Snippet } from '@/lib/types'
 import { toast } from '@metabuilder/components/m3'
 import { useTranslation } from '@/hooks/useTranslation'
-import { deleteSnippet } from '@/store/slices/snippetsSlice'
+import {
+  deleteSnippet,
+  fetchSnippetsByNamespace,
+} from '@/store/slices/snippetsSlice'
 import { setSelectedNamespace } from '@/store/slices/namespacesSlice'
 import { closeViewer, setSearchQuery } from '@/store/slices/uiSlice'
+import { selectSelectedNamespaceId } from '@/store/selectors'
 import { useSnippetSelectionActions } from './useSnippetSelectionActions'
 
 export function useSnippetManagerActions() {
@@ -14,6 +18,7 @@ export function useSnippetManagerActions() {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const selection = useSnippetSelectionActions()
+  const selectedNamespaceId = useAppSelector(selectSelectedNamespaceId)
 
   const handleEditSnippet = useCallback(
     (snippet: Snippet) => {
@@ -50,7 +55,11 @@ export function useSnippetManagerActions() {
     [router],
   )
 
-  const handleMoveSnippet = useCallback(() => {}, [])
+  const handleMoveSnippet = useCallback(() => {
+    if (selectedNamespaceId) {
+      dispatch(fetchSnippetsByNamespace(selectedNamespaceId))
+    }
+  }, [dispatch, selectedNamespaceId])
 
   const handleCreateNew = useCallback(() => {
     router.push('/snippet/new')

@@ -112,4 +112,6 @@ docker run -d \
 
 ## Configuration
 
-See `config/media-daemon.yaml` for full configuration options.
+Runtime configuration is environment-driven. Run `media_daemon --help` for the
+supported variables and command-line overrides. The file under `config/` is a
+legacy reference and is not read by the daemon.

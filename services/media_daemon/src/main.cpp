@@ -2,7 +2,6 @@
 #include <string>
 #include <csignal>
 #include <memory>
-#include <fstream>
 
 // Cross-platform signal handling
 #ifdef _WIN32
@@ -44,7 +43,6 @@ namespace {
         std::cout << "Usage: " << program << " [options]" << std::endl;
         std::cout << std::endl;
         std::cout << "Options:" << std::endl;
-        std::cout << "  --config <file>    Configuration file (default: /etc/media-daemon/config.yaml)" << std::endl;
         std::cout << "  --bind <address>   Bind address (default: 0.0.0.0)" << std::endl;
         std::cout << "  --port <port>      Port number (default: 8090)" << std::endl;
         std::cout << "  --workers <n>      Number of HTTP workers (default: 4)" << std::endl;
@@ -99,7 +97,6 @@ int main(int argc, char* argv[]) {
     
     // Default configuration
     media::ServerConfig config;
-    std::string config_file = "/etc/media-daemon/config.yaml";
     bool daemon_mode = false;
     
     // Load from environment variables
@@ -135,9 +132,7 @@ int main(int argc, char* argv[]) {
     for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
         
-        if (arg == "--config" && i + 1 < argc) {
-            config_file = argv[++i];
-        } else if (arg == "--bind" && i + 1 < argc) {
+        if (arg == "--bind" && i + 1 < argc) {
             config.bind_address = argv[++i];
         } else if (arg == "--port" && i + 1 < argc) {
             config.port = std::stoi(argv[++i]);

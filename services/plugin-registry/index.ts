@@ -34,7 +34,7 @@ export interface PluginManifest {
 }
 
 export interface LoadedPlugin {
-  language: 'ts' | 'python' | 'go' | 'rust' | 'mojo';
+  language: 'ts' | 'cpp' | 'go' | 'rust' | 'mojo';
   pluginPath: string;
   packageJson: Record<string, unknown>;
   manifest: PluginManifest | null;
@@ -61,7 +61,9 @@ export interface NodeTypeDefinition extends NodeDefinition {
 // CONSTANTS
 // =============================================================================
 
-const SUPPORTED_LANGUAGES = ['ts', 'python', 'go', 'rust', 'mojo'] as const;
+// Python plugins remain in the repository only as migration references. New
+// registries intentionally expose the TypeScript/native runtimes.
+const SUPPORTED_LANGUAGES = ['ts', 'cpp', 'go', 'rust', 'mojo'] as const;
 
 const DEFAULT_CATEGORIES: Record<string, CategoryDefinition> = {
   triggers: { id: 'triggers', name: 'Triggers', color: '#ff6b6b', icon: 'zap' },
@@ -261,7 +263,7 @@ export function getRegistryAsJSON(registry: PluginRegistry): {
 // =============================================================================
 
 if (require.main === module) {
-  const workflowDir = path.resolve(__dirname, '../../workflow');
+  const workflowDir = path.resolve(__dirname, '../../libraries/workflow');
   const registry = loadPluginRegistry(workflowDir);
 
   console.log('=== Plugin Registry ===');

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Box } from '../../layout';
 import { Paper } from '../../surfaces';
-import { Typography, Chip } from '../../data-display';
+import { Typography } from '../../data-display';
 import {
   Button,
   TextField,
@@ -320,7 +320,7 @@ export function QueryBuilderTab({
                       />
                     }
                     label={col}
-                    sx={{ mr: 1 }}
+                    className={styles.columnChip}
                   />
                 ))}
               </Box>
@@ -328,7 +328,7 @@ export function QueryBuilderTab({
                 <Button
                   size="small"
                   onClick={() => setSelectedColumns([])}
-                  sx={{ mt: 0.5 }}
+                  className={styles.clearSelection}
                 >
                   Clear selection
                 </Button>
@@ -355,7 +355,7 @@ export function QueryBuilderTab({
                       : '',
                   ].filter(Boolean).join(' ')}
                 >
-                  <FormControl sx={{ flex: 1 }}>
+                  <FormControl className={styles.grow}>
                     <InputLabel>Column</InputLabel>
                     <Select
                       native
@@ -376,7 +376,7 @@ export function QueryBuilderTab({
                     </Select>
                   </FormControl>
 
-                  <FormControl sx={{ flex: 1 }}>
+                  <FormControl className={styles.grow}>
                     <InputLabel>Operator</InputLabel>
                     <Select
                       native
@@ -400,7 +400,7 @@ export function QueryBuilderTab({
                   {condition.operator !== 'IS NULL' &&
                     condition.operator !== 'IS NOT NULL' && (
                       <TextField
-                        sx={{ flex: 1 }}
+                        className={styles.grow}
                         label="Value"
                         value={condition.value}
                         onChange={(e) =>
@@ -422,7 +422,7 @@ export function QueryBuilderTab({
 
             {/* ORDER BY */}
             <Box className={styles.row}>
-              <FormControl sx={{ flex: 1 }}>
+              <FormControl className={styles.grow}>
                 <InputLabel>Order By (optional)</InputLabel>
                 <Select
                   native
@@ -439,7 +439,7 @@ export function QueryBuilderTab({
               </FormControl>
 
               {orderByColumn && (
-                <FormControl sx={{ flex: 1 }}>
+                <FormControl className={styles.grow}>
                   <InputLabel>Direction</InputLabel>
                   <Select
                     native
@@ -458,14 +458,14 @@ export function QueryBuilderTab({
             {/* LIMIT and OFFSET */}
             <Box className={styles.row}>
               <TextField
-                sx={{ flex: 1 }}
+                className={styles.grow}
                 label="Limit (optional)"
                 type="number"
                 value={limit}
                 onChange={(e) => setLimit(e.target.value)}
               />
               <TextField
-                sx={{ flex: 1 }}
+                className={styles.grow}
                 label="Offset (optional)"
                 type="number"
                 value={offset}

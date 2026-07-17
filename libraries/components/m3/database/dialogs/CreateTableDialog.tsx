@@ -10,7 +10,6 @@ import {
   DialogClose,
 } from '../../utils';
 import { Box } from '../../layout';
-import { Paper } from '../../surfaces';
 import { Typography } from '../../data-display';
 import {
   Button,
@@ -21,6 +20,7 @@ import {
   IconButton,
 } from '../../inputs';
 import { Delete, Close } from '../../icons';
+import styles from './DatabaseDialog.module.scss';
 
 export type TableColumn = {
   name: string;
@@ -111,28 +111,25 @@ export function CreateTableDialog({
           label="Table Name"
           value={tableName}
           onChange={(e) => setTableName(e.target.value.replace(/\s/g, '_'))}
-          sx={{ mb: 1 }}
+          className={styles.tableName}
           helperText="Spaces are replaced with underscores"
         />
         <Typography variant="subtitle1" gutterBottom>
           Columns:
         </Typography>
         {columns.map((col, index) => (
-          <Box
-            key={index}
-            sx={{ mb: 2, p: 2, border: '1px solid #ddd', borderRadius: 1, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 1 }}
-          >
+          <Box key={index} className={styles.columnEditor}>
             <TextField
               label="Column Name"
               value={col.name}
               onChange={(e) => updateColumn(index, 'name', e.target.value)}
-              sx={{ mr: 1, mb: 1 }}
+              className={styles.columnField}
             />
             <Select
               native
               value={col.type}
               onChange={(e) => updateColumn(index, 'type', e.target.value as string)}
-              sx={{ mr: 1, mb: 1, minWidth: 120 }}
+              className={`${styles.columnField} ${styles.columnType}`}
             >
               {dataTypes.map((type) => (
                 <option key={type} value={type}>
@@ -146,7 +143,7 @@ export function CreateTableDialog({
                 type="number"
                 value={col.length || 255}
                 onChange={(e) => updateColumn(index, 'length', e.target.value)}
-                sx={{ mr: 1, mb: 1, width: 100 }}
+                className={`${styles.columnField} ${styles.columnLength}`}
               />
             )}
             <FormControlLabel
@@ -159,7 +156,7 @@ export function CreateTableDialog({
                 />
               }
               label="Nullable"
-              sx={{ mr: 1 }}
+              className={styles.columnOption}
             />
             <FormControlLabel
               control={
@@ -171,7 +168,7 @@ export function CreateTableDialog({
                 />
               }
               label="Primary Key"
-              sx={{ mr: 1 }}
+              className={styles.columnOption}
             />
             <IconButton
               onClick={() => removeColumn(index)}

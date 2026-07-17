@@ -12,6 +12,7 @@ import {
 import { Typography } from '../../data-display';
 import { Button, Select, TextField } from '../../inputs';
 import { Close } from '../../icons';
+import styles from './DatabaseDialog.module.scss';
 
 export type TableInfo = {
   table_name: string;
@@ -72,7 +73,7 @@ export function DropTableDialog({
           value={selectedTable}
           onChange={(e) => { setSelectedTable(e.target.value as string); setConfirmation(''); }}
           displayEmpty
-          sx={{ mt: 2, mb: 2 }}
+          className={styles.fieldSpaced}
         >
           <option value="">Select a table to drop</option>
           {tables.map((table) => (
@@ -88,7 +89,7 @@ export function DropTableDialog({
             value={confirmation}
             onChange={(e) => setConfirmation(e.target.value)}
             helperText={confirmed ? '' : 'Must match the table name exactly'}
-            sx={{ mt: 1 }}
+            className={styles.fieldTightTop}
           />
         )}
       </DialogContent>

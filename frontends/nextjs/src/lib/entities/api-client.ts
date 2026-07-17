@@ -7,6 +7,29 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
 
 import 'server-only'
+import { headers } from 'next/headers'
+
+const INTERNAL_APP_URL =
+  process.env.METABUILDER_INTERNAL_URL ?? 'http://127.0.0.1:3000/app'
+
+/**
+ * Call this application's authenticated API from a Server Component.
+ * Node's fetch does not accept relative URLs, and it does not forward the
+ * incoming session cookie automatically.
+ */
+async function entityApiFetch(path: string, init: RequestInit): Promise<Response> {
+  const requestHeaders = await headers()
+  const cookie = requestHeaders.get('cookie')
+  const outgoingHeaders = new Headers(init.headers)
+  if (cookie !== null) {
+    outgoingHeaders.set('cookie', cookie)
+  }
+
+  return fetch(`${INTERNAL_APP_URL}${path}`, {
+    ...init,
+    headers: outgoingHeaders,
+  })
+}
 
 export interface ApiResponse<T = unknown> {
   data?: T
@@ -63,7 +86,7 @@ export async function fetchEntityList(
     const queryString = buildQueryString(params)
     const url = `/api/v1/${tenant}/${pkg}/${entity}${queryString}`
     
-    const response = await fetch(url, {
+    const response = await entityApiFetch(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -117,7 +140,7 @@ export async function fetchEntity(
   try {
     const url = `/api/v1/${tenant}/${pkg}/${entity}/${id}`
     
-    const response = await fetch(url, {
+    const response = await entityApiFetch(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -172,7 +195,7 @@ export async function createEntity(
   try {
     const url = `/api/v1/${tenant}/${pkg}/${entity}`
     
-    const response = await fetch(url, {
+    const response = await entityApiFetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -230,7 +253,7 @@ export async function updateEntity(
   try {
     const url = `/api/v1/${tenant}/${pkg}/${entity}/${id}`
     
-    const response = await fetch(url, {
+    const response = await entityApiFetch(url, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -286,7 +309,7 @@ export async function deleteEntity(
   try {
     const url = `/api/v1/${tenant}/${pkg}/${entity}/${id}`
     
-    const response = await fetch(url, {
+    const response = await entityApiFetch(url, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

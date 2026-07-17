@@ -14,6 +14,13 @@ export interface JsonObject {
   [key: string]: JsonValue;
 }
 
+/**
+ * Node parameters are schema-validated before execution, but individual
+ * plugins expose different shapes. Keep that dynamic boundary explicit
+ * instead of weakening workflow context and result data.
+ */
+export type DynamicParameters = Record<string, any>;
+
 /** Runtime capabilities exposed to workflow plugins. */
 export interface WorkflowRuntime {
   log?: (level: 'debug' | 'info' | 'warn' | 'error', message: string, data?: JsonObject) => void;
@@ -22,7 +29,7 @@ export interface WorkflowRuntime {
 /**
  * Input data passed to plugin execute methods.
  */
-export interface ExecuteInputs<TParameters extends JsonObject = JsonObject> {
+export interface ExecuteInputs<TParameters extends object = DynamicParameters> {
   /** The workflow node being executed */
   node: {
     id: string;
@@ -46,16 +53,16 @@ export interface ExecuteInputs<TParameters extends JsonObject = JsonObject> {
 /**
  * Result returned from plugin execute methods.
  */
-export interface ExecuteResult<TResult extends JsonValue = JsonValue> extends JsonObject {
+export type ExecuteResult<TResult extends JsonValue = JsonValue> = JsonObject & {
   /** Primary result value */
   result?: TResult;
-}
+};
 
 /**
  * Interface that all node executor plugins must implement.
  */
 export interface NodeExecutor<
-  TParameters extends JsonObject = JsonObject,
+  TParameters extends object = DynamicParameters,
   TResult extends JsonValue = JsonValue,
 > {
   /** Unique node type identifier (e.g., 'string.concat', 'math.add') */

@@ -7,7 +7,7 @@ interface NamespaceChipProps {
   isActive: boolean
   isEditing: boolean
   editingName: string
-  renameInputRef: React.RefObject<HTMLInputElement>
+  renameInputRef: React.RefObject<HTMLInputElement | null>
   onSelect: () => void
   onEditingChange: (v: string) => void
   onRenameKeyDown: (

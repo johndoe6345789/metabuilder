@@ -23,7 +23,6 @@ RUN for i in 1 2 3 4 5; do \
 # Email services
 COPY frontends/emailclient/deployment/docker/email-service/requirements.txt   /deps/flat/email-service.txt
 COPY frontends/emailclient/tests/requirements.txt                              /deps/flat/email-tests.txt
-COPY services/email_service/requirements.txt                                   /deps/flat/legacy-email-service.txt
 
 # Backend services
 COPY services/smtprelay/requirements.txt                                       /deps/flat/smtprelay.txt
@@ -42,16 +41,6 @@ COPY libraries/dbal/production/tests/integration/requirements.txt               
 # CAD tools — preserve directory for -r requirements.txt in -dev.txt
 COPY libraries/cadquerywrapper/requirements.txt                                /deps/cadquerywrapper/requirements.txt
 COPY libraries/cadquerywrapper/requirements-dev.txt                            /deps/cadquerywrapper/requirements-dev.txt
-
-# Workflow Python plugins — preserve directory so chained -r includes work
-COPY libraries/workflow/plugins/python/requirements.txt                                  /deps/workflow/requirements.txt
-COPY libraries/workflow/plugins/python/requirements-backend.txt                          /deps/workflow/requirements-backend.txt
-COPY libraries/workflow/plugins/python/requirements-web.txt                              /deps/workflow/requirements-web.txt
-COPY libraries/workflow/plugins/python/requirements-tools.txt                            /deps/workflow/requirements-tools.txt
-COPY libraries/workflow/plugins/python/requirements-notifications.txt                    /deps/workflow/requirements-notifications.txt
-COPY libraries/workflow/plugins/python/requirements-packagerepo.txt                      /deps/workflow/requirements-packagerepo.txt
-COPY libraries/workflow/plugins/python/requirements-testing.txt                          /deps/workflow/requirements-testing.txt
-COPY libraries/workflow/plugins/python/requirements-dev.txt                              /deps/workflow/requirements-dev.txt
 
 # Route pip through the pkgrepo pypi cache when given (fetch from PyPI -> store
 # in S3 -> serve). Empty = plain PyPI. deployment.py forwards $PIP_INDEX_URL.

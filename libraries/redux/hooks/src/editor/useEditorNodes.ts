@@ -27,7 +27,7 @@ export interface UseEditorNodesReturn {
 
 export function useEditorNodes(): UseEditorNodesReturn {
   const dispatch = useDispatch();
-  const selectedNodeIds = useSelector(
+  const selectedNodeIds = useSelector<RootState, string[]>(
     (state: RootState) => state.editor.selectedNodes,
   );
   const selectedNodes = useMemo(

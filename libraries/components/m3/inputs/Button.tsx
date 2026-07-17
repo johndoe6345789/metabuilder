@@ -18,7 +18,8 @@ export type ButtonVariant =
  */
 export type ButtonSize = 'sm' | 'md' | 'lg' | 'small' | 'medium' | 'large'
 
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'style'> {
   children?: React.ReactNode
   /** Button style variant */
   variant?: ButtonVariant
@@ -50,8 +51,6 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   endIcon?: React.ReactNode
   /** Unique identifier for testing and accessibility */
   testId?: string
-  /** MUI-style sx prop for inline styles */
-  sx?: Record<string, unknown>
   /** Render as different element (for Link, etc.) */
   component?: React.ElementType
   /** URL for link buttons */
@@ -148,7 +147,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       className = '',
       type = 'button',
       testId: customTestId,
-      sx,
       component: Component,
       href,
       edge,
@@ -172,21 +170,17 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       s(getColorClass(props)),
       isDisabled ? s('mat-mdc-button-disabled') : '',
       fullWidth ? styles.fullWidth : '',
+      size === 'sm' || size === 'small' || sm ? styles.small : '',
+      size === 'lg' || size === 'large' || lg ? styles.large : styles.medium,
+      icon ? styles.iconOnly : '',
+      edge === 'start' ? styles.edgeStart : '',
+      edge === 'end' ? styles.edgeEnd : '',
       className,
     ].filter(Boolean).join(' ')
 
     // Support rendering as different element (for Next.js Link, etc.)
     const Element = Component || 'button'
     const elementProps = Component ? { ...restProps, href } : { ...restProps, type }
-
-    // Size styling via CSS custom properties
-    const sizeStyle: React.CSSProperties & Record<string, string> = {}
-    const normalizedSize = size === 'small' ? 'sm' : size === 'large' ? 'lg' : size
-    if (normalizedSize === 'sm' || sm) {
-      sizeStyle['--mat-button-text-container-height'] = '32px'
-    } else if (normalizedSize === 'lg' || lg) {
-      sizeStyle['--mat-button-text-container-height'] = '48px'
-    }
 
     return (
       <Element
@@ -197,7 +191,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         aria-label={ariaLabel || accessible['aria-label']}
         aria-busy={ariaBusy ?? loading}
         aria-disabled={isDisabled}
-        style={sizeStyle}
         {...elementProps}
       >
         {/* Touch target for accessibility (48px minimum) */}
@@ -215,7 +208,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {/* Loading spinner */}
         {loading && (
           <span className={`${s('mat-icon')} ${styles.spinner}`} aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" style={{ width: '1.125rem', height: '1.125rem', animation: 'mat-button-spin 1s linear infinite' }}>
+            <svg className={styles.spinnerIcon} viewBox="0 0 24 24" fill="none">
               <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" opacity="0.25" />
               <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             </svg>

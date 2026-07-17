@@ -67,7 +67,6 @@ services:
       - ./plugins:/plugins:ro
       
       # Custom config (optional)
-      # - ./config/media-daemon.yaml:/etc/media-daemon/config.yaml:ro
     
     deploy:
       resources:

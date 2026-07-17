@@ -12,11 +12,18 @@ using namespace drogon;
 namespace s3
 {
 
+namespace {
+std::string requestOwner(const HttpRequestPtr& req)
+{
+    return req->attributes()->get<std::string>("owner");
+}
+}
+
 void BucketCtrl::createBucket(const HttpRequestPtr& req,
                               std::function<void(const HttpResponsePtr&)>&& cb,
                               const std::string& bucket)
 {
-    bool ok = BucketStore::create(bucket, Globals::region);
+    bool ok = BucketStore::create(bucket, Globals::region, requestOwner(req));
     if (!ok) {
         auto r = HttpResponse::newHttpResponse();
         r->setStatusCode(k409Conflict);
@@ -34,7 +41,7 @@ void BucketCtrl::headBucket(const HttpRequestPtr& req,
                             std::function<void(const HttpResponsePtr&)>&& cb,
                             const std::string& bucket)
 {
-    auto b = BucketStore::get(bucket);
+    auto b = BucketStore::get(bucket, requestOwner(req));
     auto r = HttpResponse::newHttpResponse();
     if (b.isNull()) {
         r->setStatusCode(k404NotFound);
@@ -48,7 +55,7 @@ void BucketCtrl::deleteBucket(const HttpRequestPtr& req,
                               std::function<void(const HttpResponsePtr&)>&& cb,
                               const std::string& bucket)
 {
-    bool ok = BucketStore::remove(bucket);
+    bool ok = BucketStore::remove(bucket, requestOwner(req));
     auto r = HttpResponse::newHttpResponse();
     r->setStatusCode(ok ? k204NoContent : k404NotFound);
     cb(r);
@@ -57,7 +64,7 @@ void BucketCtrl::deleteBucket(const HttpRequestPtr& req,
 void BucketCtrl::listBuckets(const HttpRequestPtr& req,
                              std::function<void(const HttpResponsePtr&)>&& cb)
 {
-    auto buckets = BucketStore::list();
+    auto buckets = BucketStore::list(requestOwner(req));
     // Return S3-style XML response
     std::string xml = "<?xml version=\"1.0\"?>"
                       "<ListAllMyBucketsResult>"

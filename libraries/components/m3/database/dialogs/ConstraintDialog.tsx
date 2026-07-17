@@ -12,6 +12,7 @@ import {
 import { Typography } from '../../data-display';
 import { Button, TextField, Select } from '../../inputs';
 import { Close } from '../../icons';
+import styles from './DatabaseDialog.module.scss';
 
 export type ConstraintType = {
   name: string;
@@ -153,7 +154,7 @@ export function ConstraintDialog({
               label="Constraint Name"
               value={constraintName}
               onChange={(e) => setConstraintName(e.target.value)}
-              sx={{ mt: 2, mb: 2 }}
+              className={styles.fieldSpaced}
               helperText="A unique name for this constraint"
             />
 
@@ -161,7 +162,7 @@ export function ConstraintDialog({
               fullWidth
               value={constraintType}
               onChange={(e) => setConstraintType(e.target.value as string)}
-              sx={{ mb: 2 }}
+              className={styles.field}
             >
               {constraintTypes.map((type) => (
                 <option key={type.name} value={type.name}>
@@ -176,7 +177,7 @@ export function ConstraintDialog({
                 label="Column Name"
                 value={columnName}
                 onChange={(e) => setColumnName(e.target.value)}
-                sx={{ mb: 2 }}
+                className={styles.field}
                 helperText="The column to apply this constraint to"
               />
             )}
@@ -187,7 +188,7 @@ export function ConstraintDialog({
                 label="Check Expression"
                 value={checkExpression}
                 onChange={(e) => setCheckExpression(e.target.value)}
-                sx={{ mb: 2 }}
+                className={styles.field}
                 helperText="Boolean expression for the check constraint (e.g., price > 0)"
               />
             )}

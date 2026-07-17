@@ -303,8 +303,42 @@ $fallbacks: m3-button.get-tokens();
   width: 100%;
 }
 
+.small {
+  height: 32px;
+  min-height: 32px;
+}
+
+.medium {
+  height: 40px;
+  min-height: 40px;
+}
+
+.large {
+  height: 48px;
+  min-height: 48px;
+}
+
+.iconOnly {
+  min-width: 40px;
+  padding-inline: 8px;
+}
+
+.edgeStart {
+  margin-inline-start: -8px;
+}
+
+.edgeEnd {
+  margin-inline-end: -8px;
+}
+
 .spinner {
   margin-right: 8px;
+}
+
+.spinnerIcon {
+  width: 1.125rem;
+  height: 1.125rem;
+  animation: mat-button-spin 1s linear infinite;
 }
 
 @keyframes mat-button-spin {

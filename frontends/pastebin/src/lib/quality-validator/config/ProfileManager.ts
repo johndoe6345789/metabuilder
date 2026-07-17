@@ -110,9 +110,9 @@ export class ProfileManager {
       .map(([, p]) => p)
   }
   private detectEnv(): EnvironmentType {
-    const e = process.env.NODE_ENV || 'dev'
-    if (e.includes('production') || e === 'prod') return 'production'
-    if (e.includes('staging') || e === 'stage') return 'staging'
+    const e: string = process.env.NODE_ENV || 'dev'
+    if (e === 'production' || e === 'prod') return 'production'
+    if (e === 'staging' || e === 'stage') return 'staging'
     return 'dev'
   }
 }

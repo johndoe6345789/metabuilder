@@ -59,7 +59,6 @@ RUN mkdir -p /data/media /data/temp /data/output /data/cache \
 COPY --from=builder /app/build/media_daemon /usr/local/bin/
 
 # Copy default config
-COPY config/media-daemon.yaml /etc/media-daemon/config.yaml
 
 # Copy icecast config
 COPY config/icecast.xml /etc/icecast2/icecast.xml

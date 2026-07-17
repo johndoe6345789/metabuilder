@@ -5,8 +5,6 @@
 
 const SPACING_UNIT = 8 // 8px per unit (MUI default)
 
-type SxValue = string | number | Record<string, unknown>
-
 /**
  * Convert spacing values (1 = 8px, 2 = 16px, etc.)
  */

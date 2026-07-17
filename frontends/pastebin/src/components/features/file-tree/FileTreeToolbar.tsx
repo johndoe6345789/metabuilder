@@ -5,7 +5,7 @@ interface FileTreeToolbarProps {
   title: string
   addLabel: string
   uploadLabel: string
-  uploadInputRef: React.RefObject<HTMLInputElement>
+  uploadInputRef: React.RefObject<HTMLInputElement | null>
   onAddFile: () => void
   onUploadClick: () => void
   onUploadChange: (e: React.ChangeEvent<HTMLInputElement>) => void

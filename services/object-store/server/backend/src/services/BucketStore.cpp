@@ -13,13 +13,14 @@ namespace s3
 {
 
 bool BucketStore::create(const std::string& name,
-                         const std::string& region)
+                         const std::string& region,
+                         const std::string& owner)
 {
     try {
         DbPool::get()->execSqlSync(
-            "INSERT INTO buckets (name, region) "
-            "VALUES ($1, $2)",
-            name, region);
+            "INSERT INTO buckets (name, region, owner) "
+            "VALUES ($1, $2, $3)",
+            name, region, owner);
         return true;
     } catch (const drogon::orm::DrogonDbException& e) {
         // Unique-constraint violation → bucket exists.
@@ -33,38 +34,41 @@ bool BucketStore::create(const std::string& name,
     }
 }
 
-Json::Value BucketStore::get(const std::string& name)
+Json::Value BucketStore::get(const std::string& name,
+                             const std::string& owner)
 {
     auto r = DbPool::get()->execSqlSync(
-        "SELECT * FROM buckets WHERE name=$1", name);
+        "SELECT * FROM buckets WHERE name=$1 AND owner=$2", name, owner);
     if (r.empty())
         return Json::nullValue;
     return rowToJson(r[0]);
 }
 
-std::vector<Json::Value> BucketStore::list()
+std::vector<Json::Value> BucketStore::list(const std::string& owner)
 {
     auto r = DbPool::get()->execSqlSync(
-        "SELECT * FROM buckets ORDER BY name");
+        "SELECT * FROM buckets WHERE owner=$1 ORDER BY name", owner);
     std::vector<Json::Value> out;
     for (const auto& row : r)
         out.push_back(rowToJson(row));
     return out;
 }
 
-bool BucketStore::remove(const std::string& name)
+bool BucketStore::remove(const std::string& name,
+                         const std::string& owner)
 {
     auto r = DbPool::get()->execSqlSync(
-        "DELETE FROM buckets WHERE name=$1 "
+        "DELETE FROM buckets WHERE name=$1 AND owner=$2 "
         "RETURNING id",
-        name);
+        name, owner);
     return !r.empty();
 }
 
-int BucketStore::getId(const std::string& name)
+int BucketStore::getId(const std::string& name,
+                       const std::string& owner)
 {
     auto r = DbPool::get()->execSqlSync(
-        "SELECT id FROM buckets WHERE name=$1", name);
+        "SELECT id FROM buckets WHERE name=$1 AND owner=$2", name, owner);
     if (r.empty())
         return 0;
     // Read the id as a string first, then convert to
@@ -86,6 +90,7 @@ Json::Value BucketStore::rowToJson(
     j["id"] = std::stoi(row["id"].as<std::string>());
     j["name"] = row["name"].as<std::string>();
     j["region"] = row["region"].as<std::string>();
+    j["owner"] = row["owner"].as<std::string>();
     j["created_at"] =
         row["created_at"].as<std::string>();
     return j;

@@ -32,7 +32,6 @@ export function useFileCommandPalette(open: boolean, commands: CommandItem[]) {
     groupMap[cmd.group].push({ cmd, flatIdx: counter++ })
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleKeyDown = (e: React.KeyboardEvent, onClose: () => void) => {
     if (e.key === 'Escape') {
       onClose()
@@ -64,5 +63,6 @@ export function useFileCommandPalette(open: boolean, commands: CommandItem[]) {
     inputRef,
     filtered,
     groupMap,
+    handleKeyDown,
   }
 }
