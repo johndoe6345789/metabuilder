@@ -1,6 +1,0 @@
-Validation note
-===============
-
-Docker build/start could not be executed in the agent environment because the Docker CLI and daemon are unavailable.
-
-The branch was compared against main through the GitHub API. The intended source and declaration files are modified together and the branch is ahead of main without divergence.
