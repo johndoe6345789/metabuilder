@@ -50,8 +50,8 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   endIcon?: React.ReactNode
   /** Unique identifier for testing and accessibility */
   testId?: string
-  /** MUI-style sx prop for inline styles */
-  sx?: Record<string, unknown>
+  /** MUI-style inline style overrides */
+  sx?: React.CSSProperties
   /** Render as different element (for Link, etc.) */
   component?: React.ElementType
   /** URL for link buttons */
@@ -98,9 +98,7 @@ const getButtonClass = (props: ButtonProps): string => {
   }
 }
 
-/**
- * Get color class key for Angular Material
- */
+/** Get color class key for Angular Material. */
 const getColorClass = (props: ButtonProps): string => {
   const { variant, color } = props
 
@@ -109,23 +107,10 @@ const getColorClass = (props: ButtonProps): string => {
   return 'mat-primary'
 }
 
-/**
- * Resolve a class name through the CSS Module styles object.
- * Falls back to raw string if not found (for child elements).
- */
+/** Resolve a class name through the CSS Module styles object. */
 const s = (key: string): string => styles[key] || key
 
-/**
- * Button component using official Angular Material M3 styles
- *
- * @example
- * ```tsx
- * <Button variant="filled">Click me</Button>
- * <Button variant="outlined" startIcon={<Plus />}>Add Item</Button>
- * <Button variant="tonal">Secondary Action</Button>
- * <Button loading>Saving...</Button>
- * ```
- */
+/** Button component using official Angular Material M3 styles. */
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (props, ref) => {
     const {
@@ -149,6 +134,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       type = 'button',
       testId: customTestId,
       sx,
+      style: inlineStyle,
       component: Component,
       href,
       edge,
@@ -175,17 +161,32 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       className,
     ].filter(Boolean).join(' ')
 
+    // Keep compatibility-only props out of the rendered DOM until their
+    // styling contract is formally defined.
+    void icon
+    void edge
+    void variant
+    void color
+    void primary
+    void secondary
+    void outline
+    void ghost
+
     // Support rendering as different element (for Next.js Link, etc.)
     const Element = Component || 'button'
     const elementProps = Component ? { ...restProps, href } : { ...restProps, type }
 
-    // Size styling via CSS custom properties
-    const sizeStyle: React.CSSProperties & Record<string, string> = {}
+    // Compose internal sizing with standard style and MUI-compatible sx.
+    // Consumer overrides are applied last without dropping the size token.
+    const composedStyle: React.CSSProperties & Record<string, string | number | undefined> = {
+      ...(inlineStyle || {}),
+      ...(sx || {}),
+    }
     const normalizedSize = size === 'small' ? 'sm' : size === 'large' ? 'lg' : size
     if (normalizedSize === 'sm' || sm) {
-      sizeStyle['--mat-button-text-container-height'] = '32px'
+      composedStyle['--mat-button-text-container-height'] = '32px'
     } else if (normalizedSize === 'lg' || lg) {
-      sizeStyle['--mat-button-text-container-height'] = '48px'
+      composedStyle['--mat-button-text-container-height'] = '48px'
     }
 
     return (
@@ -197,22 +198,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         aria-label={ariaLabel || accessible['aria-label']}
         aria-busy={ariaBusy ?? loading}
         aria-disabled={isDisabled}
-        style={sizeStyle}
+        style={composedStyle}
         {...elementProps}
       >
-        {/* Touch target for accessibility (48px minimum) */}
         <span className={s('mat-mdc-button-touch-target')} />
-
-        {/* Ripple container */}
         <span className={s('mat-mdc-button-ripple')} />
-
-        {/* Persistent ripple for hover/focus/active states */}
         <span className={s('mat-mdc-button-persistent-ripple')} />
-
-        {/* Focus indicator */}
         <span className={s('mat-focus-indicator')} />
 
-        {/* Loading spinner */}
         {loading && (
           <span className={`${s('mat-icon')} ${styles.spinner}`} aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" style={{ width: '1.125rem', height: '1.125rem', animation: 'mat-button-spin 1s linear infinite' }}>
@@ -222,13 +215,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           </span>
         )}
 
-        {/* Start icon */}
         {startIcon && <span className={s('mat-icon')} aria-hidden="true">{startIcon}</span>}
-
-        {/* Label */}
         <span className={s('mdc-button__label')}>{children}</span>
-
-        {/* End icon */}
         {endIcon && <span className={s('mat-icon')} aria-hidden="true">{endIcon}</span>}
       </Element>
     )
