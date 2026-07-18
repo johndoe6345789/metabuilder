@@ -31,7 +31,9 @@
   display: grid;
   grid-template-columns: minmax(18rem, 24rem) minmax(0, 1fr);
   gap: 1rem;
-  align-items: start;
+  align-items: stretch;
+  height: clamp(32rem, calc(100dvh - 13rem), 52rem);
+  min-height: 0;
 }
 
 .listPanel,
@@ -45,11 +47,33 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  min-height: 0;
 }
 
 .cardList {
   display: grid;
+  flex: 1 1 auto;
+  align-content: start;
   gap: 0.5rem;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 0.35rem;
+  scrollbar-color: var(--mat-sys-outline-variant) transparent;
+  scrollbar-width: thin;
+}
+
+.cardList::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+.cardList::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: var(--mat-sys-outline-variant);
+}
+
+.cardList::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .card {
@@ -86,7 +110,63 @@
   gap: 0.875rem;
 }
 
-.formGrid > :last-child {
+.tabs {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 0.25rem;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  position: relative;
+  flex: 0 0 auto;
+  padding: 0.7rem 1rem;
+  border: 0;
+  background: transparent;
+  color: var(--mat-sys-on-surface-variant);
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.tab::after {
+  position: absolute;
+  right: 0.5rem;
+  bottom: -1px;
+  left: 0.5rem;
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+  background: transparent;
+  content: '';
+}
+
+.tab:hover {
+  color: var(--mat-sys-on-surface);
+  background: color-mix(in srgb, var(--mat-sys-primary) 8%, transparent);
+}
+
+.tab:focus-visible {
+  border-radius: 8px 8px 0 0;
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: -2px;
+}
+
+.tabActive {
+  color: var(--mat-sys-primary);
+}
+
+.tabActive::after {
+  background: var(--mat-sys-primary);
+}
+
+.notesField {
   grid-column: 1 / -1;
 }
 
@@ -147,13 +227,31 @@
   max-width: 52rem;
 }
 
+.clipboardInput {
+  position: fixed;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.repeatItem {
+  display: contents;
+}
+
 @media (max-width: 960px) {
-  .splitLayout,
+  .splitLayout {
+    grid-template-columns: minmax(0, 1fr);
+    height: auto;
+  }
+
+  .listPanel {
+    max-height: 26rem;
+  }
+
   .formGrid {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .formGrid > :last-child {
+  .notesField {
     grid-column: auto;
   }
 }
