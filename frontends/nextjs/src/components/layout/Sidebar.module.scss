@@ -1,11 +1,11 @@
 .drawer {
-  width: 240px;
+  width: var(--app-sidebar-width, 288px);
   flex-shrink: 0;
   height: 100%;
 }
 
 .paper {
-  width: 240px;
+  width: var(--app-sidebar-width, 288px);
   position: relative;
   height: 100%;
   display: flex;
