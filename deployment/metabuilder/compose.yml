@@ -699,6 +699,8 @@ services:
       dockerfile: frontends/nextjs/Dockerfile
     container_name: metabuilder-frontend-app
     restart: unless-stopped
+    env_file:
+      - ../../../secrets/vault.env
     environment:
       NODE_ENV: production
       PORT: 3000

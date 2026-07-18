@@ -43,6 +43,15 @@
   --mat-sys-outline-variant: var(--input);
   --mat-sys-surface-tint: var(--surface-tint, var(--primary));
 
+  // Interaction state layers. M3 component modules use these as the final
+  // fallback for hover, focus and pressed overlays. Keep concrete fallbacks
+  // here: an unresolved opacity var computes to the CSS initial value (1),
+  // which makes a state layer completely obscure its component.
+  --mat-sys-hover-state-layer-opacity: 0.08;
+  --mat-sys-focus-state-layer-opacity: 0.10;
+  --mat-sys-pressed-state-layer-opacity: 0.10;
+  --mat-sys-dragged-state-layer-opacity: 0.16;
+
   // Elevation
   --mat-sys-elevation-level0: none;
   --mat-sys-elevation-level1: 0 1px 2px var(--shadow-color);
