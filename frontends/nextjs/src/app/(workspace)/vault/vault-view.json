@@ -1,0 +1,435 @@
+{
+  "hooks": [
+    { "id": "vault", "hook": "useVaultController" }
+  ],
+  "title": "Vault",
+  "loadingLabel": "Loading vault...",
+  "entryCountLabel": "test credentials stored in DBAL",
+  "list": {
+    "searchLabel": "Search",
+    "shownLabel": "shown",
+    "searchEvent": "vault.events.setSearch",
+    "selectEvent": "vault.events.selectEntry"
+  },
+  "unlock": {
+    "description": "Enter the master password to open the DBAL-backed login store.",
+    "passwordLabel": "Master password",
+    "actionLabel": "Unlock Vault",
+    "changeEvent": "vault.events.setMasterPassword",
+    "submitEvent": "vault.events.unlock"
+  },
+  "views": {
+    "loading": {
+      "component": "Page",
+      "children": [{ "component": "Loading" }]
+    },
+    "locked": {
+      "component": "Page",
+      "children": [
+        {
+          "component": "Paper",
+          "className": "editorPanel",
+          "children": [
+            {
+              "component": "Typography",
+              "props": { "variant": "h5", "gutterBottom": true },
+              "text": { "$path": "view.title" }
+            },
+            {
+              "component": "Typography",
+              "props": {
+                "variant": "body2",
+                "color": "text.secondary",
+                "gutterBottom": true
+              },
+              "text": { "$path": "view.unlock.description" }
+            },
+            {
+              "component": "Alert",
+              "className": "alert",
+              "when": {
+                "$and": [
+                  { "$eq": [{ "$path": "vault.notice.kind" }, "error"] },
+                  { "$path": "vault.notice.message" }
+                ]
+              },
+              "props": { "severity": "error" },
+              "text": { "$path": "vault.notice.message" }
+            },
+            {
+              "component": "TextField",
+              "props": {
+                "label": { "$path": "view.unlock.passwordLabel" },
+                "type": "password",
+                "value": { "$path": "vault.masterPassword" },
+                "fullWidth": true,
+                "onChange": {
+                  "$event": { "$path": "view.unlock.changeEvent" },
+                  "$value": "target.value"
+                }
+              }
+            },
+            {
+              "component": "div",
+              "className": "detailActions",
+              "children": [
+                {
+                  "component": "Button",
+                  "props": {
+                    "variant": "contained",
+                    "disabled": { "$path": "vault.saving" },
+                    "onClick": { "$event": { "$path": "view.unlock.submitEvent" } }
+                  },
+                  "text": { "$path": "view.unlock.actionLabel" }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "unlocked": {
+      "component": "Page",
+      "children": [
+        {
+          "component": "header",
+          "className": "header",
+          "children": [
+            {
+              "component": "div",
+              "children": [
+                { "component": "Typography", "props": { "variant": "h5" }, "text": { "$path": "view.title" } },
+                {
+                  "component": "Typography",
+                  "props": { "variant": "body2", "color": "text.secondary" },
+                  "text": { "$template": "{{vault.entries.length}} {{view.entryCountLabel}}" }
+                }
+              ]
+            },
+            {
+              "component": "div",
+              "className": "headerActions",
+              "children": [
+                {
+                  "component": "Repeat",
+                  "source": { "$path": "view.headerActions" },
+                  "item": "action",
+                  "key": { "$path": "action.id" },
+                  "children": [
+                    {
+                      "component": "Button",
+                      "props": {
+                        "variant": { "$path": "action.variant" },
+                        "onClick": { "$event": { "$path": "action.event" } }
+                      },
+                      "text": { "$path": "action.label" }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        { "component": "Notice" },
+        {
+          "component": "SplitLayout",
+          "children": [
+            {
+              "component": "ListPanel",
+              "children": [
+                {
+                  "component": "div",
+                  "className": "listHead",
+                  "children": [
+                    {
+                      "component": "TextField",
+                      "props": {
+                        "label": { "$path": "view.list.searchLabel" },
+                        "value": { "$path": "vault.search" },
+                        "fullWidth": true,
+                        "onChange": {
+                          "$event": "vault.events.setSearch",
+                          "$value": "target.value"
+                        }
+                      }
+                    },
+                    {
+                      "component": "Chip",
+                      "props": {
+                        "label": {
+                          "$template": "{{vault.visibleEntries.length}} {{view.list.shownLabel}}"
+                        },
+                        "size": "small",
+                        "variant": "outlined"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "div",
+                  "className": "cardList",
+                  "children": [
+                    {
+                      "component": "Repeat",
+                      "source": { "$path": "vault.visibleEntries" },
+                      "item": "entry",
+                      "key": { "$path": "entry.id" },
+                      "children": [
+                        {
+                          "component": "button",
+                          "className": {
+                            "$classes": [
+                              "card",
+                              {
+                                "name": "cardActive",
+                                "when": {
+                                  "$eq": [
+                                    { "$path": "entry.id" },
+                                    { "$path": "vault.currentEntry.id" }
+                                  ]
+                                }
+                              }
+                            ]
+                          },
+                          "props": {
+                            "type": "button",
+                            "onClick": {
+                              "$event": "vault.events.selectEntry",
+                              "$args": [{ "$path": "entry" }]
+                            }
+                          },
+                          "children": [
+                            {
+                              "component": "div",
+                              "className": "cardTop",
+                              "children": [
+                                {
+                                  "component": "strong",
+                                  "text": { "$path": "entry.title" }
+                                },
+                                {
+                                  "component": "Chip",
+                                  "props": {
+                                    "label": { "$path": "entry.group" },
+                                    "size": "small",
+                                    "variant": "outlined"
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "component": "div",
+                              "className": "cardBody",
+                              "children": [
+                                {
+                                  "component": "span",
+                                  "text": { "$path": "entry.username" }
+                                },
+                                {
+                                  "component": "span",
+                                  "text": { "$path": "entry.slug" }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "component": "EditorPanel",
+              "children": [
+                {
+                  "component": "div",
+                  "className": "editorHead",
+                  "children": [
+                    {
+                      "component": "div",
+                      "children": [
+                        {
+                          "component": "Typography",
+                          "props": { "variant": "h6" },
+                          "text": {
+                            "$if": {
+                              "condition": {
+                                "$or": [
+                                  { "$eq": [{ "$path": "vault.routeSlug" }, "new"] },
+                                  { "$not": { "$path": "vault.currentEntry" } }
+                                ]
+                              },
+                              "then": "New entry",
+                              "else": { "$path": "vault.currentEntry.title" }
+                            }
+                          }
+                        },
+                        {
+                          "component": "Typography",
+                          "props": { "variant": "body2", "color": "text.secondary" },
+                          "text": {
+                            "$if": {
+                              "condition": {
+                                "$or": [
+                                  { "$eq": [{ "$path": "vault.routeSlug" }, "new"] },
+                                  { "$not": { "$path": "vault.currentEntry" } }
+                                ]
+                              },
+                              "then": "Create or edit a test login.",
+                              "else": { "$path": "vault.currentEntry.slug" }
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "component": "Chip",
+                      "when": { "$path": "vault.currentEntry" },
+                      "props": {
+                        "label": { "$path": "vault.updatedLabel" },
+                        "size": "small"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "div",
+                  "className": "tabs",
+                  "props": { "role": "tablist", "aria-label": "Vault entry sections" },
+                  "children": [
+                    {
+                      "component": "Repeat",
+                      "source": { "$path": "view.tabs" },
+                      "item": "tab",
+                      "key": { "$path": "tab.id" },
+                      "children": [
+                        {
+                          "component": "button",
+                          "className": {
+                            "$classes": [
+                              "tab",
+                              { "name": "tabActive", "when": { "$eq": [{ "$path": "tab.id" }, { "$path": "vault.editorTab" }] } }
+                            ]
+                          },
+                          "props": {
+                            "type": "button",
+                            "role": "tab",
+                            "aria-selected": { "$eq": [{ "$path": "tab.id" }, { "$path": "vault.editorTab" }] },
+                            "onClick": { "$event": { "$path": "tab.event" }, "$args": [{ "$path": "tab.id" }] }
+                          },
+                          "text": { "$path": "tab.label" }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "component": "div",
+                  "className": "formGrid",
+                  "children": [
+                    {
+                      "component": "Repeat",
+                      "source": { "$path": "vault.activeFields" },
+                      "item": "field",
+                      "key": { "$path": "field.key" },
+                      "children": [
+                        {
+                          "component": "TextField",
+                          "className": { "$classes": [{ "name": "notesField", "when": { "$path": "field.fullRow" } }] },
+                          "props": {
+                            "label": { "$path": "field.label" },
+                            "type": { "$path": "field.inputType" },
+                            "required": { "$path": "field.required" },
+                            "value": { "$path": "field.value" },
+                            "fullWidth": true,
+                            "multiline": { "$path": "field.multiline" },
+                            "rows": { "$path": "field.rows" },
+                            "onChange": { "$event": { "$path": "field.event" }, "$args": [{ "$path": "field.key" }], "$value": "target.value" }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "component": "div",
+                  "className": "detailActions",
+                  "children": [
+                    {
+                      "component": "Repeat",
+                      "source": { "$path": "vault.renderEditorActions" },
+                      "item": "action",
+                      "key": { "$path": "action.id" },
+                      "children": [
+                        {
+                          "component": "Button",
+                          "props": {
+                            "variant": { "$path": "action.variant" },
+                            "disabled": { "$path": "action.disabled" },
+                            "onClick": { "$event": { "$path": "action.event" } }
+                          },
+                          "text": { "$path": "action.label" }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "headerActions": [
+    { "id": "reload", "label": "Reload", "variant": "outlined", "event": "vault.events.reload" },
+    { "id": "lock", "label": "Lock", "variant": "outlined", "event": "vault.events.lock" },
+    { "id": "new", "label": "New Entry", "variant": "contained", "event": "vault.events.new" }
+  ],
+  "tabs": [
+    {
+      "id": "identity",
+      "label": "Identity",
+      "event": "vault.events.setEditorTab",
+      "fields": [
+        { "key": "title", "label": "Title", "type": "text", "required": true, "event": "vault.events.updateDraft" },
+        { "key": "slug", "label": "Slug", "type": "text", "required": true, "event": "vault.events.updateDraft" },
+        { "key": "group", "label": "Group", "type": "text", "event": "vault.events.updateDraft" }
+      ]
+    },
+    {
+      "id": "credentials",
+      "label": "Credentials",
+      "event": "vault.events.setEditorTab",
+      "fields": [
+        { "key": "username", "label": "Username", "type": "text", "required": true, "event": "vault.events.updateDraft" },
+        { "key": "password", "label": "Password", "type": "password", "required": true, "event": "vault.events.updateDraft" }
+      ]
+    },
+    {
+      "id": "links",
+      "label": "Links",
+      "event": "vault.events.setEditorTab",
+      "fields": [
+        { "key": "loginUrl", "label": "Login URL", "type": "url", "event": "vault.events.updateDraft" },
+        { "key": "appUrl", "label": "App URL", "type": "url", "event": "vault.events.updateDraft" }
+      ]
+    },
+    {
+      "id": "notes",
+      "label": "Notes",
+      "event": "vault.events.setEditorTab",
+      "fields": [
+        { "key": "notes", "label": "Notes", "type": "textarea", "rows": 5, "fullRow": true, "event": "vault.events.updateDraft" }
+      ]
+    }
+  ],
+  "editorActions": [
+    { "id": "copyUsername", "label": "Copy Username", "variant": "outlined", "event": "vault.events.copyUsername", "requires": ["username"] },
+    { "id": "copyPassword", "label": "Copy Password", "variant": "outlined", "event": "vault.events.copyPassword", "requires": ["password"] },
+    { "id": "copyTurbologin", "label": "Copy Turbologin", "variant": "contained", "event": "vault.events.copyTurbologin", "requires": ["username", "password"] },
+    { "id": "save", "label": "Save", "variant": "outlined", "event": "vault.events.save" },
+    { "id": "delete", "label": "Delete", "variant": "outlined", "event": "vault.events.delete", "requiresEntry": true }
+  ]
+}

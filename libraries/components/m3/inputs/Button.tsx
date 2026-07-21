@@ -51,6 +51,10 @@ export interface ButtonProps
   endIcon?: React.ReactNode
   /** Unique identifier for testing and accessibility */
   testId?: string
+  /** Standard React inline styles. */
+  style?: React.CSSProperties
+  /** MUI-compatible inline style overrides, applied after style. */
+  sx?: React.CSSProperties
   /** Render as different element (for Link, etc.) */
   component?: React.ElementType
   /** URL for link buttons */
@@ -147,6 +151,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       className = '',
       type = 'button',
       testId: customTestId,
+      style: inlineStyle,
+      sx,
       component: Component,
       href,
       edge,
@@ -181,6 +187,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     // Support rendering as different element (for Next.js Link, etc.)
     const Element = Component || 'button'
     const elementProps = Component ? { ...restProps, href } : { ...restProps, type }
+    const composedStyle = { ...inlineStyle, ...sx }
 
     return (
       <Element
@@ -191,6 +198,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         aria-label={ariaLabel || accessible['aria-label']}
         aria-busy={ariaBusy ?? loading}
         aria-disabled={isDisabled}
+        style={composedStyle}
         {...elementProps}
       >
         {/* Touch target for accessibility (48px minimum) */}
