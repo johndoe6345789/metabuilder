@@ -1,11 +1,11 @@
 .drawer {
-  width: 240px;
+  width: var(--app-sidebar-width, 288px);
   flex-shrink: 0;
   height: 100%;
 }
 
 .paper {
-  width: 240px;
+  width: var(--app-sidebar-width, 288px);
   position: relative;
   height: 100%;
   display: flex;
@@ -16,11 +16,13 @@
     var(--sidebar-bg)
   ) !important;
   border-right: 1px solid var(--sidebar-border) !important;
-  border-radius: 0 28px 28px 0;
+  border-radius: 0;
   overflow: hidden;
   color: var(--sidebar-fg);
   flex-shrink: 0;
-  box-shadow: var(--mat-sys-elevation-level3);
+  box-shadow:
+    var(--mat-sys-elevation-level3),
+    inset -1px 0 color-mix(in srgb, var(--sidebar-fg) 5%, transparent);
 
   @media (max-width: 767px) {
     height: 100%;
@@ -29,9 +31,14 @@
 }
 
 .userHeader {
-  padding: 18px 16px;
+  padding: 22px 18px 18px;
   border-bottom: 1px solid var(--sidebar-border);
   flex-shrink: 0;
+  background: color-mix(
+    in srgb,
+    var(--mat-sys-primary) 5%,
+    transparent
+  );
 }
 
 .userRow {
@@ -73,7 +80,7 @@
 }
 
 .navLabel {
-  padding: 12px 16px 4px;
+  padding: 16px 18px 6px;
   font-size: 0.86rem;
   font-weight: 750;
   letter-spacing: 0.09em;
@@ -84,10 +91,15 @@
 .navList {
   flex: 1;
   overflow-y: auto;
-  padding: 4px 8px;
+  padding: 6px 12px 12px;
   display: flex;
   flex-direction: column;
   gap: 5px;
+
+  scrollbar-width: thin;
+  scrollbar-color:
+    color-mix(in srgb, var(--sidebar-fg) 24%, transparent)
+    transparent;
 }
 
 .navItem {
@@ -95,8 +107,10 @@
   align-items: center;
   gap: 10px;
   min-height: 44px;
-  padding: 10px 12px;
-  border-radius: 18px;
+  position: relative;
+  padding: 10px 14px;
+  border: 1px solid transparent;
+  border-radius: 14px;
   text-decoration: none;
   color: color-mix(in srgb, var(--sidebar-fg) 85%, transparent);
   font-size: 1rem;
@@ -106,10 +120,25 @@
     color 150ms ease,
     transform 150ms ease;
 
+  &,
+  &:hover,
+  &:focus,
+  &:focus-visible,
+  &:active,
+  &:visited {
+    text-decoration: none;
+  }
+
   &:hover {
     background: color-mix(in srgb, var(--sidebar-fg) 9%, transparent);
+    border-color: color-mix(in srgb, var(--sidebar-fg) 8%, transparent);
     color: var(--sidebar-fg);
-    transform: translateX(2px);
+    transform: translateX(3px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: -2px;
   }
 
   &.active {
@@ -119,9 +148,11 @@
       var(--mat-sys-primary) 12%
     );
     color: var(--sidebar-fg);
-    font-weight: 600;
-    box-shadow: inset 0 0 0 1px
-      color-mix(in srgb, var(--sidebar-fg) 8%, transparent);
+    border-color: color-mix(in srgb, var(--mat-sys-primary) 24%, transparent);
+    font-weight: 750;
+    box-shadow:
+      inset 3px 0 var(--mat-sys-primary),
+      0 8px 20px color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
   }
 }
 
@@ -137,6 +168,15 @@
   flex-shrink: 0;
   background: color-mix(in srgb, var(--sidebar-fg) 10%, transparent);
   color: var(--sidebar-fg);
+  transition:
+    background 150ms ease,
+    color 150ms ease,
+    transform 150ms ease;
+
+  .navItem:hover & {
+    background: color-mix(in srgb, var(--sidebar-fg) 16%, transparent);
+    transform: scale(1.04);
+  }
 
   .active & {
     background: var(--mat-sys-primary);
@@ -170,6 +210,7 @@
 
 .bottom {
   border-top: 1px solid var(--sidebar-border);
-  padding: 4px 8px;
+  padding: 10px 12px;
   flex-shrink: 0;
+  background: color-mix(in srgb, var(--sidebar-bg) 88%, transparent);
 }
