@@ -103,17 +103,6 @@ const nextConfig = {
     ]
   },
 
-  // Content Security Policy
-  async redirects() {
-    return [
-      {
-        source: '/email',
-        destination: '/',
-        permanent: false
-      }
-    ]
-  },
-
   // Image optimization
   images: {
     remotePatterns: [

@@ -12,7 +12,12 @@ import { isReservedPath } from '@/lib/routing/route-parser'
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  if (pathname === '/ui/login') {
+  const isRetiredRoute =
+    pathname === '/ui/login' ||
+    pathname === '/app' ||
+    pathname.startsWith('/app/')
+
+  if (isRetiredRoute) {
     return new NextResponse('Not Found', { status: 404 })
   }
 

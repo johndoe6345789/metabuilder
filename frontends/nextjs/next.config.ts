@@ -71,18 +71,6 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  // Canonical workspace URLs live directly under basePath (/app/god-panel).
-  // Keep old /app/app/* links working while removing the duplicated segment.
-  redirects() {
-    return [
-      {
-        source: '/app/:path*',
-        destination: '/:path*',
-        permanent: false,
-      },
-    ]
-  },
-
   // Headers for security and CORS
   headers() {
     return [
