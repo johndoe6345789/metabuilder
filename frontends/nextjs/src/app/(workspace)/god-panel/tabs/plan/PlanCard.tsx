@@ -47,7 +47,7 @@ export function PlanCard(props: PlanCardProps) {
         className={s.delete}
         onClick={props.onRemove}
       >
-        x
+        <span className="material-symbols-rounded" aria-hidden="true">delete</span>
       </button>
     </article>
   )

@@ -12,6 +12,8 @@ export interface DialogProps {
   maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | false;
   fullWidth?: boolean;
   fullScreen?: boolean;
+  /** Optional class applied to the dialog panel. */
+  className?: string;
   disableEscapeKeyDown?: boolean;
   disableBackdropClick?: boolean;
   /** Test ID for automated testing */
@@ -27,6 +29,7 @@ export function Dialog({
   maxWidth = 'sm',
   fullWidth = false,
   fullScreen = false,
+  className,
   disableEscapeKeyDown = false,
   disableBackdropClick = false,
   testId,
@@ -78,6 +81,7 @@ export function Dialog({
           open={open}
           fullScreen={fullScreen}
           fullWidth={fullWidth}
+          className={className}
           sm={sizeProps.sm}
           lg={sizeProps.lg}
           xl={sizeProps.xl}

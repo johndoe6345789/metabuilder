@@ -170,16 +170,23 @@ export function OverviewTab() {
         }}
       />
 
-      <Paper>
-        <div className={s.statusRow}>
-          <div
-            className={`${s.dot} ${
-              dbalStatus.connected ? s.dotOnline : s.dotOffline
+      <Paper className={s.statusCard}>
+        <div className={s.statusRow} role="status">
+          <span className={`material-symbols-rounded ${s.statusIcon}`}>
+            storage
+          </span>
+          <div className={s.statusCopy}>
+            <span className={s.statusLabel}>DBAL Daemon</span>
+            <span className={s.statusHint}>Database abstraction service</span>
+          </div>
+          <span
+            className={`${s.statusBadge} ${
+              dbalStatus.connected ? s.statusOnline : s.statusOffline
             }`}
-          />
-          <Typography variant="subtitle2">
-            DBAL Daemon: {dbalStatus.connected ? 'Connected' : 'Offline'}
-          </Typography>
+          >
+            <span className={s.statusDot} aria-hidden="true" />
+            {dbalStatus.connected ? 'Connected' : 'Offline'}
+          </span>
         </div>
         {dbalStatus.connected && dbalStatus.version != null && (
           <div className={s.chipRow}>

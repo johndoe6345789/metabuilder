@@ -1,15 +1,11 @@
 import { PlanCard } from './PlanCard'
-import { PlanComposer } from './PlanComposer'
 import type { ColumnDef, Status, Task } from './plan-types'
 import s from './PlanTab.module.scss'
 
 interface PlanColumnProps {
   column: ColumnDef
   tasks: Task[]
-  draft: string
   dragId: string | null
-  onSetDraft: (status: Status, value: string) => void
-  onAdd: (status: Status) => void
   onDropColumn: (status: Status) => void
   onDropCard: (task: Task) => void
   onDragStart: (id: string) => void
@@ -22,7 +18,7 @@ export function PlanColumn(props: PlanColumnProps) {
   const { column, tasks } = props
   return (
     <section
-      className={s.column}
+      className={`${s.column} ${s[column.status]}`}
       onDragOver={event => {
         event.preventDefault()
       }}
@@ -39,6 +35,9 @@ export function PlanColumn(props: PlanColumnProps) {
       </div>
 
       <div className={s.cards}>
+        {tasks.length === 0 && (
+          <div className={s.empty}>Drop a card here</div>
+        )}
         {tasks.map(task => (
           <PlanCard
             key={task.id}
@@ -60,13 +59,6 @@ export function PlanColumn(props: PlanColumnProps) {
           />
         ))}
       </div>
-
-      <PlanComposer
-        column={column}
-        draft={props.draft}
-        onSetDraft={props.onSetDraft}
-        onAdd={props.onAdd}
-      />
     </section>
   )
 }

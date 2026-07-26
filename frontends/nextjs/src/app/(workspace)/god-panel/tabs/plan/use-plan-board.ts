@@ -1,19 +1,15 @@
 'use client'
 
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { setPlan } from '@/store/slices/god-slice'
 import { COLUMNS } from './plan-data'
 import { addTask, moveTask, updateTask } from './plan-ops'
-import type { Priority, Status, Task } from './plan-types'
+import type { NewTaskInput, Priority, Status, Task } from './plan-types'
 import { normalizeTask } from './plan-utils'
 
 export { COLUMNS }
 export type { Priority, Status, Task }
-
-const initialDrafts = Object.fromEntries(
-  COLUMNS.map(column => [column.status, ''])
-) as Record<Status, string>
 
 export function usePlanBoard() {
   const dispatch = useAppDispatch()
@@ -22,7 +18,6 @@ export function usePlanBoard() {
     return god?.plan ?? []
   })
   const tasks = rawTasks.map(task => normalizeTask(task))
-  const [drafts, setDrafts] = useState(initialDrafts)
 
   const persist = useCallback(
     (next: Task[]) => {
@@ -31,19 +26,13 @@ export function usePlanBoard() {
     [dispatch]
   )
 
-  const setDraft = useCallback((status: Status, value: string) => {
-    setDrafts(current => ({ ...current, [status]: value }))
-  }, [])
-
-  const add = useCallback(
-    (status: Status) => {
-      const title = drafts[status].trim()
-      if (title.length === 0) return
-      persist(addTask(tasks, title, status))
-      setDraft(status, '')
-    },
-    [drafts, tasks, persist, setDraft]
-  )
+  const create = useCallback((input: NewTaskInput) => {
+    let next = addTask(tasks, input.title, input.status)
+    const created = next[next.length - 1]
+    next = updateTask(next, created.id, input)
+    persist(next)
+    return created.id
+  }, [tasks, persist])
 
   const moveTo = useCallback(
     (id: string, status: Status, targetId?: string) => {
@@ -71,5 +60,5 @@ export function usePlanBoard() {
     [tasks]
   )
 
-  return { tasks, drafts, setDraft, add, moveTo, update, remove, byStatus }
+  return { tasks, create, moveTo, update, remove, byStatus }
 }

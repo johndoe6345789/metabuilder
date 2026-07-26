@@ -17,40 +17,6 @@ export type GodDomain =
   | 'smtp'
   | 'tests'
   | 'plan'
-  | 'rendition'
-
-export interface RenditionModule {
-  id: string
-  label: string
-  description: string
-  minLevel: 1 | 2 | 3 | 4 | 5
-  enabled: boolean
-  pinned: boolean
-}
-
-export interface RenditionNavItem {
-  id: string
-  label: string
-  path: string
-  minLevel: 1 | 2 | 3 | 4 | 5
-  enabled: boolean
-}
-
-export interface RenditionConfig {
-  id: string
-  tenantId: string
-  productName: string
-  tagline: string
-  controlPanelName: string
-  primaryAccent: string
-  secondaryAccent: string
-  borderRadius: number
-  density: 'comfortable' | 'compact' | 'spacious'
-  defaultLandingPath: string
-  modules: RenditionModule[]
-  navItems: RenditionNavItem[]
-  updatedAt: string
-}
 
 export interface GodState {
   workflow: Workflow
@@ -61,120 +27,16 @@ export interface GodState {
   smtp: SmtpConfig
   tests: TestCase[]
   plan: Task[]
-  rendition: RenditionConfig
   dirty: Record<GodDomain, boolean>
 }
 
 const now = () => new Date().toISOString()
-
-export const DEFAULT_RENDITION_CONFIG: RenditionConfig = {
-  id: 'rendition_default',
-  tenantId: 'system',
-  productName: 'MetaBuilder',
-  tagline: 'Build, operate and ship tenant apps from one control panel.',
-  controlPanelName: 'Control Panel',
-  primaryAccent: '#4493f8',
-  secondaryAccent: '#56d364',
-  borderRadius: 18,
-  density: 'comfortable',
-  defaultLandingPath: '/app',
-  modules: [
-    {
-      id: 'overview',
-      label: 'Overview',
-      description: 'System health, alerts and quick actions',
-      minLevel: 1,
-      enabled: true,
-      pinned: true,
-    },
-    {
-      id: 'content',
-      label: 'Content Studio',
-      description: 'Pages, component trees and reusable blocks',
-      minLevel: 4,
-      enabled: true,
-      pinned: true,
-    },
-    {
-      id: 'data',
-      label: 'Data Models',
-      description: 'Schemas, records and tenant data operations',
-      minLevel: 3,
-      enabled: true,
-      pinned: false,
-    },
-    {
-      id: 'automation',
-      label: 'Automations',
-      description: 'JSON workflows, test runs and execution logs',
-      minLevel: 4,
-      enabled: true,
-      pinned: true,
-    },
-    {
-      id: 'users',
-      label: 'People',
-      description: 'Users, roles and access policy',
-      minLevel: 3,
-      enabled: true,
-      pinned: false,
-    },
-    {
-      id: 'credentials',
-      label: 'Credentials',
-      description: 'Tenant-scoped secrets and integrations',
-      minLevel: 4,
-      enabled: true,
-      pinned: false,
-    },
-    {
-      id: 'deploy',
-      label: 'Release',
-      description: 'Publish, export, import and rollback controls',
-      minLevel: 4,
-      enabled: true,
-      pinned: true,
-    },
-  ],
-  navItems: [
-    {
-      id: 'nav_dashboard',
-      label: 'Dashboard',
-      path: '/',
-      minLevel: 1,
-      enabled: true,
-    },
-    {
-      id: 'nav_profile',
-      label: 'Profile',
-      path: '/profile',
-      minLevel: 1,
-      enabled: true,
-    },
-    {
-      id: 'nav_admin',
-      label: 'Admin',
-      path: '/admin',
-      minLevel: 3,
-      enabled: true,
-    },
-    {
-      id: 'nav_builder',
-      label: 'Builder',
-      path: '/god-panel',
-      minLevel: 4,
-      enabled: true,
-    },
-  ],
-  updatedAt: now(),
-}
 
 const normalizeCssProps = (state: GodState): GodState => {
   const persisted = state as Partial<GodState>
   return {
     ...initialState,
     ...state,
-    rendition: persisted.rendition ?? initialState.rendition,
     dirty: { ...initialState.dirty, ...persisted.dirty },
     css: (persisted.css ?? initialState.css).map(cssClass => {
       const props = { ...cssClass.props }
@@ -268,7 +130,6 @@ const initialState: GodState = {
     { id: 'p1', title: 'Design the landing page', status: 'todo' },
     { id: 'p2', title: 'Wire signup workflow', status: 'doing' },
   ],
-  rendition: DEFAULT_RENDITION_CONFIG,
   dirty: {
     workflow: false,
     tree: false,
@@ -278,7 +139,6 @@ const initialState: GodState = {
     smtp: false,
     tests: false,
     plan: false,
-    rendition: false,
   },
 }
 
@@ -318,10 +178,6 @@ const godSlice = createSlice({
       s.plan = a.payload
       s.dirty.plan = true
     },
-    setRendition: (s, a: PayloadAction<RenditionConfig>) => {
-      s.rendition = { ...a.payload, updatedAt: now() }
-      s.dirty.rendition = true
-    },
     clearDirty: (s, a: PayloadAction<GodDomain>) => {
       s.dirty[a.payload] = false
     },
@@ -338,7 +194,6 @@ export const {
   setSmtp,
   setTests,
   setPlan,
-  setRendition,
   clearDirty,
   rehydrate,
 } = godSlice.actions

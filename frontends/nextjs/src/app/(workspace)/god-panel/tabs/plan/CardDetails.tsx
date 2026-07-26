@@ -14,9 +14,12 @@ export function CardDetails({ task, onClose, onChange }: CardDetailsProps) {
   return (
     <aside className={s.details} aria-label="Card details">
       <div className={s.detailsHead}>
-        <Typography variant="subtitle1">Card details</Typography>
+        <div>
+          <span className={s.eyebrow}>Selected card</span>
+          <Typography variant="subtitle1">Card details</Typography>
+        </div>
         <button type="button" onClick={onClose} aria-label="Close details">
-          x
+          <span className="material-symbols-rounded" aria-hidden="true">close</span>
         </button>
       </div>
 

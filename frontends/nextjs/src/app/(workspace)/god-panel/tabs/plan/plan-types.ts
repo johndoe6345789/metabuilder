@@ -13,6 +13,11 @@ export interface Task {
   updatedAt?: string
 }
 
+export type NewTaskInput = Pick<
+  Task,
+  'title' | 'status' | 'priority' | 'description' | 'labels'
+>
+
 export interface ColumnDef {
   status: Status
   label: string

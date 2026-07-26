@@ -1,28 +1,109 @@
+.statusCard {
+  padding: 18px 20px;
+  margin-bottom: 22px;
+  border: 1px solid
+    color-mix(in srgb, var(--mat-sys-outline-variant) 76%, transparent);
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--mat-sys-primary) 8%, transparent),
+      transparent 48%
+    ),
+    var(--mat-sys-surface-container-low);
+}
+
 .statusRow {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 14px;
 }
 
-.dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 12px;
+.statusIcon {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--mat-sys-primary) 14%, transparent);
+  color: var(--mat-sys-primary);
+  font-size: 1.45rem;
+  line-height: 1;
+  vertical-align: middle;
   flex-shrink: 0;
 }
 
-.dotOnline {
-  background-color: #4caf50;
+.statusCopy {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
 }
-.dotOffline {
-  background-color: #f44336;
+
+.statusLabel {
+  color: var(--mat-sys-on-surface);
+  font-size: 1.02rem;
+  font-weight: 800;
+}
+
+.statusHint {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.86rem;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 4px color-mix(in srgb, currentColor 14%, transparent);
+}
+
+.statusOnline {
+  border-color: color-mix(in srgb, #2e7d32 32%, transparent);
+  background: color-mix(in srgb, #2e7d32 12%, transparent);
+  color: #2e7d32;
+}
+
+.statusOffline {
+  border-color: color-mix(in srgb, var(--mat-sys-error) 32%, transparent);
+  background: color-mix(in srgb, var(--mat-sys-error) 12%, transparent);
+  color: var(--mat-sys-error);
 }
 
 .chipRow {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  margin-top: 14px;
+  padding-left: 56px;
+}
+
+@media (max-width: 520px) {
+  .statusRow {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .statusBadge {
+    margin-left: 56px;
+  }
+
+  .chipRow {
+    padding-left: 0;
+  }
 }
 
 .alert {
