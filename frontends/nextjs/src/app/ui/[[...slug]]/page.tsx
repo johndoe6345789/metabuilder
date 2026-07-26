@@ -13,7 +13,7 @@ interface PageProps {
 
 /**
  * Generic dynamic route for database-driven UI pages
- * Handles all paths: /ui, /ui/login, /ui/dashboard, etc.
+ * Handles database-driven paths such as /ui and /ui/dashboard.
  *
  * Flow:
  * 1. JSON seed data → Database (via import-ui-pages.ts)

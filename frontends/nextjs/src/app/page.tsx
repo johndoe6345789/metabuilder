@@ -33,7 +33,7 @@ export default function RootPage() {
           (r) => r.path === '/' && r.isPublished === true
         )
         if (homeRoute?.requiresAuth === true) {
-          router.replace('/ui/login')
+          router.replace('/login')
           return
         }
         setReady(true)

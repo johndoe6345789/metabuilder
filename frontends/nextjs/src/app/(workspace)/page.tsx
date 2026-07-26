@@ -44,7 +44,7 @@ export default function AppRootPage() {
           <Button
             variant="contained"
             onClick={() => {
-              router.push('/ui/login')
+              router.push('/login')
             }}
           >
             Sign In

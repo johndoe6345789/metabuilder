@@ -175,7 +175,7 @@ export function AppBarComponent({
           variant="contained"
           size="small"
           onClick={() => {
-            router.push('/ui/login')
+            router.push('/login')
           }}
           className={s.textButton}
         >

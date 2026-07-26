@@ -193,7 +193,7 @@ export default function SignupPage() {
 
         <p className={s.signin}>
           Already have an account?{' '}
-          <Link href="/ui/login" className={s.link}>Sign in</Link>
+          <Link href="/login" className={s.link}>Sign in</Link>
         </p>
       </div>
     </div>

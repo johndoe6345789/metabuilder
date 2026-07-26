@@ -12,6 +12,10 @@ import { isReservedPath } from '@/lib/routing/route-parser'
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
+  if (pathname === '/ui/login') {
+    return new NextResponse('Not Found', { status: 404 })
+  }
+
   // Skip reserved paths
   const firstSegment = pathname.split('/')[1]
   if (firstSegment === undefined || firstSegment.length === 0 || isReservedPath(firstSegment)) {

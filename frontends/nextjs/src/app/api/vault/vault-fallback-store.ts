@@ -15,7 +15,7 @@ export const DEFAULT_VAULT_LOGINS = [
     password: 'demo1234',
     group: 'Default',
     notes: 'Primary smoke-test login.',
-    loginUrl: '/app/ui/login',
+    loginUrl: '/app/login',
     appUrl: '/app',
   },
   {
@@ -25,7 +25,7 @@ export const DEFAULT_VAULT_LOGINS = [
     password: 'alice1234',
     group: 'Default',
     notes: 'Secondary test account.',
-    loginUrl: '/app/ui/login',
+    loginUrl: '/app/login',
     appUrl: '/app',
   },
   {
@@ -35,7 +35,7 @@ export const DEFAULT_VAULT_LOGINS = [
     password: 'bob12345',
     group: 'Default',
     notes: 'Used for permission and role checks.',
-    loginUrl: '/app/ui/login',
+    loginUrl: '/app/login',
     appUrl: '/app',
   },
   {
@@ -45,7 +45,7 @@ export const DEFAULT_VAULT_LOGINS = [
     password: 'guest1234',
     group: 'Public',
     notes: 'Low-friction smoke test account.',
-    loginUrl: '/app/ui/login',
+    loginUrl: '/app/login',
     appUrl: '/app',
   },
   {
@@ -55,7 +55,7 @@ export const DEFAULT_VAULT_LOGINS = [
     password: 'qa1234',
     group: 'Testing',
     notes: 'Used for general QA runs.',
-    loginUrl: '/app/ui/login',
+    loginUrl: '/app/login',
     appUrl: '/app/dashboard',
   },
   {
@@ -65,7 +65,7 @@ export const DEFAULT_VAULT_LOGINS = [
     password: 'analyst1234',
     group: 'Testing',
     notes: 'Checks reporting surfaces and read-only flows.',
-    loginUrl: '/app/ui/login',
+    loginUrl: '/app/login',
     appUrl: '/app/dashboard',
   },
   {
@@ -75,7 +75,7 @@ export const DEFAULT_VAULT_LOGINS = [
     password: 'editor1234',
     group: 'Workspace',
     notes: 'Useful for content and form editing checks.',
-    loginUrl: '/app/ui/login',
+    loginUrl: '/app/login',
     appUrl: '/app/comments',
   },
   {
@@ -85,7 +85,7 @@ export const DEFAULT_VAULT_LOGINS = [
     password: 'moderator1234',
     group: 'Workspace',
     notes: 'Moderation and review workflows.',
-    loginUrl: '/app/ui/login',
+    loginUrl: '/app/login',
     appUrl: '/app/comments',
   },
   {
@@ -95,7 +95,7 @@ export const DEFAULT_VAULT_LOGINS = [
     password: 'admin1234',
     group: 'Administration',
     notes: 'Covers admin and configuration flows.',
-    loginUrl: '/app/ui/login',
+    loginUrl: '/app/login',
     appUrl: '/app/admin',
   },
   {
@@ -105,7 +105,7 @@ export const DEFAULT_VAULT_LOGINS = [
     password: 'god1234',
     group: 'Administration',
     notes: 'Exercises god panel controls.',
-    loginUrl: '/app/ui/login',
+    loginUrl: '/app/login',
     appUrl: '/app/god-panel',
   },
   {
@@ -115,7 +115,7 @@ export const DEFAULT_VAULT_LOGINS = [
     password: 'supergod1234',
     group: 'Administration',
     notes: 'Exercises super-god workflows.',
-    loginUrl: '/app/ui/login',
+    loginUrl: '/app/login',
     appUrl: '/app/super-god-panel',
   },
   {
@@ -125,7 +125,7 @@ export const DEFAULT_VAULT_LOGINS = [
     password: 'service1234',
     group: 'System',
     notes: 'Tests automation and integration hooks.',
-    loginUrl: '/app/ui/login',
+    loginUrl: '/app/login',
     appUrl: '/app/system/god-panel',
   },
 ]

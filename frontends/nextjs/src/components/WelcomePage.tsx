@@ -19,7 +19,7 @@ export function WelcomePage() {
             <a className={s.navLink} href="#pricing">Pricing</a>
           </div>
           <div className={s.navCtas}>
-            <Link className={s.btnOutline} href="/ui/login">Sign In</Link>
+            <Link className={s.btnOutline} href="/login">Sign In</Link>
             <Link className={s.btnFilled} href="/ui/signup">Start free</Link>
           </div>
         </div>

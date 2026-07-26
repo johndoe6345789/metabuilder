@@ -58,7 +58,7 @@ export function makeVaultEntry(
     password: String(config.password ?? fallback?.password ?? ''),
     group: String(config.group ?? fallback?.group ?? 'General'),
     notes: String(config.notes ?? fallback?.notes ?? ''),
-    loginUrl: String(config.loginUrl ?? fallback?.loginUrl ?? '/app/ui/login'),
+    loginUrl: String(config.loginUrl ?? fallback?.loginUrl ?? '/app/login'),
     appUrl: String(config.appUrl ?? fallback?.appUrl ?? '/app'),
     tenantId: record.tenantId ?? 'system',
     createdAt,

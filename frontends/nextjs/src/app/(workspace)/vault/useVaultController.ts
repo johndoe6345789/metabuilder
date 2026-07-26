@@ -19,7 +19,7 @@ export type VaultNotice = { kind: 'success' | 'error' | 'info'; message: string 
 function draftFromEntry(entry: VaultEntry | null): VaultDraft {
   return entry ?? {
     slug: '', title: '', username: '', password: '', group: 'General', notes: '',
-    loginUrl: '/app/ui/login', appUrl: '/app',
+    loginUrl: '/app/login', appUrl: '/app',
   }
 }
 
