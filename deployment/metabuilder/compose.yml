@@ -700,7 +700,8 @@ services:
     container_name: metabuilder-frontend-app
     restart: unless-stopped
     env_file:
-      - ../../../secrets/vault.env
+      - path: ../../../secrets/vault.env
+        required: false
     environment:
       NODE_ENV: production
       PORT: 3000
@@ -997,7 +998,8 @@ services:
     restart: unless-stopped
     profiles: [monitoring]
     env_file:
-      - ../../../jenkins/secrets/grafana.env
+      - path: ../../../jenkins/secrets/grafana.env
+        required: false
     environment:
       GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
       GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource
@@ -1146,16 +1148,18 @@ services:
           cpus: '0.25'
           memory: 128M
 
-  # Starlink Exporter - Starlink dish metrics
-  starlink-exporter:
-    image: danopstech/starlink_exporter:latest
-    container_name: metabuilder-starlink-exporter
+  # eero Exporter - eero mesh WiFi metrics
+  eero-exporter:
+    image: ghcr.io/fulviofreitas/eero-prometheus-exporter:latest
+    container_name: metabuilder-eero-exporter
     restart: unless-stopped
     profiles: [monitoring]
+    volumes:
+      - eero-exporter-config:/home/eero/.config/eero-exporter
     healthcheck:
-      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://127.0.0.1:9817/metrics || exit 1"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:10052/ready')"]
       interval: 30s
-      timeout: 5s
+      timeout: 10s
       retries: 3
       start_period: 10s
     networks:
@@ -1402,6 +1406,9 @@ services:
 # Volumes
 # ============================================================================
 volumes:
+  # eero Exporter session storage
+  eero-exporter-config:
+    driver: local
   # NPM registry
   verdaccio-storage:
     driver: local
