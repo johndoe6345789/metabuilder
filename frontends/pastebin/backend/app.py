@@ -1452,6 +1452,29 @@ def _dbal_path(entity: str) -> str:
     return f'/{DBAL_TENANT_ID}/pastebin/{entity}'
 
 
+def _get_username(user_id: str) -> str:
+    """Resolve a Snippet/Namespace's userId to a display username.
+
+    Post-migration (see migrate_to_dbal_oidc.py), userId already IS the
+    username for any account that's gone through DBAL OIDC — but content
+    from before that migration may still carry the old local Flask UUID,
+    so fall back to a DBAL User lookup by id in that case, and finally to
+    the raw userId if even that fails (never raise for a missing profile).
+    """
+    if not user_id:
+        return 'unknown'
+    r = dbal_request('GET', f'/{DBAL_TENANT_ID}/core/User/{user_id}')
+    if r and r.ok:
+        try:
+            body = r.json()
+            profile = body.get('data', body)
+            if profile.get('username'):
+                return profile['username']
+        except Exception:
+            pass
+    return user_id
+
+
 # ---------------------------------------------------------------------------
 # Snippet endpoints — backed by DBAL
 # ---------------------------------------------------------------------------
