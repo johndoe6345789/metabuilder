@@ -94,7 +94,12 @@ protected:
     void createTables();
     std::optional<EntitySchema> getEntitySchemaInternal(const std::string& entityName) const;
 
-    // Schema migration: adds columns present in entity definition but missing from the table
+    // Schema migration: adds columns present in entity definition but missing
+    // from the table; relaxes NOT NULL where the schema now allows null;
+    // corrects the primary key when the schema's designated primary field
+    // has moved to a different column (e.g. after a field rename). Never
+    // drops columns or deletes rows — see migrateTable's own comments for
+    // why that's a deliberate boundary, not an oversight.
     void migrateTable(SqlConnection*, const EntityDefinition&, SqlDialect, SqlTemplateGenerator&);
 
     // Error mapping
