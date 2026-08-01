@@ -1587,7 +1587,12 @@ def get_shared_snippet(token):
     r = dbal_request('GET', f'{_dbal_path("Snippet")}?filter.shareToken={token}&limit=1')
     if not r or not r.ok:
         return jsonify({'error': 'Not found'}), 404
-    items = r.json().get('data', [])
+    # DBAL's list envelope is {"data": {"data": [...], "total": N, ...}} —
+    # two levels of unwrapping, same as _dbal_all_pages(). The previous
+    # single-level `.get('data', [])` returned the inner dict itself, and
+    # `items[0]` on a dict raised KeyError -> 500 for every request here,
+    # found or not.
+    items = r.json().get('data', {}).get('data', [])
     if not items:
         return jsonify({'error': 'Not found'}), 404
     snippet = items[0]
@@ -1608,7 +1613,7 @@ def _maybe_save_revision(snippet_id: str, data: dict, user_id: str) -> None:
     )
     last_rev = None
     if last_r and last_r.ok:
-        items = last_r.json().get('data') or []
+        items = last_r.json().get('data', {}).get('data') or []
         if items:
             last_rev = items[0]
 
@@ -1677,7 +1682,7 @@ def list_revisions(snippet_id):
     )
     if not r or not r.ok:
         return jsonify([])
-    items = r.json().get('data', [])
+    items = r.json().get('data', {}).get('data', [])
     # Parse files JSON string back to array if present
     for rev in items:
         if rev.get('files') and isinstance(rev['files'], str):
@@ -1745,7 +1750,7 @@ def fork_shared_snippet(token):
     r = dbal_request('GET', f'{_dbal_path("Snippet")}?filter.shareToken={token}&limit=1')
     if not r or not r.ok:
         return jsonify({'error': 'Not found'}), 404
-    items = r.json().get('data', [])
+    items = r.json().get('data', {}).get('data', [])
     if not items:
         return jsonify({'error': 'Not found'}), 404
     source = items[0]
