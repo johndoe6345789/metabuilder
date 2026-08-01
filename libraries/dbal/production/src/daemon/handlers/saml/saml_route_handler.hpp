@@ -16,7 +16,9 @@ namespace dbal::daemon::handlers::saml {
 
 class SamlRouteHandler {
 public:
-    explicit SamlRouteHandler(dbal::saml::SamlService& service);
+    /// @param publicPathPrefix See oidc::OidcRouteHandler's constructor doc —
+    ///        prepended to the /saml/login redirect this handler issues.
+    explicit SamlRouteHandler(dbal::saml::SamlService& service, std::string publicPathPrefix = "");
 
     void handleMetadata(const drogon::HttpRequestPtr& req,
                          std::function<void(const drogon::HttpResponsePtr&)>&& cb) const;
@@ -28,6 +30,7 @@ public:
 
 private:
     dbal::saml::SamlService& service_;
+    std::string public_path_prefix_;
 };
 
 } // namespace dbal::daemon::handlers::saml

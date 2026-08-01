@@ -30,7 +30,8 @@ std::string htmlAttrEscape(const std::string& in) {
     return out;
 }
 
-std::string renderLoginForm(const std::string& continuationToken, const std::string& error = "") {
+std::string renderLoginForm(const std::string& publicPathPrefix, const std::string& continuationToken,
+                             const std::string& error = "") {
     std::string errorHtml = error.empty() ? "" : "<div class=\"error\" role=\"alert\">" + error + "</div>";
     return "<!doctype html><html><head><meta charset=\"utf-8\">"
            "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
@@ -39,7 +40,7 @@ std::string renderLoginForm(const std::string& continuationToken, const std::str
            "<div class=\"card\">"
            "<p class=\"brand\">MetaBuilder SSO</p>"
            "<h1>Sign in</h1>" + errorHtml +
-           "<form method=\"POST\" action=\"/saml/login\">"
+           "<form method=\"POST\" action=\"" + publicPathPrefix + "/saml/login\">"
            "<input type=\"hidden\" name=\"continuation\" value=\"" +
            htmlAttrEscape(continuationToken) + "\">"
            "<div class=\"field\"><label for=\"username\">Username</label>"
@@ -75,8 +76,9 @@ std::string renderAutoSubmitForm(const std::string& acsUrl, const std::string& s
 
 } // namespace
 
-SamlLoginRouteHandler::SamlLoginRouteHandler(dbal::Client& client, dbal::saml::SamlService& service)
-    : client_(client), service_(service) {}
+SamlLoginRouteHandler::SamlLoginRouteHandler(dbal::Client& client, dbal::saml::SamlService& service,
+                                              std::string publicPathPrefix)
+    : client_(client), service_(service), public_path_prefix_(std::move(publicPathPrefix)) {}
 
 void SamlLoginRouteHandler::handleGet(
     const drogon::HttpRequestPtr& req, std::function<void(const drogon::HttpResponsePtr&)>&& cb) const {
@@ -90,7 +92,7 @@ void SamlLoginRouteHandler::handleGet(
     }
     auto resp = drogon::HttpResponse::newHttpResponse();
     resp->setContentTypeCode(drogon::CT_TEXT_HTML);
-    resp->setBody(renderLoginForm(continuation));
+    resp->setBody(renderLoginForm(public_path_prefix_, continuation));
     cb(resp);
 }
 
@@ -110,7 +112,7 @@ void SamlLoginRouteHandler::handlePost(
         // the same token works until it naturally expires.
         auto resp = drogon::HttpResponse::newHttpResponse();
         resp->setContentTypeCode(drogon::CT_TEXT_HTML);
-        resp->setBody(renderLoginForm(continuation, "Invalid username or password"));
+        resp->setBody(renderLoginForm(public_path_prefix_, continuation, "Invalid username or password"));
         cb(resp);
         return;
     }

@@ -5,14 +5,6 @@
  *        mechanism by which /authorize learns who the user is before
  *        issuing a code, scoped to username+password against the
  *        Credential entity. No self-service registration, no password reset.
- *
- * NOTE: Credential::verify() is real, but until Phase 5 replaces the fake
- * hash algorithm with Argon2id and wires it through the generic adapter
- * (instead of the dead InMemoryStore), this will reject every login. That's
- * expected at this point in the build — Phase 3's own gate tests the
- * code/token/PKCE mechanics directly against a pre-created session rather
- * than through this handler; full end-to-end browser testing happens after
- * Phase 5 lands.
  */
 #pragma once
 
@@ -28,8 +20,11 @@ namespace dbal::daemon::handlers::oidc {
 
 class LoginRouteHandler {
 public:
+    /// @param publicPathPrefix See OidcRouteHandler's constructor doc — same
+    ///        reverse-proxy-prefix concern applies to this form's own
+    ///        action="" URL.
     LoginRouteHandler(dbal::Client& client, dbal::oidc::OidcService& service,
-                       PendingAuthorizeStore& pendingStore);
+                       PendingAuthorizeStore& pendingStore, std::string publicPathPrefix = "");
 
     /// GET /oidc/login?continuation=... — renders the login form.
     void handleGet(const drogon::HttpRequestPtr& req,
@@ -44,6 +39,7 @@ private:
     dbal::Client& client_;
     dbal::oidc::OidcService& service_;
     PendingAuthorizeStore& pending_store_;
+    std::string public_path_prefix_;
 };
 
 } // namespace dbal::daemon::handlers::oidc

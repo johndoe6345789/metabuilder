@@ -18,7 +18,17 @@ namespace dbal::daemon::handlers::oidc {
 
 class OidcRouteHandler {
 public:
-    OidcRouteHandler(dbal::oidc::OidcService& service, PendingAuthorizeStore& pendingStore);
+    /**
+     * @param publicPathPrefix Prepended to Location headers this handler
+     *        generates for browser-facing redirects (e.g. "/api/dbal" when
+     *        fronted by a reverse proxy that strips that prefix before
+     *        forwarding — DBAL itself always registers routes at their bare
+     *        paths, so without this its own redirects would send the
+     *        browser to a path the proxy never routes back to DBAL).
+     *        Empty string (default) for an unproxied deployment.
+     */
+    OidcRouteHandler(dbal::oidc::OidcService& service, PendingAuthorizeStore& pendingStore,
+                      std::string publicPathPrefix = "");
 
     void handleDiscovery(const drogon::HttpRequestPtr& req,
                           std::function<void(const drogon::HttpResponsePtr&)>&& cb) const;
@@ -39,6 +49,7 @@ public:
 private:
     dbal::oidc::OidcService& service_;
     PendingAuthorizeStore& pending_store_;
+    std::string public_path_prefix_;
 };
 
 } // namespace dbal::daemon::handlers::oidc

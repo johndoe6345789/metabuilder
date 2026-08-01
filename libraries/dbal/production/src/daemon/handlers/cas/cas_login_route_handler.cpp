@@ -30,7 +30,8 @@ std::string htmlAttrEscape(const std::string& in) {
     return out;
 }
 
-std::string renderLoginForm(const std::string& service, const std::string& error = "") {
+std::string renderLoginForm(const std::string& publicPathPrefix, const std::string& service,
+                             const std::string& error = "") {
     std::string errorHtml = error.empty() ? "" : "<div class=\"error\" role=\"alert\">" + error + "</div>";
     return "<!doctype html><html><head><meta charset=\"utf-8\">"
            "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
@@ -39,7 +40,7 @@ std::string renderLoginForm(const std::string& service, const std::string& error
            "<div class=\"card\">"
            "<p class=\"brand\">MetaBuilder SSO</p>"
            "<h1>Sign in</h1>" + errorHtml +
-           "<form method=\"POST\" action=\"/cas/login\">"
+           "<form method=\"POST\" action=\"" + publicPathPrefix + "/cas/login\">"
            "<input type=\"hidden\" name=\"service\" value=\"" + htmlAttrEscape(service) + "\">"
            "<div class=\"field\"><label for=\"username\">Username</label>"
            "<input id=\"username\" type=\"text\" name=\"username\" autofocus autocomplete=\"username\"></div>"
@@ -53,8 +54,9 @@ std::string renderLoginForm(const std::string& service, const std::string& error
 
 } // namespace
 
-CasLoginRouteHandler::CasLoginRouteHandler(dbal::Client& client, dbal::cas::CasService& service)
-    : client_(client), service_(service) {}
+CasLoginRouteHandler::CasLoginRouteHandler(dbal::Client& client, dbal::cas::CasService& service,
+                                            std::string publicPathPrefix)
+    : client_(client), service_(service), public_path_prefix_(std::move(publicPathPrefix)) {}
 
 void CasLoginRouteHandler::handleGet(
     const drogon::HttpRequestPtr& req, std::function<void(const drogon::HttpResponsePtr&)>&& cb) const {
@@ -68,7 +70,7 @@ void CasLoginRouteHandler::handleGet(
     }
     auto resp = drogon::HttpResponse::newHttpResponse();
     resp->setContentTypeCode(drogon::CT_TEXT_HTML);
-    resp->setBody(renderLoginForm(service));
+    resp->setBody(renderLoginForm(public_path_prefix_, service));
     cb(resp);
 }
 
@@ -92,7 +94,7 @@ void CasLoginRouteHandler::handlePost(
         // Deliberately generic message — don't reveal whether the username exists.
         auto resp = drogon::HttpResponse::newHttpResponse();
         resp->setContentTypeCode(drogon::CT_TEXT_HTML);
-        resp->setBody(renderLoginForm(service, "Invalid username or password"));
+        resp->setBody(renderLoginForm(public_path_prefix_, service, "Invalid username or password"));
         cb(resp);
         return;
     }

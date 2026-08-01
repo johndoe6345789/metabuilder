@@ -126,6 +126,16 @@ void Server::registerRoutes() {
         return;
     }
 
+    // Reverse-proxy path prefix (e.g. "/api/dbal") that a fronting proxy
+    // strips before forwarding to this daemon. DBAL's own routes are always
+    // registered at their bare paths (Drogon has no basePath concept), so
+    // any Location header or HTML form action="" this daemon generates for
+    // a browser-facing redirect must be prefixed with this to round-trip
+    // back through the proxy correctly. Empty (default) for an unproxied
+    // deployment, where bare paths are already correct.
+    const char* path_prefix_env = std::getenv("DBAL_PUBLIC_PATH_PREFIX");
+    const std::string public_path_prefix = path_prefix_env ? path_prefix_env : "";
+
     // Initialize JWT validator + YAML auth config
     {
         const char* secret = std::getenv("JWT_SECRET_KEY");
@@ -1160,9 +1170,9 @@ void Server::registerRoutes() {
     // ===== OIDC provider routes (no-op if oidc_service_ failed to initialize) =====
     if (oidc_service_) {
         auto oidc_handler = std::make_shared<handlers::oidc::OidcRouteHandler>(
-            *oidc_service_, oidc_pending_store_);
+            *oidc_service_, oidc_pending_store_, public_path_prefix);
         auto login_handler = std::make_shared<handlers::oidc::LoginRouteHandler>(
-            *dbal_client_, *oidc_service_, oidc_pending_store_);
+            *dbal_client_, *oidc_service_, oidc_pending_store_, public_path_prefix);
 
         drogon::app().registerHandler(
             "/.well-known/openid-configuration",
@@ -1214,9 +1224,9 @@ void Server::registerRoutes() {
 
     // ===== SAML IdP routes (no-op if saml_service_ failed to initialize) =====
     if (saml_service_) {
-        auto saml_handler = std::make_shared<handlers::saml::SamlRouteHandler>(*saml_service_);
+        auto saml_handler = std::make_shared<handlers::saml::SamlRouteHandler>(*saml_service_, public_path_prefix);
         auto saml_login_handler = std::make_shared<handlers::saml::SamlLoginRouteHandler>(
-            *dbal_client_, *saml_service_);
+            *dbal_client_, *saml_service_, public_path_prefix);
 
         drogon::app().registerHandler(
             "/saml/metadata",
@@ -1253,7 +1263,7 @@ void Server::registerRoutes() {
     if (cas_service_) {
         auto cas_handler = std::make_shared<handlers::cas::CasRouteHandler>(*cas_service_);
         auto cas_login_handler = std::make_shared<handlers::cas::CasLoginRouteHandler>(
-            *dbal_client_, *cas_service_);
+            *dbal_client_, *cas_service_, public_path_prefix);
 
         drogon::app().registerHandler(
             "/cas/login",

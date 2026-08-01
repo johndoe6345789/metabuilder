@@ -38,8 +38,9 @@ constexpr const char* kSessionCookieName = "dbal_oidc_sid";
 
 } // namespace
 
-OidcRouteHandler::OidcRouteHandler(dbal::oidc::OidcService& service, PendingAuthorizeStore& pendingStore)
-    : service_(service), pending_store_(pendingStore) {}
+OidcRouteHandler::OidcRouteHandler(dbal::oidc::OidcService& service, PendingAuthorizeStore& pendingStore,
+                                    std::string publicPathPrefix)
+    : service_(service), pending_store_(pendingStore), public_path_prefix_(std::move(publicPathPrefix)) {}
 
 void OidcRouteHandler::handleDiscovery(
     const drogon::HttpRequestPtr&, std::function<void(const drogon::HttpResponsePtr&)>&& cb) const {
@@ -90,7 +91,7 @@ void OidcRouteHandler::handleAuthorize(
     std::string continuationToken = pending_store_.store(authReq);
     auto resp = drogon::HttpResponse::newHttpResponse();
     resp->setStatusCode(drogon::k302Found);
-    resp->addHeader("Location", "/oidc/login?continuation=" + continuationToken);
+    resp->addHeader("Location", public_path_prefix_ + "/oidc/login?continuation=" + continuationToken);
     cb(resp);
 }
 

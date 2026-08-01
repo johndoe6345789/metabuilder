@@ -8,7 +8,8 @@
 
 namespace dbal::daemon::handlers::saml {
 
-SamlRouteHandler::SamlRouteHandler(dbal::saml::SamlService& service) : service_(service) {}
+SamlRouteHandler::SamlRouteHandler(dbal::saml::SamlService& service, std::string publicPathPrefix)
+    : service_(service), public_path_prefix_(std::move(publicPathPrefix)) {}
 
 void SamlRouteHandler::handleMetadata(
     const drogon::HttpRequestPtr&, std::function<void(const drogon::HttpResponsePtr&)>&& cb) const {
@@ -45,7 +46,7 @@ void SamlRouteHandler::handleSso(
 
     auto resp = drogon::HttpResponse::newHttpResponse();
     resp->setStatusCode(drogon::k302Found);
-    resp->addHeader("Location", "/saml/login?continuation=" + result.value());
+    resp->addHeader("Location", public_path_prefix_ + "/saml/login?continuation=" + result.value());
     cb(resp);
 }
 

@@ -24,7 +24,10 @@ namespace dbal::daemon::handlers::cas {
 
 class CasLoginRouteHandler {
 public:
-    CasLoginRouteHandler(dbal::Client& client, dbal::cas::CasService& service);
+    /// @param publicPathPrefix See oidc::OidcRouteHandler's constructor doc —
+    ///        prepended to this form's own action="" URL.
+    CasLoginRouteHandler(dbal::Client& client, dbal::cas::CasService& service,
+                          std::string publicPathPrefix = "");
 
     /// GET /cas/login?service=... — renders the login form.
     void handleGet(const drogon::HttpRequestPtr& req,
@@ -38,6 +41,7 @@ public:
 private:
     dbal::Client& client_;
     dbal::cas::CasService& service_;
+    std::string public_path_prefix_;
 };
 
 } // namespace dbal::daemon::handlers::cas

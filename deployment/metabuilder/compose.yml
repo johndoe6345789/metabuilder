@@ -344,6 +344,10 @@ services:
       DBAL_SAML_SP_REGISTRY: /app/schemas/saml/sp_registry.json
       # CAS protocol — no config file needed, carries no message-level crypto
       DBAL_CAS_ENABLED: "${DBAL_CAS_ENABLED:-true}"
+      # nginx's /api/dbal/ location strips this prefix before forwarding —
+      # DBAL's own browser-facing redirects (Location headers, login form
+      # action="") need it prepended back on to round-trip through nginx.
+      DBAL_PUBLIC_PATH_PREFIX: "${DBAL_PUBLIC_PATH_PREFIX:-/api/dbal}"
       # Blob storage — powers media service and package repo
       DBAL_BLOB_BACKEND: ${DBAL_BLOB_BACKEND:-filesystem}
       DBAL_BLOB_ROOT: /app/data/blobs
