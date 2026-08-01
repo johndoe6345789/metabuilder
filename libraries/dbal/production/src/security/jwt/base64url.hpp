@@ -45,6 +45,49 @@ inline std::vector<uint8_t> base64url_decode(const std::string& input) {
 }
 
 /**
+ * @brief Encode raw bytes as base64url, no padding (RFC 4648 §5).
+ * Used for JWT segments and JWKS "n"/"e" values.
+ */
+inline std::string base64url_encode(const uint8_t* data, size_t len) {
+    static const char b64chars[] =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+    std::string out;
+    out.reserve((len + 2) / 3 * 4);
+
+    size_t i = 0;
+    for (; i + 3 <= len; i += 3) {
+        uint32_t n = (static_cast<uint32_t>(data[i]) << 16) |
+                     (static_cast<uint32_t>(data[i + 1]) << 8) |
+                     static_cast<uint32_t>(data[i + 2]);
+        out += b64chars[(n >> 18) & 0x3F];
+        out += b64chars[(n >> 12) & 0x3F];
+        out += b64chars[(n >> 6) & 0x3F];
+        out += b64chars[n & 0x3F];
+    }
+    if (len - i == 1) {
+        uint32_t n = static_cast<uint32_t>(data[i]) << 16;
+        out += b64chars[(n >> 18) & 0x3F];
+        out += b64chars[(n >> 12) & 0x3F];
+    } else if (len - i == 2) {
+        uint32_t n = (static_cast<uint32_t>(data[i]) << 16) |
+                     (static_cast<uint32_t>(data[i + 1]) << 8);
+        out += b64chars[(n >> 18) & 0x3F];
+        out += b64chars[(n >> 12) & 0x3F];
+        out += b64chars[(n >> 6) & 0x3F];
+    }
+    for (char& c : out) {
+        if (c == '+') c = '-';
+        else if (c == '/') c = '_';
+    }
+    return out; // no '=' padding — never emitted by the loop above
+}
+
+inline std::string base64url_encode(const std::vector<uint8_t>& data) {
+    return base64url_encode(data.data(), data.size());
+}
+
+/**
  * @brief Decode a base64url-encoded string and return as lowercase hex.
  * Used to compare JWT signatures against hmac_sha256() output.
  */

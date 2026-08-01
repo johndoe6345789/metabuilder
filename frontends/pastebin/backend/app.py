@@ -14,6 +14,7 @@ import smtplib
 from email.message import EmailMessage
 from functools import wraps
 import jwt
+from jwt import PyJWKClient
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
 import socket as _socket
@@ -52,6 +53,15 @@ DBAL_ADMIN_TOKEN = os.environ.get('DBAL_ADMIN_TOKEN', '')
 # Seed data (Default + Examples namespaces, 5 snippets) is now handled by the
 # DBAL C++ workflow engine via event_config.yaml → on_user_created.json.
 
+# DBAL OIDC provider — pastebin's login now redirects here (see /auth/callback
+# in the Next.js frontend); Flask itself only verifies the RS256 tokens DBAL
+# issues. JWT_SECRET_KEY/HS256 acceptance below stays alive permanently as
+# legacy compat for any pre-migration token still live within its 7-day TTL.
+DBAL_OIDC_ISSUER    = os.environ.get('DBAL_OIDC_ISSUER', '')
+DBAL_OIDC_JWKS_URL  = os.environ.get('DBAL_OIDC_JWKS_URL') or (f'{DBAL_BASE_URL}/oidc/jwks.json' if DBAL_BASE_URL else '')
+DBAL_OIDC_CLIENT_ID = os.environ.get('DBAL_OIDC_CLIENT_ID', 'pastebin-web')
+_jwks_client = PyJWKClient(DBAL_OIDC_JWKS_URL) if DBAL_OIDC_JWKS_URL else None
+
 
 def dbal_request(method: str, path: str, json_body=None):
     """Call DBAL REST API with admin token. Non-fatal on any error."""
@@ -76,13 +86,44 @@ def auth_required(f):
         if not header.startswith('Bearer '):
             return jsonify({'error': 'Unauthorized'}), 401
         token = header[7:]
+
+        # Peek the (unverified) alg header to dispatch — mirrors DBAL's own
+        # MultiAlgJwtValidator. HS256 = a pre-migration token this app itself
+        # minted, still honored via the shared JWT_SECRET_KEY until it
+        # naturally expires. RS256 = a token issued by DBAL's OIDC provider,
+        # verified against its published JWKS. Anything else is rejected.
         try:
-            payload = jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
-            g.user_id = payload['sub']
+            alg = jwt.get_unverified_header(token).get('alg')
+        except jwt.InvalidTokenError:
+            return jsonify({'error': 'Invalid token'}), 401
+
+        try:
+            if alg == 'HS256':
+                payload = jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
+            elif alg == 'RS256':
+                if not _jwks_client:
+                    return jsonify({'error': 'OIDC verification not configured'}), 503
+                signing_key = _jwks_client.get_signing_key_from_jwt(token)
+                payload = jwt.decode(
+                    token, signing_key.key, algorithms=['RS256'],
+                    audience=DBAL_OIDC_CLIENT_ID, issuer=DBAL_OIDC_ISSUER,
+                )
+            else:
+                return jsonify({'error': 'Unsupported token algorithm'}), 401
         except jwt.ExpiredSignatureError:
             return jsonify({'error': 'Token expired'}), 401
         except jwt.InvalidTokenError:
             return jsonify({'error': 'Invalid token'}), 401
+        except Exception:
+            # PyJWKClient network/lookup failures land here — treat as auth
+            # failure, never as a 500 that could leak internals.
+            return jsonify({'error': 'Invalid token'}), 401
+
+        g.user_id = payload['sub']
+        # DBAL-issued tokens don't carry a separate 'username' claim — 'sub'
+        # already IS the username (see login_route_handler.cpp), so this
+        # falls back correctly for both token kinds.
+        g.username = payload.get('username', payload['sub'])
         return f(*args, **kwargs)
     return decorated
 
@@ -1163,22 +1204,35 @@ def register():
         return jsonify({'error': 'Username already taken'}), 409
     conn.close()
 
-    # Persist user profile to DBAL (non-fatal — auth secrets stay local)
+    # Persist user profile to DBAL (non-fatal — auth secrets stay local).
+    # Content ownership (id here, userId on Namespace/Snippet below) uses
+    # `username`, not the local user_auth UUID — matching DBAL's own
+    # Credential.id convention (Credential's primary key IS the username,
+    # see credential.json) and what DBAL-issued OIDC tokens carry as `sub`.
+    # Kept consistent across both login paths so ownership never splits
+    # across two identifiers for the same person.
     dbal_request('POST', f'/{DBAL_TENANT_ID}/core/User', {
-        'id': user_id,
+        'id': username,
         'username': username,
         'email': f'{username}@codesnippet.local',
         'tenantId': DBAL_TENANT_ID,
     })
 
     # Seed Default + Examples namespaces and starter snippets (mirrors on_user_created.json)
-    _seed_new_user(user_id, now)
+    _seed_new_user(username, now)
+
+    # Also provision a real DBAL Credential with the password the user just
+    # chose, so this account works via DBAL's OIDC login immediately, not
+    # just this legacy endpoint. Non-fatal: if DBAL is unreachable, the
+    # legacy login path below still works — the account isn't unusable,
+    # just not yet SSO-capable (mirrors the DBAL User call above).
+    dbal_request('POST', '/admin/credentials', {'username': username, 'password': password})
 
     token = jwt.encode(
-        {'sub': user_id, 'username': username, 'exp': int(time.time()) + 7 * 86400},
+        {'sub': username, 'username': username, 'exp': int(time.time()) + 7 * 86400},
         JWT_SECRET, algorithm='HS256'
     )
-    return jsonify({'token': token, 'user': {'id': user_id, 'username': username}}), 201
+    return jsonify({'token': token, 'user': {'id': username, 'username': username}}), 201
 
 
 @app.route('/api/auth/login', methods=['POST'])
@@ -1198,11 +1252,17 @@ def login():
     if not user or not check_password_hash(user['password_hash'], password):
         return jsonify({'error': 'Invalid credentials'}), 401
 
+    # `sub` is the username, not the local user_auth UUID — see the matching
+    # comment in register(). IMPORTANT: this means every pre-existing
+    # account's content (Snippet/Namespace.userId, previously stored as the
+    # UUID) must have been re-pointed to the username by
+    # migrate_to_dbal_oidc.py BEFORE this code ships, or existing users will
+    # appear to have lost access to their own content on next login.
     token = jwt.encode(
-        {'sub': user['id'], 'username': user['username'], 'exp': int(time.time()) + 7 * 86400},
+        {'sub': user['username'], 'username': user['username'], 'exp': int(time.time()) + 7 * 86400},
         JWT_SECRET, algorithm='HS256'
     )
-    return jsonify({'token': token, 'user': {'id': user['id'], 'username': user['username']}})
+    return jsonify({'token': token, 'user': {'id': user['username'], 'username': user['username']}})
 
 
 @app.route('/api/auth/me', methods=['GET'])
@@ -1226,7 +1286,11 @@ def get_me():
     user = cursor.fetchone()
     conn.close()
     if not user:
-        return jsonify({'error': 'User not found'}), 404
+        # DBAL-OIDC-authenticated users have no local user_auth row and no
+        # DBAL User profile with this id (DBAL's User.id is an internal UUID,
+        # not the username 'sub' claim) — fall back to the token's own
+        # claims rather than 404ing a successfully-authenticated request.
+        return jsonify({'id': g.user_id, 'username': g.username})
     return jsonify({'id': user['id'], 'username': user['username']})
 
 
@@ -1348,7 +1412,12 @@ def reset_password():
 
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT user_id, expires_at FROM password_reset_tokens WHERE token = ?', (token,))
+    cursor.execute(
+        'SELECT prt.user_id, prt.expires_at, ua.username '
+        'FROM password_reset_tokens prt JOIN user_auth ua ON ua.id = prt.user_id '
+        'WHERE prt.token = ?',
+        (token,)
+    )
     row = cursor.fetchone()
     if not row:
         conn.close()
@@ -1364,6 +1433,14 @@ def reset_password():
     cursor.execute('DELETE FROM password_reset_tokens WHERE token = ?', (token,))
     conn.commit()
     conn.close()
+
+    # This is also THE recovery path for accounts migrated by
+    # migrate_to_dbal_oidc.py (which sets an unusable placeholder DBAL
+    # password): completing a reset here gives them a real Argon2id
+    # Credential they chose themselves, making DBAL OIDC login work.
+    # Non-fatal — the legacy password still changed successfully either way.
+    dbal_request('POST', '/admin/credentials', {'username': row['username'], 'password': new_password})
+
     return jsonify({'ok': True})
 
 

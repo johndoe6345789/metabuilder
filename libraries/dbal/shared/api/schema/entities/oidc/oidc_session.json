@@ -1,0 +1,73 @@
+{
+  "entity": "OidcSession",
+  "version": "1.0",
+  "description": "The OIDC provider's own authentication-session record (its id is the token 'sid' claim). Distinct from the generic Session entity, which belongs to unrelated first-party login flows (e.g. pastebin's own cookie session) — kept separate so no protocol's session semantics leak into another's. System-managed — never reachable through the generic entity API.",
+  "fields": {
+    "id": {
+      "type": "string",
+      "primary": true,
+      "generated": true,
+      "description": "This is the OIDC 'sid' claim value"
+    },
+    "userId": {
+      "type": "string",
+      "required": true,
+      "foreign_key": {
+        "entity": "User",
+        "field": "id",
+        "on_delete": "cascade"
+      }
+    },
+    "tenantId": {
+      "type": "string",
+      "required": true
+    },
+    "clientId": {
+      "type": "string",
+      "required": true
+    },
+    "authTime": {
+      "type": "bigint",
+      "required": true,
+      "description": "For the 'auth_time' claim / future max_age support"
+    },
+    "revokedAt": {
+      "type": "bigint",
+      "nullable": true,
+      "description": "Set by /oidc/logout"
+    },
+    "expiresAt": {
+      "type": "bigint",
+      "required": true,
+      "description": "Absolute session ceiling, independent of individual refresh-token TTLs"
+    },
+    "createdAt": {
+      "type": "bigint",
+      "optional": true,
+      "nullable": true
+    }
+  },
+  "indexes": [
+    {
+      "fields": ["userId"]
+    },
+    {
+      "fields": ["expiresAt"]
+    }
+  ],
+  "relations": {
+    "user": {
+      "type": "belongs-to",
+      "entity": "User",
+      "foreign_key": "userId",
+      "on_delete": "cascade",
+      "description": "User this OIDC session belongs to"
+    }
+  },
+  "acl": {
+    "create": { "system": true },
+    "read": { "system": true },
+    "update": { "system": true },
+    "delete": { "system": true }
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "entity": "RefreshToken",
+  "version": "1.0",
+  "description": "Rotating OAuth2 refresh tokens with family-based reuse detection: replaying an already-rotated token revokes every token sharing its familyId. System-managed — never reachable through the generic entity API.",
+  "fields": {
+    "id": {
+      "type": "string",
+      "primary": true,
+      "generated": true
+    },
+    "tokenHash": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "sensitive": true,
+      "description": "SHA-256 of the raw opaque refresh token"
+    },
+    "familyId": {
+      "type": "string",
+      "required": true,
+      "description": "Shared across a rotation chain — this is what lets reuse revoke the whole chain, not just one token"
+    },
+    "clientId": {
+      "type": "string",
+      "required": true
+    },
+    "userId": {
+      "type": "string",
+      "required": true,
+      "foreign_key": {
+        "entity": "User",
+        "field": "id",
+        "on_delete": "cascade"
+      }
+    },
+    "tenantId": {
+      "type": "string",
+      "required": true
+    },
+    "scope": {
+      "type": "string",
+      "required": true,
+      "description": "Never exceeds the scope of the original grant, even across rotations"
+    },
+    "parentId": {
+      "type": "string",
+      "nullable": true,
+      "description": "Previous token id in the rotation chain, for audit"
+    },
+    "revokedAt": {
+      "type": "bigint",
+      "nullable": true,
+      "description": "Set on rotation-consumption or explicit revoke; a non-null value being presented again is the reuse-detection trigger"
+    },
+    "expiresAt": {
+      "type": "bigint",
+      "required": true
+    },
+    "createdAt": {
+      "type": "bigint",
+      "optional": true,
+      "nullable": true
+    }
+  },
+  "indexes": [
+    {
+      "fields": ["tokenHash"],
+      "unique": true
+    },
+    {
+      "fields": ["familyId"]
+    },
+    {
+      "fields": ["userId"]
+    }
+  ],
+  "relations": {
+    "user": {
+      "type": "belongs-to",
+      "entity": "User",
+      "foreign_key": "userId",
+      "on_delete": "cascade",
+      "description": "User this refresh token was issued to"
+    }
+  },
+  "acl": {
+    "create": { "system": true },
+    "read": { "system": true },
+    "update": { "system": true },
+    "delete": { "system": true }
+  }
+}

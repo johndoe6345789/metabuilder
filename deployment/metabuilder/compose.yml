@@ -282,6 +282,8 @@ services:
     container_name: metabuilder-dbal-init
     volumes:
       - dbal-schemas:/target/schemas/entities
+      - dbal-oidc-config:/target/schemas/oidc
+      - dbal-saml-config:/target/schemas/saml
       - dbal-templates:/target/templates/sql
     networks:
       - metabuilder
@@ -326,11 +328,23 @@ services:
       DBAL_CORS_ORIGIN: ${DBAL_CORS_ORIGIN:-*}
       # JWT entity auth — must match JWT_SECRET_KEY used by pastebin-backend Flask app
       JWT_SECRET_KEY: "${JWT_SECRET_KEY:-changeme-in-production}"
+      # OIDC provider — issuer must match the public URL this daemon is reachable at
+      DBAL_OIDC_ISSUER: "${DBAL_OIDC_ISSUER:-http://wardcrew.com:8900/dbal}"
+      DBAL_OIDC_CLIENTS_CONFIG: /app/schemas/oidc/clients.json
+      DBAL_OIDC_PRIVATE_KEY_PATH: /app/keys/oidc_signing_key.pem
+      # SAML IdP — shares the OIDC signing key by default (see server_routes.cpp)
+      DBAL_SAML_ISSUER: "${DBAL_SAML_ISSUER:-http://wardcrew.com:8900/dbal}"
+      DBAL_SAML_SP_REGISTRY: /app/schemas/saml/sp_registry.json
+      # CAS protocol — no config file needed, carries no message-level crypto
+      DBAL_CAS_ENABLED: "${DBAL_CAS_ENABLED:-true}"
       # Blob storage — powers media service and package repo
       DBAL_BLOB_BACKEND: ${DBAL_BLOB_BACKEND:-filesystem}
       DBAL_BLOB_ROOT: /app/data/blobs
     volumes:
       - dbal-schemas:/app/schemas/entities:ro
+      - dbal-oidc-config:/app/schemas/oidc:ro
+      - dbal-saml-config:/app/schemas/saml:ro
+      - dbal-oidc-keys:/app/keys
       - dbal-templates:/app/templates/sql:ro
       - dbal-logs:/var/log/dbal
       - dbal-blobs:/app/data/blobs
@@ -548,6 +562,12 @@ services:
     build:
       context: ../..
       dockerfile: frontends/pastebin/Dockerfile
+      args:
+        # Browser-reachable DBAL origin — must match wherever DBAL's OIDC
+        # endpoints are actually exposed to the outside world, not the
+        # in-network "dbal:8080" hostname other services use.
+        NEXT_PUBLIC_DBAL_OIDC_BASE_URL: "${NEXT_PUBLIC_DBAL_OIDC_BASE_URL:-http://wardcrew.com:8900/dbal}"
+        NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID: pastebin-web
     container_name: metabuilder-pastebin
     restart: unless-stopped
     environment:
@@ -596,6 +616,12 @@ services:
       DBAL_BASE_URL: "http://dbal:8080"
       DBAL_TENANT_ID: "pastebin"
       DBAL_ADMIN_TOKEN: "069e6487a710300381cd52120eab95d56d7f53beee21479cbeba9128217cbea9"
+      # Must match the `dbal` service's DBAL_OIDC_ISSUER (the public-facing
+      # value baked into every token's `iss` claim) — deliberately NOT
+      # DBAL_BASE_URL, which is the internal-network address used to fetch
+      # the JWKS itself (see DBAL_OIDC_JWKS_URL's default in app.py).
+      DBAL_OIDC_ISSUER: "${DBAL_OIDC_ISSUER:-http://wardcrew.com:8900/dbal}"
+      DBAL_OIDC_CLIENT_ID: pastebin-web
     volumes:
       - pastebin-backend-data:/app/data
       - /var/run/docker.sock:/var/run/docker.sock
@@ -1424,6 +1450,16 @@ volumes:
   mongodb-data:
     driver: local
   dbal-schemas:
+    driver: local
+  dbal-oidc-config:
+    driver: local
+  dbal-saml-config:
+    driver: local
+  # RSA signing key — a real stateful secret, not regenerable config. Losing
+  # this volume silently invalidates every outstanding OIDC token (see
+  # RsaKeypair's boot-time log warning). Back this volume up like any other
+  # credential store.
+  dbal-oidc-keys:
     driver: local
   dbal-templates:
     driver: local

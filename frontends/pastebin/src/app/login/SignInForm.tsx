@@ -26,19 +26,40 @@ export function SignInForm({
   onForgotUsernameChange,
   onForgotEmailChange,
   onSwitchRegister,
+  onSsoLogin,
+  ssoError,
 }: SignInFormProps) {
   return (
     <>
       <div>
         <h1 className={styles.formTitle}>Log In</h1>
-        <p className={styles.formSub}>Enter your credentials to continue.</p>
+        <p className={styles.formSub}>Sign in with your account.</p>
       </div>
+
+      {ssoError && (
+        <div className={styles.error} role="alert">
+          {ssoError}
+        </div>
+      )}
+
+      <button
+        type="button"
+        className={styles.btn}
+        data-testid="login-sso"
+        onClick={onSsoLogin}
+      >
+        Continue with SSO
+      </button>
+
+      <div className={styles.divider} />
 
       {displayError && (
         <div className={styles.error} data-testid="login-error" role="alert">
           {displayError}
         </div>
       )}
+
+      <p className={styles.formSub}>Or sign in with a local password:</p>
 
       <form
         onSubmit={onSubmit}

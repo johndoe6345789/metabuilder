@@ -20,6 +20,16 @@ struct JwtClaims {
     std::string user_id;    ///< "sub" field — owner UUID
     std::string username;   ///< "username" field
     long long   exp = 0;    ///< Unix timestamp expiry (0 = no expiry check)
+
+    // Additive-optional: populated by RsJwtValidator (DBAL-issued RS256
+    // tokens), left empty by the original HS256 (Flask) path. Callers that
+    // cross-check tenant_id must fall back to URL-only trust when it's
+    // empty — see server_routes.cpp's tenant cross-check for why the
+    // fallback exists and must not be tightened into a hard-require.
+    std::string tenant_id;
+    std::string scope;
+    std::string aud;
+    std::string iss;
 };
 
 /**

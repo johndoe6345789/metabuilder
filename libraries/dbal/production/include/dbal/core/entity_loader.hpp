@@ -19,6 +19,7 @@ struct EntityField {
     bool generated = false;
     bool nullable = false;
     bool index = false;
+    bool sensitive = false;
     std::optional<std::string> defaultValue;
     std::optional<std::string> references;
     std::optional<int> minLength;

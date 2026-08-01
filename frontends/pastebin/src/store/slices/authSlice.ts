@@ -4,17 +4,19 @@ import {
   loginUser,
   registerUser,
   validateToken,
+  completeOidcLogin,
   onFulfilled,
   isTokenValid,
 } from './authThunks'
 import type { AuthUser, AuthState } from './authThunks'
 
-export { loginUser, registerUser, validateToken }
+export { loginUser, registerUser, validateToken, completeOidcLogin }
 export type { AuthUser }
 
 const initialState: AuthState = {
   user: null,
   token: null,
+  refreshToken: null,
   isAuthenticated: false,
   loading: false,
   error: null,
@@ -36,6 +38,7 @@ const authSlice = createSlice({
     logout(state) {
       state.user = null
       state.token = null
+      state.refreshToken = null
       state.isAuthenticated = false
       state.error = null
       setAuthToken(null)
@@ -55,6 +58,9 @@ const authSlice = createSlice({
       .addCase(registerUser.pending, onPending)
       .addCase(registerUser.fulfilled, onFulfilled)
       .addCase(registerUser.rejected, onRejected)
+      .addCase(completeOidcLogin.pending, onPending)
+      .addCase(completeOidcLogin.fulfilled, onFulfilled)
+      .addCase(completeOidcLogin.rejected, onRejected)
       .addCase(validateToken.fulfilled, (state, action) => {
         state.user = action.payload.user
         state.token = action.payload.token

@@ -63,6 +63,33 @@ Result<Json> SqlAdapter::read(const std::string& entityName, const std::string& 
     }
 }
 
+Result<Json> SqlAdapter::readIncludingSensitive(const std::string& entityName, const std::string& id) {
+    auto schemaResult = getEntitySchemaInternal(entityName);
+    if (!schemaResult) {
+        return Error::validationError("Unknown entity: " + entityName);
+    }
+    const auto& schema = *schemaResult;
+
+    auto conn = pool_.acquire();
+    if (!conn) {
+        return Error::internal("Unable to acquire SQL connection");
+    }
+    ConnectionGuard guard(pool_, conn);
+
+    const std::string sql = buildSelectSql(schema, Json{{"id", id}});
+    const std::vector<SqlParam> params = {{"id", id}};
+
+    try {
+        const auto rows = executeQuery(conn, sql, params);
+        if (rows.empty()) {
+            return Error::notFound(entityName + " not found");
+        }
+        return rowToJson(schema, rows.front(), /*includeSensitive=*/true);
+    } catch (const SqlError& err) {
+        return mapSqlError(err);
+    }
+}
+
 Result<Json> SqlAdapter::update(const std::string& entityName, const std::string& id, const Json& data) {
     auto schemaResult = getEntitySchemaInternal(entityName);
     if (!schemaResult) {

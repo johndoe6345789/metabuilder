@@ -45,6 +45,7 @@ void SqlAdapter::loadSchemas() {
             ef.minLength    = field.min_length;
             ef.maxLength    = field.max_length;
             ef.pattern      = field.pattern;
+            ef.sensitive    = field.sensitive;
             schema.fields.push_back(ef);
         }
 

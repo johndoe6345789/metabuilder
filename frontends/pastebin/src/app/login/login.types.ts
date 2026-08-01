@@ -24,6 +24,8 @@ export interface SignInFormProps {
   onForgotUsernameChange: (v: string) => void
   onForgotEmailChange: (v: string) => void
   onSwitchRegister: () => void
+  onSsoLogin: () => void
+  ssoError: string
 }
 
 export interface RegisterFormProps {

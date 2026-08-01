@@ -9,17 +9,26 @@
 #include "handlers/entity_route_handler.hpp"
 #include "handlers/query_route_handler.hpp"
 #include "security/jwt/jwt_validator.hpp"
+#include "security/jwt/multi_alg_jwt_validator.hpp"
+#include "security/crypto/timing_safe_equal.hpp"
 #include "auth/auth_config.hpp"
 #include "handlers/blob_route_handler.hpp"
 #include "handlers/rpc_route_handler.hpp"
 #include "handlers/schema_route_handler.hpp"
 #include "handlers/admin_route_handler.hpp"
+#include "handlers/admin/credential_admin_route_handler.hpp"
 #include "handlers/seed_route_handler.hpp"
 #include "actions/seed_loader_action.hpp"
 #include "handlers/batch_route_handler.hpp"
 #include "handlers/entity_route_handler_helpers.hpp"
 #include "bulk_handler.hpp"
 #include "rpc_restful_handler.hpp"
+#include "handlers/oidc/oidc_route_handler.hpp"
+#include "handlers/oidc/login_route_handler.hpp"
+#include "handlers/saml/saml_route_handler.hpp"
+#include "handlers/saml/saml_login_route_handler.hpp"
+#include "handlers/cas/cas_route_handler.hpp"
+#include "handlers/cas/cas_login_route_handler.hpp"
 
 // Blob storage backends
 #include "../blob/memory_storage.hpp"
@@ -54,6 +63,19 @@ namespace {
             return comma == std::string::npos ? xff : xff.substr(0, comma);
         }
         return req->getPeerAddr().toIp();
+    }
+
+    // Maps an HTTP method to the schema.acl operation it corresponds to,
+    // for SchemaAclRegistry::isSystemOnly() checks.
+    const char* acl_operation_for_method(drogon::HttpMethod method) {
+        switch (method) {
+            case drogon::HttpMethod::Post:   return "create";
+            case drogon::HttpMethod::Get:    return "read";
+            case drogon::HttpMethod::Put:
+            case drogon::HttpMethod::Patch:  return "update";
+            case drogon::HttpMethod::Delete: return "delete";
+            default:                         return "read";
+        }
     }
 
     struct RateLimitEntry {
@@ -119,6 +141,87 @@ void Server::registerRoutes() {
             auth_config_ = dbal::auth::AuthConfig::load(auth_cfg_path);
         } else {
             auth_config_ = dbal::auth::AuthConfig::loadDefault();
+        }
+
+        const char* schema_dir = std::getenv("DBAL_SCHEMA_DIR");
+        if (schema_dir && std::filesystem::exists(schema_dir)) {
+            schema_acl_registry_.emplace(schema_dir);
+        } else {
+            spdlog::warn("[schema-acl] DBAL_SCHEMA_DIR not set/found — "
+                         "schema.acl.system enforcement is DISABLED");
+        }
+    }
+
+    // Initialize the OIDC provider — requires dbal_client_, so ensureClient()
+    // must run first (dbal_client_ is null during route registration
+    // otherwise; same gotcha as SeedLoaderAction).
+    {
+        const char* issuer = std::getenv("DBAL_OIDC_ISSUER");
+        if (!issuer || std::strlen(issuer) == 0) {
+            spdlog::warn("[oidc] DBAL_OIDC_ISSUER not set — OIDC provider is DISABLED");
+        } else if (!ensureClient()) {
+            spdlog::error("[oidc] dbal_client_ unavailable — OIDC provider is DISABLED");
+        } else {
+            try {
+                std::string clientsPath = std::getenv("DBAL_OIDC_CLIENTS_CONFIG")
+                    ? std::getenv("DBAL_OIDC_CLIENTS_CONFIG") : "/app/schemas/oidc/clients.json";
+                std::string keyPath = std::getenv("DBAL_OIDC_PRIVATE_KEY_PATH")
+                    ? std::getenv("DBAL_OIDC_PRIVATE_KEY_PATH") : "/app/keys/oidc_signing_key.pem";
+
+                auto clientConfig = dbal::oidc::clients::OAuthClientConfig::load(clientsPath);
+                dbal::oidc::crypto::RsaKeypair keypair(keyPath);
+                oidc_service_.emplace(*dbal_client_, std::move(clientConfig),
+                                       std::move(keypair), std::string(issuer));
+                spdlog::info("[oidc] OIDC provider initialized, issuer={}", issuer);
+            } catch (const std::exception& e) {
+                spdlog::error("[oidc] Failed to initialize OIDC provider: {} — OIDC provider is DISABLED", e.what());
+            }
+        }
+    }
+
+    // Initialize the SAML IdP — same ensureClient()-first requirement as
+    // OIDC above. Independent of OIDC being enabled: it loads its own
+    // RsaKeypair instance (defaulting to the SAME key file as OIDC, since
+    // both are meant to share one signing key — see server.hpp comment).
+    {
+        const char* issuer = std::getenv("DBAL_SAML_ISSUER");
+        if (!issuer || std::strlen(issuer) == 0) {
+            spdlog::warn("[saml] DBAL_SAML_ISSUER not set — SAML IdP is DISABLED");
+        } else if (!ensureClient()) {
+            spdlog::error("[saml] dbal_client_ unavailable — SAML IdP is DISABLED");
+        } else {
+            try {
+                std::string spRegistryPath = std::getenv("DBAL_SAML_SP_REGISTRY")
+                    ? std::getenv("DBAL_SAML_SP_REGISTRY") : "/app/schemas/saml/sp_registry.json";
+                std::string keyPath = std::getenv("DBAL_SAML_PRIVATE_KEY_PATH")
+                    ? std::getenv("DBAL_SAML_PRIVATE_KEY_PATH")
+                    : (std::getenv("DBAL_OIDC_PRIVATE_KEY_PATH")
+                           ? std::getenv("DBAL_OIDC_PRIVATE_KEY_PATH") : "/app/keys/oidc_signing_key.pem");
+
+                auto spRegistry = dbal::saml::metadata::SpRegistry::load(spRegistryPath);
+                dbal::oidc::crypto::RsaKeypair keypair(keyPath);
+                saml_service_.emplace(*dbal_client_, std::move(spRegistry),
+                                       std::move(keypair), std::string(issuer));
+                spdlog::info("[saml] SAML IdP initialized, issuer={}", issuer);
+            } catch (const std::exception& e) {
+                spdlog::error("[saml] Failed to initialize SAML IdP: {} — SAML IdP is DISABLED", e.what());
+            }
+        }
+    }
+
+    // Initialize the CAS protocol handler — no config file or crypto key
+    // needed (CAS carries no message-level cryptography of its own), just
+    // dbal_client_, so the only gate is the enable flag + ensureClient().
+    {
+        const char* enabled = std::getenv("DBAL_CAS_ENABLED");
+        bool casEnabled = enabled && (std::string(enabled) == "true" || std::string(enabled) == "1");
+        if (!casEnabled) {
+            spdlog::warn("[cas] DBAL_CAS_ENABLED not set — CAS protocol is DISABLED");
+        } else if (!ensureClient()) {
+            spdlog::error("[cas] dbal_client_ unavailable — CAS protocol is DISABLED");
+        } else {
+            cas_service_.emplace(*dbal_client_);
+            spdlog::info("[cas] CAS protocol initialized");
         }
     }
 
@@ -335,6 +438,34 @@ void Server::registerRoutes() {
             }
             auto seed_handler = std::make_shared<handlers::SeedRouteHandler>(*dbal_client_);
             seed_handler->handleSeed(req, std::move(callback));
+        },
+        {drogon::HttpMethod::Post, drogon::HttpMethod::Options}
+    );
+
+    // POST /admin/credentials — set/reset a Credential's password.
+    // Admin-token gated; the only legitimate way an external caller can
+    // ever write a Credential row (see credential_admin_route_handler.hpp).
+    drogon::app().registerHandler(
+        "/admin/credentials",
+        [this](const drogon::HttpRequestPtr& req, DrogonCallback&& callback) {
+            auto client_key = rate_limit_key(req);
+            if (!admin_limiter.allow(client_key)) {
+                auto resp = drogon::HttpResponse::newHttpResponse();
+                resp->setStatusCode(drogon::k429TooManyRequests);
+                callback(resp);
+                return;
+            }
+            if (!ensureClient()) {
+                ::Json::Value body;
+                body["success"] = false;
+                body["error"] = "DBAL client is unavailable";
+                auto response = drogon::HttpResponse::newHttpJsonResponse(body);
+                response->setStatusCode(drogon::HttpStatusCode::k503ServiceUnavailable);
+                callback(response);
+                return;
+            }
+            auto cred_admin_handler = std::make_shared<handlers::admin::CredentialAdminRouteHandler>(*dbal_client_);
+            cred_admin_handler->handleSetCredential(req, std::move(callback));
         },
         {drogon::HttpMethod::Post, drogon::HttpMethod::Options}
     );
@@ -772,6 +903,16 @@ void Server::registerRoutes() {
                 cb(response);
                 return;
             }
+            // System-managed entities (schema.acl.<op>.system == true) are never
+            // reachable over HTTP, even with the admin token — unconditional.
+            if (schema_acl_registry_ &&
+                schema_acl_registry_->isSystemOnly(entity, acl_operation_for_method(req->method()))) {
+                ::Json::Value body; body["success"] = false;
+                body["error"] = "This entity is system-managed and not reachable via the API";
+                auto resp = drogon::HttpResponse::newHttpJsonResponse(body);
+                resp->setStatusCode(drogon::k403Forbidden);
+                cb(resp); return;
+            }
             // JWT auth + ownership context
             std::optional<handlers::AuthContext> auth_ctx;
             auto entity_cfg = auth_config_.getEntityConfig(tenant, entity);
@@ -780,22 +921,36 @@ void Server::registerRoutes() {
                 const char* admin_tok = std::getenv("DBAL_ADMIN_TOKEN");
                 if (admin_tok && std::strlen(admin_tok) > 0) {
                     auto auth_hdr = req->getHeader("Authorization");
-                    if (auth_hdr == std::string("Bearer ") + admin_tok) is_admin = true;
+                    if (dbal::security::timing_safe_equal(auth_hdr, std::string("Bearer ") + admin_tok)) is_admin = true;
                 }
                 if (!is_admin) {
-                    if (jwt_secret_.empty()) {
+                    std::string rs256_pubkey = oidc_service_ ? oidc_service_->keypair().publicKeyPem() : std::string();
+                    std::string rs256_issuer = oidc_service_ ? oidc_service_->issuer() : std::string();
+                    if (jwt_secret_.empty() && rs256_pubkey.empty()) {
                         ::Json::Value body; body["success"] = false;
                         body["error"] = "Auth not configured (JWT_SECRET_KEY not set)";
                         auto resp = drogon::HttpResponse::newHttpJsonResponse(body);
                         resp->setStatusCode(drogon::k503ServiceUnavailable);
                         cb(resp); return;
                     }
-                    auto claims = dbal::security::JwtValidator::fromRequest(req, jwt_secret_);
+                    auto claims = dbal::security::MultiAlgJwtValidator::fromRequest(
+                        req, jwt_secret_, rs256_pubkey, rs256_issuer);
                     if (!claims) {
                         ::Json::Value body; body["success"] = false;
                         body["error"] = "Unauthorized";
                         auto resp = drogon::HttpResponse::newHttpJsonResponse(body);
                         resp->setStatusCode(drogon::k401Unauthorized);
+                        cb(resp); return;
+                    }
+                    // tenant_id (RS256 tokens only) is cross-checked against the URL
+                    // path tenant. HS256 (legacy Flask) tokens carry no tenant_id and
+                    // fall back to today's URL-only trust — deliberate, not a gap;
+                    // don't tighten this into a hard-require, it would break Flask compat.
+                    if (!claims->tenant_id.empty() && claims->tenant_id != tenant) {
+                        ::Json::Value body; body["success"] = false;
+                        body["error"] = "Token tenant does not match request tenant";
+                        auto resp = drogon::HttpResponse::newHttpJsonResponse(body);
+                        resp->setStatusCode(drogon::k403Forbidden);
                         cb(resp); return;
                     }
                     handlers::AuthContext ctx;
@@ -850,6 +1005,14 @@ void Server::registerRoutes() {
                 response->setStatusCode(drogon::HttpStatusCode::k503ServiceUnavailable);
                 cb(response); return;
             }
+            if (schema_acl_registry_ &&
+                schema_acl_registry_->isSystemOnly(entity, acl_operation_for_method(req->method()))) {
+                ::Json::Value body; body["success"] = false;
+                body["error"] = "This entity is system-managed and not reachable via the API";
+                auto resp = drogon::HttpResponse::newHttpJsonResponse(body);
+                resp->setStatusCode(drogon::k403Forbidden);
+                cb(resp); return;
+            }
             std::optional<handlers::AuthContext> auth_ctx;
             auto entity_cfg = auth_config_.getEntityConfig(tenant, entity);
             if (entity_cfg.require_auth) {
@@ -857,22 +1020,36 @@ void Server::registerRoutes() {
                 const char* admin_tok = std::getenv("DBAL_ADMIN_TOKEN");
                 if (admin_tok && std::strlen(admin_tok) > 0) {
                     auto auth_hdr = req->getHeader("Authorization");
-                    if (auth_hdr == std::string("Bearer ") + admin_tok) is_admin = true;
+                    if (dbal::security::timing_safe_equal(auth_hdr, std::string("Bearer ") + admin_tok)) is_admin = true;
                 }
                 if (!is_admin) {
-                    if (jwt_secret_.empty()) {
+                    std::string rs256_pubkey = oidc_service_ ? oidc_service_->keypair().publicKeyPem() : std::string();
+                    std::string rs256_issuer = oidc_service_ ? oidc_service_->issuer() : std::string();
+                    if (jwt_secret_.empty() && rs256_pubkey.empty()) {
                         ::Json::Value body; body["success"] = false;
                         body["error"] = "Auth not configured (JWT_SECRET_KEY not set)";
                         auto resp = drogon::HttpResponse::newHttpJsonResponse(body);
                         resp->setStatusCode(drogon::k503ServiceUnavailable);
                         cb(resp); return;
                     }
-                    auto claims = dbal::security::JwtValidator::fromRequest(req, jwt_secret_);
+                    auto claims = dbal::security::MultiAlgJwtValidator::fromRequest(
+                        req, jwt_secret_, rs256_pubkey, rs256_issuer);
                     if (!claims) {
                         ::Json::Value body; body["success"] = false;
                         body["error"] = "Unauthorized";
                         auto resp = drogon::HttpResponse::newHttpJsonResponse(body);
                         resp->setStatusCode(drogon::k401Unauthorized);
+                        cb(resp); return;
+                    }
+                    // tenant_id (RS256 tokens only) is cross-checked against the URL
+                    // path tenant. HS256 (legacy Flask) tokens carry no tenant_id and
+                    // fall back to today's URL-only trust — deliberate, not a gap;
+                    // don't tighten this into a hard-require, it would break Flask compat.
+                    if (!claims->tenant_id.empty() && claims->tenant_id != tenant) {
+                        ::Json::Value body; body["success"] = false;
+                        body["error"] = "Token tenant does not match request tenant";
+                        auto resp = drogon::HttpResponse::newHttpJsonResponse(body);
+                        resp->setStatusCode(drogon::k403Forbidden);
                         cb(resp); return;
                     }
                     handlers::AuthContext ctx;
@@ -929,6 +1106,14 @@ void Server::registerRoutes() {
                 response->setStatusCode(drogon::HttpStatusCode::k503ServiceUnavailable);
                 cb(response); return;
             }
+            if (schema_acl_registry_ &&
+                schema_acl_registry_->isSystemOnly(entity, acl_operation_for_method(req->method()))) {
+                ::Json::Value body; body["success"] = false;
+                body["error"] = "This entity is system-managed and not reachable via the API";
+                auto resp = drogon::HttpResponse::newHttpJsonResponse(body);
+                resp->setStatusCode(drogon::k403Forbidden);
+                cb(resp); return;
+            }
             // Actions inherit the entity's require_auth but not ownership semantics
             auto entity_cfg = auth_config_.getEntityConfig(tenant, entity);
             if (entity_cfg.require_auth) {
@@ -936,22 +1121,32 @@ void Server::registerRoutes() {
                 const char* admin_tok = std::getenv("DBAL_ADMIN_TOKEN");
                 if (admin_tok && std::strlen(admin_tok) > 0) {
                     auto auth_hdr = req->getHeader("Authorization");
-                    if (auth_hdr == std::string("Bearer ") + admin_tok) is_admin = true;
+                    if (dbal::security::timing_safe_equal(auth_hdr, std::string("Bearer ") + admin_tok)) is_admin = true;
                 }
                 if (!is_admin) {
-                    if (jwt_secret_.empty()) {
+                    std::string rs256_pubkey = oidc_service_ ? oidc_service_->keypair().publicKeyPem() : std::string();
+                    std::string rs256_issuer = oidc_service_ ? oidc_service_->issuer() : std::string();
+                    if (jwt_secret_.empty() && rs256_pubkey.empty()) {
                         ::Json::Value body; body["success"] = false;
                         body["error"] = "Auth not configured (JWT_SECRET_KEY not set)";
                         auto resp = drogon::HttpResponse::newHttpJsonResponse(body);
                         resp->setStatusCode(drogon::k503ServiceUnavailable);
                         cb(resp); return;
                     }
-                    auto claims = dbal::security::JwtValidator::fromRequest(req, jwt_secret_);
+                    auto claims = dbal::security::MultiAlgJwtValidator::fromRequest(
+                        req, jwt_secret_, rs256_pubkey, rs256_issuer);
                     if (!claims) {
                         ::Json::Value body; body["success"] = false;
                         body["error"] = "Unauthorized";
                         auto resp = drogon::HttpResponse::newHttpJsonResponse(body);
                         resp->setStatusCode(drogon::k401Unauthorized);
+                        cb(resp); return;
+                    }
+                    if (!claims->tenant_id.empty() && claims->tenant_id != tenant) {
+                        ::Json::Value body; body["success"] = false;
+                        body["error"] = "Token tenant does not match request tenant";
+                        auto resp = drogon::HttpResponse::newHttpJsonResponse(body);
+                        resp->setStatusCode(drogon::k403Forbidden);
                         cb(resp); return;
                     }
                 }
@@ -961,6 +1156,127 @@ void Server::registerRoutes() {
         },
         {drogon::HttpMethod::Get, drogon::HttpMethod::Post, drogon::HttpMethod::Options}
     );
+
+    // ===== OIDC provider routes (no-op if oidc_service_ failed to initialize) =====
+    if (oidc_service_) {
+        auto oidc_handler = std::make_shared<handlers::oidc::OidcRouteHandler>(
+            *oidc_service_, oidc_pending_store_);
+        auto login_handler = std::make_shared<handlers::oidc::LoginRouteHandler>(
+            *dbal_client_, *oidc_service_, oidc_pending_store_);
+
+        drogon::app().registerHandler(
+            "/.well-known/openid-configuration",
+            [oidc_handler](const drogon::HttpRequestPtr& req, DrogonCallback&& cb) {
+                oidc_handler->handleDiscovery(req, std::move(cb));
+            },
+            {drogon::HttpMethod::Get}
+        );
+
+        drogon::app().registerHandler(
+            "/oidc/jwks.json",
+            [oidc_handler](const drogon::HttpRequestPtr& req, DrogonCallback&& cb) {
+                oidc_handler->handleJwks(req, std::move(cb));
+            },
+            {drogon::HttpMethod::Get}
+        );
+
+        drogon::app().registerHandler(
+            "/oidc/authorize",
+            [oidc_handler](const drogon::HttpRequestPtr& req, DrogonCallback&& cb) {
+                oidc_handler->handleAuthorize(req, std::move(cb));
+            },
+            {drogon::HttpMethod::Get}
+        );
+
+        drogon::app().registerHandler(
+            "/oidc/token",
+            [oidc_handler](const drogon::HttpRequestPtr& req, DrogonCallback&& cb) {
+                oidc_handler->handleToken(req, std::move(cb));
+            },
+            {drogon::HttpMethod::Post}
+        );
+
+        drogon::app().registerHandler(
+            "/oidc/login",
+            [login_handler](const drogon::HttpRequestPtr& req, DrogonCallback&& cb) {
+                if (req->method() == drogon::HttpMethod::Post) {
+                    login_handler->handlePost(req, std::move(cb));
+                } else {
+                    login_handler->handleGet(req, std::move(cb));
+                }
+            },
+            {drogon::HttpMethod::Get, drogon::HttpMethod::Post}
+        );
+
+        spdlog::info("[oidc] Routes registered: /.well-known/openid-configuration, "
+                     "/oidc/{{jwks.json,authorize,token,login}}");
+    }
+
+    // ===== SAML IdP routes (no-op if saml_service_ failed to initialize) =====
+    if (saml_service_) {
+        auto saml_handler = std::make_shared<handlers::saml::SamlRouteHandler>(*saml_service_);
+        auto saml_login_handler = std::make_shared<handlers::saml::SamlLoginRouteHandler>(
+            *dbal_client_, *saml_service_);
+
+        drogon::app().registerHandler(
+            "/saml/metadata",
+            [saml_handler](const drogon::HttpRequestPtr& req, DrogonCallback&& cb) {
+                saml_handler->handleMetadata(req, std::move(cb));
+            },
+            {drogon::HttpMethod::Get}
+        );
+
+        drogon::app().registerHandler(
+            "/saml/sso",
+            [saml_handler](const drogon::HttpRequestPtr& req, DrogonCallback&& cb) {
+                saml_handler->handleSso(req, std::move(cb));
+            },
+            {drogon::HttpMethod::Get}
+        );
+
+        drogon::app().registerHandler(
+            "/saml/login",
+            [saml_login_handler](const drogon::HttpRequestPtr& req, DrogonCallback&& cb) {
+                if (req->method() == drogon::HttpMethod::Post) {
+                    saml_login_handler->handlePost(req, std::move(cb));
+                } else {
+                    saml_login_handler->handleGet(req, std::move(cb));
+                }
+            },
+            {drogon::HttpMethod::Get, drogon::HttpMethod::Post}
+        );
+
+        spdlog::info("[saml] Routes registered: /saml/{{metadata,sso,login}}");
+    }
+
+    // ===== CAS protocol routes (no-op if cas_service_ failed to initialize) =====
+    if (cas_service_) {
+        auto cas_handler = std::make_shared<handlers::cas::CasRouteHandler>(*cas_service_);
+        auto cas_login_handler = std::make_shared<handlers::cas::CasLoginRouteHandler>(
+            *dbal_client_, *cas_service_);
+
+        drogon::app().registerHandler(
+            "/cas/login",
+            [cas_login_handler](const drogon::HttpRequestPtr& req, DrogonCallback&& cb) {
+                if (req->method() == drogon::HttpMethod::Post) {
+                    cas_login_handler->handlePost(req, std::move(cb));
+                } else {
+                    cas_login_handler->handleGet(req, std::move(cb));
+                }
+            },
+            {drogon::HttpMethod::Get, drogon::HttpMethod::Post}
+        );
+
+        drogon::app().registerHandler(
+            "/cas/serviceValidate",
+            [cas_handler](const drogon::HttpRequestPtr& req, DrogonCallback&& cb) {
+                cas_handler->handleServiceValidate(req, std::move(cb));
+            },
+            {drogon::HttpMethod::Get}
+        );
+
+        spdlog::info("[cas] Routes registered: /cas/{{login,serviceValidate}}");
+    }
 
 }
 

@@ -1,0 +1,62 @@
+{
+  "entity": "CasTicket",
+  "version": "1.0",
+  "description": "CAS service/ticket-granting tickets — single-use, short TTL, same CSPRNG-hash-store pattern as OIDC's AuthorizationCode. System-managed — never reachable through the generic entity API.",
+  "fields": {
+    "id": {
+      "type": "string",
+      "primary": true,
+      "generated": true
+    },
+    "ticketHash": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "sensitive": true,
+      "description": "SHA-256 of the raw opaque ticket (ST-... or TGT-...)"
+    },
+    "ticketType": {
+      "type": "string",
+      "required": true,
+      "description": "\"ST\" (service ticket, single-use) or \"TGT\" (ticket-granting ticket, tracks the browser session)"
+    },
+    "userId": {
+      "type": "string",
+      "required": true
+    },
+    "tenantId": {
+      "type": "string",
+      "required": true
+    },
+    "service": {
+      "type": "string",
+      "required": true,
+      "description": "The service URL this ticket was issued for — re-checked exact-match at /cas/serviceValidate"
+    },
+    "consumedAt": {
+      "type": "bigint",
+      "nullable": true
+    },
+    "expiresAt": {
+      "type": "bigint",
+      "required": true
+    },
+    "createdAt": {
+      "type": "bigint",
+      "optional": true,
+      "nullable": true
+    }
+  },
+  "indexes": [
+    {
+      "fields": ["ticketHash"],
+      "unique": true
+    }
+  ],
+  "acl": {
+    "create": { "system": true },
+    "read": { "system": true },
+    "update": { "system": true },
+    "delete": { "system": true }
+  }
+}

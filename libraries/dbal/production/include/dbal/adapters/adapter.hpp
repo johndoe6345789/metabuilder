@@ -35,6 +35,9 @@ struct EntityField {
     std::optional<int> maxLength{};
     std::optional<std::string> pattern{};
     std::optional<std::vector<std::string>> enumValues{};
+    // "sensitive": true in the JSON schema — stripped from HTTP-facing
+    // responses by rowToJson() unless explicitly requested internally.
+    bool sensitive{false};
 };
 
 // Relation metadata (from entity JSON "relations" section)
@@ -83,6 +86,16 @@ public:
 
     virtual Result<Json> create(const std::string& entityName, const Json& data) = 0;
     virtual Result<Json> read(const std::string& entityName, const std::string& id) = 0;
+
+    // Internal-only variant of read() that includes schema.sensitive fields
+    // (passwordHash, token, ...) — NEVER call this from an HTTP-facing code
+    // path (see server_routes.cpp's schema.acl.system gate for how those
+    // entities are kept off the generic HTTP surface entirely). Default
+    // implementation just delegates to read() — safe no-op for adapters that
+    // don't distinguish sensitive fields; SqlAdapter overrides it.
+    virtual Result<Json> readIncludingSensitive(const std::string& entityName, const std::string& id) {
+        return read(entityName, id);
+    }
     virtual Result<Json> update(const std::string& entityName, const std::string& id, const Json& data) = 0;
     virtual Result<bool> remove(const std::string& entityName, const std::string& id) = 0;
     virtual Result<ListResult<Json>> list(const std::string& entityName, const ListOptions& options) = 0;

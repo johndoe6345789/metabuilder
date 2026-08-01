@@ -34,7 +34,8 @@ public:
      * Reads all columns and converts to appropriate JSON types
      * Uses schema to determine proper type conversions
      */
-    Json rowToJson(const core::EntitySchema& schema, sqlite3_stmt* stmt) const;
+    // includeSensitive defaults false — see SqlAdapter::rowToJson for rationale.
+    Json rowToJson(const core::EntitySchema& schema, sqlite3_stmt* stmt, bool includeSensitive = false) const;
 
     /**
      * Read all rows from SELECT statement

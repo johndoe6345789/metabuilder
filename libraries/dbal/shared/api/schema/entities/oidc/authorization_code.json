@@ -1,0 +1,101 @@
+{
+  "entity": "AuthorizationCode",
+  "version": "1.0",
+  "description": "Single-use OAuth2 authorization codes for the OIDC authorization_code grant (PKCE, S256 only). System-managed — never reachable through the generic entity API.",
+  "fields": {
+    "id": {
+      "type": "string",
+      "primary": true,
+      "generated": true
+    },
+    "codeHash": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "sensitive": true,
+      "description": "SHA-256 of the raw authorization code — the raw code is never stored"
+    },
+    "clientId": {
+      "type": "string",
+      "required": true,
+      "description": "OAuth client_id from clients.json"
+    },
+    "userId": {
+      "type": "string",
+      "required": true,
+      "foreign_key": {
+        "entity": "User",
+        "field": "id",
+        "on_delete": "cascade"
+      }
+    },
+    "tenantId": {
+      "type": "string",
+      "required": true,
+      "description": "Tenant resolved at issuance time"
+    },
+    "redirectUri": {
+      "type": "string",
+      "required": true,
+      "description": "Exact redirect_uri from /authorize — re-checked byte-exact at /token"
+    },
+    "codeChallenge": {
+      "type": "string",
+      "required": true,
+      "description": "PKCE code_challenge from /authorize"
+    },
+    "codeChallengeMethod": {
+      "type": "string",
+      "required": true,
+      "description": "Always 'S256' — 'plain' is rejected at issuance"
+    },
+    "scope": {
+      "type": "string",
+      "required": true
+    },
+    "nonce": {
+      "type": "string",
+      "nullable": true,
+      "description": "OIDC nonce, echoed into the ID token if present"
+    },
+    "expiresAt": {
+      "type": "bigint",
+      "required": true,
+      "description": "Issuance + 60s — short-lived by design"
+    },
+    "consumedAt": {
+      "type": "bigint",
+      "nullable": true,
+      "description": "Set atomically on redemption; presence enforces single-use"
+    },
+    "createdAt": {
+      "type": "bigint",
+      "optional": true,
+      "nullable": true
+    }
+  },
+  "indexes": [
+    {
+      "fields": ["codeHash"],
+      "unique": true
+    },
+    {
+      "fields": ["expiresAt"]
+    }
+  ],
+  "relations": {
+    "user": {
+      "type": "belongs-to",
+      "entity": "User",
+      "foreign_key": "userId",
+      "on_delete": "cascade",
+      "description": "User this authorization code was issued to"
+    }
+  },
+  "acl": {
+    "create": { "system": true },
+    "read": { "system": true },
+    "update": { "system": true },
+    "delete": { "system": true }
+  }
+}

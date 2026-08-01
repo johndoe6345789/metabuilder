@@ -12,8 +12,13 @@
 #include <string>
 #include "dbal/core/client.hpp"
 #include "auth/auth_config.hpp"
+#include "core/schema_acl_registry.hpp"
 #include "security/jwt/jwt_validator.hpp"
 #include "workflow/wf_engine.hpp"
+#include "oidc/oidc_service.hpp"
+#include "handlers/oidc/pending_authorize_store.hpp"
+#include "saml/saml_service.hpp"
+#include "cas/cas_service.hpp"
 
 // Clang thread safety annotations
 #if defined(__clang__)
@@ -71,6 +76,19 @@ private:
     // JWT + auth config (set once in registerRoutes, read-only thereafter)
     std::string jwt_secret_;
     dbal::auth::AuthConfig auth_config_;
+
+    // Per-entity schema.acl.system enforcement (set once in registerRoutes)
+    std::optional<dbal::core::SchemaAclRegistry> schema_acl_registry_;
+
+    // OIDC provider (set once in registerRoutes; requires dbal_client_ to exist first)
+    std::optional<dbal::oidc::OidcService> oidc_service_;
+    dbal::daemon::handlers::oidc::PendingAuthorizeStore oidc_pending_store_;
+
+    // SAML 2.0 IdP (set once in registerRoutes; requires dbal_client_ to exist first)
+    std::optional<dbal::saml::SamlService> saml_service_;
+
+    // CAS protocol (set once in registerRoutes; requires dbal_client_ to exist first)
+    std::optional<dbal::cas::CasService> cas_service_;
 
     // Optional workflow engine — initialized from DBAL_EVENT_CONFIG
     std::optional<dbal::workflow::WfEngine> wf_engine_;

@@ -50,6 +50,8 @@ export default function LoginPage() {
                 onForgotUsernameChange={vm.setForgotUsername}
                 onForgotEmailChange={vm.setForgotEmail}
                 onSwitchRegister={() => vm.switchMode('register')}
+                onSsoLogin={vm.handleSsoLogin}
+                ssoError={vm.ssoError}
               />
             ) : (
               <RegisterForm

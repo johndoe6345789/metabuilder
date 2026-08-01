@@ -2,6 +2,7 @@ import { FormEvent, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { loginUser, registerUser, clearError } from '@/store/slices/authSlice'
+import { beginOidcLogin } from '@/store/slices/authThunks'
 import {
   selectIsAuthenticated,
   selectAuthLoading,
@@ -51,6 +52,16 @@ export function useLoginPage() {
     setShowConf(false)
     setForgot('closed')
     dispatch(clearError())
+  }
+
+  const [ssoError, setSsoError] = useState('')
+  const handleSsoLogin = async () => {
+    setSsoError('')
+    try {
+      await beginOidcLogin()
+    } catch {
+      setSsoError('Could not start sign-in — please try again')
+    }
   }
 
   const handleSignIn = async (e: FormEvent) => {
@@ -156,5 +167,7 @@ export function useLoginPage() {
     handleTurboLogin,
     turboError,
     clearTurboError: () => setTurboError(null),
+    handleSsoLogin,
+    ssoError,
   }
 }

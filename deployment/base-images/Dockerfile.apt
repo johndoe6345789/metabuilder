@@ -28,6 +28,10 @@ RUN for i in 1 2 3 4 5; do \
         clang-format-18 \
         lldb-18 \
         lld \
+        # Autotools — needed by ConanCenter's xmlsec recipe (DBAL SAML support)
+        libtool \
+        autoconf \
+        automake \
         \
         # ── Python ────────────────────────────────────────────────────────
         python3 \

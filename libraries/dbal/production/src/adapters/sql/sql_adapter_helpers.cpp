@@ -175,9 +175,12 @@ std::vector<SqlParam> SqlAdapter::jsonToParams(const EntitySchema& schema, const
     return params;
 }
 
-Json SqlAdapter::rowToJson(const EntitySchema& schema, const SqlRow& row) const {
+Json SqlAdapter::rowToJson(const EntitySchema& schema, const SqlRow& row, bool includeSensitive) const {
     Json result;
     for (const auto& field : schema.fields) {
+        if (field.sensitive && !includeSensitive) {
+            continue; // never emit sensitive fields (passwordHash, token, ...) to HTTP callers
+        }
         const std::string value = columnValue(row, field.name);
 
         if (field.type == "boolean") {

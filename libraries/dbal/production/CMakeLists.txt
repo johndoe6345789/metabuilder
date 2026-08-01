@@ -64,6 +64,14 @@ find_package(fmt REQUIRED)
 find_package(SQLite3 REQUIRED)
 find_package(inja REQUIRED)
 find_package(GTest REQUIRED)
+find_package(jwt-cpp REQUIRED)
+find_package(OpenSSL REQUIRED) # RSA/EVP for oidc/crypto — dbal_daemon already got this
+find_package(argon2 REQUIRED) # Argon2id password hashing for Credential
+find_package(xmlsec REQUIRED) # XML-DSig sign/verify for SAML
+find_package(LibXml2 REQUIRED) # SAML AuthnRequest/Response DOM construction
+find_package(ZLIB REQUIRED) # SAML HTTP-Redirect binding raw-DEFLATE decode
+                                # transitively via Drogon, but dbal_unit_tests doesn't
+                                # link Drogon, so it needs an explicit find here too.
 
 # System DB client libs — needed by daemon and integration tests, not unit tests
 if(BUILD_DAEMON OR BUILD_INTEGRATION_TESTS)
@@ -137,6 +145,12 @@ if(BUILD_DAEMON)
         Boost::boost
         PostgreSQL::PostgreSQL
         ${MYSQL_LIBRARIES}
+        jwt-cpp::jwt-cpp
+        OpenSSL::Crypto
+        argon2::argon2
+        xmlsec::xmlsec
+        LibXml2::LibXml2
+        ZLIB::ZLIB
     )
 
     install(TARGETS dbal_daemon DESTINATION bin)
@@ -155,6 +169,20 @@ if(BUILD_TESTING)
         tests/security/sql_injection_test.cpp
         tests/unit/query_procedures_test.cpp
         tests/unit/schema_loader_test.cpp
+        tests/security/oidc_rsa_keypair_test.cpp
+        tests/security/schema_acl_registry_test.cpp
+        tests/security/saml_xmldsig_test.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/oidc/crypto/rsa_keypair.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/saml/xmldsig/xmlsec_context.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/saml/xmldsig/signer.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/saml/xmldsig/verifier.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/core/schema_acl_registry.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/core/entity_loader.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/core/loaders/field_parser.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/core/loaders/relation_parser.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/core/loaders/schema_validator.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/core/loaders/json_parser.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/core/loaders/schema_cache.cpp
     )
 
     add_executable(dbal_unit_tests ${DBAL_UNIT_TEST_SOURCES})
@@ -177,6 +205,10 @@ if(BUILD_TESTING)
         spdlog::spdlog
         fmt::fmt
         SQLite::SQLite3
+        jwt-cpp::jwt-cpp
+        OpenSSL::Crypto
+        xmlsec::xmlsec
+        LibXml2::LibXml2
     )
 
     add_test(NAME dbal_unit_tests COMMAND dbal_unit_tests --gtest_output=xml:test_results.xml)

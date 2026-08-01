@@ -23,6 +23,7 @@ struct FieldDefinition {
     bool generated = false;
     bool optional = false;
     bool nullable = false;
+    bool sensitive = false;
     std::optional<std::string> default_value;
     std::optional<int> min_length;
     std::optional<int> max_length;
@@ -112,6 +113,7 @@ public:
                     field.generated = field_def.value("generated",  false);
                     field.optional  = field_def.value("optional",   false);
                     field.nullable  = field_def.value("nullable",   false);
+                    field.sensitive = field_def.value("sensitive",  false);
 
                     if (field_def.contains("default")) {
                         const auto& def_node = field_def["default"];
@@ -245,6 +247,7 @@ public:
                             field.generated = fd.value("generated", false);
                             field.optional  = fd.value("optional",  false);
                             field.nullable  = fd.value("nullable",  false);
+                            field.sensitive = fd.value("sensitive", false);
                             if (fd.contains("default")) {
                                 const auto& dv = fd["default"];
                                 if (dv.is_string())

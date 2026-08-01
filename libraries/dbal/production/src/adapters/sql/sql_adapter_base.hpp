@@ -43,6 +43,7 @@ public:
 
     Result<Json> create(const std::string& entityName, const Json& data) override;
     Result<Json> read(const std::string& entityName, const std::string& id) override;
+    Result<Json> readIncludingSensitive(const std::string& entityName, const std::string& id) override;
     Result<Json> update(const std::string& entityName, const std::string& id, const Json& data) override;
     Result<bool> remove(const std::string& entityName, const std::string& id) override;
     Result<ListResult<Json>> list(const std::string& entityName, const ListOptions& options) override;
@@ -100,7 +101,10 @@ protected:
     static Error mapSqlError(const SqlError& error);
 
     // Data conversion helpers (protected for dialect-specific overrides)
-    Json rowToJson(const EntitySchema& schema, const SqlRow& row) const;
+    // includeSensitive defaults false: every existing call site is on the
+    // HTTP-response path, so schema.<field>.sensitive fields are stripped
+    // unless a future internal-only caller explicitly opts in.
+    Json rowToJson(const EntitySchema& schema, const SqlRow& row, bool includeSensitive = false) const;
     static std::string jsonValueToString(const Json& value);
 
     // Utility helpers (protected for dialect-specific overrides)

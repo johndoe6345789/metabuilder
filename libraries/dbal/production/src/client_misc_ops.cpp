@@ -11,19 +11,72 @@
 #include "dbal/client.hpp"
 #include "entities/index.hpp"
 #include "store/in_memory_store.hpp"
+#include "security/crypto/password_hash.hpp"
+#include "validation/validation.hpp"
 
 namespace dbal {
 
 // ============================================================================
 // Credential Operations
+//
+// Real implementation through the generic multi-backend adapter (Argon2id),
+// replacing the previous entities::credential::* functions, which hashed
+// with a non-cryptographic std::hash placeholder and operated on a
+// process-local InMemoryStore that no HTTP route ever populated or read —
+// confirmed dead code, now deleted (see entities/credential/crud/ removal).
 // ============================================================================
 
 Result<bool> Client::setCredential(const CreateCredentialInput& input) {
-    return entities::credential::set(getStore(), input);
+    if (!validation::isValidUsername(input.username)) {
+        return Error::validationError("username must be 3-50 characters (alphanumeric, underscore, hyphen)");
+    }
+    // Legacy naming: input.passwordHash is actually the plain-text password to be hashed.
+    if (!validation::isValidCredentialPassword(input.passwordHash)) {
+        return Error::validationError("password must be 8-128 characters with at least one non-whitespace");
+    }
+
+    std::string encoded;
+    try {
+        encoded = dbal::security::hash_password(input.passwordHash);
+    } catch (const std::exception& e) {
+        return Error::internal(std::string("password hashing failed: ") + e.what());
+    }
+
+    // Credential's primary key field is "id" (holding the username value),
+    // not "username" — the generic adapter's single-record methods always
+    // operate on a column literally named "id" (see credential.json).
+    nlohmann::json createData;
+    createData["id"] = input.username;
+    createData["passwordHash"] = encoded;
+
+    nlohmann::json updateData;
+    updateData["passwordHash"] = encoded;
+
+    auto result = adapter_->upsert("Credential", "id", input.username, createData, updateData);
+    if (result.isError()) {
+        return result.error();
+    }
+    return true;
 }
 
 Result<bool> Client::verifyCredential(const std::string& username, const std::string& password) {
-    return entities::credential::verify(getStore(), username, password);
+    if (username.empty() || password.empty()) {
+        return Error::validationError("username and password are required");
+    }
+
+    auto result = adapter_->readIncludingSensitive("Credential", username);
+    if (result.isError()) {
+        // Dummy hash computation (same real Argon2id cost as the success
+        // path) so username enumeration can't be inferred from timing.
+        try { dbal::security::hash_password(password); } catch (...) {}
+        return Error::unauthorized("Invalid credentials");
+    }
+
+    std::string storedHash = result.value().value("passwordHash", std::string());
+    if (storedHash.empty() || !dbal::security::verify_password(password, storedHash)) {
+        return Error::unauthorized("Invalid credentials");
+    }
+    return true;
 }
 
 Result<bool> Client::setCredentialFirstLoginFlag(const std::string& username, bool flag) {
@@ -35,7 +88,11 @@ Result<bool> Client::getCredentialFirstLoginFlag(const std::string& username) {
 }
 
 Result<bool> Client::deleteCredential(const std::string& username) {
-    return entities::credential::remove(getStore(), username);
+    auto result = adapter_->remove("Credential", username);
+    if (result.isError()) {
+        return result.error();
+    }
+    return true;
 }
 
 // ============================================================================

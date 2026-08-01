@@ -10,7 +10,7 @@ SQLiteResultParser::SQLiteResultParser(SQLiteConnectionManager& conn_manager)
     : conn_manager_(conn_manager) {
 }
 
-Json SQLiteResultParser::rowToJson(const core::EntitySchema& schema, sqlite3_stmt* stmt) const {
+Json SQLiteResultParser::rowToJson(const core::EntitySchema& schema, sqlite3_stmt* stmt, bool includeSensitive) const {
     Json result;
 
     const int columnCount = sqlite3_column_count(stmt);
@@ -27,6 +27,10 @@ Json SQLiteResultParser::rowToJson(const core::EntitySchema& schema, sqlite3_stm
                 field = &f;
                 break;
             }
+        }
+
+        if (field && field->sensitive && !includeSensitive) {
+            continue; // never emit sensitive fields (passwordHash, token, ...) to HTTP callers
         }
 
         if (!field) {

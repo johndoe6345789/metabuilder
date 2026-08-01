@@ -1,0 +1,56 @@
+{
+  "entity": "SamlAuthnRequestState",
+  "version": "1.0",
+  "description": "Tracks outgoing SP AuthnRequest IDs for replay defense (InResponseTo correlation) and RelayState carry-through. Delete-on-first-use, short TTL. System-managed — never reachable through the generic entity API.",
+  "fields": {
+    "id": {
+      "type": "string",
+      "primary": true,
+      "generated": true
+    },
+    "requestId": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "description": "The AuthnRequest ID this IdP generated — becomes the Response's InResponseTo"
+    },
+    "spEntityId": {
+      "type": "string",
+      "required": true
+    },
+    "acsUrl": {
+      "type": "string",
+      "required": true,
+      "description": "Assertion Consumer Service URL the Response must be POSTed to"
+    },
+    "relayState": {
+      "type": "string",
+      "nullable": true
+    },
+    "consumedAt": {
+      "type": "bigint",
+      "nullable": true
+    },
+    "expiresAt": {
+      "type": "bigint",
+      "required": true
+    },
+    "createdAt": {
+      "type": "bigint",
+      "optional": true,
+      "nullable": true
+    }
+  },
+  "indexes": [
+    {
+      "fields": ["requestId"],
+      "unique": true
+    }
+  ],
+  "acl": {
+    "create": { "system": true },
+    "read": { "system": true },
+    "update": { "system": true },
+    "delete": { "system": true }
+  }
+}

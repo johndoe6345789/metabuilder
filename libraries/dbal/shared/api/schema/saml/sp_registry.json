@@ -1,0 +1,10 @@
+{
+  "version": "1.0",
+  "service_providers": [
+    {
+      "entity_id": "urn:dbal:test-sp",
+      "name": "DBAL Internal Test SP",
+      "acs_url": "http://localhost:8080/test/saml/acs"
+    }
+  ]
+}

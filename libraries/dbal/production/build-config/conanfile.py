@@ -16,6 +16,9 @@ class DBALDaemonConan(ConanFile):
         self.requires("mongo-cxx-driver/3.10.2")
         self.requires("boost/1.83.0", override=True)
         self.requires("gtest/1.14.0")
+        self.requires("jwt-cpp/0.7.2")
+        self.requires("argon2/20190702")
+        self.requires("xmlsec/1.2.31")
 
     def configure(self):
         self.options["sqlite3"].shared = False
