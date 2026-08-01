@@ -53,6 +53,15 @@ async function sha256Base64Url(input: string): Promise<string> {
 const PKCE_VERIFIER_KEY = 'dbal_oidc_pkce_verifier'
 const PKCE_STATE_KEY = 'dbal_oidc_state'
 
+// Must match next.config.js's basePath — window.location.origin alone
+// doesn't include it, and this is registered verbatim (exact-match, no
+// relaxation) as the client's redirect_uri in DBAL's clients.json.
+const BASE_PATH = '/pastebin'
+
+function oidcRedirectUri(): string {
+  return `${window.location.origin}${BASE_PATH}/auth/callback`
+}
+
 /**
  * Redirects the browser to DBAL's /oidc/authorize, having stashed the PKCE
  * code_verifier (and state, for CSRF protection) in sessionStorage — read
@@ -66,7 +75,7 @@ export async function beginOidcLogin(): Promise<void> {
   sessionStorage.setItem(PKCE_VERIFIER_KEY, verifier)
   sessionStorage.setItem(PKCE_STATE_KEY, state)
 
-  const redirectUri = `${window.location.origin}/auth/callback`
+  const redirectUri = oidcRedirectUri()
   const params = new URLSearchParams({
     response_type: 'code',
     client_id: dbalOidcClientId(),
@@ -149,7 +158,7 @@ export const completeOidcLogin = createAsyncThunk(
     }
 
     try {
-      const redirectUri = `${window.location.origin}/auth/callback`
+      const redirectUri = oidcRedirectUri()
       const res = await fetch(`${dbalOidcBase()}/oidc/token`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },

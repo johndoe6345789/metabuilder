@@ -8,10 +8,12 @@
       "grant_types": ["authorization_code", "refresh_token"],
       "response_types": ["code"],
       "redirect_uris": [
-        "http://localhost:3000/auth/callback"
+        "http://localhost:3000/pastebin/auth/callback",
+        "http://rdesktop.local:8900/pastebin/auth/callback"
       ],
       "post_logout_redirect_uris": [
-        "http://localhost:3000/"
+        "http://localhost:3000/pastebin/",
+        "http://rdesktop.local:8900/pastebin/"
       ],
       "require_pkce": true,
       "pkce_methods": ["S256"],
