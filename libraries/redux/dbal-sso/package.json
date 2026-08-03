@@ -1,0 +1,28 @@
+{
+  "name": "@metabuilder/dbal-sso",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Shared DBAL OIDC/PKCE SSO client (browser core + optional Redux adapter)",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react-redux": "^8.0.0 || ^9.0.0",
+    "@reduxjs/toolkit": "^1.9.7 || ^2.5.2"
+  },
+  "peerDependenciesMeta": {
+    "react-redux": {
+      "optional": true
+    },
+    "@reduxjs/toolkit": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.1",
+    "typescript": "^5.9.3"
+  }
+}
