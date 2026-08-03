@@ -19,7 +19,6 @@ CStatsStrip 1.0 CStatsStrip.qml
 CLevelCard 1.0 CLevelCard.qml
 CTechCard 1.0 CTechCard.qml
 CServiceStatus 1.0 CServiceStatus.qml
-CQuickLoginCard 1.0 CQuickLoginCard.qml
 CAdminStatsBar 1.0 CAdminStatsBar.qml
 CEntitySidebar 1.0 CEntitySidebar.qml
 CDataTable 1.0 CDataTable.qml

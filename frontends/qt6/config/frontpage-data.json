@@ -21,12 +21,5 @@
         { "name": "Redis Cache",     "statusKey": "standby" },
         { "name": "Workflow Engine", "statusKey": "dbal" },
         { "name": "Media Service",   "statusKey": "standby" }
-    ],
-    "quickCreds": [
-        { "user": "demo",  "pass": "demo",     "label": "User",      "level": 2, "accentKey": "blue" },
-        { "user": "mod",   "pass": "mod",      "label": "Moderator", "level": 3, "accentKey": "cyan" },
-        { "user": "admin", "pass": "admin",    "label": "Admin",     "level": 4, "accentKey": "amber" },
-        { "user": "god",   "pass": "god123",   "label": "God",       "level": 5, "accentKey": "violet" },
-        { "user": "super", "pass": "super123", "label": "Super God", "level": 6, "accentKey": "rose" }
     ]
 }

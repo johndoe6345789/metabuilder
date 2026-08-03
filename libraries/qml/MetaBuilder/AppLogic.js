@@ -13,22 +13,6 @@ function loadJson(relativePath) {
     return null
 }
 
-function login(app, username, password) {
-    for (var i = 0; i < app.users.length; i++) {
-        if (app.users[i].username === username
-            && app.users[i].password
-                === password) {
-            app.currentUser = username
-            app.currentRole = app.users[i].role
-            app.currentLevel = app.users[i].level
-            app.loggedIn = true
-            app.currentView = "dashboard"
-            return true
-        }
-    }
-    return false
-}
-
 function logout(app, dbalProvider) {
     app.currentUser = ""
     app.currentRole = "public"

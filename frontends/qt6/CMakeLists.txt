@@ -209,7 +209,6 @@ set_source_files_properties(../../libraries/qml/MetaBuilder/CProfileForm.qml PRO
 set_source_files_properties(../../libraries/qml/MetaBuilder/CProfileHeader.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CProfileHeader.qml)
 set_source_files_properties(../../libraries/qml/MetaBuilder/CProfilePasswordCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CProfilePasswordCard.qml)
 set_source_files_properties(../../libraries/qml/MetaBuilder/CQuickActions.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CQuickActions.qml)
-set_source_files_properties(../../libraries/qml/MetaBuilder/CQuickLoginCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CQuickLoginCard.qml)
 set_source_files_properties(../../libraries/qml/MetaBuilder/CReportCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CReportCard.qml)
 set_source_files_properties(../../libraries/qml/MetaBuilder/CRouteEditPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CRouteEditPanel.qml)
 set_source_files_properties(../../libraries/qml/MetaBuilder/CRoutePermissionSection.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/CRoutePermissionSection.qml)
@@ -490,7 +489,6 @@ qt_add_qml_module(metabuilder-qt6
         ../../libraries/qml/MetaBuilder/CProfileHeader.qml
         ../../libraries/qml/MetaBuilder/CProfilePasswordCard.qml
         ../../libraries/qml/MetaBuilder/CQuickActions.qml
-        ../../libraries/qml/MetaBuilder/CQuickLoginCard.qml
         ../../libraries/qml/MetaBuilder/CReportCard.qml
         ../../libraries/qml/MetaBuilder/CRouteEditPanel.qml
         ../../libraries/qml/MetaBuilder/CRoutePermissionSection.qml

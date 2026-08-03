@@ -25,7 +25,7 @@ Rectangle {
     readonly property color onSurfaceVariant:
         Theme.textSecondary
     property var levels: []; property var techStack: []
-    property var services: []; property var quickCreds: []
+    property var services: []
     Component.onCompleted: {
         Logic.loadFallbackData(root)
         Logic.loadPlatformStatus(root, dbal) }
@@ -104,29 +104,6 @@ Rectangle {
                             name: modelData.name
                                 status: modelData.status
                                 isDark: root.isDark } }
-                }
-            }
-            ColumnLayout {
-                Layout.fillWidth: true; Layout.topMargin: 48
-                Layout.leftMargin: 40; Layout.rightMargin: 40; spacing: 20
-                CText { text: "Quick Access"
-                    font.pixelSize: 22; font.weight: Font.Bold
-                    color: onSurface
-                        Layout.fillWidth: true
-                    horizontalAlignment: Text.AlignHCenter }
-                RowLayout {
-                    Layout.fillWidth: true; spacing: 10
-                    Repeater {
-                        model: quickCreds
-                        delegate: CQuickLoginCard {
-                            Layout.fillWidth: true
-                            username: modelData.user; password: modelData.pass
-                            label: modelData.label; level: modelData.level
-                            accent: modelData.accent; isDark: root.isDark
-                            onLogin: appWindow.login(modelData.user,
-                                modelData.pass)
-                        }
-                    }
                 }
             }
             Item { Layout.preferredHeight: 48 }

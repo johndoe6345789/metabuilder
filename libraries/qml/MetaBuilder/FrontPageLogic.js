@@ -43,12 +43,6 @@ function loadFallbackData(root) {
             root.dbalOnline, s.statusKey)
         return s
     })
-    root.quickCreds = data.quickCreds.map(
-        function(q) {
-        q.accent = resolveAccent(
-            root.accentMap, q.accentKey)
-        return q
-    })
 }
 
 function refreshServiceStatuses(root) {

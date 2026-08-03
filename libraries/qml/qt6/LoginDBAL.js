@@ -1,48 +1,9 @@
-// LoginDBAL.js — DBAL login logic and dev
-// credential data for LoginView
-
-function devCredentials(palette) {
-    return [
-        {
-            user: "demo", pass: "demo",
-            label: "User", level: 2,
-            accent: palette.blue
-        },
-        {
-            user: "mod", pass: "mod",
-            label: "Moderator", level: 3,
-            accent: palette.cyan
-        },
-        {
-            user: "admin", pass: "admin",
-            label: "Admin", level: 4,
-            accent: palette.amber
-        },
-        {
-            user: "god", pass: "god123",
-            label: "God", level: 5,
-            accent: palette.violet
-        },
-        {
-            user: "super", pass: "super123",
-            label: "Super God", level: 6,
-            accent: palette.rose
-        }
-    ]
-}
-
-function loginWithDBAL(dbal, username, password,
-                       callbacks) {
-    callbacks.onStart()
-    dbal.execute("core/auth/login",
-        { username: username,
-          password: password },
-        function(result, error) {
-        if (!error && result && result.token) {
-            callbacks.onSuccess(result, username)
-        } else {
-            callbacks.onFallback(
-                username, password, error)
-        }
-    })
-}
+// LoginDBAL.js — placeholder pending real OIDC login for the desktop app.
+//
+// Previously called a DBAL route ("core/auth/login") that doesn't exist
+// anywhere in the daemon, and silently fell back to a hardcoded dev
+// credential list (demo/mod/admin/god/super with plaintext passwords) on
+// failure -- a real security hole, not a dev convenience. Removed rather
+// than left in place. A proper fix needs a native OIDC integration (system
+// browser handoff + loopback-redirect listener), which is separate,
+// larger follow-up work -- not a drop-in replacement for this file alone.

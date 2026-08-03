@@ -4,7 +4,6 @@ import QtQuick.Layouts
 import QmlComponents 1.0
 import "qmllib/dbal"
 import "qmllib/MetaBuilder"
-import "LoginDBAL.js" as DBAL
 
 Rectangle {
     id: loginView; color: "transparent"
@@ -17,58 +16,12 @@ Rectangle {
         Theme.mode === "dark"
     DBALProvider { id: dbal }
 
-    readonly property color accentBlue:
-        "#6366F1"
-    readonly property color accentCyan:
-        "#06B6D4"
-    readonly property color accentAmber:
-        "#F59E0B"
-    readonly property color accentViolet:
-        "#8B5CF6"
-    readonly property color accentRose:
-        "#F43F5E"
-    readonly property var credentials:
-        DBAL.devCredentials({
-            blue: accentBlue,
-            cyan: accentCyan,
-            amber: accentAmber,
-            violet: accentViolet,
-            rose: accentRose
-        })
-
+    // Real sign-in isn't wired up yet -- this used to fall back to
+    // hardcoded dev credentials, which was a security hole, not a
+    // convenience. See LoginDBAL.js for why.
     function loginWithDBAL(username, password) {
-        DBAL.loginWithDBAL(dbal,
-            username, password, {
-            onStart: function() {
-                loggingIn = true
-                errorMessage = ""
-            },
-            onSuccess:
-                function(result, user) {
-                appWindow.currentUser =
-                    result.username || user
-                appWindow.currentRole =
-                    result.role || "user"
-                appWindow.currentLevel =
-                    result.level || 2
-                appWindow.loggedIn = true
-                appWindow.authToken =
-                    result.token
-                dbal.authToken = result.token
-                appWindow.currentView =
-                    "dashboard"
-                loggingIn = false
-            },
-            onFallback:
-                function(user, pass, error) {
-                loggingIn = false
-                if (!appWindow.login(
-                        user, pass))
-                    errorMessage = error
-                        || "Invalid username"
-                        + " or password"
-            }
-        })
+        errorMessage = "Sign-in isn't available yet"
+            + " -- SSO support is coming in a follow-up."
     }
 
     ColumnLayout {
@@ -103,78 +56,6 @@ Rectangle {
                 loginView.errorMessage = ""
                 loginWithDBAL(
                     username, password)
-            }
-        }
-        CText {
-            text: "Dev Credentials"
-            font.pixelSize: 14
-            font.weight: Font.DemiBold
-            color: Theme.textSecondary
-            Layout.fillWidth: true
-            horizontalAlignment:
-                Text.AlignHCenter
-        }
-        CText {
-            text: "Click any card below"
-                + " to sign in instantly"
-            font.pixelSize: 12
-            color: Theme.textSecondary
-            opacity: isDark ? 0.5 : 0.6
-            Layout.fillWidth: true
-            horizontalAlignment:
-                Text.AlignHCenter
-        }
-        GridLayout {
-            Layout.fillWidth: true; columns: 2
-            columnSpacing: 10; rowSpacing: 10
-            Repeater {
-                model: credentials
-                delegate: CQuickLoginCard {
-                    Layout.fillWidth: true
-                    username: modelData.user
-                    password: modelData.pass
-                    label: modelData.label
-                    level: modelData.level
-                    accent: modelData.accent
-                    isDark: loginView.isDark
-                    activeFocusOnTab: true
-                    Accessible.role:
-                        Accessible.Button
-                    Accessible.name:
-                        "Sign in as "
-                        + modelData.label
-                    Accessible.description:
-                        "Level "
-                        + modelData.level
-                        + " dev credential"
-                    Keys.onReturnPressed: {
-                        loginForm.username =
-                            modelData.user
-                        loginForm.password =
-                            modelData.pass
-                        appWindow.login(
-                            modelData.user,
-                            modelData.pass)
-                    }
-                    Keys.onSpacePressed: {
-                        loginForm.username =
-                            modelData.user
-                        loginForm.password =
-                            modelData.pass
-                        appWindow.login(
-                            modelData.user,
-                            modelData.pass)
-                    }
-                    onLogin: {
-                        loginForm.username =
-                            modelData.user
-                        loginForm.password =
-                            modelData.pass
-                        appWindow.login(
-                            modelData.user,
-                            modelData.pass)
-                    }
-                }
             }
         }
         CButton {

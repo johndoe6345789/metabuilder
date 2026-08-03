@@ -26,16 +26,11 @@ ApplicationWindow {
     property bool loggedIn: false
     property string authToken: ""
     property string currentView: "frontpage"
-    property var users:
-        appConfig ? appConfig.seedUsers : []
     readonly property var staticViews:
         appConfig ? appConfig.staticViews : []
     readonly property bool isDark:
         Theme.mode === "dark"
 
-    function login(u, p) {
-        return Logic.login(appWindow, u, p)
-    }
     function logout() {
         Logic.logout(appWindow, dbalProvider)
     }
