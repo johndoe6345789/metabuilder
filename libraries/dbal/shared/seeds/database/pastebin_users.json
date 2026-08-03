@@ -1,11 +1,11 @@
 {
   "entity": "User",
   "version": "1.0",
-  "description": "Pastebin demo/test users — passwords managed by Flask auth layer",
+  "description": "Pastebin demo/test users. Note: this DBAL User entity ignores passwordHash for its own purposes (DBAL auth goes through the separate Credential entity, see pastebin_credentials.json) -- but pastebin's Flask backend's seed_test_users() reads this same file and DOES consume passwordHash to seed its own local user_auth table, so don't strip it.",
   "records": [
     {
       "id": "11111111-1111-1111-1111-111111111111",
-      "username": "demo",
+      "username": "demo-pastebin",
       "email": "demo@codesnippet.local",
       "role": "user",
       "tenantId": "pastebin",
@@ -44,6 +44,6 @@
     "bootstrap": true,
     "useCurrentTimestamp": true,
     "timestampField": "createdAt",
-    "note": "passwordHash is Flask-only — DBAL ignores it. demo=demo1234, alice=alice1234, bob=bob12345, playwright=pw-test-2024"
+    "note": "Documented plaintext passwords: demo-pastebin=demo1234, alice=alice1234, bob=bob12345, playwright=pw-test-2024"
   }
 }

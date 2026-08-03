@@ -1226,7 +1226,11 @@ def register():
     # just this legacy endpoint. Non-fatal: if DBAL is unreachable, the
     # legacy login path below still works — the account isn't unusable,
     # just not yet SSO-capable (mirrors the DBAL User call above).
-    dbal_request('POST', '/admin/credentials', {'username': username, 'password': password})
+    # tenantId is required here -- omitting it defaults the Credential to
+    # DBAL's "system" tenant, which would 403 this user against pastebin's
+    # own tenant-scoped entities the moment they logged in via SSO.
+    dbal_request('POST', '/admin/credentials',
+                  {'username': username, 'password': password, 'tenantId': DBAL_TENANT_ID})
 
     token = jwt.encode(
         {'sub': username, 'username': username, 'exp': int(time.time()) + 7 * 86400},
