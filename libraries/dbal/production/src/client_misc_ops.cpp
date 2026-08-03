@@ -48,7 +48,14 @@ Result<bool> Client::setCredential(const CreateCredentialInput& input) {
     nlohmann::json createData;
     createData["id"] = input.username;
     createData["passwordHash"] = encoded;
+    if (!input.tenantId.empty()) {
+        createData["tenantId"] = input.tenantId;
+    }
 
+    // Deliberately doesn't touch tenantId on update: this is a
+    // password-reset path (existing user changing/resetting their
+    // password), not a re-provisioning one -- an already-set tenant
+    // shouldn't silently move just because someone reset their password.
     nlohmann::json updateData;
     updateData["passwordHash"] = encoded;
 
@@ -87,19 +94,28 @@ Result<std::string> Client::getCredentialTenantId(const std::string& username) {
     if (result.isError()) {
         return std::string("system");
     }
-    std::string tenantId = result.value().value("tenantId", std::string());
+    // .value() only substitutes its default when the key is ABSENT -- a
+    // nullable column with no value comes back as an explicit JSON null
+    // (see SqlAdapter::rowToJson), which .value() would try to .get<string>()
+    // and throw type_error.302 on. Must check for null first.
+    const auto& row = result.value();
+    if (!row.contains("tenantId") || row["tenantId"].is_null()) {
+        return std::string("system");
+    }
+    std::string tenantId = row["tenantId"].get<std::string>();
     return tenantId.empty() ? std::string("system") : tenantId;
 }
 
 Result<std::string> Client::getUserRoleByUsername(const std::string& username) {
-    ListOptions options;
-    options.filter["username"] = username;
-    options.limit = 1;
-    auto result = listUsers(options);
-    if (result.isError() || result.value().empty()) {
+    // findByField, not listUsers()+filter -- a direct point lookup by the
+    // real adapter rather than a filtered list, so this can't accidentally
+    // return some other user's row (see client_user_ops.cpp's header
+    // comment for the bug this replaced).
+    auto result = adapter_->findByField("User", "username", username);
+    if (result.isError()) {
         return std::string("user");
     }
-    const std::string& role = result.value().front().role;
+    std::string role = result.value().value("role", std::string());
     return role.empty() ? std::string("user") : role;
 }
 

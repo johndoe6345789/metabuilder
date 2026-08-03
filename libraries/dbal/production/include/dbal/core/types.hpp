@@ -43,6 +43,8 @@ struct UpdateUserBatchItem {
 struct CreateCredentialInput {
     std::string username;
     std::string passwordHash;
+    /** Empty => Client::getCredentialTenantId() falls back to "system". */
+    std::string tenantId;
 };
 
 struct UpdateCredentialInput {
