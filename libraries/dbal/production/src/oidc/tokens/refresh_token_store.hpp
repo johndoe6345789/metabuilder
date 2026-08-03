@@ -60,6 +60,17 @@ public:
      */
     Result<RotatedRefreshToken> rotate(const std::string& rawToken, const std::string& clientIdHint);
 
+    /**
+     * @brief Revoke a single refresh token (used by /oidc/logout).
+     *
+     * Unlike rotate()'s reuse-detection path, this revokes only the
+     * presented token, not its whole family -- a normal logout isn't a
+     * leak signal. Idempotent: revoking an already-revoked or unknown token
+     * is not an error (logout shouldn't fail just because the token was
+     * already gone).
+     */
+    Result<bool> revoke(const std::string& rawToken);
+
 private:
     void revokeFamily(const std::string& familyId);
 

@@ -33,6 +33,10 @@ struct OAuthClient {
     /// Exact string match against redirect_uris — no prefix/scheme relaxation.
     bool isValidRedirectUri(const std::string& uri) const;
 
+    /// Same exact-match rule as isValidRedirectUri, against
+    /// post_logout_redirect_uris. Used by /oidc/logout.
+    bool isValidPostLogoutRedirectUri(const std::string& uri) const;
+
     /// True if every requested scope is present in this client's configured scope.
     bool isScopeAllowed(const std::string& requestedScope) const;
 };

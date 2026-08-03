@@ -49,7 +49,8 @@ std::string issueAccessToken(const crypto::RsaKeypair& keypair, const std::strin
         .set_expires_at(now + std::chrono::seconds(claims.ttlSeconds))
         .set_id(dbal::security::generate_token())
         .set_payload_claim("tenant_id", jwt::basic_claim<Traits>(claims.tenantId))
-        .set_payload_claim("scope", jwt::basic_claim<Traits>(claims.scope));
+        .set_payload_claim("scope", jwt::basic_claim<Traits>(claims.scope))
+        .set_payload_claim("role", jwt::basic_claim<Traits>(claims.role));
 
     return builder.sign(jwt::algorithm::rs256("", keypair.privateKeyPem(), "", ""));
 }

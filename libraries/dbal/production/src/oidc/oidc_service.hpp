@@ -35,6 +35,17 @@ struct AuthorizeRequest {
     std::optional<std::string> nonce;
 };
 
+/// A browser-level SSO session, distinct from the per-client-exchange
+/// OidcSession created in exchangeCode (that one becomes the ID token's
+/// "sid" claim). This one is looked up by /authorize on subsequent visits
+/// from *other* clients so they can skip the login form. Same OidcSession
+/// entity, disambiguated by the reserved clientId "__browser_session__"
+/// (never a real registered client_id, so it can't collide).
+struct BrowserSession {
+    std::string userId;
+    std::string tenantId;
+};
+
 struct TokenResponse {
     std::string accessToken;
     std::string idToken;
@@ -77,6 +88,27 @@ public:
     Result<std::string> issueCode(const AuthorizeRequest& req, const std::string& userId,
                                    const std::string& tenantId);
 
+    /// Creates the browser-level SSO session (reserved sentinel clientId),
+    /// set as the dbal_oidc_sid cookie by the login handler. Returns the sid.
+    Result<std::string> createBrowserSession(const std::string& userId, const std::string& tenantId);
+
+    /// Looks up a browser-level SSO session by sid (from the cookie). Returns
+    /// an error if missing/revoked/expired, or if it isn't actually a
+    /// browser-level session (defense against a client-exchange sid ever
+    /// being replayed here).
+    Result<BrowserSession> lookupBrowserSession(const std::string& sid) const;
+
+    /// Revokes a browser-level SSO session (sets revokedAt) so a subsequent
+    /// /authorize call can't resurrect the login. Called by /oidc/logout.
+    Result<bool> revokeBrowserSession(const std::string& sid);
+
+    /// Issues a code for an already-authenticated request and builds the
+    /// final `redirectUri?code=...&state=...` Location value. Shared by both
+    /// the login handler (fresh login) and the authorize handler (session
+    /// reuse) so the redirect-assembly logic isn't duplicated between them.
+    Result<std::string> buildAuthorizeRedirect(const AuthorizeRequest& req, const std::string& userId,
+                                                const std::string& tenantId);
+
     /**
      * @brief Redeem a code for tokens: redirect_uri exact-match, PKCE
      *        verification, single-use enforcement, then issue access+ID
@@ -93,6 +125,10 @@ public:
      */
     Result<TokenResponse> exchangeRefreshToken(const std::string& refreshToken,
                                                 const std::string& clientId);
+
+    /// Revokes a single refresh token (does not touch its rotation family —
+    /// see RefreshTokenStore::revoke). Used by /oidc/logout.
+    Result<bool> revokeRefreshToken(const std::string& refreshToken);
 
     const clients::OAuthClientConfig& clientConfig() const { return client_config_; }
     const crypto::RsaKeypair& keypair() const { return keypair_; }

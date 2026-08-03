@@ -50,6 +50,12 @@ public:
     Result<bool> setCredentialFirstLoginFlag(const std::string& username, bool firstLogin);
     Result<bool> getCredentialFirstLoginFlag(const std::string& username);
     Result<bool> deleteCredential(const std::string& username);
+    // Tenant a login should be scoped to, sourced from Credential.tenantId.
+    // Falls back to "system" if the field is absent/empty (un-migrated rows).
+    Result<std::string> getCredentialTenantId(const std::string& username);
+    // Role claim source for OIDC access tokens. Falls back to "user" if no
+    // matching User row exists (Credential-only accounts).
+    Result<std::string> getUserRoleByUsername(const std::string& username);
 
     Result<PageConfig> createPage(const CreatePageInput& input);
     Result<PageConfig> getPage(const std::string& id);

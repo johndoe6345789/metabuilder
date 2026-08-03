@@ -30,6 +30,7 @@ struct JwtClaims {
     std::string scope;
     std::string aud;
     std::string iss;
+    std::string role;  ///< populated by RsJwtValidator only, same as tenant_id above.
 };
 
 /**

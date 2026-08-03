@@ -101,6 +101,38 @@ Result<RotatedRefreshToken> RefreshTokenStore::rotate(const std::string& rawToke
     return rotated;
 }
 
+Result<bool> RefreshTokenStore::revoke(const std::string& rawToken) {
+    std::string tokenHash = dbal::security::sha256_hex(rawToken);
+
+    dbal::ListOptions opts;
+    opts.filter["tokenHash"] = tokenHash;
+    opts.limit = 1;
+
+    auto listResult = client_.listEntities("RefreshToken", opts);
+    if (listResult.isError()) {
+        return listResult.error();
+    }
+    const auto& items = listResult.value().items;
+    if (items.empty()) {
+        return true; // idempotent: already gone (or never existed)
+    }
+
+    const auto& row = items.front();
+    bool alreadyRevoked = row.contains("revokedAt") && !row["revokedAt"].is_null();
+    if (alreadyRevoked) {
+        return true;
+    }
+
+    std::string id = row.value("id", std::string());
+    nlohmann::json update;
+    update["revokedAt"] = nowUnix();
+    auto updateResult = client_.updateEntity("RefreshToken", id, update);
+    if (updateResult.isError()) {
+        return updateResult.error();
+    }
+    return true;
+}
+
 void RefreshTokenStore::revokeFamily(const std::string& familyId) {
     dbal::ListOptions opts;
     opts.filter["familyId"] = familyId;

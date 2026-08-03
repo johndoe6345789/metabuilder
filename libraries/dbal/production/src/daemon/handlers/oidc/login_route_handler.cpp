@@ -3,6 +3,7 @@
  */
 #include "login_route_handler.hpp"
 #include "../shared/login_page_style.hpp"
+#include "session_cookie.hpp"
 
 #include <drogon/drogon.h>
 #include <spdlog/spdlog.h>
@@ -10,8 +11,6 @@
 namespace dbal::daemon::handlers::oidc {
 
 namespace {
-constexpr const char* kSessionCookieName = "dbal_oidc_sid";
-
 std::string renderLoginForm(const std::string& publicPathPrefix, const std::string& continuationToken,
                              const std::string& error = "") {
     std::string errorHtml = error.empty() ? "" : "<div class=\"error\" role=\"alert\">" + error + "</div>";
@@ -87,15 +86,16 @@ void LoginRouteHandler::handlePost(
     // Username-as-subject: simple for a credential-only login where there's
     // no separate profile/User linkage required for the "sub" claim.
     const std::string& userId = username;
-    // tenantId resolution: single-tenant "system" default for v1 — the
-    // multi-tenant JWT-claim cross-check (server_routes.cpp) is what
-    // actually matters for authorization; login itself doesn't need to pick
-    // a tenant beyond what the client is scoped to.
-    const std::string tenantId = "system";
+    // Real tenant, sourced from Credential.tenantId (falls back to "system"
+    // for un-migrated rows) -- this is what the multi-tenant JWT-claim
+    // cross-check (server_routes.cpp) authorizes against, so it must reflect
+    // the actual user, not a fixed default.
+    auto tenantResult = client_.getCredentialTenantId(username);
+    const std::string tenantId = tenantResult.isError() ? "system" : tenantResult.value();
 
-    auto codeResult = service_.issueCode(*pending, userId, tenantId);
-    if (codeResult.isError()) {
-        spdlog::error("[oidc] Failed to issue authorization code: {}", codeResult.error().what());
+    auto locationResult = service_.buildAuthorizeRedirect(*pending, userId, tenantId);
+    if (locationResult.isError()) {
+        spdlog::error("[oidc] Failed to issue authorization code: {}", locationResult.error().what());
         auto resp = drogon::HttpResponse::newHttpResponse();
         resp->setStatusCode(drogon::k500InternalServerError);
         resp->setBody("Failed to complete sign-in");
@@ -103,15 +103,22 @@ void LoginRouteHandler::handlePost(
         return;
     }
 
-    std::string separator = pending->redirectUri.find('?') == std::string::npos ? "?" : "&";
-    std::string location = pending->redirectUri + separator + "code=" + codeResult.value();
-    if (!pending->state.empty()) {
-        location += "&state=" + pending->state;
-    }
-
     auto resp = drogon::HttpResponse::newHttpResponse();
     resp->setStatusCode(drogon::k302Found);
-    resp->addHeader("Location", location);
+    resp->addHeader("Location", locationResult.value());
+
+    // Browser-level SSO session so a subsequent /authorize call from a
+    // *different* client can skip this login form entirely (see
+    // OidcRouteHandler::handleAuthorize). Non-fatal if it fails to create --
+    // the current login still succeeds, just without carrying over to other
+    // apps this round.
+    auto sessionResult = service_.createBrowserSession(userId, tenantId);
+    if (sessionResult.hasValue()) {
+        setSessionCookie(resp, sessionResult.value(), public_path_prefix_, service_.issuer());
+    } else {
+        spdlog::warn("[oidc] Failed to create browser session: {}", sessionResult.error().what());
+    }
+
     cb(resp);
 }
 

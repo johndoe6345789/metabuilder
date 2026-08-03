@@ -46,6 +46,17 @@ public:
     void handleToken(const drogon::HttpRequestPtr& req,
                       std::function<void(const drogon::HttpResponsePtr&)>&& cb);
 
+    /// GET /oidc/userinfo — bearer-token-verified, returns {sub, tenant_id, role}.
+    void handleUserinfo(const drogon::HttpRequestPtr& req,
+                         std::function<void(const drogon::HttpResponsePtr&)>&& cb) const;
+
+    /// POST/GET /oidc/logout (end_session_endpoint) — revokes the browser
+    /// session so /authorize can't resurrect it, clears the cookie,
+    /// optionally revokes a supplied refresh token, and honors
+    /// post_logout_redirect_uri if supplied and registered for the client.
+    void handleLogout(const drogon::HttpRequestPtr& req,
+                       std::function<void(const drogon::HttpResponsePtr&)>&& cb);
+
 private:
     dbal::oidc::OidcService& service_;
     PendingAuthorizeStore& pending_store_;

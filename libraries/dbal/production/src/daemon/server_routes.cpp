@@ -1218,8 +1218,24 @@ void Server::registerRoutes() {
             {drogon::HttpMethod::Get, drogon::HttpMethod::Post}
         );
 
+        drogon::app().registerHandler(
+            "/oidc/userinfo",
+            [oidc_handler](const drogon::HttpRequestPtr& req, DrogonCallback&& cb) {
+                oidc_handler->handleUserinfo(req, std::move(cb));
+            },
+            {drogon::HttpMethod::Get}
+        );
+
+        drogon::app().registerHandler(
+            "/oidc/logout",
+            [oidc_handler](const drogon::HttpRequestPtr& req, DrogonCallback&& cb) {
+                oidc_handler->handleLogout(req, std::move(cb));
+            },
+            {drogon::HttpMethod::Get, drogon::HttpMethod::Post}
+        );
+
         spdlog::info("[oidc] Routes registered: /.well-known/openid-configuration, "
-                     "/oidc/{{jwks.json,authorize,token,login}}");
+                     "/oidc/{{jwks.json,authorize,token,login,userinfo,logout}}");
     }
 
     // ===== SAML IdP routes (no-op if saml_service_ failed to initialize) =====

@@ -99,9 +99,10 @@ void CasLoginRouteHandler::handlePost(
         return;
     }
 
-    // Single-tenant "system" default for v1 — same simplification as
-    // OIDC/SAML's login handlers (see their comments for why).
-    const std::string tenantId = "system";
+    // Real tenant, sourced from Credential.tenantId (see the identical fix
+    // in oidc/login_route_handler.cpp for the full rationale).
+    auto tenantResult = client_.getCredentialTenantId(username);
+    const std::string tenantId = tenantResult.isError() ? "system" : tenantResult.value();
 
     auto ticketResult = service_.issueServiceTicket(username, tenantId, service);
     if (ticketResult.isError()) {

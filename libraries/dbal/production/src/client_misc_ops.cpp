@@ -79,6 +79,30 @@ Result<bool> Client::verifyCredential(const std::string& username, const std::st
     return true;
 }
 
+Result<std::string> Client::getCredentialTenantId(const std::string& username) {
+    // Plain (non-sensitive) read -- tenantId isn't in Credential's
+    // never_expose list, unlike passwordHash which verifyCredential above
+    // fetches via readIncludingSensitive.
+    auto result = adapter_->read("Credential", username);
+    if (result.isError()) {
+        return std::string("system");
+    }
+    std::string tenantId = result.value().value("tenantId", std::string());
+    return tenantId.empty() ? std::string("system") : tenantId;
+}
+
+Result<std::string> Client::getUserRoleByUsername(const std::string& username) {
+    ListOptions options;
+    options.filter["username"] = username;
+    options.limit = 1;
+    auto result = listUsers(options);
+    if (result.isError() || result.value().empty()) {
+        return std::string("user");
+    }
+    const std::string& role = result.value().front().role;
+    return role.empty() ? std::string("user") : role;
+}
+
 Result<bool> Client::setCredentialFirstLoginFlag(const std::string& username, bool flag) {
     return entities::credential::setFirstLogin(getStore(), username, flag);
 }

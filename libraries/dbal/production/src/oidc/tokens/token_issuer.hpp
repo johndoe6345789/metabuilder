@@ -30,6 +30,7 @@ struct AccessTokenClaims {
     std::string audience;
     std::string tenantId;
     std::string scope;
+    std::string role;
     long long ttlSeconds = 900;
 };
 

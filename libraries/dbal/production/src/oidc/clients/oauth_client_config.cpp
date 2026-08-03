@@ -15,6 +15,11 @@ bool OAuthClient::isValidRedirectUri(const std::string& uri) const {
     return std::find(redirect_uris.begin(), redirect_uris.end(), uri) != redirect_uris.end();
 }
 
+bool OAuthClient::isValidPostLogoutRedirectUri(const std::string& uri) const {
+    return std::find(post_logout_redirect_uris.begin(), post_logout_redirect_uris.end(), uri)
+           != post_logout_redirect_uris.end();
+}
+
 bool OAuthClient::isScopeAllowed(const std::string& requestedScope) const {
     // Space-delimited scope strings; every requested token must be a member
     // of this client's configured scope set.

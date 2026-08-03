@@ -15,6 +15,11 @@ long long nowUnix() {
         std::chrono::system_clock::now().time_since_epoch()).count();
 }
 
+// Reserved clientId for browser-level SSO sessions (see BrowserSession in
+// the header) -- never a real registered client_id, so it can't collide
+// with one from clients.json.
+constexpr const char* kBrowserSessionClientId = "__browser_session__";
+
 // Space-delimited scope membership check (word-boundary safe — unlike a raw
 // substring search, "offline_accessfoo" doesn't false-match "offline_access").
 bool scopeContains(const std::string& scope, const std::string& token) {
@@ -154,6 +159,66 @@ Result<std::string> OidcService::issueCode(const AuthorizeRequest& req, const st
     return auth_code_store_.issue(codeReq);
 }
 
+Result<std::string> OidcService::createBrowserSession(const std::string& userId,
+                                                        const std::string& tenantId) {
+    return createSession(userId, tenantId, kBrowserSessionClientId);
+}
+
+Result<BrowserSession> OidcService::lookupBrowserSession(const std::string& sid) const {
+    auto result = client_.getEntity("OidcSession", sid);
+    if (result.isError()) {
+        return Error::notFound("no such session");
+    }
+    const auto& row = result.value();
+
+    if (row.value("clientId", std::string()) != kBrowserSessionClientId) {
+        // Not a browser-level session (e.g. a client-exchange sid replayed
+        // here) -- treat identically to "not found", don't leak the distinction.
+        return Error::notFound("no such session");
+    }
+    if (!row.value("revokedAt", nlohmann::json(nullptr)).is_null()) {
+        return Error::unauthorized("session revoked");
+    }
+    long long expiresAt = row.value("expiresAt", 0LL);
+    if (expiresAt <= nowUnix()) {
+        return Error::unauthorized("session expired");
+    }
+
+    BrowserSession session;
+    session.userId = row.value("userId", std::string());
+    session.tenantId = row.value("tenantId", std::string());
+    if (session.userId.empty()) {
+        return Error::notFound("no such session");
+    }
+    return session;
+}
+
+Result<bool> OidcService::revokeBrowserSession(const std::string& sid) {
+    nlohmann::json update;
+    update["revokedAt"] = nowUnix();
+    auto result = client_.updateEntity("OidcSession", sid, update);
+    if (result.isError()) {
+        return result.error();
+    }
+    return true;
+}
+
+Result<std::string> OidcService::buildAuthorizeRedirect(const AuthorizeRequest& req,
+                                                          const std::string& userId,
+                                                          const std::string& tenantId) {
+    auto codeResult = issueCode(req, userId, tenantId);
+    if (codeResult.isError()) {
+        return codeResult.error();
+    }
+
+    std::string separator = req.redirectUri.find('?') == std::string::npos ? "?" : "&";
+    std::string location = req.redirectUri + separator + "code=" + codeResult.value();
+    if (!req.state.empty()) {
+        location += "&state=" + req.state;
+    }
+    return location;
+}
+
 Result<TokenResponse> OidcService::exchangeCode(const std::string& code, const std::string& redirectUri,
                                                  const std::string& clientId,
                                                  const std::string& codeVerifier) {
@@ -196,11 +261,14 @@ Result<TokenResponse> OidcService::exchangeCode(const std::string& code, const s
     idClaims.nonce = rc.nonce;
     idClaims.ttlSeconds = client->id_token_ttl_seconds;
 
+    auto roleResult = client_.getUserRoleByUsername(rc.userId);
+
     tokens::AccessTokenClaims accessClaims;
     accessClaims.subject = rc.userId;
     accessClaims.audience = rc.clientId;
     accessClaims.tenantId = rc.tenantId;
     accessClaims.scope = rc.scope;
+    accessClaims.role = roleResult.isError() ? "user" : roleResult.value();
     accessClaims.ttlSeconds = client->access_token_ttl_seconds;
 
     TokenResponse resp;
@@ -260,11 +328,16 @@ Result<TokenResponse> OidcService::exchangeRefreshToken(const std::string& refre
     idClaims.authTime = nowUnix();
     idClaims.ttlSeconds = client->id_token_ttl_seconds;
 
+    auto roleResult = client_.getUserRoleByUsername(rt.userId);
+
     tokens::AccessTokenClaims accessClaims;
     accessClaims.subject = rt.userId;
     accessClaims.audience = rt.clientId;
     accessClaims.tenantId = rt.tenantId;
     accessClaims.scope = rt.scope; // never exceeds the original grant's scope
+    // Re-looked-up on every refresh (not carried over from the prior token)
+    // so a role change takes effect on next refresh without forcing re-login.
+    accessClaims.role = roleResult.isError() ? "user" : roleResult.value();
     accessClaims.ttlSeconds = client->access_token_ttl_seconds;
 
     TokenResponse resp;
@@ -296,6 +369,10 @@ Result<TokenResponse> OidcService::exchangeRefreshToken(const std::string& refre
         spdlog::error("[oidc] Failed to issue rotated refresh token: {}", nextRefresh.error().what());
     }
     return resp;
+}
+
+Result<bool> OidcService::revokeRefreshToken(const std::string& refreshToken) {
+    return refresh_token_store_.revoke(refreshToken);
 }
 
 } // namespace dbal::oidc

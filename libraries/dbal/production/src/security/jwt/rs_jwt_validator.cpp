@@ -41,6 +41,9 @@ std::optional<JwtClaims> RsJwtValidator::validate(const std::string& token) cons
         if (decoded.has_payload_claim("scope")) {
             claims.scope = decoded.get_payload_claim("scope").as_string();
         }
+        if (decoded.has_payload_claim("role")) {
+            claims.role = decoded.get_payload_claim("role").as_string();
+        }
 
         if (claims.user_id.empty()) {
             spdlog::debug("[rs_jwt] Missing 'sub' claim");
