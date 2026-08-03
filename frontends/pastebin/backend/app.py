@@ -2371,8 +2371,13 @@ def seed_test_users():
         cursor.execute('SELECT id FROM user_auth WHERE username = ?', (username,))
         if cursor.fetchone():
             continue
+        # OR IGNORE, not a plain INSERT: user_auth.id is ALSO a unique key
+        # (not just username, checked above), and a stale row with a
+        # matching id but a different/renamed username would otherwise
+        # crash this INSERT with UNIQUE constraint failed: user_auth.id,
+        # taking the whole container down in a restart loop.
         cursor.execute(
-            'INSERT INTO user_auth (id, username, password_hash) VALUES (?, ?, ?)',
+            'INSERT OR IGNORE INTO user_auth (id, username, password_hash) VALUES (?, ?, ?)',
             (user_id, username, pw_hash)
         )
         conn.commit()
