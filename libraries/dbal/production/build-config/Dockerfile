@@ -42,6 +42,9 @@ COPY production/tests/ ./tests/
 COPY shared/api/schema/ ./shared/api/schema/
 COPY shared/seeds/database/ ./shared/seeds/database/
 COPY shared/tools/codegen/gen_types.py ./shared/tools/codegen/gen_types.py
+# SQL Jinja2 templates -- needed by the SQL/SQLite adapters' generic CRUD
+# (integration tests read DBAL_TEMPLATE_DIR, which points here; see CMakeLists.txt)
+COPY templates/ ./templates/
 RUN python3 shared/tools/codegen/gen_types.py \
     --schema-dir ./shared/api/schema \
     --cpp-output ./include/dbal/core/types.generated.hpp \

@@ -11,7 +11,6 @@
 
 #include <optional>
 #include <string>
-#include <drogon/HttpRequest.h>
 #include "jwt_validator.hpp" // JwtClaims
 
 namespace dbal::security {
@@ -28,12 +27,6 @@ public:
      *        attacks are rejected before any claim is even read.
      */
     std::optional<JwtClaims> validate(const std::string& token) const;
-
-    static std::optional<JwtClaims> fromRequest(
-        const drogon::HttpRequestPtr& req,
-        const std::string& publicKeyPem,
-        const std::string& issuer
-    );
 
 private:
     std::string public_key_pem_;

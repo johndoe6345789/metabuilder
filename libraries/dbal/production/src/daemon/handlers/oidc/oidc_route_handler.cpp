@@ -36,6 +36,21 @@ std::pair<std::string, std::string> splitError(const std::string& message) {
     return {message.substr(0, pos), message.substr(pos + 2)};
 }
 
+// RsJwtValidator itself stays Drogon-free (it's linked into the test targets,
+// which don't link Drogon) -- the HttpRequest bearer-token extraction lives
+// here instead, at its one call site.
+std::optional<dbal::security::JwtClaims> validateBearerToken(
+    const drogon::HttpRequestPtr& req, const std::string& publicKeyPem, const std::string& issuer) {
+    auto auth_header = req->getHeader("Authorization");
+    static const std::string bearer_prefix = "Bearer ";
+    if (auth_header.size() <= bearer_prefix.size() ||
+        auth_header.substr(0, bearer_prefix.size()) != bearer_prefix) {
+        return std::nullopt;
+    }
+    dbal::security::RsJwtValidator validator(publicKeyPem, issuer);
+    return validator.validate(auth_header.substr(bearer_prefix.size()));
+}
+
 } // namespace
 
 OidcRouteHandler::OidcRouteHandler(dbal::oidc::OidcService& service, PendingAuthorizeStore& pendingStore,
@@ -174,7 +189,7 @@ void OidcRouteHandler::handleToken(
 
 void OidcRouteHandler::handleUserinfo(
     const drogon::HttpRequestPtr& req, std::function<void(const drogon::HttpResponsePtr&)>&& cb) const {
-    auto claims = dbal::security::RsJwtValidator::fromRequest(
+    auto claims = validateBearerToken(
         req, service_.keypair().publicKeyPem(), service_.issuer());
     if (!claims) {
         auto resp = jsonResponse({{"error", "invalid_token"}}, drogon::k401Unauthorized);

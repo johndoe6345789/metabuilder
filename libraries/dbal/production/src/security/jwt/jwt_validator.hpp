@@ -9,7 +9,6 @@
 
 #include <optional>
 #include <string>
-#include <drogon/HttpRequest.h>
 
 namespace dbal::security {
 
@@ -48,15 +47,6 @@ public:
      * @return Claims if valid and not expired, std::nullopt otherwise.
      */
     std::optional<JwtClaims> validate(const std::string& token) const;
-
-    /**
-     * @brief Extract Bearer token from Authorization header and validate.
-     * @return Claims if valid, std::nullopt if missing/invalid/expired.
-     */
-    static std::optional<JwtClaims> fromRequest(
-        const drogon::HttpRequestPtr& req,
-        const std::string& secret
-    );
 
 private:
     std::string secret_;

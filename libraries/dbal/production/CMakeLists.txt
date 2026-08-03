@@ -172,7 +172,13 @@ if(BUILD_TESTING)
         tests/security/oidc_rsa_keypair_test.cpp
         tests/security/schema_acl_registry_test.cpp
         tests/security/saml_xmldsig_test.cpp
+        tests/security/token_issuer_role_claim_test.cpp
+        tests/security/rs_jwt_validator_role_claim_test.cpp
+        tests/security/oauth_client_config_post_logout_test.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/oidc/crypto/rsa_keypair.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/oidc/tokens/token_issuer.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/oidc/clients/oauth_client_config.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/security/jwt/rs_jwt_validator.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/saml/xmldsig/xmlsec_context.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/saml/xmldsig/signer.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/saml/xmldsig/verifier.cpp
@@ -230,7 +236,13 @@ option(BUILD_INTEGRATION_TESTS "Build GTest integration tests (SQLite always; PG
 if(BUILD_INTEGRATION_TESTS)
     enable_testing()
 
-    # Adapter sources: SQLite + SQL base (no Drogon HTTP handlers, no cassandra/redis/mongo)
+    # mongocxx is otherwise only found under BUILD_DAEMON -- needed here too
+    # now that adapter_factory.cpp (which #includes mongodb_adapter.hpp
+    # unconditionally, regardless of which adapter a given Client actually
+    # uses at runtime) is compiled into this target, see below.
+    find_package(mongocxx REQUIRED)
+
+    # Adapter sources: SQLite + SQL base (no Drogon HTTP handlers, no cassandra/redis)
     file(GLOB SQLITE_ADAPTER_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/src/adapters/sqlite/*.cpp"
     )
@@ -242,12 +254,20 @@ if(BUILD_INTEGRATION_TESTS)
     )
     list(FILTER SQL_ADAPTER_SOURCES EXCLUDE REGEX ".*/prisma_adapter\\.cpp")
 
+    file(GLOB MONGODB_ADAPTER_SOURCES
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/adapters/mongodb/*.cpp"
+    )
+
     file(GLOB CORE_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/src/core/*.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/core/loaders/*.cpp"
     )
-    # adapter_factory.cpp pulls in mongodb/drogon/redis headers — exclude from test builds
-    list(FILTER CORE_SOURCES EXCLUDE REGEX ".*/adapter_factory\\.cpp$")
+    # adapter_factory.cpp is now included (no longer filtered out) so
+    # dbal::Client -- and by extension OidcService/RefreshTokenStore, which
+    # take a Client& -- can actually be constructed in this test binary. It
+    # unconditionally #includes mongodb_adapter.hpp regardless of which
+    # backend a given test's Client config picks at runtime, hence pulling
+    # in MONGODB_ADAPTER_SOURCES + mongocxx above even for sqlite-only tests.
 
     # Supabase adapter sources (exclude http_client.cpp — needs cpr, daemon-only)
     file(GLOB SUPABASE_ADAPTER_SOURCES
@@ -255,11 +275,19 @@ if(BUILD_INTEGRATION_TESTS)
     )
     list(FILTER SUPABASE_ADAPTER_SOURCES EXCLUDE REGEX ".*/supabase_http_client\\.cpp$")
 
+    file(GLOB CLIENT_SOURCES
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/client*.cpp"
+    )
+
     set(DBAL_INTEGRATION_TEST_SOURCES
         tests/integration/test_main.cpp
         tests/integration/sqlite_bi_test.cpp
         tests/integration/postgres_integration_test.cpp
         tests/integration/mysql_integration_test.cpp
+        tests/integration/client_credential_tenant_test.cpp
+        tests/integration/client_user_crud_test.cpp
+        tests/integration/refresh_token_revoke_test.cpp
+        tests/integration/oidc_browser_session_test.cpp
         tests/unit/supabase_adapter_test.cpp
         tests/unit/sql_utils_test.cpp
         tests/unit/sql_parser_test.cpp
@@ -273,6 +301,13 @@ if(BUILD_INTEGRATION_TESTS)
         tests/unit/sql_adapter_utils_test.cpp
         tests/unit/sql_adapter_di_test.cpp
         src/errors.cpp
+        src/oidc/oidc_service.cpp
+        src/oidc/clients/oauth_client_config.cpp
+        src/oidc/tokens/auth_code_store.cpp
+        src/oidc/tokens/refresh_token_store.cpp
+        src/oidc/tokens/token_issuer.cpp
+        src/oidc/crypto/rsa_keypair.cpp
+        src/security/crypto/password_hash.cpp
     )
 
     add_executable(dbal_integration_tests
@@ -280,11 +315,31 @@ if(BUILD_INTEGRATION_TESTS)
         ${SQLITE_ADAPTER_SOURCES}
         ${SQL_ADAPTER_SOURCES}
         ${SUPABASE_ADAPTER_SOURCES}
+        ${MONGODB_ADAPTER_SOURCES}
         ${CORE_SOURCES}
+        ${CLIENT_SOURCES}
     )
 
     # Pass the template directory at configure time so tests can find SQL Jinja2 templates
     get_filename_component(DBAL_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOLUTE)
+
+    # Entity schema + SQL template dirs: local (non-Docker) checkouts have production/,
+    # shared/, and templates/ as true siblings under dbal/, so these live at
+    # DBAL_ROOT/shared/api/schema/entities and DBAL_ROOT/templates/sql. The Docker
+    # builder image instead COPYs shared/ and templates/ directly under the same
+    # WORKDIR as production/'s own contents (see build-config/Dockerfile), so there
+    # they're direct children of CMAKE_CURRENT_SOURCE_DIR, not DBAL_ROOT. Prefer
+    # whichever actually exists.
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/shared/api/schema/entities")
+        set(DBAL_TEST_SCHEMA_DIR_VALUE "${CMAKE_CURRENT_SOURCE_DIR}/shared/api/schema/entities")
+    else()
+        set(DBAL_TEST_SCHEMA_DIR_VALUE "${DBAL_ROOT}/shared/api/schema/entities")
+    endif()
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/templates/sql")
+        set(DBAL_TEST_TEMPLATE_DIR_VALUE "${CMAKE_CURRENT_SOURCE_DIR}/templates/sql")
+    else()
+        set(DBAL_TEST_TEMPLATE_DIR_VALUE "${DBAL_ROOT}/templates/sql")
+    endif()
 
     # Locate testcontainers-sidecar binary.
     # 1. Try the Conan package: after find_package(testcontainers-sidecar), CMakeDeps exposes
@@ -315,7 +370,8 @@ if(BUILD_INTEGRATION_TESTS)
     endif()
 
     target_compile_definitions(dbal_integration_tests PRIVATE
-        DBAL_TEST_TEMPLATE_DIR="${DBAL_ROOT}/templates/sql"
+        DBAL_TEST_TEMPLATE_DIR="${DBAL_TEST_TEMPLATE_DIR_VALUE}"
+        DBAL_TEST_SCHEMA_DIR="${DBAL_TEST_SCHEMA_DIR_VALUE}"
         TESTCONTAINERS_SIDECAR_BIN="${TESTCONTAINERS_SIDECAR}"
     )
 
@@ -341,6 +397,11 @@ if(BUILD_INTEGRATION_TESTS)
         pantor::inja
         PostgreSQL::PostgreSQL
         ${MYSQL_LIBRARIES}
+        mongo::mongocxx_static
+        mongo::bsoncxx_static
+        jwt-cpp::jwt-cpp
+        OpenSSL::Crypto
+        argon2::argon2
     )
 
     # Supabase unit tests use a GMock ISupabaseHttpClient — real SupabaseHttpClient

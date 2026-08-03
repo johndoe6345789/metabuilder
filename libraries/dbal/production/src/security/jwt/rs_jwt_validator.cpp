@@ -56,19 +56,4 @@ std::optional<JwtClaims> RsJwtValidator::validate(const std::string& token) cons
     }
 }
 
-std::optional<JwtClaims> RsJwtValidator::fromRequest(
-    const drogon::HttpRequestPtr& req,
-    const std::string& publicKeyPem,
-    const std::string& issuer
-) {
-    auto auth_header = req->getHeader("Authorization");
-    static const std::string bearer_prefix = "Bearer ";
-    if (auth_header.size() <= bearer_prefix.size() ||
-        auth_header.substr(0, bearer_prefix.size()) != bearer_prefix) {
-        return std::nullopt;
-    }
-    RsJwtValidator validator(publicKeyPem, issuer);
-    return validator.validate(auth_header.substr(bearer_prefix.size()));
-}
-
 } // namespace dbal::security
