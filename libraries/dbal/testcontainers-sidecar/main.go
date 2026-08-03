@@ -33,7 +33,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/docker/go-connections/nat"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 )
@@ -81,7 +80,7 @@ func main() {
 	}
 
 	// Choose wait strategy
-	tcPort := nat.Port(fmt.Sprintf("%d/tcp", *port))
+	tcPort := fmt.Sprintf("%d/tcp", *port)
 	var strategy wait.Strategy
 	switch {
 	case *waitLog != "":
@@ -105,7 +104,7 @@ func main() {
 		ContainerRequest: testcontainers.ContainerRequest{
 			Image:        *image,
 			Env:          envMap,
-			ExposedPorts: []string{string(tcPort)},
+			ExposedPorts: []string{tcPort},
 			WaitingFor:   strategy,
 		},
 		Started: true,
