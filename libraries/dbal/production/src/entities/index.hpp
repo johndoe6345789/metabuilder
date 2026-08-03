@@ -8,7 +8,6 @@
 #ifndef DBAL_ENTITIES_INDEX_HPP
 #define DBAL_ENTITIES_INDEX_HPP
 
-#include "user/index.hpp"
 #include "page/index.hpp"
 #include "component/index.hpp"
 #include "workflow/index.hpp"
