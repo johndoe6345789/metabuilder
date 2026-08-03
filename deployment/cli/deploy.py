@@ -1,12 +1,12 @@
 """Build + deploy one or more apps with health check polling."""
 
 import argparse
-import subprocess
 import sys
 import time
 from cli.helpers import (
     COMPOSE_FILE, GREEN, RED, YELLOW, BLUE, NC,
-    docker_compose, get_buildable_services, log_err, log_warn, resolve_services, run as run_proc,
+    container_health, docker_compose, get_buildable_services, log_err,
+    log_warn, resolve_services, run as run_proc,
 )
 
 
@@ -51,11 +51,7 @@ def run_cmd(args: argparse.Namespace, config: dict) -> int:
 
         status = "unknown"
         for _ in range(30):
-            result = subprocess.run(
-                ["docker", "inspect", "--format", "{{.State.Health.Status}}", container],
-                capture_output=True, text=True,
-            )
-            status = result.stdout.strip() if result.returncode == 0 else "missing"
+            status = container_health(container)
             if status in ("healthy", "unhealthy"):
                 break
             time.sleep(2)

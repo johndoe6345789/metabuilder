@@ -72,6 +72,36 @@ def docker_compose(*args: str, dev: bool = False) -> list[str]:
     return ["docker", "compose", *files, *args]
 
 
+def container_health(container: str) -> str:
+    """Return 'healthy', 'unhealthy', or 'missing' for a container.
+
+    Many services (loki, promtail, one-shot init jobs like dbal-init) have
+    no HEALTHCHECK, which makes `--format {{.State.Health.Status}}` error
+    out (nil `.State.Health`) rather than report anything useful. Fetch run
+    state alongside health in one call and fall back to it: running with no
+    healthcheck is healthy, and an init container that exited 0 completed
+    successfully rather than failing to become healthy.
+    """
+    result = subprocess.run(
+        ["docker", "inspect", "--format",
+         "{{.State.Status}}|{{.State.ExitCode}}|"
+         "{{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}",
+         container],
+        capture_output=True, text=True,
+    )
+    if result.returncode != 0:
+        return "missing"
+
+    state, exit_code, health = result.stdout.strip().split("|")
+    if health in ("healthy", "unhealthy"):
+        return health
+    if state == "running":
+        return "healthy"
+    if state == "exited" and exit_code == "0":
+        return "healthy"
+    return "unhealthy"
+
+
 def curl_status(url: str, auth: str | None = None, timeout: int = 5) -> int:
     """Return HTTP status code for a URL, or 0 on connection error."""
     cmd = ["curl", "-s", "-o", os.devnull, "-w", "%{http_code}",
