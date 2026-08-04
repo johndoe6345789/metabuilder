@@ -23,7 +23,7 @@ psycopg2-binary==2.9.9
 python-dotenv==1.2.2
 
 # Security & Encryption
-cryptography==48.0.1
+cryptography==50.0.0
 pyjwt==2.13.0
 
 # HTTP & Requests
