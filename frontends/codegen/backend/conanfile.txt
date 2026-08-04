@@ -1,6 +1,7 @@
 [requires]
 drogon/1.9.3
 sqlite3/3.46.1
+gtest/1.14.0
 
 [options]
 drogon/*:with_postgres=True

@@ -2,7 +2,8 @@ FROM debian:bookworm AS build
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-       ca-certificates cmake g++ ninja-build python3-pip \
+       ca-certificates cmake g++ make ninja-build python3-pip \
+       pkg-config autoconf automake libtool \
     && rm -rf /var/lib/apt/lists/*
 
 RUN python3 -m pip install --break-system-packages --no-cache-dir conan

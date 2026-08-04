@@ -576,12 +576,66 @@ services:
       # (src/lib/adminAuth.ts), never NEXT_PUBLIC_-prefixed.
       DBAL_DAEMON_URL: http://dbal:8080
       DBAL_ADMIN_TOKEN: ${DBAL_ADMIN_TOKEN:-069e6487a710300381cd52120eab95d56d7f53beee21479cbeba9128217cbea9}
+      # Server-only -- next.config.js's rewrites() proxies /api/storage/* and
+      # /health to this C++ backend at request time (not a NEXT_PUBLIC_ build arg).
+      FLASK_BACKEND_URL: http://codegen-backend:5001
+    depends_on:
+      codegen-backend:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:3000/codegen"]
       interval: 15s
       timeout: 5s
       retries: 3
       start_period: 30s
+    networks:
+      - metabuilder
+
+  # Codegen - Dedicated PostgreSQL (isolated from main metabuilder db)
+  codegen-db:
+    image: postgres:16-alpine
+    container_name: metabuilder-codegen-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: codegen
+      POSTGRES_USER: codegen
+      POSTGRES_PASSWORD: codegen
+    volumes:
+      - codegen-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U codegen -d codegen"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - metabuilder
+
+  # Codegen Backend - C++/Drogon storage API
+  codegen-backend:
+    build:
+      context: ../../frontends/codegen/backend
+      dockerfile: Dockerfile
+    container_name: metabuilder-codegen-backend
+    restart: unless-stopped
+    environment:
+      PORT: "5001"
+      DATABASE_URL: >-
+        host=codegen-db port=5432
+        dbname=codegen user=codegen password=codegen
+      MIGRATIONS_DIR: /app/migrations
+      SQLITE_MIGRATION_PATH: /data/codeforge.db
+      ALLOWED_ORIGINS: "*"
+    volumes:
+      - codegen-backend-data:/data
+    depends_on:
+      codegen-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:5001/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
     networks:
       - metabuilder
 
@@ -1543,6 +1597,10 @@ volumes:
   retro-roms:
     driver: local
   pastebin-backend-data:
+    driver: local
+  codegen-db-data:
+    driver: local
+  codegen-backend-data:
     driver: local
   packagerepo-pgdata:
     driver: local

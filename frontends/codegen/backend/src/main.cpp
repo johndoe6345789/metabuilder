@@ -2,14 +2,12 @@
 #include <drogon/orm/DbClient.h>
 #include <sqlite3.h>
 
-#include <chrono>
+#include "util.hpp"
+
 #include <algorithm>
-#include <cstdlib>
 #include <filesystem>
-#include <fstream>
 #include <iostream>
 #include <memory>
-#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <thread>
@@ -22,47 +20,13 @@ using drogon::HttpRequestPtr;
 using drogon::HttpResponse;
 using drogon::HttpResponsePtr;
 using drogon::orm::DbClientPtr;
-
-std::string envOr(const char* name, const std::string& fallback)
-{
-    if (const char* v = std::getenv(name); v && *v)
-        return v;
-    return fallback;
-}
-
-int envInt(const char* name, int fallback)
-{
-    if (const char* v = std::getenv(name); v && *v)
-        return std::stoi(v);
-    return fallback;
-}
-
-std::string nowIso()
-{
-    auto t = std::chrono::system_clock::to_time_t(
-        std::chrono::system_clock::now());
-    char buf[32];
-    std::strftime(buf, sizeof buf, "%Y-%m-%dT%H:%M:%SZ", std::gmtime(&t));
-    return buf;
-}
-
-Json::Value parseJson(const std::string& text)
-{
-    Json::Value out;
-    Json::CharReaderBuilder b;
-    std::string errs;
-    std::istringstream in(text);
-    if (!Json::parseFromStream(b, in, &out, &errs))
-        throw std::runtime_error(errs);
-    return out;
-}
-
-std::string jsonText(const Json::Value& v)
-{
-    Json::StreamWriterBuilder b;
-    b["indentation"] = "";
-    return Json::writeString(b, v);
-}
+using codegen_backend::envInt;
+using codegen_backend::envOr;
+using codegen_backend::jsonText;
+using codegen_backend::nowIso;
+using codegen_backend::parseJson;
+using codegen_backend::readFile;
+using codegen_backend::sqlStatements;
 
 HttpResponsePtr jsonResponse(const Json::Value& v,
                              drogon::HttpStatusCode code = drogon::k200OK)
@@ -78,37 +42,6 @@ HttpResponsePtr errorResponse(const std::string& msg,
     Json::Value e;
     e["error"] = msg;
     return jsonResponse(e, code);
-}
-
-std::string readFile(const std::filesystem::path& p)
-{
-    std::ifstream in(p);
-    if (!in)
-        throw std::runtime_error("failed to read " + p.string());
-    std::ostringstream ss;
-    ss << in.rdbuf();
-    return ss.str();
-}
-
-std::vector<std::string> sqlStatements(const std::string& sql)
-{
-    std::vector<std::string> out;
-    std::string cur;
-    bool single = false;
-    for (char c : sql) {
-        if (c == '\'')
-            single = !single;
-        if (c == ';' && !single) {
-            if (cur.find_first_not_of(" \n\r\t") != std::string::npos)
-                out.push_back(cur);
-            cur.clear();
-            continue;
-        }
-        cur += c;
-    }
-    if (cur.find_first_not_of(" \n\r\t") != std::string::npos)
-        out.push_back(cur);
-    return out;
 }
 
 class Store
