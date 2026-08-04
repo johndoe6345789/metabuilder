@@ -560,6 +560,11 @@ services:
         NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID: codegen-web
         NEXT_PUBLIC_DBAL_API_URL: /api/dbal
         NEXT_PUBLIC_DBAL_TENANT: codegen
+        # Server-only -- baked at build time because next.config.js's
+        # rewrites() destination is frozen into routes-manifest.json by
+        # `next build`; setting this under `environment:` alone (runtime)
+        # has no effect on the standalone server's proxy target.
+        FLASK_BACKEND_URL: http://codegen-backend:5001
     container_name: metabuilder-codegen
     restart: unless-stopped
     environment:
