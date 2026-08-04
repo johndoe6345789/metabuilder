@@ -815,6 +815,13 @@ services:
     build:
       context: ../..
       dockerfile: frontends/nextjs/Dockerfile
+      args:
+        # Browser-reachable DBAL origin for the OIDC PKCE dance, same
+        # relative-path convention as pastebin/codegen/dbal-frontend's
+        # build args -- baked in because next.config.ts's rewrites-adjacent
+        # config is resolved at `next build` time.
+        NEXT_PUBLIC_DBAL_OIDC_BASE_URL: "${NEXT_PUBLIC_DBAL_OIDC_BASE_URL:-/api/dbal}"
+        NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID: nextjs-web
     container_name: metabuilder-frontend-app
     restart: unless-stopped
     env_file:
@@ -827,6 +834,9 @@ services:
       METABUILDER_INTERNAL_URL: http://127.0.0.1:3000/app
       DBAL_API_URL: http://dbal:8080
       DBAL_WS_URL: ws://dbal:50051
+      # Server-only -- used by src/lib/auth/api/register.ts to provision
+      # Credentials through DBAL's Argon2id-hashing admin endpoint.
+      DBAL_ADMIN_TOKEN: ${DBAL_ADMIN_TOKEN:-069e6487a710300381cd52120eab95d56d7f53beee21479cbeba9128217cbea9}
     depends_on:
       dbal:
         condition: service_healthy

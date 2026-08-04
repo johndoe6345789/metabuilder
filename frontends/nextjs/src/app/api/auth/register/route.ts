@@ -1,14 +1,14 @@
 /**
  * POST /api/auth/register
  *
- * Creates a new user account and sets a session cookie.
+ * Creates a new user account and its DBAL Credential. Does not sign the
+ * caller in -- the client redirects to DBAL's OIDC login afterward, same as
+ * any other account, so there is no separate registration session mechanism
+ * to keep in sync with the OIDC-issued one.
  */
 
 import { NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
 import { register } from '@/lib/auth/api/register'
-import { db } from '@/lib/db-client'
-import crypto from 'crypto'
 
 export async function POST(request: Request): Promise<NextResponse> {
   try {
@@ -31,25 +31,6 @@ export async function POST(request: Request): Promise<NextResponse> {
     if (!result.success || result.user === null) {
       return NextResponse.json(result, { status: 400 })
     }
-
-    // Create a session token and persist it
-    const sessionToken = crypto.randomUUID()
-    await db.sessions.create({
-      id: `sess_${sessionToken}`,
-      userId: result.user.id ?? '',
-      token: sessionToken,
-      expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000,
-    })
-
-    // Set session cookie
-    const cookieStore = await cookies()
-    cookieStore.set('session_token', sessionToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 7 * 24 * 60 * 60,
-    })
 
     return NextResponse.json(result)
   } catch (error) {

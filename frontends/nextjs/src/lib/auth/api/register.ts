@@ -1,13 +1,22 @@
 /**
  * Register API
  *
- * Creates a new user account with username, email, and password
+ * Creates a new user account with username, email, and password. The
+ * Credential itself is provisioned through DBAL's own admin endpoint (real
+ * Argon2id hashing) rather than hashed locally, so the account can actually
+ * log in afterward through DBAL's OIDC /oidc/login -- which verifies against
+ * Argon2id, not any locally-chosen scheme.
  */
 
 import type { User } from '@/lib/types/level-types'
 import type { DbalUserRecord } from '@/lib/auth/types'
 import { db } from '@/lib/db-client'
 import crypto from 'crypto'
+
+const DBAL_URL =
+  process.env.DBAL_ENDPOINT ??
+  process.env.DBAL_API_URL ??
+  'http://localhost:8080'
 
 export interface RegisterData {
   username: string
@@ -21,11 +30,19 @@ export interface RegisterResult {
   error?: string
 }
 
-/**
- * Hash password using SHA-512
- */
-function hashPassword(password: string): string {
-  return crypto.createHash('sha512').update(password).digest('hex')
+async function createDbalCredential(username: string, password: string): Promise<void> {
+  const res = await fetch(`${DBAL_URL}/admin/credentials`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.DBAL_ADMIN_TOKEN ?? ''}`,
+    },
+    body: JSON.stringify({ username, password }),
+  })
+  if (!res.ok) {
+    const body = await res.text().catch(() => '')
+    throw new Error(`Failed to provision credential: ${res.status} ${body}`)
+  }
 }
 
 export async function register(username: string, email: string, password: string): Promise<RegisterResult> {
@@ -65,9 +82,6 @@ export async function register(username: string, email: string, password: string
       }
     }
 
-    // Hash password
-    const passwordHash = hashPassword(password)
-
     // Create user
     const userId = crypto.randomUUID()
 
@@ -76,20 +90,16 @@ export async function register(username: string, email: string, password: string
       username,
       email,
       role: 'user',
-      createdAt: BigInt(Date.now()),
+      createdAt: Date.now(),
       isInstanceOwner: false,
       tenantId: null,
       profilePicture: null,
       bio: null,
     }) as unknown as DbalUserRecord
 
-    // Create credentials
-    await db.credentials.create({
-      id: `cred_${userId}`,
-      username,
-      passwordHash,
-      userId,
-    })
+    // Provision the Credential through DBAL's own admin endpoint so the
+    // password is Argon2id-hashed the same way DBAL's OIDC login verifies it.
+    await createDbalCredential(username, password)
 
     const user: User = {
       id: newUser.id,

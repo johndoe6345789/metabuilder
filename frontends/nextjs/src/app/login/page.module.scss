@@ -49,45 +49,6 @@
   margin: 0 0 16px;
 }
 
-.form {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.label {
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: var(--foreground);
-}
-
-.input {
-  width: 100%;
-  padding: 10px 14px;
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  background: var(--background);
-  color: var(--foreground);
-  font-size: 0.9375rem;
-  font-family: inherit;
-  transition: border-color 150ms ease, box-shadow 150ms ease;
-
-  &::placeholder { color: var(--muted-foreground); }
-
-  &:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px oklch(from var(--primary) l c h / 0.15);
-  }
-}
-
 .error {
   font-size: 0.8125rem;
   color: var(--destructive);
@@ -112,40 +73,19 @@
   &:disabled { opacity: 0.6; cursor: not-allowed; }
 }
 
-.divider {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.signin {
+  font-size: 0.8125rem;
   color: var(--muted-foreground);
-  font-size: 0.75rem;
-  margin-top: 4px;
-
-  &::before, &::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
+  text-align: center;
+  margin: 8px 0 0;
 }
 
-.turbo {
-  width: 100%;
-  padding: 12px;
-  background: transparent;
+.link {
   color: var(--primary);
-  border: 1.5px solid var(--primary);
-  border-radius: 16px;
-  font-family: var(--font-sans, inherit);
-  font-size: 0.9375rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 150ms ease, opacity 150ms ease;
+  font-weight: 500;
+  text-decoration: none;
 
-  &:hover:not(:disabled) {
-    background: oklch(from var(--primary) l c h / 0.08);
-  }
-  &:disabled { opacity: 0.6; cursor: not-allowed; }
+  &:hover { text-decoration: underline; }
 }
 
 .back {

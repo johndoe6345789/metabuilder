@@ -38,6 +38,7 @@ COPY libraries/translations/ ./libraries/translations/
 COPY libraries/dbal/shared/ui/ ./libraries/dbal/shared/ui/
 
 # ── Redux packages (all — small TS source, avoids transitive dep breakage) ───
+COPY libraries/redux/dbal-sso/ ./libraries/redux/dbal-sso/
 COPY libraries/redux/core/ ./libraries/redux/core/
 COPY libraries/redux/slices/ ./libraries/redux/slices/
 COPY libraries/redux/hooks/ ./libraries/redux/hooks/
@@ -84,6 +85,12 @@ done
 # cross-origin everywhere else and was the cause of "DBAL Offline".
 ARG NEXT_PUBLIC_DBAL_API_URL=/api/dbal
 ENV NEXT_PUBLIC_DBAL_API_URL=$NEXT_PUBLIC_DBAL_API_URL
+# Browser-reachable DBAL origin for the OIDC PKCE dance, same relative-path
+# convention as NEXT_PUBLIC_DBAL_API_URL above.
+ARG NEXT_PUBLIC_DBAL_OIDC_BASE_URL=/api/dbal
+ARG NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID=nextjs-web
+ENV NEXT_PUBLIC_DBAL_OIDC_BASE_URL=$NEXT_PUBLIC_DBAL_OIDC_BASE_URL
+ENV NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID=$NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID
 RUN cd frontends/nextjs && npx next build --turbopack
 
 # --- Runtime stage ---

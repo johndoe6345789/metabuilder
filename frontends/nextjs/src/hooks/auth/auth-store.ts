@@ -2,19 +2,27 @@
  * @file auth-store.ts
  * @description Authentication state management store
  *
- * All auth operations go through API routes to avoid importing
- * server-only modules into the client bundle.
+ * Backed by DBAL's own OIDC flow (@metabuilder/dbal-sso/core) -- the store
+ * holds the access/refresh token pair in sessionStorage and asks
+ * /api/auth/session (a thin server-side proxy to DBAL's /oidc/userinfo +
+ * User entity) for the full profile, rather than owning a password check or
+ * server-side session table itself.
  */
 
+import {
+  refreshTokens,
+  logout as oidcLogout,
+  setAuthToken,
+  isTokenValid,
+} from '@metabuilder/dbal-sso/core'
 import type { User } from '@/lib/types/level-types'
 import type { AuthState } from './auth-types'
 import { mapUserToAuthUser } from './utils/map-user'
 import { BASE_PATH } from '@/lib/app-config'
+import { dbalSsoConfig, loadPersistedSession, savePersistedSession } from '@/lib/dbalSsoConfig'
 
-interface AuthApiResponse {
-  success: boolean
+interface SessionApiResponse {
   user: User | null
-  error?: string
 }
 
 export class AuthStore {
@@ -26,6 +34,7 @@ export class AuthStore {
 
   private readonly listeners = new Set<() => void>()
   private sessionCheckPromise: Promise<void> | null = null
+  private refreshToken: string | null = null
 
   getState(): AuthState {
     return this.state
@@ -43,6 +52,23 @@ export class AuthStore {
     this.listeners.forEach(listener => { listener(); })
   }
 
+  private async loadProfile(token: string): Promise<void> {
+    const response = await fetch(`${BASE_PATH}/api/auth/session`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    const result = await response.json() as SessionApiResponse
+
+    if (result.user === null) {
+      throw new Error('Session token rejected')
+    }
+
+    this.setState({
+      user: mapUserToAuthUser(result.user),
+      isAuthenticated: true,
+      isLoading: false,
+    })
+  }
+
   async ensureSessionChecked(): Promise<void> {
     this.sessionCheckPromise ??= this.refresh().finally(() => {
       this.sessionCheckPromise = null
@@ -50,89 +76,13 @@ export class AuthStore {
     return this.sessionCheckPromise
   }
 
-  async login(identifier: string, password: string): Promise<void> {
-    this.setState({
-      ...this.state,
-      isLoading: true,
-    })
-
-    try {
-      const response = await fetch(`${BASE_PATH}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ identifier, password }),
-      })
-
-      const result = await response.json() as AuthApiResponse
-
-      if (!result.success || result.user === null) {
-        this.setState({
-          ...this.state,
-          isLoading: false,
-        })
-        throw new Error(result.error ?? 'Login failed')
-      }
-
-      this.setState({
-        user: mapUserToAuthUser(result.user),
-        isAuthenticated: true,
-        isLoading: false,
-      })
-    } catch (error) {
-      this.setState({
-        ...this.state,
-        isLoading: false,
-      })
-      throw error
-    }
-  }
-
-  async register(username: string, email: string, password: string): Promise<void> {
-    this.setState({
-      ...this.state,
-      isLoading: true,
-    })
-
-    try {
-      const response = await fetch(`${BASE_PATH}/api/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ username, email, password }),
-      })
-
-      const result = await response.json() as AuthApiResponse
-
-      if (!result.success || result.user === null) {
-        this.setState({
-          ...this.state,
-          isLoading: false,
-        })
-        throw new Error(result.error ?? 'Registration failed')
-      }
-
-      this.setState({
-        user: mapUserToAuthUser(result.user),
-        isAuthenticated: true,
-        isLoading: false,
-      })
-    } catch (error) {
-      this.setState({
-        ...this.state,
-        isLoading: false,
-      })
-      throw error
-    }
-  }
-
   async logout(): Promise<void> {
     try {
-      await fetch(`${BASE_PATH}/api/auth/logout`, {
-        method: 'POST',
-        credentials: 'include',
-      })
+      await oidcLogout(dbalSsoConfig, this.refreshToken)
     } finally {
+      this.refreshToken = null
+      setAuthToken(null)
+      savePersistedSession(null)
       this.setState({
         user: null,
         isAuthenticated: false,
@@ -141,39 +91,58 @@ export class AuthStore {
     }
   }
 
+  /** Rehydrates from a persisted token (valid or refreshable), or applies a
+   * freshly-issued one from the OIDC callback page. */
   async refresh(): Promise<void> {
-    this.setState({
-      ...this.state,
-      isLoading: true,
-    })
+    this.setState({ ...this.state, isLoading: true })
+
+    const persisted = loadPersistedSession()
+    if (persisted === null) {
+      this.setState({ user: null, isAuthenticated: false, isLoading: false })
+      return
+    }
 
     try {
-      const response = await fetch(`${BASE_PATH}/api/auth/session`, {
-        credentials: 'include',
-      })
+      let token = persisted.token
+      let refreshToken = persisted.refreshToken
 
-      const result = await response.json() as { user: User | null }
-
-      if (result.user !== null && result.user !== undefined) {
-        this.setState({
-          user: mapUserToAuthUser(result.user),
-          isAuthenticated: true,
-          isLoading: false,
-        })
-      } else {
-        this.setState({
-          user: null,
-          isAuthenticated: false,
-          isLoading: false,
-        })
+      if (!isTokenValid(token)) {
+        if (refreshToken === null) {
+          throw new Error('Session expired')
+        }
+        const tokens = await refreshTokens(dbalSsoConfig, refreshToken)
+        token = tokens.token
+        refreshToken = tokens.refreshToken
+        savePersistedSession({ token, refreshToken })
       }
+
+      this.refreshToken = refreshToken
+      setAuthToken(token)
+      await this.loadProfile(token)
     } catch (error) {
-      this.setState({
-        user: null,
-        isAuthenticated: false,
-        isLoading: false,
-      })
+      this.refreshToken = null
+      setAuthToken(null)
+      savePersistedSession(null)
+      this.setState({ user: null, isAuthenticated: false, isLoading: false })
       console.error('Failed to refresh session', error)
+    }
+  }
+
+  /** Applies a token pair obtained directly from the OIDC callback page
+   * (already exchanged there), persisting and loading the profile. */
+  async applySession(token: string, refreshToken: string | null): Promise<void> {
+    this.refreshToken = refreshToken
+    setAuthToken(token)
+    savePersistedSession({ token, refreshToken })
+    this.setState({ ...this.state, isLoading: true })
+    try {
+      await this.loadProfile(token)
+    } catch (error) {
+      this.refreshToken = null
+      setAuthToken(null)
+      savePersistedSession(null)
+      this.setState({ user: null, isAuthenticated: false, isLoading: false })
+      throw error
     }
   }
 }

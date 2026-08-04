@@ -3,8 +3,9 @@ import type { Configuration } from 'webpack'
 import type webpack from 'webpack'
 import path from 'path'
 import fs from 'fs'
+import { fileURLToPath } from 'url'
 
-const projectDir = process.cwd()
+const projectDir = fileURLToPath(new URL('.', import.meta.url))
 const monorepoRoot = path.resolve(projectDir, '../..')
 
 // Read version from monorepo root package.json at build time
@@ -37,6 +38,7 @@ const nextConfig: NextConfig = {
     silenceDeprecations: ['legacy-js-api', 'import'],
   },
   transpilePackages: [
+    '@metabuilder/dbal-sso',
     '@metabuilder/m3',
     '@metabuilder/redux-persist',
     '@metabuilder/service-adapters',

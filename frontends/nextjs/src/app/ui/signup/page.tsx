@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { beginLogin } from '@metabuilder/dbal-sso/core'
+import { dbalSsoConfig } from '@/lib/dbalSsoConfig'
 import {
   PRODUCT_TIERS,
   PRODUCT_PACKAGES,
@@ -26,7 +27,6 @@ function slugify(val: string): string {
 }
 
 export default function SignupPage() {
-  const router = useRouter()
   const [community, setCommunity] = useState('')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -63,7 +63,9 @@ export default function SignupPage() {
         setError(json.error ?? 'Registration failed. Please try again.')
         return
       }
-      router.replace('/dashboard')
+      // The account now exists in DBAL; sign in through the normal OIDC
+      // flow rather than fabricating a local session here.
+      await beginLogin(dbalSsoConfig)
     } catch {
       setError('Could not connect. Please try again.')
     } finally {
