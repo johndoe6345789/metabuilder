@@ -1,15 +1,16 @@
-# CodeForge Flask Backend
+# CodeForge Backend
 
-A Flask-based storage backend for CodeForge that provides persistent storage using SQLite.
+A C++/Drogon storage backend for CodeForge, backed by PostgreSQL.
 
 ## Features
 
 - RESTful API for key-value storage
-- SQLite database for data persistence
+- PostgreSQL for data persistence
 - CORS enabled for frontend communication
 - Data import/export functionality
 - Health check endpoint
 - Storage statistics
+- One-time migration from a legacy SQLite database, if present
 
 ## API Endpoints
 
@@ -71,106 +72,52 @@ GET /api/storage/stats
 Response: {
   "total_keys": 42,
   "total_size_bytes": 123456,
-  "database_path": "/data/codeforge.db"
+  "database": "postgres"
 }
 ```
 
 ## Environment Variables
 
 - `PORT`: Server port (default: 5001)
-- `DEBUG`: Enable debug mode (default: false)
-- `DATABASE_PATH`: SQLite database file path (default: /data/codeforge.db)
+- `DATABASE_URL`: Postgres connection string (default: `host=codegen-db port=5432 dbname=codegen user=codegen password=codegen`)
+- `MIGRATIONS_DIR`: SQL migrations directory (default: `/app/migrations`)
+- `SQLITE_MIGRATION_PATH`: Path to a legacy SQLite database to one-time-migrate from, if present (default: `/data/codeforge.db`)
+- `ALLOWED_ORIGINS`: CORS allowed origins (default: `*`)
+
+## Building
+
+Requires Conan 2 + CMake + Ninja (or Make).
+
+```bash
+cd backend
+conan install . --output-folder=build --build=missing -s build_type=Release
+cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+```
+
+### Running tests
+
+```bash
+cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake -DBUILD_TESTING=ON
+cmake --build build --target codegen-backend-tests
+./build/codegen-backend-tests
+```
 
 ## Running with Docker
 
-### Build the image
+This service is built and run as part of the monorepo's `deployment/metabuilder/compose.yml` stack (services `codegen-backend` + `codegen-db`):
+
 ```bash
-docker build -t codeforge-backend ./backend
-```
-
-### Run the container
-```bash
-docker run -d \
-  -p 5001:5001 \
-  -v codeforge-data:/data \
-  --name codeforge-backend \
-  codeforge-backend
-```
-
-### With custom settings
-```bash
-docker run -d \
-  -p 8080:8080 \
-  -e PORT=8080 \
-  -e DEBUG=true \
-  -v $(pwd)/data:/data \
-  --name codeforge-backend \
-  codeforge-backend
-```
-
-## Running without Docker
-
-### Install dependencies
-```bash
-cd backend
-pip install -r requirements.txt
-```
-
-### Development mode
-```bash
-python app.py
-```
-
-### Production mode with gunicorn
-```bash
-gunicorn --bind 0.0.0.0:5001 --workers 4 app:app
-```
-
-## Docker Compose
-
-Add to your `docker-compose.yml`:
-
-```yaml
-version: '3.8'
-
-services:
-  backend:
-    build: ./backend
-    ports:
-      - "5001:5001"
-    volumes:
-      - codeforge-data:/data
-    environment:
-      - PORT=5001
-      - DEBUG=false
-      - DATABASE_PATH=/data/codeforge.db
-    restart: unless-stopped
-
-volumes:
-  codeforge-data:
-```
-
-Run with:
-```bash
-docker-compose up -d
+docker compose -f deployment/metabuilder/compose.yml up -d codegen-backend codegen-db
 ```
 
 ## Data Persistence
 
-The SQLite database is stored in `/data/codeforge.db` inside the container. Mount a volume to persist data:
-
-```bash
-# Named volume (recommended)
--v codeforge-data:/data
-
-# Bind mount
--v $(pwd)/data:/data
-```
+Data lives in the `codegen-db` PostgreSQL service (see `codegen-db-data` volume in compose.yml). The `SQLITE_MIGRATION_PATH` volume (`codegen-backend-data`) only matters for a one-time migration from a legacy SQLite deployment, if one exists.
 
 ## Security Considerations
 
-- This backend is designed for local/internal use
-- No authentication is implemented by default
+- No authentication is implemented on this API by default
 - CORS is enabled for all origins
 - For production use, consider adding:
   - Authentication/authorization
@@ -181,20 +128,8 @@ The SQLite database is stored in `/data/codeforge.db` inside the container. Moun
 
 ## Troubleshooting
 
-### Port already in use
-Change the port mapping:
-```bash
-docker run -p 8080:5001 ...
-```
-
-### Permission denied on /data
-Ensure the volume has proper permissions:
-```bash
-docker run --user $(id -u):$(id -g) ...
-```
-
 ### Cannot connect from frontend
 Check:
-1. Backend is running: `curl http://localhost:5001/health`
+1. Backend is running and healthy: `curl http://localhost:5001/health`
 2. CORS is enabled (it should be by default)
-3. Frontend BACKEND_URL environment variable is set correctly
+3. The `codegen` frontend's `FLASK_BACKEND_URL` build arg points at `http://codegen-backend:5001`
