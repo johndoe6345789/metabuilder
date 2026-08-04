@@ -11,6 +11,33 @@
 namespace dbal::daemon::handlers::oidc {
 
 namespace {
+
+// Reads a `{"user":"...","pass":"..."}` blob from the clipboard (copied
+// from vault.wardcrew.com), fills the form, and submits it -- the single
+// central implementation of "Turbologin" now that every app's own login
+// page redirects here instead of collecting a password itself.
+constexpr const char* kTurboLoginScript = R"JS(
+<script>
+async function turboLogin() {
+  const errEl = document.getElementById('turbo-error');
+  errEl.style.display = 'none';
+  try {
+    const raw = await navigator.clipboard.readText();
+    if (!raw.trim()) throw new Error('Clipboard is empty. Copy a Turbologin from vault.wardcrew.com first.');
+    let data;
+    try { data = JSON.parse(raw); } catch { throw new Error('Clipboard does not contain valid Turbologin JSON.'); }
+    if (!data.user || !data.pass) throw new Error('Clipboard JSON is missing required fields (user, pass).');
+    document.getElementById('username').value = data.user;
+    document.getElementById('password').value = data.pass;
+    document.getElementById('login-form').submit();
+  } catch (e) {
+    errEl.textContent = e.message || 'Could not read clipboard. Please allow clipboard access and try again.';
+    errEl.style.display = 'block';
+  }
+}
+</script>
+)JS";
+
 std::string renderLoginForm(const std::string& publicPathPrefix, const std::string& continuationToken,
                              const std::string& error = "") {
     std::string errorHtml = error.empty() ? "" : "<div class=\"error\" role=\"alert\">" + error + "</div>";
@@ -21,7 +48,7 @@ std::string renderLoginForm(const std::string& publicPathPrefix, const std::stri
            "<div class=\"card\">"
            "<p class=\"brand\">MetaBuilder SSO</p>"
            "<h1>Sign in</h1>" + errorHtml +
-           "<form method=\"POST\" action=\"" + publicPathPrefix + "/oidc/login\">"
+           "<form id=\"login-form\" method=\"POST\" action=\"" + publicPathPrefix + "/oidc/login\">"
            "<input type=\"hidden\" name=\"continuation\" value=\"" + continuationToken + "\">"
            "<div class=\"field\"><label for=\"username\">Username</label>"
            "<input id=\"username\" type=\"text\" name=\"username\" autofocus autocomplete=\"username\"></div>"
@@ -29,6 +56,10 @@ std::string renderLoginForm(const std::string& publicPathPrefix, const std::stri
            "<input id=\"password\" type=\"password\" name=\"password\" autocomplete=\"current-password\"></div>"
            "<button type=\"submit\">Sign in</button>"
            "</form>"
+           "<div class=\"divider\">or</div>"
+           "<div class=\"error\" id=\"turbo-error\" role=\"alert\" style=\"display:none\"></div>"
+           "<button type=\"button\" class=\"turbo\" onclick=\"turboLogin()\">\xE2\x9A\xA1 Turbologin</button>" +
+           kTurboLoginScript +
            "<p class=\"footnote\">Signing in via OpenID Connect</p>"
            "</div></body></html>";
 }

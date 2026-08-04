@@ -114,6 +114,33 @@ inline const std::string& loginPageStyle() {
   }
   button[type="submit"]:hover { background: var(--accent-hover); }
   button[type="submit"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 18px 0;
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+  .divider::before, .divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  button.turbo {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
+    background: transparent;
+    border: 1.5px solid var(--accent);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  button.turbo:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
   .error {
     background: var(--error-bg);
     color: var(--error-text);
