@@ -157,8 +157,6 @@ jobs:
         uses: docker://mcr.microsoft.com/playwright:v1.57.0
         with:
           args: sh -c "HOME=/root npm run test:e2e" # Set HOME to /root to avoid Playwright error with Firebox
-        env:
-          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
 
       - name: Fix test results permission # Give permissions to test results needed by Chromatic
         run: |
