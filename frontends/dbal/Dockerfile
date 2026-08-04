@@ -19,20 +19,37 @@ RUN conan install . \
     && cmake --build build --config Release
 
 # Stage 2: Build the Next.js frontend
+#
+# /app is kept as the true monorepo root (not frontends/dbal itself), same
+# convention as frontends/pastebin/Dockerfile -- @metabuilder/dbal-sso is a
+# sibling workspace package (libraries/redux/dbal-sso) resolved via a
+# node_modules symlink, and Next.js/Turbopack refuse to resolve packages
+# symlinked to a target outside the recognized project root. Keeping the
+# real frontends/dbal + libraries/redux/dbal-sso relative layout under one
+# shared /app means the symlink target stays inside that root instead of
+# escaping it.
 FROM node:24-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
-COPY frontends/dbal/package.json ./
+COPY frontends/dbal/package.json frontends/dbal/package.json
+COPY libraries/redux/dbal-sso/ libraries/redux/dbal-sso/
+WORKDIR /app/frontends/dbal
 RUN npm install
 
 FROM node:24-alpine AS nextjs-builder
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY frontends/dbal/ .
+COPY --from=deps /app/frontends/dbal/node_modules frontends/dbal/node_modules
+COPY libraries/redux/dbal-sso/ libraries/redux/dbal-sso/
+COPY frontends/dbal/ frontends/dbal/
 
 ARG DBAL_DAEMON_URL=http://dbal:8080
 ENV DBAL_DAEMON_URL=$DBAL_DAEMON_URL
+ARG NEXT_PUBLIC_DBAL_OIDC_BASE_URL="/api/dbal"
+ARG NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID=dbal-console
+ENV NEXT_PUBLIC_DBAL_OIDC_BASE_URL=$NEXT_PUBLIC_DBAL_OIDC_BASE_URL
+ENV NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID=$NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID
 
+WORKDIR /app/frontends/dbal
 RUN mkdir -p public && npm run build
 
 # Stage 3: Runtime - Ubuntu 24.04 (glibc 2.38 matches base-conan-cli build)
@@ -53,11 +70,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY --from=cli-builder /app/cli/build/metabuilder-cli /usr/local/bin/metabuilder-cli
 COPY packages/ /app/packages/
 
-# Copy Next.js standalone output
-COPY --from=nextjs-builder /app/public ./public
-RUN mkdir .next
-COPY --from=nextjs-builder /app/.next/standalone ./
-COPY --from=nextjs-builder /app/.next/static ./.next/static
+# Copy Next.js standalone output -- traced relative to the monorepo root
+# (see nextjs-builder above), so it nests as frontends/dbal/server.js
+# inside .next/standalone rather than sitting at its own root.
+COPY --from=nextjs-builder /app/frontends/dbal/.next/standalone ./
+COPY --from=nextjs-builder /app/frontends/dbal/.next/static ./frontends/dbal/.next/static
+COPY --from=nextjs-builder /app/frontends/dbal/public ./frontends/dbal/public
 
 ENV NODE_ENV=production
 ENV PORT=3000
@@ -70,4 +88,5 @@ EXPOSE 3000
 HEALTHCHECK --interval=15s --timeout=5s --start-period=30s --retries=3 \
     CMD wget --quiet --tries=1 --spider http://127.0.0.1:3000/dbal || exit 1
 
+WORKDIR /app/frontends/dbal
 CMD ["node", "server.js"]

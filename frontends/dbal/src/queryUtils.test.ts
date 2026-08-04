@@ -5,9 +5,6 @@ import {
   loadHistory,
   saveHistory,
   addToHistory,
-  loadToken,
-  saveToken,
-  removeToken,
   methodColor,
 } from './queryUtils'
 
@@ -123,45 +120,6 @@ describe('addToHistory', () => {
     addToHistory(entry, [])
     const stored = localStorageMock.getItem('dbal-query-history')
     expect(JSON.parse(stored!)).toEqual([entry])
-  })
-})
-
-describe('loadToken', () => {
-  beforeEach(() => localStorageMock.clear())
-
-  it('returns empty string when no token stored', () => {
-    expect(loadToken()).toBe('')
-  })
-
-  it('returns stored token', () => {
-    localStorageMock.setItem('dbal-admin-token', 'my-token')
-    expect(loadToken()).toBe('my-token')
-  })
-})
-
-describe('saveToken', () => {
-  beforeEach(() => localStorageMock.clear())
-
-  it('stores the token in localStorage', () => {
-    saveToken('abc123')
-    expect(localStorageMock.getItem('dbal-admin-token')).toBe('abc123')
-  })
-
-  it('does not throw on storage error', () => {
-    const orig = localStorageMock.setItem
-    localStorageMock.setItem = () => { throw new Error('storage error') }
-    expect(() => saveToken('x')).not.toThrow()
-    localStorageMock.setItem = orig
-  })
-})
-
-describe('removeToken', () => {
-  beforeEach(() => localStorageMock.clear())
-
-  it('removes the stored token', () => {
-    localStorageMock.setItem('dbal-admin-token', 'my-token')
-    removeToken()
-    expect(localStorageMock.getItem('dbal-admin-token')).toBeNull()
   })
 })
 

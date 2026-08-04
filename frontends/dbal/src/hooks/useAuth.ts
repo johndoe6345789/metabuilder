@@ -1,87 +1,104 @@
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
-import { loadToken, saveToken, removeToken } from '../queryUtils'
-import cfg from '../data/queryConsole.json'
-
-const { defaultToken } = cfg
+import {
+  beginLogin,
+  logout as oidcLogout,
+  refreshTokens,
+  setAuthToken,
+  decodeJwtPayload,
+  isTokenValid,
+} from '@metabuilder/dbal-sso/core'
+import { dbalSsoConfig, loadPersistedSession, savePersistedSession } from '../authConfig'
 
 interface UseAuthReturn {
   token: string
   authed: boolean
-  tokenInput: string
-  setTokenInput: (v: string) => void
+  loading: boolean
+  role: string | null
+  username: string | null
+  error: string | null
   handleLogin: () => void
   handleLogout: () => void
-  handleTurboLogin: () => Promise<void>
-  turboError: string | null
-  clearTurboError: () => void
+  clearError: () => void
 }
 
 export function useAuth(): UseAuthReturn {
   const [token, setToken] = useState('')
+  const [refreshToken, setRefreshToken] = useState<string | null>(null)
   const [authed, setAuthed] = useState(false)
-  const [tokenInput, setTokenInput] = useState('')
-  const [turboError, setTurboError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [role, setRole] = useState<string | null>(null)
+  const [username, setUsername] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    const saved = loadToken()
-    if (saved) {
-      setToken(saved)
-      setAuthed(true)
-    }
-  }, [])
-
-  const loginWithToken = useCallback((tok: string) => {
-    const t = tok.trim() || defaultToken
-    setToken(t)
-    saveToken(t)
+  const applySession = useCallback((tok: string, refresh: string | null) => {
+    const claims = decodeJwtPayload(tok)
+    setToken(tok)
+    setRefreshToken(refresh)
     setAuthed(true)
+    setRole(typeof claims.role === 'string' ? claims.role : null)
+    setUsername(typeof claims.sub === 'string' ? claims.sub : null)
+    setAuthToken(tok)
+    savePersistedSession({ token: tok, refreshToken: refresh })
   }, [])
+
+  const clearSession = useCallback(() => {
+    setToken('')
+    setRefreshToken(null)
+    setAuthed(false)
+    setRole(null)
+    setUsername(null)
+    setAuthToken(null)
+    savePersistedSession(null)
+  }, [])
+
+  // Rehydrate on mount: a valid persisted token is applied directly, an
+  // expired one is refreshed once (DBAL rotates refresh tokens, so this is
+  // a single attempt, not a retry loop), anything else clears local state.
+  useEffect(() => {
+    const persisted = loadPersistedSession()
+    if (!persisted) {
+      setLoading(false)
+      return
+    }
+    if (isTokenValid(persisted.token)) {
+      applySession(persisted.token, persisted.refreshToken)
+      setLoading(false)
+      return
+    }
+    if (persisted.refreshToken) {
+      refreshTokens(dbalSsoConfig, persisted.refreshToken)
+        .then(tokens => applySession(tokens.token, tokens.refreshToken))
+        .catch(() => clearSession())
+        .finally(() => setLoading(false))
+      return
+    }
+    clearSession()
+    setLoading(false)
+  }, [applySession, clearSession])
 
   const handleLogin = useCallback(() => {
-    loginWithToken(tokenInput)
-  }, [tokenInput, loginWithToken])
-
-  const handleLogout = useCallback(() => {
-    setToken('')
-    setAuthed(false)
-    removeToken()
+    setError(null)
+    beginLogin(dbalSsoConfig).catch(e => {
+      setError(e instanceof Error ? e.message : 'Sign-in failed to start')
+    })
   }, [])
 
-  const handleTurboLogin = useCallback(async () => {
-    try {
-      const raw = await navigator.clipboard.readText()
-      if (!raw.trim()) {
-        setTurboError('Clipboard is empty. Copy a Turbologin from Vault first.')
-        return
-      }
-      let data: Record<string, unknown>
-      try { data = JSON.parse(raw) } catch {
-        setTurboError('Clipboard does not contain valid Turbologin JSON.')
-        return
-      }
-      if (!data.pass) {
-        setTurboError('Clipboard JSON is missing required field (pass).')
-        return
-      }
-      loginWithToken(data.pass as string)
-    } catch {
-      setTurboError(
-        'Could not read clipboard. Please allow clipboard access and try again.'
-      )
-    }
-  }, [loginWithToken])
+  const handleLogout = useCallback(() => {
+    void oidcLogout(dbalSsoConfig, refreshToken)
+    clearSession()
+  }, [refreshToken, clearSession])
 
   return {
     token,
     authed,
-    tokenInput,
-    setTokenInput,
+    loading,
+    role,
+    username,
+    error,
     handleLogin,
     handleLogout,
-    handleTurboLogin,
-    turboError,
-    clearTurboError: () => setTurboError(null),
+    clearError: () => setError(null),
   }
 }

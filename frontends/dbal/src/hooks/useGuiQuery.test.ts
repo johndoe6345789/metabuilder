@@ -155,7 +155,7 @@ describe('useGuiQuery', () => {
       })
       const result2 = result.current.parseBody()
       expect(result2.ok).toBe(false)
-      if (!result2.ok) expect(result2.err).toBeTruthy()
+      if (result2.ok === false) expect(result2.err).toBeTruthy()
     })
 
     it('returns ok true with undefined when body is whitespace only', () => {

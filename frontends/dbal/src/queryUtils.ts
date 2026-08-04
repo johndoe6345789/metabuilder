@@ -42,21 +42,6 @@ export function addToHistory(
   return updated
 }
 
-export function loadToken(): string {
-  if (typeof window === 'undefined') return ''
-  return localStorage.getItem(storageKeys.token) || ''
-}
-
-export function saveToken(token: string) {
-  try {
-    localStorage.setItem(storageKeys.token, token)
-  } catch { /* ignore */ }
-}
-
-export function removeToken() {
-  localStorage.removeItem(storageKeys.token)
-}
-
 export function methodColor(m: HttpMethod): string {
   switch (m) {
     case 'GET':    return '#4ade80'

@@ -45,8 +45,11 @@ export function useQueryExecutor(token: string): ExecReturn {
       try {
         const res = await fetch(`${base()}/api/query`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ method: m, path, body: reqBody, token }),
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ method: m, path, body: reqBody }),
         })
         const data: QueryResponse = await res.json()
         setResponse(data)
@@ -69,8 +72,11 @@ export function useQueryExecutor(token: string): ExecReturn {
       try {
         const res = await fetch(`${base()}/api/cli`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ command, token: tok }),
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${tok}`,
+          },
+          body: JSON.stringify({ command }),
         })
         const data: QueryResponse & { command?: string } = await res.json()
         setResponse(data)

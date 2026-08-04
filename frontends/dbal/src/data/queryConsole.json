@@ -17,9 +17,7 @@
     "package list"
   ],
   "storageKeys": {
-    "history": "dbal-query-history",
-    "token":   "dbal-admin-token"
+    "history": "dbal-query-history"
   },
-  "maxHistory":    20,
-  "defaultToken":  "069e6487a710300381cd52120eab95d56d7f53beee21479cbeba9128217cbea9"
+  "maxHistory": 20
 }

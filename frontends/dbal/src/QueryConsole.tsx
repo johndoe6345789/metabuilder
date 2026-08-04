@@ -17,15 +17,16 @@ export function QueryConsole() {
     handleExecuteGui, handleExecuteCli,
   } = useConsoleState()
 
+  if (auth.loading) {
+    return null
+  }
+
   if (!auth.authed) {
     return (
       <LoginScreen
-        tokenInput={auth.tokenInput}
-        onTokenChange={auth.setTokenInput}
         onLogin={auth.handleLogin}
-        onTurboLogin={auth.handleTurboLogin}
-        turboError={auth.turboError}
-        onClearTurboError={auth.clearTurboError}
+        error={auth.error}
+        onClearError={auth.clearError}
       />
     )
   }

@@ -1,19 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { verifyAdminCaller } from '@/adminAuth'
 
 const DBAL_DAEMON_URL = process.env.DBAL_DAEMON_URL ?? 'http://localhost:8080'
 
 export async function POST(request: NextRequest) {
-  const { method, path, body, token } = await request.json()
+  const auth = await verifyAdminCaller(request)
+  if (auth.ok === false) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status })
+  }
+
+  const { method, path, body } = await request.json()
 
   const url = `${DBAL_DAEMON_URL}${path}`
 
   try {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-    }
-
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`
+      Authorization: `Bearer ${auth.adminToken}`,
     }
 
     const fetchOptions: RequestInit = {

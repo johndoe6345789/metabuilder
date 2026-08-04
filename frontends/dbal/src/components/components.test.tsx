@@ -39,48 +39,28 @@ function makeEntry(overrides?: Partial<QueryHistoryEntry>): QueryHistoryEntry {
 // ════════════════════════════════════════════════════════════════════════════
 describe('LoginScreen', () => {
   it('renders the login heading', () => {
-    render(
-      <LoginScreen tokenInput="" onTokenChange={vi.fn()} onLogin={vi.fn()} />
-    )
+    render(<LoginScreen onLogin={vi.fn()} />)
     expect(screen.getByText('DBAL Query Console')).toBeTruthy()
   })
 
-  it('renders the Connect button', () => {
-    render(
-      <LoginScreen tokenInput="" onTokenChange={vi.fn()} onLogin={vi.fn()} />
-    )
-    expect(screen.getByRole('button', { name: 'Connect' })).toBeTruthy()
+  it('renders the sign-in button', () => {
+    render(<LoginScreen onLogin={vi.fn()} />)
+    expect(screen.getByTestId('dbal-sso-login-button')).toBeTruthy()
   })
 
-  it('calls onLogin when Connect is clicked', () => {
+  it('calls onLogin when the sign-in button is clicked', () => {
     const onLogin = vi.fn()
-    render(<LoginScreen tokenInput="" onTokenChange={vi.fn()} onLogin={onLogin} />)
-    fireEvent.click(screen.getByRole('button', { name: 'Connect' }))
+    render(<LoginScreen onLogin={onLogin} />)
+    fireEvent.click(screen.getByTestId('dbal-sso-login-button'))
     expect(onLogin).toHaveBeenCalledTimes(1)
   })
 
-  it('calls onTokenChange when input changes', () => {
-    const onTokenChange = vi.fn()
-    render(<LoginScreen tokenInput="" onTokenChange={onTokenChange} onLogin={vi.fn()} />)
-    const input = screen.getByPlaceholderText('Leave blank for default token')
-    fireEvent.change(input, { target: { value: 'mytoken' } })
-    expect(onTokenChange).toHaveBeenCalledWith('mytoken')
-  })
-
-  it('calls onLogin on Enter keydown', () => {
-    const onLogin = vi.fn()
-    render(<LoginScreen tokenInput="" onTokenChange={vi.fn()} onLogin={onLogin} />)
-    const input = screen.getByPlaceholderText('Leave blank for default token')
-    fireEvent.keyDown(input, { key: 'Enter' })
-    expect(onLogin).toHaveBeenCalledTimes(1)
-  })
-
-  it('does not call onLogin on non-Enter keydown', () => {
-    const onLogin = vi.fn()
-    render(<LoginScreen tokenInput="x" onTokenChange={vi.fn()} onLogin={onLogin} />)
-    const input = screen.getByPlaceholderText('Leave blank for default token')
-    fireEvent.keyDown(input, { key: 'Tab' })
-    expect(onLogin).not.toHaveBeenCalled()
+  it('shows the error dialog and clears it', () => {
+    const onClearError = vi.fn()
+    render(<LoginScreen onLogin={vi.fn()} error="Sign-in failed" onClearError={onClearError} />)
+    expect(screen.getByText('Sign-in failed')).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: 'Close' }))
+    expect(onClearError).toHaveBeenCalledTimes(1)
   })
 })
 

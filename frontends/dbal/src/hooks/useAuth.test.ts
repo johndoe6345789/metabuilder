@@ -1,85 +1,122 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { renderHook, act } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 
-// Mock queryUtils to control localStorage
-vi.mock('../queryUtils', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../queryUtils')>()
+vi.mock('@metabuilder/dbal-sso/core', () => ({
+  beginLogin: vi.fn(),
+  logout: vi.fn(),
+  refreshTokens: vi.fn(),
+  setAuthToken: vi.fn(),
+  decodeJwtPayload: vi.fn(),
+  isTokenValid: vi.fn(),
+}))
+
+vi.mock('../authConfig', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../authConfig')>()
   return {
     ...actual,
-    loadToken: vi.fn(() => ''),
-    saveToken: vi.fn(),
-    removeToken: vi.fn(),
+    loadPersistedSession: vi.fn(),
+    savePersistedSession: vi.fn(),
   }
 })
 
 import { useAuth } from './useAuth'
-import * as queryUtils from '../queryUtils'
+import * as dbalSso from '@metabuilder/dbal-sso/core'
+import * as authConfig from '../authConfig'
+
+function makeToken(claims: Record<string, unknown>) {
+  // decodeJwtPayload is mocked, so the actual token string just needs to
+  // be a non-empty placeholder -- what matters is what the mock returns.
+  return 'header.payload.signature-' + JSON.stringify(claims)
+}
 
 describe('useAuth', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    ;(queryUtils.loadToken as ReturnType<typeof vi.fn>).mockReturnValue('')
+    ;(authConfig.loadPersistedSession as ReturnType<typeof vi.fn>).mockReturnValue(null)
   })
 
-  describe('initial state', () => {
-    it('starts unauthenticated when no token saved', () => {
-      const { result } = renderHook(() => useAuth())
-      expect(result.current.authed).toBe(false)
-      expect(result.current.token).toBe('')
-      expect(result.current.tokenInput).toBe('')
-    })
-
-    it('auto-logs in when a token is already saved', () => {
-      ;(queryUtils.loadToken as ReturnType<typeof vi.fn>).mockReturnValue('saved-token')
-      const { result } = renderHook(() => useAuth())
-      expect(result.current.authed).toBe(true)
-      expect(result.current.token).toBe('saved-token')
-    })
+  it('starts unauthenticated when nothing is persisted', async () => {
+    const { result } = renderHook(() => useAuth())
+    await waitFor(() => expect(result.current.loading).toBe(false))
+    expect(result.current.authed).toBe(false)
+    expect(result.current.token).toBe('')
   })
 
-  describe('setTokenInput', () => {
-    it('updates tokenInput state', () => {
-      const { result } = renderHook(() => useAuth())
-      act(() => result.current.setTokenInput('my-token'))
-      expect(result.current.tokenInput).toBe('my-token')
+  it('auto-authenticates from a valid persisted session', async () => {
+    const token = makeToken({ role: 'admin', sub: 'alice' })
+    ;(authConfig.loadPersistedSession as ReturnType<typeof vi.fn>).mockReturnValue({
+      token, refreshToken: 'rt-1',
     })
+    ;(dbalSso.isTokenValid as ReturnType<typeof vi.fn>).mockReturnValue(true)
+    ;(dbalSso.decodeJwtPayload as ReturnType<typeof vi.fn>).mockReturnValue({ role: 'admin', sub: 'alice' })
+
+    const { result } = renderHook(() => useAuth())
+    await waitFor(() => expect(result.current.loading).toBe(false))
+
+    expect(result.current.authed).toBe(true)
+    expect(result.current.token).toBe(token)
+    expect(result.current.role).toBe('admin')
+    expect(result.current.username).toBe('alice')
+    expect(dbalSso.setAuthToken).toHaveBeenCalledWith(token)
   })
 
-  describe('handleLogin', () => {
-    it('sets token and authed=true from tokenInput', () => {
-      const { result } = renderHook(() => useAuth())
-      act(() => result.current.setTokenInput('new-token'))
-      act(() => result.current.handleLogin())
-      expect(result.current.token).toBe('new-token')
-      expect(result.current.authed).toBe(true)
-      expect(queryUtils.saveToken).toHaveBeenCalledWith('new-token')
+  it('refreshes an expired persisted session once', async () => {
+    const expired = makeToken({ role: 'user', sub: 'bob' })
+    const fresh = makeToken({ role: 'user', sub: 'bob' })
+    ;(authConfig.loadPersistedSession as ReturnType<typeof vi.fn>).mockReturnValue({
+      token: expired, refreshToken: 'rt-1',
     })
+    ;(dbalSso.isTokenValid as ReturnType<typeof vi.fn>).mockReturnValue(false)
+    ;(dbalSso.refreshTokens as ReturnType<typeof vi.fn>).mockResolvedValue({
+      token: fresh, refreshToken: 'rt-2', user: { id: 'bob', username: 'bob' },
+    })
+    ;(dbalSso.decodeJwtPayload as ReturnType<typeof vi.fn>).mockReturnValue({ role: 'user', sub: 'bob' })
 
-    it('trims whitespace from tokenInput', () => {
-      const { result } = renderHook(() => useAuth())
-      // setTokenInput must be committed to state before handleLogin reads it
-      act(() => result.current.setTokenInput('  trimmed  '))
-      act(() => result.current.handleLogin())
-      expect(result.current.token).toBe('trimmed')
-    })
+    const { result } = renderHook(() => useAuth())
+    await waitFor(() => expect(result.current.loading).toBe(false))
 
-    it('uses defaultToken when tokenInput is empty', () => {
-      const { result } = renderHook(() => useAuth())
-      act(() => result.current.handleLogin())
-      // The default token is non-empty (from queryConsole.json)
-      expect(result.current.token.length).toBeGreaterThan(0)
-      expect(result.current.authed).toBe(true)
-    })
+    expect(dbalSso.refreshTokens).toHaveBeenCalledWith(expect.anything(), 'rt-1')
+    expect(result.current.authed).toBe(true)
+    expect(result.current.token).toBe(fresh)
   })
 
-  describe('handleLogout', () => {
-    it('clears token and sets authed=false', () => {
-      ;(queryUtils.loadToken as ReturnType<typeof vi.fn>).mockReturnValue('existing-token')
-      const { result } = renderHook(() => useAuth())
-      act(() => result.current.handleLogout())
-      expect(result.current.token).toBe('')
-      expect(result.current.authed).toBe(false)
-      expect(queryUtils.removeToken).toHaveBeenCalled()
+  it('clears session when refresh fails', async () => {
+    const expired = makeToken({ role: 'user', sub: 'bob' })
+    ;(authConfig.loadPersistedSession as ReturnType<typeof vi.fn>).mockReturnValue({
+      token: expired, refreshToken: 'rt-1',
     })
+    ;(dbalSso.isTokenValid as ReturnType<typeof vi.fn>).mockReturnValue(false)
+    ;(dbalSso.refreshTokens as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('expired'))
+
+    const { result } = renderHook(() => useAuth())
+    await waitFor(() => expect(result.current.loading).toBe(false))
+
+    expect(result.current.authed).toBe(false)
+    expect(authConfig.savePersistedSession).toHaveBeenCalledWith(null)
+  })
+
+  it('handleLogin starts the OIDC redirect', async () => {
+    ;(dbalSso.beginLogin as ReturnType<typeof vi.fn>).mockResolvedValue(undefined)
+    const { result } = renderHook(() => useAuth())
+    await waitFor(() => expect(result.current.loading).toBe(false))
+    result.current.handleLogin()
+    expect(dbalSso.beginLogin).toHaveBeenCalled()
+  })
+
+  it('handleLogout revokes the server session and clears local state', async () => {
+    const token = makeToken({ role: 'admin', sub: 'alice' })
+    ;(authConfig.loadPersistedSession as ReturnType<typeof vi.fn>).mockReturnValue({
+      token, refreshToken: 'rt-1',
+    })
+    ;(dbalSso.isTokenValid as ReturnType<typeof vi.fn>).mockReturnValue(true)
+    ;(dbalSso.decodeJwtPayload as ReturnType<typeof vi.fn>).mockReturnValue({ role: 'admin', sub: 'alice' })
+
+    const { result } = renderHook(() => useAuth())
+    await waitFor(() => expect(result.current.authed).toBe(true))
+
+    result.current.handleLogout()
+    expect(dbalSso.logout).toHaveBeenCalledWith(expect.anything(), 'rt-1')
+    await waitFor(() => expect(result.current.authed).toBe(false))
+    expect(result.current.token).toBe('')
   })
 })

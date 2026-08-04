@@ -3,25 +3,15 @@
 import styles from '../QueryConsole.module.scss'
 
 interface LoginScreenProps {
-  tokenInput: string
-  onTokenChange: (v: string) => void
   onLogin: () => void
-  onTurboLogin?: () => void
-  turboError?: string | null
-  onClearTurboError?: () => void
+  error?: string | null
+  onClearError?: () => void
 }
 
-export function LoginScreen({
-  tokenInput,
-  onTokenChange,
-  onLogin,
-  onTurboLogin,
-  turboError,
-  onClearTurboError,
-}: LoginScreenProps) {
+export function LoginScreen({ onLogin, error, onClearError }: LoginScreenProps) {
   return (
     <div className={styles.root}>
-      {turboError && onClearTurboError && (
+      {error && onClearError && (
         <div style={{
           position: 'fixed', inset: 0,
           background: 'rgba(0,0,0,0.7)',
@@ -34,25 +24,13 @@ export function LoginScreen({
             maxWidth: '380px', width: '90%', color: '#fff',
           }}>
             <h3 style={{ margin: '0 0 12px', fontSize: '16px' }}>
-              Turbologin Failed
+              Sign-in Failed
             </h3>
-            <p style={{ margin: '0 0 12px', color: '#aaa' }}>{turboError}</p>
-            <p style={{ margin: '0 0 20px', color: '#aaa' }}>
-              Copy a Turbologin from{' '}
-              <a
-                href="https://vault.wardcrew.com"
-                target="_blank"
-                rel="noreferrer"
-                style={{ color: '#7c6af7' }}
-              >
-                vault.wardcrew.com
-              </a>
-              , then try again.
-            </p>
+            <p style={{ margin: '0 0 20px', color: '#aaa' }}>{error}</p>
             <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
               <button
                 type="button"
-                onClick={onClearTurboError}
+                onClick={onClearError}
                 style={{
                   padding: '8px 16px', border: '1px solid #555',
                   borderRadius: '4px', background: 'none',
@@ -60,17 +38,6 @@ export function LoginScreen({
                 }}
               >
                 Close
-              </button>
-              <button
-                type="button"
-                onClick={() => window.open('https://vault.wardcrew.com', '_blank')}
-                style={{
-                  padding: '8px 16px', border: '1px solid #555',
-                  borderRadius: '4px', background: 'none',
-                  color: '#fff', cursor: 'pointer',
-                }}
-              >
-                Open Vault
               </button>
             </div>
           </div>
@@ -81,46 +48,17 @@ export function LoginScreen({
           <div className={styles.loginIcon}>DB</div>
           <h2 className={styles.loginTitle}>DBAL Query Console</h2>
           <p className={styles.loginSub}>
-            Enter your admin token to connect to the DBAL daemon.
+            Sign in with your DBAL account. Admin-level access (admin, god,
+            or supergod role) is required to run queries here.
           </p>
-          <div className={styles.field}>
-            <label className={styles.label}>Admin Token</label>
-            <input
-              className={styles.input}
-              type="password"
-              value={tokenInput}
-              onChange={e => onTokenChange(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && onLogin()}
-              placeholder="Leave blank for default token"
-              autoFocus
-            />
-          </div>
           <button
             className={styles.loginBtn}
             onClick={onLogin}
             type="button"
+            data-testid="dbal-sso-login-button"
           >
-            Connect
+            Sign in with DBAL SSO
           </button>
-          {onTurboLogin && (
-            <button
-              className={styles.loginBtn}
-              onClick={onTurboLogin}
-              type="button"
-              data-testid="dbal-turbo-button"
-              style={{
-                marginTop: '8px',
-                background: 'none',
-                border: '1px solid currentColor',
-                opacity: 0.85,
-              }}
-            >
-              ⚡ Turbologin
-            </button>
-          )}
-          <p className={styles.loginHint}>
-            Default token is pre-configured for local development
-          </p>
         </div>
       </div>
     </div>

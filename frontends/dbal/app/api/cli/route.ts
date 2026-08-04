@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { execFile } from 'child_process'
 import { promisify } from 'util'
+import { verifyAdminCaller } from '@/adminAuth'
 
 const execFileAsync = promisify(execFile)
 
@@ -9,7 +10,12 @@ const DBAL_URL = process.env.METABUILDER_BASE_URL ?? process.env.DBAL_DAEMON_URL
 const MAX_TIMEOUT = 15000
 
 export async function POST(request: NextRequest) {
-  const { command, token } = await request.json()
+  const auth = await verifyAdminCaller(request)
+  if (auth.ok === false) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status })
+  }
+
+  const { command } = await request.json()
 
   if (!command || typeof command !== 'string') {
     return NextResponse.json({ error: 'Missing command' }, { status: 400 })
@@ -48,7 +54,7 @@ export async function POST(request: NextRequest) {
     const env = {
       ...process.env,
       METABUILDER_BASE_URL: DBAL_URL,
-      ...(token ? { DBAL_ADMIN_TOKEN: token } : {}),
+      DBAL_ADMIN_TOKEN: auth.adminToken,
     }
 
     const { stdout, stderr } = await execFileAsync(CLI_PATH, finalArgs, {

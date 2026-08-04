@@ -122,7 +122,7 @@ describe('useQueryExecutor', () => {
       expect(onEntry).not.toHaveBeenCalled()
     })
 
-    it('sends the token in the request body', async () => {
+    it('sends the token as a Bearer Authorization header, not in the body', async () => {
       const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValueOnce(
         makeFetchResponse({ status: 200, statusText: 'OK', url: '/test', timestamp: '', data: {} })
       )
@@ -133,8 +133,11 @@ describe('useQueryExecutor', () => {
         await result.current.executeQuery('GET', '/test', undefined, vi.fn())
       })
 
-      const body = JSON.parse(fetchSpy.mock.calls[0][1]?.body as string)
-      expect(body.token).toBe('my-auth-token')
+      const [, opts] = fetchSpy.mock.calls[0]
+      const headers = new Headers(opts?.headers)
+      expect(headers.get('Authorization')).toBe('Bearer my-auth-token')
+      const body = JSON.parse(opts?.body as string)
+      expect(body.token).toBeUndefined()
     })
   })
 
@@ -152,7 +155,7 @@ describe('useQueryExecutor', () => {
       expect(onEntry).not.toHaveBeenCalled()
     })
 
-    it('calls the CLI endpoint with command and token', async () => {
+    it('calls the CLI endpoint with the command in the body and token as a Bearer header', async () => {
       const cliResponse = {
         status: 200,
         statusText: 'OK',
@@ -171,9 +174,11 @@ describe('useQueryExecutor', () => {
 
       const [url, opts] = fetchSpy.mock.calls[0]
       expect(url).toContain('/api/cli')
+      const headers = new Headers(opts?.headers)
+      expect(headers.get('Authorization')).toBe('Bearer my-token')
       const body = JSON.parse(opts?.body as string)
       expect(body.command).toBe('dbal list Snippet')
-      expect(body.token).toBe('my-token')
+      expect(body.token).toBeUndefined()
     })
 
     it('calls onEntry after CLI execution', async () => {
