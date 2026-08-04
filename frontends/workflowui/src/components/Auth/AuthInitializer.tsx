@@ -1,37 +1,40 @@
 /**
  * Auth Initializer Component
- * Restores user session from localStorage on app startup
+ *
+ * redux-persist already rehydrates the `auth` slice (token/user/
+ * isAuthenticated) from IndexedDB before this renders (see PersistGate in
+ * RootLayoutClient) -- this only needs to validate the restored token and
+ * sync the in-memory dbal-sso token bridge (used by createAuthenticatedFetch)
+ * with whatever Redux holds. An expired token just signs the user out; DBAL
+ * SSO redirects them back through login on their next protected-page visit.
  */
 
 'use client';
 
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { restoreFromStorage } from '@metabuilder/redux-slices';
+import { useDispatch, useSelector } from 'react-redux';
+import { setAuthToken, isTokenValid } from '@metabuilder/dbal-sso/core';
+import { logout } from '@metabuilder/redux-slices';
+
+interface AuthState {
+  auth: { token: string | null };
+}
 
 export function AuthInitializer() {
   const dispatch = useDispatch();
+  const token = useSelector((s: AuthState) => s.auth.token);
 
   useEffect(() => {
-    // Restore auth session from localStorage
-    try {
-      const token = localStorage.getItem('auth_token');
-      const userStr = localStorage.getItem('current_user');
+    if (!token) return;
 
-      if (token && userStr) {
-        const user = JSON.parse(userStr);
-        dispatch(
-          restoreFromStorage({
-            token,
-            user
-          })
-        );
-      }
-    } catch (error) {
-      console.error('Failed to restore auth session:', error);
-      // Continue without auth - user will need to login
+    if (isTokenValid(token)) {
+      setAuthToken(token);
+      return;
     }
-  }, [dispatch]);
 
-  return null; // This component doesn't render anything
+    setAuthToken(null);
+    dispatch(logout());
+  }, [token, dispatch]);
+
+  return null;
 }

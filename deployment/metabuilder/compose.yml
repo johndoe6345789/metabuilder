@@ -388,6 +388,8 @@ services:
       dockerfile: frontends/workflowui/Dockerfile
       args:
         NODE_ENV: production
+        NEXT_PUBLIC_DBAL_OIDC_BASE_URL: "${NEXT_PUBLIC_DBAL_OIDC_BASE_URL:-/api/dbal}"
+        NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID: workflowui-web
     container_name: metabuilder-workflowui
     restart: unless-stopped
     environment:

@@ -1,75 +1,37 @@
 /**
- * Login Page
- * User authentication with Material Design 3 and Salesforce-style
+ * Login Page - redirects to DBAL SSO
  */
 
 'use client';
 
-import React from 'react';
-import { useLoginPage } from './hooks/useLoginPage';
-import SalesforceLoginForm from './SalesforceLoginForm';
-import MaterialLoginForm from './MaterialLoginForm';
-import TurboErrorDialog from './TurboErrorDialog';
+import React, { useState } from 'react';
+import { beginLogin } from '@metabuilder/dbal-sso/core';
+import { dbalSsoConfig } from '../../lib/dbalSsoConfig';
+import styles from './page.module.scss';
 
 export default function LoginPage() {
-  const {
-    email,
-    password,
-    localError,
-    isLoading,
-    errorMessage,
-    setEmail,
-    setPassword,
-    rememberMe,
-    setRememberMe,
-    useSalesforceStyle,
-    setUseSalesforceStyle,
-    onLoginSubmit,
-    onTurboLogin,
-    turboError,
-    clearTurboError,
-  } = useLoginPage();
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSignIn = () => {
+    setError('');
+    setLoading(true);
+    beginLogin(dbalSsoConfig).catch(e => {
+      setError(e instanceof Error ? e.message : 'Sign-in failed to start');
+      setLoading(false);
+    });
+  };
 
   return (
-    <>
-      <TurboErrorDialog
-        open={!!turboError}
-        message={turboError ?? ''}
-        onClose={clearTurboError}
-      />
-      {useSalesforceStyle ? (
-        <SalesforceLoginForm
-          email={email}
-          password={password}
-          isLoading={isLoading}
-          localError={localError}
-          errorMessage={errorMessage}
-          rememberMe={rememberMe}
-          setEmail={setEmail}
-          setPassword={setPassword}
-          setRememberMe={setRememberMe}
-          onSubmit={onLoginSubmit}
-          onTurboLogin={onTurboLogin}
-          onSwitchToMaterial={() =>
-            setUseSalesforceStyle(false)
-          }
-        />
-      ) : (
-        <MaterialLoginForm
-          email={email}
-          password={password}
-          isLoading={isLoading}
-          localError={localError}
-          errorMessage={errorMessage}
-          setEmail={setEmail}
-          setPassword={setPassword}
-          onSubmit={onLoginSubmit}
-          onTurboLogin={onTurboLogin}
-          onSwitchToSalesforce={() =>
-            setUseSalesforceStyle(true)
-          }
-        />
-      )}
-    </>
+    <div className={styles.root}>
+      <div className={styles.card}>
+        <h1 className={styles.title}>Sign in to WorkflowUI</h1>
+        <p className={styles.subtitle}>Continue with your MetaBuilder account</p>
+        {error.length > 0 && <p className={styles.error}>{error}</p>}
+        <button className={styles.submit} type="button" disabled={loading} onClick={handleSignIn}>
+          {loading ? 'Redirecting…' : 'Sign In'}
+        </button>
+      </div>
+    </div>
   );
 }

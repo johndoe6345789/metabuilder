@@ -26,6 +26,7 @@ const nextConfig = {
     '@metabuilder/hooks',
     '@metabuilder/services',
     '@metabuilder/interfaces',
+    '@metabuilder/dbal-sso',
   ],
   // Turbopack config — paths MUST be relative to turbopack root (monorepo root)
   turbopack: {
@@ -45,6 +46,8 @@ const nextConfig = {
       '@metabuilder/components/workflow-editor': '../../libraries/components/workflow-editor/index.ts',
       // Redux
       '@metabuilder/api-clients': '../../libraries/redux/api-clients/src',
+      '@metabuilder/dbal-sso': '../../libraries/redux/dbal-sso/src',
+      '@metabuilder/dbal-sso/core': '../../libraries/redux/dbal-sso/src/core',
       // Hooks
       '@metabuilder/hooks': '../../libraries/hooks/index.ts',
       '@metabuilder/hooks/workflow-editor': '../../libraries/hooks/workflow-editor/index.ts',
@@ -76,6 +79,8 @@ const nextConfig = {
 
     // Resolve @metabuilder/api-clients to source (not dist/) so transpilePackages works on live code
     config.resolve.alias['@metabuilder/api-clients'] = resolve(__dirname, '../../libraries/redux/api-clients/src');
+    config.resolve.alias['@metabuilder/dbal-sso'] = resolve(__dirname, '../../libraries/redux/dbal-sso/src');
+    config.resolve.alias['@metabuilder/dbal-sso/core'] = resolve(__dirname, '../../libraries/redux/dbal-sso/src/core');
 
     // Resolve @metabuilder/components to source (package.json exports point to .ts/.tsx)
     config.resolve.alias['@metabuilder/components/cards'] = join(componentsPath, 'cards/index.ts');

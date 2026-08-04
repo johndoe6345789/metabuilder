@@ -24,6 +24,7 @@ import MainLayout from './MainLayout';
 import { NotificationAdapter } from '../UI/NotificationAdapter';
 import { LoadingOverlay } from '../UI/LoadingOverlay';
 import { AuthInitializer } from '../Auth/AuthInitializer';
+import { RequireAuth } from '../Auth/RequireAuth';
 import { ErrorBoundary } from '../ErrorBoundary';
 
 interface RootLayoutClientProps {
@@ -51,6 +52,8 @@ export default function RootLayoutClient({ children }: RootLayoutClientProps) {
     workspaceService: new DefaultWorkspaceServiceAdapter('/api'),
     workflowService: new DefaultWorkflowServiceAdapter('/api'),
     executionService: new DefaultExecutionServiceAdapter('/api'),
+    // Unused now that sign-in goes through DBAL SSO -- kept only because
+    // IServiceProviders requires authService; nothing calls its methods.
     authService: new DefaultAuthServiceAdapter('/api'),
   }), []);
 
@@ -62,7 +65,7 @@ export default function RootLayoutClient({ children }: RootLayoutClientProps) {
             <I18nProvider>
               <AuthInitializer />
               <MainLayout showSidebar={true}>
-                {children}
+                <RequireAuth>{children}</RequireAuth>
               </MainLayout>
               <NotificationAdapter />
             </I18nProvider>

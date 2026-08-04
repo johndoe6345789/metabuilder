@@ -32,6 +32,7 @@ COPY libraries/translations/ ./libraries/translations/
 COPY libraries/components/ ./libraries/components/
 
 # ── Redux packages (all — small TS source, avoids transitive dep breakage) ───
+COPY libraries/redux/dbal-sso/ ./libraries/redux/dbal-sso/
 COPY libraries/redux/core/ ./libraries/redux/core/
 COPY libraries/redux/slices/ ./libraries/redux/slices/
 COPY libraries/redux/hooks/ ./libraries/redux/hooks/
@@ -72,6 +73,10 @@ RUN for ws in libraries/redux/core libraries/redux/slices \
 done
 
 # Build the app
+ARG NEXT_PUBLIC_DBAL_OIDC_BASE_URL=/api/dbal
+ARG NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID=workflowui-web
+ENV NEXT_PUBLIC_DBAL_OIDC_BASE_URL=${NEXT_PUBLIC_DBAL_OIDC_BASE_URL}
+ENV NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID=${NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID}
 RUN cd frontends/workflowui && npx next build --turbopack
 
 # --- Runtime stage ---
