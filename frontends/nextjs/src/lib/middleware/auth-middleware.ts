@@ -81,8 +81,10 @@ export async function authenticate(
   }
 
   try {
-    // Get current user from session
-    const user = await getCurrentUser()
+    // Get current user from the caller's DBAL OIDC bearer token
+    const authHeader = request.headers.get('authorization') ?? ''
+    const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null
+    const user = await getCurrentUser(token)
 
     // Check if user is authenticated
     if (user == null) {

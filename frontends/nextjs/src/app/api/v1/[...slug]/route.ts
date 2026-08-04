@@ -12,7 +12,7 @@
  *   POST /api/v1/acme/forum_forge/posts/123/like  -> custom action
  * 
  * Authentication & Authorization:
- *   - Session validated from mb_session cookie
+ *   - Session validated from the caller's DBAL OIDC bearer token
  *   - Tenant access validated (user must belong to tenant or be God+)
  *   - Package minLevel checked against user level
  *   - Entity must be declared in package schema
@@ -79,7 +79,7 @@ async function handleRequest(
   const { route, operation, dbalOp } = context
 
   // 2. Get current user session (may be null for public routes)
-  const { user: rawUser } = await getSessionUser()
+  const { user: rawUser } = await getSessionUser(request)
   
   // Type-safe user with required fields
   const user = rawUser !== null ? {

@@ -67,11 +67,13 @@ export interface SessionUser {
   user: Record<string, unknown> | null
 }
 
-export async function getSessionUser(_req?: Request): Promise<SessionUser> {
+export async function getSessionUser(req?: Request): Promise<SessionUser> {
   try {
-    // Use fetchSession to get current user from cookies
+    // Use fetchSession to verify the caller's DBAL OIDC bearer token
     const { fetchSession } = await import('@/lib/auth/api/fetch-session')
-    const user = await fetchSession()
+    const authHeader = req?.headers.get('authorization') ?? ''
+    const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null
+    const user = await fetchSession(token)
     
     if (user === null) {
       return { user: null }
