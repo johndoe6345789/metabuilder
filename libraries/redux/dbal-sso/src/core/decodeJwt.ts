@@ -4,7 +4,11 @@
  * trust a token's authenticity for an authorization decision (the backend
  * that actually enforces access re-verifies the signature server-side). */
 export function decodeJwtPayload(token: string): Record<string, unknown> {
-  return JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')))
+  const payloadSegment = token.split('.')[1]
+  if (payloadSegment === undefined) {
+    throw new Error('Malformed JWT: missing payload segment')
+  }
+  return JSON.parse(atob(payloadSegment.replace(/-/g, '+').replace(/_/g, '/')))
 }
 
 export function isTokenValid(token: string | null): boolean {

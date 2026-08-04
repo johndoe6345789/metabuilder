@@ -22,5 +22,6 @@ export const mapUserToAuthUser = (user: User): AuthUser => {
     profilePicture: user.profilePicture ?? undefined,
     bio: user.bio ?? undefined,
     isInstanceOwner: user.isInstanceOwner,
+    createdAt: user.createdAt !== undefined ? Number(user.createdAt) : undefined,
   }
 }

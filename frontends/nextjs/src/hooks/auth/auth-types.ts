@@ -11,6 +11,7 @@ export interface AuthUser {
   profilePicture?: string
   bio?: string
   isInstanceOwner?: boolean
+  createdAt?: number
 }
 
 export interface AuthState {

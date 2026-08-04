@@ -58,7 +58,7 @@ export default function LoginForm() {
             </Typography>
           </Box>
           {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
+            <Alert severity="error" style={{ marginBottom: 16 }}>
               {error}
             </Alert>
           )}
