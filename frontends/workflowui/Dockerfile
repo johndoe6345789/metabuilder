@@ -80,32 +80,22 @@ ENV NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID=${NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID}
 RUN cd frontends/workflowui && npx next build --turbopack
 
 # --- Runtime stage ---
-# Pinned to alpine3.21 (Python 3.12) on purpose: node:24-alpine moved to
-# alpine3.24 / Python 3.14, for which pydantic-core has no musl wheel and its
-# pinned pyo3 won't compile -> pip install fails. 3.12 installs from a wheel.
-FROM node:24-alpine3.21
+FROM node:24-alpine
 WORKDIR /app
-
-# Install Python for Flask backend
-RUN apk add --no-cache python3 py3-pip
 
 # Copy standalone Next.js output
 COPY --from=builder /app/frontends/workflowui/.next/standalone ./
 COPY --from=builder /app/frontends/workflowui/.next/static ./frontends/workflowui/.next/static
 COPY --from=builder /app/frontends/workflowui/public ./frontends/workflowui/public
 
-# Copy Flask backend
-COPY --from=builder /app/frontends/workflowui/backend ./backend
-RUN pip3 install --no-cache-dir --break-system-packages -r /app/backend/requirements.txt
-
 ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-EXPOSE 3000 5000
+EXPOSE 3000
 
 HEALTHCHECK --interval=15s --timeout=5s --start-period=40s --retries=3 \
     CMD wget --quiet --tries=1 --spider http://127.0.0.1:3000/ || exit 1
 
 WORKDIR /app/frontends/workflowui
-CMD ["sh", "-c", "python3 /app/backend/server_sqlalchemy.py & node server.js"]
+CMD ["node", "server.js"]

@@ -157,23 +157,6 @@ function scanPluginDirectory(
 // API HANDLER
 // =============================================================================
 
-// Check if Python backend is available
-async function checkPythonBackendHealth(): Promise<boolean> {
-  try {
-    // Try to connect to the Python workflow executor
-    // This could be a Flask server or just check if Python is available
-    const pythonPort = process.env.PYTHON_BACKEND_PORT || '5000';
-    const response = await fetch(`http://localhost:${pythonPort}/health`, {
-      method: 'GET',
-      signal: AbortSignal.timeout(2000), // 2 second timeout
-    });
-    return response.ok;
-  } catch {
-    // Backend not available
-    return false;
-  }
-}
-
 export async function GET() {
   const workflowDir = path.resolve(process.cwd(), '../workflow/plugins');
   const languages = ['ts', 'python', 'go', 'rust', 'mojo'];
@@ -184,9 +167,6 @@ export async function GET() {
   const nodesByCategory: Record<string, NodeTypeDefinition[]> = {};
   const languageHealth: Record<string, boolean> = {};
 
-  // Check Python backend health
-  const pythonHealthy = await checkPythonBackendHealth();
-  languageHealth['python'] = pythonHealthy;
   languageHealth['ts'] = true; // TypeScript always available (runs in same process)
 
   for (const lang of languages) {

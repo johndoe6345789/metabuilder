@@ -27,9 +27,7 @@ COPY frontends/emailclient/tests/requirements.txt                              /
 # Backend services
 COPY services/smtprelay/requirements.txt                                       /deps/flat/smtprelay.txt
 COPY frontends/dockerterminal/backend/requirements.txt                         /deps/flat/dockerterminal.txt
-COPY frontends/codegen/backend/requirements.txt                                /deps/flat/codegen-backend.txt
 COPY frontends/pastebin/backend/requirements.txt                               /deps/flat/pastebin-backend.txt
-COPY frontends/workflowui/backend/requirements.txt                             /deps/flat/workflowui-backend.txt
 
 # PCB generator (no -r includes)
 COPY libraries/pcbgenerator/requirements.txt                                   /deps/flat/pcbgenerator.txt
