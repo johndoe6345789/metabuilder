@@ -26,6 +26,10 @@ fi
 echo "Starting icecast2..."
 icecast2 -c "$ICECAST_CFG" -b
 
-# Start media daemon in foreground
+# Start media daemon in foreground. Configured entirely via env vars (see
+# `media_daemon --help`) -- there is no --config flag, and no config.yaml
+# is ever generated into /etc/media-daemon; a stale --config argument here
+# previously made the binary print its usage text and exit instead of
+# starting, crash-looping the container.
 echo "Starting media_daemon..."
-exec media_daemon --config /etc/media-daemon/config.yaml "$@"
+exec media_daemon "$@"

@@ -51,9 +51,16 @@ RUN groupadd -r media && useradd -r -g media media
 
 # Create directories
 RUN mkdir -p /data/media /data/temp /data/output /data/cache \
-    /data/hls/radio /data/hls/tv \
+    /data/hls/radio /data/hls/tv /data/uploads \
     /plugins /etc/media-daemon /var/log/media-daemon /var/log/icecast2 \
     && chown -R media:media /data /plugins /var/log/media-daemon /var/log/icecast2
+
+# No WORKDIR was ever set in this stage (nor in base-apt), so it defaulted
+# to Docker's own default of "/" -- writable only by root, not the `media`
+# user this container actually runs as. The daemon writes upload staging
+# files to a relative "./uploads/tmp/<hex>/" path, which needs a writable,
+# persistent home; /data is the existing convention for that.
+WORKDIR /data
 
 # Copy binary
 COPY --from=builder /app/build/media_daemon /usr/local/bin/
