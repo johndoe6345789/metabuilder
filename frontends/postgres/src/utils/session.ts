@@ -43,10 +43,10 @@ export async function setSessionCookie(token: string): Promise<void> {
   });
 }
 
-export async function getSession(): Promise<SessionData | null> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
-
+/** Pure token verification, usable from both Server Components (via
+ * getSession below) and Edge Middleware (which can't use next/headers'
+ * cookies()) -- see proxy.ts. */
+export async function verifySessionToken(token: string | undefined): Promise<SessionData | null> {
   if (!token) {
     return null;
   }
@@ -58,6 +58,13 @@ export async function getSession(): Promise<SessionData | null> {
     return null;
   }
 }
+
+export async function getSession(): Promise<SessionData | null> {
+  const cookieStore = await cookies();
+  return verifySessionToken(cookieStore.get(SESSION_COOKIE_NAME)?.value);
+}
+
+export { SESSION_COOKIE_NAME };
 
 export async function clearSession(): Promise<void> {
   const cookieStore = await cookies();

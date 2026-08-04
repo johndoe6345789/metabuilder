@@ -1,55 +1,37 @@
-import { eq } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
-import { verifyPassword } from '@/utils/auth';
-import { adminUserSchema, db } from '@/utils/db';
+import { verifyDbalAdminToken } from '@/utils/dbalAdmin';
 import { createSession, setSessionCookie } from '@/utils/session';
 
+/**
+ * Bridges a DBAL OIDC access token (obtained client-side via the
+ * beginLogin/completeLogin redirect flow) into this app's own httpOnly
+ * session cookie -- keeps every existing /api/admin/* route's
+ * cookie-based getSession() check unchanged, while the only way to
+ * actually mint that cookie is now a DBAL-verified, admin-tier login.
+ */
 export async function POST(request: Request) {
   try {
-    const { username, password } = await request.json();
+    const { token } = await request.json();
 
-    if (!username || !password) {
+    if (!token) {
       return NextResponse.json(
-        { error: 'Username and password are required' },
+        { error: 'DBAL access token is required' },
         { status: 400 },
       );
     }
 
-    // Find user
-    const users = await db
-      .select()
-      .from(adminUserSchema)
-      .where(eq(adminUserSchema.username, username))
-      .limit(1);
-
-    const user = users[0];
-
-    if (!user) {
+    const username = await verifyDbalAdminToken(token);
+    if (!username) {
       return NextResponse.json(
-        { error: 'Invalid credentials' },
+        { error: 'Not authorized -- admin role required' },
         { status: 401 },
       );
     }
 
-    // Verify password
-    const isValid = await verifyPassword(password, user.passwordHash);
+    const sessionToken = await createSession({ userId: 0, username });
+    await setSessionCookie(sessionToken);
 
-    if (!isValid) {
-      return NextResponse.json(
-        { error: 'Invalid credentials' },
-        { status: 401 },
-      );
-    }
-
-    // Create session
-    const token = await createSession({
-      userId: user.id,
-      username: user.username,
-    });
-
-    await setSessionCookie(token);
-
-    return NextResponse.json({ success: true, username: user.username });
+    return NextResponse.json({ success: true, username });
   } catch (error) {
     console.error('Login error:', error);
     return NextResponse.json(

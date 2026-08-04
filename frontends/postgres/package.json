@@ -38,11 +38,10 @@
   },
   "dependencies": {
     "@arcjet/next": "^1.1.0",
-    "@clerk/localizations": "^4.2.3",
-    "@clerk/nextjs": "^6.38.0",
     "@hookform/resolvers": "^5.2.2",
     "@logtape/logtape": "^2.0.2",
     "@metabuilder/components": "file:../../libraries/components",
+    "@metabuilder/dbal-sso": "file:../../libraries/redux/dbal-sso",
     "@metabuilder/hooks": "file:../../libraries/hooks",
     "@metabuilder/m3": "file:../../libraries/components/m3",
     "@metabuilder/redux-persist": "file:../../libraries/redux/persist",

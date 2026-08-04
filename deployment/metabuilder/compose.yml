@@ -731,15 +731,26 @@ services:
     build:
       context: ../..
       dockerfile: frontends/postgres/Dockerfile
+      args:
+        NEXT_PUBLIC_DBAL_OIDC_BASE_URL: "${NEXT_PUBLIC_DBAL_OIDC_BASE_URL:-/api/dbal}"
+        NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID: postgres-dashboard-web
     container_name: metabuilder-postgres-dashboard
     restart: unless-stopped
     environment:
       NODE_ENV: production
       PORT: 3000
       DATABASE_URL: "postgresql://${POSTGRES_USER:-metabuilder}:${POSTGRES_PASSWORD:-metabuilder}@postgres:5432/${POSTGRES_DB:-metabuilder}"
+      # Local session cookie, only ever minted after a DBAL-verified
+      # admin-tier login (see src/app/api/admin/login/route.ts) -- keeps
+      # every existing /api/admin/* route's cookie check unchanged.
       JWT_SECRET: "${JWT_SECRET:-changeme-in-production}"
+      # Server-only -- verifies caller bearer tokens via DBAL's own
+      # /oidc/userinfo (src/utils/dbalAdmin.ts).
+      DBAL_ENDPOINT: http://dbal:8080
     depends_on:
       postgres:
+        condition: service_healthy
+      dbal:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:3000/postgres/admin/dashboard"]

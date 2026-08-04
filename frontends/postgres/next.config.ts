@@ -48,7 +48,7 @@ const baseConfig: NextConfig = {
       path.join(monorepoRoot, 'libraries/scss/mixins'),
     ],
   },
-  transpilePackages: ['@metabuilder/components', '@metabuilder/m3'],
+  transpilePackages: ['@metabuilder/components', '@metabuilder/m3', '@metabuilder/dbal-sso'],
   typescript: {
     ignoreBuildErrors: true,
   },

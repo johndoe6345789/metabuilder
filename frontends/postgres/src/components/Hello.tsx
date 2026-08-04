@@ -1,17 +1,17 @@
-import { currentUser } from '@clerk/nextjs/server';
 import { getTranslations } from 'next-intl/server';
+import { getSession } from '@/utils/session';
 import { Sponsors } from './Sponsors';
 import { StyledLink } from './StyledLink';
 
 export const Hello = async () => {
   const t = await getTranslations('Dashboard');
-  const user = await currentUser();
+  const session = await getSession();
 
   return (
     <>
       <p>
         {`👋 `}
-        {t('hello_message', { email: user?.primaryEmailAddress?.emailAddress ?? '' })}
+        {t('hello_message', { email: session?.username ?? '' })}
       </p>
       <p>
         {t.rich('alternative_message', {

@@ -9,6 +9,11 @@ FROM ${BASE_REGISTRY}/base-postgres-deps:latest AS builder
 
 COPY package.json .npmrc ./
 
+# dbal-sso isn't part of base-postgres-deps' pre-baked libraries/redux/, so
+# (unlike scss/components below) it must land BEFORE npm install for the
+# file:../../libraries/redux/dbal-sso symlink to resolve.
+COPY libraries/redux/dbal-sso/ ./libraries/redux/dbal-sso/
+
 # Re-link workspace symlinks BEFORE source copies so this layer is cached on
 # source-only changes (scss/component/app edits never touch package.json).
 # --no-audit --prefer-offline make it fast when it does need to run.
@@ -28,6 +33,10 @@ ENV SKIP_ENV_VALIDATION=true
 ENV JWT_SECRET=build-placeholder
 ENV NEXT_PUBLIC_SENTRY_DISABLED=true
 ENV NODE_OPTIONS="--max-old-space-size=3072"
+ARG NEXT_PUBLIC_DBAL_OIDC_BASE_URL=/api/dbal
+ARG NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID=postgres-dashboard-web
+ENV NEXT_PUBLIC_DBAL_OIDC_BASE_URL=${NEXT_PUBLIC_DBAL_OIDC_BASE_URL}
+ENV NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID=${NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID}
 RUN --mount=type=cache,target=/app/frontends/postgres/.next/cache \
     cd frontends/postgres && npx next build --turbopack
 

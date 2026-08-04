@@ -1,24 +1,22 @@
 import type { NextFetchEvent, NextRequest } from 'next/server';
 import { detectBot } from '@arcjet/next';
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import createMiddleware from 'next-intl/middleware';
 import { NextResponse } from 'next/server';
 import arcjet from '@/libs/Arcjet';
+import { verifySessionToken, SESSION_COOKIE_NAME } from '@/utils/session';
 import { routing } from './libs/I18nRouting';
 
 const handleI18nRouting = createMiddleware(routing);
 
-const isProtectedRoute = createRouteMatcher([
-  '/dashboard(.*)',
-  '/:locale/dashboard(.*)',
-]);
+const DASHBOARD_PREFIX = '/dashboard';
 
-const isAuthPage = createRouteMatcher([
-  '/sign-in(.*)',
-  '/:locale/sign-in(.*)',
-  '/sign-up(.*)',
-  '/:locale/sign-up(.*)',
-]);
+function isDashboardRoute(pathname: string): boolean {
+  const segments = pathname.split('/').filter(Boolean);
+  const withoutLocale = routing.locales.includes(segments[0] as (typeof routing.locales)[number])
+    ? `/${segments.slice(1).join('/')}`
+    : pathname;
+  return withoutLocale === DASHBOARD_PREFIX || withoutLocale.startsWith(`${DASHBOARD_PREFIX}/`);
+}
 
 // Admin routes that should bypass i18n routing
 const ADMIN_ROUTE_PREFIX = '/admin';
@@ -58,23 +56,12 @@ export default async function proxy(
     }
   }
 
-  // Clerk keyless mode doesn't work with i18n, this is why we need to run the middleware conditionally
-  if (
-    isAuthPage(request) || isProtectedRoute(request)
-  ) {
-    return clerkMiddleware(async (auth, req) => {
-      if (isProtectedRoute(req)) {
-        const locale = req.nextUrl.pathname.match(/(\/.*)\/dashboard/)?.at(1) ?? '';
-
-        const signInUrl = new URL(`${locale}/sign-in`, req.url);
-
-        await auth.protect({
-          unauthenticatedUrl: signInUrl.toString(),
-        });
-      }
-
-      return handleI18nRouting(req);
-    })(request, event);
+  if (isDashboardRoute(request.nextUrl.pathname)) {
+    const session = await verifySessionToken(request.cookies.get(SESSION_COOKIE_NAME)?.value);
+    if (!session) {
+      const locale = request.nextUrl.pathname.match(/(\/.*)\/dashboard/)?.at(1) ?? '';
+      return NextResponse.redirect(new URL(`${locale}/sign-in`, request.url));
+    }
   }
 
   return handleI18nRouting(request);
