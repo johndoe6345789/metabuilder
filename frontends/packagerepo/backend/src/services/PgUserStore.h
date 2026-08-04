@@ -10,6 +10,8 @@
 
 #include <json/json.h>
 
+#include <cstdlib>
+#include <iostream>
 #include <string>
 
 namespace repo
@@ -18,15 +20,30 @@ namespace repo
 class PgUserStore
 {
   public:
-    /// @brief Create users table and seed admin if needed.
+    /// @brief Create users table and seed admin if needed. Requires
+    /// PACKAGEREPO_ADMIN_PASSWORD to be set -- unlike the old hardcoded
+    /// "admin"/"admin" default (a real, live credential anyone could use
+    /// for full read/write/admin registry access via HTTP Basic auth),
+    /// there is no insecure fallback: seeding is skipped (with a loud
+    /// warning) if the variable is absent.
     static void init()
     {
         auto db = DbPool::get();
         auto r = db->execSqlSync("SELECT id FROM users "
                                  "WHERE username='admin'");
         if (r.empty()) {
+            const char* pass = std::getenv("PACKAGEREPO_ADMIN_PASSWORD");
+            if (!pass || !*pass) {
+                std::cerr
+                    << "[packagerepo] WARNING: PACKAGEREPO_ADMIN_PASSWORD "
+                       "not set -- skipping admin user seed. Docker "
+                       "registry Basic auth (docker login) has no "
+                       "bootstrap account until this is set and the "
+                       "service is restarted.\n";
+                return;
+            }
             auto salt = makeSalt();
-            auto hash = hashPass("admin", salt);
+            auto hash = hashPass(pass, salt);
             db->execSqlSync("INSERT INTO users "
                             "(username,pass_hash,pass_salt,scopes) "
                             "VALUES ($1,$2,$3,$4)",

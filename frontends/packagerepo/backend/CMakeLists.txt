@@ -16,8 +16,6 @@ add_executable(packagerepo-server
     src/controllers/ArtifactTag.cpp
     src/controllers/HealthCtrl.cpp
     src/controllers/AdminCtrl.cpp
-    src/controllers/DevTokenCtrl.cpp
-    src/controllers/DevTokenVerify.cpp
     src/controllers/GenericAdapterCtrl.cpp
     src/controllers/RegistryV2Blob.cpp
     src/controllers/RegistryV2Catalog.cpp

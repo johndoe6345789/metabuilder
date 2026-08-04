@@ -1,54 +1,48 @@
-FROM node:24-alpine AS base
+# Multi-stage prod build for packagerepo frontend — monorepo-aware so
+# @metabuilder/dbal-sso (an npm workspace package, not published to npm)
+# resolves. Context: monorepo root (../../..).
+# Requires: metabuilder/base-node-deps:latest
 
-# Install dependencies only when needed
-FROM base AS deps
-RUN apk add --no-cache libc6-compat
-WORKDIR /app
+# --- Build stage ---
+ARG BASE_REGISTRY=metabuilder
+FROM ${BASE_REGISTRY}/base-node-deps:latest AS builder
 
-COPY package.json ./
-RUN npm install
+ARG NEXT_PUBLIC_DBAL_OIDC_BASE_URL=/api/dbal
+ARG NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID=packagerepo-web
+ENV NEXT_PUBLIC_DBAL_OIDC_BASE_URL=${NEXT_PUBLIC_DBAL_OIDC_BASE_URL}
+ENV NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID=${NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID}
 
-# Rebuild the source code only when needed
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
+COPY package.json .npmrc ./
+
+COPY libraries/redux/dbal-sso/ ./libraries/redux/dbal-sso/
+
+COPY frontends/packagerepo/frontend/ ./frontends/packagerepo/frontend/
+
+RUN npm install --ignore-scripts
 
 ENV NEXT_TELEMETRY_DISABLED=1
-# Set backend URL for Next.js rewrites (Docker internal network)
 ARG BACKEND_URL=http://backend:5000
 ENV BACKEND_URL=${BACKEND_URL}
 
-# Ensure public directory exists (Next.js may not create it if no static assets)
-RUN mkdir -p public
+RUN cd frontends/packagerepo/frontend && mkdir -p public && npx next build
 
-RUN npm run build
-
-# Production image, copy all the files and run next
-FROM base AS runner
+# --- Runtime stage ---
+FROM node:24-alpine
 WORKDIR /app
 
+COPY --from=builder /app/frontends/packagerepo/frontend/.next/standalone ./
+COPY --from=builder /app/frontends/packagerepo/frontend/.next/static ./frontends/packagerepo/frontend/.next/static
+COPY --from=builder /app/frontends/packagerepo/frontend/public ./frontends/packagerepo/frontend/public
+
 ENV NODE_ENV=production
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 ENV NEXT_TELEMETRY_DISABLED=1
-
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-COPY --from=builder /app/public ./public
-
-# Set the correct permission for prerender cache
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
-
-# Automatically leverage output traces to reduce image size
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-USER nextjs
 
 EXPOSE 3000
 
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
+HEALTHCHECK --interval=15s --timeout=5s --start-period=30s --retries=3 \
+    CMD wget --quiet --tries=1 --spider http://127.0.0.1:3000/packagerepo || exit 1
 
+WORKDIR /app/frontends/packagerepo/frontend
 CMD ["node", "server.js"]

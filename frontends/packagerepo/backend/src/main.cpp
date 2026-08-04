@@ -27,12 +27,12 @@ int main()
     auto s3Ep = env("S3_ENDPOINT", "http://localhost:9000");
     auto s3Bk = env("S3_BUCKET", "packagerepo");
     auto s3Ak = env("S3_ACCESS_KEY", "minioadmin");
-    auto jwt = env("JWT_SECRET", "dev-secret-key");
+    auto dbal = env("DBAL_ENDPOINT", "http://localhost:8080");
     auto db = env("DATABASE_URL",
         "host=localhost port=5432 dbname=packagerepo "
         "user=packagerepo password=packagerepo");
 
-    repo::Globals::initConfig(s3Ep, s3Bk, s3Ak, jwt, db);
+    repo::Globals::initConfig(s3Ep, s3Bk, s3Ak, dbal, db);
     // Upstream registries for pull-through proxying (empty disables it).
     repo::Globals::npmUpstream = env("NPM_UPSTREAM", "https://registry.npmjs.org");
     repo::Globals::conanUpstream = env("CONAN_UPSTREAM", "https://center2.conan.io");

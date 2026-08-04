@@ -1,33 +1,132 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-const API = process.env.NEXT_PUBLIC_API_URL || '';
+import {
+  beginLogin,
+  completeLogin,
+  refreshTokens,
+  logout as oidcLogout,
+  setAuthToken,
+  decodeJwtPayload,
+  isTokenValid,
+} from '@metabuilder/dbal-sso/core';
+import { dbalSsoConfig } from './dbalSsoConfig';
 
-export const login = createAsyncThunk('auth/login', async ({ username, password }, { rejectWithValue }) => {
-  const res = await fetch(`${API}/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password }) });
-  const data = await res.json();
-  if (!res.ok) return rejectWithValue(data.error?.message || 'Login failed');
-  localStorage.setItem('token', data.token); localStorage.setItem('user', JSON.stringify(data.user));
-  return data;
+const STORAGE_KEY = 'packagerepo-web-sso';
+
+function loadPersistedSession() {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = sessionStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function savePersistedSession(session) {
+  try {
+    if (session) sessionStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+    else sessionStorage.removeItem(STORAGE_KEY);
+  } catch {
+    // ignore quota errors
+  }
+}
+
+// DBAL only carries a role claim, not this app's read/write/admin scopes --
+// mirrors the backend's own AuthFilter::scopesForRole mapping so
+// user.scopes.includes('admin') keeps working for existing UI checks.
+function scopesForRole(role) {
+  const scopes = ['read', 'write'];
+  if (role === 'admin' || role === 'god' || role === 'supergod') scopes.push('admin');
+  return scopes;
+}
+
+function userFromToken(token) {
+  const claims = decodeJwtPayload(token);
+  return { username: claims.sub, scopes: scopesForRole(claims.role) };
+}
+
+export const startOidcLogin = createAsyncThunk('auth/startOidcLogin', async () => {
+  await beginLogin(dbalSsoConfig);
 });
 
-export const logout = createAsyncThunk('auth/logout', async () => { localStorage.removeItem('token'); localStorage.removeItem('user'); });
+export const completeOidcLogin = createAsyncThunk(
+  'auth/completeOidcLogin',
+  async ({ code, state }, { rejectWithValue }) => {
+    try {
+      const tokens = await completeLogin(dbalSsoConfig, code, state);
+      savePersistedSession({ token: tokens.token, refreshToken: tokens.refreshToken });
+      return tokens;
+    } catch (e) {
+      return rejectWithValue(e instanceof Error ? e.message : 'Sign-in failed');
+    }
+  },
+);
 
-export const checkAuth = createAsyncThunk('auth/check', async (_, { rejectWithValue }) => {
-  const token = localStorage.getItem('token'), user = localStorage.getItem('user');
-  return token && user ? { token, user: JSON.parse(user) } : rejectWithValue('Not authenticated');
+export const hydrate = createAsyncThunk('auth/hydrate', async (_, { rejectWithValue }) => {
+  const persisted = loadPersistedSession();
+  if (!persisted) return rejectWithValue('Not authenticated');
+
+  if (isTokenValid(persisted.token)) {
+    return { token: persisted.token, refreshToken: persisted.refreshToken };
+  }
+  if (persisted.refreshToken) {
+    try {
+      const tokens = await refreshTokens(dbalSsoConfig, persisted.refreshToken);
+      savePersistedSession({ token: tokens.token, refreshToken: tokens.refreshToken });
+      return { token: tokens.token, refreshToken: tokens.refreshToken };
+    } catch {
+      savePersistedSession(null);
+      return rejectWithValue('Session expired');
+    }
+  }
+  savePersistedSession(null);
+  return rejectWithValue('Not authenticated');
+});
+
+export const logout = createAsyncThunk('auth/logout', async (_, { getState }) => {
+  const { refreshToken } = getState().auth;
+  await oidcLogout(dbalSsoConfig, refreshToken);
+  savePersistedSession(null);
 });
 
 const authSlice = createSlice({
   name: 'auth',
-  initialState: { user: null, token: null, loading: true, error: null },
-  reducers: { clearError: (state) => { state.error = null; } },
+  initialState: { user: null, token: null, refreshToken: null, loading: true, error: null },
+  reducers: {
+    clearError: (state) => { state.error = null; },
+  },
   extraReducers: (b) => {
-    b.addCase(login.pending, (s) => { s.loading = true; s.error = null; })
-     .addCase(login.fulfilled, (s, { payload }) => { s.loading = false; s.token = payload.token; s.user = payload.user; })
-     .addCase(login.rejected, (s, { payload }) => { s.loading = false; s.error = payload; })
-     .addCase(logout.fulfilled, (s) => { s.user = null; s.token = null; })
-     .addCase(checkAuth.pending, (s) => { s.loading = true; })
-     .addCase(checkAuth.fulfilled, (s, { payload }) => { s.loading = false; s.token = payload.token; s.user = payload.user; })
-     .addCase(checkAuth.rejected, (s) => { s.loading = false; s.user = null; s.token = null; });
+    b.addCase(startOidcLogin.rejected, (s, { error }) => { s.error = error.message; })
+     .addCase(completeOidcLogin.pending, (s) => { s.loading = true; s.error = null; })
+     .addCase(completeOidcLogin.fulfilled, (s, { payload }) => {
+       s.loading = false;
+       s.token = payload.token;
+       s.refreshToken = payload.refreshToken;
+       s.user = userFromToken(payload.token);
+       setAuthToken(payload.token);
+     })
+     .addCase(completeOidcLogin.rejected, (s, { payload }) => { s.loading = false; s.error = payload; })
+     .addCase(hydrate.pending, (s) => { s.loading = true; })
+     .addCase(hydrate.fulfilled, (s, { payload }) => {
+       s.loading = false;
+       s.token = payload.token;
+       s.refreshToken = payload.refreshToken;
+       s.user = userFromToken(payload.token);
+       setAuthToken(payload.token);
+     })
+     .addCase(hydrate.rejected, (s) => {
+       s.loading = false;
+       s.user = null;
+       s.token = null;
+       s.refreshToken = null;
+       setAuthToken(null);
+     })
+     .addCase(logout.fulfilled, (s) => {
+       s.user = null;
+       s.token = null;
+       s.refreshToken = null;
+       setAuthToken(null);
+     });
   },
 });
 

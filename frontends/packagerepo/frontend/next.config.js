@@ -3,6 +3,7 @@ const nextConfig = {
   output: 'standalone',
   basePath: '/packagerepo',
   allowedDevOrigins: ['metabuilder.wardcrew.com', 'wardcrew.com'],
+  transpilePackages: ['@metabuilder/dbal-sso'],
   async rewrites() {
     // Get backend URL from environment, fallback to localhost for development
     const backendUrl = process.env.BACKEND_URL || 'http://localhost:5000';

@@ -21,7 +21,7 @@ namespace repo
 /// @brief Global service singletons, initialised in main.
 struct Globals {
     static inline std::unique_ptr<S3BlobStore> blobs;
-    static inline std::string jwtSecret;
+    static inline std::string dbalUrl;
     static inline std::string schemaJson;
     static inline int repoType = 0;
 
@@ -41,13 +41,13 @@ struct Globals {
     /// @brief Init DB and config (safe before event loop).
     static void initConfig(
         const std::string& s3Ep, const std::string& s3Bkt,
-        const std::string& s3Key, const std::string& secret,
+        const std::string& s3Key, const std::string& dbalEndpoint,
         const std::string& dbConn)
     {
         s3Ep_ = s3Ep;
         s3Bkt_ = s3Bkt;
         s3Key_ = s3Key;
-        jwtSecret = secret;
+        dbalUrl = dbalEndpoint;
         DbPool::init(dbConn);
         PgUserStore::init();
         repoType = PgConfigStore::defaultRepoType();

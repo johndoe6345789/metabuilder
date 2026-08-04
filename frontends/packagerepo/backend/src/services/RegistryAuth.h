@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Globals.h"
-#include "JwtVerify.h"
 #include "PgUserStore.h"
 
 #include <drogon/HttpResponse.h>
@@ -22,12 +20,12 @@ inline bool hasScope(const Json::Value& p, const std::string& scope)
     return false;
 }
 
+/// @brief HTTP Basic auth only -- the Docker CLI (`docker login`/push/pull)
+/// authenticates this way, not via a browser OIDC redirect, so this stays
+/// on PgUserStore's own username/password store rather than DBAL SSO.
 inline Json::Value authenticate(const drogon::HttpRequestPtr& req)
 {
     const auto auth = req->getHeader("Authorization");
-    if (auth.rfind("Bearer ", 0) == 0) {
-        return verifyJwt(auth.substr(7), Globals::jwtSecret);
-    }
     if (auth.rfind("Basic ", 0) != 0) return Json::nullValue;
     const auto raw = drogon::utils::base64Decode(auth.substr(6));
     const auto pos = raw.find(':');

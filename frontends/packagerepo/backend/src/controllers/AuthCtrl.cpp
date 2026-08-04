@@ -4,52 +4,13 @@
  */
 
 #include "AuthCtrl.h"
-#include "../services/Globals.h"
-#include "../services/JwtService.h"
 #include "../services/PgUserStore.h"
+#include "../services/RegistryAuth.h"
 
 using namespace drogon;
 
 namespace repo
 {
-
-void AuthCtrl::login(const HttpRequestPtr& req,
-                     std::function<void(const HttpResponsePtr&)>&& cb)
-{
-    auto json = req->getJsonObject();
-    if (!json || !(*json)["username"].isString() ||
-        !(*json)["password"].isString()) {
-        Json::Value err;
-        err["error"]["code"] = "INVALID_REQUEST";
-        err["error"]["message"] = "Missing credentials";
-        auto r = HttpResponse::newHttpJsonResponse(err);
-        r->setStatusCode(k400BadRequest);
-        cb(r);
-        return;
-    }
-
-    auto user = PgUserStore::verify((*json)["username"].asString(),
-                                    (*json)["password"].asString());
-
-    if (user.isNull()) {
-        Json::Value err;
-        err["error"]["code"] = "UNAUTHORIZED";
-        err["error"]["message"] = "Invalid credentials";
-        auto r = HttpResponse::newHttpJsonResponse(err);
-        r->setStatusCode(k401Unauthorized);
-        cb(r);
-        return;
-    }
-
-    auto token = createJwt(user["username"].asString(), user["scopes"],
-                           Globals::jwtSecret);
-
-    Json::Value out;
-    out["ok"] = true;
-    out["token"] = token;
-    out["user"] = user;
-    cb(HttpResponse::newHttpJsonResponse(out));
-}
 
 void AuthCtrl::me(const HttpRequestPtr& req,
                   std::function<void(const HttpResponsePtr&)>&& cb)
@@ -66,6 +27,22 @@ void AuthCtrl::changePassword(const HttpRequestPtr& req,
                               std::function<void(const HttpResponsePtr&)>&& cb)
 {
     auto p = req->attributes()->get<Json::Value>("principal");
+
+    // The Docker CLI (`docker login`) authenticates with a single shared
+    // "admin" credential in the separate PgUserStore, not per-DBAL-user --
+    // this rotates that credential, gated on an admin-tier DBAL role,
+    // rather than changing the caller's own (nonexistent, in PgUserStore)
+    // password.
+    if (!registry_auth::hasScope(p, "admin")) {
+        Json::Value err;
+        err["error"]["code"] = "FORBIDDEN";
+        err["error"]["message"] = "Admin role required";
+        auto r = HttpResponse::newHttpJsonResponse(err);
+        r->setStatusCode(k403Forbidden);
+        cb(r);
+        return;
+    }
+
     auto json = req->getJsonObject();
     if (!json || !(*json)["old_password"].isString() ||
         !(*json)["new_password"].isString()) {
@@ -78,14 +55,14 @@ void AuthCtrl::changePassword(const HttpRequestPtr& req,
         return;
     }
 
-    bool ok = PgUserStore::changePass(p["sub"].asString(),
+    bool ok = PgUserStore::changePass("admin",
                                       (*json)["old_password"].asString(),
                                       (*json)["new_password"].asString());
 
     Json::Value out;
     if (ok) {
         out["ok"] = true;
-        out["message"] = "Password changed";
+        out["message"] = "Docker registry login credential changed";
     } else {
         out["error"]["code"] = "INVALID_PASSWORD";
         out["error"]["message"] = "Old password incorrect";

@@ -1,6 +1,11 @@
 /**
  * @file AuthCtrl.h
- * @brief Authentication endpoints: login, me, change-password.
+ * @brief Authentication endpoints: me, change-password.
+ *
+ * Sign-in itself goes through DBAL SSO (browser OIDC redirect) on the
+ * frontend now -- this controller only serves the already-authenticated
+ * paths, plus password management for the separate Basic-auth account
+ * store used by Docker CLI clients (see PgUserStore, RegistryAuth).
  */
 
 #pragma once
@@ -14,15 +19,10 @@ class AuthCtrl : public drogon::HttpController<AuthCtrl>
 {
   public:
     METHOD_LIST_BEGIN
-    ADD_METHOD_TO(AuthCtrl::login, "/auth/login", drogon::Post);
     ADD_METHOD_TO(AuthCtrl::me, "/auth/me", drogon::Get, "repo::AuthFilter");
     ADD_METHOD_TO(AuthCtrl::changePassword, "/auth/change-password",
                   drogon::Post, "repo::AuthFilter");
     METHOD_LIST_END
-
-    /// @brief Login with username/password, return JWT.
-    void login(const drogon::HttpRequestPtr& req,
-               std::function<void(const drogon::HttpResponsePtr&)>&& cb);
 
     /// @brief Get current user info from token.
     void me(const drogon::HttpRequestPtr& req,

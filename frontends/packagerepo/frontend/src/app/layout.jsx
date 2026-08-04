@@ -2,13 +2,16 @@
 
 import '../styles/globals.scss';
 import Navbar from '../components/Navbar';
+import StoreProvider from '../store/Provider';
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <Navbar />
-        {children}
+        <StoreProvider>
+          <Navbar />
+          {children}
+        </StoreProvider>
       </body>
     </html>
   );
