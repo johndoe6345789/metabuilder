@@ -8,12 +8,9 @@
 export {
   DBAL_API_URL,
   DBAL_TENANT,
-  DBAL_ADMIN_TOKEN,
   ENTITY_MAP,
   isConnectionError,
   entityUrl,
-  adminUrl,
-  adminHeaders,
 } from './dbalConfig'
 
 export {

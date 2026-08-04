@@ -6,9 +6,6 @@ export const DBAL_API_URL =
   process.env.NEXT_PUBLIC_DBAL_API_URL || 'http://localhost:8080'
 export const DBAL_TENANT =
   process.env.NEXT_PUBLIC_DBAL_TENANT || 'default'
-/** Admin token — not NEXT_PUBLIC_ to avoid client-side exposure. */
-export const DBAL_ADMIN_TOKEN =
-  process.env.DBAL_ADMIN_TOKEN || ''
 
 /** Redux slice name → DBAL entity/package mapping */
 export const ENTITY_MAP: Record<
@@ -49,16 +46,3 @@ export function entityUrl(sliceName: string, id?: string): string {
   return id ? `${base}/${id}` : base
 }
 
-export function adminUrl(path: string): string {
-  return `${DBAL_API_URL}/admin/${path}`
-}
-
-export function adminHeaders(): Record<string, string> {
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  }
-  if (DBAL_ADMIN_TOKEN) {
-    headers['Authorization'] = `Bearer ${DBAL_ADMIN_TOKEN}`
-  }
-  return headers
-}
