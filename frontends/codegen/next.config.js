@@ -19,6 +19,7 @@ const nextConfig = {
     // Root shared packages
     '@metabuilder/m3',
     '@metabuilder/components',
+    '@metabuilder/dbal-sso',
     '@metabuilder/hooks',
     '@metabuilder/types',
     '@metabuilder/interfaces',
@@ -89,6 +90,8 @@ const nextConfig = {
       // Workflow
       '@metabuilder/workflow': './workflow',
       // Redux — all packages resolve to source
+      '@metabuilder/dbal-sso': './redux/dbal-sso/src',
+      '@metabuilder/dbal-sso/core': './redux/dbal-sso/src/core',
       '@metabuilder/api-clients': './redux/api-clients/src',
       '@metabuilder/core-hooks': './redux/core-hooks/src',
       '@metabuilder/hooks-async': './redux/hooks-async/src',

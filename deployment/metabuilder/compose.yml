@@ -551,6 +551,15 @@ services:
       dockerfile: frontends/codegen/Dockerfile
       args:
         NEXT_PUBLIC_AI_ENABLED: ${NEXT_PUBLIC_AI_ENABLED:-true}
+        # Browser-reachable DBAL origin for the OIDC PKCE dance, same
+        # same-origin-relative convention as pastebin/dbal-frontend's build args.
+        # NEXT_PUBLIC_* vars are compiled into the client bundle at build time --
+        # setting them under `environment:` below would have no effect on
+        # client-side code, only build `args:` does.
+        NEXT_PUBLIC_DBAL_OIDC_BASE_URL: "${NEXT_PUBLIC_DBAL_OIDC_BASE_URL:-/api/dbal}"
+        NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID: codegen-web
+        NEXT_PUBLIC_DBAL_API_URL: /api/dbal
+        NEXT_PUBLIC_DBAL_TENANT: codegen
     container_name: metabuilder-codegen
     restart: unless-stopped
     environment:
@@ -559,6 +568,10 @@ services:
       HOSTNAME: "0.0.0.0"
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       NEXT_PUBLIC_AI_ENABLED: ${NEXT_PUBLIC_AI_ENABLED:-true}
+      NEXT_PUBLIC_DBAL_OIDC_BASE_URL: "${NEXT_PUBLIC_DBAL_OIDC_BASE_URL:-/api/dbal}"
+      NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID: codegen-web
+      NEXT_PUBLIC_DBAL_API_URL: /api/dbal
+      NEXT_PUBLIC_DBAL_TENANT: codegen
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:3000/codegen"]
       interval: 15s

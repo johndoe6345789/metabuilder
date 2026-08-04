@@ -28,6 +28,7 @@
     "@metabuilder/hooks-canvas": "*",
     "@metabuilder/hooks-core": "*",
     "@metabuilder/hooks-data": "*",
+    "@metabuilder/dbal-sso": "*",
     "@metabuilder/redux-persist": "*",
     "@metabuilder/redux-slices": "*",
     "@metabuilder/service-adapters": "*",

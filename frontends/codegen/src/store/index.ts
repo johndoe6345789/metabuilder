@@ -1,6 +1,8 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import type { ThunkDispatch, UnknownAction } from '@reduxjs/toolkit'
 import { createPersistedStore } from '@metabuilder/redux-persist'
+import { setAuthToken } from '@metabuilder/dbal-sso/core'
+import authReducer from './slices/authSlice'
 import projectReducer from './slices/projectSlice'
 import filesReducer from './slices/filesSlice'
 import modelsReducer from './slices/modelsSlice'
@@ -22,6 +24,7 @@ import { createAutoSyncMiddleware } from './middleware/autoSyncMiddleware'
 
 const { store, persistor } = createPersistedStore({
   reducers: {
+    auth: authReducer,
     project: projectReducer,
     files: filesReducer,
     models: modelsReducer,
@@ -41,7 +44,7 @@ const { store, persistor } = createPersistedStore({
   },
   persist: {
     key: 'codeforge',
-    whitelist: ['files', 'models', 'components', 'componentTrees', 'workflows', 'lambdas', 'theme', 'settings', 'project', 'tests', 'config', 'uiState', 'translations', 'ui'],
+    whitelist: ['auth', 'files', 'models', 'components', 'componentTrees', 'workflows', 'lambdas', 'theme', 'settings', 'project', 'tests', 'config', 'uiState', 'translations', 'ui'],
     throttle: 300,
   },
   middleware: (base) =>
@@ -49,6 +52,12 @@ const { store, persistor } = createPersistedStore({
       .concat(createSyncMonitorMiddleware())
       .concat(createAutoSyncMiddleware()),
 })
+
+// Keep the token bridge in sync with Redux auth state -- fires on
+// REHYDRATE too, so this handles page-reload token restoration (see
+// @metabuilder/dbal-sso's authenticatedFetch, which reads from this
+// module-level bridge rather than importing the store directly).
+store.subscribe(() => setAuthToken(store.getState().auth.token))
 
 export { store, persistor }
 

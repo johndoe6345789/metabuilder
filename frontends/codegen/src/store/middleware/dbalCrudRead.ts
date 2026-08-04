@@ -2,7 +2,13 @@
  * DBAL read operations — fetch single and list entities.
  */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { getAuthToken } from '@metabuilder/dbal-sso/core'
 import { isConnectionError, entityUrl } from './dbalConfig'
+
+function authHeaders(): Record<string, string> {
+  const token = getAuthToken()
+  return token ? { Authorization: `Bearer ${token}` } : {}
+}
 
 export async function fetchFromDBAL(
   sliceName: string,
@@ -10,7 +16,7 @@ export async function fetchFromDBAL(
 ): Promise<any | null> {
   try {
     const url = entityUrl(sliceName, id)
-    const response = await fetch(url)
+    const response = await fetch(url, { headers: authHeaders() })
     if (response.status === 404) return null
     if (!response.ok) {
       throw new Error(
@@ -40,7 +46,7 @@ export async function listFromDBAL(
         url.searchParams.set(k, v),
       )
     }
-    const response = await fetch(url.toString())
+    const response = await fetch(url.toString(), { headers: authHeaders() })
     if (!response.ok) {
       throw new Error(
         `DBAL list failed: ${response.status}` +
