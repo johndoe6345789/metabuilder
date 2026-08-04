@@ -1,5 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
+import { beginLogin, completeLogin, isTokenValid } from '@metabuilder/dbal-sso/core'
 import { setAuthToken } from '@/lib/authToken'
+import { dbalSsoConfig } from '@/lib/dbalSsoConfig'
 
 export interface AuthUser {
   id: string
@@ -22,85 +24,16 @@ export function apiBase(): string {
   )
 }
 
-// DBAL's OIDC endpoints — the browser talks to DBAL directly for the
-// PKCE dance, not through Flask (Flask only ever verifies the resulting
-// tokens, it never sees the authorization code or the exchange).
-export function dbalOidcBase(): string {
-  return (process.env.NEXT_PUBLIC_DBAL_OIDC_BASE_URL ?? '').replace(/\/$/, '')
-}
-
-export function dbalOidcClientId(): string {
-  return process.env.NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID ?? 'pastebin-web'
-}
-
-function base64UrlEncode(bytes: Uint8Array): string {
-  let binary = ''
-  for (const b of bytes) binary += String.fromCharCode(b)
-  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
-}
-
-function randomString(byteLength: number): string {
-  const bytes = new Uint8Array(byteLength)
-  crypto.getRandomValues(bytes)
-  return base64UrlEncode(bytes)
-}
-
-async function sha256Base64Url(input: string): Promise<string> {
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input))
-  return base64UrlEncode(new Uint8Array(digest))
-}
-
-const PKCE_VERIFIER_KEY = 'dbal_oidc_pkce_verifier'
-const PKCE_STATE_KEY = 'dbal_oidc_state'
-
-// Must match next.config.js's basePath — window.location.origin alone
-// doesn't include it, and this is registered verbatim (exact-match, no
-// relaxation) as the client's redirect_uri in DBAL's clients.json.
-const BASE_PATH = '/pastebin'
-
-function oidcRedirectUri(): string {
-  return `${window.location.origin}${BASE_PATH}/auth/callback`
-}
+export { isTokenValid }
 
 /**
- * Redirects the browser to DBAL's /oidc/authorize, having stashed the PKCE
- * code_verifier (and state, for CSRF protection) in sessionStorage — read
- * back by /auth/callback once DBAL redirects here with ?code=&state=.
+ * Redirects the browser to DBAL's /oidc/authorize -- see
+ * @metabuilder/dbal-sso's beginLogin for the PKCE/sessionStorage details,
+ * read back by /auth/callback via completeOidcLogin below once DBAL
+ * redirects here with ?code=&state=.
  */
 export async function beginOidcLogin(): Promise<void> {
-  const verifier = randomString(32)
-  const challenge = await sha256Base64Url(verifier)
-  const state = randomString(16)
-
-  sessionStorage.setItem(PKCE_VERIFIER_KEY, verifier)
-  sessionStorage.setItem(PKCE_STATE_KEY, state)
-
-  const redirectUri = oidcRedirectUri()
-  const params = new URLSearchParams({
-    response_type: 'code',
-    client_id: dbalOidcClientId(),
-    redirect_uri: redirectUri,
-    scope: 'openid profile offline_access',
-    state,
-    code_challenge: challenge,
-    code_challenge_method: 'S256',
-  })
-  window.location.assign(`${dbalOidcBase()}/oidc/authorize?${params.toString()}`)
-}
-
-function decodeJwtPayload(token: string): Record<string, unknown> {
-  return JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')))
-}
-
-export function isTokenValid(token: string | null): boolean {
-  if (!token) return false
-  try {
-    const payload = JSON.parse(atob(token.split('.')[1]))
-    if (!payload.exp) return false
-    return payload.exp * 1000 > Date.now()
-  } catch {
-    return false
-  }
+  await beginLogin(dbalSsoConfig)
 }
 
 export const loginUser = createAsyncThunk(
@@ -148,42 +81,15 @@ export const registerUser = createAsyncThunk(
 export const completeOidcLogin = createAsyncThunk(
   'auth/completeOidcLogin',
   async ({ code, state }: { code: string; state: string }, { rejectWithValue }) => {
-    const storedState = sessionStorage.getItem(PKCE_STATE_KEY)
-    const verifier = sessionStorage.getItem(PKCE_VERIFIER_KEY)
-    sessionStorage.removeItem(PKCE_STATE_KEY)
-    sessionStorage.removeItem(PKCE_VERIFIER_KEY)
-
-    if (!verifier || !storedState || storedState !== state) {
-      return rejectWithValue('Sign-in session expired or invalid — please try again')
-    }
-
     try {
-      const redirectUri = oidcRedirectUri()
-      const res = await fetch(`${dbalOidcBase()}/oidc/token`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-          grant_type: 'authorization_code',
-          code,
-          redirect_uri: redirectUri,
-          client_id: dbalOidcClientId(),
-          code_verifier: verifier,
-        }),
-      })
-      const data = await res.json()
-      if (!res.ok) return rejectWithValue(data.error_description ?? data.error ?? 'Sign-in failed')
-
-      const claims = decodeJwtPayload(data.access_token as string)
-      const username = (claims.sub as string) ?? ''
-      if (!username) return rejectWithValue('Sign-in failed — malformed token')
-
+      const tokens = await completeLogin(dbalSsoConfig, code, state)
       return {
-        token: data.access_token as string,
-        refreshToken: (data.refresh_token as string) ?? null,
-        user: { id: username, username } satisfies AuthUser,
+        token: tokens.token,
+        refreshToken: tokens.refreshToken,
+        user: tokens.user satisfies AuthUser,
       }
-    } catch {
-      return rejectWithValue('Network error')
+    } catch (e) {
+      return rejectWithValue(e instanceof Error ? e.message : 'Sign-in failed')
     }
   },
 )

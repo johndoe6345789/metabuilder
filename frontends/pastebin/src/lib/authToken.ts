@@ -1,8 +1,5 @@
-// Module-level token bridge — lets the storage layer read the current auth
-// token without importing from the Redux store (avoids circular deps).
-let _token: string | null = null
-
-export const setAuthToken = (t: string | null) => {
-  _token = t
-}
-export const getAuthToken = () => _token
+// Thin re-export -- was a hand-rolled duplicate of exactly this module-level
+// token bridge. Kept as a separate file (rather than updating every
+// importer to '@metabuilder/dbal-sso/core' directly) to avoid churning the
+// ~9 call sites across this app that already import from here.
+export { getAuthToken, setAuthToken } from '@metabuilder/dbal-sso/core'

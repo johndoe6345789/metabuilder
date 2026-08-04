@@ -26,6 +26,7 @@
   "dependencies": {
     "@babel/standalone": "^7.29.1",
     "@metabuilder/components": "file:../../components",
+    "@metabuilder/dbal-sso": "file:../../redux/dbal-sso",
     "@metabuilder/hooks": "file:../../hooks",
     "@metabuilder/redux-persist": "file:../../redux/persist",
     "@metabuilder/services": "file:../../redux/services",

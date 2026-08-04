@@ -3,9 +3,13 @@
  */
 
 import { createAsyncThunk } from '@reduxjs/toolkit'
+import { createAuthenticatedFetch } from '@metabuilder/dbal-sso/core'
 import type { Snippet } from '@/lib/types'
 import { getStorageConfig } from '@/lib/storage'
 import { getAuthToken } from '@/lib/authToken'
+import { dbalSsoConfig } from '@/lib/dbalSsoConfig'
+import { tokensRefreshed, logout } from './authSlice'
+import type { AuthState } from './authThunks'
 
 export interface SharedSnippet extends Snippet {
   authorUsername?: string
@@ -57,12 +61,18 @@ export function parseSnippet(raw: Record<string, unknown>): SharedSnippet {
 
 export const generateShareToken = createAsyncThunk(
   'share/generateShareToken',
-  async (snippetId: string, { rejectWithValue }) => {
+  async (snippetId: string, { getState, dispatch, rejectWithValue }) => {
     try {
+      const { auth } = getState() as { auth: AuthState }
+      const dbalFetch = createAuthenticatedFetch(dbalSsoConfig, {
+        getRefreshToken: () => auth.refreshToken,
+        onRefreshed: tokens => dispatch(tokensRefreshed(tokens)),
+        onAuthFailure: () => dispatch(logout()),
+      })
       const token = crypto.randomUUID()
-      const res = await fetch(`${entityUrl('Snippet')}/${snippetId}`, {
+      const res = await dbalFetch(`${entityUrl('Snippet')}/${snippetId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json', ...authHeaders() },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ shareToken: token }),
       })
       if (!res.ok) {
@@ -80,11 +90,17 @@ export const generateShareToken = createAsyncThunk(
 
 export const revokeShareToken = createAsyncThunk(
   'share/revokeShareToken',
-  async (snippetId: string, { rejectWithValue }) => {
+  async (snippetId: string, { getState, dispatch, rejectWithValue }) => {
     try {
-      const res = await fetch(`${entityUrl('Snippet')}/${snippetId}`, {
+      const { auth } = getState() as { auth: AuthState }
+      const dbalFetch = createAuthenticatedFetch(dbalSsoConfig, {
+        getRefreshToken: () => auth.refreshToken,
+        onRefreshed: tokens => dispatch(tokensRefreshed(tokens)),
+        onAuthFailure: () => dispatch(logout()),
+      })
+      const res = await dbalFetch(`${entityUrl('Snippet')}/${snippetId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json', ...authHeaders() },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ shareToken: null }),
       })
       if (!res.ok) {

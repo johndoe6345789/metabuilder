@@ -18,6 +18,7 @@ const nextConfig = {
   },
   transpilePackages: [
     '@metabuilder/components',
+    '@metabuilder/dbal-sso',
     '@metabuilder/m3',
     '@metabuilder/redux-persist',
     '@metabuilder/redux-slices',

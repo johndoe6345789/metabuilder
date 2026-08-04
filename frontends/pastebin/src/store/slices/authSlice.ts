@@ -49,6 +49,14 @@ const authSlice = createSlice({
     seedToken(state) {
       if (state.token) setAuthToken(state.token)
     },
+    /** Used by authenticatedFetch's onRefreshed callback (see
+     * share-thunks.ts) to push a refreshed token set back into state
+     * without a full thunk round-trip. */
+    tokensRefreshed(state, action: { payload: { token: string; refreshToken: string | null } }) {
+      state.token = action.payload.token
+      state.refreshToken = action.payload.refreshToken
+      setAuthToken(action.payload.token)
+    },
   },
   extraReducers: builder => {
     builder
@@ -89,5 +97,5 @@ const authSlice = createSlice({
   },
 })
 
-export const { logout, clearError, seedToken } = authSlice.actions
+export const { logout, clearError, seedToken, tokensRefreshed } = authSlice.actions
 export default authSlice.reducer

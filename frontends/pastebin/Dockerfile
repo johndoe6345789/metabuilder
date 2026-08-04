@@ -41,6 +41,7 @@ COPY libraries/scss/ ./libraries/scss/
 COPY libraries/components/ ./libraries/components/
 
 # ── Redux packages (all — small TS source, avoids transitive dep breakage) ───
+COPY libraries/redux/dbal-sso/ ./libraries/redux/dbal-sso/
 COPY libraries/redux/core/ ./libraries/redux/core/
 COPY libraries/redux/slices/ ./libraries/redux/slices/
 COPY libraries/redux/hooks/ ./libraries/redux/hooks/
