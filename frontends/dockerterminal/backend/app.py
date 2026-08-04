@@ -2,17 +2,41 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import docker
 import os
-from datetime import datetime, timedelta
+import requests
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
 
-# Simple in-memory session storage (in production, use proper session management)
-sessions = {}
+DBAL_URL = os.getenv('DBAL_ENDPOINT', os.getenv('DBAL_URL', 'http://localhost:8080'))
+# Docker exec grants full host access via the mounted socket -- require an
+# admin-tier role, not just any authenticated user.
+ADMIN_ROLES = {'admin', 'god', 'supergod'}
 
-# Default credentials (should be environment variables in production)
-ADMIN_USERNAME = os.getenv('ADMIN_USERNAME', 'admin')
-ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', 'admin123')
+
+def verify_admin_caller():
+    """Verifies the caller's DBAL OIDC bearer token via /oidc/userinfo and
+    requires an admin-tier role. Returns the username on success, or None
+    (having already written the error response) on failure."""
+    auth_header = request.headers.get('Authorization', '')
+    if not auth_header.startswith('Bearer '):
+        return None
+    token = auth_header.split(' ', 1)[1]
+    try:
+        resp = requests.get(
+            f'{DBAL_URL}/oidc/userinfo',
+            headers={'Authorization': f'Bearer {token}'},
+            timeout=5,
+        )
+    except requests.RequestException:
+        return None
+    if resp.status_code != 200:
+        return None
+    claims = resp.json()
+    if claims.get('role') not in ADMIN_ROLES:
+        return None
+    return claims.get('sub')
+
 
 def get_docker_client():
     """Get Docker client"""
@@ -39,53 +63,12 @@ def format_uptime(created_at):
     else:
         return f"{minutes}m"
 
-@app.route('/api/auth/login', methods=['POST'])
-def login():
-    """Authenticate user"""
-    data = request.get_json()
-    username = data.get('username')
-    password = data.get('password')
-    
-    if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
-        # Create a simple session token (in production, use JWT or proper session management)
-        session_token = f"session_{username}_{datetime.now().timestamp()}"
-        sessions[session_token] = {
-            'username': username,
-            'created_at': datetime.now()
-        }
-        return jsonify({
-            'success': True,
-            'token': session_token,
-            'username': username
-        })
-    
-    return jsonify({
-        'success': False,
-        'message': 'Invalid credentials'
-    }), 401
-
-@app.route('/api/auth/logout', methods=['POST'])
-def logout():
-    """Logout user"""
-    auth_header = request.headers.get('Authorization')
-    if auth_header and auth_header.startswith('Bearer '):
-        token = auth_header.split(' ')[1]
-        if token in sessions:
-            del sessions[token]
-    
-    return jsonify({'success': True})
-
 @app.route('/api/containers', methods=['GET'])
 def get_containers():
     """Get list of all containers"""
-    auth_header = request.headers.get('Authorization')
-    if not auth_header or not auth_header.startswith('Bearer '):
+    if not verify_admin_caller():
         return jsonify({'error': 'Unauthorized'}), 401
-    
-    token = auth_header.split(' ')[1]
-    if token not in sessions:
-        return jsonify({'error': 'Invalid session'}), 401
-    
+
     client = get_docker_client()
     if not client:
         return jsonify({'error': 'Cannot connect to Docker'}), 500
@@ -110,14 +93,9 @@ def get_containers():
 @app.route('/api/containers/<container_id>/exec', methods=['POST'])
 def exec_container(container_id):
     """Execute command in container"""
-    auth_header = request.headers.get('Authorization')
-    if not auth_header or not auth_header.startswith('Bearer '):
+    if not verify_admin_caller():
         return jsonify({'error': 'Unauthorized'}), 401
-    
-    token = auth_header.split(' ')[1]
-    if token not in sessions:
-        return jsonify({'error': 'Invalid session'}), 401
-    
+
     data = request.get_json()
     command = data.get('command', '/bin/sh')
     

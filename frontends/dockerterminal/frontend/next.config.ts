@@ -18,7 +18,7 @@ const nextConfig: NextConfig = {
   basePath: '/terminal',
   distDir: process.env.NEXT_DIST_DIR ?? '.next',
   outputFileTracingRoot: monorepoRoot,
-  transpilePackages: ['@metabuilder/components', '@metabuilder/m3'],
+  transpilePackages: ['@metabuilder/components', '@metabuilder/m3', '@metabuilder/dbal-sso'],
   sassOptions: {
     loadPaths: scssPaths,
     includePaths: scssPaths,

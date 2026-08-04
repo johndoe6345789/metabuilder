@@ -9,6 +9,12 @@ FROM ${BASE_REGISTRY}/base-node-deps:latest AS builder
 
 ARG NEXT_PUBLIC_API_URL=/terminal-api
 ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+# Browser-reachable DBAL origin for the OIDC PKCE dance, same relative-path
+# convention as pastebin/codegen/nextjs's build args.
+ARG NEXT_PUBLIC_DBAL_OIDC_BASE_URL=/api/dbal
+ARG NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID=dockerterminal-web
+ENV NEXT_PUBLIC_DBAL_OIDC_BASE_URL=${NEXT_PUBLIC_DBAL_OIDC_BASE_URL}
+ENV NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID=${NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID}
 
 COPY package.json .npmrc ./
 
@@ -22,6 +28,7 @@ COPY libraries/scss/         ./libraries/scss/
 COPY libraries/translations/ ./libraries/translations/
 COPY libraries/components/   ./libraries/components/
 COPY libraries/workflow/     ./libraries/workflow/
+COPY libraries/redux/dbal-sso/     ./libraries/redux/dbal-sso/
 COPY libraries/redux/core/         ./libraries/redux/core/
 COPY libraries/redux/slices/       ./libraries/redux/slices/
 COPY libraries/redux/hooks/        ./libraries/redux/hooks/

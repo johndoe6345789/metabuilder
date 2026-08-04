@@ -894,8 +894,14 @@ services:
     restart: unless-stopped
     environment:
       FLASK_ENV: production
+      # Server-only -- verifies caller bearer tokens via DBAL's own
+      # /oidc/userinfo before granting Docker exec access.
+      DBAL_ENDPOINT: http://dbal:8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      dbal:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/api/health', timeout=3)"]
       interval: 30s
@@ -911,6 +917,8 @@ services:
       dockerfile: frontends/dockerterminal/frontend/Dockerfile
       args:
         NEXT_PUBLIC_API_URL: /terminal-api
+        NEXT_PUBLIC_DBAL_OIDC_BASE_URL: "${NEXT_PUBLIC_DBAL_OIDC_BASE_URL:-/api/dbal}"
+        NEXT_PUBLIC_DBAL_OIDC_CLIENT_ID: dockerterminal-web
     container_name: metabuilder-dockerterminal
     restart: unless-stopped
     environment:
