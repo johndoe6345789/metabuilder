@@ -480,13 +480,49 @@ services:
       - metabuilder
 
   # Email Service - Flask backend for IMAP/SMTP operations
+  # Email Service - Dedicated PostgreSQL (isolated from main metabuilder db)
+  email-db:
+    image: postgres:16-alpine
+    command:
+      - postgres
+      - -c
+      - shared_buffers=32MB
+      - -c
+      - max_connections=40
+      - -c
+      - work_mem=2MB
+    container_name: metabuilder-email-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: email
+      POSTGRES_USER: email
+      POSTGRES_PASSWORD: email
+    volumes:
+      - email-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U email -d email"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - metabuilder
+
   email-service:
     build:
       context: ../../frontends/emailclient
-      dockerfile: deployment/docker/email-service/Dockerfile
+      dockerfile: backend/Dockerfile
     container_name: metabuilder-email-service
     restart: unless-stopped
     environment:
+      PORT: "5000"
+      PGHOST: email-db
+      PGPORT: "5432"
+      PGUSER: email
+      PGPASSWORD: email
+      PGDATABASE: email
+      DATABASE_URL: >-
+        host=email-db port=5432
+        dbname=email user=email password=email
       POSTFIX_HOST: "postfix"
       POSTFIX_PORT: "25"
       DOVECOT_HOST: "dovecot"
@@ -494,26 +530,15 @@ services:
       DOVECOT_IMAP_SSL_PORT: "993"
       DOVECOT_POP3_PORT: "110"
       DOVECOT_POP3_SSL_PORT: "995"
-      DATABASE_URL: "postgresql://${POSTGRES_USER:-metabuilder}:${POSTGRES_PASSWORD:-metabuilder}@postgres:5432/${POSTGRES_DB:-metabuilder}"
-      REDIS_URL: "redis://redis:6379/1"
-      CELERY_BROKER_URL: "redis://redis:6379/1"
-      CELERY_RESULT_BACKEND: "redis://redis:6379/1"
-      FLASK_ENV: "development"
-      FLASK_HOST: "0.0.0.0"
-      FLASK_PORT: "5000"
-      IMAP_SYNC_INTERVAL: "300"
-      SMTP_TIMEOUT: "30"
     depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
+      email-db:
         condition: service_healthy
       postfix:
         condition: service_healthy
       dovecot:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://127.0.0.1:5000/health"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:5000/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -1653,6 +1678,8 @@ volumes:
   packagerepo-pgdata:
     driver: local
   packagerepo-minio-data:
+    driver: local
+  email-pgdata:
     driver: local
   # Registry
   nexus-data:
