@@ -2,19 +2,18 @@
 #include "Helpers.hpp"
 #include "../services/Db.hpp"
 #include "../services/ImapClient.hpp"
-#include "../util.hpp"
+#include "../util_env.hpp"
 
 namespace email_backend {
 
-void FoldersCtrl::list(const drogon::HttpRequestPtr& req,
-                        std::function<void(const drogon::HttpResponsePtr&)>&& cb,
+void FoldersCtrl::list(const drogon::HttpRequestPtr& req, ResponseCb&& cb,
                         const std::string& accountId) {
-    auto idOpt = parseId(accountId);
+    const auto idOpt = parseId(accountId);
     if (!idOpt) {
         cb(errorResponse("Account not found", drogon::k404NotFound));
         return;
     }
-    auto tenant = tenantId(req);
+    const auto tenant = tenantId(req);
 
     db()->execSqlAsync(
         "SELECT imap_host, imap_port, imap_encryption, imap_username, "
@@ -34,8 +33,9 @@ void FoldersCtrl::list(const drogon::HttpRequestPtr& req,
             if (cfg.host.empty())
                 cfg.host = envOr("DOVECOT_HOST", "dovecot");
             if (cfg.port == 0)
-                cfg.port = cfg.encryption == "tls" ? envInt("DOVECOT_IMAP_SSL_PORT", 993)
-                                                    : envInt("DOVECOT_IMAP_PORT", 143);
+                cfg.port = cfg.encryption == "tls"
+                               ? envInt("DOVECOT_IMAP_SSL_PORT", 993)
+                               : envInt("DOVECOT_IMAP_PORT", 143);
 
             try {
                 auto folders = ImapClient(cfg).listFolders();

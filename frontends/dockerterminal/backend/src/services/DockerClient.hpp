@@ -30,7 +30,8 @@ class DockerClient {
     /// Runs `shellLine` inside `containerId` via the Docker exec API
     /// (create + start + inspect-for-exit-code) and returns its combined
     /// TTY output and exit code.
-    RunResult runInContainer(const std::string& containerId, const std::string& shellLine);
+    RunResult runInContainer(const std::string& containerId,
+                              const std::string& shellLine);
 
   private:
     std::string socketPath_;

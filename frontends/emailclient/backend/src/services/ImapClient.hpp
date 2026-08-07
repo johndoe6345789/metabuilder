@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../util.hpp"
+#include "../util_imap_fetch.hpp"
+#include "../util_imap_list.hpp"
 
 #include <string>
 #include <vector>
@@ -10,7 +11,7 @@ namespace email_backend {
 struct ImapConfig {
     std::string host;
     int port = 993;
-    std::string encryption = "tls"; // "tls" (implicit SSL), "starttls", or "none"
+    std::string encryption = "tls"; // "tls" (implicit SSL), "starttls", "none"
     std::string username;
     std::string password;
 };

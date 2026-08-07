@@ -7,7 +7,8 @@ namespace dockerterminal {
 
 namespace {
 
-drogon::HttpResponsePtr errorResponse(const std::string& msg, drogon::HttpStatusCode code) {
+drogon::HttpResponsePtr errorResponse(const std::string& msg,
+                                       drogon::HttpStatusCode code) {
     Json::Value e;
     e["error"] = msg;
     auto r = drogon::HttpResponse::newHttpJsonResponse(e);
@@ -18,7 +19,7 @@ drogon::HttpResponsePtr errorResponse(const std::string& msg, drogon::HttpStatus
 } // namespace
 
 void ContainersCtrl::list(const drogon::HttpRequestPtr& req,
-                           std::function<void(const drogon::HttpResponsePtr&)>&& cb) {
+                           ResponseCb&& cb) {
     if (!verifyAdminCaller(req)) {
         cb(errorResponse("Unauthorized", drogon::k401Unauthorized));
         return;
@@ -26,8 +27,8 @@ void ContainersCtrl::list(const drogon::HttpRequestPtr& req,
 
     try {
         DockerClient client;
-        auto containers = client.listContainers();
-        int64_t now = time(nullptr);
+        const auto containers = client.listContainers();
+        const int64_t now = time(nullptr);
 
         Json::Value list(Json::arrayValue);
         for (const auto& c : containers) {
@@ -36,8 +37,9 @@ void ContainersCtrl::list(const drogon::HttpRequestPtr& req,
             o["name"] = c.name;
             o["image"] = c.image;
             o["status"] = c.status;
-            o["uptime"] = c.status == "running" ? formatUptime(c.createdEpochSeconds, now)
-                                                 : "N/A";
+            o["uptime"] = c.status == "running"
+                              ? formatUptime(c.createdEpochSeconds, now)
+                              : "N/A";
             list.append(o);
         }
         Json::Value out;
@@ -49,21 +51,20 @@ void ContainersCtrl::list(const drogon::HttpRequestPtr& req,
 }
 
 void ContainersCtrl::runCommand(const drogon::HttpRequestPtr& req,
-                                 std::function<void(const drogon::HttpResponsePtr&)>&& cb,
-                                 const std::string& id) {
+                                 ResponseCb&& cb, const std::string& id) {
     if (!verifyAdminCaller(req)) {
         cb(errorResponse("Unauthorized", drogon::k401Unauthorized));
         return;
     }
 
-    auto body = req->getJsonObject();
-    std::string shellLine = (body && body->isMember("command"))
-                                 ? (*body)["command"].asString()
-                                 : "/bin/sh";
+    const auto body = req->getJsonObject();
+    const std::string shellLine = (body && body->isMember("command"))
+                                       ? (*body)["command"].asString()
+                                       : "/bin/sh";
 
     try {
         DockerClient client;
-        auto result = client.runInContainer(id, shellLine);
+        const auto result = client.runInContainer(id, shellLine);
         Json::Value out;
         out["output"] = result.output;
         out["exit_code"] = result.exitCode;

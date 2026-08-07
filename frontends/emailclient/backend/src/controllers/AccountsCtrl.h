@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "Helpers.hpp"
+
 #include <drogon/HttpController.h>
 
 namespace email_backend {
@@ -18,15 +20,11 @@ class AccountsCtrl : public drogon::HttpController<AccountsCtrl> {
     ADD_METHOD_TO(AccountsCtrl::remove, "/api/accounts/{id}", drogon::Delete);
     METHOD_LIST_END
 
-    void list(const drogon::HttpRequestPtr& req,
-              std::function<void(const drogon::HttpResponsePtr&)>&& cb);
-    void create(const drogon::HttpRequestPtr& req,
-                std::function<void(const drogon::HttpResponsePtr&)>&& cb);
-    void get(const drogon::HttpRequestPtr& req,
-             std::function<void(const drogon::HttpResponsePtr&)>&& cb,
+    void list(const drogon::HttpRequestPtr& req, ResponseCb&& cb);
+    void create(const drogon::HttpRequestPtr& req, ResponseCb&& cb);
+    void get(const drogon::HttpRequestPtr& req, ResponseCb&& cb,
              const std::string& id);
-    void remove(const drogon::HttpRequestPtr& req,
-                std::function<void(const drogon::HttpResponsePtr&)>&& cb,
+    void remove(const drogon::HttpRequestPtr& req, ResponseCb&& cb,
                 const std::string& id);
 };
 

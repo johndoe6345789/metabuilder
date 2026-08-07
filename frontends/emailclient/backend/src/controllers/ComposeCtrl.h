@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "Helpers.hpp"
+
 #include <drogon/HttpController.h>
 
 namespace email_backend {
@@ -17,12 +19,9 @@ class ComposeCtrl : public drogon::HttpController<ComposeCtrl> {
     ADD_METHOD_TO(ComposeCtrl::saveDraft, "/api/compose/drafts", drogon::Post);
     METHOD_LIST_END
 
-    void send(const drogon::HttpRequestPtr& req,
-              std::function<void(const drogon::HttpResponsePtr&)>&& cb);
-    void listDrafts(const drogon::HttpRequestPtr& req,
-                     std::function<void(const drogon::HttpResponsePtr&)>&& cb);
-    void saveDraft(const drogon::HttpRequestPtr& req,
-                    std::function<void(const drogon::HttpResponsePtr&)>&& cb);
+    void send(const drogon::HttpRequestPtr& req, ResponseCb&& cb);
+    void listDrafts(const drogon::HttpRequestPtr& req, ResponseCb&& cb);
+    void saveDraft(const drogon::HttpRequestPtr& req, ResponseCb&& cb);
 };
 
 } // namespace email_backend

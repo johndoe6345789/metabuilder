@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "Helpers.hpp"
+
 #include <drogon/HttpController.h>
 
 namespace email_backend {
@@ -15,8 +17,7 @@ class FoldersCtrl : public drogon::HttpController<FoldersCtrl> {
     ADD_METHOD_TO(FoldersCtrl::list, "/api/folders/{accountId}", drogon::Get);
     METHOD_LIST_END
 
-    void list(const drogon::HttpRequestPtr& req,
-              std::function<void(const drogon::HttpResponsePtr&)>&& cb,
+    void list(const drogon::HttpRequestPtr& req, ResponseCb&& cb,
               const std::string& accountId);
 };
 

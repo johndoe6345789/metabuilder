@@ -1,0 +1,12 @@
+BasedOnStyle: LLVM
+ColumnLimit: 80
+IndentWidth: 4
+AccessModifierOffset: -2
+AlignAfterOpenBracket: Align
+AllowShortFunctionsOnASingleLine: Inline
+BreakBeforeBraces: Attach
+NamespaceIndentation: None
+PointerAlignment: Left
+SortIncludes: true
+SpaceBeforeParens: ControlStatements
+Standard: c++20

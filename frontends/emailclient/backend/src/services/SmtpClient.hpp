@@ -7,7 +7,7 @@ namespace email_backend {
 struct SmtpConfig {
     std::string host;
     int port = 587;
-    std::string encryption = "tls"; // "tls" (STARTTLS), "ssl" (implicit), or "none"
+    std::string encryption = "tls"; // "tls"/STARTTLS, "ssl"/implicit, "none"
     std::string username;
     std::string password;
 };

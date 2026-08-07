@@ -3,10 +3,13 @@
 #include <drogon/HttpRequest.h>
 #include <drogon/HttpResponse.h>
 
+#include <functional>
 #include <optional>
 #include <string>
 
 namespace email_backend {
+
+using ResponseCb = std::function<void(const drogon::HttpResponsePtr&)>;
 
 /// Parses a path-param id string, requiring it to be a plain integer (no
 /// trailing junk) -- mirrors Flask's `<int:...>` route converter, which
@@ -58,10 +61,9 @@ inline std::string pgTsToIso(const std::string& raw) {
 
 /// Parses the request's JSON body. On missing/invalid body, calls `cb` with
 /// the same 400 the Flask routes returned and returns false.
-inline bool requireJsonBody(
-    const drogon::HttpRequestPtr& req,
-    const std::function<void(const drogon::HttpResponsePtr&)>& cb,
-    std::shared_ptr<Json::Value>& out) {
+inline bool requireJsonBody(const drogon::HttpRequestPtr& req,
+                             const ResponseCb& cb,
+                             std::shared_ptr<Json::Value>& out) {
     out = req->getJsonObject();
     if (!out || !out->isObject()) {
         cb(errorResponse("Request body required", drogon::k400BadRequest));

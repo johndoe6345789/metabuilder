@@ -2,9 +2,7 @@
 
 #include <sqlite3.h>
 
-#include <cstdint>
 #include <memory>
-#include <string>
 
 namespace pastebin {
 
@@ -23,11 +21,5 @@ SqlitePtr openDb();
 
 /// Creates the user_settings table if missing. Call once at startup.
 void initDb();
-
-/// Returns the stored settings JSON for a user, or "{}" if none.
-std::string getUserSettingsJson(const std::string& userId);
-
-void putUserSettingsJson(const std::string& userId, const std::string& json,
-                          int64_t updatedAtMs);
 
 } // namespace pastebin

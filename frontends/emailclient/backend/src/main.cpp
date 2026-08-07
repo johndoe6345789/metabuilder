@@ -5,7 +5,7 @@
  */
 
 #include "services/Db.hpp"
-#include "util.hpp"
+#include "util_env.hpp"
 
 #include <drogon/drogon.h>
 
@@ -17,11 +17,12 @@
 namespace {
 
 void addCors(const drogon::HttpResponsePtr& r) {
-    std::string origins = email_backend::envOr("ALLOWED_ORIGINS", "*");
+    const std::string origins = email_backend::envOr("ALLOWED_ORIGINS", "*");
     r->addHeader("Access-Control-Allow-Origin", origins);
     r->addHeader("Access-Control-Allow-Headers",
                  "Content-Type, Authorization, X-Tenant-Id");
-    r->addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    r->addHeader("Access-Control-Allow-Methods",
+                 "GET, POST, PUT, DELETE, OPTIONS");
 }
 
 void waitForDb(const drogon::orm::DbClientPtr& db) {
@@ -45,20 +46,22 @@ int main() {
     using email_backend::envOr;
 
     try {
-        std::string conn = envOr(
+        const std::string conn = envOr(
             "DATABASE_URL",
-            "host=localhost port=5432 dbname=email user=email password=email");
-        auto dbClient = drogon::orm::DbClient::newPgClient(conn, 4);
+            "host=localhost port=5432 dbname=email user=email "
+            "password=email");
+        const auto dbClient = drogon::orm::DbClient::newPgClient(conn, 4);
         waitForDb(dbClient);
         email_backend::initDb(dbClient);
 
         drogon::app().registerPostHandlingAdvice(
-            [](const drogon::HttpRequestPtr&, const drogon::HttpResponsePtr& r) {
-                addCors(r);
-            });
+            [](const drogon::HttpRequestPtr&,
+               const drogon::HttpResponsePtr& r) { addCors(r); });
 
-        int port = envInt("PORT", 5000);
-        drogon::app().addListener("0.0.0.0", static_cast<uint16_t>(port)).run();
+        const int port = envInt("PORT", 5000);
+        drogon::app()
+            .addListener("0.0.0.0", static_cast<uint16_t>(port))
+            .run();
     } catch (const std::exception& e) {
         std::cerr << "email-service: " << e.what() << '\n';
         return 1;
