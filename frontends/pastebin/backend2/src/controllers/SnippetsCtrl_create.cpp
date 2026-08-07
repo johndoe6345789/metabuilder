@@ -3,6 +3,7 @@
 #include "../services/DbalClient.hpp"
 #include "../services/JsonConvert.hpp"
 #include "../services/SnippetJson.hpp"
+#include "../util.hpp"
 
 namespace pastebin {
 

@@ -33,7 +33,8 @@ bool alreadyMatchesLatest(const std::string& snippetId,
         return false;
     const auto items =
         r->body.value("data", r->body).value("data", nlohmann::json::array());
-    return !items.empty() && matchesLastRevision(items.front(), code, filesJson);
+    return !items.empty() &&
+           matchesLastRevision(items.front(), code, filesJson);
 }
 
 } // namespace

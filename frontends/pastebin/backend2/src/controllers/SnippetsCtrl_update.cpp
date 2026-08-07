@@ -5,6 +5,7 @@
 #include "../services/SnippetJson.hpp"
 #include "../services/SnippetOwnership.hpp"
 #include "../services/SnippetRevisions.hpp"
+#include "../util.hpp"
 
 namespace pastebin {
 

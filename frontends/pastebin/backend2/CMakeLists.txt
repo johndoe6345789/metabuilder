@@ -44,6 +44,7 @@ set(PASTEBIN_SOURCES
     src/services/Uuid.cpp
     src/services/RandomToken.cpp
     src/services/UserLookup.cpp
+    src/services/TimeCoerce.cpp
     src/services/SnippetJson_normalize.cpp
     src/services/SnippetJson_build.cpp
     src/services/SnippetOwnership.cpp
