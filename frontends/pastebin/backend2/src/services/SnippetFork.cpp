@@ -18,7 +18,8 @@ std::pair<nlohmann::json, int> forkSnippet(const nlohmann::json& source,
     body["category"] = source.value("category", "general");
     body["namespaceId"] = nullptr;
     body["hasPreview"] = source.value("hasPreview", false);
-    body["functionName"] = source.value("functionName", nlohmann::json(nullptr));
+    body["functionName"] =
+        source.value("functionName", nlohmann::json(nullptr));
     body["inputParameters"] =
         source.value("inputParameters", nlohmann::json(nullptr));
     body["files"] = source.value("files", nlohmann::json(nullptr));
