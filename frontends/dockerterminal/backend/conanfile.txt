@@ -1,0 +1,9 @@
+[requires]
+drogon/1.9.3
+openssl/3.3.2
+libcurl/8.11.1
+gtest/1.14.0
+
+[generators]
+CMakeDeps
+CMakeToolchain
