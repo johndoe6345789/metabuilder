@@ -17,10 +17,17 @@ std::string makeContainerFilesEnv(const std::vector<SourceFile>& files);
 /// decodes FILES_PAYLOAD and writes files to /workspace.
 const char* fileWriterShellSnippet();
 
+/// The timeout (seconds) a non-interactive run will actually enforce:
+/// `userTimeoutSeconds` if given, else the runner's own default, always
+/// clamped to MAX_RUN_TIMEOUT. Callers use this both to build the
+/// command (see below) and to size the Docker wait() grace period, so
+/// the two stay in sync.
+int effectiveTimeoutSeconds(const RunnerSpec& spec,
+                             std::optional<int> userTimeoutSeconds);
+
 /// Builds the container command for `spec`/`entry`. Non-interactive runs
 /// are wrapped in the `timeout` coreutil so the container self-terminates
-/// (see DockerEngine.hpp's note on exit code 124); `userTimeoutSeconds`
-/// overrides the runner's default, clamped to MAX_RUN_TIMEOUT.
+/// (see DockerEngine.hpp's note on exit code 124).
 std::vector<std::string> buildRunCommand(
     const RunnerSpec& spec, const std::string& entry, bool interactive,
     std::optional<int> userTimeoutSeconds);
