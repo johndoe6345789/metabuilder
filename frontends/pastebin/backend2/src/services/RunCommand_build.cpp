@@ -23,6 +23,13 @@ int defaultTimeoutFor(const RunnerSpec& spec) {
 
 } // namespace
 
+int effectiveTimeoutSeconds(const RunnerSpec& spec,
+                             std::optional<int> userTimeoutSeconds) {
+    const int maxTimeout = envInt("MAX_RUN_TIMEOUT", 300);
+    return std::min(userTimeoutSeconds.value_or(defaultTimeoutFor(spec)),
+                     maxTimeout);
+}
+
 std::vector<std::string> buildRunCommand(
     const RunnerSpec& spec, const std::string& entry, bool interactive,
     std::optional<int> userTimeoutSeconds) {
@@ -34,9 +41,7 @@ std::vector<std::string> buildRunCommand(
     if (interactive)
         return {"sh", "-c", fullCmd};
 
-    const int maxTimeout = envInt("MAX_RUN_TIMEOUT", 300);
-    const int timeout = std::min(
-        userTimeoutSeconds.value_or(defaultTimeoutFor(spec)), maxTimeout);
+    const int timeout = effectiveTimeoutSeconds(spec, userTimeoutSeconds);
     return {"sh", "-c", R"(exec timeout "$0" sh -c "$1")",
             std::to_string(timeout), fullCmd};
 }
