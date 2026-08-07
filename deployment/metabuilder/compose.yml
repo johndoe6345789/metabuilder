@@ -707,7 +707,8 @@ services:
     networks:
       - metabuilder
 
-  # Pastebin Flask Backend - REST API for snippet storage
+  # Pastebin Backend - C++/Drogon REST API for snippet storage + code
+  # execution/debugging (DBAL-only auth, no local password store)
   pastebin-backend:
     build:
       context: ../..
@@ -715,27 +716,21 @@ services:
     container_name: metabuilder-pastebin-backend
     restart: unless-stopped
     environment:
-      DATABASE_PATH: /app/data/snippets.db
-      CORS_ALLOWED_ORIGINS: "*"
+      DATABASE_PATH: /app/data/pastebin.db
       PYTHON_RUNNER_IMAGE: "${PYTHON_RUNNER_IMAGE:-python:3.11-slim}"
       PYTHON_RUN_TIMEOUT: "${PYTHON_RUN_TIMEOUT:-10}"
       MYSQL_RUNNER_IMAGE: "${MYSQL_RUNNER_IMAGE:-mysql:8.0}"
       POSTGRES_RUNNER_IMAGE: "${POSTGRES_RUNNER_IMAGE:-postgres:16-alpine}"
       SQL_RUN_TIMEOUT: "${SQL_RUN_TIMEOUT:-120}"
-      JWT_SECRET_KEY: "${JWT_SECRET_KEY:-changeme-in-production}"
       PYTHON_DEBUG_IMAGE: "${PYTHON_DEBUG_IMAGE:-python-debug:latest}"
       NODE_DEBUG_IMAGE: "${NODE_DEBUG_IMAGE:-node-debug:latest}"
       GO_DEBUG_IMAGE: "${GO_DEBUG_IMAGE:-golang:1.22-alpine}"
       CPP_DEBUG_IMAGE: "${CPP_DEBUG_IMAGE:-cpp-debug:latest}"
-      SMTP_HOST: "smtp-relay"
-      SMTP_PORT: "2525"
-      MAIL_FROM: "noreply@codesnippet.local"
-      APP_BASE_URL: "http://localhost/pastebin"
       DBAL_BASE_URL: "http://dbal:8080"
       DBAL_TENANT_ID: "pastebin"
       DBAL_ADMIN_TOKEN: "069e6487a710300381cd52120eab95d56d7f53beee21479cbeba9128217cbea9"
-      # Must match the `dbal` service's DBAL_OIDC_ISSUER exactly — jwt.decode's
-      # issuer= check is a plain string comparison against every token's
+      # Must match the `dbal` service's DBAL_OIDC_ISSUER exactly — the JWT
+      # issuer check is a plain string comparison against every token's
       # `iss` claim, so this has to be identical even though it happens to
       # equal DBAL_BASE_URL above (same value, two different purposes: one
       # makes an HTTP connection, this one is compared as an opaque string).
@@ -745,7 +740,7 @@ services:
       - pastebin-backend-data:/app/data
       - /var/run/docker.sock:/var/run/docker.sock
     healthcheck:
-      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/health')"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:5000/health"]
       interval: 15s
       timeout: 5s
       retries: 3

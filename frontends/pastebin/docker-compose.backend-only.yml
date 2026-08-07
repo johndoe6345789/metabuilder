@@ -6,9 +6,10 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - snippet-data:/data
+      - snippet-data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - DB_PATH=/data/snippets.db
+      - DATABASE_PATH=/app/data/pastebin.db
     restart: unless-stopped
 
 volumes:

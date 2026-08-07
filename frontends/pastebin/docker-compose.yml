@@ -7,8 +7,7 @@ services:
       - snippet-data:/app/data
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - DATABASE_PATH=/app/data/snippets.db
-      - CORS_ALLOWED_ORIGINS=http://localhost:3000
+      - DATABASE_PATH=/app/data/pastebin.db
       - PYTHON_RUNNER_IMAGE=python:3.11-slim
       - JAVA_MAVEN_RUNNER_IMAGE=maven:3.9-eclipse-temurin-21
       - JAVA_GRADLE_RUNNER_IMAGE=gradle:8.6-jdk21
