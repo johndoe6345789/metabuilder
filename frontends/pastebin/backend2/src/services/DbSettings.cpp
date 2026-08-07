@@ -8,7 +8,8 @@ namespace pastebin {
 std::string getUserSettingsJson(const std::string& userId) {
     auto db = openDb();
     sqlite3_stmt* stmt = nullptr;
-    const char* sql = "SELECT settings_json FROM user_settings WHERE user_id = ?";
+    const char* sql =
+        "SELECT settings_json FROM user_settings WHERE user_id = ?";
     if (sqlite3_prepare_v2(db.get(), sql, -1, &stmt, nullptr) != SQLITE_OK)
         throw std::runtime_error(sqlite3_errmsg(db.get()));
 

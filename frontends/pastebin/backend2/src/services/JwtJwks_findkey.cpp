@@ -10,11 +10,11 @@ std::optional<std::pair<std::string, std::string>> findJwkNE(
     try {
         const auto jwks =
             jwt::parse_jwks<jwt::traits::nlohmann_json>(jwksText);
-        const auto it = jwks.find_by_kid(kid);
-        if (it == jwks.end())
+        if (!jwks.has_jwk(kid))
             return std::nullopt;
-        return std::make_pair(it->get_jwk_claim("n").as_string(),
-                               it->get_jwk_claim("e").as_string());
+        const auto jwk = jwks.get_jwk(kid);
+        return std::make_pair(jwk.get_jwk_claim("n").as_string(),
+                               jwk.get_jwk_claim("e").as_string());
     } catch (const std::exception&) {
         return std::nullopt;
     }
