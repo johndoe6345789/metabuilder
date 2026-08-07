@@ -1,6 +1,6 @@
 #include "SqlRunner.hpp"
-#include "DockerEngine.hpp"
 #include "DockerImage.hpp"
+#include "DockerRunToCompletion.hpp"
 #include "SqlRunner_command.hpp"
 #include "../util.hpp"
 
@@ -23,38 +23,6 @@ ContainerConfig toContainerConfig(const std::string& image,
     return cfg;
 }
 
-Json::Value runToCompletion(const ContainerConfig& cfg, int timeoutS,
-                             int* outStatus) {
-    Json::Value out;
-    std::string containerId;
-    try {
-        containerId = dockerCreateContainer(cfg);
-        dockerStartContainer(containerId);
-        const int exitCode =
-            dockerWaitContainer(containerId, timeoutS + 10);
-        const auto logs = dockerGetLogs(containerId);
-        out["output"] = logs.stdoutText;
-        if (exitCode == 124) {
-            out["error"] = "Timed out after " + std::to_string(timeoutS) + "s";
-            *outStatus = 408;
-        } else {
-            out["error"] =
-                exitCode != 0 ? Json::Value(logs.stderrText) : Json::Value();
-        }
-    } catch (const std::exception& e) {
-        out["error"] = e.what();
-        *outStatus = 500;
-    }
-    if (!containerId.empty()) {
-        try {
-            dockerRemoveContainer(containerId);
-        } catch (...) {
-            // Best-effort cleanup; the run's own result is what matters.
-        }
-    }
-    return out;
-}
-
 } // namespace
 
 SqlRunResult runSqlInDocker(const RunnerSpec& spec,
@@ -75,9 +43,9 @@ SqlRunResult runSqlInDocker(const RunnerSpec& spec,
     dockerEnsureImage(image);
 
     SqlRunResult result;
-    result.body = runToCompletion(toContainerConfig(image, *command),
-                                   envInt("SQL_RUN_TIMEOUT", 120),
-                                   &result.status);
+    result.body = runContainerToCompletion(toContainerConfig(image, *command),
+                                            envInt("SQL_RUN_TIMEOUT", 120),
+                                            &result.status);
     return result;
 }
 
