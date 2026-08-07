@@ -41,11 +41,40 @@ set(PASTEBIN_SOURCES
     src/services/JwtJwks_key.cpp
     src/services/JwtJwks.cpp
     src/services/JwtAuth.cpp
+    src/services/Uuid.cpp
+    src/services/RandomToken.cpp
+    src/services/UserLookup.cpp
+    src/services/SnippetJson_normalize.cpp
+    src/services/SnippetJson_build.cpp
+    src/services/SnippetOwnership.cpp
+    src/services/SnippetRevisions.cpp
+    src/services/SnippetFork.cpp
+    src/services/NamespaceJson.cpp
+    src/services/NamespaceOwnership.cpp
+    src/services/NamespaceRehome.cpp
     src/controllers/HealthCtrl.cpp
     src/controllers/AuthCtrl_me.cpp
     src/controllers/AuthCtrl_settings.cpp
     src/controllers/ProfileCtrl_get.cpp
     src/controllers/ProfileCtrl_update.cpp
+    src/controllers/SnippetsCtrl_list.cpp
+    src/controllers/SnippetsCtrl_get.cpp
+    src/controllers/SnippetsCtrl_create.cpp
+    src/controllers/SnippetsCtrl_update.cpp
+    src/controllers/SnippetsCtrl_remove.cpp
+    src/controllers/SnippetsCtrl_share.cpp
+    src/controllers/SnippetsCtrl_unshare.cpp
+    src/controllers/SnippetsCtrl_getShared.cpp
+    src/controllers/SnippetsCtrl_forkShared.cpp
+    src/controllers/SnippetsCtrl_fork.cpp
+    src/controllers/SnippetsCtrl_revisions.cpp
+    src/controllers/SnippetsCtrl_revert.cpp
+    src/controllers/SnippetsCtrl_bulkMove.cpp
+    src/controllers/NamespacesCtrl_list.cpp
+    src/controllers/NamespacesCtrl_create.cpp
+    src/controllers/NamespacesCtrl_remove.cpp
+    src/controllers/NamespacesCtrl_update.cpp
+    src/controllers/AdminCtrl_wipe.cpp
 )
 
 add_executable(pastebin-server src/main.cpp ${PASTEBIN_SOURCES})
