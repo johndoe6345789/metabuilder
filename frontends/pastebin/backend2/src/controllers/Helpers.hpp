@@ -24,4 +24,17 @@ inline drogon::HttpResponsePtr errorResponse(const std::string& msg,
     return jsonResponse(e, code);
 }
 
+/// Parses the request's JSON body. On missing/invalid body, calls `cb`
+/// with a 400 and returns false.
+inline bool requireJsonBody(const drogon::HttpRequestPtr& req,
+                             const ResponseCb& cb,
+                             std::shared_ptr<Json::Value>& out) {
+    out = req->getJsonObject();
+    if (!out || !out->isObject()) {
+        cb(errorResponse("Request body required", drogon::k400BadRequest));
+        return false;
+    }
+    return true;
+}
+
 } // namespace pastebin

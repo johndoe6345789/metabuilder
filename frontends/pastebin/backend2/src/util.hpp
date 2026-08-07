@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <string>
 
 namespace pastebin {
@@ -13,5 +14,9 @@ std::string dbalTenant();
 /// Current UTC time as an ISO-8601 string, matching Python's
 /// `datetime.utcnow().isoformat()` (no trailing "Z").
 std::string nowIso();
+
+/// Current UTC time as epoch milliseconds, matching Python's
+/// `int(time.time() * 1000)`.
+int64_t nowEpochMillis();
 
 } // namespace pastebin

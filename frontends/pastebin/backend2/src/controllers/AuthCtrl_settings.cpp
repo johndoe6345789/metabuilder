@@ -1,20 +1,9 @@
 #include "AuthCtrl.h"
 #include "AuthHelpers.hpp"
 #include "../services/DbSettings.hpp"
-
-#include <chrono>
+#include "../util.hpp"
 
 namespace pastebin {
-
-namespace {
-
-int64_t nowMillis() {
-    using namespace std::chrono;
-    return duration_cast<milliseconds>(system_clock::now().time_since_epoch())
-        .count();
-}
-
-} // namespace
 
 void AuthCtrl::getSettings(const drogon::HttpRequestPtr& req,
                             ResponseCb&& cb) {
@@ -38,10 +27,9 @@ void AuthCtrl::putSettings(const drogon::HttpRequestPtr& req,
     const auto body = req->getJsonObject();
     Json::StreamWriterBuilder writer;
     writer["indentation"] = "";
-    const std::string json =
-        body ? Json::writeString(writer, *body) : "{}";
+    const std::string json = body ? Json::writeString(writer, *body) : "{}";
 
-    putUserSettingsJson(auth->userId, json, nowMillis());
+    putUserSettingsJson(auth->userId, json, nowEpochMillis());
     cb(jsonResponse(body ? *body : Json::Value(Json::objectValue)));
 }
 

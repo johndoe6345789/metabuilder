@@ -36,4 +36,10 @@ std::string nowIso() {
     return full;
 }
 
+int64_t nowEpochMillis() {
+    using namespace std::chrono;
+    return duration_cast<milliseconds>(system_clock::now().time_since_epoch())
+        .count();
+}
+
 } // namespace pastebin
