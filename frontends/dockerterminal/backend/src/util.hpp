@@ -7,6 +7,7 @@
 namespace dockerterminal {
 
 std::string envOr(const char* name, const std::string& fallback);
+int envInt(const char* name, int fallback);
 
 /// Splits a shell-like command string into argv tokens. Handles single and
 /// double quotes (so `sh -c "echo hi there"` stays one token) but not

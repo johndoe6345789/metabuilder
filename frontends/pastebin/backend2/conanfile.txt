@@ -1,0 +1,12 @@
+[requires]
+drogon/1.9.3
+openssl/3.3.2
+libcurl/8.11.1
+sqlite3/3.46.1
+jwt-cpp/0.7.2
+nlohmann_json/3.11.3
+gtest/1.14.0
+
+[generators]
+CMakeDeps
+CMakeToolchain
