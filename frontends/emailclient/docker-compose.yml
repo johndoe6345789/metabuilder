@@ -39,78 +39,31 @@ services:
       - emailclient-net
     restart: unless-stopped
 
-  # Phase 8: Redis Cache & Celery Broker
-  redis:
-    build:
-      context: ./deployment/docker/redis
-      dockerfile: Dockerfile
-    image: emailclient-redis:latest
-    container_name: emailclient-redis
-    environment:
-      # Redis authentication
-      REDIS_PASSWORD: ${REDIS_PASSWORD:-redis_development_password}
-      # Redis memory management
-      REDIS_MAXMEMORY: ${REDIS_MAXMEMORY:-512mb}
-      REDIS_MAXMEMORY_POLICY: ${REDIS_MAXMEMORY_POLICY:-allkeys-lru}
-    ports:
-      - '6379:6379'
-    volumes:
-      # Persistent data storage for RDB snapshots and AOF
-      - redis-data:/data
-    networks:
-      - emailclient-net
-    healthcheck:
-      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 5s
-    restart: unless-stopped
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-
-  # Phase 8: Email Service (Flask backend)
+  # Email Service (C++/Drogon backend)
   email-service:
     image: emailclient-service:latest
     build:
-      context: ./services/email_service
+      context: ./backend
       dockerfile: Dockerfile
     container_name: emailclient-email-service
     environment:
-      # Mail service configuration
+      PORT: "5000"
+      PGHOST: postgres
+      PGPORT: "5432"
+      PGUSER: emailclient
+      PGPASSWORD: emailclient
+      PGDATABASE: emailclient
+      DATABASE_URL: >-
+        host=postgres port=5432
+        dbname=emailclient user=emailclient password=emailclient
       POSTFIX_HOST: postfix
       POSTFIX_PORT: 25
       DOVECOT_HOST: dovecot
       DOVECOT_IMAP_PORT: 143
       DOVECOT_IMAP_SSL_PORT: 993
-      DOVECOT_POP3_PORT: 110
-      DOVECOT_POP3_SSL_PORT: 995
-      # Redis/Celery configuration
-      REDIS_PASSWORD: ${REDIS_PASSWORD:-redis_development_password}
-      REDIS_URL: redis://:${REDIS_PASSWORD:-redis_development_password}@redis:6379/0
-      CELERY_BROKER_URL: redis://:${REDIS_PASSWORD:-redis_development_password}@redis:6379/0
-      CELERY_RESULT_BACKEND: redis://:${REDIS_PASSWORD:-redis_development_password}@redis:6379/0
-      CELERY_TASK_SERIALIZER: json
-      CELERY_RESULT_SERIALIZER: json
-      CELERY_ACCEPT_CONTENT: json
-      CELERY_TASK_TIME_LIMIT: 3600
-      CELERY_TASK_SOFT_TIME_LIMIT: 3000
-      # Database configuration
-      DATABASE_URL: postgresql://emailclient:emailclient@postgres:5432/emailclient
-      # Flask configuration
-      FLASK_ENV: ${FLASK_ENV:-development}
-      FLASK_DEBUG: ${FLASK_DEBUG:-1}
-      # Email service configuration
-      IMAP_SYNC_INTERVAL: 300
-      SMTP_TIMEOUT: 30
     ports:
       - '8500:5000'
     depends_on:
-      redis:
-        condition: service_healthy
       postgres:
         condition: service_started
       postfix:
@@ -144,7 +97,6 @@ services:
 
 volumes:
   dovecot-data:
-  redis-data:
   postgres-data:
 
 networks:

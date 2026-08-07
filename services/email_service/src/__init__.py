@@ -1,3 +1,0 @@
-"""
-Email Service - Source package
-"""

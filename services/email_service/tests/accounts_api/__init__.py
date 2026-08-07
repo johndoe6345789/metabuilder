@@ -1,3 +1,0 @@
-"""
-Accounts API Test Suite
-"""
