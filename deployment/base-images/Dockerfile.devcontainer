@@ -11,7 +11,7 @@
 #   base-pip-deps     -> all Python pip packages (copied in)
 #   base-android-sdk  -> Android SDK 34 + Gradle (copied in)
 #   + Rust / Cargo
-#   + Go 1.22
+#   + Go 1.25
 #   + Mesa software renderer (CPU-powered headless 3D/GL/Vulkan)
 #   + oh-my-zsh + dev comforts
 #
@@ -86,12 +86,12 @@ RUN for i in 1 2 3 4 5; do \
       || (echo "rustup failed (attempt $i/5), retrying in $((i*10))s..." && sleep $((i*10))); \
     done
 
-# ── Go 1.22 ───────────────────────────────────────────────────────────────────
+# ── Go 1.25 ───────────────────────────────────────────────────────────────────
 ENV GOROOT=/opt/go \
     GOPATH=/opt/gopath \
     PATH=/opt/go/bin:/opt/gopath/bin:$PATH
 
-RUN GO_VERSION=1.22.6 && \
+RUN GO_VERSION=1.25.7 && \
     ARCH=$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/') && \
     for i in 1 2 3 4 5; do \
       wget -q "https://go.dev/dl/go${GO_VERSION}.linux-${ARCH}.tar.gz" -O /tmp/go.tar.gz && \
