@@ -9,11 +9,13 @@
       "response_types": ["code"],
       "redirect_uris": [
         "http://localhost:3000/pastebin/auth/callback",
-        "http://rdesktop.local:8900/pastebin/auth/callback"
+        "http://rdesktop.local:8900/pastebin/auth/callback",
+        "https://metabuilder.wardcrew.com/pastebin/auth/callback"
       ],
       "post_logout_redirect_uris": [
         "http://localhost:3000/pastebin/",
-        "http://rdesktop.local:8900/pastebin/"
+        "http://rdesktop.local:8900/pastebin/",
+        "https://metabuilder.wardcrew.com/pastebin/"
       ],
       "require_pkce": true,
       "pkce_methods": ["S256"],
@@ -30,11 +32,13 @@
       "response_types": ["code"],
       "redirect_uris": [
         "http://localhost:3000/dbal/auth/callback",
-        "http://rdesktop.local:8900/dbal/auth/callback"
+        "http://rdesktop.local:8900/dbal/auth/callback",
+        "https://metabuilder.wardcrew.com/dbal/auth/callback"
       ],
       "post_logout_redirect_uris": [
         "http://localhost:3000/dbal/",
-        "http://rdesktop.local:8900/dbal/"
+        "http://rdesktop.local:8900/dbal/",
+        "https://metabuilder.wardcrew.com/dbal/"
       ],
       "require_pkce": true,
       "pkce_methods": ["S256"],
@@ -51,11 +55,13 @@
       "response_types": ["code"],
       "redirect_uris": [
         "http://localhost:3000/codegen/auth/callback",
-        "http://rdesktop.local:8900/codegen/auth/callback"
+        "http://rdesktop.local:8900/codegen/auth/callback",
+        "https://metabuilder.wardcrew.com/codegen/auth/callback"
       ],
       "post_logout_redirect_uris": [
         "http://localhost:3000/codegen/",
-        "http://rdesktop.local:8900/codegen/"
+        "http://rdesktop.local:8900/codegen/",
+        "https://metabuilder.wardcrew.com/codegen/"
       ],
       "require_pkce": true,
       "pkce_methods": ["S256"],
@@ -72,11 +78,13 @@
       "response_types": ["code"],
       "redirect_uris": [
         "http://localhost:3000/app/auth/callback",
-        "http://rdesktop.local:8900/app/auth/callback"
+        "http://rdesktop.local:8900/app/auth/callback",
+        "https://metabuilder.wardcrew.com/app/auth/callback"
       ],
       "post_logout_redirect_uris": [
         "http://localhost:3000/app/",
-        "http://rdesktop.local:8900/app/"
+        "http://rdesktop.local:8900/app/",
+        "https://metabuilder.wardcrew.com/app/"
       ],
       "require_pkce": true,
       "pkce_methods": ["S256"],
@@ -93,11 +101,13 @@
       "response_types": ["code"],
       "redirect_uris": [
         "http://localhost:3000/terminal/auth/callback",
-        "http://rdesktop.local:8900/terminal/auth/callback"
+        "http://rdesktop.local:8900/terminal/auth/callback",
+        "https://metabuilder.wardcrew.com/terminal/auth/callback"
       ],
       "post_logout_redirect_uris": [
         "http://localhost:3000/terminal/",
-        "http://rdesktop.local:8900/terminal/"
+        "http://rdesktop.local:8900/terminal/",
+        "https://metabuilder.wardcrew.com/terminal/"
       ],
       "require_pkce": true,
       "pkce_methods": ["S256"],
@@ -114,11 +124,13 @@
       "response_types": ["code"],
       "redirect_uris": [
         "http://localhost:3000/packagerepo/auth/callback",
-        "http://rdesktop.local:8900/packagerepo/auth/callback"
+        "http://rdesktop.local:8900/packagerepo/auth/callback",
+        "https://metabuilder.wardcrew.com/packagerepo/auth/callback"
       ],
       "post_logout_redirect_uris": [
         "http://localhost:3000/packagerepo/",
-        "http://rdesktop.local:8900/packagerepo/"
+        "http://rdesktop.local:8900/packagerepo/",
+        "https://metabuilder.wardcrew.com/packagerepo/"
       ],
       "require_pkce": true,
       "pkce_methods": ["S256"],
@@ -135,11 +147,13 @@
       "response_types": ["code"],
       "redirect_uris": [
         "http://localhost:3000/postgres/admin/auth/callback",
-        "http://rdesktop.local:8900/postgres/admin/auth/callback"
+        "http://rdesktop.local:8900/postgres/admin/auth/callback",
+        "https://metabuilder.wardcrew.com/postgres/admin/auth/callback"
       ],
       "post_logout_redirect_uris": [
         "http://localhost:3000/postgres/",
-        "http://rdesktop.local:8900/postgres/"
+        "http://rdesktop.local:8900/postgres/",
+        "https://metabuilder.wardcrew.com/postgres/"
       ],
       "require_pkce": true,
       "pkce_methods": ["S256"],
@@ -156,11 +170,13 @@
       "response_types": ["code"],
       "redirect_uris": [
         "http://localhost:3000/workflowui/auth/callback",
-        "http://rdesktop.local:8900/workflowui/auth/callback"
+        "http://rdesktop.local:8900/workflowui/auth/callback",
+        "https://metabuilder.wardcrew.com/workflowui/auth/callback"
       ],
       "post_logout_redirect_uris": [
         "http://localhost:3000/workflowui/",
-        "http://rdesktop.local:8900/workflowui/"
+        "http://rdesktop.local:8900/workflowui/",
+        "https://metabuilder.wardcrew.com/workflowui/"
       ],
       "require_pkce": true,
       "pkce_methods": ["S256"],
@@ -177,11 +193,13 @@
       "response_types": ["code"],
       "redirect_uris": [
         "http://localhost:3000/emailclient/auth/callback",
-        "http://rdesktop.local:8900/emailclient/auth/callback"
+        "http://rdesktop.local:8900/emailclient/auth/callback",
+        "https://metabuilder.wardcrew.com/emailclient/auth/callback"
       ],
       "post_logout_redirect_uris": [
         "http://localhost:3000/emailclient/",
-        "http://rdesktop.local:8900/emailclient/"
+        "http://rdesktop.local:8900/emailclient/",
+        "https://metabuilder.wardcrew.com/emailclient/"
       ],
       "require_pkce": true,
       "pkce_methods": ["S256"],
