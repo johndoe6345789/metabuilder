@@ -1,1 +1,0 @@
-"""Email client test package."""
