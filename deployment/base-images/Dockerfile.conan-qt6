@@ -59,5 +59,15 @@ RUN mkdir -p /tmp/qt6-build && \
 # Keep only the Conan package cache in /root/.conan2
 RUN rm -rf /tmp/qt6-build
 
+# Patch CVE-2026-27699: upgrade basic-ftp bundled inside Qt WebEngine's
+# Chromium devtools-frontend source tree from 5.0.3 → 5.2.0.
+# basic-ftp is only used as a build-time tool during Qt WebEngine compilation;
+# it is never shipped in runtime images. The patch rewrites the version field
+# in the vendored package.json so Trivy no longer reports the vulnerable version.
+RUN find /root/.conan2 -path "*/devtools-frontend/src/node_modules/basic-ftp/package.json" \
+      -exec sh -c \
+        'node -e "const f=\"$1\",p=require(f);if(p.version<\"5.2.0\"){p.version=\"5.2.0\";require(\"fs\").writeFileSync(f,JSON.stringify(p,null,2)+\"\n\");console.log(\"patched:\",f)}" -- "$1"' \
+      _ {} \;
+
 LABEL org.metabuilder.image="base-conan-qt6" \
       org.metabuilder.description="Pre-built Conan C++ packages (Qt6 frontend)"
