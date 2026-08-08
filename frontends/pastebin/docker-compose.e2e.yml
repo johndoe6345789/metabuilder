@@ -81,12 +81,9 @@ services:
       context: .
       dockerfile: backend/Dockerfile
     environment:
-      DATABASE_PATH: /app/data/pastebin.db
       DBAL_BASE_URL: "http://dbal:8080"
       DBAL_TENANT_ID: "pastebin"
       DBAL_ADMIN_TOKEN: "069e6487a710300381cd52120eab95d56d7f53beee21479cbeba9128217cbea9"
-    volumes:
-      - pastebin-backend-data:/app/data
     depends_on:
       dbal:
         condition: service_healthy
@@ -144,7 +141,6 @@ services:
 volumes:
   dbal-schemas:
   dbal-templates:
-  pastebin-backend-data:
 
 networks:
   e2e:

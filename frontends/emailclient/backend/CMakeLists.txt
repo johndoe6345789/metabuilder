@@ -20,6 +20,8 @@ endfunction()
 find_package(Drogon REQUIRED)
 find_package(OpenSSL REQUIRED)
 find_package(CURL REQUIRED)
+find_package(jwt-cpp REQUIRED)
+find_package(nlohmann_json REQUIRED)
 
 set(EMAIL_SERVICE_UTIL_SOURCES
     src/util_env.cpp
@@ -32,8 +34,19 @@ set(EMAIL_SERVICE_UTIL_SOURCES
 
 set(EMAIL_SERVICE_SOURCES
     ${EMAIL_SERVICE_UTIL_SOURCES}
-    src/services/Db.cpp
     src/services/CurlHandle.cpp
+    src/services/DbalClient.cpp
+    src/services/DbalClient_method.cpp
+    src/services/DbalClient_pages.cpp
+    src/services/EncryptedSecretClient.cpp
+    src/services/EnsureFolder.cpp
+    src/services/JsonConvert.cpp
+    src/services/Uuid.cpp
+    src/services/JwtJwks_fetch.cpp
+    src/services/JwtJwks_findkey.cpp
+    src/services/JwtJwks_key.cpp
+    src/services/JwtJwks.cpp
+    src/services/JwtAuth.cpp
     src/services/ImapClient_curl.cpp
     src/services/ImapClient_list.cpp
     src/services/ImapClient_fetch.cpp
@@ -57,9 +70,12 @@ set(EMAIL_SERVICE_SOURCES
 
 add_executable(email-service-server src/main.cpp ${EMAIL_SERVICE_SOURCES})
 target_link_libraries(email-service-server PRIVATE
-    Drogon::Drogon OpenSSL::SSL CURL::libcurl)
+    Drogon::Drogon OpenSSL::SSL CURL::libcurl
+    jwt-cpp::jwt-cpp nlohmann_json::nlohmann_json)
 silence_vendor_warnings(email-service-server Drogon::Drogon)
 silence_vendor_warnings(email-service-server CURL::libcurl)
+silence_vendor_warnings(email-service-server jwt-cpp::jwt-cpp)
+silence_vendor_warnings(email-service-server nlohmann_json::nlohmann_json)
 
 install(TARGETS email-service-server RUNTIME DESTINATION bin)
 

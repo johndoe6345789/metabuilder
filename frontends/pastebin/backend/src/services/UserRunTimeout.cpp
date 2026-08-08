@@ -1,16 +1,21 @@
 #include "UserRunTimeout.hpp"
-#include "DbSettings.hpp"
+#include "DbalClient.hpp"
+#include "PastebinSettingsPath.hpp"
 #include "../util.hpp"
 
 #include <algorithm>
-#include <nlohmann/json.hpp>
 
 namespace pastebin {
 
 std::optional<int> getUserRunTimeout(const std::string& userId) {
+    const auto r = dbalRequest("GET", pastebinSettingsPath(userId));
+    if (!r || !r->ok())
+        return std::nullopt;
+
     try {
-        const auto settings = nlohmann::json::parse(
-            getUserSettingsJson(userId));
+        const auto entity = r->body.value("data", r->body);
+        const auto settings =
+            nlohmann::json::parse(entity.value("settingsJson", "{}"));
         if (!settings.contains("runTimeout") ||
             settings["runTimeout"].is_null()) {
             return std::nullopt;

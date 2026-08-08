@@ -479,34 +479,8 @@ services:
     networks:
       - metabuilder
 
-  # Email Service - Flask backend for IMAP/SMTP operations
-  # Email Service - Dedicated PostgreSQL (isolated from main metabuilder db)
-  email-db:
-    image: postgres:16-alpine
-    command:
-      - postgres
-      - -c
-      - shared_buffers=32MB
-      - -c
-      - max_connections=40
-      - -c
-      - work_mem=2MB
-    container_name: metabuilder-email-db
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: email
-      POSTGRES_USER: email
-      POSTGRES_PASSWORD: email
-    volumes:
-      - email-pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U email -d email"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    networks:
-      - metabuilder
-
+  # Email Service - IMAP/SMTP operations, all persistence via DBAL (no
+  # local database -- see EmailClient/EmailFolder/EmailMessage entities).
   email-service:
     build:
       context: ../../frontends/emailclient
@@ -515,14 +489,6 @@ services:
     restart: unless-stopped
     environment:
       PORT: "5000"
-      PGHOST: email-db
-      PGPORT: "5432"
-      PGUSER: email
-      PGPASSWORD: email
-      PGDATABASE: email
-      DATABASE_URL: >-
-        host=email-db port=5432
-        dbname=email user=email password=email
       POSTFIX_HOST: "postfix"
       POSTFIX_PORT: "25"
       DOVECOT_HOST: "dovecot"
@@ -530,9 +496,15 @@ services:
       DOVECOT_IMAP_SSL_PORT: "993"
       DOVECOT_POP3_PORT: "110"
       DOVECOT_POP3_SSL_PORT: "995"
+      DBAL_BASE_URL: "http://dbal:8080"
+      # Must match the `dbal` service's DBAL_OIDC_ISSUER exactly -- the JWT
+      # issuer check is a plain string comparison against every token's
+      # `iss` claim (see frontends/pastebin's identical pattern).
+      DBAL_OIDC_ISSUER: "${DBAL_OIDC_ISSUER:-http://dbal:8080}"
+      DBAL_OIDC_CLIENT_ID: emailclient-web
+      DBAL_TENANT_ID: "emailclient"
+      DBAL_ADMIN_TOKEN: ${DBAL_ADMIN_TOKEN:-069e6487a710300381cd52120eab95d56d7f53beee21479cbeba9128217cbea9}
     depends_on:
-      email-db:
-        condition: service_healthy
       postfix:
         condition: service_healthy
       dovecot:
@@ -716,7 +688,6 @@ services:
     container_name: metabuilder-pastebin-backend
     restart: unless-stopped
     environment:
-      DATABASE_PATH: /app/data/pastebin.db
       PYTHON_RUNNER_IMAGE: "${PYTHON_RUNNER_IMAGE:-python:3.11-slim}"
       PYTHON_RUN_TIMEOUT: "${PYTHON_RUN_TIMEOUT:-10}"
       MYSQL_RUNNER_IMAGE: "${MYSQL_RUNNER_IMAGE:-mysql:8.0}"
@@ -737,7 +708,6 @@ services:
       DBAL_OIDC_ISSUER: "${DBAL_OIDC_ISSUER:-http://dbal:8080}"
       DBAL_OIDC_CLIENT_ID: pastebin-web
     volumes:
-      - pastebin-backend-data:/app/data
       - /var/run/docker.sock:/var/run/docker.sock
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:5000/health"]
@@ -1664,8 +1634,6 @@ volumes:
     driver: local
   retro-roms:
     driver: local
-  pastebin-backend-data:
-    driver: local
   codegen-db-data:
     driver: local
   codegen-backend-data:
@@ -1673,8 +1641,6 @@ volumes:
   packagerepo-pgdata:
     driver: local
   packagerepo-minio-data:
-    driver: local
-  email-pgdata:
     driver: local
   # Registry
   nexus-data:

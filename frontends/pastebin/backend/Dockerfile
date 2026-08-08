@@ -8,7 +8,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     ca-certificates cmake ninja-build clang-tidy \
     gcc-13 g++-13 git make \
-    pkg-config libssl-dev libcurl4-openssl-dev libsqlite3-dev \
+    pkg-config libssl-dev libcurl4-openssl-dev \
     python3 python3-pip && \
     update-alternatives --install \
         /usr/bin/gcc gcc /usr/bin/gcc-13 100 && \
@@ -42,14 +42,11 @@ RUN cmake -B out -G Ninja \
 FROM ${RUNTIME_IMAGE}
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    ca-certificates libssl3 libcurl4 libsqlite3-0 wget && \
+    ca-certificates libssl3 libcurl4 wget && \
     rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /build/out/pastebin-server /usr/bin/
 # COPY backend/runners/ /app/runners/   -- added in Phase 3 (code execution)
-
-RUN mkdir -p /app/data
-ENV DATABASE_PATH=/app/data/pastebin.db
 
 EXPOSE 5000
 ENTRYPOINT ["/usr/bin/pastebin-server"]

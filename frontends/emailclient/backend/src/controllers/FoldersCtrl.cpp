@@ -1,65 +1,71 @@
 #include "FoldersCtrl.h"
+#include "AuthHelpers.hpp"
 #include "Helpers.hpp"
-#include "../services/Db.hpp"
+#include "../services/DbalClient.hpp"
+#include "../services/EncryptedSecretClient.hpp"
 #include "../services/ImapClient.hpp"
+#include "../services/JsonConvert.hpp"
 #include "../util_env.hpp"
 
 namespace email_backend {
 
 void FoldersCtrl::list(const drogon::HttpRequestPtr& req, ResponseCb&& cb,
                         const std::string& accountId) {
-    const auto idOpt = parseId(accountId);
-    if (!idOpt) {
+    const auto auth = requireAuth(req, cb);
+    if (!auth)
+        return;
+    if (accountId.empty()) {
         cb(errorResponse("Account not found", drogon::k404NotFound));
         return;
     }
-    const auto tenant = tenantId(req);
 
-    db()->execSqlAsync(
-        "SELECT imap_host, imap_port, imap_encryption, imap_username, "
-        "imap_password FROM email_accounts WHERE id = $1 AND tenant_id = $2",
-        [cb](const drogon::orm::Result& r) {
-            if (r.empty()) {
-                cb(errorResponse("Account not found", drogon::k404NotFound));
-                return;
-            }
-            const auto& row = r[0];
-            ImapConfig cfg;
-            cfg.host = row["imap_host"].as<std::string>();
-            cfg.port = row["imap_port"].as<int>();
-            cfg.encryption = row["imap_encryption"].as<std::string>();
-            cfg.username = row["imap_username"].as<std::string>();
-            cfg.password = row["imap_password"].as<std::string>();
-            if (cfg.host.empty())
-                cfg.host = envOr("DOVECOT_HOST", "dovecot");
-            if (cfg.port == 0)
-                cfg.port = cfg.encryption == "tls"
-                               ? envInt("DOVECOT_IMAP_SSL_PORT", 993)
-                               : envInt("DOVECOT_IMAP_PORT", 143);
+    const auto r = dbalRequest(
+        "GET", "/" + dbalTenant() + "/email_client/EmailClient/" + accountId);
+    if (!r || !r->ok()) {
+        cb(errorResponse("Account not found", drogon::k404NotFound));
+        return;
+    }
+    const auto entity = r->body.value("data", nlohmann::json::object());
+    if (entity.value("userId", "") != auth->userId) {
+        cb(errorResponse("Account not found", drogon::k404NotFound));
+        return;
+    }
 
-            try {
-                auto folders = ImapClient(cfg).listFolders();
-                Json::Value out(Json::arrayValue);
-                for (const auto& f : folders) {
-                    Json::Value fo;
-                    fo["name"] = f.name;
-                    fo["delimiter"] = f.delimiter;
-                    Json::Value flags(Json::arrayValue);
-                    for (const auto& fl : f.flags)
-                        flags.append(fl);
-                    fo["flags"] = flags;
-                    out.append(fo);
-                }
-                cb(jsonResponse(out));
-            } catch (const std::exception& e) {
-                cb(errorResponse(std::string("IMAP error: ") + e.what(),
-                                  drogon::k500InternalServerError));
-            }
-        },
-        [cb](const drogon::orm::DrogonDbException& e) {
-            cb(errorResponse(e.base().what(), drogon::k500InternalServerError));
-        },
-        *idOpt, tenant);
+    const auto password =
+        revealEncryptedSecret(entity.value("credentialId", ""));
+    if (!password) {
+        cb(errorResponse("Failed to retrieve credentials",
+                          drogon::k500InternalServerError));
+        return;
+    }
+
+    ImapConfig cfg;
+    cfg.host = entity.value("hostname", "");
+    cfg.port = intFromJson(entity, "port", 993);
+    cfg.encryption = entity.value("encryption", "tls");
+    cfg.username = entity.value("username", "");
+    cfg.password = *password;
+    if (cfg.host.empty())
+        cfg.host = envOr("DOVECOT_HOST", "dovecot");
+
+    try {
+        auto folders = ImapClient(cfg).listFolders();
+        Json::Value out(Json::arrayValue);
+        for (const auto& f : folders) {
+            Json::Value fo;
+            fo["name"] = f.name;
+            fo["delimiter"] = f.delimiter;
+            Json::Value flags(Json::arrayValue);
+            for (const auto& fl : f.flags)
+                flags.append(fl);
+            fo["flags"] = flags;
+            out.append(fo);
+        }
+        cb(jsonResponse(out));
+    } catch (const std::exception& e) {
+        cb(errorResponse(std::string("IMAP error: ") + e.what(),
+                          drogon::k500InternalServerError));
+    }
 }
 
 } // namespace email_backend

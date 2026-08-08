@@ -4,10 +4,8 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - snippet-data:/app/data
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - DATABASE_PATH=/app/data/pastebin.db
       - PYTHON_RUNNER_IMAGE=python:3.11-slim
       - JAVA_MAVEN_RUNNER_IMAGE=maven:3.9-eclipse-temurin-21
       - JAVA_GRADLE_RUNNER_IMAGE=gradle:8.6-jdk21
@@ -25,6 +23,3 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
-
-volumes:
-  snippet-data:

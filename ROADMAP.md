@@ -2,9 +2,9 @@
 
 > **The Single Source of Truth for MetaBuilder Development**
 
-**Version:** 0.9.0
-**Last Updated:** June 25, 2026
-**Status:** Universal Platform — Quake 3 on custom engine ✅, C++ DBAL production ✅
+**Version:** 0.9.1
+**Last Updated:** August 8, 2026
+**Status:** Universal Platform — Quake 3 on custom engine ✅, C++ DBAL production ✅, all frontend backends on C++/Drogon ✅
 **Scale:** 27,826+ files | 16 frontends | 16 libraries | 84 packages
 
 ---
@@ -12,7 +12,7 @@
 ## Executive Summary
 
 **What's Done:**
-- ✅ Full-stack multi-tenant platform (Next.js + Flask + C++ DBAL, 8 DB backends)
+- ✅ Full-stack multi-tenant platform (Next.js + C++/Drogon backends + C++ DBAL, 8 DB backends)
 - ✅ C++ game engine running Quake 3 (BSP, physics, weapons, bots, HUD — 212 workflow steps)
 - ✅ M3 component library — 241 components, 19 categories (`@metabuilder/m3`)
 - ✅ Multi-language workflow engine (TS/Python/C++/Go/Rust/Mojo, 41 examples)
@@ -20,6 +20,7 @@
 - ✅ Full email client, CodeForge IDE, visual workflow editor, PostgreSQL dashboard
 - ✅ Package repository (PyPI/Maven/Go/Cargo/Ruby/Nuget), Android apps (Kotlin/Compose)
 - ✅ Monorepo reorganised into `libraries/` + `frontends/` (June 2026)
+- ✅ Every Flask backend eliminated — `pastebin`, `emailclient`, `dockerterminal` rewritten to C++/Drogon; DBAL is now the sole JWT issuer platform-wide (August 2026)
 
 **What's Next:**
 - 🔄 Phase 3: Close out Backend Integration (rate limiting, OpenAPI)
@@ -55,7 +56,7 @@ metabuilder/
 │   └── sparkos/            # Minimal Linux distro (C++/Qt6)
 ├── frontends/              # 16 application frontends
 │   ├── gameengine/         # SDL3/bgfx C++ game engine — Quake 3 ✅ (212 workflow steps)
-│   ├── pastebin/           # Code snippet sharing (Next.js + Flask + DBAL)
+│   ├── pastebin/           # Code snippet sharing (Next.js + C++/Drogon + DBAL)
 │   ├── codegen/            # CodeForge IDE (React + Monaco)
 │   ├── workflowui/         # Visual workflow editor (n8n-style)
 │   ├── postgres/           # PostgreSQL admin dashboard (Next.js + M3)
@@ -155,11 +156,11 @@ Multi-language DAG execution.
 
 | Frontend | Status | Notes |
 |----------|--------|-------|
-| `pastebin` | ✅ Production | Next.js + Flask + DBAL; 3 seeded accounts |
+| `pastebin` | ✅ Production | Next.js + C++/Drogon + DBAL (DBAL-only auth); 3 seeded accounts |
 | `workflowui` | ✅ Functional | n8n-style DAG editor; 92.6% E2E pass rate |
 | `codegen` | ✅ Functional | CodeForge IDE; React + Monaco |
 | `postgres` | ✅ Functional | PostgreSQL admin; full M3 migration |
-| `emailclient` | ✅ Phases 1-5 | Frontend done; backend phases 6-8 TODO |
+| `emailclient` | ✅ Production | Full-stack; Next.js frontend (phases 1-5) + C++/Drogon backend |
 | `packagerepo` | ✅ Framework | PyPI/Maven/Go/Cargo/Ruby/Nuget support |
 | `gameengine` | ✅ Production | Quake 3 playable |
 | `nextjs` | ✅ Functional | Primary web UI |
@@ -247,6 +248,26 @@ Multi-language DAG execution.
 - [x] component library renamed to `m3` (package `@metabuilder/m3`)
 - [x] Postgres dashboard fully migrated to SCSS modules (all sx props removed)
 - [x] All 534 import/reference sites updated
+
+---
+
+### ✅ Phase 7.6: Flask Backend Elimination (Complete — August 2026)
+
+Every remaining Flask backend rewritten to C++/Drogon/CMake/Ninja/Conan 2, matching the pattern already set by `codegen` and `packagerepo`.
+
+- [x] `emailclient` — full C++/Drogon backend (IMAP/SMTP via libcurl, PostgreSQL), Docker Compose stack
+- [x] `dockerterminal` — full C++/Drogon backend (Docker Engine API over its Unix socket)
+- [x] `pastebin` — full C++/Drogon backend across 6 phases, dropping legacy local-password auth entirely in favor of DBAL-only JWT (RS256/JWKS):
+  - Phase 1: DBAL-only auth + SQLite settings
+  - Phase 2: Snippets/Namespaces CRUD
+  - Phase 3: one-shot code execution (`/api/run`, 25 language/SQL runners)
+  - Phase 4: interactive Python sessions (Docker attach-stream hijack, prompt-sentinel `input()` protocol)
+  - Phase 5: DAP debugging sessions (isolated Docker network, debugpy/js-debug/delve/codelldb)
+  - Phase 6: AI proxy (OpenAI/Anthropic-compatible) + cutover — old `backend/` deleted, `backend2/` renamed to `backend/`
+- [x] Removed the orphaned top-level `services/email_service/` Flask duplicate
+- [x] Retrofitted all three new backends to the formal C++ coding standards (`.clang-format`, `-Wall -Wextra -Wpedantic -Werror`, 80-line/80-char soft limits with real margin, `SYSTEM`-marked vendor includes)
+- [x] Removed ~70 stale agent-generated markdown reports/summaries and a disconnected "Phase 8" Flask-era pytest suite from `pastebin`, `emailclient`, and `codegen`
+- [x] Every phase verified end-to-end: real `docker build` with gcc-13 + Conan, GTest suites, and live-Docker-daemon runs (not just local compiles) — including a genuine DAP `initialize` round-trip and an interactive prompt/input/output cycle
 
 ---
 
@@ -345,7 +366,7 @@ Multi-language DAG execution.
 | Declarative seed data | ✅ Complete | 24 JSON files, idempotent |
 | **Authentication** | | |
 | Session-based auth | ✅ Complete | Secure cookies |
-| JWT (DBAL) | ✅ Complete | Flask issues, C++ validates |
+| JWT (DBAL) | ✅ Complete | DBAL is the sole OIDC-style issuer; each app's C++ backend validates independently via JWKS |
 | Auth middleware | ✅ Complete | 401/403, 6-level check |
 | OAuth / SSO | 🔮 Planned | Phase 6 |
 | MFA (TOTP/SMS) | 🔮 Planned | Phase 6 |
@@ -379,11 +400,11 @@ Multi-language DAG execution.
 | 41 example workflows | ✅ Complete | Cross-project |
 | 212 game engine steps | ✅ Complete | Full game loop |
 | **Frontends** | | |
-| Pastebin (full-stack) | ✅ Production | JWT, seeded users |
+| Pastebin (full-stack) | ✅ Production | C++/Drogon backend, DBAL-only auth, code run/debug, AI proxy |
 | WorkflowUI (visual editor) | ✅ Functional | 92.6% E2E |
 | CodeForge IDE | ✅ Functional | Monaco editor |
 | PostgreSQL dashboard | ✅ Functional | Full M3 migration |
-| Email client | ✅ Phases 1-5 | Backend TODO |
+| Email client | ✅ Production | Full-stack; C++/Drogon backend |
 | Package repository | ✅ Framework | Multi-format |
 | Qt6 desktop | ✅ Functional | QML |
 | Android apps (×2) | ✅ Functional | Kotlin/Compose |
@@ -420,11 +441,10 @@ Multi-language DAG execution.
 ### Backend & Database
 | Technology | Version | Purpose |
 |------------|---------|---------|
-| Drogon | Latest | C++ HTTP framework (DBAL daemon) |
-| Flask | Latest | Python auth backend (pastebin) |
+| Drogon | Latest | C++ HTTP framework (DBAL daemon + pastebin/emailclient/dockerterminal backends) |
 | PostgreSQL | Latest | Production database |
 | SQLite3 | Latest | Development + embedded |
-| Redis | Latest | Cache layer |
+| Redis | Latest | Cache layer (DBAL adapter) |
 | nlohmann/json | Latest | C++ JSON (replaces yaml-cpp) |
 | Inja | Latest | C++ Jinja2 templates (SQL) |
 
@@ -458,6 +478,7 @@ Multi-language DAG execution.
 
 | Version | Date | Highlights |
 |---------|------|-----------|
+| **0.9.1** | August 8, 2026 | Flask backend elimination — pastebin/emailclient/dockerterminal rewritten to C++/Drogon, DBAL-only auth platform-wide |
 | **0.9.0** | June 25, 2026 | Monorepo reorganisation (libraries/+frontends/), m3 rename, postgres SCSS migration |
 | **0.8.8** | March 4, 2026 | C++ DBAL production, event-driven workflows, JWT auth, pastebin full-stack, i18n EN/ES |
 | **0.7.x** | February 2026 | Game engine Quake 3 support (BSP, pmove, 212 steps), 14 DB backends, WorkflowUI E2E |

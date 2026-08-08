@@ -6,11 +6,5 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - snippet-data:/app/data
       - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      - DATABASE_PATH=/app/data/pastebin.db
     restart: unless-stopped
-
-volumes:
-  snippet-data:

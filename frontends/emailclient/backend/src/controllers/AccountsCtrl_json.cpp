@@ -1,40 +1,39 @@
 #include "AccountsCtrl_json.hpp"
-#include "Helpers.hpp"
 
 namespace email_backend {
 
-const char* kAccountColumns =
-    "id, tenant_id, account_name, email_address, imap_host, imap_port, "
-    "imap_encryption, smtp_host, smtp_port, smtp_encryption, last_sync_at, "
-    "sync_status, created_at, updated_at";
-
 namespace {
 
-Json::Value optionalString(const std::string& v) {
-    return v.empty() ? Json::Value() : Json::Value(v);
+Json::Value optionalBigint(const nlohmann::json& entity, const char* key) {
+    if (!entity.contains(key) || entity[key].is_null())
+        return Json::Value();
+    return Json::Value(static_cast<Json::Int64>(entity[key].get<long long>()));
 }
 
 } // namespace
 
-Json::Value accountToJson(const drogon::orm::Row& row) {
+Json::Value accountToJson(const nlohmann::json& entity) {
     Json::Value o;
-    o["id"] = row["id"].as<int>();
-    o["tenantId"] = row["tenant_id"].as<std::string>();
-    o["accountName"] = row["account_name"].as<std::string>();
-    o["emailAddress"] = row["email_address"].as<std::string>();
-    o["imapHost"] = optionalString(row["imap_host"].as<std::string>());
-    o["imapPort"] = row["imap_port"].as<int>();
-    o["imapEncryption"] = row["imap_encryption"].as<std::string>();
-    o["smtpHost"] = optionalString(row["smtp_host"].as<std::string>());
-    o["smtpPort"] = row["smtp_port"].as<int>();
-    o["smtpEncryption"] = row["smtp_encryption"].as<std::string>();
-    o["lastSyncAt"] =
-        row["last_sync_at"].isNull()
-            ? Json::Value()
-            : Json::Value(pgTsToIso(row["last_sync_at"].as<std::string>()));
-    o["syncStatus"] = row["sync_status"].as<std::string>();
-    o["createdAt"] = pgTsToIso(row["created_at"].as<std::string>());
-    o["updatedAt"] = pgTsToIso(row["updated_at"].as<std::string>());
+    o["id"] = entity.value("id", "");
+    o["tenantId"] = entity.value("tenantId", "");
+    o["accountName"] = entity.value("accountName", "");
+    o["emailAddress"] = entity.value("emailAddress", "");
+    o["protocol"] = entity.value("protocol", "imap");
+    o["hostname"] = entity.value("hostname", "");
+    o["port"] = intFromJson(entity, "port", 0);
+    o["encryption"] = entity.value("encryption", "tls");
+    o["username"] = entity.value("username", "");
+    o["smtpHost"] = entity.value("smtpHost", "");
+    o["smtpPort"] = intFromJson(entity, "smtpPort", 0);
+    o["smtpEncryption"] = entity.value("smtpEncryption", "tls");
+    o["smtpUsername"] = entity.value("smtpUsername", "");
+    o["isSyncEnabled"] = entity.value("isSyncEnabled", true);
+    o["syncInterval"] = intFromJson(entity, "syncInterval", 300);
+    o["lastSyncAt"] = optionalBigint(entity, "lastSyncAt");
+    o["isSyncing"] = entity.value("isSyncing", false);
+    o["isEnabled"] = entity.value("isEnabled", true);
+    o["createdAt"] = optionalBigint(entity, "createdAt");
+    o["updatedAt"] = optionalBigint(entity, "updatedAt");
     return o;
 }
 

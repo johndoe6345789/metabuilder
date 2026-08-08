@@ -19,7 +19,6 @@ endfunction()
 find_package(Drogon REQUIRED)
 find_package(OpenSSL REQUIRED)
 find_package(CURL REQUIRED)
-find_package(SQLite3 REQUIRED)
 find_package(jwt-cpp REQUIRED)
 find_package(nlohmann_json REQUIRED)
 
@@ -29,8 +28,6 @@ set(PASTEBIN_UTIL_SOURCES
 
 set(PASTEBIN_SOURCES
     ${PASTEBIN_UTIL_SOURCES}
-    src/services/Db.cpp
-    src/services/DbSettings.cpp
     src/services/CurlHandle.cpp
     src/services/DbalClient.cpp
     src/services/DbalClient_method.cpp
@@ -145,7 +142,6 @@ target_link_libraries(pastebin-server PRIVATE
     Drogon::Drogon
     OpenSSL::SSL
     CURL::libcurl
-    SQLite::SQLite3
     jwt-cpp::jwt-cpp
     nlohmann_json::nlohmann_json
 )

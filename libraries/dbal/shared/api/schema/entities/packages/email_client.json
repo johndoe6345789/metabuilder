@@ -71,7 +71,33 @@
     "credentialId": {
       "type": "string",
       "required": true,
-      "description": "FK to Credential entity (password stored encrypted)"
+      "description": "FK to EncryptedSecret entity (IMAP/POP3 password, reversibly encrypted -- see security/crypto/reversible_crypto.hpp)"
+    },
+    "smtpHost": {
+      "type": "string",
+      "required": true,
+      "description": "SMTP server for outgoing mail (e.g. smtp.gmail.com)"
+    },
+    "smtpPort": {
+      "type": "int",
+      "required": true,
+      "description": "SMTP server port (587 for STARTTLS, 465 for implicit TLS)"
+    },
+    "smtpEncryption": {
+      "type": "enum",
+      "values": ["none", "tls", "starttls"],
+      "default": "tls",
+      "description": "SMTP encryption method"
+    },
+    "smtpUsername": {
+      "type": "string",
+      "required": true,
+      "description": "Username for SMTP auth"
+    },
+    "smtpCredentialId": {
+      "type": "string",
+      "required": true,
+      "description": "FK to EncryptedSecret entity (SMTP password, reversibly encrypted)"
     },
     "isSyncEnabled": {
       "type": "boolean",

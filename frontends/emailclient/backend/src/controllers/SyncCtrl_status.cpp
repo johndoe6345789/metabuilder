@@ -1,41 +1,57 @@
 #include "SyncCtrl.h"
+#include "AuthHelpers.hpp"
 #include "Helpers.hpp"
-#include "../services/Db.hpp"
+#include "../services/DbalClient.hpp"
+#include "../services/EnsureFolder.hpp"
+#include "../util_env.hpp"
 
 namespace email_backend {
 
 void SyncCtrl::status(const drogon::HttpRequestPtr& req, ResponseCb&& cb,
                        const std::string& accountId) {
-    const auto idOpt = parseId(accountId);
-    if (!idOpt) {
+    const auto auth = requireAuth(req, cb);
+    if (!auth)
+        return;
+    if (accountId.empty()) {
         cb(errorResponse("Account not found", drogon::k404NotFound));
         return;
     }
-    const auto tenant = tenantId(req);
 
-    db()->execSqlAsync(
-        "SELECT sync_status, last_sync_at, last_sync_uid FROM "
-        "email_accounts WHERE id = $1 AND tenant_id = $2",
-        [cb](const drogon::orm::Result& r) {
-            if (r.empty()) {
-                cb(errorResponse("Account not found", drogon::k404NotFound));
-                return;
-            }
-            const auto& row = r[0];
-            const auto& tsField = row["last_sync_at"];
-            Json::Value out;
-            out["status"] = row["sync_status"].as<std::string>();
-            out["lastSyncAt"] =
-                tsField.isNull()
-                    ? Json::Value()
-                    : Json::Value(pgTsToIso(tsField.as<std::string>()));
-            out["lastSyncUid"] = row["last_sync_uid"].as<int>();
-            cb(jsonResponse(out));
-        },
-        [cb](const drogon::orm::DrogonDbException& e) {
-            cb(errorResponse(e.base().what(), drogon::k500InternalServerError));
-        },
-        *idOpt, tenant);
+    const auto r = dbalRequest(
+        "GET", "/" + dbalTenant() + "/email_client/EmailClient/" + accountId);
+    if (!r || !r->ok()) {
+        cb(errorResponse("Account not found", drogon::k404NotFound));
+        return;
+    }
+    const auto entity = r->body.value("data", nlohmann::json::object());
+    if (entity.value("userId", "") != auth->userId) {
+        cb(errorResponse("Account not found", drogon::k404NotFound));
+        return;
+    }
+
+    long lastSyncUid = 0;
+    if (const auto folderId = findFolder(accountId, "Inbox")) {
+        const auto fr = dbalRequest("GET", "/" + dbalTenant() +
+                                                "/email_client/EmailFolder/" +
+                                                *folderId);
+        if (fr && fr->ok()) {
+            const auto folder =
+                fr->body.value("data", nlohmann::json::object());
+            const std::string token = folder.value("syncToken", "");
+            if (!token.empty())
+                lastSyncUid = std::stol(token);
+        }
+    }
+
+    Json::Value out;
+    out["status"] = entity.value("isSyncing", false) ? "syncing" : "idle";
+    if (entity.contains("lastSyncAt") && !entity["lastSyncAt"].is_null())
+        out["lastSyncAt"] =
+            static_cast<Json::Int64>(entity["lastSyncAt"].get<long long>());
+    else
+        out["lastSyncAt"] = Json::Value();
+    out["lastSyncUid"] = static_cast<Json::Int64>(lastSyncUid);
+    cb(jsonResponse(out));
 }
 
 } // namespace email_backend

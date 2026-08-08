@@ -1,25 +1,26 @@
 #include "AccountsCtrl.h"
 #include "AccountsCtrl_json.hpp"
+#include "AuthHelpers.hpp"
 #include "Helpers.hpp"
-#include "../services/Db.hpp"
+#include "../services/DbalClient.hpp"
+#include "../util_env.hpp"
 
 namespace email_backend {
 
 void AccountsCtrl::list(const drogon::HttpRequestPtr& req, ResponseCb&& cb) {
-    const auto tenant = tenantId(req);
-    db()->execSqlAsync(
-        std::string("SELECT ") + kAccountColumns +
-            " FROM email_accounts WHERE tenant_id = $1 ORDER BY id",
-        [cb](const drogon::orm::Result& r) {
-            Json::Value out(Json::arrayValue);
-            for (const auto& row : r)
-                out.append(accountToJson(row));
-            cb(jsonResponse(out));
-        },
-        [cb](const drogon::orm::DrogonDbException& e) {
-            cb(errorResponse(e.base().what(), drogon::k500InternalServerError));
-        },
-        tenant);
+    const auto auth = requireAuth(req, cb);
+    if (!auth)
+        return;
+
+    const auto accounts =
+        dbalAllPages("/" + dbalTenant() +
+                     "/email_client/EmailClient?filter.userId=" +
+                     auth->userId);
+
+    Json::Value out(Json::arrayValue);
+    for (const auto& entity : accounts)
+        out.append(accountToJson(entity));
+    cb(jsonResponse(out));
 }
 
 } // namespace email_backend
