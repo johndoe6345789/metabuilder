@@ -252,7 +252,6 @@ echo "Dovecot: $(ls backups/dovecot/mail_*.tar.gz* 2>/dev/null | wc -l)"
 | Resource | Location |
 |----------|----------|
 | Full guide | `deployment/backup/README.md` |
-| Implementation details | `PHASE8_BACKUP_IMPLEMENTATION.md` |
 | Backup logs | `backups/logs/backup_*.log` |
 | Restore logs | `backups/logs/restore_*.log` |
 | Monitoring logs | `backups/logs/monitoring.log` |
