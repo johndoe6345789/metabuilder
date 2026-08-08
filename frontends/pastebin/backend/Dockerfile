@@ -22,7 +22,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /build
-COPY backend2/conanfile.txt .
+COPY backend/conanfile.txt .
 
 ENV CONAN_SKIP_TEST=1
 RUN conan install . --build=missing \
@@ -30,8 +30,8 @@ RUN conan install . --build=missing \
     -s compiler.cppstd=20 \
     -of /build/conan
 
-COPY backend2/CMakeLists.txt .
-COPY backend2/src/ src/
+COPY backend/CMakeLists.txt .
+COPY backend/src/ src/
 RUN cmake -B out -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_TOOLCHAIN_FILE=/build/conan/conan_toolchain.cmake \
@@ -46,7 +46,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /build/out/pastebin-server /usr/bin/
-# COPY backend2/runners/ /app/runners/   -- added in Phase 3 (code execution)
+# COPY backend/runners/ /app/runners/   -- added in Phase 3 (code execution)
 
 RUN mkdir -p /app/data
 ENV DATABASE_PATH=/app/data/pastebin.db

@@ -78,8 +78,8 @@ services:
   # Pastebin Backend - C++/Drogon: DBAL-only auth + snippet storage
   pastebin-backend:
     build:
-      context: ../..
-      dockerfile: frontends/pastebin/backend/Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
     environment:
       DATABASE_PATH: /app/data/pastebin.db
       DBAL_BASE_URL: "http://dbal:8080"

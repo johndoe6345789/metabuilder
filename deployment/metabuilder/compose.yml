@@ -711,8 +711,8 @@ services:
   # execution/debugging (DBAL-only auth, no local password store)
   pastebin-backend:
     build:
-      context: ../..
-      dockerfile: frontends/pastebin/backend/Dockerfile
+      context: ../../frontends/pastebin
+      dockerfile: backend/Dockerfile
     container_name: metabuilder-pastebin-backend
     restart: unless-stopped
     environment:
