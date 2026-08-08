@@ -1,6 +1,6 @@
 # Lightweight init container that copies DBAL schemas and templates into named
 # volumes so the DBAL daemon has them at runtime without host bind mounts.
-FROM alpine:3.19
+FROM alpine:3.20
 COPY libraries/dbal/shared/api/schema/entities /seed/schemas/entities
 COPY libraries/dbal/shared/api/schema/oidc     /seed/schemas/oidc
 COPY libraries/dbal/shared/api/schema/saml     /seed/schemas/saml
