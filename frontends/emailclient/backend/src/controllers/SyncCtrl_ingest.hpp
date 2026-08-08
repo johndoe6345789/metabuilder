@@ -12,12 +12,17 @@ struct IngestResult {
     long maxUid = 0;
 };
 
-/// Inserts any not-yet-seen fetched messages into email_messages, returning
-/// the count of new messages and the highest UID seen (>= lastUid).
-IngestResult ingestFetchedMessages(int accountId, const std::string& tenant,
+/// Batch-inserts any not-yet-seen fetched messages into the DBAL
+/// EmailMessage entity (folder `folderId`, account `emailClientId`) via
+/// DBAL's `_batch` endpoint, returning the count of new messages and the
+/// highest UID seen (>= lastUid). Dedupes against imapUid values already
+/// present in the folder.
+IngestResult ingestFetchedMessages(const std::string& emailClientId,
+                                    const std::string& folderId,
                                     const std::vector<FetchedMessage>& fetched,
                                     long lastUid);
 
-void markSyncStatus(int accountId, const std::string& status);
+/// Flips EmailClient.isSyncing for `emailClientId`.
+void markSyncing(const std::string& emailClientId, bool syncing);
 
 } // namespace email_backend

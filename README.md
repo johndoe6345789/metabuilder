@@ -21,11 +21,11 @@ The same JSON workflow engine that powers a Quake 3-compatible game loop also po
 | **Component Library** | M3 — 241-component Material Design 3 implementation (`@metabuilder/m3`) |
 | **Game Engine** | JSON workflow game engine (SDL3 GPU C++) — Quake 3 proof of concept, any game possible |
 | **IDE** | CodeForge — in-browser code generation studio (React + Monaco) |
-| **Email Client** | Full IMAP/SMTP client (Next.js, phases 1–5 complete) |
+| **Email Client** | Full-stack IMAP/SMTP client (Next.js frontend + C++/Drogon backend) |
 | **Package Registry** | Multi-format: PyPI, Maven, Go modules, Cargo, Ruby, Nuget |
 | **3D CAD / PCB** | Parametric 3D CAD (CadQuery) and PCB design automation |
 | **Android Apps** | Kotlin/Compose GitHub client + CapRover mobile PaaS client |
-| **Pastebin** | Full-stack code snippet manager (Next.js + Flask + DBAL C++) |
+| **Pastebin** | Full-stack code snippet manager (Next.js + C++/Drogon + DBAL C++) |
 | **Admin Tooling** | PostgreSQL admin, Docker Swarm terminal, visual workflow editor |
 
 ---
@@ -65,7 +65,7 @@ cmake --build _build/Release --target sdl3_app
 ```bash
 # Deploy full stack
 cd deployment
-docker compose -f compose.yml up -d
+python3 deployment.py stack up
 
 # Build & deploy a specific app
 python3 deployment.py build apps --force dbal pastebin
@@ -77,8 +77,8 @@ python3 deployment.py build base
 **Running services** (pastebin stack):
 ```
 http://localhost/pastebin          # Next.js UI
-http://localhost/pastebin-api      # Flask auth (register, login, Python runner)
-http://localhost:8080              # DBAL C++ REST API (entities)
+http://localhost/pastebin-api      # C++/Drogon backend — snippets, code run/debug, AI proxy
+http://localhost:8080              # DBAL C++ REST API (entities, DBAL-only auth)
 ```
 
 **Test accounts** (seeded automatically on first startup):
@@ -116,7 +116,7 @@ metabuilder/
 │   └── sparkos/            # Minimal Linux distro (C++/Qt6)
 ├── frontends/              # 16 application frontends
 │   ├── gameengine/         # SDL3 GPU C++ game engine (Quake 3 ✅)
-│   ├── pastebin/           # Code snippet sharing (Next.js + Flask + DBAL)
+│   ├── pastebin/           # Code snippet sharing (Next.js + C++/Drogon + DBAL)
 │   ├── codegen/            # CodeForge IDE (React + Monaco)
 │   ├── workflowui/         # Visual workflow editor (n8n-style)
 │   ├── postgres/           # PostgreSQL admin dashboard
@@ -147,14 +147,14 @@ metabuilder/
 
 | Frontend | Stack | Status | Description |
 |----------|-------|--------|-------------|
-| `pastebin` | Next.js + Flask + DBAL C++ | Production | Multi-tenant code snippet manager. JWT auth, Redux + IndexedDB, 3 seeded accounts, event-driven user seeding via DBAL workflows. |
+| `pastebin` | Next.js + C++/Drogon + DBAL C++ | Production | Multi-tenant code snippet manager. DBAL-only JWT auth (no local password store), code execution/debugging sandboxes, AI proxy, Redux + IndexedDB, 3 seeded accounts, event-driven user seeding via DBAL workflows. |
 | `nextjs` | Next.js 16, React 19, App Router | Active | **The platform runtime** — thin shell that loads from `packages/`. 6-level permission system (Public→SuperGod), `/{tenant}/{package}/{entity}` routing, JSON workflow execution, God Panel. Almost no feature code lives here — behaviour comes from the 84 packages it loads. Same JSON-workflow architecture as the game engine, applied to web. |
 | `workflowui` | React, n8n-style DAG editor | Functional | Visual workflow editor with 152+ plugin nodes. 92.6% Playwright E2E pass rate. |
 | `codegen` | React + Monaco Editor | Functional | CodeForge IDE — in-browser code generation studio. Schema → component mapping, live preview. |
 | `postgres` | Next.js + M3 | Functional | PostgreSQL admin dashboard. Fully migrated to `@metabuilder/m3` SCSS modules (no MUI). |
-| `emailclient` | Next.js, Redux, M3 | Phases 1–5 | Full IMAP/SMTP email client. Frontend complete; Flask backend (phases 6–8) TODO. |
+| `emailclient` | Next.js, Redux, M3 + C++/Drogon | Production | Full-stack IMAP/SMTP email client. Frontend (phases 1–5) plus a complete C++/Drogon backend and Docker Compose stack (Postgres, Postfix, Dovecot). |
 | `packagerepo` | Next.js | Framework | Multi-format package registry. Supports PyPI, Maven, Go modules, Cargo, Ruby Gems, Nuget. |
-| `dockerterminal` | React | Functional | Docker Swarm management UI with interactive container terminal access. |
+| `dockerterminal` | React + C++/Drogon | Functional | Docker Swarm management UI with interactive container terminal access. |
 | `storybook` | Storybook | Functional | Component docs and testing. Previews MetaBuilder JSON packages without the full app. |
 | `exploded-diagrams` | Next.js | Functional | Interactive 3D exploded views for component/assembly visualisation. |
 | `dbal` | Next.js | Functional | DBAL Daemon overview UI + standalone `/api/status` endpoint. |
@@ -181,8 +181,8 @@ metabuilder/
 ```
 Browser
   └── Next.js (React + Redux + IndexedDB)
-        └── Flask (auth, Python runner, JWT)
-              └── DBAL C++ daemon (REST API, 8 DB backends)
+        └── C++/Drogon backend (per-app: pastebin, emailclient, dockerterminal…)
+              └── DBAL C++ daemon (REST API, 8 DB backends, JWT issuer)
                     └── PostgreSQL (prod) / SQLite (dev)
 ```
 
@@ -299,7 +299,7 @@ The DBAL (Database Abstraction Layer) daemon is a C++ binary that:
 - Exposes a RESTful HTTP API for all entity operations
 - Enforces multi-tenant isolation (`tenantId` on every query, no exceptions)
 - Validates every write against JSON entity schemas
-- Authenticates requests via JWT (issued by Flask, validated in C++)
+- Authenticates requests via JWT (DBAL is the sole OIDC-style issuer; every app backend validates independently against DBAL's JWKS)
 - Enforces rate limits per IP via configurable sliding-window buckets
 - Fires event-driven workflows asynchronously after CRUD operations
 - Auto-seeds the database from declarative JSON files on startup
@@ -382,7 +382,7 @@ Keys off `X-Forwarded-For` (original client IP when behind nginx) or peer addres
 
 ### JWT Authentication
 
-Configured via `DBAL_AUTH_CONFIG=/app/schemas/auth/auth.json`. Defines which endpoints require auth and what roles can access them. JWT tokens are issued by the Flask backend and validated in C++ — no round-trip to Flask on each request.
+Configured via `DBAL_AUTH_CONFIG=/app/schemas/auth/auth.json`. Defines which endpoints require auth and what roles can access them. DBAL issues RS256 JWTs and publishes its JWKS; every app backend (pastebin, emailclient, dockerterminal) verifies tokens against that JWKS directly — no per-request round trip to DBAL and no per-app password store.
 
 ### Auto-Seeding
 
@@ -428,9 +428,9 @@ cd docs/txt && python3 reports.py search "topic" # 212 reports
 # Type regeneration (after schema changes)
 python3 libraries/dbal/shared/tools/codegen/gen_types.py
 
-# Deploy Flask backend (separate from Next.js build)
-docker compose -f deployment/compose.yml build pastebin-backend
-docker compose -f deployment/compose.yml up -d pastebin-backend
+# Deploy the C++/Drogon backend (separate from Next.js build)
+docker compose -f deployment/metabuilder/compose.yml build pastebin-backend
+docker compose -f deployment/metabuilder/compose.yml up -d pastebin-backend
 ```
 
 ---
@@ -534,5 +534,5 @@ docker compose up -d          # starts vault-db, vault-backend, vault-frontend
 
 ---
 
-**Last Updated**: 2026-06-25  
+**Last Updated**: 2026-08-08  
 **Roadmap**: See [ROADMAP.md](ROADMAP.md) for phase status and what's next.

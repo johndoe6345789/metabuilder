@@ -1,32 +1,34 @@
 #include "AccountsCtrl.h"
 #include "AccountsCtrl_json.hpp"
+#include "AuthHelpers.hpp"
 #include "Helpers.hpp"
-#include "../services/Db.hpp"
+#include "../services/DbalClient.hpp"
+#include "../util_env.hpp"
 
 namespace email_backend {
 
 void AccountsCtrl::get(const drogon::HttpRequestPtr& req, ResponseCb&& cb,
                         const std::string& id) {
-    const auto idOpt = parseId(id);
-    if (!idOpt) {
+    const auto auth = requireAuth(req, cb);
+    if (!auth)
+        return;
+    if (id.empty()) {
         cb(errorResponse("Account not found", drogon::k404NotFound));
         return;
     }
-    const auto tenant = tenantId(req);
-    db()->execSqlAsync(
-        std::string("SELECT ") + kAccountColumns +
-            " FROM email_accounts WHERE id = $1 AND tenant_id = $2",
-        [cb](const drogon::orm::Result& r) {
-            if (r.empty()) {
-                cb(errorResponse("Account not found", drogon::k404NotFound));
-                return;
-            }
-            cb(jsonResponse(accountToJson(r[0])));
-        },
-        [cb](const drogon::orm::DrogonDbException& e) {
-            cb(errorResponse(e.base().what(), drogon::k500InternalServerError));
-        },
-        *idOpt, tenant);
+
+    const auto r = dbalRequest(
+        "GET", "/" + dbalTenant() + "/email_client/EmailClient/" + id);
+    if (!r || !r->ok()) {
+        cb(errorResponse("Account not found", drogon::k404NotFound));
+        return;
+    }
+    const auto entity = r->body.value("data", nlohmann::json::object());
+    if (entity.value("userId", "") != auth->userId) {
+        cb(errorResponse("Account not found", drogon::k404NotFound));
+        return;
+    }
+    cb(jsonResponse(accountToJson(entity)));
 }
 
 } // namespace email_backend

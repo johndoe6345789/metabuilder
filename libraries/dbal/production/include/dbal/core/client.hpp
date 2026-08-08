@@ -57,6 +57,15 @@ public:
     // matching User row exists (Credential-only accounts).
     Result<std::string> getUserRoleByUsername(const std::string& username);
 
+    // Reversible secret storage (EncryptedSecret) -- for values a caller
+    // must later recover in plaintext, unlike Credential's one-way hash.
+    // See security/crypto/reversible_crypto.hpp.
+    Result<std::string> createEncryptedSecret(const std::string& tenantId,
+                                               const std::string& plaintext);
+    // The only place plaintext is ever recovered -- callers must be
+    // admin/system-token-gated, see encrypted_secret_admin_route_handler.
+    Result<std::string> revealEncryptedSecret(const std::string& id);
+
     Result<PageConfig> createPage(const CreatePageInput& input);
     Result<PageConfig> getPage(const std::string& id);
     Result<PageConfig> getPageByPath(const std::string& path);

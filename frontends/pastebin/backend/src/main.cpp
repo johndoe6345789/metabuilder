@@ -5,7 +5,6 @@
  * src/controllers/.
  */
 
-#include "services/Db.hpp"
 #include "util.hpp"
 
 #include <drogon/drogon.h>
@@ -26,8 +25,6 @@ void addCors(const drogon::HttpResponsePtr& r) {
 
 int main() {
     try {
-        pastebin::initDb();
-
         drogon::app().registerPostHandlingAdvice(
             [](const drogon::HttpRequestPtr&,
                const drogon::HttpResponsePtr& r) { addCors(r); });

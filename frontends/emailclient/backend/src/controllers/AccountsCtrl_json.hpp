@@ -1,17 +1,15 @@
 #pragma once
 
-#include <drogon/orm/Field.h>
-#include <drogon/orm/Row.h>
+#include "../services/JsonConvert.hpp"
+
 #include <json/json.h>
+#include <nlohmann/json.hpp>
 
 namespace email_backend {
 
-// Column list shared by every query that returns a full account record.
-extern const char* kAccountColumns;
-
-// Serializes one email_accounts row into the JSON shape the old Flask API
-// returned. Optional host fields are stored as "" when unset (see
-// AccountsCtrl_create.cpp) and surfaced back as JSON null.
-Json::Value accountToJson(const drogon::orm::Row& row);
+/// Serializes a DBAL EmailClient entity into the HTTP response shape.
+/// Deliberately never includes credentialId/smtpCredentialId -- those are
+/// internal EncryptedSecret row ids, not returned to callers.
+Json::Value accountToJson(const nlohmann::json& entity);
 
 } // namespace email_backend

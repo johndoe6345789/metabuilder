@@ -17,6 +17,7 @@
 #include "handlers/schema_route_handler.hpp"
 #include "handlers/admin_route_handler.hpp"
 #include "handlers/admin/credential_admin_route_handler.hpp"
+#include "handlers/admin/encrypted_secret_admin_route_handler.hpp"
 #include "handlers/seed_route_handler.hpp"
 #include "actions/seed_loader_action.hpp"
 #include "handlers/batch_route_handler.hpp"
@@ -476,6 +477,63 @@ void Server::registerRoutes() {
             }
             auto cred_admin_handler = std::make_shared<handlers::admin::CredentialAdminRouteHandler>(*dbal_client_);
             cred_admin_handler->handleSetCredential(req, std::move(callback));
+        },
+        {drogon::HttpMethod::Post, drogon::HttpMethod::Options}
+    );
+
+    // POST /admin/secrets — create a reversible EncryptedSecret.
+    // POST /admin/secrets/{id}/reveal — the only path plaintext ever
+    // leaves DBAL on. Both admin-token gated (see
+    // encrypted_secret_admin_route_handler.hpp).
+    drogon::app().registerHandler(
+        "/admin/secrets",
+        [this](const drogon::HttpRequestPtr& req, DrogonCallback&& callback) {
+            auto client_key = rate_limit_key(req);
+            if (!admin_limiter.allow(client_key)) {
+                auto resp = drogon::HttpResponse::newHttpResponse();
+                resp->setStatusCode(drogon::k429TooManyRequests);
+                callback(resp);
+                return;
+            }
+            if (!ensureClient()) {
+                ::Json::Value body;
+                body["success"] = false;
+                body["error"] = "DBAL client is unavailable";
+                auto response = drogon::HttpResponse::newHttpJsonResponse(body);
+                response->setStatusCode(drogon::HttpStatusCode::k503ServiceUnavailable);
+                callback(response);
+                return;
+            }
+            auto secret_admin_handler =
+                std::make_shared<handlers::admin::EncryptedSecretAdminRouteHandler>(*dbal_client_);
+            secret_admin_handler->handleCreate(req, std::move(callback));
+        },
+        {drogon::HttpMethod::Post, drogon::HttpMethod::Options}
+    );
+
+    drogon::app().registerHandler(
+        "/admin/secrets/{id}/reveal",
+        [this](const drogon::HttpRequestPtr& req, DrogonCallback&& callback,
+               const std::string& id) {
+            auto client_key = rate_limit_key(req);
+            if (!admin_limiter.allow(client_key)) {
+                auto resp = drogon::HttpResponse::newHttpResponse();
+                resp->setStatusCode(drogon::k429TooManyRequests);
+                callback(resp);
+                return;
+            }
+            if (!ensureClient()) {
+                ::Json::Value body;
+                body["success"] = false;
+                body["error"] = "DBAL client is unavailable";
+                auto response = drogon::HttpResponse::newHttpJsonResponse(body);
+                response->setStatusCode(drogon::HttpStatusCode::k503ServiceUnavailable);
+                callback(response);
+                return;
+            }
+            auto secret_admin_handler =
+                std::make_shared<handlers::admin::EncryptedSecretAdminRouteHandler>(*dbal_client_);
+            secret_admin_handler->handleReveal(req, std::move(callback), id);
         },
         {drogon::HttpMethod::Post, drogon::HttpMethod::Options}
     );

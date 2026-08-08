@@ -1,0 +1,64 @@
+{
+  "entity": "PastebinSettings",
+  "version": "1.0",
+  "description": "Per-user Pastebin preferences, an opaque JSON blob the frontend owns the shape of. id IS the userId directly (one settings row per user, no separate generated id) -- same pattern as Credential.id = username.",
+  "fields": {
+    "id": {
+      "type": "string",
+      "primary": true,
+      "required": true,
+      "description": "User ID this settings row belongs to, used directly as the primary key"
+    },
+    "tenantId": {
+      "type": "string",
+      "optional": true,
+      "nullable": true
+    },
+    "settingsJson": {
+      "type": "string",
+      "required": true,
+      "default": "{}",
+      "description": "Arbitrary user-preferences JSON, stored and returned verbatim"
+    },
+    "createdAt": {
+      "type": "bigint",
+      "generated": true,
+      "description": "Creation timestamp (Unix milliseconds)"
+    },
+    "updatedAt": {
+      "type": "bigint",
+      "generated": true,
+      "description": "Last update timestamp (Unix milliseconds)"
+    }
+  },
+  "indexes": [
+    {
+      "fields": ["tenantId"]
+    }
+  ],
+  "query": {
+    "allowed_operators": ["eq"],
+    "allowed_group_by": [],
+    "allowed_includes": [],
+    "max_results": 1,
+    "timeout_ms": 3000
+  },
+  "acl": {
+    "create": {
+      "user": true,
+      "admin": true
+    },
+    "read": {
+      "self": true,
+      "admin": true
+    },
+    "update": {
+      "self": true,
+      "admin": true
+    },
+    "delete": {
+      "self": true,
+      "admin": true
+    }
+  }
+}

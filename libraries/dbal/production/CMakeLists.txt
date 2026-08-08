@@ -175,6 +175,8 @@ if(BUILD_TESTING)
         tests/security/token_issuer_role_claim_test.cpp
         tests/security/rs_jwt_validator_role_claim_test.cpp
         tests/security/oauth_client_config_post_logout_test.cpp
+        tests/security/reversible_crypto_test.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/security/crypto/reversible_crypto.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/oidc/crypto/rsa_keypair.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/oidc/tokens/token_issuer.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/oidc/clients/oauth_client_config.cpp

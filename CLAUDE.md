@@ -1,6 +1,6 @@
 # MetaBuilder - AI Assistant Guide
 
-**Last Updated**: 2026-06-25 | **Status**: Universal Platform — Quake 3 on custom engine ✅
+**Last Updated**: 2026-08-08 | **Status**: Universal Platform — Quake 3 on custom engine ✅, all frontend backends on C++/Drogon
 **Scale**: 27,826+ files | 16 frontends | 16 libraries | 84 packages | **Philosophy**: 95% JSON config, 5% TS/C++ infrastructure
 **Documentation**: Code = Doc (self-documenting Python scripts with argparse)
 
@@ -28,6 +28,7 @@ cd docs && python3 docs.py list --category guides
 
 ## Completed Milestones (All ✅)
 
+- **Aug 8**: Eliminated the last Flask backends — `pastebin`, `emailclient`, and `dockerterminal` rewritten to C++/Drogon/CMake/Ninja/Conan 2. Pastebin is now DBAL-only auth (no local password store); also gained one-shot code execution, interactive Python sessions, DAP debugging, and an AI proxy, all verified against a live Docker daemon. Removed the orphaned top-level Flask duplicate and disconnected Phase-8 planning docs/tests left over from the old architecture.
 - **Jun 25**: Root reorganised into category folders (`libraries/`, `frontends/`), component library renamed to `m3` (`@metabuilder/m3`), postgres dashboard migrated to SCSS modules (all sx props removed)
 - **Mar 4**: DBAL C++ event-driven workflow engine (`pastebin.User.created` → 15-node JSON workflow → seeded namespaces + snippets), full YAML→JSON migration (63 files, yaml-cpp removed), JWT auth + JSON ACL, declarative seed data (`dbal/shared/seeds/database/`), i18n (EN/ES) across all pastebin components, dark/light theme switcher
 - **Feb 7**: Game engine CLI args (`--bootstrap`, `--game`), 27/27 tests passing (100%)
@@ -61,7 +62,7 @@ cd docs && python3 docs.py list --category guides
 | `libraries/qml/` | Qt6 QML components |
 | `libraries/sparkos/` | Minimal Linux distro (C++/Qt6) |
 | `frontends/gameengine/` | SDL3 GPU C++ game engine — Quake 3 playable, **212 workflow steps** |
-| `frontends/pastebin/` | Code snippet sharing (Next.js + Flask + DBAL) |
+| `frontends/pastebin/` | Code snippet sharing (Next.js + C++/Drogon + DBAL) |
 | `frontends/codegen/` | CodeForge IDE (React + Monaco) |
 | `frontends/workflowui/` | Visual workflow editor (n8n-style, 152+ plugin nodes) |
 | `frontends/postgres/` | PostgreSQL admin dashboard (Next.js + M3) |
@@ -198,7 +199,7 @@ Visual code generation studio — React + Monaco editor. See `frontends/codegen/
 
 ### Email Client
 
-Phases 1-5 complete (frontend). DBAL schemas, M3 components (email category), Redux slices, hooks, API endpoints. Phases 6-8 TODO: workflow plugins, Flask backend, Docker.
+Full-stack complete. Phases 1-5 frontend (DBAL schemas, M3 components, Redux slices, hooks, API endpoints) plus a C++/Drogon backend (IMAP/SMTP via libcurl, Postgres) and Docker Compose stack — no workflow-plugin layer or Flask involved.
 
 ---
 
@@ -243,11 +244,11 @@ npm run build --workspaces
 cd deployment && python3 deployment.py build base  # Build Docker base images
 
 # Deploy full stack
-cd deployment && docker compose -f compose.yml up -d
+cd deployment && python3 deployment.py stack up
 
 # Build & deploy specific apps
 python3 deployment.py build apps --force dbal pastebin  # Next.js frontend only
-docker compose -f compose.yml build pastebin-backend  # Flask backend
+docker compose -f metabuilder/compose.yml build pastebin-backend  # C++/Drogon backend
 
 # DBAL logs / seed verification
 docker logs -f metabuilder-dbal
@@ -389,10 +390,9 @@ Multi-version peer deps. React 18/19, TypeScript 5.9.3, Next.js 14-16, @reduxjs/
 | nlohmann/json iterators | Use `it.value()` not `it->second` (std::map syntax fails) |
 | dbal-init volume stale | Rebuild with `docker compose build dbal-init` when schema file extensions change |
 | `.dockerignore` excludes `dbal/` | Whitelist specific subdirs: `!dbal/shared/seeds/database` |
-| `deployment.py build apps pastebin` ≠ Flask backend | Use `docker compose build pastebin-backend` for Flask |
+| `deployment.py build apps pastebin` ≠ backend | That only rebuilds Next.js — the C++ backend needs `docker compose build pastebin-backend` |
 | `ensureClient()` before startup DB ops | `dbal_client_` is null in `registerRoutes()` — must call `ensureClient()` first |
-| Seed data in Flask Python | NEVER — declarative seed data belongs in `dbal/shared/seeds/database/*.json` |
-| Werkzeug scrypt on macOS Python | Generate hashes inside running container: `docker exec metabuilder-pastebin-backend python3 -c "..."` |
+| Seed data in backend service code | NEVER — declarative seed data belongs in `dbal/shared/seeds/database/*.json` |
 | `loadFromDirectory` vs `loadFromFile` | Both must stay in sync — `loadFromDirectory` is used in production; check both when adding schema parsing features |
 | New DBAL entity missing from frontend | Add JSON schema in `dbal/shared/api/schema/entities/{package}/`, seed in `dbal/shared/seeds/database/`, rebuild `dbal-init` + DBAL image |
 | ComponentNode schema vs C++ struct | JSON schema must match C++ struct in `types.generated.hpp` (pageId, parentId, childIds, order), NOT the Redux slice shape |

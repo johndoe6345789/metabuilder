@@ -1,51 +1,60 @@
 #include "ComposeCtrl_json.hpp"
-#include "Helpers.hpp"
 
 namespace email_backend {
 
-const char* kMessageColumns =
-    "id, account_id, message_id, uid, folder, subject, from_address, "
-    "to_addresses, cc_addresses, bcc_addresses, body_text, body_html, "
-    "has_attachments, is_read, is_starred, is_draft, date_sent, "
-    "date_received";
-
 namespace {
 
-Json::Value optionalString(const drogon::orm::Field& f) {
-    return f.isNull() ? Json::Value() : Json::Value(f.as<std::string>());
+// The sqlite adapter round-trips "json"-typed schema fields (to/cc/bcc) as
+// a JSON-encoded string rather than a real array -- unlike int/bigint
+// fields, which are inconsistent in the other direction (see
+// JsonConvert::intFromJson). Accept both shapes defensively.
+nlohmann::json resolveJsonArray(const nlohmann::json& entity,
+                                 const char* key) {
+    if (!entity.contains(key))
+        return nlohmann::json::array();
+    const auto& v = entity[key];
+    if (v.is_array())
+        return v;
+    if (v.is_string()) {
+        try {
+            auto parsed = nlohmann::json::parse(v.get<std::string>());
+            if (parsed.is_array())
+                return parsed;
+        } catch (const nlohmann::json::parse_error&) {
+            // fall through
+        }
+    }
+    return nlohmann::json::array();
 }
 
-Json::Value optionalTimestamp(const drogon::orm::Field& f) {
-    return f.isNull() ? Json::Value()
-                       : Json::Value(pgTsToIso(f.as<std::string>()));
-}
-
-Json::Value optionalInt(const drogon::orm::Field& f) {
-    return f.isNull() ? Json::Value() : Json::Value(f.as<int>());
+Json::Value stringArray(const nlohmann::json& entity, const char* key) {
+    Json::Value out(Json::arrayValue);
+    for (const auto& v : resolveJsonArray(entity, key))
+        if (v.is_string())
+            out.append(v.get<std::string>());
+    return out;
 }
 
 } // namespace
 
-Json::Value messageToJson(const drogon::orm::Row& row) {
+Json::Value messageToJson(const nlohmann::json& entity) {
     Json::Value o;
-    o["id"] = row["id"].as<int>();
-    o["accountId"] = row["account_id"].as<int>();
-    o["messageId"] = optionalString(row["message_id"]);
-    o["uid"] = optionalInt(row["uid"]);
-    o["folder"] = row["folder"].as<std::string>();
-    o["subject"] = optionalString(row["subject"]);
-    o["from"] = optionalString(row["from_address"]);
-    o["to"] = optionalString(row["to_addresses"]);
-    o["cc"] = optionalString(row["cc_addresses"]);
-    o["bcc"] = optionalString(row["bcc_addresses"]);
-    o["bodyText"] = optionalString(row["body_text"]);
-    o["bodyHtml"] = optionalString(row["body_html"]);
-    o["hasAttachments"] = row["has_attachments"].as<bool>();
-    o["isRead"] = row["is_read"].as<bool>();
-    o["isStarred"] = row["is_starred"].as<bool>();
-    o["isDraft"] = row["is_draft"].as<bool>();
-    o["dateSent"] = optionalTimestamp(row["date_sent"]);
-    o["dateReceived"] = optionalTimestamp(row["date_received"]);
+    o["id"] = entity.value("id", "");
+    o["accountId"] = entity.value("emailClientId", "");
+    o["folderId"] = entity.value("folderId", "");
+    o["messageId"] = entity.value("messageId", "");
+    o["subject"] = entity.value("subject", "");
+    o["from"] = entity.value("from", "");
+    o["to"] = stringArray(entity, "to");
+    o["cc"] = stringArray(entity, "cc");
+    o["bcc"] = stringArray(entity, "bcc");
+    o["bodyText"] = entity.value("textBody", "");
+    o["bodyHtml"] = entity.value("htmlBody", "");
+    o["isRead"] = entity.value("isRead", false);
+    o["isStarred"] = entity.value("isStarred", false);
+    o["isDraft"] = entity.value("isDraft", false);
+    o["receivedAt"] =
+        static_cast<Json::Int64>(entity.value("receivedAt", 0LL));
     return o;
 }
 

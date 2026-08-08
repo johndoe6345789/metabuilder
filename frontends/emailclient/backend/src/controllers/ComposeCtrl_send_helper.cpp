@@ -1,28 +1,36 @@
 #include "ComposeCtrl_send_helper.hpp"
 #include "Helpers.hpp"
+#include "../services/EncryptedSecretClient.hpp"
+#include "../services/JsonConvert.hpp"
 #include "../services/SmtpClient.hpp"
 #include "../util_env.hpp"
 
 namespace email_backend {
 
-void sendViaAccount(const drogon::orm::Row& row, const std::string& to,
+void sendViaAccount(const nlohmann::json& account, const std::string& to,
                      const std::string& subject, const std::string& bodyText,
                      const std::string& bodyHtml, const std::string& cc,
                      const std::string& bcc, const std::string& replyTo,
                      const ResponseCb& cb) {
+    const auto password =
+        revealEncryptedSecret(account.value("smtpCredentialId", ""));
+    if (!password) {
+        cb(errorResponse("Failed to retrieve SMTP credentials",
+                          drogon::k500InternalServerError));
+        return;
+    }
+
     SmtpConfig cfg;
-    cfg.host = row["smtp_host"].as<std::string>();
-    cfg.port = row["smtp_port"].as<int>();
-    cfg.encryption = row["smtp_encryption"].as<std::string>();
-    cfg.username = row["smtp_username"].as<std::string>();
-    cfg.password = row["smtp_password"].as<std::string>();
+    cfg.host = account.value("smtpHost", "");
+    cfg.port = intFromJson(account, "smtpPort", 587);
+    cfg.encryption = account.value("smtpEncryption", "tls");
+    cfg.username = account.value("smtpUsername", "");
+    cfg.password = *password;
     if (cfg.host.empty())
         cfg.host = envOr("POSTFIX_HOST", "postfix");
-    if (cfg.port == 0)
-        cfg.port = envInt("POSTFIX_PORT", 25);
 
     OutgoingEmail email;
-    email.from = row["email_address"].as<std::string>();
+    email.from = account.value("emailAddress", "");
     email.to = to;
     email.subject = subject;
     email.bodyText = bodyText;

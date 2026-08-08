@@ -8,7 +8,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     ca-certificates cmake ninja-build clang-tidy \
     gcc-13 g++-13 git make \
-    pkg-config libssl-dev libpq-dev libcurl4-openssl-dev \
+    pkg-config libssl-dev libcurl4-openssl-dev \
     python3 python3-pip && \
     update-alternatives --install \
         /usr/bin/gcc gcc /usr/bin/gcc-13 100 && \
@@ -42,14 +42,10 @@ RUN cmake -B out -G Ninja \
 FROM ${RUNTIME_IMAGE}
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    ca-certificates libpq5 libssl3 libcurl4 \
-    postgresql-client wget && \
+    ca-certificates libssl3 libcurl4 wget && \
     rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /build/out/email-service-server /usr/bin/
-COPY backend/migrations/ /app/migrations/
-COPY backend/entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
 
 EXPOSE 5000
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/email-service-server"]

@@ -1,6 +1,6 @@
 # MetaBuilder — Agent Guide
 
-**Last Updated**: 2026-06-25
+**Last Updated**: 2026-08-08
 Quick-start for AI agents (Claude Code, Copilot, etc.) working on this codebase.
 Read CLAUDE.md for the full guide. This file covers agent-specific patterns and shortcuts.
 
@@ -10,11 +10,11 @@ Read CLAUDE.md for the full guide. This file covers agent-specific patterns and 
 
 ```
 http://localhost/pastebin           # Next.js UI
-http://localhost/pastebin-api       # Flask auth (register, login, JWT)
-http://localhost:8080               # DBAL C++ REST API (entities)
+http://localhost/pastebin-api       # C++/Drogon backend (snippets, code run/debug, AI proxy)
+http://localhost:8080               # DBAL C++ REST API (entities, sole JWT issuer)
 ```
 
-**Test accounts**: `demo/demo1234`, `alice/alice1234`, `bob/bob12345`
+**Test accounts**: `demo/demo1234`, `alice/alice1234`, `bob/bob12345` — these are DBAL Users; pastebin has no local password store, all auth goes through DBAL.
 
 ---
 
@@ -22,8 +22,9 @@ http://localhost:8080               # DBAL C++ REST API (entities)
 
 ```
 Browser (Next.js + Redux + IndexedDB)
-  └── Flask (JWT auth, Python runner)       frontends/pastebin/backend/
-        └── DBAL C++ daemon (REST API)      dbal/production/
+  └── C++/Drogon backend (DBAL-only JWT verification, code run/debug, AI proxy)
+        frontends/pastebin/backend/
+        └── DBAL C++ daemon (REST API, JWT issuer)      dbal/production/
               └── PostgreSQL (prod)
 ```
 
@@ -48,9 +49,9 @@ POST /pastebin/pastebin/User
 | `libraries/dbal/shared/seeds/database/` | Declarative seed data (JSON, loaded at startup) |
 | `libraries/dbal/production/src/workflow/` | C++ workflow engine (WfEngine, WfExecutor, steps/) |
 | `libraries/dbal/production/src/daemon/server_routes.cpp` | Route registration + auto-seed startup |
-| `frontends/pastebin/backend/app.py` | Flask JWT auth + Python runner |
+| `frontends/pastebin/backend/src/` | C++/Drogon backend — DBAL-only JWT auth, snippets, code run/debug, AI proxy |
 | `frontends/pastebin/src/` | Next.js React app |
-| `deployment/compose.yml` | Full stack compose |
+| `deployment/metabuilder/compose.yml` | Full stack compose |
 | `deployment/deployment.py` | Python CLI for all build/deploy/stack commands |
 
 ---
@@ -80,15 +81,15 @@ cd deployment
 
 # Full rebuild + restart
 python3 deployment.py build apps --force dbal pastebin
-docker compose -f compose.yml up -d
+python3 deployment.py stack up
 
-# Flask backend (separate from Next.js)
-docker compose -f compose.yml build pastebin-backend
-docker compose -f compose.yml up -d pastebin-backend
+# C++/Drogon backend (separate from Next.js)
+docker compose -f metabuilder/compose.yml build pastebin-backend
+docker compose -f metabuilder/compose.yml up -d pastebin-backend
 
 # dbal-init volume (schema volume container — rebuild when entity JSON changes)
-docker compose -f compose.yml build dbal-init
-docker compose -f compose.yml up dbal-init
+docker compose -f metabuilder/compose.yml build dbal-init
+docker compose -f metabuilder/compose.yml up dbal-init
 ```
 
 ---
@@ -132,11 +133,7 @@ All seed files in `libraries/dbal/shared/seeds/database/*.json`. Idempotent — 
 
 For multi-document seeds (array of seed objects): wrap in `[...]` at top level.
 
-**User passwords**: Generate werkzeug hashes inside the container:
-```bash
-docker exec metabuilder-pastebin-backend python3 -c \
-  "from werkzeug.security import generate_password_hash; print(generate_password_hash('mypassword'))"
-```
+**User passwords**: Pastebin has no local password store — real login credentials live in DBAL's `Credential` entity (Argon2id, `dbal::security::hash_password`), seeded via `pastebin_credentials.json`. The `User` entity's own `passwordHash` field is vestigial and ignored.
 
 ---
 
@@ -160,10 +157,10 @@ Context variable resolution: `"${var_name}"`, `"${event.userId}"`, `"prefix-${na
 
 1. **Multi-tenant always**: Every DBAL query filters by `tenantId`. No exceptions.
 2. **JSON not YAML**: All schemas, events, workflows, seeds — pure JSON. yaml-cpp removed.
-3. **Seed data in `dbal/shared/seeds/`** — never hardcode in Flask Python or C++.
+3. **Seed data in `dbal/shared/seeds/`** — never hardcode in backend service code.
 4. **No hardcoded entity names** — loaded from schema JSON.
 5. **Call `ensureClient()` before any DB op in `registerRoutes()`** — `dbal_client_` starts null.
-6. **`deployment.py build apps pastebin` ≠ Flask** — that only rebuilds Next.js. Flask needs `docker compose build pastebin-backend`.
+6. **`deployment.py build apps pastebin` ≠ the backend** — that only rebuilds Next.js. The C++/Drogon backend needs `docker compose build pastebin-backend`.
 
 ---
 
@@ -176,7 +173,6 @@ Context variable resolution: `"${var_name}"`, `"${event.userId}"`, `"prefix-${na
 | `.dockerignore` blocks `dbal/shared/seeds/` | Add `!dbal/shared/seeds/database` |
 | Seed segfaults on startup | Missing `ensureClient()` guard |
 | Seed runs every restart | `skipIfExists` check broken — verify entity name matches schema |
-| Werkzeug scrypt not on host Python | Generate inside running container with `docker exec` |
 
 ---
 
@@ -185,6 +181,6 @@ Context variable resolution: `"${var_name}"`, `"${event.userId}"`, `"prefix-${na
 | Service | URL | Auth |
 |---------|-----|------|
 | UI | `http://localhost/pastebin` | JWT cookie |
-| Flask auth API | `http://localhost/pastebin-api/api/auth/*` | — |
+| Pastebin backend (C++/Drogon) | `http://localhost/pastebin-api/api/*` | Bearer JWT (DBAL-issued; no register/login here — login happens via DBAL) |
 | DBAL entities | `http://localhost:8080/{tenant}/{package}/{entity}` | Bearer JWT |
 | DBAL health | `http://localhost:8080/health` | — |
