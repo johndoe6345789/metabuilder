@@ -12,7 +12,7 @@ FROM python:3.14-slim
 # Build-time deps for native extensions (psycopg2, cryptography, etc.)
 RUN for i in 1 2 3 4 5; do \
       apt-get update && apt-get install -y --no-install-recommends \
-        gcc g++ libpq-dev libssl-dev libffi-dev python3-dev \
+        dpkg gcc g++ libpq-dev libssl-dev libffi-dev python3-dev \
       && break \
       || (echo "apt-get failed (attempt $i/5), retrying in $((i*10))s..." && sleep $((i*10))); \
     done && rm -rf /var/lib/apt/lists/*
