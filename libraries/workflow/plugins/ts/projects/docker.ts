@@ -5,7 +5,7 @@
  * Integrates with the dockerterminal project.
  */
 
-import { execSync } from 'child_process';
+import { execFileSync } from 'child_process';
 import * as path from 'path';
 
 export const DOCKER_PATH = path.resolve(__dirname, '../../../../dockerterminal');
@@ -36,8 +36,9 @@ export async function dockerListContainers(input: {
   const { all = false } = input;
 
   try {
-    const cmd = `docker ps ${all ? '-a' : ''} --format '{"id":"{{.ID}}","name":"{{.Names}}","image":"{{.Image}}","status":"{{.Status}}","ports":"{{.Ports}}"}'`;
-    const output = execSync(cmd).toString().trim();
+    const args = ['ps', ...(all ? ['-a'] : []), '--format',
+      '{"id":"{{.ID}}","name":"{{.Names}}","image":"{{.Image}}","status":"{{.Status}}","ports":"{{.Ports}}"}'];
+    const output = execFileSync('docker', args).toString().trim();
 
     const containers = output
       .split('\n')
@@ -68,8 +69,9 @@ export async function dockerListServices(): Promise<{
   error?: string;
 }> {
   try {
-    const cmd = `docker service ls --format '{"id":"{{.ID}}","name":"{{.Name}}","replicas":"{{.Replicas}}","image":"{{.Image}}","ports":"{{.Ports}}"}'`;
-    const output = execSync(cmd).toString().trim();
+    const args = ['service', 'ls', '--format',
+      '{"id":"{{.ID}}","name":"{{.Name}}","replicas":"{{.Replicas}}","image":"{{.Image}}","ports":"{{.Ports}}"}'];
+    const output = execFileSync('docker', args).toString().trim();
 
     const services = output
       .split('\n')
@@ -104,22 +106,22 @@ export async function dockerRun(input: {
   const { image, name, ports = [], env = {}, detach = true } = input;
 
   try {
-    let cmd = 'docker run';
+    const args = ['run'];
 
-    if (detach) cmd += ' -d';
-    if (name) cmd += ` --name ${name}`;
+    if (detach) args.push('-d');
+    if (name) args.push('--name', name);
 
     for (const port of ports) {
-      cmd += ` -p ${port}`;
+      args.push('-p', port);
     }
 
     for (const [key, value] of Object.entries(env)) {
-      cmd += ` -e ${key}=${value}`;
+      args.push('-e', `${key}=${value}`);
     }
 
-    cmd += ` ${image}`;
+    args.push(image);
 
-    const output = execSync(cmd).toString().trim();
+    const output = execFileSync('docker', args).toString().trim();
     return { success: true, containerId: output };
   } catch (error) {
     return {
@@ -136,7 +138,7 @@ export async function dockerStop(input: {
   container: string;
 }): Promise<{ success: boolean; error?: string }> {
   try {
-    execSync(`docker stop ${input.container}`);
+    execFileSync('docker', ['stop', input.container]);
     return { success: true };
   } catch (error) {
     return {
@@ -154,7 +156,7 @@ export async function dockerScaleService(input: {
   replicas: number;
 }): Promise<{ success: boolean; error?: string }> {
   try {
-    execSync(`docker service scale ${input.service}=${input.replicas}`);
+    execFileSync('docker', ['service', 'scale', `${input.service}=${input.replicas}`]);
     return { success: true };
   } catch (error) {
     return {
@@ -172,7 +174,7 @@ export async function dockerDeployStack(input: {
   composeFile: string;
 }): Promise<{ success: boolean; error?: string }> {
   try {
-    execSync(`docker stack deploy -c ${input.composeFile} ${input.stackName}`);
+    execFileSync('docker', ['stack', 'deploy', '-c', input.composeFile, input.stackName]);
     return { success: true };
   } catch (error) {
     return {

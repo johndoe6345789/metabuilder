@@ -2,6 +2,7 @@
 
 import { useRef, useEffect } from 'react'
 import type HlsType from 'hls.js'
+import { isSafeMediaSrc } from './mediaUrl'
 import s from './VideoPlayer.module.scss'
 
 export interface VideoPlayerProps {
@@ -20,7 +21,7 @@ export function VideoPlayer({
 
   useEffect(() => {
     const video = videoRef.current
-    if (video === null || !src) return undefined
+    if (video === null || !src || !isSafeMediaSrc(src)) return undefined
 
     hlsRef.current?.destroy()
     hlsRef.current = null

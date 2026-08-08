@@ -11,6 +11,7 @@
  * - Comprehensive sync metrics and recovery
  */
 
+import { randomUUID } from 'crypto';
 import {
   INodeExecutor,
   WorkflowNode,
@@ -482,7 +483,7 @@ export class POP3SyncExecutor implements INodeExecutor {
    * Generate unique session ID for transaction tracking
    */
   private _generateSessionId(): string {
-    return `pop3-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    return `pop3-${Date.now()}-${randomUUID()}`;
   }
 }
 

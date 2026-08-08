@@ -452,15 +452,24 @@ export class SecurityScanner {
       })
     }
 
-    const javascriptProtocol = /href\s*=\s*['"]javascript:/gi
-    if (javascriptProtocol.test(html)) {
-      issues.push({
-        type: 'dangerous',
-        severity: 'critical',
-        message: 'javascript: protocol in href',
-        pattern: 'javascript:',
-        recommendation: 'Use proper URLs or event handlers'
-      })
+    // Extract each href value with a simple (non-backtracking) pattern,
+    // then strip whitespace/control characters before checking the
+    // scheme — browsers ignore those characters when evaluating a URL's
+    // scheme, so e.g. `jav\tascript:` still executes even though a plain
+    // /javascript:/ substring check would miss it. Checking data: and
+    // vbscript: alongside javascript: closes the same class of bypass.
+    const hrefPattern = /href\s*=\s*['"]([^'"]*)['"]/gi
+    for (const match of html.matchAll(hrefPattern)) {
+      const normalizedScheme = match[1].replace(/[\s\x00-\x1f]/g, '').toLowerCase()
+      if (/^(javascript|data|vbscript):/.test(normalizedScheme)) {
+        issues.push({
+          type: 'dangerous',
+          severity: 'critical',
+          message: 'javascript:/data:/vbscript: protocol in href',
+          pattern: match[0],
+          recommendation: 'Use proper URLs or event handlers'
+        })
+      }
     }
 
     const iframePattern = /<iframe[^>]*>/gi
@@ -505,30 +514,6 @@ export class SecurityScanner {
     if (hasLow) return 'low'
     
     return 'safe'
-  }
-
-  sanitizeInput(input: string, type: 'text' | 'html' | 'json' | 'javascript' | 'lua' = 'text'): string {
-    let sanitized = input
-
-    if (type === 'text') {
-      sanitized = sanitized.replace(/<script[^>]*>.*?<\/script>/gis, '')
-      sanitized = sanitized.replace(/on\w+\s*=/gi, '')
-      sanitized = sanitized.replace(/javascript:/gi, '')
-    }
-
-    if (type === 'html') {
-      sanitized = sanitized.replace(/<script[^>]*>.*?<\/script>/gis, '')
-      sanitized = sanitized.replace(/on\w+\s*=/gi, '')
-      sanitized = sanitized.replace(/javascript:/gi, '')
-      sanitized = sanitized.replace(/data:\s*text\/html/gi, '')
-    }
-
-    if (type === 'json') {
-      sanitized = sanitized.replace(/__proto__/gi, '_proto_')
-      sanitized = sanitized.replace(/constructor\s*\[\s*['"]prototype['"]\s*\]/gi, '')
-    }
-
-    return sanitized
   }
 }
 

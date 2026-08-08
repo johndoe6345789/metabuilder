@@ -343,8 +343,11 @@ export class SMTPSendExecutor implements INodeExecutor {
    * Validate email address format using simple regex
    */
   private _isValidEmailAddress(address: string): boolean {
-    // RFC 5322 simplified validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // RFC 5322 simplified validation. Domain labels exclude '.' to avoid
+    // the classic ReDoS ambiguity in '[^\s@]+\.[^\s@]+' (exponentially
+    // many ways to pick which dot is the separator on a non-matching
+    // input).
+    const emailRegex = /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/;
     return emailRegex.test(address) && address.length <= 254;
   }
 

@@ -46,8 +46,11 @@ export function interpolateTemplate(template: any, context: TemplateContext): an
     return template;
   }
 
-  // Process string templates
-  return template.replace(/\{\{(.*?)\}\}/g, (match, expression) => {
+  // Process string templates. The captured expression excludes '{'/'}'
+  // (rather than '.' matching anything): with a plain lazy '.*?', a
+  // non-matching input with many repeated '{{' has an unbounded inner
+  // scan retried at every '{{' occurrence — O(n^2) instead of O(n).
+  return template.replace(/\{\{([^{}]*?)\}\}/g, (match, expression) => {
     try {
       return String(evaluateExpression(expression.trim(), context));
     } catch (error) {
@@ -147,8 +150,11 @@ function getNestedValue(obj: any, path: string): any {
       return undefined;
     }
 
-    // Handle array indexing like "array[0]"
-    const arrayMatch = part.match(/(\w+)\[(\d+)\]/);
+    // Handle array indexing like "array[0]". Bounded: being unanchored,
+    // a non-matching input (e.g. a long run of digits with no '[')
+    // otherwise retries the unbounded \w+ scan at every position — O(n^2)
+    // instead of O(n).
+    const arrayMatch = part.match(/(\w{1,64})\[(\d{1,10})\]/);
     if (arrayMatch) {
       const [, fieldName, index] = arrayMatch;
       current = current[fieldName]?.[parseInt(index)];
@@ -164,7 +170,10 @@ function getNestedValue(obj: any, path: string): any {
  * Call utility function
  */
 function callUtility(expression: string, utils: Record<string, any>): any {
-  const match = expression.match(/(\w+)\((.*)\)/);
+  // Bounded, and the args capture excludes ')': being unanchored, a
+  // non-matching input otherwise retries an unbounded scan at every
+  // position — O(n^2) instead of O(n).
+  const match = expression.match(/(\w{1,128})\(([^)]{0,10000})\)/);
   if (!match) {
     return utils[expression];
   }

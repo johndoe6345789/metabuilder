@@ -489,7 +489,10 @@ export class MessageThreadingExecutor implements INodeExecutor {
    * Extract Message-ID from angle-bracketed format
    */
   private _extractMessageId(raw: string): string | null {
-    const match = raw.match(/<([^>]+)>/);
+    // Bounded: being unanchored, a non-matching input (many '<' with no
+    // closing '>') otherwise retries at every '<' position with an
+    // unbounded inner scan each time — O(n^2) instead of O(n).
+    const match = raw.match(/<([^<>]{1,320})>/);
     return match ? match[1] : raw.trim() || null;
   }
 

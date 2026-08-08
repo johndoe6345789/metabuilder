@@ -98,7 +98,10 @@ export class EmailSendExecutor implements INodeExecutor {
     }
 
     const to = node.parameters.to || '';
-    if (to && !to.includes('{{') && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) {
+    // Domain labels exclude '.' to avoid the classic ReDoS ambiguity in
+    // '[^\s@]+\.[^\s@]+' (exponentially many ways to pick which dot is
+    // the separator on a non-matching input).
+    if (to && !to.includes('{{') && !/^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/.test(to)) {
       errors.push('Invalid email format in "to" parameter');
     }
 

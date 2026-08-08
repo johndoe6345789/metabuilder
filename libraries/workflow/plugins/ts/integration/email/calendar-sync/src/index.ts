@@ -465,8 +465,13 @@ export class CalendarSyncExecutor implements INodeExecutor {
    * Extract iCalendar content from email body
    */
   private _extractICalendarContent(emailBody: string): string | null {
-    // Look for BEGIN:VCALENDAR ... END:VCALENDAR
-    const match = emailBody.match(/BEGIN:VCALENDAR[\s\S]*?END:VCALENDAR/i);
+    // Look for BEGIN:VCALENDAR ... END:VCALENDAR. Each step requires the
+    // END marker to *not* match first, rather than a bare lazy [\s\S]*?
+    // — a lazy wildcard bounded only by a literal that shares structure
+    // with the opener is a known ReDoS shape (many BEGIN:VCALENDAR-like
+    // near-misses with no real terminator cause quadratic rescanning).
+    // This form matches the same content but can't backtrack that way.
+    const match = emailBody.match(/BEGIN:VCALENDAR(?:(?!END:VCALENDAR)[\s\S])*END:VCALENDAR/i);
     if (match) {
       return match[0];
     }
@@ -552,8 +557,16 @@ export class CalendarSyncExecutor implements INodeExecutor {
    * Extract email address from iCalendar property
    */
   private _extractEmail(value: string): string {
-    // Handle mailto: prefix and angle brackets
-    const emailMatch = value.match(/mailto:([^\s>;]+)/i) || value.match(/<([^>]+)>/) || value.match(/([^\s;]+@[^\s;]+)/);
+    // Handle mailto: prefix and angle brackets. Bounded lengths and (for
+    // the last alternative) excluding '@' from the pre-'@' class avoid
+    // the quadratic blowup these patterns have unbounded: being
+    // unanchored, a failed match retries at every '<'/'@' position in
+    // the string, so an unbounded inner scan at each retry is O(n^2) on
+    // pathological input (e.g. many '<' with no closing '>').
+    const emailMatch =
+      value.match(/mailto:([^\s>;]{1,320})/i) ||
+      value.match(/<([^<>]{1,320})>/) ||
+      value.match(/([^\s;@]{1,320}@[^\s;]{1,320})/);
     return emailMatch?.[1] || '';
   }
 
@@ -723,7 +736,10 @@ export class CalendarSyncExecutor implements INodeExecutor {
    * Validate email address format
    */
   private _isValidEmail(email: string): boolean {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    // Domain labels exclude '.' to avoid the classic ReDoS ambiguity in
+    // '[^\s@]+\.[^\s@]+' (exponentially many ways to pick which dot is
+    // the separator on a non-matching input).
+    return /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/.test(email);
   }
 }
 

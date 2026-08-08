@@ -5,7 +5,7 @@
  * Provides build, run, and asset management capabilities.
  */
 
-import { spawn, execSync } from 'child_process';
+import { spawn, execFileSync } from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
 
@@ -57,10 +57,10 @@ export async function gameengineBuild(input: GameEngineBuildInput): Promise<Game
         `-DCMAKE_BUILD_TYPE=${profile === 'release' ? 'Release' : 'Debug'}`,
       ];
 
-      execSync(`cmake ${cmakeArgs.join(' ')}`, { cwd: GAMEENGINE_PATH });
+      execFileSync('cmake', cmakeArgs, { cwd: GAMEENGINE_PATH });
 
       // Build
-      execSync(`cmake --build ${buildDir} --parallel`, { cwd: GAMEENGINE_PATH });
+      execFileSync('cmake', ['--build', buildDir, '--parallel'], { cwd: GAMEENGINE_PATH });
 
       resolve({
         success: true,

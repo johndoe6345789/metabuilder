@@ -1,29 +1,28 @@
 import type { S3Credentials } from '@/types';
 
-const STORAGE_KEY = 's3_credentials';
+// Held in memory only for the lifetime of this tab. Secret keys must never
+// be written to localStorage/sessionStorage/cookies in plaintext: Web
+// Storage is readable by any script on the origin (XSS), browser
+// extensions, and gets swept into disk-based session backups/crash
+// reports. A hard page reload clears this, requiring re-login.
+let currentCredentials: S3Credentials | null = null;
 
-/** @brief Read stored S3 credentials. */
+/** @brief Read in-memory S3 credentials. */
 export function getCredentials():
   S3Credentials | null {
-  if (typeof window === 'undefined') return null;
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) return null;
-  return JSON.parse(raw) as S3Credentials;
+  return currentCredentials;
 }
 
-/** @brief Save S3 credentials. */
+/** @brief Save S3 credentials (in memory only, for this tab's lifetime). */
 export function saveCredentials(
   creds: S3Credentials,
 ): void {
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(creds),
-  );
+  currentCredentials = creds;
 }
 
 /** @brief Clear stored credentials. */
 export function clearCredentials(): void {
-  localStorage.removeItem(STORAGE_KEY);
+  currentCredentials = null;
 }
 
 /** @brief Build auth headers for S3 API. */

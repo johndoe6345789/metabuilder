@@ -19,6 +19,21 @@ async function validateTable(tableName: string): Promise<boolean> {
   return result.rows.length > 0;
 }
 
+// Look up the real column names for a table so identifiers built from
+// request data can be checked against a whitelist, not just escaped.
+async function getValidColumns(tableName: string): Promise<Set<string>> {
+  const result = await db.execute(sql`
+    SELECT column_name
+    FROM information_schema.columns
+    WHERE table_schema = 'public' AND table_name = ${tableName}
+  `);
+  return new Set(result.rows.map((row: any) => row.column_name as string));
+}
+
+function findInvalidColumns(columns: string[], validColumns: Set<string>): string[] {
+  return columns.filter((col) => !validColumns.has(col));
+}
+
 export async function POST(request: Request) {
   try {
     const session = await getSession();
@@ -36,6 +51,12 @@ export async function POST(request: Request) {
     const values = Object.values(data);
     if (columns.length === 0) {
       return NextResponse.json({ error: 'No data provided' }, { status: 400 });
+    }
+
+    const validColumns = await getValidColumns(tableName);
+    const invalidColumns = findInvalidColumns(columns, validColumns);
+    if (invalidColumns.length > 0) {
+      return NextResponse.json({ error: `Unknown column(s): ${invalidColumns.join(', ')}` }, { status: 400 });
     }
 
     const columnList = columns.map(qi).join(', ');
@@ -76,6 +97,13 @@ export async function PUT(request: Request) {
 
     const pkKeys = Object.keys(primaryKey);
     const pkValues = Object.values(primaryKey);
+
+    const validColumns = await getValidColumns(tableName);
+    const invalidColumns = findInvalidColumns([...columns, ...pkKeys], validColumns);
+    if (invalidColumns.length > 0) {
+      return NextResponse.json({ error: `Unknown column(s): ${invalidColumns.join(', ')}` }, { status: 400 });
+    }
+
     const setClause = columns.map((col, i) => `${qi(col)} = $${i + 1}`).join(', ');
     const whereClause = pkKeys.map((k, i) => `${qi(k)} = $${values.length + i + 1}`).join(' AND ');
 
@@ -109,6 +137,13 @@ export async function DELETE(request: Request) {
 
     const pkKeys = Object.keys(primaryKey);
     const pkValues = Object.values(primaryKey);
+
+    const validColumns = await getValidColumns(tableName);
+    const invalidColumns = findInvalidColumns(pkKeys, validColumns);
+    if (invalidColumns.length > 0) {
+      return NextResponse.json({ error: `Unknown column(s): ${invalidColumns.join(', ')}` }, { status: 400 });
+    }
+
     const whereClause = pkKeys.map((k, i) => `${qi(k)} = $${i + 1}`).join(' AND ');
 
     const result = await pool.query(

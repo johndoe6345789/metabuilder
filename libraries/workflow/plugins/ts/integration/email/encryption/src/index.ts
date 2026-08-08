@@ -687,7 +687,7 @@ export class EncryptionExecutor implements INodeExecutor {
     }
 
     // Step 1: Extract signature from content
-    const signatureMatch = config.content.match(/-----BEGIN SIGNATURE-----\n([\s\S]+?)\n-----END SIGNATURE-----/);
+    const signatureMatch = config.content.match(/-----BEGIN SIGNATURE-----\n((?:(?!\n-----END SIGNATURE-----)[\s\S])*)\n-----END SIGNATURE-----/);
     if (!signatureMatch) {
       throw new Error('No signature found in content');
     }
@@ -903,7 +903,7 @@ export class EncryptionExecutor implements INodeExecutor {
    */
   private _verifySignatureContent(content: string, publicKey: string): SignatureVerification {
     // Extract signature from content
-    const signatureMatch = content.match(/-----BEGIN SIGNATURE-----\n([\s\S]+?)\n-----END SIGNATURE-----/);
+    const signatureMatch = content.match(/-----BEGIN SIGNATURE-----\n((?:(?!\n-----END SIGNATURE-----)[\s\S])*)\n-----END SIGNATURE-----/);
 
     if (!signatureMatch) {
       return {

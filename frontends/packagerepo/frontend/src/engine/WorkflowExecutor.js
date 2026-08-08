@@ -56,7 +56,6 @@ const nodeHandlers = {
     const filtered = input.filter((item) => {
       // Simple condition evaluation
       const condition = params.condition
-        .replace(/item\./g, 'item.')
         .replace(/\$(\w+)/g, (_, key) => JSON.stringify(context[key] || ''));
       try {
         return new Function('item', `return ${condition}`)(item);

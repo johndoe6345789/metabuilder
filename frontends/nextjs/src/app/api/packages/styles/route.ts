@@ -48,15 +48,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     return new NextResponse('Bad Request', { status: 400 })
   }
   try {
-    const p = path.join(
-      process.cwd(),
-      '..',
-      '..',
-      'packages',
-      id,
-      'styles',
-      'tokens.json'
-    )
+    const packagesDir = path.resolve(process.cwd(), '..', '..', 'packages')
+    const p = path.resolve(packagesDir, id, 'styles', 'tokens.json')
+    if (p !== packagesDir && !p.startsWith(packagesDir + path.sep)) {
+      return new NextResponse('Bad Request', { status: 400 })
+    }
     const tokens = JSON.parse(await fs.readFile(p, 'utf-8')) as TokensJson
     return new NextResponse(tokensToCSS(id, tokens), {
       headers: {

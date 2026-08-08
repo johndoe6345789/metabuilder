@@ -333,7 +333,12 @@ export class SMTPRelayExecutor implements INodeExecutor {
   }
 
   private _isValidEmail(email: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // Domain labels exclude '.' so there's no ambiguity in how to split
+    // the string between literal dots and the surrounding character
+    // classes — the unbounded '[^\s@]+\.[^\s@]+' version is a classic
+    // ReDoS: on a non-matching input like "a@a...." it has exponentially
+    // many ways to choose which dot is "the" separator.
+    const emailRegex = /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/;
     return emailRegex.test(email);
   }
 

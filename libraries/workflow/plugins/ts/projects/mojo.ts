@@ -5,7 +5,7 @@
  * Leverages Mojo's Python superset for high-performance computing.
  */
 
-import { execSync } from 'child_process';
+import { execFileSync } from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as os from 'os';
@@ -50,7 +50,7 @@ export async function mojoRun(input: MojoRunInput): Promise<MojoRunOutput> {
       fs.writeFileSync(tempFile, code);
 
       const startTime = Date.now();
-      const output = execSync(`mojo run ${tempFile} ${args.join(' ')}`, {
+      const output = execFileSync('mojo', ['run', tempFile, ...args], {
         cwd: MOJO_PATH,
         encoding: 'utf-8',
         timeout: 60000,
@@ -89,10 +89,10 @@ export async function mojoBuild(input: MojoBuildInput): Promise<MojoBuildOutput>
     fullSourcePath.replace(/\.mojo$/, '');
 
   try {
-    let cmd = `mojo build ${fullSourcePath} -o ${binaryPath}`;
-    if (optimize) cmd += ' -O3';
+    const args = ['build', fullSourcePath, '-o', binaryPath];
+    if (optimize) args.push('-O3');
 
-    execSync(cmd, { cwd: MOJO_PATH });
+    execFileSync('mojo', args, { cwd: MOJO_PATH });
 
     return {
       success: true,
@@ -151,7 +151,7 @@ export async function mojoRunExample(input: {
 
   try {
     const startTime = Date.now();
-    const output = execSync(`mojo run ${examplePath} ${args.join(' ')}`, {
+    const output = execFileSync('mojo', ['run', examplePath, ...args], {
       cwd: MOJO_PATH,
       encoding: 'utf-8',
       timeout: 60000,

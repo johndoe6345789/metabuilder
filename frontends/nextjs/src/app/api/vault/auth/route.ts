@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import {
   createVaultSessionToken,
   getExpectedVaultSessionToken,
+  safeTokenEqual,
   VAULT_COOKIE_NAME,
 } from '../vault-session'
 
@@ -15,7 +16,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Vault master password is not configured' }, { status: 500 })
   }
   const current = request.cookies.get(VAULT_COOKIE_NAME)?.value ?? ''
-  return buildAuthResponse(current === expected)
+  return buildAuthResponse(safeTokenEqual(current, expected))
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -30,7 +31,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ authenticated: false, error: 'Password is required' }, { status: 400 })
   }
 
-  if (createVaultSessionToken(password) !== expected) {
+  if (!safeTokenEqual(createVaultSessionToken(password), expected)) {
     return NextResponse.json({ authenticated: false, error: 'Invalid master password' }, { status: 401 })
   }
 

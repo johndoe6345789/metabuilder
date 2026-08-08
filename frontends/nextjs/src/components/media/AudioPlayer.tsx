@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState, useCallback } from 'react'
+import { isSafeMediaSrc } from './mediaUrl'
 import s from './AudioPlayer.module.scss'
 
 export interface AudioPlayerProps {
@@ -53,7 +54,7 @@ export function AudioPlayer({
     <div className={s.root}>
       <audio
         ref={audioRef}
-        src={src}
+        src={isSafeMediaSrc(src) ? src : undefined}
         onPlay={() => { setPlaying(true) }}
         onPause={() => { setPlaying(false) }}
         onTimeUpdate={() => {

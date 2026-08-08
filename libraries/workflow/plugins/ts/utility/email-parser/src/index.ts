@@ -296,8 +296,12 @@ export class EmailParserExecutor implements INodeExecutor {
   }
 
   private _extractEmail(value: string): string {
-    // Extract email address from "Name <email@domain.com>" format
-    const match = value.match(/<(.+?)>/);
+    // Extract email address from "Name <email@domain.com>" format.
+    // Bounded and excludes '<'/'>' from the captured content: being
+    // unanchored, a non-matching input (e.g. many '<' with no closing
+    // '>') otherwise retries at every '<' position with an unbounded
+    // inner scan each time — O(n^2) instead of O(n).
+    const match = value.match(/<([^<>]{1,320})>/);
     return match ? match[1] : value.trim();
   }
 

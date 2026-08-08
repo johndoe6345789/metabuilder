@@ -129,7 +129,11 @@ export class DBALReadExecutor implements INodeExecutor {
             break;
 
           case 'email':
-            if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+            // Domain labels exclude '.' to avoid the classic ReDoS
+            // ambiguity in '[^\s@]+\.[^\s@]+' (exponentially many ways
+            // to pick which dot is the separator on a non-matching
+            // input).
+            if (value && !/^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/.test(value)) {
               errors[field] = `${field} must be a valid email`;
             }
             break;

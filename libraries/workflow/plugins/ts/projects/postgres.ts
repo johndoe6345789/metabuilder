@@ -5,7 +5,8 @@
  * Integrates with the postgres admin dashboard project.
  */
 
-import { execSync } from 'child_process';
+import { execFileSync, spawnSync } from 'child_process';
+import * as fs from 'fs';
 import * as path from 'path';
 
 export const POSTGRES_PATH = path.resolve(__dirname, '../../../../postgres');
@@ -41,9 +42,13 @@ export interface PostgresTableInfo {
 }
 
 /**
- * Build connection string from config
+ * Build psql/pg_dump environment variables from config.
+ *
+ * Connection details are passed via env (PGHOST/PGPORT/...) rather than
+ * interpolated into a shell string, so the query and connection fields
+ * can never be interpreted as shell syntax.
  */
-function buildConnectionString(config: PostgresConnectionConfig): string {
+function buildPgEnv(config: PostgresConnectionConfig): NodeJS.ProcessEnv {
   const {
     host = 'localhost',
     port = 5432,
@@ -52,10 +57,14 @@ function buildConnectionString(config: PostgresConnectionConfig): string {
     password,
   } = config;
 
-  if (password) {
-    return `postgresql://${user}:${password}@${host}:${port}/${database}`;
-  }
-  return `postgresql://${user}@${host}:${port}/${database}`;
+  return {
+    ...process.env,
+    PGHOST: host,
+    PGPORT: String(port),
+    PGDATABASE: database,
+    PGUSER: user,
+    ...(password ? { PGPASSWORD: password } : {}),
+  };
 }
 
 /**
@@ -63,12 +72,15 @@ function buildConnectionString(config: PostgresConnectionConfig): string {
  */
 export async function postgresQuery(input: PostgresQueryInput): Promise<PostgresQueryOutput> {
   const { query, ...config } = input;
-  const connStr = buildConnectionString(config);
+  const env = buildPgEnv(config);
 
   try {
     // Use psql with JSON output
-    const cmd = `psql "${connStr}" -t -A -c "SELECT json_agg(t) FROM (${query.replace(/"/g, '\\"')}) t"`;
-    const output = execSync(cmd, { encoding: 'utf-8' }).trim();
+    const output = execFileSync(
+      'psql',
+      ['-t', '-A', '-c', `SELECT json_agg(t) FROM (${query}) t`],
+      { encoding: 'utf-8', env }
+    ).trim();
 
     if (!output || output === 'null') {
       return { success: true, rows: [], rowCount: 0 };
@@ -97,12 +109,10 @@ export async function postgresExecute(input: PostgresQueryInput): Promise<{
   error?: string;
 }> {
   const { query, ...config } = input;
-  const connStr = buildConnectionString(config);
+  const env = buildPgEnv(config);
 
   try {
-    const output = execSync(`psql "${connStr}" -c "${query.replace(/"/g, '\\"')}"`, {
-      encoding: 'utf-8',
-    });
+    const output = execFileSync('psql', ['-c', query], { encoding: 'utf-8', env });
 
     // Parse affected rows from output like "UPDATE 5"
     const match = output.match(/(\d+)$/m);
@@ -148,6 +158,13 @@ export async function postgresListTables(
 }
 
 /**
+ * Escape a value for use inside a single-quoted SQL string literal.
+ */
+function escapeSqlLiteral(value: string): string {
+  return value.replace(/'/g, "''");
+}
+
+/**
  * Get table schema/columns
  */
 export async function postgresDescribeTable(
@@ -163,7 +180,7 @@ export async function postgresDescribeTable(
         data_type as type,
         is_nullable = 'YES' as nullable
       FROM information_schema.columns
-      WHERE table_schema = '${schema}' AND table_name = '${table}'
+      WHERE table_schema = '${escapeSqlLiteral(schema)}' AND table_name = '${escapeSqlLiteral(table)}'
       ORDER BY ordinal_position
     `,
   });
@@ -207,16 +224,25 @@ export async function postgresBackup(
   input: PostgresConnectionConfig & { outputPath: string }
 ): Promise<{ success: boolean; backupPath?: string; error?: string }> {
   const { outputPath, ...config } = input;
-  const connStr = buildConnectionString(config);
+  const env = buildPgEnv(config);
 
+  const outFd = fs.openSync(outputPath, 'w');
   try {
-    execSync(`pg_dump "${connStr}" > "${outputPath}"`, { encoding: 'utf-8' });
+    const result = spawnSync('pg_dump', [], { env, stdio: ['ignore', outFd, 'pipe'] });
+    if (result.status !== 0) {
+      return {
+        success: false,
+        error: result.stderr?.toString().trim() || `pg_dump exited with code ${result.status}`,
+      };
+    }
     return { success: true, backupPath: outputPath };
   } catch (error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : String(error),
     };
+  } finally {
+    fs.closeSync(outFd);
   }
 }
 

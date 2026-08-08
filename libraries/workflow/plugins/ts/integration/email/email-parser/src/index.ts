@@ -163,22 +163,50 @@ export class EmailParserExecutor implements INodeExecutor {
   readonly category = 'email-integration';
   readonly description = 'Parse RFC 5322 email messages with MIME multipart support and HTML sanitization';
 
-  // Dangerous HTML tags that could contain XSS vectors
-  private readonly DANGEROUS_TAGS = [
-    'script', 'iframe', 'object', 'embed', 'applet',
-    'meta', 'link', 'style', 'form', 'input', 'button',
-    'textarea', 'select', 'label', 'fieldset', 'legend',
-    'svg', 'math', 'video', 'audio', 'source', 'track'
+  // Block-level elements whose entire content (not just the tag) is
+  // stripped, since it's never safe to display: scripts, embedded
+  // documents, and stylesheets.
+  private readonly BLOCKED_CONTENT_TAGS = ['script', 'iframe', 'style'];
+
+  // Allowlist of tags permitted in sanitized email HTML. Anything not on
+  // this list is stripped. This is deliberately an allowlist rather than
+  // a denylist of "known dangerous" tags: a denylist can never enumerate
+  // every script-capable element HTML defines (e.g. <details ontoggle=
+  // ..>, <marquee onstart=..>, <body onpageshow=..>, <svg onload=..>),
+  // so anything not explicitly recognized as safe is removed.
+  private readonly ALLOWED_TAGS = [
+    'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'br', 'hr', 'div', 'span',
+    'table', 'thead', 'tbody', 'tfoot', 'tr', 'td', 'th', 'ul', 'ol', 'li',
+    'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'pre', 'code', 'img',
+    'font', 'center', 'small', 'sub', 'sup'
   ];
 
-  // Dangerous attributes that could contain event handlers
-  private readonly DANGEROUS_ATTRS = [
-    'onload', 'onerror', 'onmouseover', 'onclick', 'onchange',
-    'onsubmit', 'onkeydown', 'onkeyup', 'onwheel', 'onscroll',
-    'ondrag', 'ondrop', 'onpaste', 'oncopy', 'oncut', 'onwheel',
-    'oncontextmenu', 'ondblclick', 'onfocus', 'onblur',
-    'href', 'src', 'action', 'formaction', 'data', 'poster'
+  // Allowlist of attributes permitted on any allowed tag. Event-handler
+  // attributes (onclick, onerror, ...) are stripped unconditionally
+  // below regardless of name, so there's no need (and no way) to
+  // enumerate every on* handler HTML supports.
+  private readonly ALLOWED_ATTRS = [
+    'href', 'src', 'alt', 'title', 'width', 'height', 'align', 'valign',
+    'class', 'colspan', 'rowspan', 'border', 'cellpadding', 'cellspacing',
+    'style'
   ];
+
+  // URL schemes allowed in href/src attribute values. `cid:` is needed
+  // for inline email attachments (Content-ID references).
+  private readonly ALLOWED_URL_SCHEMES = ['http:', 'https:', 'mailto:', 'cid:'];
+
+  /**
+   * True if a href/src value can't execute script when navigated/loaded.
+   * Strips whitespace/control characters before checking the scheme:
+   * browsers ignore those when evaluating a URL, so `jav\tascript:...`
+   * still executes even though it doesn't contain the literal substring
+   * "javascript:".
+   */
+  private _isSafeUrl(value: string): boolean {
+    const normalized = value.replace(/[\s\x00-\x1f]/g, '').toLowerCase();
+    if (!/^[a-z][a-z0-9+.-]*:/.test(normalized)) return true; // relative/anchor URL
+    return this.ALLOWED_URL_SCHEMES.some(scheme => normalized.startsWith(scheme));
+  }
 
   /**
    * Execute email parsing
@@ -599,11 +627,15 @@ export class EmailParserExecutor implements INodeExecutor {
 
     for (const part of parts) {
       const trimmed = part.trim();
-      // Extract email from angle brackets if present
-      const match = trimmed.match(/<([^>]+)>/);
+      // Extract email from angle brackets if present. Bounded and
+      // excludes '.'/'<'/'>' from the ambiguous parts of these patterns:
+      // being unanchored, a non-matching input otherwise retries at
+      // every '<' (or every '.') with an unbounded inner scan each time
+      // — O(n^2) instead of O(n).
+      const match = trimmed.match(/<([^<>]{1,320})>/);
       if (match) {
         addresses.push(match[1]);
-      } else if (trimmed.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      } else if (trimmed.match(/^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/)) {
         // Direct email address
         addresses.push(trimmed);
       }
@@ -858,53 +890,69 @@ export class EmailParserExecutor implements INodeExecutor {
   private _sanitizeHtml(html: string): { html: string; warnings: number } {
     let warnings = 0;
     let sanitized = html;
+    let previous: string;
 
-    // Remove script tags and content
-    sanitized = sanitized.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, () => {
-      warnings++;
-      return '';
-    });
-
-    // Remove iframe tags
-    sanitized = sanitized.replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, () => {
-      warnings++;
-      return '';
-    });
-
-    // Remove style tags and content
-    sanitized = sanitized.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, () => {
-      warnings++;
-      return '';
-    });
-
-    // Remove event handlers from tags
-    const tagPattern = /<(\w+)[^>]*>/gi;
-    sanitized = sanitized.replace(tagPattern, (match, tagName) => {
-      let result = match;
-
-      // Check if tag is dangerous
-      if (this.DANGEROUS_TAGS.includes(tagName.toLowerCase())) {
+    // Strip <script>/<iframe>/<style> and their content, plus HTML
+    // comments. Looped to a fixed point: a single non-idempotent pass is
+    // bypassable by nesting tags so the removed inner match reconstructs
+    // a new one from the leftover fragments, e.g.
+    // "<scr<script>ipt>payload</scr</script>ipt>" collapses to
+    // "<script>" once the naive middle match is cut out.
+    const blockedTagsAlt = this.BLOCKED_CONTENT_TAGS.join('|');
+    const blockElementPattern = new RegExp(
+      `<(${blockedTagsAlt})\\b[^<]*(?:(?!<\\/\\1>)<[^<]*)*<\\/\\1>`, 'gi'
+    );
+    do {
+      previous = sanitized;
+      sanitized = sanitized.replace(blockElementPattern, () => {
         warnings++;
         return '';
-      }
+      });
+      sanitized = sanitized.replace(/<!--[\s\S]*?-->/g, '');
+    } while (sanitized !== previous);
 
-      // Remove dangerous attributes
-      for (const attr of this.DANGEROUS_ATTRS) {
-        const pattern = new RegExp(`\\s${attr}\\s*=\\s*(?:"[^"]*"|'[^']*'|[^\\s>]*)`, 'gi');
-        if (pattern.test(result)) {
-          warnings++;
-          result = result.replace(pattern, '');
+    // Allowlist remaining tags/attributes: unknown tags are dropped
+    // entirely, and only recognized, non-event-handler attributes with
+    // safe URL schemes survive. Also looped to a fixed point for the
+    // same reconstruction-bypass reason as above.
+    const tagPattern = /<(\/?)([a-zA-Z][a-zA-Z0-9]*)((?:\s+[^<>]*)?)\/?>/g;
+    const attrPattern = /([a-zA-Z][a-zA-Z0-9-]*)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]*))/g;
+    do {
+      previous = sanitized;
+      sanitized = sanitized.replace(
+        tagPattern,
+        (match: string, closingSlash: string, tagName: string, attrsPart: string) => {
+          const name = tagName.toLowerCase();
+
+          if (!this.ALLOWED_TAGS.includes(name)) {
+            warnings++;
+            return '';
+          }
+          if (closingSlash || !attrsPart) {
+            return `<${closingSlash}${name}>`;
+          }
+
+          let cleanedAttrs = '';
+          for (const attrMatch of attrsPart.matchAll(attrPattern)) {
+            const attrName = attrMatch[1].toLowerCase();
+            const attrValue = attrMatch[2] ?? attrMatch[3] ?? attrMatch[4] ?? '';
+
+            if (attrName.startsWith('on') || !this.ALLOWED_ATTRS.includes(attrName)) {
+              warnings++;
+              continue;
+            }
+            if ((attrName === 'href' || attrName === 'src') && !this._isSafeUrl(attrValue)) {
+              warnings++;
+              continue;
+            }
+            cleanedAttrs += ` ${attrName}="${attrValue.replace(/"/g, '&quot;')}"`;
+          }
+
+          const selfClosing = match.endsWith('/>') ? ' /' : '';
+          return `<${name}${cleanedAttrs}${selfClosing}>`;
         }
-      }
-
-      return result;
-    });
-
-    // Remove closing tags for removed elements
-    for (const tag of this.DANGEROUS_TAGS) {
-      const pattern = new RegExp(`</${tag}>`, 'gi');
-      sanitized = sanitized.replace(pattern, '');
-    }
+      );
+    } while (sanitized !== previous);
 
     return { html: sanitized, warnings };
   }

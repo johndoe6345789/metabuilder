@@ -17,9 +17,15 @@ function readLocalPlatform(): string {
   return localStorage.getItem('ai_platform') || DEFAULT_PLATFORM_ID
 }
 
+// API keys are kept in memory only, never written to localStorage: they're
+// secrets, and Web Storage is plaintext and readable by any script on the
+// origin. The DBAL server (see handleSave/handleClear below) is the
+// persistent store; this cache just avoids an extra round trip while the
+// user is actively editing settings in the current tab.
+const inMemoryKeyCache = new Map<string, string>()
+
 function readLocalKey(platformId: string): string {
-  if (typeof window === 'undefined') return ''
-  return localStorage.getItem(`ai_key_${platformId}`) || ''
+  return inMemoryKeyCache.get(platformId) || ''
 }
 
 export function useOpenAISettings() {
@@ -63,9 +69,9 @@ export function useOpenAISettings() {
   const handleSave = async () => {
     localStorage.setItem('ai_platform', platformId)
     if (apiKey.trim()) {
-      localStorage.setItem(`ai_key_${platformId}`, apiKey.trim())
+      inMemoryKeyCache.set(platformId, apiKey.trim())
     } else {
-      localStorage.removeItem(`ai_key_${platformId}`)
+      inMemoryKeyCache.delete(platformId)
     }
 
     const flask = baseUrl()
@@ -98,7 +104,7 @@ export function useOpenAISettings() {
 
   const handleClear = async () => {
     setApiKey('')
-    localStorage.removeItem(`ai_key_${platformId}`)
+    inMemoryKeyCache.delete(platformId)
 
     const flask = baseUrl()
     const token = getAuthToken()
