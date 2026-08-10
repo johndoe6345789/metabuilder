@@ -85,8 +85,10 @@ COPY --from=builder /dbal/shared/api/schema/queries   /app/schemas/queries
 # Embed seed data
 COPY --from=builder /dbal/shared/seeds/database /app/seeds/database
 
-# Create data directories
-RUN mkdir -p /app/data/blobs
+# Create data directories (pre-create volume mount points so a fresh named
+# volume inherits dbal:dbal ownership from the image instead of defaulting
+# to root, which would block the non-root runtime user from writing to it)
+RUN mkdir -p /app/data/blobs /app/keys /var/log/dbal
 
 # Default config (overridden by docker-compose env vars + mounted config)
 RUN echo "# DBAL Configuration" > /app/config.yaml
