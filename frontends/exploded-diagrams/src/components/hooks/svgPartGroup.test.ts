@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderPartGroup } from './svgPartGroup'
 import type { Part, Geometry } from '@/lib/types'
 import type { PositionedPart } from '@/lib/collision'
