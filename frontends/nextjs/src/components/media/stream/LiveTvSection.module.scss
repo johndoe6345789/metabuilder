@@ -1,0 +1,111 @@
+.guide {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 180px 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: var(--card, #fff);
+  border: 1px solid var(--border, #eee);
+}
+
+.channelInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.channelNumber {
+  font-family: monospace;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--muted-foreground, #888);
+  min-width: 1.5em;
+}
+
+.liveBadge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: #c62828;
+  color: #fff;
+}
+
+.nowNext {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.programTitle {
+  font-weight: 600 !important;
+}
+
+.progressTrack {
+  height: 3px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--foreground, #000) 10%, transparent);
+  overflow: hidden;
+  max-width: 240px;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--primary, #6750A4);
+  transition: width 1s linear;
+}
+
+.upNext {
+  display: block;
+}
+
+.watchBtn {
+  padding: 9px 20px;
+  border-radius: 16px;
+  border: none;
+  background: var(--primary, #6750A4);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+
+  &:hover:not(:disabled) { opacity: 0.88; }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+}
+
+.player {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.playerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.backBtn {
+  padding: 8px 16px;
+  border-radius: 14px;
+  border: 1.5px solid var(--border, #ddd);
+  background: transparent;
+  color: var(--foreground);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover { background: color-mix(in srgb, var(--foreground, #000) 5%, transparent); }
+}
