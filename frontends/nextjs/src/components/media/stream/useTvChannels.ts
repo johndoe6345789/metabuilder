@@ -35,7 +35,7 @@ export interface TvChannel {
   next_program?: TvProgram
 }
 
-interface EpgEntry {
+export interface EpgEntry {
   channel_id: string
   channel_name: string
   program: TvProgram
@@ -51,6 +51,10 @@ interface EpgEntry {
 export interface ScheduledChannel extends TvChannel {
   epgNow?: EpgEntry
   epgNext?: EpgEntry
+  // Full sorted schedule within the fetched window (see refresh()'s
+  // ?hours= query) — the grid needs every entry, not just now/next, to
+  // draw a real timeline.
+  epgEntries: EpgEntry[]
 }
 
 export function useTvChannels() {
@@ -72,15 +76,15 @@ export function useTvChannels() {
 
       const now = Date.now()
       const merged: ScheduledChannel[] = channelsData.channels.map(ch => {
-        const forChannel = epgData.epg.filter(e => e.channel_id === ch.id)
+        const forChannel = epgData.epg
+          .filter(e => e.channel_id === ch.id)
+          .sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime())
         const epgNow = forChannel.find(
           e => new Date(e.start_time).getTime() <= now &&
                new Date(e.end_time).getTime() > now,
         )
-        const epgNext = forChannel
-          .filter(e => new Date(e.start_time).getTime() > now)
-          .sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime())[0]
-        return { ...ch, epgNow, epgNext }
+        const epgNext = forChannel.find(e => new Date(e.start_time).getTime() > now)
+        return { ...ch, epgNow, epgNext, epgEntries: forChannel }
       })
 
       setChannels(merged)

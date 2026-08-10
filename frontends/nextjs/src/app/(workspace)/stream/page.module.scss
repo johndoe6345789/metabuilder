@@ -1,17 +1,308 @@
+// ============================================================================
+// MetaBuilder Stream — atmospheric indigo/violet glow with glass panels
+// floating on top, deliberately distinct from the app's light dashboard
+// chrome around it. Every color below is scoped to .root; nothing leaks out.
+// ============================================================================
+
 .root {
+  --sh-bg: #0b0a1f;
+  --sh-bg-raised: rgba(255, 255, 255, 0.045);
+  --sh-card: rgba(20, 16, 46, 0.55);
+  --sh-card-hover: rgba(32, 26, 68, 0.7);
+  --sh-border: rgba(210, 200, 255, 0.1);
+  --sh-border-strong: rgba(210, 200, 255, 0.2);
+  --sh-text: #f6f4fb;
+  --sh-text-dim: #a9a3c4;
+  --sh-red: #ff3b5c;
+  --sh-red-soft: rgba(255, 59, 92, 0.35);
+  --sh-display: 'Outfit', 'IBM Plex Sans', sans-serif;
+  --sh-body: 'IBM Plex Sans', sans-serif;
+
+  // Shared components (AudioPlayer, VideoPlayer, RetroLauncher) style
+  // themselves off these ambient var names, not --sh-*, so they can live
+  // in the app's light chrome elsewhere. Overriding them here — instead of
+  // forking those components — means they render correctly on-theme inside
+  // this hub for free, with zero changes to files other pages also use.
+  --foreground: var(--sh-text);
+  --muted-foreground: var(--sh-text-dim);
+  --card: var(--sh-card);
+  --border: var(--sh-border);
+  --primary: var(--sh-red);
+
+  position: relative;
+  border-radius: 28px;
+  overflow: hidden;
+  color: var(--sh-text);
+  font-family: var(--sh-body);
+  padding: 28px 28px 40px;
+  isolation: isolate;
+
+  // One continuous atmosphere behind the whole hub — glass panels below
+  // float on top of this rather than each carrying its own flat background,
+  // so the glow reads as one scene, not a stack of separate boxes.
+  background:
+    radial-gradient(ellipse 60% 50% at 15% -5%, rgba(139, 92, 246, 0.45), transparent 55%),
+    radial-gradient(ellipse 45% 40% at 92% 8%, rgba(255, 95, 168, 0.32), transparent 50%),
+    radial-gradient(ellipse 55% 55% at 75% 95%, rgba(77, 127, 255, 0.35), transparent 55%),
+    radial-gradient(ellipse 40% 40% at 5% 90%, rgba(255, 159, 67, 0.16), transparent 50%),
+    linear-gradient(180deg, #120f2e, var(--sh-bg) 55%);
+}
+
+// Faint grain wash across the whole panel — keeps the glow from looking
+// like a flat digital gradient, adds a touch of broadcast-monitor texture.
+.root::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.03;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+// ============================================================================
+// Hero
+// ============================================================================
+
+@keyframes heroFadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero {
+  --hue: 265;
+  position: relative;
+  border-radius: 22px;
+  padding: 52px 44px;
+  overflow: hidden;
+  background: var(--sh-bg-raised);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--sh-border);
+  animation: heroFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.heroGlow {
+  position: absolute;
+  inset: -40% -10% auto -10%;
+  height: 130%;
+  background: radial-gradient(
+    ellipse 60% 70% at 25% 0%,
+    hsl(var(--hue) 85% 60% / 0.4),
+    transparent 70%
+  );
+  filter: blur(20px);
+  pointer-events: none;
+}
+
+.heroNoise {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 80% 60% at 85% 100%, hsl(calc(var(--hue) + 60) 85% 60% / 0.22), transparent 70%);
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  max-width: 640px;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 14px;
+}
+
+.heroEyebrow {
+  font-family: var(--sh-display);
+  font-weight: 600;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sh-text-dim);
+}
+
+@keyframes pulseDot {
+  0%, 100% { box-shadow: 0 0 0 0 var(--sh-red-soft); }
+  70% { box-shadow: 0 0 0 8px transparent; }
+}
+
+.pulseDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--sh-red);
+  animation: pulseDot 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.heroLive {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  font-family: var(--sh-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--sh-red);
+  background: rgba(255, 59, 92, 0.12);
+  border: 1px solid rgba(255, 59, 92, 0.3);
+  padding: 6px 14px 6px 10px;
+  border-radius: 100px;
+}
+
+.heroTitle {
+  font-family: var(--sh-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.heroSub {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--sh-text-dim);
+  margin: 0;
+  max-width: 52ch;
+}
+
+.heroMeta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 6px;
+}
+
+.heroProgress {
+  width: 200px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.heroProgressFill {
   height: 100%;
+  background: linear-gradient(90deg, hsl(var(--hue) 85% 65%), var(--sh-red));
+  transition: width 1s linear;
+  border-radius: 2px;
 }
 
-.header {
-  padding: 0 0 20px;
+.heroNext {
+  font-size: 0.82rem;
+  color: var(--sh-text-dim);
+}
+
+.heroCta {
+  margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  padding: 14px 30px;
+  border-radius: 100px;
+  border: none;
+  background: var(--sh-red);
+  color: #fff;
+  font-family: var(--sh-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  box-shadow: 0 8px 24px -8px var(--sh-red-soft);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 12px 32px -8px rgba(255, 59, 92, 0.55);
+  }
+  &:active { transform: translateY(0) scale(0.98); }
+}
+
+.heroCtaIcon {
+  font-size: 0.7rem;
+}
+
+// ============================================================================
+// Pill navigation
+// ============================================================================
+
+.pillNav {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: fit-content;
+  min-width: 480px;
+  margin: 28px 0 24px;
+  padding: 5px;
+  border-radius: 100px;
+  background: var(--sh-bg-raised);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--sh-border);
+  animation: heroFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+.pillIndicator {
+  position: absolute;
+  inset: 5px;
+  width: calc((100% - 10px) / 3);
+  border-radius: 100px;
+  background: var(--sh-card-hover);
+  border: 1px solid var(--sh-border-strong);
+  transform: translateX(calc(var(--pos, 0) * 100%));
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 0;
+}
+
+.pill {
+  position: relative;
+  z-index: 1;
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 20px;
+  border: none;
+  background: transparent;
+  color: var(--sh-text-dim);
+  font-family: var(--sh-display);
+  font-weight: 600;
+  font-size: 0.86rem;
+  cursor: pointer;
+  border-radius: 100px;
+  transition: color 0.25s;
+  white-space: nowrap;
+
+  &[data-active='true'] { color: var(--sh-text); }
+  &:hover { color: var(--sh-text); }
 }
 
-.tabs {
-  margin-bottom: 0;
+.pillGlyph {
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+// ============================================================================
+// Panel stage
+// ============================================================================
+
+.panelStage {
+  animation: heroFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
+}
+
+@keyframes panelIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.panel {
+  animation: panelIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.retroShell {
+  padding: 28px;
+  border-radius: 20px;
+  background: var(--sh-card);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--sh-border);
 }

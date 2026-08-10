@@ -1,111 +1,108 @@
-.guide {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+// Reads the --sh-* custom properties defined on .root in the parent page
+// (frontends/nextjs/.../stream/page.module.scss) — CSS custom properties
+// cascade through the real DOM regardless of which CSS Module file defines
+// them, so this file and RadioSection's/EpgGrid's share one palette without
+// duplicating it.
+
+.status {
+  color: var(--sh-text-dim);
+  font-size: 0.9rem;
+  padding: 40px 0;
+  text-align: center;
 }
 
-.row {
-  display: grid;
-  grid-template-columns: 180px 1fr auto;
-  align-items: center;
-  gap: 16px;
-  padding: 12px 16px;
-  border-radius: 14px;
-  background: var(--card, #fff);
-  border: 1px solid var(--border, #eee);
+.statusError {
+  color: var(--sh-red);
+  font-size: 0.9rem;
+  padding: 40px 0;
+  text-align: center;
 }
 
-.channelInfo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
+// ============================================================================
+// Full-bleed player
+// ============================================================================
+
+@keyframes playerIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
 }
 
-.channelNumber {
-  font-family: monospace;
-  font-weight: 700;
-  font-size: 0.85rem;
-  color: var(--muted-foreground, #888);
-  min-width: 1.5em;
-}
-
-.liveBadge {
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  padding: 2px 6px;
-  border-radius: 6px;
-  background: #c62828;
-  color: #fff;
-}
-
-.nowNext {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
-}
-
-.programTitle {
-  font-weight: 600 !important;
-}
-
-.progressTrack {
-  height: 3px;
-  border-radius: 2px;
-  background: color-mix(in srgb, var(--foreground, #000) 10%, transparent);
-  overflow: hidden;
-  max-width: 240px;
-}
-
-.progressFill {
-  height: 100%;
-  background: var(--primary, #6750A4);
-  transition: width 1s linear;
-}
-
-.upNext {
-  display: block;
-}
-
-.watchBtn {
-  padding: 9px 20px;
-  border-radius: 16px;
-  border: none;
-  background: var(--primary, #6750A4);
-  color: #fff;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: opacity 0.15s;
-
-  &:hover:not(:disabled) { opacity: 0.88; }
-  &:disabled { opacity: 0.4; cursor: not-allowed; }
+@keyframes liveDotPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
 }
 
 .player {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
+  animation: playerIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .playerHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
+}
+
+.playerTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.playerLive {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sh-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--sh-red);
+  background: rgba(255, 59, 92, 0.12);
+  border: 1px solid rgba(255, 59, 92, 0.3);
+  padding: 5px 12px;
+  border-radius: 100px;
+}
+
+.playerLiveDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--sh-red);
+  animation: liveDotPulse 1.6s ease-in-out infinite;
+}
+
+.playerTitle {
+  font-family: var(--sh-display);
+  font-weight: 700;
+  font-size: 1.3rem;
+  margin: 0;
+  color: var(--sh-text);
 }
 
 .backBtn {
-  padding: 8px 16px;
-  border-radius: 14px;
-  border: 1.5px solid var(--border, #ddd);
-  background: transparent;
-  color: var(--foreground);
-  font-size: 0.85rem;
+  padding: 9px 18px;
+  border-radius: 100px;
+  border: 1px solid var(--sh-border-strong);
+  background: var(--sh-card);
+  backdrop-filter: blur(16px);
+  color: var(--sh-text);
+  font-family: var(--sh-display);
+  font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
 
-  &:hover { background: color-mix(in srgb, var(--foreground, #000) 5%, transparent); }
+  &:hover { background: var(--sh-card-hover); }
+}
+
+.playerFrame {
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--sh-border);
+  background: #000;
 }
