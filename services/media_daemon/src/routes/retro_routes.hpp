@@ -17,7 +17,7 @@ namespace media::routes {
  */
 class RetroRoutes {
 public:
-    explicit RetroRoutes(JobQueue& jq) : job_queue_(jq) {}
+    RetroRoutes(JobQueue& jq, PluginManager& pm) : job_queue_(jq), plugin_manager_(pm) {}
 
     void handle_create_session(
         const drogon::HttpRequestPtr& req,
@@ -43,6 +43,7 @@ public:
 
 private:
     JobQueue& job_queue_;
+    PluginManager& plugin_manager_;
     // Maps session_id → job_id for fast lookup
     std::map<std::string, std::string> session_to_job_;
     std::mutex sessions_mutex_;

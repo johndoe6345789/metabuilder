@@ -86,6 +86,13 @@ void JobQueue::start() {
         );
     }
 
+    // Retro session workers
+    for (int i = 0; i < config_.retro_workers; ++i) {
+        typed_workers_[JobType::RetroSession].emplace_back(
+            [this, i]() { worker_thread(JobType::RetroSession, i); }
+        );
+    }
+
     // Cleanup thread
     cleanup_thread_ = std::thread([this]() { cleanup_thread(); });
 

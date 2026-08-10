@@ -1,4 +1,5 @@
 #include "routes/retro_routes.hpp"
+#include "media/plugins/libretro_plugin.hpp"
 #include <json/json.h>
 #include <cstdlib>
 #include <sstream>
@@ -6,6 +7,20 @@
 #include <iomanip>
 
 namespace media::routes {
+
+namespace {
+// Matches the button name strings frontends/nextjs's RetroLauncher.tsx sends
+// (BUTTONS array) to the standard libretro RETRO_DEVICE_ID_JOYPAD_* ids.
+int button_name_to_retro_id(const std::string& name) {
+    static const std::map<std::string, int> table = {
+        {"b", 0}, {"y", 1}, {"select", 2}, {"start", 3},
+        {"up", 4}, {"down", 5}, {"left", 6}, {"right", 7},
+        {"a", 8}, {"x", 9}, {"l", 10}, {"r", 11},
+    };
+    auto it = table.find(name);
+    return it != table.end() ? it->second : -1;
+}
+} // namespace
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -125,6 +140,13 @@ void RetroRoutes::handle_stop_session(
         job_id = it->second;
         session_to_job_.erase(it);
     }
+    // job_queue_.cancel() only updates JobQueue's own bookkeeping — it never
+    // reaches a plugin already inside process() (see JobQueue::cancel()).
+    // The libretro plugin's own cancel() is what actually stops the running
+    // session's frame loop.
+    if (auto* plugin = plugin_manager_.get_plugin("libretro")) {
+        static_cast<plugins::LibretroPlugin*>(plugin)->cancel(job_id);
+    }
     job_queue_.cancel(job_id);
     auto r = drogon::HttpResponse::newHttpResponse();
     r->setStatusCode(drogon::k204NoContent);
@@ -147,14 +169,30 @@ void RetroRoutes::handle_send_input(
     auto json = req->getJsonObject();
     if (!json) { cb(err("Invalid JSON", drogon::k400BadRequest)); return; }
 
-    // Input relay to libretro core via job queue side-channel
-    // Full implementation: job worker holds a shared input queue;
-    // this handler enqueues the button event.
-    // For now we acknowledge the input — the libretro plugin reads it.
+    const std::string button = (*json)["button"].asString();
+    const bool pressed = (*json)["pressed"].asBool();
+    const int retro_id = button_name_to_retro_id(button);
+    if (retro_id < 0) {
+        cb(err("Unknown button: " + button, drogon::k400BadRequest));
+        return;
+    }
+
+    auto* plugin = plugin_manager_.get_plugin("libretro");
+    if (!plugin) {
+        cb(err("Libretro plugin unavailable", drogon::k503ServiceUnavailable));
+        return;
+    }
+    // player 0 only — frontends/nextjs's RetroLauncher is single-player today
+    auto result = static_cast<plugins::LibretroPlugin*>(plugin)->send_input(session_id, 0, retro_id, pressed);
+    if (result.is_error()) {
+        cb(err(result.error_message(), drogon::k404NotFound));
+        return;
+    }
+
     Json::Value resp;
     resp["session_id"] = session_id;
-    resp["button"]     = (*json)["button"].asString();
-    resp["pressed"]    = (*json)["pressed"].asBool();
+    resp["button"]     = button;
+    resp["pressed"]    = pressed;
     resp["queued"]     = true;
     cb(json_ok(resp));
 }

@@ -115,6 +115,7 @@ int main(int argc, char* argv[]) {
     config.job_queue.audio_workers = get_env_int("MEDIA_AUDIO_WORKERS", 4);
     config.job_queue.document_workers = get_env_int("MEDIA_DOC_WORKERS", 4);
     config.job_queue.image_workers = get_env_int("MEDIA_IMAGE_WORKERS", 8);
+    config.job_queue.retro_workers = get_env_int("MEDIA_RETRO_WORKERS", 2);
     config.job_queue.temp_dir = get_env("MEDIA_TEMP_DIR", "/data/temp");
     config.job_queue.output_dir = get_env("MEDIA_OUTPUT_DIR", "/data/output");
     

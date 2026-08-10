@@ -1468,6 +1468,11 @@ services:
     profiles: [media]
     volumes:
       - hls-output:/data/hls:ro
+    ports:
+      # retro_routes.cpp's MEDIA_HLS_HOST default (http://localhost:8088) and
+      # the nginx-stream.conf comment both assume this — browsers need a host
+      # port since they never reach the Docker-internal network directly.
+      - "8088:80"
     depends_on:
       - media-daemon
     healthcheck:

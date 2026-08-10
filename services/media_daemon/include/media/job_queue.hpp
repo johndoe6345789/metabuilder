@@ -23,6 +23,12 @@ struct JobQueueConfig {
     int audio_workers = 4;
     int document_workers = 4;
     int image_workers = 8;
+    // Each retro session runs one core for its entire lifetime on a worker
+    // thread. LibretroPlugin allows only one *active* core process-wide
+    // regardless of this count (see core_slot_mutex_ in libretro_plugin.hpp),
+    // so a value above 1 just means extra session requests fail fast with a
+    // clear "already active" error instead of sitting queued indefinitely.
+    int retro_workers = 2;
     
     // Directories
     std::string temp_dir = "/data/temp";

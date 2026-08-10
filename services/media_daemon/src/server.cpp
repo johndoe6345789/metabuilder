@@ -1,6 +1,7 @@
 #include "media/server.hpp"
 #include "media/plugins/ffmpeg_plugin.hpp"
 #include "media/plugins/pandoc_plugin.hpp"
+#include "media/plugins/libretro_plugin.hpp"
 #include "media/stream_broadcaster.hpp"
 #include <drogon/drogon.h>
 #include <iostream>
@@ -122,7 +123,7 @@ Result<void> Server::initialize(const ServerConfig& config) {
     impl_->radio->set_broadcaster(impl_->broadcaster.get());
     impl_->tv = std::make_unique<routes::TvRoutes>(*tv_engine_);
     impl_->plugins = std::make_unique<routes::PluginRoutes>(*plugin_manager_);
-    impl_->retro = std::make_unique<routes::RetroRoutes>(*job_queue_);
+    impl_->retro = std::make_unique<routes::RetroRoutes>(*job_queue_, *plugin_manager_);
 
     // Set up Drogon
     setup_middleware();
@@ -509,6 +510,18 @@ Result<void> Server::register_builtin_plugins() {
     auto reg2 = plugin_manager_->register_builtin(std::move(pandoc));
     if (reg2.is_error()) {
         std::cerr << "[Server] Pandoc registration failed: " << reg2.error_message() << std::endl;
+    }
+
+    // Libretro plugin
+    auto libretro = std::make_unique<plugins::LibretroPlugin>();
+    auto libretro_init = libretro->initialize("");
+    if (libretro_init.is_error()) {
+        std::cerr << "[Server] Libretro plugin init warning: "
+                  << libretro_init.error_message() << std::endl;
+    }
+    auto reg3 = plugin_manager_->register_builtin(std::move(libretro));
+    if (reg3.is_error()) {
+        std::cerr << "[Server] Libretro registration failed: " << reg3.error_message() << std::endl;
     }
 
     return Result<void>::ok();
