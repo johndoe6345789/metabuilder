@@ -1,0 +1,35 @@
+{
+  "entity": "SeedFingerprint",
+  "version": "1.0",
+  "description": "Tracks the content hash of each bootstrap seed record (metadata.bootstrap=true in seeds/database/*.json) as last applied by SeedLoaderAction. Lets the seed loader tell 'the seed file changed since we last applied it' (reconcile) apart from 'an operator changed the live row through a real write path since then' (leave alone) — see seed_loader_action.cpp. System-managed — never reachable through the generic entity API.",
+  "fields": {
+    "id": {
+      "type": "string",
+      "primary": true,
+      "description": "\"{entity}:{recordId}\" composite key"
+    },
+    "entity": {
+      "type": "string",
+      "required": true
+    },
+    "recordId": {
+      "type": "string",
+      "required": true
+    },
+    "fingerprint": {
+      "type": "string",
+      "required": true,
+      "description": "SHA-256 hex digest of the seed record's canonical JSON as last applied"
+    },
+    "appliedAt": {
+      "type": "bigint",
+      "required": true
+    }
+  },
+  "acl": {
+    "create": { "system": true },
+    "read": { "system": true },
+    "update": { "system": true },
+    "delete": { "system": true }
+  }
+}

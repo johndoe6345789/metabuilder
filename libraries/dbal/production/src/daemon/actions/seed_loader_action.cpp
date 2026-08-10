@@ -12,11 +12,73 @@
 #include <nlohmann/json.hpp>
 #include <spdlog/spdlog.h>
 
+#include "../../security/crypto/sha256.hpp"
+
 namespace fs = std::filesystem;
 
 namespace dbal {
 namespace daemon {
 namespace actions {
+
+namespace {
+
+int64_t nowMs() {
+    return std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::system_clock::now().time_since_epoch()
+    ).count();
+}
+
+// nlohmann::json's default object_t is a std::map, so dump() serializes
+// object keys in sorted order regardless of source insertion order — that
+// makes this a stable fingerprint of the seed record's content.
+std::string fingerprintOf(const nlohmann::json& record) {
+    return dbal::security::sha256_hex(record.dump());
+}
+
+// Bootstrap reconciliation (see loadSeedFile) must tell "the seed file
+// changed since we last applied it" (should propagate to the DB) apart from
+// "an operator changed the live row through a real write path since then,
+// e.g. POST /admin/credentials" (must NOT be clobbered on the next plain
+// restart). SeedFingerprint remembers the seed content we last applied per
+// bootstrap record so that distinction survives restarts. A record with no
+// stored fingerprint yet (upgrading a pre-existing deployment) is treated
+// as needing reconciliation once, then tracked from that point on.
+bool bootstrapNeedsReconcile(Client& client, const std::string& entity_name,
+                              const std::string& record_id, const std::string& current_fingerprint) {
+    auto existing = client.getEntity("SeedFingerprint", entity_name + ":" + record_id);
+    if (!existing.isOk()) return true;
+    return existing.value().value("fingerprint", std::string()) != current_fingerprint;
+}
+
+void recordBootstrapFingerprint(Client& client, const std::string& entity_name,
+                                 const std::string& record_id, const std::string& fingerprint) {
+    std::string tracking_id = entity_name + ":" + record_id;
+    nlohmann::json tracking_record = {
+        {"id", tracking_id},
+        {"entity", entity_name},
+        {"recordId", record_id},
+        {"fingerprint", fingerprint},
+        {"appliedAt", nowMs()},
+    };
+
+    auto create_result = client.createEntity("SeedFingerprint", tracking_record);
+    if (create_result.isOk()) return;
+    if (create_result.error().code() != ErrorCode::Conflict) {
+        spdlog::warn("Seed: failed to record fingerprint for {} id={}: {}",
+                     entity_name, record_id, create_result.error().what());
+        return;
+    }
+    auto update_result = client.updateEntity("SeedFingerprint", tracking_id, nlohmann::json{
+        {"fingerprint", fingerprint},
+        {"appliedAt", nowMs()},
+    });
+    if (!update_result.isOk()) {
+        spdlog::warn("Seed: failed to update fingerprint for {} id={}: {}",
+                     entity_name, record_id, update_result.error().what());
+    }
+}
+
+} // namespace
 
 std::string SeedLoaderAction::getDefaultSeedDir() {
     const char* env = std::getenv("DBAL_SEED_DIR");
@@ -142,15 +204,27 @@ std::vector<SeedResult> SeedLoaderAction::loadSeedFile(Client& client, const std
                     auto create_result = client.createEntity(entity_name, record);
                     if (create_result.isOk()) {
                         result.inserted++;
+                        if (bootstrap && record.contains("id") && record["id"].is_string()) {
+                            recordBootstrapFingerprint(client, entity_name, record["id"].get<std::string>(),
+                                                        fingerprintOf(record));
+                        }
                     } else if (create_result.error().code() == ErrorCode::Conflict) {
                         std::string id_str = record.contains("id") ? record["id"].dump() : "unknown";
-                        if (bootstrap && record.contains("id") && record["id"].is_string()) {
-                            // Bootstrap fixture already exists — reconcile it to the seed's
-                            // declared state (e.g. a stale password hash from before a
-                            // hashing algorithm migration) instead of leaving it wrong forever.
-                            auto update_result = client.updateEntity(entity_name, record["id"].get<std::string>(), record);
+                        bool bootstrap_record = bootstrap && record.contains("id") && record["id"].is_string();
+                        std::string record_id = bootstrap_record ? record["id"].get<std::string>() : std::string();
+                        std::string current_fingerprint = bootstrap_record ? fingerprintOf(record) : std::string();
+
+                        if (bootstrap_record && bootstrapNeedsReconcile(client, entity_name, record_id, current_fingerprint)) {
+                            // The seed file's content for this bootstrap record changed since
+                            // we last applied it (or this is the first run tracking it at all)
+                            // — reconcile the DB to match. If the DB instead drifted because an
+                            // operator wrote to it directly (e.g. POST /admin/credentials) while
+                            // the seed file stayed the same, bootstrapNeedsReconcile returns false
+                            // and that write is left alone.
+                            auto update_result = client.updateEntity(entity_name, record_id, record);
                             if (update_result.isOk()) {
                                 result.updated++;
+                                recordBootstrapFingerprint(client, entity_name, record_id, current_fingerprint);
                                 spdlog::debug("Seed: {} id={} already exists, reconciled to seed", entity_name, id_str);
                             } else {
                                 result.failed++;
@@ -160,7 +234,9 @@ std::vector<SeedResult> SeedLoaderAction::loadSeedFile(Client& client, const std
                                 spdlog::warn("Seed: {}", err);
                             }
                         } else {
-                            // Record already exists (duplicate primary key) — idempotent, skip silently
+                            // Record already exists (duplicate primary key) — idempotent, skip silently.
+                            // For bootstrap records, this also covers "the DB already matches what
+                            // we last applied, or has been intentionally changed since — don't touch it".
                             result.skipped++;
                             spdlog::debug("Seed: {} id={} already exists, skipping", entity_name, id_str);
                         }
