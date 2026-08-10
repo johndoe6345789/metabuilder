@@ -410,9 +410,25 @@ void Server::setup_routes() {
         [this](const drogon::HttpRequestPtr& req,
                std::function<void(const drogon::HttpResponsePtr&)>&& cb,
                const std::string& id) {
-            impl_->tv->handle_get_schedule(req, std::move(cb), id);
+            if (req->getMethod() == drogon::Put) {
+                impl_->tv->handle_set_schedule(req, std::move(cb), id);
+            } else if (req->getMethod() == drogon::Post) {
+                impl_->tv->handle_add_program(req, std::move(cb), id);
+            } else {
+                impl_->tv->handle_get_schedule(req, std::move(cb), id);
+            }
         },
-        {drogon::Get}
+        {drogon::Get, drogon::Put, drogon::Post}
+    );
+
+    drogon::app().registerHandler(
+        "/api/tv/channels/{id}/schedule/{program_id}",
+        [this](const drogon::HttpRequestPtr& req,
+               std::function<void(const drogon::HttpResponsePtr&)>&& cb,
+               const std::string& id, const std::string& program_id) {
+            impl_->tv->handle_remove_program(req, std::move(cb), id, program_id);
+        },
+        {drogon::Delete}
     );
 
     drogon::app().registerHandler(

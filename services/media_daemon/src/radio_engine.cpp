@@ -235,26 +235,35 @@ Result<std::string> RadioEngine::start_channel(const std::string& channel_id) {
 }
 
 Result<void> RadioEngine::stop_channel(const std::string& channel_id) {
-    std::lock_guard<std::mutex> lock(channels_mutex_);
-
-    auto it = channels_.find(channel_id);
-    if (it == channels_.end()) {
-        return Result<void>::error(ErrorCode::NOT_FOUND, "Channel not found: " + channel_id);
+    // stream_thread()'s loop re-acquires channels_mutex_ every iteration —
+    // holding that same mutex across .join() here deadlocks against it (same
+    // bug, same fix, as TvEngine::stop_channel — see its comment). The state
+    // pointer stays valid unlocked since channels_ entries are only ever
+    // added, never erased.
+    RadioChannelState* state = nullptr;
+    {
+        std::lock_guard<std::mutex> lock(channels_mutex_);
+        auto it = channels_.find(channel_id);
+        if (it == channels_.end()) {
+            return Result<void>::error(ErrorCode::NOT_FOUND, "Channel not found: " + channel_id);
+        }
+        state = it->second.get();
+        if (!state->is_running.load()) {
+            return Result<void>::ok();  // Already stopped
+        }
+        state->is_running.store(false);
+        state->cv.notify_all();
     }
 
-    auto& state = it->second;
-    if (!state->is_running.load()) {
-        return Result<void>::ok();  // Already stopped
-    }
-
-    state->is_running.store(false);
-    state->cv.notify_all();
     if (state->stream_thread.joinable()) {
         state->stream_thread.join();
     }
 
-    state->status.is_live = false;
-    state->status.now_playing = std::nullopt;
+    {
+        std::lock_guard<std::mutex> lock(channels_mutex_);
+        state->status.is_live = false;
+        state->status.now_playing = std::nullopt;
+    }
 
     std::cout << "[RadioEngine] Stopped channel: " << channel_id << std::endl;
 

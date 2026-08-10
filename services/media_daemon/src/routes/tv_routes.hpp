@@ -44,6 +44,26 @@ public:
         const std::string& channel_id
     );
 
+    // Bulk-replace a channel's schedule (mirrors RadioRoutes::handle_set_playlist).
+    void handle_set_schedule(
+        const drogon::HttpRequestPtr& req,
+        std::function<void(const drogon::HttpResponsePtr&)>&& cb,
+        const std::string& channel_id
+    );
+
+    void handle_add_program(
+        const drogon::HttpRequestPtr& req,
+        std::function<void(const drogon::HttpResponsePtr&)>&& cb,
+        const std::string& channel_id
+    );
+
+    void handle_remove_program(
+        const drogon::HttpRequestPtr& req,
+        std::function<void(const drogon::HttpResponsePtr&)>&& cb,
+        const std::string& channel_id,
+        const std::string& program_id
+    );
+
     void handle_get_epg(
         const drogon::HttpRequestPtr& req,
         std::function<void(const drogon::HttpResponsePtr&)>&& cb
@@ -58,6 +78,12 @@ private:
     Json::Value status_to_json(const TvChannelStatus& s);
     Json::Value program_to_json(const TvProgram& p);
     Json::Value schedule_to_json(const TvScheduleEntry& e);
+
+    // Inverse of schedule_to_json/program_to_json — parses a {program:{...},
+    // start_time, end_time, is_live} JSON object (ISO-8601 UTC timestamps,
+    // e.g. "2026-08-10T20:00:00Z") into a TvScheduleEntry. Returns false and
+    // sets *error on a missing/malformed required field.
+    bool schedule_entry_from_json(const Json::Value& j, TvScheduleEntry& out, std::string* error);
 };
 
 } // namespace media::routes

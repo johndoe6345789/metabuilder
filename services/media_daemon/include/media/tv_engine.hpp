@@ -356,11 +356,6 @@ private:
     );
     
     /**
-     * Generate HLS master playlist
-     */
-    void generate_master_playlist(const std::string& channel_id);
-    
-    /**
      * Update variant playlists
      */
     void update_variant_playlist(

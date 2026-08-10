@@ -208,7 +208,15 @@ Result<TvEngine::StreamUrls> TvEngine::start_channel(const std::string& channel_
         std::filesystem::create_directories(hls_dir);
 
         StreamUrls urls;
-        urls.hls_url = "/hls/tv/" + channel_id + "/master.m3u8";
+        // do_encode_segment() only ever writes a single stream.m3u8 at the
+        // channel root — never advertise master.m3u8 here: generate_master_
+        // playlist() lists a variant per config_.resolutions entry (default:
+        // 1080p/720p/480p) pointing at "<resolution>/stream.m3u8", but
+        // nothing ever encodes into those subdirectories (they're created
+        // empty). A player loading that master playlist 404s on every
+        // variant. Multi-resolution/ABR isn't implemented — point at the
+        // one real stream until it is.
+        urls.hls_url = "/hls/tv/" + channel_id + "/stream.m3u8";
         urls.dash_url = "";  // DASH not implemented
 
         it->second->status.hls_url = urls.hls_url;
@@ -219,9 +227,6 @@ Result<TvEngine::StreamUrls> TvEngine::start_channel(const std::string& channel_
         it->second->stream_thread = std::thread([this, channel_id]() {
             stream_thread(channel_id);
         });
-
-        // Generate master HLS playlist
-        generate_master_playlist(channel_id);
 
         if (config_.notification_callback) {
             Notification n;
@@ -239,27 +244,41 @@ Result<TvEngine::StreamUrls> TvEngine::start_channel(const std::string& channel_
 }
 
 Result<void> TvEngine::stop_channel(const std::string& channel_id) {
-    std::lock_guard<std::mutex> lock(channels_mutex_);
-
-    auto it = channels_.find(channel_id);
-    if (it == channels_.end()) {
-        return Result<void>::error(ErrorCode::NOT_FOUND, "Channel not found: " + channel_id);
+    // stream_thread()'s loop re-acquires channels_mutex_ on every iteration
+    // (to check is_running and read the current schedule entry) — holding
+    // that same mutex across .join() here deadlocks against it: this thread
+    // waits for stream_thread to exit, stream_thread waits for a lock this
+    // thread is holding. Confirmed live: stopping a running channel hung
+    // indefinitely. Look the state up and release the lock before joining;
+    // TvChannelState itself is heap-allocated (channels_ holds unique_ptr),
+    // so the raw pointer stays valid after unlocking as long as no one
+    // erases the entry from channels_ concurrently (nothing in this class
+    // does — channels are only ever added, never removed).
+    TvChannelState* state = nullptr;
+    {
+        std::lock_guard<std::mutex> lock(channels_mutex_);
+        auto it = channels_.find(channel_id);
+        if (it == channels_.end()) {
+            return Result<void>::error(ErrorCode::NOT_FOUND, "Channel not found: " + channel_id);
+        }
+        state = it->second.get();
+        if (!state->is_running.load()) {
+            return Result<void>::ok();
+        }
+        state->is_running.store(false);
+        state->cv.notify_all();
     }
 
-    auto& state = it->second;
-    if (!state->is_running.load()) {
-        return Result<void>::ok();
-    }
-
-    state->is_running.store(false);
-    state->cv.notify_all();
     if (state->stream_thread.joinable()) {
         state->stream_thread.join();
     }
 
-    state->status.is_live = false;
-    state->status.now_playing = std::nullopt;
-    state->status.next_program = std::nullopt;
+    {
+        std::lock_guard<std::mutex> lock(channels_mutex_);
+        state->status.is_live = false;
+        state->status.now_playing = std::nullopt;
+        state->status.next_program = std::nullopt;
+    }
 
     std::cout << "[TvEngine] Stopped channel: " << channel_id << std::endl;
     return Result<void>::ok();
@@ -362,7 +381,9 @@ Result<std::vector<TvScheduleEntry>> TvEngine::get_schedule(
 
     std::vector<TvScheduleEntry> result;
     for (const auto& entry : it->second->schedule) {
-        if (entry.start_time >= start_time && entry.start_time <= end_time) {
+        // Overlap, not "starts inside" — see generate_epg()'s comment for
+        // why (a currently-airing program must show up).
+        if (entry.end_time > start_time && entry.start_time <= end_time) {
             result.push_back(entry);
         }
     }
@@ -383,7 +404,13 @@ std::vector<EpgEntry> TvEngine::generate_epg(int hours_ahead) const {
 
     for (const auto& [channel_id, state] : channels_) {
         for (const auto& entry : state->schedule) {
-            if (entry.start_time >= now && entry.start_time <= end) {
+            // Overlaps [now, end], not just "starts inside" it — otherwise a
+            // program already airing (started before `now`) never shows up
+            // in its own channel's EPG, which is the one program viewers
+            // most need "what's on now" to show. Confirmed live: a channel
+            // with a program actively airing right now returned an empty
+            // EPG because start_time was (correctly) in the past.
+            if (entry.end_time > now && entry.start_time <= end) {
                 EpgEntry epg_entry;
                 epg_entry.channel_id = channel_id;
                 epg_entry.channel_name = state->config.name;
@@ -421,7 +448,8 @@ Result<std::vector<EpgEntry>> TvEngine::generate_channel_epg(
     auto end = now + std::chrono::hours(hours_ahead);
 
     for (const auto& entry : it->second->schedule) {
-        if (entry.start_time >= now && entry.start_time <= end) {
+        // Overlap, not "starts inside" — see generate_epg()'s comment.
+        if (entry.end_time > now && entry.start_time <= end) {
             EpgEntry epg_entry;
             epg_entry.channel_id = channel_id;
             epg_entry.channel_name = it->second->config.name;
@@ -592,6 +620,17 @@ int TvEngine::get_total_viewers() const {
 void TvEngine::stream_thread(const std::string& channel_id) {
     std::cout << "[TvEngine] Stream thread started: " << channel_id << std::endl;
 
+    // Paces segment production to wall-clock time. Without this the loop
+    // encodes back-to-back as fast as ffmpeg can run (confirmed live: 280+
+    // 4-second segments produced in a handful of real seconds, each flagged
+    // #EXT-X-DISCONTINUITY since every invocation re-cuts from nearly the
+    // same start_offset) — nothing resembling live TV, just a firehose.
+    // steady_clock + resync-if-behind mirrors the same pattern already
+    // proven for libretro's retro_run() pacing.
+    using clock = std::chrono::steady_clock;
+    auto segment_period = std::chrono::seconds(1);  // recomputed per-iteration below from cfg
+    auto next_deadline = clock::now();
+
     while (true) {
         // Check if still running
         {
@@ -600,9 +639,12 @@ void TvEngine::stream_thread(const std::string& channel_id) {
             if (it == channels_.end() || !it->second->is_running.load()) break;
         }
 
-        // Get current scheduled program
+        // Get current scheduled program. Copies the entry by value (not a
+        // pointer into state->schedule) — set_schedule()/add_program() can
+        // reassign/reallocate that vector from another thread once the lock
+        // below is released, which would otherwise leave a dangling pointer.
         TvChannelConfig cfg;
-        const TvScheduleEntry* current_entry = nullptr;
+        std::optional<TvScheduleEntry> current_entry;
 
         {
             std::lock_guard<std::mutex> lock(channels_mutex_);
@@ -610,41 +652,59 @@ void TvEngine::stream_thread(const std::string& channel_id) {
             if (it == channels_.end() || !it->second->is_running.load()) break;
 
             cfg = it->second->config;
-            current_entry = get_current_scheduled_program(*it->second);
+            if (const auto* entry = get_current_scheduled_program(*it->second)) {
+                current_entry = *entry;
+            }
 
-            if (current_entry) {
-                it->second->status.now_playing = current_entry->program;
-            } else {
-                it->second->status.now_playing = std::nullopt;
+            it->second->status.now_playing = current_entry ? std::make_optional(current_entry->program)
+                                                             : std::nullopt;
+
+            // next_program was previously only ever cleared (in stop_channel),
+            // never set — get_next_program()/the EPG "up next" field always
+            // returned nothing. schedule is kept sorted by start_time (see
+            // set_schedule/add_program), so the first entry starting after
+            // now is next, regardless of whether something is live now.
+            it->second->status.next_program = std::nullopt;
+            auto now_tp = std::chrono::system_clock::now();
+            for (const auto& entry : it->second->schedule) {
+                if (entry.start_time > now_tp) {
+                    it->second->status.next_program = entry.program;
+                    break;
+                }
             }
         }
 
+        segment_period = std::chrono::seconds(std::max(1, cfg.segment_duration_seconds));
+        next_deadline += segment_period;
+
         if (!current_entry) {
-            // No scheduled content - play filler or sleep
+            // No scheduled content - play filler or wait
             if (!cfg.filler_playlist.empty() && std::filesystem::exists(cfg.filler_playlist)) {
                 do_encode_segment(config_.hls_output_dir, channel_id, cfg, config_,
                                   cfg.filler_playlist, 0.0,
                                   static_cast<double>(cfg.segment_duration_seconds));
-            } else {
-                std::this_thread::sleep_for(std::chrono::seconds(cfg.segment_duration_seconds));
             }
-            continue;
+        } else {
+            // Encode current program segment
+            const std::string& content_path = current_entry->program.content_path;
+            if (!content_path.empty() && std::filesystem::exists(content_path)) {
+                auto now = std::chrono::system_clock::now();
+                double start_offset = std::chrono::duration<double>(
+                    now - current_entry->start_time
+                ).count();
+                if (start_offset < 0) start_offset = 0;
+
+                do_encode_segment(config_.hls_output_dir, channel_id, cfg, config_,
+                                  content_path, start_offset,
+                                  static_cast<double>(cfg.segment_duration_seconds));
+            }
         }
 
-        // Encode current program segment
-        const std::string& content_path = current_entry->program.content_path;
-        if (!content_path.empty() && std::filesystem::exists(content_path)) {
-            auto now = std::chrono::system_clock::now();
-            double start_offset = std::chrono::duration<double>(
-                now - current_entry->start_time
-            ).count();
-            if (start_offset < 0) start_offset = 0;
-
-            do_encode_segment(config_.hls_output_dir, channel_id, cfg, config_,
-                              content_path, start_offset,
-                              static_cast<double>(cfg.segment_duration_seconds));
+        auto now = clock::now();
+        if (next_deadline > now) {
+            std::this_thread::sleep_until(next_deadline);
         } else {
-            std::this_thread::sleep_for(std::chrono::seconds(cfg.segment_duration_seconds));
+            next_deadline = now;  // fell behind (slow encode/host) — resync rather than try to catch up
         }
     }
 
@@ -722,46 +782,6 @@ void TvEngine::encode_segment(
     (void)input_path;
     (void)start_time;
     (void)duration;
-}
-
-void TvEngine::generate_master_playlist(const std::string& channel_id) {
-    std::string hls_dir = config_.hls_output_dir + "/" + channel_id;
-    std::filesystem::create_directories(hls_dir);
-
-    TvChannelConfig cfg;
-    {
-        std::lock_guard<std::mutex> lock(channels_mutex_);
-        auto it = channels_.find(channel_id);
-        if (it == channels_.end()) return;
-        cfg = it->second->config;
-    }
-
-    std::ofstream master(hls_dir + "/master.m3u8");
-    if (!master.is_open()) return;
-
-    master << "#EXTM3U\n";
-    master << "#EXT-X-VERSION:3\n\n";
-
-    // Write variant streams based on configured resolutions
-    for (const auto& res : config_.resolutions) {
-        master << "#EXT-X-STREAM-INF:BANDWIDTH="
-               << (res.bitrate_kbps * 1000)
-               << ",RESOLUTION=" << res.width << "x" << res.height
-               << ",CODECS=\"avc1.42E01E,mp4a.40.2\"\n";
-        master << res.name << "/stream.m3u8\n";
-
-        // Create sub-directory for this resolution
-        std::filesystem::create_directories(hls_dir + "/" + res.name);
-    }
-
-    // Fallback to single stream.m3u8
-    if (config_.resolutions.empty()) {
-        master << "#EXT-X-STREAM-INF:BANDWIDTH=4000000\n";
-        master << "stream.m3u8\n";
-    }
-
-    master.close();
-    std::cout << "[TvEngine] Generated master playlist for channel: " << channel_id << std::endl;
 }
 
 void TvEngine::update_variant_playlist(

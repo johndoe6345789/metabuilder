@@ -93,6 +93,61 @@ Json::Value TvRoutes::schedule_to_json(const TvScheduleEntry& e) {
     return j;
 }
 
+bool TvRoutes::schedule_entry_from_json(const Json::Value& j, TvScheduleEntry& out, std::string* error) {
+    auto parse_iso8601 = [](const std::string& s, std::chrono::system_clock::time_point& tp) -> bool {
+        std::tm tm{};
+        if (!strptime(s.c_str(), "%Y-%m-%dT%H:%M:%SZ", &tm)) return false;
+        tp = std::chrono::system_clock::from_time_t(timegm(&tm));
+        return true;
+    };
+
+    if (!j.isMember("program") || !j["program"].isObject()) {
+        *error = "program is required";
+        return false;
+    }
+    const auto& p = j["program"];
+    if (!p.isMember("title") || p["title"].asString().empty()) {
+        *error = "program.title is required";
+        return false;
+    }
+    if (!p.isMember("content_path") || p["content_path"].asString().empty()) {
+        *error = "program.content_path is required";
+        return false;
+    }
+    if (!j.isMember("start_time") || !j.isMember("end_time")) {
+        *error = "start_time and end_time (ISO-8601 UTC, e.g. 2026-08-10T20:00:00Z) are required";
+        return false;
+    }
+
+    out.program.id = p.get("id", "").asString();
+    if (out.program.id.empty()) {
+        // add_program()/set_schedule() store entries as given — no server-side
+        // ID generation — so a caller that omits "id" still needs one to be
+        // addressable later via DELETE .../schedule/{program_id}.
+        auto now = std::chrono::system_clock::now().time_since_epoch();
+        std::ostringstream id;
+        id << "prog_" << std::hex << std::chrono::duration_cast<std::chrono::microseconds>(now).count();
+        out.program.id = id.str();
+    }
+    out.program.title = p["title"].asString();
+    out.program.description = p.get("description", "").asString();
+    out.program.category = p.get("category", "").asString();
+    out.program.content_path = p["content_path"].asString();
+    out.program.duration_seconds = p.get("duration_seconds", 0).asInt();
+    out.program.thumbnail_url = p.get("thumbnail_url", "").asString();
+    out.program.rating = p.get("rating", "").asString();
+
+    if (!parse_iso8601(j["start_time"].asString(), out.start_time) ||
+        !parse_iso8601(j["end_time"].asString(), out.end_time)) {
+        *error = "start_time/end_time must be ISO-8601 UTC, e.g. 2026-08-10T20:00:00Z";
+        return false;
+    }
+    out.is_live = j.get("is_live", false).asBool();
+    out.bumper_before = j.get("bumper_before", "").asString();
+    out.bumper_after = j.get("bumper_after", "").asString();
+    return true;
+}
+
 // ============================================================================
 // Route Handlers
 // ============================================================================
@@ -250,6 +305,98 @@ void TvRoutes::handle_get_schedule(
     body["schedule"] = arr;
     body["channel_id"] = channel_id;
     body["count"] = static_cast<Json::UInt>(result.value().size());
+    cb(json_response(body, drogon::k200OK));
+}
+
+void TvRoutes::handle_set_schedule(
+    const drogon::HttpRequestPtr& req,
+    std::function<void(const drogon::HttpResponsePtr&)>&& cb,
+    const std::string& channel_id
+) {
+    auto json = req->getJsonObject();
+    if (!json || !json->isMember("entries") || !(*json)["entries"].isArray()) {
+        cb(error_response("Body must be {\"entries\": [...]}", drogon::k400BadRequest));
+        return;
+    }
+
+    std::vector<TvScheduleEntry> entries;
+    for (const auto& item : (*json)["entries"]) {
+        TvScheduleEntry entry;
+        std::string error;
+        if (!schedule_entry_from_json(item, entry, &error)) {
+            cb(error_response(error, drogon::k400BadRequest));
+            return;
+        }
+        entries.push_back(std::move(entry));
+    }
+
+    auto result = tv_engine_.set_schedule(channel_id, entries);
+    if (result.is_error()) {
+        auto code = result.error_code() == ErrorCode::NOT_FOUND ? drogon::k404NotFound
+                                                                  : drogon::k500InternalServerError;
+        cb(error_response(result.error_message(), code));
+        return;
+    }
+
+    Json::Value body;
+    body["message"] = "Schedule set";
+    body["channel_id"] = channel_id;
+    body["count"] = static_cast<Json::UInt>(entries.size());
+    cb(json_response(body, drogon::k200OK));
+}
+
+void TvRoutes::handle_add_program(
+    const drogon::HttpRequestPtr& req,
+    std::function<void(const drogon::HttpResponsePtr&)>&& cb,
+    const std::string& channel_id
+) {
+    auto json = req->getJsonObject();
+    if (!json) {
+        cb(error_response("Invalid JSON body", drogon::k400BadRequest));
+        return;
+    }
+
+    TvScheduleEntry entry;
+    std::string error;
+    if (!schedule_entry_from_json(*json, entry, &error)) {
+        cb(error_response(error, drogon::k400BadRequest));
+        return;
+    }
+
+    auto result = tv_engine_.add_program(channel_id, entry);
+    if (result.is_error()) {
+        auto code = result.error_code() == ErrorCode::NOT_FOUND ? drogon::k404NotFound
+                    : result.error_code() == ErrorCode::CONFLICT ? drogon::k409Conflict
+                                                                  : drogon::k500InternalServerError;
+        cb(error_response(result.error_message(), code));
+        return;
+    }
+
+    Json::Value body;
+    body["message"] = "Program added";
+    body["channel_id"] = channel_id;
+    body["program_id"] = entry.program.id;
+    cb(json_response(body, drogon::k201Created));
+}
+
+void TvRoutes::handle_remove_program(
+    const drogon::HttpRequestPtr& /*req*/,
+    std::function<void(const drogon::HttpResponsePtr&)>&& cb,
+    const std::string& channel_id,
+    const std::string& program_id
+) {
+    auto result = tv_engine_.remove_program(channel_id, program_id);
+    if (result.is_error()) {
+        auto code = result.error_code() == ErrorCode::NOT_FOUND ? drogon::k404NotFound
+                                                                  : drogon::k500InternalServerError;
+        cb(error_response(result.error_message(), code));
+        return;
+    }
+
+    Json::Value body;
+    body["message"] = "Program removed";
+    body["channel_id"] = channel_id;
+    body["program_id"] = program_id;
     cb(json_response(body, drogon::k200OK));
 }
 
