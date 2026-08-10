@@ -1435,6 +1435,11 @@ services:
     depends_on:
       dbal:
         condition: service_healthy
+    ports:
+      # frontends/nextjs's media-center page talks to this directly from the
+      # browser (NEXT_PUBLIC_MEDIA_API_URL, default http://localhost:8090) —
+      # unlike every other app, it isn't proxied through the main portal nginx.
+      - "8090:8090"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://127.0.0.1:8090/health"]
       interval: 30s
