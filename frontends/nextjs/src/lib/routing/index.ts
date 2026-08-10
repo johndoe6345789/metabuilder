@@ -358,9 +358,12 @@ export async function validateTenantAccess(
     return { allowed: false, reason: `Insufficient permissions. Required level: ${minLevel}, your level: ${userLevel}` }
   }
   
-  // God and supergod can access any tenant
+  // God and supergod can access any tenant. There's no "Tenant" entity in
+  // DBAL to look up (no schema for it — tenantId is just a scoping field on
+  // other entities), so build the tenant reference straight from the route's
+  // slug rather than a lookup that would always fail.
   if (userLevel >= ROLE_LEVELS.god) {
-    return { allowed: true }
+    return { allowed: true, tenant: { id: tenantSlug } }
   }
   
   // For lower levels, verify tenant membership

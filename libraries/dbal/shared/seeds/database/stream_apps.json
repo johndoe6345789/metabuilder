@@ -1,0 +1,71 @@
+{
+  "entity": "StreamApp",
+  "version": "1.0",
+  "description": "Default Apps-row tiles for the MetaBuilder Stream hub. bootstrap is deliberately false — unlike Credential/User, these are meant to be edited via the hub's own Settings tile (add/remove/re-theme/toggle embedMode), and bootstrap:true's restart-time reconciliation (see seed_loader_action.cpp) would silently revert those edits back to this file's defaults, the exact bug that fix was built to prevent for Credential. skipIfExists seeds the initial 6 once and never touches them again.",
+  "records": [
+    {
+      "id": "netflix",
+      "tenantId": "system",
+      "name": "Netflix",
+      "url": "https://www.netflix.com",
+      "bgColor": "#000000",
+      "fgColor": "#e50914",
+      "embedMode": "newtab",
+      "sortOrder": 0
+    },
+    {
+      "id": "youtube",
+      "tenantId": "system",
+      "name": "YouTube",
+      "url": "https://www.youtube.com",
+      "bgColor": "#ffffff",
+      "fgColor": "#ff0000",
+      "embedMode": "newtab",
+      "sortOrder": 1
+    },
+    {
+      "id": "disneyplus",
+      "tenantId": "system",
+      "name": "Disney+",
+      "url": "https://www.disneyplus.com",
+      "bgColor": "#0c1e3e",
+      "fgColor": "#ffffff",
+      "embedMode": "newtab",
+      "sortOrder": 2
+    },
+    {
+      "id": "primevideo",
+      "tenantId": "system",
+      "name": "Prime Video",
+      "url": "https://www.primevideo.com",
+      "bgColor": "#00a8e1",
+      "fgColor": "#0f1111",
+      "embedMode": "newtab",
+      "sortOrder": 3
+    },
+    {
+      "id": "twitch",
+      "tenantId": "system",
+      "name": "Twitch",
+      "url": "https://www.twitch.tv",
+      "bgColor": "#6441a5",
+      "fgColor": "#ffffff",
+      "embedMode": "newtab",
+      "sortOrder": 4
+    },
+    {
+      "id": "spotify",
+      "tenantId": "system",
+      "name": "Spotify",
+      "url": "https://open.spotify.com",
+      "bgColor": "#1db954",
+      "fgColor": "#000000",
+      "embedMode": "newtab",
+      "sortOrder": 5
+    }
+  ],
+  "metadata": {
+    "bootstrap": false,
+    "skipIfExists": true
+  }
+}

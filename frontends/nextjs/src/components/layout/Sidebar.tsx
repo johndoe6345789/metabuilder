@@ -13,6 +13,7 @@ import s from './Sidebar.module.scss'
 
 const iconMap: Record<string, string> = {
   dashboard: 'D',
+  live_tv: 'S',
   person: 'P',
   chat: 'C',
   chat_bubble: 'C',

@@ -8,6 +8,13 @@
       "level": 1
     },
     {
+      "id": "stream",
+      "label": "Stream",
+      "icon": "live_tv",
+      "path": "/stream",
+      "level": 2
+    },
+    {
       "id": "profile",
       "label": "Profile",
       "icon": "person",

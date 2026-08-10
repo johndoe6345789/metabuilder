@@ -84,3 +84,38 @@
   color: var(--fg);
   opacity: 0.55;
 }
+
+.settingsTile {
+  flex: 0 0 auto;
+  width: 100px;
+  height: 76px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-radius: 14px;
+  border: 1.5px dashed var(--sh-border-strong);
+  background: transparent;
+  color: var(--sh-text-dim);
+  cursor: pointer;
+  animation: tileIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 50ms);
+  transition: border-color 0.2s, color 0.2s, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &:hover {
+    border-color: var(--sh-text-dim);
+    color: var(--sh-text);
+    transform: translateY(-4px);
+  }
+
+  .tileName {
+    color: inherit;
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+}
+
+.settingsIcon {
+  font-size: 1.1rem;
+}

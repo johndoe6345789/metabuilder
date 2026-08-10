@@ -1,0 +1,62 @@
+{
+  "entity": "StreamApp",
+  "version": "1.0",
+  "description": "Third-party service tiles shown in the MetaBuilder Stream hub's Apps row (frontends/nextjs's (workspace)/stream page — see AppsRow.tsx). Each links out to an external streaming/media service, either opened in a new tab or an embedded iframe, per embedMode. Managed via the hub's own Settings tile, not the god-panel.",
+  "fields": {
+    "id": {
+      "type": "string",
+      "primary": true
+    },
+    "tenantId": {
+      "type": "string",
+      "nullable": true,
+      "description": "Tenant isolation ID"
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "url": {
+      "type": "string",
+      "required": true
+    },
+    "bgColor": {
+      "type": "string",
+      "required": true,
+      "description": "CSS color for the tile background, e.g. #000000"
+    },
+    "fgColor": {
+      "type": "string",
+      "required": true,
+      "description": "CSS color for the tile's text"
+    },
+    "embedMode": {
+      "type": "string",
+      "required": true,
+      "description": "\"newtab\" (default — safest, since most streaming services send X-Frame-Options/CSP headers that block iframe embedding by design) or \"iframe\" (opens in an in-page frame; only actually renders content for services that don't block framing)"
+    },
+    "sortOrder": {
+      "type": "number",
+      "nullable": true
+    }
+  },
+  "indexes": [
+    {
+      "fields": ["tenantId", "sortOrder"]
+    }
+  ],
+  "acl": {
+    "create": {
+      "role": ["admin", "god", "supergod"]
+    },
+    "read": {
+      "public": true
+    },
+    "update": {
+      "role": ["admin", "god", "supergod"]
+    },
+    "delete": {
+      "role": ["admin", "god", "supergod"]
+    }
+  }
+}
