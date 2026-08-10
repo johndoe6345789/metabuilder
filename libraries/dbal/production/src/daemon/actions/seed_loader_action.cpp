@@ -97,17 +97,26 @@ std::vector<SeedResult> SeedLoaderAction::loadSeedFile(Client& client, const std
             result.entity = entity_name;
 
             bool skip_if_exists = false;
+            bool bootstrap = false;
             bool use_current_timestamp = false;
             std::string timestamp_field;
 
             if (doc.contains("metadata")) {
                 const auto& meta = doc["metadata"];
                 skip_if_exists        = meta.value("skipIfExists",        false);
+                bootstrap              = meta.value("bootstrap",          false);
                 use_current_timestamp = meta.value("useCurrentTimestamp", false);
                 timestamp_field       = meta.value("timestampField",      std::string(""));
             }
 
-            if (skip_if_exists && !force) {
+            // Bootstrap records (fixed system fixtures like the demo Credential/User
+            // rows — not organic content a user could have edited) always reconcile to
+            // match the seed file, even once they already exist: skipIfExists only
+            // short-circuits the *whole document* here for non-bootstrap seeds, so a
+            // record whose format goes stale (e.g. a password hashing algorithm
+            // migration) doesn't stay silently wrong forever. Per-record conflicts are
+            // still handled below via updateEntity instead of being skipped.
+            if (skip_if_exists && !force && !bootstrap) {
                 ListOptions opts;
                 opts.limit = 1;
                 auto existing = client.listEntities(entity_name, opts);
@@ -134,10 +143,27 @@ std::vector<SeedResult> SeedLoaderAction::loadSeedFile(Client& client, const std
                     if (create_result.isOk()) {
                         result.inserted++;
                     } else if (create_result.error().code() == ErrorCode::Conflict) {
-                        // Record already exists (duplicate primary key) — idempotent, skip silently
-                        result.skipped++;
                         std::string id_str = record.contains("id") ? record["id"].dump() : "unknown";
-                        spdlog::debug("Seed: {} id={} already exists, skipping", entity_name, id_str);
+                        if (bootstrap && record.contains("id") && record["id"].is_string()) {
+                            // Bootstrap fixture already exists — reconcile it to the seed's
+                            // declared state (e.g. a stale password hash from before a
+                            // hashing algorithm migration) instead of leaving it wrong forever.
+                            auto update_result = client.updateEntity(entity_name, record["id"].get<std::string>(), record);
+                            if (update_result.isOk()) {
+                                result.updated++;
+                                spdlog::debug("Seed: {} id={} already exists, reconciled to seed", entity_name, id_str);
+                            } else {
+                                result.failed++;
+                                std::string err = "Failed to reconcile bootstrap " + entity_name + " id=" + id_str +
+                                                  ": " + std::string(update_result.error().what());
+                                result.errors.push_back(err);
+                                spdlog::warn("Seed: {}", err);
+                            }
+                        } else {
+                            // Record already exists (duplicate primary key) — idempotent, skip silently
+                            result.skipped++;
+                            spdlog::debug("Seed: {} id={} already exists, skipping", entity_name, id_str);
+                        }
                     } else {
                         result.failed++;
                         std::string id_str = record.contains("id") ? record["id"].dump() : "unknown";
@@ -153,8 +179,8 @@ std::vector<SeedResult> SeedLoaderAction::loadSeedFile(Client& client, const std
                 }
             }
 
-            spdlog::info("Seed: {} — inserted={}, skipped={}, failed={}",
-                         entity_name, result.inserted, result.skipped, result.failed);
+            spdlog::info("Seed: {} — inserted={}, updated={}, skipped={}, failed={}",
+                         entity_name, result.inserted, result.updated, result.skipped, result.failed);
             results.push_back(result);
         }
 
@@ -198,6 +224,7 @@ SeedSummary SeedLoaderAction::loadSeeds(Client& client, const std::string& seed_
         auto file_results = loadSeedFile(client, file_path.string(), force);
         for (auto& r : file_results) {
             summary.total_inserted += r.inserted;
+            summary.total_updated  += r.updated;
             summary.total_skipped  += r.skipped;
             summary.total_failed   += r.failed;
             if (!r.errors.empty()) { summary.success = false; for (const auto& e : r.errors) summary.errors.push_back(e); }
@@ -214,6 +241,7 @@ SeedSummary SeedLoaderAction::loadSeeds(Client& client, const std::string& seed_
         auto file_results = loadSeedFile(client, entry.path().string(), force);
         for (auto& r : file_results) {
             summary.total_inserted += r.inserted;
+            summary.total_updated  += r.updated;
             summary.total_skipped  += r.skipped;
             summary.total_failed   += r.failed;
             if (!r.errors.empty()) { for (const auto& e : r.errors) summary.errors.push_back(e); }
@@ -222,8 +250,8 @@ SeedSummary SeedLoaderAction::loadSeeds(Client& client, const std::string& seed_
     }
 
     summary.success = (summary.total_failed == 0);
-    spdlog::info("Seed: complete — inserted={}, skipped={}, failed={}",
-                 summary.total_inserted, summary.total_skipped, summary.total_failed);
+    spdlog::info("Seed: complete — inserted={}, updated={}, skipped={}, failed={}",
+                 summary.total_inserted, summary.total_updated, summary.total_skipped, summary.total_failed);
     return summary;
 }
 

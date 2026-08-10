@@ -107,6 +107,7 @@ void SeedRouteHandler::handleSeed(
 
     ::Json::Value data;
     data["total_inserted"] = summary.total_inserted;
+    data["total_updated"] = summary.total_updated;
     data["total_skipped"] = summary.total_skipped;
     data["total_failed"] = summary.total_failed;
     data["seed_dir"] = seed_dir;
@@ -117,6 +118,7 @@ void SeedRouteHandler::handleSeed(
         ::Json::Value entry;
         entry["entity"] = r.entity;
         entry["inserted"] = r.inserted;
+        entry["updated"] = r.updated;
         entry["skipped"] = r.skipped;
         entry["failed"] = r.failed;
 

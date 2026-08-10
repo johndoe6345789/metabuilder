@@ -18,6 +18,7 @@ namespace actions {
 struct SeedResult {
     std::string entity;
     int inserted = 0;
+    int updated = 0;
     int skipped = 0;
     int failed = 0;
     std::vector<std::string> errors;
@@ -26,6 +27,7 @@ struct SeedResult {
 struct SeedSummary {
     bool success = true;
     int total_inserted = 0;
+    int total_updated = 0;
     int total_skipped = 0;
     int total_failed = 0;
     std::vector<SeedResult> results;
