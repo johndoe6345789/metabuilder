@@ -5,6 +5,7 @@ import { LevelGate } from '@/components/layout/LevelGate'
 import { LiveTvSection } from '@/components/media/stream/LiveTvSection'
 import { RadioSection } from '@/components/media/stream/RadioSection'
 import { RetroLauncher } from '@/components/media/RetroLauncher'
+import { AppsRow } from '@/components/media/stream/AppsRow'
 import { useTvChannels } from '@/components/media/stream/useTvChannels'
 import { hueFor } from '@/components/media/stream/hue'
 import s from './page.module.scss'
@@ -88,6 +89,8 @@ function StreamHubContent() {
   return (
     <div className={s.root}>
       <Hero onWatch={handleHeroWatch} />
+
+      <AppsRow />
 
       <nav className={s.pillNav} role="tablist" aria-label="Stream sections">
         {SECTIONS.map((section, i) => (

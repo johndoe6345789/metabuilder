@@ -1,0 +1,86 @@
+@keyframes rowFadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+  // Matches the hero/pill-nav/panel-stage stagger in page.module.scss —
+  // CSS Modules scope @keyframes names per-file, so this can't just
+  // reference heroFadeUp from there; same curve and timing slot (0.05s),
+  // between the hero (0s) and pill nav (0.1s), redefined locally.
+  animation: rowFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both;
+}
+
+.label {
+  font-family: var(--sh-display);
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--sh-text-dim);
+  padding-left: 2px;
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 2px 2px 8px;
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar { height: 6px; }
+  &::-webkit-scrollbar-thumb {
+    background: var(--sh-border-strong);
+    border-radius: 3px;
+  }
+}
+
+@keyframes tileIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.tile {
+  --bg: #222;
+  --fg: #fff;
+  position: relative;
+  flex: 0 0 auto;
+  width: 132px;
+  height: 76px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 12px;
+  border-radius: 14px;
+  background: var(--bg);
+  text-decoration: none;
+  overflow: hidden;
+  animation: tileIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 50ms);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+
+  &:hover {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.12) inset;
+  }
+}
+
+.tileName {
+  font-family: var(--sh-display);
+  font-weight: 700;
+  font-size: 0.86rem;
+  color: var(--fg);
+  line-height: 1.15;
+}
+
+.tileArrow {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 0.75rem;
+  color: var(--fg);
+  opacity: 0.55;
+}
