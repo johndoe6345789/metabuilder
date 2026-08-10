@@ -5,20 +5,23 @@
 #include <filesystem>
 #include <algorithm>
 #include <cstdlib>
+#include <cmath>
 #include <ctime>
 #include <iomanip>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <csignal>
 
 namespace media {
 
 // Forward declaration of internal encode helper (defined later in this file)
-static void do_encode_segment(
+static pid_t spawn_persistent_hls_encode(
     const std::string& hls_output_dir,
     const std::string& channel_id,
     const TvChannelConfig& cfg,
     const TvEngineConfig& engine_cfg,
     const std::string& input_path,
-    double start_offset,
-    double duration
+    double start_offset
 );
 
 TvEngine::TvEngine() = default;
@@ -208,14 +211,14 @@ Result<TvEngine::StreamUrls> TvEngine::start_channel(const std::string& channel_
         std::filesystem::create_directories(hls_dir);
 
         StreamUrls urls;
-        // do_encode_segment() only ever writes a single stream.m3u8 at the
-        // channel root — never advertise master.m3u8 here: generate_master_
-        // playlist() lists a variant per config_.resolutions entry (default:
-        // 1080p/720p/480p) pointing at "<resolution>/stream.m3u8", but
-        // nothing ever encodes into those subdirectories (they're created
-        // empty). A player loading that master playlist 404s on every
-        // variant. Multi-resolution/ABR isn't implemented — point at the
-        // one real stream until it is.
+        // spawn_persistent_hls_encode() only ever writes a single stream.m3u8
+        // at the channel root — never advertise master.m3u8 here: the
+        // (now-removed) generate_master_playlist() listed a variant per
+        // config_.resolutions entry (default: 1080p/720p/480p) pointing at
+        // "<resolution>/stream.m3u8", but nothing ever encoded into those
+        // subdirectories. A player loading that master playlist 404s on
+        // every variant. Multi-resolution/ABR isn't implemented — point at
+        // the one real stream until it is.
         urls.hls_url = "/hls/tv/" + channel_id + "/stream.m3u8";
         urls.dash_url = "";  // DASH not implemented
 
@@ -620,16 +623,24 @@ int TvEngine::get_total_viewers() const {
 void TvEngine::stream_thread(const std::string& channel_id) {
     std::cout << "[TvEngine] Stream thread started: " << channel_id << std::endl;
 
-    // Paces segment production to wall-clock time. Without this the loop
-    // encodes back-to-back as fast as ffmpeg can run (confirmed live: 280+
-    // 4-second segments produced in a handful of real seconds, each flagged
-    // #EXT-X-DISCONTINUITY since every invocation re-cuts from nearly the
-    // same start_offset) — nothing resembling live TV, just a firehose.
-    // steady_clock + resync-if-behind mirrors the same pattern already
-    // proven for libretro's retro_run() pacing.
-    using clock = std::chrono::steady_clock;
-    auto segment_period = std::chrono::seconds(1);  // recomputed per-iteration below from cfg
-    auto next_deadline = clock::now();
+    // One persistent ffmpeg process is supervised across loop iterations —
+    // restarted only at genuine boundaries (a new scheduled program, or the
+    // previous encode reaching EOF and looping), not every ~1s tick. See
+    // spawn_persistent_hls_encode()'s comment for why: a fresh ffmpeg
+    // process per segment (the previous design) re-opens the HLS muxer
+    // every time, which is what caused the discontinuity/ENDLIST flicker.
+    pid_t ffmpeg_pid = -1;
+    std::string running_program_id;
+
+    auto stop_ffmpeg = [&]() {
+        if (ffmpeg_pid <= 0) return;
+        int status = 0;
+        if (waitpid(ffmpeg_pid, &status, WNOHANG) != ffmpeg_pid) {
+            kill(ffmpeg_pid, SIGTERM);
+            waitpid(ffmpeg_pid, &status, 0);
+        }
+        ffmpeg_pid = -1;
+    };
 
     while (true) {
         // Check if still running
@@ -674,39 +685,74 @@ void TvEngine::stream_thread(const std::string& channel_id) {
             }
         }
 
-        segment_period = std::chrono::seconds(std::max(1, cfg.segment_duration_seconds));
-        next_deadline += segment_period;
+        bool have_scheduled_content = current_entry.has_value() &&
+            !current_entry->program.content_path.empty() &&
+            std::filesystem::exists(current_entry->program.content_path);
 
-        if (!current_entry) {
-            // No scheduled content - play filler or wait
-            if (!cfg.filler_playlist.empty() && std::filesystem::exists(cfg.filler_playlist)) {
-                do_encode_segment(config_.hls_output_dir, channel_id, cfg, config_,
-                                  cfg.filler_playlist, 0.0,
-                                  static_cast<double>(cfg.segment_duration_seconds));
+        std::string active_input;
+        std::string active_program_id;
+        if (have_scheduled_content) {
+            active_input = current_entry->program.content_path;
+            active_program_id = current_entry->program.id;
+        } else if (!cfg.filler_playlist.empty() && std::filesystem::exists(cfg.filler_playlist)) {
+            active_input = cfg.filler_playlist;
+            active_program_id = "__filler__";
+        }
+
+        if (active_input.empty()) {
+            // Truly nothing to play — stop any running encoder and idle.
+            stop_ffmpeg();
+            running_program_id.clear();
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+            continue;
+        }
+
+        bool process_died = false;
+        if (ffmpeg_pid > 0) {
+            int status = 0;
+            if (waitpid(ffmpeg_pid, &status, WNOHANG) == ffmpeg_pid) {
+                ffmpeg_pid = -1;
+                process_died = true;
             }
-        } else {
-            // Encode current program segment
-            const std::string& content_path = current_entry->program.content_path;
-            if (!content_path.empty() && std::filesystem::exists(content_path)) {
+        }
+
+        bool same_program_looping = process_died && active_program_id == running_program_id;
+
+        if (ffmpeg_pid <= 0 && (active_program_id != running_program_id || process_died)) {
+            double start_offset = 0.0;
+            if (!same_program_looping && current_entry) {
+                // First time this program has started encoding this run —
+                // seek to how far into its *scheduled slot* we are (so
+                // tuning into a channel mid-program joins in progress, not
+                // from the start). Once looping the same content to fill a
+                // slot longer than the content itself, always restart from
+                // 0 instead — "how far into the slot" no longer means "how
+                // far into this particular playthrough" once it's looped.
                 auto now = std::chrono::system_clock::now();
-                double start_offset = std::chrono::duration<double>(
-                    now - current_entry->start_time
-                ).count();
-                if (start_offset < 0) start_offset = 0;
+                double raw = std::chrono::duration<double>(now - current_entry->start_time).count();
+                if (raw < 0) raw = 0;
+                if (current_entry->program.duration_seconds > 0) {
+                    raw = std::fmod(raw, static_cast<double>(current_entry->program.duration_seconds));
+                }
+                start_offset = raw;
+            }
 
-                do_encode_segment(config_.hls_output_dir, channel_id, cfg, config_,
-                                  content_path, start_offset,
-                                  static_cast<double>(cfg.segment_duration_seconds));
+            pid_t pid = spawn_persistent_hls_encode(config_.hls_output_dir, channel_id, cfg, config_,
+                                                     active_input, start_offset);
+            if (pid > 0) {
+                ffmpeg_pid = pid;
+                running_program_id = active_program_id;
+            } else {
+                std::cerr << "[TvEngine] Failed to start encoder for channel " << channel_id << std::endl;
             }
         }
 
-        auto now = clock::now();
-        if (next_deadline > now) {
-            std::this_thread::sleep_until(next_deadline);
-        } else {
-            next_deadline = now;  // fell behind (slow encode/host) — resync rather than try to catch up
-        }
+        // Just supervising now (is the program still current? did ffmpeg
+        // die?) — no need to hammer this faster than about once a second.
+        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
+
+    stop_ffmpeg();
 
     // Mark stopped
     {
@@ -735,36 +781,65 @@ const TvScheduleEntry* TvEngine::get_current_scheduled_program(
     return nullptr;
 }
 
-// Internal helper (not in header - used only from stream_thread)
-static void do_encode_segment(
+// Internal helper (not in header - used only from stream_thread).
+//
+// Spawns ONE long-running ffmpeg process that seeks into input_path and
+// continuously encodes+segments from there until it's killed or reaches
+// EOF on its own — unlike restarting a short per-segment ffmpeg invocation
+// every few seconds (the previous design), this never re-opens the HLS
+// muxer mid-program, so the playlist never flickers #EXT-X-ENDLIST or gets
+// a fresh #EXT-X-DISCONTINUITY on every segment (confirmed live: the old
+// design produced a discontinuity tag on literally every 4-second segment,
+// and briefly wrote #EXT-X-ENDLIST — "no more segments ever" — between
+// each invocation, which a player polling at the wrong instant would take
+// as the broadcast having ended). fork()+execvp() (not std::system(), which
+// blocks synchronously until exit) so the caller gets a real pid back and
+// can keep supervising other channel state while this runs in the
+// background — same pattern already used for libretro's ffmpeg spawn.
+static pid_t spawn_persistent_hls_encode(
     const std::string& hls_output_dir,
     const std::string& channel_id,
     const TvChannelConfig& cfg,
     const TvEngineConfig& engine_cfg,
     const std::string& input_path,
-    double start_offset,
-    double duration
+    double start_offset
 ) {
     std::string hls_dir = hls_output_dir + "/" + channel_id;
     std::filesystem::create_directories(hls_dir);
 
-    std::string cmd = "/usr/bin/ffmpeg"
-        " -ss " + std::to_string(start_offset)
-        + " -i \"" + input_path + "\""
-        + " -t " + std::to_string(duration)
-        + " -c:v " + cfg.codec
-        + " -preset " + engine_cfg.video_preset
-        + " -c:a " + engine_cfg.default_audio_codec
-        + " -b:a " + std::to_string(engine_cfg.audio_bitrate_kbps) + "k"
-        + " -ar " + std::to_string(engine_cfg.audio_sample_rate)
-        + " -hls_time " + std::to_string(engine_cfg.hls_segment_duration)
-        + " -hls_list_size " + std::to_string(engine_cfg.hls_playlist_size)
-        + " -hls_flags delete_segments+append_list"
-        + " -hls_segment_filename \"" + hls_dir + "/seg_%05d.ts\""
-        + " \"" + hls_dir + "/stream.m3u8\""
-        + " -y 2>/dev/null";
+    std::vector<std::string> args = {
+        "ffmpeg", "-hide_banner", "-loglevel", "warning",
+        // -re: read the input at its native frame rate. Without it ffmpeg
+        // encodes the entire file as fast as the CPU allows (confirmed
+        // live: 10 segments covering ~86 content-seconds appeared in the
+        // first 3 real seconds) — fine for a one-shot transcode, wrong for
+        // a "live" channel that's supposed to track wall-clock time.
+        // RadioEngine's ffmpeg invocation already does this correctly.
+        "-re",
+        "-ss", std::to_string(start_offset),
+        "-i", input_path,
+        "-c:v", cfg.codec,
+        "-preset", engine_cfg.video_preset,
+        "-c:a", engine_cfg.default_audio_codec,
+        "-b:a", std::to_string(engine_cfg.audio_bitrate_kbps) + "k",
+        "-ar", std::to_string(engine_cfg.audio_sample_rate),
+        "-hls_time", std::to_string(engine_cfg.hls_segment_duration),
+        "-hls_list_size", std::to_string(engine_cfg.hls_playlist_size),
+        "-hls_flags", "delete_segments+append_list",
+        "-hls_segment_filename", hls_dir + "/seg_%05d.ts",
+        "-y", hls_dir + "/stream.m3u8",
+    };
 
-    std::system(cmd.c_str());
+    pid_t pid = fork();
+    if (pid == 0) {
+        std::vector<char*> argv;
+        argv.reserve(args.size() + 1);
+        for (auto& a : args) argv.push_back(a.data());
+        argv.push_back(nullptr);
+        execvp("ffmpeg", argv.data());
+        _exit(127);  // only reached if exec failed
+    }
+    return pid;  // -1 on fork() failure — caller checks
 }
 
 void TvEngine::prepare_next_segment(TvChannelState& state) {
