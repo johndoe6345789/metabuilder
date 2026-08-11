@@ -1,1 +1,0 @@
-export { RainbowText } from './RainbowText';

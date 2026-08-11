@@ -1,1 +1,0 @@
-export { MarqueeText } from './MarqueeText';
