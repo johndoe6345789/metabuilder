@@ -244,8 +244,8 @@ npm run build --workspaces
 
 # Base images and the stack live in the sibling deployment repo.
 # In CI you pull the published base rather than building it:
-docker pull ghcr.io/johndoe6345789/metabuilder-base-node-deps:latest
-docker tag  ghcr.io/johndoe6345789/metabuilder-base-node-deps:latest \
+docker pull ghcr.io/johndoe6345789/deployment/base-node-deps:latest
+docker tag  ghcr.io/johndoe6345789/deployment/base-node-deps:latest \
             metabuilder/base-node-deps:latest
 
 cd ../deployment && python3 deployment.py build base  # Build Docker base images
@@ -324,7 +324,7 @@ packages and DBAL that no longer live here).
 | `nextjs.yml` | lint, typecheck, unit, build, E2E | Needs 11 repos / 13 mounts |
 | `cli.yml` | Conan + CMake, Release & Debug | Self-contained; no mounts |
 | `qt6.yml` | CMake + prebuilt Qt (aqtinstall) | **No Conan** — see below |
-| `docker.yml` | Publishes `metabuilder-{nextjs,cli}` to GHCR | Every push to main; multi-arch |
+| `docker.yml` | Publishes `metabuilder/{nextjs-app,cli}` to GHCR | Every push to main; multi-arch |
 | `bump-workspace-pins.yml` | Weekly pin refresh → PR | Manual dispatch too |
 
 **Container images** — `docker.yml` builds both app images natively on
@@ -332,7 +332,7 @@ packages and DBAL that no longer live here).
 with `docker buildx imagetools create` into `:latest` and `:<sha>`. It runs on
 *every* push because it no longer builds a base image: the sibling
 [deployment](https://github.com/johndoe6345789/deployment) repo publishes
-`metabuilder-base-{apt,conan-cli,node-deps}` to GHCR and these jobs pull one,
+`deployment/base-{apt,conan-cli,node-deps}` to GHCR and these jobs pull one,
 retagging it to the `metabuilder/base-*:latest` name the app Dockerfiles
 expect (their `ARG BASE_REGISTRY=metabuilder` default makes this work with no
 Dockerfile change). A stale base costs build minutes, never correctness — the
@@ -514,7 +514,7 @@ Multi-version peer deps. React 18/19, TypeScript 5.9.3, Next.js 14-16, @reduxjs/
 | A base image Dockerfile that `COPY`s from another repo | `Dockerfile.conan-cli` needs `frontends/cli/conanfile.txt` and `Dockerfile.node-deps` needs every workspace `package.json` — both from metabuilder. The deployment repo's `base-images.yml` checks metabuilder out at `_metabuilder/` and passes *that* as the build context while keeping `-f` pointed at its own Dockerfile. For node-deps it must also run `assemble_workspace.py` first, or the workspace `package.json` COPYs fail |
 | A stale `COPY` line in a base image Dockerfile is fatal; a missing one is not | `COPY` of an absent path fails the build outright, which is why the eight removed frontends had to come out of `Dockerfile.node-deps`. Workspaces *omitted* from that list only cost cache efficiency: the app Dockerfiles re-run `npm install` over the real source afterwards |
 | Publishing a base image built from this repo's `.npmrc` | The committed `.npmrc` carries a Verdaccio `_authToken` and points `@esbuild-kit`/`@metabuilder` at `localhost:4873`. The `COPY package.json .npmrc ./` layer preserves whatever was on disk, so the sanitising `sed` has to run on the *host* before the context is sent — an in-`RUN` sed cannot remove it from the earlier layer. `base-images.yml` asserts the published image is clean before pushing |
-| GHCR packages are private on first push | A package created by one repo's Actions run is not readable by another repo's `GITHUB_TOKEN`. After the deployment repo's first `base-images` run, make the three `metabuilder-base-*` packages public (or grant metabuilder read access), or `docker.yml`'s pull step fails |
+| GHCR package naming | This account nests packages under the publishing repo — `metabuilder/nextjs-app`, `deployment/base-apt`, `businessplanner/businessplanner-base-apt`. Follow that; a flat `metabuilder-base-apt` works but is the odd one out. This repo publishes exactly two: `metabuilder/nextjs-app` and `metabuilder/cli`. Packages published by Actions here come out **public**, so no cross-repo grant is needed — the pull from the deployment repo's packages just works |
 
 ### Critical Folders to Check Before Any Task
 

@@ -1,7 +1,7 @@
 name: docker
 
 # Builds and publishes the two container images this repo produces —
-# metabuilder-nextjs and metabuilder-cli — for linux/amd64 and linux/arm64,
+# metabuilder/nextjs-app and metabuilder/cli — for linux/amd64 and linux/arm64,
 # then joins each pair under a single multi-arch tag.
 #
 # This runs on every push to main. It can afford to, because it no longer
@@ -9,8 +9,8 @@ name: docker
 # (github.com/johndoe6345789/deployment) publishes them to GHCR, and the jobs
 # here just pull one.
 #
-#   cli     <- ghcr.io/johndoe6345789/metabuilder-base-conan-cli
-#   nextjs  <- ghcr.io/johndoe6345789/metabuilder-base-node-deps
+#   cli     <- ghcr.io/johndoe6345789/deployment/base-conan-cli
+#   nextjs  <- ghcr.io/johndoe6345789/deployment/base-node-deps
 #
 # A stale base is never wrong, only slower: frontends/nextjs/Dockerfile re-runs
 # npm install and frontends/cli/Dockerfile re-runs conan install
@@ -45,26 +45,34 @@ jobs:
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 120
 
+    # `image` is the frontends/ directory; `pkg` is the GHCR package leaf, which
+    # is not always the same. Packages are nested under the publishing repo to
+    # match the convention across this account, and nextjs keeps the
+    # metabuilder/nextjs-app name it has been published under since Mar 2026.
     strategy:
       fail-fast: false
       matrix:
         include:
           - image: cli
+            pkg: cli
             arch: amd64
             runner: ubuntu-latest
           - image: cli
+            pkg: cli
             arch: arm64
             runner: ubuntu-24.04-arm
           - image: nextjs
+            pkg: nextjs-app
             arch: amd64
             runner: ubuntu-latest
           - image: nextjs
+            pkg: nextjs-app
             arch: arm64
             runner: ubuntu-24.04-arm
 
     env:
       APP: ${{ matrix.image }}
-      IMAGE: ghcr.io/johndoe6345789/metabuilder-${{ matrix.image }}
+      IMAGE: ghcr.io/johndoe6345789/metabuilder/${{ matrix.pkg }}
       ARCH: ${{ matrix.arch }}
       SHA: ${{ github.sha }}
 
@@ -119,18 +127,18 @@ jobs:
       # name is all it takes — no --build-arg and no Dockerfile change.
       #
       # The base is pulled, never built: its Dockerfile lives in the deployment
-      # repo now. If this step fails, the base has not been published yet (or
-      # its GHCR package is private and has not granted this repo access).
+      # repo now. These packages publish public, so no cross-repo grant is
+      # needed; a failure here means the base has not been published yet.
       - name: Pull base image
         env:
           BASE: ${{ matrix.image == 'cli' && 'conan-cli' || 'node-deps' }}
         run: |
-          REMOTE="ghcr.io/johndoe6345789/metabuilder-base-${BASE}:latest"
+          REMOTE="ghcr.io/johndoe6345789/deployment/base-${BASE}:latest"
           if ! docker pull "$REMOTE"; then
             echo "::error::Could not pull $REMOTE"
-            echo "Base images are built by github.com/johndoe6345789/deployment"
-            echo "  -> run its 'base-images' workflow, then make the GHCR package"
-            echo "     public (or grant this repo read access to it)."
+            echo "Base images come from github.com/johndoe6345789/deployment"
+            echo "  -> its 'base-images' workflow must have completed at least"
+            echo "     once, including the manifest job that creates :latest."
             exit 1
           fi
           docker tag "$REMOTE" "metabuilder/base-${BASE}:latest"
@@ -209,18 +217,19 @@ jobs:
         run: docker push "$IMAGE:${SHA}-${ARCH}"
 
   manifest:
-    name: manifest (${{ matrix.image }})
+    name: manifest (${{ matrix.pkg }})
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
+    # Must stay in step with the build matrix's `pkg` values above.
     strategy:
       fail-fast: false
       matrix:
-        image: [cli, nextjs]
+        pkg: [cli, nextjs-app]
 
     env:
-      IMAGE: ghcr.io/johndoe6345789/metabuilder-${{ matrix.image }}
+      IMAGE: ghcr.io/johndoe6345789/metabuilder/${{ matrix.pkg }}
       SHA: ${{ github.sha }}
 
     steps:

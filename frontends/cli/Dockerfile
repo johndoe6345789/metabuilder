@@ -4,8 +4,8 @@
 #           deployment repo (github.com/johndoe6345789/deployment), so pull
 #           and retag rather than building it:
 #
-#   docker pull ghcr.io/johndoe6345789/metabuilder-base-conan-cli:latest
-#   docker tag  ghcr.io/johndoe6345789/metabuilder-base-conan-cli:latest \
+#   docker pull ghcr.io/johndoe6345789/deployment/base-conan-cli:latest
+#   docker tag  ghcr.io/johndoe6345789/deployment/base-conan-cli:latest \
 #               metabuilder/base-conan-cli:latest
 
 ARG BASE_REGISTRY=metabuilder

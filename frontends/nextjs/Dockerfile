@@ -4,8 +4,8 @@
 #           deployment repo (github.com/johndoe6345789/deployment), so pull
 #           and retag rather than building it:
 #
-#   docker pull ghcr.io/johndoe6345789/metabuilder-base-node-deps:latest
-#   docker tag  ghcr.io/johndoe6345789/metabuilder-base-node-deps:latest \
+#   docker pull ghcr.io/johndoe6345789/deployment/base-node-deps:latest
+#   docker tag  ghcr.io/johndoe6345789/deployment/base-node-deps:latest \
 #               metabuilder/base-node-deps:latest
 
 # --- Build stage ---
