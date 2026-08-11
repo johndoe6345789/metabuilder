@@ -1,7 +1,12 @@
 # Multi-stage build: node_modules from base image, source built fresh
 # Context: monorepo root (..)
-# Requires: docker build -f deployment/base-images/Dockerfile.node-deps \
-#           -t metabuilder/base-node-deps:latest .
+# Requires: metabuilder/base-node-deps:latest. It is published by the
+#           deployment repo (github.com/johndoe6345789/deployment), so pull
+#           and retag rather than building it:
+#
+#   docker pull ghcr.io/johndoe6345789/metabuilder-base-node-deps:latest
+#   docker tag  ghcr.io/johndoe6345789/metabuilder-base-node-deps:latest \
+#               metabuilder/base-node-deps:latest
 
 # --- Build stage ---
 ARG BASE_REGISTRY=metabuilder

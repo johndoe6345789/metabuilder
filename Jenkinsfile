@@ -21,6 +21,24 @@ pipeline {
             }
         }
 
+        // The deployment tree moved to its own repo
+        // (github.com/johndoe6345789/deployment) because it describes the whole
+        // platform rather than this one. The Base Images / App Images / Deploy
+        // stages below still drive it, so it is cloned into the workspace at
+        // the path they expect.
+        //
+        // Those three stages predate the repo split and still act on the full
+        // ~20-service stack, most of which now lives in other repos; they
+        // arguably belong in the deployment repo's own pipeline.
+        stage('Checkout deployment') {
+            steps {
+                dir('deployment') {
+                    git url: 'https://github.com/johndoe6345789/deployment.git',
+                        branch: 'main'
+                }
+            }
+        }
+
         stage('Base Images') {
             when { expression { !params.SKIP_BASE } }
             steps {

@@ -1,6 +1,12 @@
 # Build the metabuilder-cli C++ binary
 # Context: monorepo root (..)
-# Requires: metabuilder/base-conan-cli:latest base image
+# Requires: metabuilder/base-conan-cli:latest. It is published by the
+#           deployment repo (github.com/johndoe6345789/deployment), so pull
+#           and retag rather than building it:
+#
+#   docker pull ghcr.io/johndoe6345789/metabuilder-base-conan-cli:latest
+#   docker tag  ghcr.io/johndoe6345789/metabuilder-base-conan-cli:latest \
+#               metabuilder/base-conan-cli:latest
 
 ARG BASE_REGISTRY=metabuilder
 FROM ${BASE_REGISTRY}/base-conan-cli:latest AS builder

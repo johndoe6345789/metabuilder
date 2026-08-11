@@ -1,8 +1,0 @@
-# Lightweight init container that copies DBAL schemas and templates into named
-# volumes so the DBAL daemon has them at runtime without host bind mounts.
-FROM alpine:3.20
-COPY libraries/dbal/shared/api/schema/entities /seed/schemas/entities
-COPY libraries/dbal/shared/api/schema/oidc     /seed/schemas/oidc
-COPY libraries/dbal/shared/api/schema/saml     /seed/schemas/saml
-COPY libraries/dbal/templates/sql              /seed/templates/sql
-CMD ["sh", "-c", "cp -r /seed/schemas/entities/* /target/schemas/entities/ 2>/dev/null; cp -r /seed/schemas/oidc/* /target/schemas/oidc/ 2>/dev/null; cp -r /seed/schemas/saml/* /target/schemas/saml/ 2>/dev/null; cp -r /seed/templates/sql/* /target/templates/sql/ 2>/dev/null; echo 'DBAL config seeded'"]

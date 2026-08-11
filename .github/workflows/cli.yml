@@ -1,0 +1,116 @@
+name: cli
+
+# The C++ CLI is the only frontend in this repo that is self-contained: all of
+# its sources live under frontends/cli/src and every dependency (cpr, lua,
+# sol2, nlohmann_json) comes from Conan. No workspace assembly is needed.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'frontends/cli/**'
+      - '.github/workflows/cli.yml'
+  pull_request:
+    paths:
+      - 'frontends/cli/**'
+      - '.github/workflows/cli.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: cli-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build (${{ matrix.build_type }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    strategy:
+      fail-fast: false
+      matrix:
+        build_type: [Release, Debug]
+
+    env:
+      BUILD_TYPE: ${{ matrix.build_type }}
+
+    defaults:
+      run:
+        working-directory: frontends/cli
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Install Conan
+        run: pip install --upgrade 'conan>=2.1'
+
+      # Keyed on the conanfile so the cache is reused until dependencies
+      # actually change. Restore-keys let an outdated cache still seed the
+      # rebuild rather than starting from nothing.
+      - name: Cache Conan packages
+        uses: actions/cache@v6
+        with:
+          path: ~/.conan2
+          key: conan-cli-${{ runner.os }}-${{ matrix.build_type }}-${{ hashFiles('frontends/cli/conanfile.txt') }}
+          restore-keys: |
+            conan-cli-${{ runner.os }}-${{ matrix.build_type }}-
+            conan-cli-${{ runner.os }}-
+
+      - name: Detect Conan profile
+        run: conan profile detect --force
+
+      # cpr pulls in libcurl, which wants OpenSSL headers on the host.
+      - name: Install system packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential libssl-dev pkg-config
+
+      # frontends/cli/conanfile.txt declares no [layout], so the output folder
+      # is passed explicitly. _build rather than build/ to avoid colliding with
+      # the CMake target of the same name.
+      - name: Conan install
+        run: |
+          conan install . \
+            --output-folder=_build \
+            --build=missing \
+            --settings=build_type="$BUILD_TYPE"
+
+      # Absolute path deliberately: CMake resolves a relative
+      # CMAKE_TOOLCHAIN_FILE against the build directory, so "_build/..." here
+      # would wrongly become "_build/_build/...".
+      - name: Configure
+        run: |
+          cmake -S . -B _build \
+            -DCMAKE_TOOLCHAIN_FILE="$PWD/_build/conan_toolchain.cmake" \
+            -DCMAKE_BUILD_TYPE="$BUILD_TYPE"
+
+      - name: Build
+        run: cmake --build _build --parallel "$(nproc)"
+
+      - name: Smoke test the binary
+        run: |
+          BIN=_build/metabuilder-cli
+          test -x "$BIN" || { echo "binary not produced at $BIN"; exit 1; }
+          file "$BIN"
+          # The CLI targets a running DBAL daemon over HTTP, so there is no
+          # network-free command that exercises real behaviour here. This
+          # confirms the binary links and starts rather than testing logic.
+          "$BIN" --help || true
+
+      - name: Upload binary
+        if: ${{ matrix.build_type == 'Release' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: metabuilder-cli-${{ matrix.build_type }}
+          path: frontends/cli/_build/metabuilder-cli
+          if-no-files-found: error

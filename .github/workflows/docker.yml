@@ -1,0 +1,250 @@
+name: docker
+
+# Builds and publishes the two container images this repo produces —
+# metabuilder-nextjs and metabuilder-cli — for linux/amd64 and linux/arm64,
+# then joins each pair under a single multi-arch tag.
+#
+# This runs on every push to main. It can afford to, because it no longer
+# builds a base image: the base-images workflow in the deployment repo
+# (github.com/johndoe6345789/deployment) publishes them to GHCR, and the jobs
+# here just pull one.
+#
+#   cli     <- ghcr.io/johndoe6345789/metabuilder-base-conan-cli
+#   nextjs  <- ghcr.io/johndoe6345789/metabuilder-base-node-deps
+#
+# A stale base is never wrong, only slower: frontends/nextjs/Dockerfile re-runs
+# npm install and frontends/cli/Dockerfile re-runs conan install
+# --build=missing, so neither pipeline has to wait on the other.
+#
+# nextjs additionally cannot build from a checkout of this repo alone: its
+# workspaces live in sibling micro-repos and are mounted by
+# .github/scripts/assemble_workspace.py before the build context is handed to
+# Docker. qt6 has no Dockerfile and so is not built here.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      floating:
+        description: 'Ignore workspace.json pins and use each sibling repo branch head'
+        type: boolean
+        default: false
+
+concurrency:
+  group: docker-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    name: ${{ matrix.image }} (${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 120
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image: cli
+            arch: amd64
+            runner: ubuntu-latest
+          - image: cli
+            arch: arm64
+            runner: ubuntu-24.04-arm
+          - image: nextjs
+            arch: amd64
+            runner: ubuntu-latest
+          - image: nextjs
+            arch: arm64
+            runner: ubuntu-24.04-arm
+
+    env:
+      APP: ${{ matrix.image }}
+      IMAGE: ghcr.io/johndoe6345789/metabuilder-${{ matrix.image }}
+      ARCH: ${{ matrix.arch }}
+      SHA: ${{ github.sha }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # The pulled base is several GB, and the assembled nextjs workspace plus
+      # its node_modules is several more. A default runner has ~14 GB free,
+      # which these builds exhaust. None of the toolchains removed here are
+      # used by a Docker build. The hosted toolcache is deliberately left
+      # alone: the assemble-workspace action runs setup-python right after.
+      - name: Free disk space
+        run: |
+          before=$(df --output=avail -BG / | tail -1)
+          sudo rm -rf \
+            /usr/share/dotnet \
+            /usr/local/lib/android \
+            /opt/ghc \
+            /usr/local/share/boost || true
+          echo "root fs available: ${before} -> $(df --output=avail -BG / | tail -1)"
+
+      - name: Assemble workspace
+        if: ${{ matrix.image == 'nextjs' }}
+        uses: ./.github/actions/assemble-workspace
+        with:
+          frontend: nextjs
+          token: ${{ secrets.WORKSPACE_TOKEN }}
+          floating: ${{ inputs.floating && 'true' || 'false' }}
+
+      # The committed .npmrc points @esbuild-kit and @metabuilder at a
+      # Verdaccio on localhost:4873 for desktop builds. No such registry exists
+      # on a runner, and Dockerfile.node-deps hard-fails its reachability check
+      # on any registry it cannot resolve. Every @metabuilder/* package is a
+      # workspace here, so npm resolves them locally without a registry.
+      - name: Point .npmrc at the public registry
+        if: ${{ matrix.image == 'nextjs' }}
+        run: |
+          sed -i '/localhost:4873/d; /localhost:8091/d; /host\.docker\.internal/d' .npmrc
+          echo "--- .npmrc ---"
+          cat .npmrc
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # The app Dockerfiles say FROM ${BASE_REGISTRY}/base-*:latest with
+      # BASE_REGISTRY defaulting to "metabuilder", so retagging to that local
+      # name is all it takes — no --build-arg and no Dockerfile change.
+      #
+      # The base is pulled, never built: its Dockerfile lives in the deployment
+      # repo now. If this step fails, the base has not been published yet (or
+      # its GHCR package is private and has not granted this repo access).
+      - name: Pull base image
+        env:
+          BASE: ${{ matrix.image == 'cli' && 'conan-cli' || 'node-deps' }}
+        run: |
+          REMOTE="ghcr.io/johndoe6345789/metabuilder-base-${BASE}:latest"
+          if ! docker pull "$REMOTE"; then
+            echo "::error::Could not pull $REMOTE"
+            echo "Base images are built by github.com/johndoe6345789/deployment"
+            echo "  -> run its 'base-images' workflow, then make the GHCR package"
+            echo "     public (or grant this repo read access to it)."
+            exit 1
+          fi
+          docker tag "$REMOTE" "metabuilder/base-${BASE}:latest"
+
+      - name: Build image
+        run: |
+          docker build \
+            -f "frontends/${APP}/Dockerfile" \
+            -t "$IMAGE:${SHA}-${ARCH}" \
+            .
+
+      # A bare invocation prints usage and exits 0 (command_dispatch.cpp), so
+      # this exercises the real entrypoint rather than only asserting the file
+      # exists. Every command past that point talks to a DBAL daemon over HTTP,
+      # which is out of scope for an image smoke test.
+      - name: Smoke test (cli)
+        if: ${{ matrix.image == 'cli' }}
+        run: |
+          docker run --rm --entrypoint sh "$IMAGE:${SHA}-${ARCH}" -c '
+            set -e
+            test -x /usr/local/bin/metabuilder-cli || { echo "binary missing"; exit 1; }
+            if ldd /usr/local/bin/metabuilder-cli | grep "not found"; then
+              echo "unresolved shared libraries in runtime image"; exit 1
+            fi
+          '
+          out=$(docker run --rm "$IMAGE:${SHA}-${ARCH}")
+          echo "$out"
+          echo "$out" | grep -q "Usage: metabuilder-cli" \
+            || { echo "entrypoint did not print usage"; exit 1; }
+
+      # packages/ is checked because scripts/compile-tokens.mjs writes a
+      # "tokens.json not found" stub and exits 0 when it is absent — a missing
+      # workspace mount yields a tokenless app, not a failed build.
+      - name: Smoke test (nextjs)
+        if: ${{ matrix.image == 'nextjs' }}
+        run: |
+          docker run --rm --entrypoint sh "$IMAGE:${SHA}-${ARCH}" -c '
+            set -e
+            test -f /app/frontends/nextjs/server.js   || { echo "standalone server missing"; exit 1; }
+            test -d /app/frontends/nextjs/.next/static || { echo "static assets missing"; exit 1; }
+            count=$(ls /app/packages | wc -l)
+            [ "$count" -gt 0 ] || { echo "packages/ is empty - design tokens would be stubbed"; exit 1; }
+            echo "packages: $count"
+          '
+
+      # basePath is /app (next.config.ts), so the health route is served at
+      # /app/api/health - the same path the image HEALTHCHECK uses.
+      - name: Boot test (nextjs)
+        if: ${{ matrix.image == 'nextjs' }}
+        run: |
+          docker run -d --name nextjs-smoke -p 3000:3000 "$IMAGE:${SHA}-${ARCH}"
+          for i in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:3000/app/api/health > /tmp/health.json; then
+              echo "healthy after ${i}s:"
+              cat /tmp/health.json
+              docker rm -f nextjs-smoke > /dev/null
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "server did not become healthy within 60s"
+          docker logs nextjs-smoke
+          docker rm -f nextjs-smoke > /dev/null
+          exit 1
+
+      - name: Report image size
+        run: |
+          SIZE=$(docker image inspect "$IMAGE:${SHA}-${ARCH}" --format '{{.Size}}')
+          {
+            echo "### ${APP} (${ARCH})"
+            echo
+            echo "size: $((SIZE / 1024 / 1024)) MB"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Push
+        run: docker push "$IMAGE:${SHA}-${ARCH}"
+
+  manifest:
+    name: manifest (${{ matrix.image }})
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    strategy:
+      fail-fast: false
+      matrix:
+        image: [cli, nextjs]
+
+    env:
+      IMAGE: ghcr.io/johndoe6345789/metabuilder-${{ matrix.image }}
+      SHA: ${{ github.sha }}
+
+    steps:
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create and push manifest
+        run: |
+          docker buildx imagetools create \
+            --tag "$IMAGE:latest" \
+            --tag "$IMAGE:${SHA}" \
+            "$IMAGE:${SHA}-amd64" \
+            "$IMAGE:${SHA}-arm64"
+
+      - name: Verify manifest platforms
+        run: |
+          docker buildx imagetools inspect "$IMAGE:${SHA}"
+          RAW=$(docker buildx imagetools inspect "$IMAGE:${SHA}" --raw)
+          for want in amd64 arm64; do
+            echo "$RAW" | grep -q "\"$want\"" \
+              || { echo "manifest is missing linux/$want"; exit 1; }
+          done
+          echo "manifest covers linux/amd64 and linux/arm64"

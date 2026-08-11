@@ -9,7 +9,7 @@ import { getAuthToken } from '@metabuilder/dbal-sso/core'
 // exists inside the Next.js app, which is mounted under basePath "/app"
 // (next.config.js) — so it must be reached as /app/api/v1/... . A bare
 // /api/... path never reaches Next.js at all: nginx's own "/api/" location
-// (deployment/config/nginx/production.conf) proxies straight to raw DBAL
+// (config/nginx/production.conf in the deployment repo) proxies straight to raw DBAL
 // under a *different* convention, /api/{tenant}/{package}/{entity} (no
 // "v1"), stripping just "/api/". Hitting it with the Next.js-shaped path
 // shifts every segment by one, so DBAL parsed our packageId ("platform")

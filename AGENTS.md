@@ -51,8 +51,8 @@ POST /pastebin/pastebin/User
 | `libraries/dbal/production/src/daemon/server_routes.cpp` | Route registration + auto-seed startup |
 | `frontends/pastebin/backend/src/` | C++/Drogon backend — DBAL-only JWT auth, snippets, code run/debug, AI proxy |
 | `frontends/pastebin/src/` | Next.js React app |
-| `deployment/metabuilder/compose.yml` | Full stack compose |
-| `deployment/deployment.py` | Python CLI for all build/deploy/stack commands |
+| `../deployment/metabuilder/compose.yml` | Full stack compose — moved to the [deployment](https://github.com/johndoe6345789/deployment) repo |
+| `../deployment/deployment.py` | Python CLI for all build/deploy/stack commands — same repo |
 
 ---
 

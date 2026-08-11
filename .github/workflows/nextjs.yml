@@ -1,0 +1,193 @@
+name: nextjs
+
+# The Next.js frontend cannot build from a checkout of this repo alone: the
+# root package.json declares npm workspaces under libraries/*, and those
+# libraries now live in sibling micro-repos. The workspace is reassembled from
+# .github/workspace.json before anything else runs.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'frontends/nextjs/**'
+      - 'package.json'
+      - 'config/**'
+      - 'scripts/patch-bundled-deps.sh'
+      - '.github/workflows/nextjs.yml'
+      - '.github/workspace.json'
+      - '.github/scripts/assemble_workspace.py'
+      - '.github/actions/assemble-workspace/**'
+  pull_request:
+    paths:
+      - 'frontends/nextjs/**'
+      - 'package.json'
+      - 'config/**'
+      - 'scripts/patch-bundled-deps.sh'
+      - '.github/workflows/nextjs.yml'
+      - '.github/workspace.json'
+      - '.github/scripts/assemble_workspace.py'
+      - '.github/actions/assemble-workspace/**'
+  workflow_dispatch:
+    inputs:
+      floating:
+        description: 'Ignore workspace.json pins and use each sibling repo branch head'
+        type: boolean
+        default: false
+
+concurrency:
+  group: nextjs-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  nextjs:
+    name: Lint, typecheck, test, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    # Every step after the first runs even when an earlier one fails, so a
+    # single run reports every problem rather than only the first.
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Assemble workspace
+        uses: ./.github/actions/assemble-workspace
+        with:
+          frontend: nextjs
+          token: ${{ secrets.WORKSPACE_TOKEN }}
+          floating: ${{ inputs.floating && 'true' || 'false' }}
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+
+      - name: Cache npm downloads
+        uses: actions/cache@v6
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('package.json', 'frontends/nextjs/package.json', '.github/workspace.json') }}
+          restore-keys: npm-${{ runner.os }}-
+
+      # No package-lock.json is committed, so npm ci is not an option.
+      # Retried because workspace installs of this size hit transient
+      # registry failures often enough to matter.
+      - name: Install dependencies
+        id: install
+        run: |
+          for attempt in 1 2 3; do
+            npm install && exit 0
+            echo "npm install attempt $attempt failed; retrying in 15s"
+            sleep 15
+          done
+          exit 1
+
+      # frontends/nextjs/scripts/typecheck.cjs suppresses module-resolution
+      # errors (TS2307, TS2339, ...) on the assumption that CI has already
+      # built the workspace packages. If this step is skipped, typecheck
+      # silently stops checking large parts of the app rather than failing.
+      #
+      # Only the libraries/* workspaces are built here. A plain
+      # `npm run build --workspaces` would also build frontends/nextjs itself,
+      # because it is a workspace too - which would move the app build into
+      # this step and then run it a second time below.
+      - name: Build workspace libraries
+        id: build_libs
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          npm query '.workspace' \
+            | python3 -c 'import json,sys; [print(w["location"]) for w in json.load(sys.stdin) if w["location"].startswith("libraries/")]' \
+            > /tmp/lib-workspaces.txt
+
+          count=$(wc -l < /tmp/lib-workspaces.txt)
+          if [ "$count" -eq 0 ]; then
+            echo "No libraries/* workspaces found - the workspace was not assembled."
+            exit 1
+          fi
+          echo "Building $count library workspace(s)."
+
+          while read -r ws; do
+            npm run build --workspace "$ws" --if-present
+          done < /tmp/lib-workspaces.txt
+
+      - name: Lint
+        id: lint
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        working-directory: frontends/nextjs
+        run: npm run lint
+
+      - name: Typecheck
+        id: typecheck
+        if: ${{ !cancelled() && steps.build_libs.outcome == 'success' }}
+        working-directory: frontends/nextjs
+        run: npm run typecheck
+
+      - name: Unit tests
+        id: unit
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        working-directory: frontends/nextjs
+        run: npm run test:run
+
+      - name: Build
+        id: build
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        working-directory: frontends/nextjs
+        run: npm run build
+
+      # E2E runs against frontends/nextjs/playwright.config.ts, which is
+      # self-contained: testDir ./e2e, chromium only, and its own `next dev`
+      # webServer on :3004. It deliberately does NOT use the old monorepo root
+      # config that now lives in the metabuilder_e2e repo - that one starts
+      # workflowui and codesnippet dev servers, which are not in this repo.
+      - name: Install Playwright browser
+        id: browser
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        working-directory: frontends/nextjs
+        run: npx playwright install --with-deps chromium
+
+      # Runs after Build so scripts/compile-tokens.mjs has already produced
+      # src/styles/core/_global-tokens.scss - the webServer command calls
+      # `next dev` directly and would otherwise skip token compilation.
+      - name: E2E tests
+        id: e2e
+        if: ${{ !cancelled() && steps.browser.outcome == 'success' }}
+        working-directory: frontends/nextjs
+        run: npm run test:e2e
+
+      - name: Upload Playwright report
+        if: ${{ !cancelled() && steps.e2e.outcome == 'failure' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: frontends/nextjs/playwright-report
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Report
+        if: ${{ !cancelled() }}
+        env:
+          R_INSTALL: ${{ steps.install.outcome }}
+          R_LIBS: ${{ steps.build_libs.outcome }}
+          R_LINT: ${{ steps.lint.outcome }}
+          R_TYPECHECK: ${{ steps.typecheck.outcome }}
+          R_UNIT: ${{ steps.unit.outcome }}
+          R_BUILD: ${{ steps.build.outcome }}
+          R_E2E: ${{ steps.e2e.outcome }}
+        run: |
+          {
+            echo "### Next.js results"
+            echo
+            echo "| Step | Result |"
+            echo "| --- | --- |"
+            echo "| Install | ${R_INSTALL} |"
+            echo "| Build libraries | ${R_LIBS} |"
+            echo "| Lint | ${R_LINT} |"
+            echo "| Typecheck | ${R_TYPECHECK} |"
+            echo "| Unit tests | ${R_UNIT} |"
+            echo "| Build | ${R_BUILD} |"
+            echo "| E2E | ${R_E2E} |"
+          } >> "$GITHUB_STEP_SUMMARY"

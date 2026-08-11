@@ -157,3 +157,6 @@ e2e/playwright-report/
 /e2e/verify-i18n.config.ts
 /e2e/verify-tm.spec.ts
 /e2e/verify-tm.config.ts
+
+# Cloned by the Jenkinsfile; source of truth is github.com/johndoe6345789/deployment
+/deployment/

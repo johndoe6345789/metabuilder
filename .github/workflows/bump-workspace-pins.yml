@@ -1,0 +1,93 @@
+name: bump-workspace-pins
+
+# .github/workspace.json pins every sibling micro-repo to a commit SHA, which
+# is what makes builds here reproducible and immune to other repos' pushes.
+# The trade-off is drift: nothing picks up sibling changes until the pins move.
+# This job moves them on a schedule and opens a PR, so the update is reviewed
+# and CI proves the new set works before it lands.
+
+on:
+  schedule:
+    # Mondays, 06:00 UTC.
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+    inputs:
+      repos:
+        description: 'Comma-separated repo names to bump (blank = all)'
+        type: string
+        default: ''
+
+concurrency:
+  group: bump-workspace-pins
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  bump:
+    name: Bump sibling repo pins
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Bump pins
+        id: bump
+        env:
+          # A PAT is needed here if any sibling repo is private; the default
+          # token can only see this repository.
+          GITHUB_TOKEN: ${{ secrets.WORKSPACE_TOKEN || secrets.GITHUB_TOKEN }}
+          SELECTED_REPOS: ${{ inputs.repos }}
+        run: |
+          args=()
+          if [ -n "$SELECTED_REPOS" ]; then
+            IFS=',' read -ra names <<< "$SELECTED_REPOS"
+            for name in "${names[@]}"; do
+              trimmed="$(echo "$name" | tr -d '[:space:]')"
+              [ -n "$trimmed" ] && args+=(--repo "$trimmed")
+            done
+          fi
+          python3 .github/scripts/bump_pins.py "${args[@]}"
+
+      - name: Open pull request
+        if: ${{ steps.bump.outputs.count != '' && steps.bump.outputs.count != '0' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CHANGED: ${{ steps.bump.outputs.changed }}
+          COUNT: ${{ steps.bump.outputs.count }}
+        run: |
+          BRANCH="chore/bump-workspace-pins-${GITHUB_RUN_ID}"
+
+          git config user.name  'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git checkout -b "$BRANCH"
+          git add .github/workspace.json
+          git commit -m "chore(ci): bump sibling repo pins (${COUNT} repo(s))"
+          git push origin "$BRANCH"
+
+          {
+            echo "Moves the sibling micro-repo pins in \`.github/workspace.json\`"
+            echo "to their current branch heads."
+            echo
+            echo "Repos bumped (${COUNT}):"
+            echo
+            printf '%s\n' "$CHANGED" | tr ',' '\n' | sed 's/^/- /'
+            echo
+            echo "The nextjs and qt6 workflows run against these new pins on this"
+            echo "PR, so merging it means the updated set is known to build."
+          } > /tmp/pr-body.md
+
+          gh pr create \
+            --title "chore(ci): bump workspace pins (${COUNT} repo(s))" \
+            --body-file /tmp/pr-body.md \
+            --base "${GITHUB_REF_NAME}" \
+            --head "$BRANCH"

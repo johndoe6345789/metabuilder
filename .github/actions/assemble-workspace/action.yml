@@ -1,0 +1,56 @@
+name: 'Assemble MetaBuilder workspace'
+description: >-
+  Clone the sibling micro-repos a frontend depends on and mount them at the
+  paths its build configuration expects. Reads .github/workspace.json.
+
+inputs:
+  frontend:
+    description: 'Which frontend to assemble for: nextjs, qt6 or cli.'
+    required: true
+  token:
+    description: >-
+      Token used to clone the sibling repos. The default GITHUB_TOKEN only has
+      access to this repository, so a PAT is required if any sibling repo is
+      private.
+    required: false
+    default: ''
+  floating:
+    description: >-
+      Set to "true" to use each sibling repo's branch head instead of the SHA
+      pinned in workspace.json.
+    required: false
+    default: 'false'
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v7
+      with:
+        python-version: '3.12'
+
+    - name: Assemble workspace
+      shell: bash
+      env:
+        WORKSPACE_TOKEN: ${{ inputs.token }}
+      run: |
+        python3 .github/scripts/assemble_workspace.py \
+          --frontend "${{ inputs.frontend }}" \
+          --force \
+          ${{ inputs.floating == 'true' && '--floating' || '' }}
+
+    - name: Summarise mounted workspace
+      shell: bash
+      run: |
+        {
+          echo "### Workspace assembled for \`${{ inputs.frontend }}\`"
+          echo
+          if [ "${{ inputs.floating }}" = "true" ]; then
+            echo "> Pins ignored — sibling repos taken at branch head."
+          fi
+          echo '```'
+          for d in libraries packages; do
+            [ -d "$d" ] && find "$d" -maxdepth 1 -mindepth 1 -type d | sort
+          done
+          echo '```'
+        } >> "$GITHUB_STEP_SUMMARY"

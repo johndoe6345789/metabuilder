@@ -16,7 +16,7 @@ This repo used to be a large monorepo (`packages/`, `libraries/`, `services/`, m
 | `frontends/cli` | C++, Lua runtime | Command-line interface targeting MetaBuilder services via HTTP. Lua scripting for package execution. Conan + CMake. |
 | `frontends/qt6` | Qt6, QML | Desktop app — Qt Quick replica of the MetaBuilder landing page. |
 
-Plus supporting root-level content: `config/` (lint, test, misc configs), `deployment/` (Docker Compose stack + build scripts), `docs/`, and `scripts/` (mirrored in [metabuilder-scripts](https://github.com/johndoe6345789/metabuilder-scripts)).
+Plus supporting root-level content: `config/` (lint, test, misc configs), `docs/`, and `scripts/` (mirrored in [metabuilder-scripts](https://github.com/johndoe6345789/metabuilder-scripts)). The Docker base images, Compose stack and build CLI live in the [deployment](https://github.com/johndoe6345789/deployment) repo; the base images this repo builds against are published from there to GHCR.
 
 **Known open item**: `frontends/nextjs` renders admin/auth/dashboard packages (`admin`, `ui_auth`, `ui_login`, `ui_permissions`, `role_editor`, `user_manager`, `audit_log`, `dashboard`, `nav_menu`, `ui_header/footer/home/intro/pages`, `notification_center`, `config_summary`) that moved to the [packages](https://github.com/johndoe6345789/packages) repo along with everything else — that dependency hasn't been reconciled yet.
 
@@ -31,8 +31,43 @@ See the [reposplit README](https://github.com/johndoe6345789/reposplit#readme) f
 
 ## CI/CD Infrastructure
 
-Both the CI stack and credential manager live in a **sibling repo** at
-`../jenkins/` (`github.com/johndoe6345789/jenkins`).
+### GitHub Actions (`.github/`)
+
+| Workflow | What it does |
+|----------|--------------|
+| `nextjs.yml` | Lint, typecheck, unit tests, build, Playwright E2E |
+| `cli.yml` | Conan + CMake build (Release and Debug), uploads the binary |
+| `qt6.yml` | CMake build against a prebuilt Qt (via `aqtinstall`), uploads the binary |
+| `bump-workspace-pins.yml` | Weekly refresh of sibling-repo pins, via PR |
+
+`qt6.yml` deliberately skips Conan: `conanfile.txt` asks for `qt/6.7.3`, which
+Conan has no prebuilt binary for, so it would compile Qt from source and tie up
+(or exhaust) the runner for hours. The workflow installs that same version as a
+binary instead, parsing the version out of `conanfile.txt` so the two can't drift.
+
+**Building locally.** Because MetaBuilder is split across micro-repos, only
+`frontends/cli` builds from a bare checkout. The other two need their
+dependencies mounted first — the root `package.json` still declares npm
+workspaces under `libraries/*`, and `frontends/qt6/CMakeLists.txt` references
+275 paths under `libraries/qml/`, none of which live here any more:
+
+```bash
+# Clone the 10 sibling repos the Next.js frontend needs into libraries/ and packages/
+python3 .github/scripts/assemble_workspace.py --frontend nextjs
+npm install
+
+# Just the QML sources for the Qt6 frontend
+python3 .github/scripts/assemble_workspace.py --frontend qt6
+```
+
+`.github/workspace.json` is the repo → mount-path map (the mapping
+[reposplit](https://github.com/johndoe6345789/reposplit) leaves as an open
+TODO). Each sibling is pinned to a commit SHA, so a push elsewhere can't break
+CI here; `bump-workspace-pins.yml` moves the pins through a PR so the new set
+is proven before it lands. Run `--help` on either script for the full options.
+
+> Set the `WORKSPACE_TOKEN` secret to a PAT if any sibling repo is private —
+> a workflow's default `GITHUB_TOKEN` can only see this repository.
 
 ### Jenkins (`../jenkins/`)
 

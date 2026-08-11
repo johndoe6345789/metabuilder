@@ -16,7 +16,7 @@ All documentation is executable code. No separate markdown docs.
 ./frontends/pastebin/pastebin.py --help        # Pastebin
 ./frontends/postgres/postgres.py --help        # PostgreSQL dashboard
 ./libraries/mojo/mojo.py --help               # Mojo compiler
-cd deployment && python3 deployment.py build base --list  # Docker base images
+cd ../deployment && python3 deployment.py build base --list  # Docker base images (sibling repo)
 
 # Documentation (SQLite3 + FTS5 full-text search)
 cd docs/txt && python3 reports.py search "query"     # 212 reports
@@ -241,10 +241,17 @@ Frontends (CLI C++ | Qt6 QML | Next.js React)
 ```bash
 npm run dev / build / typecheck / lint / test:e2e
 npm run build --workspaces
-cd deployment && python3 deployment.py build base  # Build Docker base images
+
+# Base images and the stack live in the sibling deployment repo.
+# In CI you pull the published base rather than building it:
+docker pull ghcr.io/johndoe6345789/metabuilder-base-node-deps:latest
+docker tag  ghcr.io/johndoe6345789/metabuilder-base-node-deps:latest \
+            metabuilder/base-node-deps:latest
+
+cd ../deployment && python3 deployment.py build base  # Build Docker base images
 
 # Deploy full stack
-cd deployment && python3 deployment.py stack up
+cd ../deployment && python3 deployment.py stack up
 
 # Build & deploy specific apps
 python3 deployment.py build apps --force dbal pastebin  # Next.js frontend only
@@ -305,6 +312,92 @@ Ask: Could this be JSON config? Could a generic renderer handle this? Is it filt
 Both the build pipeline and credential manager are in `../jenkins/`
 (`github.com/johndoe6345789/jenkins`) — a **separate repo in the same GitHub
 folder**, not inside metabuilder.
+
+### GitHub Actions (`.github/`)
+
+Rebuilt from scratch after the repo split — the old monolithic
+`gated-pipeline.yml` is gone and is **not** a reference (it built libraries,
+packages and DBAL that no longer live here).
+
+| Workflow | Covers | Notes |
+|----------|--------|-------|
+| `nextjs.yml` | lint, typecheck, unit, build, E2E | Needs 11 repos / 13 mounts |
+| `cli.yml` | Conan + CMake, Release & Debug | Self-contained; no mounts |
+| `qt6.yml` | CMake + prebuilt Qt (aqtinstall) | **No Conan** — see below |
+| `docker.yml` | Publishes `metabuilder-{nextjs,cli}` to GHCR | Every push to main; multi-arch |
+| `bump-workspace-pins.yml` | Weekly pin refresh → PR | Manual dispatch too |
+
+**Container images** — `docker.yml` builds both app images natively on
+`ubuntu-latest` + `ubuntu-24.04-arm`, pushes `:<sha>-<arch>`, then joins them
+with `docker buildx imagetools create` into `:latest` and `:<sha>`. It runs on
+*every* push because it no longer builds a base image: the sibling
+[deployment](https://github.com/johndoe6345789/deployment) repo publishes
+`metabuilder-base-{apt,conan-cli,node-deps}` to GHCR and these jobs pull one,
+retagging it to the `metabuilder/base-*:latest` name the app Dockerfiles
+expect (their `ARG BASE_REGISTRY=metabuilder` default makes this work with no
+Dockerfile change). A stale base costs build minutes, never correctness — the
+app Dockerfiles re-run `npm install` / `conan install --build=missing`
+themselves — which is why the app pipeline never blocks on the base pipeline.
+
+**Qt6 does not use Conan in CI.** `conanfile.txt` requests `qt/6.7.3`, for which
+Conan has no prebuilt binary, so `--build=missing` would compile Qt from source
+— hours of runner time and enough disk to exhaust the runner. `qt6.yml` instead
+installs the same version prebuilt via `aqtinstall` (the approach
+`CPlusPlusQT6Skel/python/download_qt6/` already uses) and points CMake at it
+with `CMAKE_PREFIX_PATH`. `conanfile.txt` is left untouched and is still the
+source of truth for the **version** — the workflow parses `qt/<version>` out of
+it rather than hardcoding, so the two cannot drift. This works because
+`CMakeLists.txt` includes `conan_toolchain.cmake` with `OPTIONAL`.
+
+**Workspace assembly** — metabuilder follows a micro-repo model, so the npm
+workspaces under `libraries/*` and the QML paths in
+`frontends/qt6/CMakeLists.txt` point at directories that no longer exist here.
+`.github/workspace.json` records the repo → mount-path map (this is the
+mapping the reposplit README left as a TODO), and
+`.github/scripts/assemble_workspace.py` clones them into place.
+
+```bash
+python3 .github/scripts/assemble_workspace.py --frontend nextjs   # 9 repos
+python3 .github/scripts/assemble_workspace.py --frontend qt6      # QML only
+python3 .github/scripts/assemble_workspace.py --all --dry-run
+python3 .github/scripts/bump_pins.py --check                      # pins behind?
+```
+
+Sibling repos are **pinned to commit SHAs**, so a push in another repo can
+never redden CI here; `bump-workspace-pins.yml` moves the pins via PR so the
+new set is proven by CI before it lands. Set the `WORKSPACE_TOKEN` secret to a
+PAT if any sibling repo is private — the default `GITHUB_TOKEN` only sees this
+repo.
+
+### Sibling micro-repo CI (2026-08-11)
+
+All 56 reposplit micro-repos now carry a standalone `.github/workflows/ci.yml`,
+generated from what each repo actually contains rather than a shared template.
+Archetypes: npm (with sibling assembly where needed), C++/CMake (+Conan where a
+conanfile exists), Python (`compileall` + requirements), and JSON validation for
+data-only repos.
+
+Two traps worth knowing when touching those workflows:
+
+- **The m3 family can't `npm install` standalone.** `@metabuilder/*` is never
+  published to npm (404), and the family resolves each other through *flat*
+  relative paths (`../../icons/react/m3`). Their CI clones the family into a
+  sibling layout and generates a root `package.json` with workspaces — and it
+  needs `overrides` pinning `react`/`react-dom`/`react-redux`, or npm resolves
+  `react-redux@9.0.4` (peer `react ^18`) against React 19 and dies on ERESOLVE.
+- **Several repos have no root `package.json`** (`blog`, `wiki`, `packages`,
+  `platform-core`, …) — packages are nested under `admin/`, `services/*/admin/`
+  etc. Install per package directory; a root `npm install` fails with ENOENT.
+- **Consumer apps use Verdaccio, not sibling assembly.** `codegen_studio`,
+  `email_client` and `dbal` merely *consume* `@metabuilder/*`; their CI stands up
+  Verdaccio, publishes those packages from their own source repos, and installs
+  against it — so the app resolves them exactly as a real consumer would.
+  Verdaccio's **default config** suffices (it proxies npmjs and lets an
+  authenticated user publish scoped packages); don't hand-write one. 24 of 26
+  packages publish; the 2 skipped are `private: true`. Note `@metabuilder/components`
+  packs a broken tarball — its `main` is `./index.tsx` and the `./` prefix isn't
+  matched by `files`. Sibling assembly is still correct for the m3 family itself,
+  which resolves *relative* cross-repo paths that a registry cannot satisfy.
 
 ### Jenkins (`../jenkins/`)
 
@@ -405,10 +498,27 @@ Multi-version peer deps. React 18/19, TypeScript 5.9.3, Next.js 14-16, @reduxjs/
 | Merging Conan caches across images | A raw `COPY /root/.conan2` from multiple images clobbers the Conan 2 sqlite index. Use `conan cache save`/`conan cache restore` (Conan >= 2.1) — see `Dockerfile.devcontainer` |
 | `.github/workflows/gated-pipeline.yml` still references conan-deps | The GitHub Actions pipeline (separate from the Jenkins stack) still builds `base-conan-deps`/`Dockerfile.conan-deps`; update its Tier-2 matrix + verify loop to the split images before relying on GH CI |
 | New app Dockerfile uses selective `COPY` but misses transitive workspace deps | Frontend Dockerfiles `COPY` only the workspaces the app imports. `@metabuilder/types` is imported by `redux/slices` et al., and `types/project.ts` imports `../interfaces/requests`. So any Dockerfile that builds `redux/*` MUST `COPY types/ interfaces/ translations/` (the full set), not just `types/` — a partial set yields `TS2307: Cannot find module '@metabuilder/types'` / `'../interfaces/requests'`. Mirror the COPY set of `frontends/codegen` or `frontends/workflowui`. Also: app `name` in `deployment/cli/commands.json` MUST equal the compose service name (== `local` minus `deployment-`/`:latest`) or the per-app Jenkins loop fails with `Unknown or non-buildable service`. |
+| Building any frontend from a bare checkout | Won't work for `nextjs` or `qt6` — their dependencies are in sibling micro-repos. Run `.github/scripts/assemble_workspace.py --frontend <name>` first. Only `cli` is self-contained. |
+| `compile-tokens.mjs` fails silently | It runs on every `nextjs` build and reads `packages/{id}/styles/tokens.json`. When `packages/` isn't mounted it writes a `/* tokens.json not found */` stub and **exits 0** — you get a tokenless app, not a failed build. `assemble_workspace.py` verifies mounts are non-empty precisely because of this class of failure |
+| `typecheck.cjs` silently stops checking | It suppresses `TS2307`/`TS2339`/`TS18046`/`TS7006`/`TS2353` on the assumption that CI ran `npm run build --workspaces` first. Skip that build step and typecheck still passes — while no longer checking most of the app. Always build workspaces before typechecking |
+| `AutoMetabuilder` default branch is `master` | Every other sibling repo uses `main`. It's also a **subdirectory** mount: only `workflow-lib/` is `@metabuilder/workflow`; the rest is the workflowui app |
+| `libraries/components/m3` needs no separate mount | The `components` repo already contains `m3/` (`@metabuilder/m3`). Mounting `components` satisfies both workspace entries. The standalone `m3` repo is now just a meta-repo holding `checkout.py` |
+| Two different `playwright.config.ts` exist — use the local one | `frontends/nextjs/playwright.config.ts` is self-contained (`testDir: './e2e'`, chromium, own `next dev` on :3004) and is what CI runs. The **old monorepo root** config now lives in the `metabuilder_e2e` repo and starts `workflowui` + `codesnippet` dev servers — apps that are no longer in this repo — so do **not** mount `metabuilder_e2e` to satisfy the old `--config=../../playwright.config.ts` path. Those stale `--config` flags were removed; Playwright auto-discovers the local config |
+| `e2e/media-center.spec.ts` fails (9 tests) | Pre-existing, not a CI problem: the spec mocks `**/api/auth/session`, but the auth provider never calls that endpoint, so `auth.user` stays null and `LevelGate minLevel={2}` blocks the page — no tabs render. `e2e/landing.spec.ts` (9 tests) passes. Fix the mock to match the real auth mechanism |
+| `next.config.ts` and `tsconfig.json` disagree on the same alias | `@dbal-ui` resolves to root `dbal/shared/ui` in `next.config.ts` but `libraries/dbal/shared/ui` in `tsconfig.json`; webpack uses the former, `tsc` the latter, so **both** paths must exist. Likewise `@metabuilder/service-adapters` is aliased to `path.resolve(monorepoRoot, 'redux/adapters/src')` — a root-level `redux/` that predates the Jun 2026 reorg into `libraries/`. `workspace.json` therefore mounts `redux` and `dbal` at two paths each. Correcting the aliases to the `libraries/` paths would let both second mounts be dropped |
+| Cross-library deps hide behind **relative** paths | `libraries/components/m3` imports `'../../icons/react/m3'` — a path, not a package name. Grepping for `@metabuilder/icons` finds nothing, yet omitting `libraries/icons` fails the build with `Module not found: Can't resolve '../../../../icons/react/m3'`. `icons` has no root `package.json` and is not an npm workspace at all. When adding a repo to `workspace.json`, grep for `from '(../){2,}` too, not just package names |
+| `npm ci` in CI | Not possible — no `package-lock.json` is committed. Use `npm install` (with retries; workspace installs this large hit transient registry failures) |
+| Re-running `assemble_workspace.py --force` after `npm install` | `node_modules/@metabuilder/*` are symlinks into `libraries/`. Re-assembling replaces those directories and leaves the links dangling, so the next build fails with `Module not found: '@metabuilder/…'` for packages that were previously fine. Always `npm install` again after re-assembling. CI is unaffected — it assembles before installing |
+| Assuming a GitHub Action version | Confirmed current majors as of 2026-08-11: `checkout@v7`, `setup-node@v7`, `setup-python@v7`, `cache@v6`, `upload-artifact@v7`, `docker/login-action@v4`. Verify with `gh api repos/<owner>/<name>/releases/latest --jq .tag_name` — never guess. The dbal repo's `docker.yml` is still on `login-action@v3` |
+| `deployment/` is gone from this repo | It moved to the sibling [deployment](https://github.com/johndoe6345789/deployment) repo (2026-08-11) because it describes the whole platform: its `compose.yml` builds ~20 services and only `frontends/nextjs` + `frontends/cli` still live here. Base-image Dockerfiles, `deployment.py`, the compose stacks, `config/` and `portal/` are all there now. `/deployment/` is gitignored here because the Jenkinsfile clones it into the workspace |
+| A base image Dockerfile that `COPY`s from another repo | `Dockerfile.conan-cli` needs `frontends/cli/conanfile.txt` and `Dockerfile.node-deps` needs every workspace `package.json` — both from metabuilder. The deployment repo's `base-images.yml` checks metabuilder out at `_metabuilder/` and passes *that* as the build context while keeping `-f` pointed at its own Dockerfile. For node-deps it must also run `assemble_workspace.py` first, or the workspace `package.json` COPYs fail |
+| A stale `COPY` line in a base image Dockerfile is fatal; a missing one is not | `COPY` of an absent path fails the build outright, which is why the eight removed frontends had to come out of `Dockerfile.node-deps`. Workspaces *omitted* from that list only cost cache efficiency: the app Dockerfiles re-run `npm install` over the real source afterwards |
+| Publishing a base image built from this repo's `.npmrc` | The committed `.npmrc` carries a Verdaccio `_authToken` and points `@esbuild-kit`/`@metabuilder` at `localhost:4873`. The `COPY package.json .npmrc ./` layer preserves whatever was on disk, so the sanitising `sed` has to run on the *host* before the context is sent — an in-`RUN` sed cannot remove it from the earlier layer. `base-images.yml` asserts the published image is clean before pushing |
+| GHCR packages are private on first push | A package created by one repo's Actions run is not readable by another repo's `GITHUB_TOKEN`. After the deployment repo's first `base-images` run, make the three `metabuilder-base-*` packages public (or grant metabuilder read access), or `docker.yml`'s pull step fails |
 
 ### Critical Folders to Check Before Any Task
 
-`/libraries/redux/`, `/libraries/components/`, `/libraries/scss/`, `/libraries/hooks/`, `/libraries/types/`, `/libraries/interfaces/`, `/libraries/icons/`, `/libraries/workflow/`, `/libraries/schemas/`, `/packages/`, `/deployment/`, `/docs/docs.db`, `/docs/txt/reports.db`
+`/libraries/redux/`, `/libraries/components/`, `/libraries/scss/`, `/libraries/hooks/`, `/libraries/types/`, `/libraries/interfaces/`, `/libraries/icons/`, `/libraries/workflow/`, `/libraries/schemas/`, `/packages/`, `/docs/docs.db`, `/docs/txt/reports.db`
 
 ### Task Workflow
 1. Read relevant CLAUDE.md

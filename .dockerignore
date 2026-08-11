@@ -90,7 +90,6 @@ dbal
 services
 old
 txt
-deployment
 prisma
 mojo
 spec
@@ -118,15 +117,6 @@ dist
 !services/email_service/requirements.txt
 !services/smtprelay/requirements.txt
 
-# Allow deployment config files for baked-in Docker images
-!deployment/portal
-!deployment/config/nginx/production.conf
-!deployment/config/prometheus/prometheus.yml
-!deployment/config/prometheus/alerts.yml
-!deployment/config/grafana/provisioning
-!deployment/config/loki/loki-config.yml
-!deployment/config/promtail/promtail-config.yml
-!deployment/config/alertmanager/alertmanager.yml
 
 # Allow DBAL templates for dbal-init volume seeder
 !dbal/templates/sql

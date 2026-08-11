@@ -1,0 +1,203 @@
+name: qt6
+
+# The Qt6 frontend needs two things a checkout of this repo cannot provide:
+#
+#   1. QML sources. frontends/qt6/CMakeLists.txt references 275 distinct paths
+#      under ../../libraries/qml/, which now live in the CPlusPlusQT6Skel repo.
+#      These are mounted by the assemble-workspace action.
+#
+#   2. Qt 6 itself.
+#
+# On (2): frontends/qt6/conanfile.txt asks Conan for qt/6.7.3, and Conan has no
+# prebuilt binary for that configuration, so it would compile Qt from source -
+# hours of runner time and enough disk to routinely exhaust the runner. This
+# workflow instead installs the same Qt version as a prebuilt binary via
+# aqtinstall, which is the approach the CPlusPlusQT6Skel repo already takes
+# (see its python/download_qt6/). Minutes instead of hours, no disk pressure.
+#
+# conanfile.txt is deliberately left untouched and is still the source of truth
+# for the version - the step below parses it rather than hardcoding 6.7.3, so
+# the two cannot drift. Conan is not invoked at all here; CMakeLists.txt
+# includes conan_toolchain.cmake with OPTIONAL, so its absence is fine, and Qt
+# is located through CMAKE_PREFIX_PATH instead.
+#
+# The conanfile's qtdeclarative and qtshadertools options are preserved:
+# qtdeclarative ships in the aqt base install, qtshadertools is added with -m.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'frontends/qt6/**'
+      - '.github/workflows/qt6.yml'
+      - '.github/workspace.json'
+      - '.github/scripts/assemble_workspace.py'
+      - '.github/actions/assemble-workspace/**'
+  pull_request:
+    paths:
+      - 'frontends/qt6/**'
+      - '.github/workflows/qt6.yml'
+      - '.github/workspace.json'
+      - '.github/scripts/assemble_workspace.py'
+      - '.github/actions/assemble-workspace/**'
+  workflow_dispatch:
+    inputs:
+      floating:
+        description: 'Ignore workspace.json pins and use each sibling repo branch head'
+        type: boolean
+        default: false
+
+concurrency:
+  group: qt6-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    defaults:
+      run:
+        working-directory: frontends/qt6
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Assemble workspace
+        uses: ./.github/actions/assemble-workspace
+        with:
+          frontend: qt6
+          token: ${{ secrets.WORKSPACE_TOKEN }}
+          floating: ${{ inputs.floating && 'true' || 'false' }}
+
+      # Verify the mount really satisfies CMakeLists before installing Qt: a
+      # missing QML tree otherwise fails at configure time with a far less
+      # obvious error.
+      - name: Check QML paths resolve
+        working-directory: ${{ github.workspace }}
+        run: |
+          missing=0
+          while read -r path; do
+            [ -e "libraries/qml/$path" ] || { echo "missing: libraries/qml/$path"; missing=$((missing + 1)); }
+          done < <(grep -o '\.\./\.\./libraries/qml/[A-Za-z0-9_/.-]*' \
+                     frontends/qt6/CMakeLists.txt \
+                   | sed 's|\.\./\.\./libraries/qml/||' | sort -u)
+          if [ "$missing" -gt 0 ]; then
+            echo "$missing QML path(s) referenced by CMakeLists.txt are not present."
+            exit 1
+          fi
+          echo "All QML paths referenced by CMakeLists.txt resolved."
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      # Read the version Conan is pinned to, so switching to prebuilt binaries
+      # cannot silently build a different Qt than the project declares.
+      - name: Resolve Qt version from conanfile.txt
+        id: qt
+        run: |
+          version=$(sed -nE 's|^qt/([0-9][0-9.]*).*|\1|p' conanfile.txt | head -1)
+          if [ -z "$version" ]; then
+            echo "Could not read the qt/<version> requirement from conanfile.txt"
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Qt version from conanfile.txt: $version"
+
+      # Prebuilt Qt still links against the host's X11/OpenGL/fontconfig stack.
+      # This is a much smaller set than a source build of Qt would need.
+      - name: Install system packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential ninja-build pkg-config \
+            libgl1-mesa-dev libglu1-mesa-dev libegl1-mesa-dev \
+            libxkbcommon-dev libxkbcommon-x11-dev \
+            libx11-dev libx11-xcb-dev libxcb1-dev libxcb-glx0-dev \
+            libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev \
+            libxcb-randr0-dev libxcb-render-util0-dev libxcb-shape0-dev \
+            libxcb-shm0-dev libxcb-sync-dev libxcb-util-dev \
+            libxcb-xfixes0-dev libxcb-xinerama0-dev libxcb-xkb-dev \
+            libfontconfig1-dev libfreetype6-dev
+
+      - name: Cache Qt
+        id: qt_cache
+        uses: actions/cache@v6
+        with:
+          path: ${{ github.workspace }}/Qt
+          key: qt-${{ runner.os }}-${{ steps.qt.outputs.version }}-linux_gcc_64
+
+      - name: Install Qt
+        if: ${{ steps.qt_cache.outputs.cache-hit != 'true' }}
+        env:
+          QT_VERSION: ${{ steps.qt.outputs.version }}
+        run: |
+          python3 -m pip install --upgrade aqtinstall
+
+          # linux_gcc_64 is the only desktop architecture published for Qt 6.7
+          # on Linux, but resolve it rather than assuming, so a version bump in
+          # conanfile.txt does not silently break this step.
+          ARCH=$(python3 -m aqt list-qt linux desktop --arch "$QT_VERSION" \
+                 | tr ' ' '\n' | grep -E 'gcc_64$' | head -1)
+          if [ -z "$ARCH" ]; then
+            echo "No gcc_64 desktop architecture published for Qt $QT_VERSION"
+            exit 1
+          fi
+          echo "Installing Qt $QT_VERSION ($ARCH)"
+
+          # qtdeclarative (Qt Quick) is in the base install; qtshadertools is a
+          # separate module. Both are switched on in conanfile.txt.
+          python3 -m aqt install-qt linux desktop "$QT_VERSION" "$ARCH" \
+            --outputdir "${{ github.workspace }}/Qt" \
+            --modules qtshadertools
+
+      - name: Locate Qt
+        id: qtdir
+        env:
+          QT_VERSION: ${{ steps.qt.outputs.version }}
+        run: |
+          QT_ROOT="${{ github.workspace }}/Qt/$QT_VERSION/gcc_64"
+          if [ ! -d "$QT_ROOT" ]; then
+            QT_ROOT=$(find "${{ github.workspace }}/Qt" -maxdepth 2 -type d -name '*gcc_64' | head -1)
+          fi
+          if [ -z "$QT_ROOT" ] || [ ! -x "$QT_ROOT/bin/qmake" ]; then
+            echo "Qt installation not found or incomplete under ${{ github.workspace }}/Qt"
+            find "${{ github.workspace }}/Qt" -maxdepth 3 -type d | head -20
+            exit 1
+          fi
+          echo "root=$QT_ROOT" >> "$GITHUB_OUTPUT"
+          "$QT_ROOT/bin/qmake" -query QT_VERSION
+
+      # _build rather than build/ to match the convention used elsewhere in
+      # this repo and avoid colliding with CMake target names.
+      - name: Configure
+        env:
+          QT_ROOT: ${{ steps.qtdir.outputs.root }}
+        run: |
+          cmake -S . -B _build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="$QT_ROOT"
+
+      - name: Build
+        run: cmake --build _build --parallel "$(nproc)"
+
+      - name: Confirm binary
+        run: |
+          BIN=$(find _build -name metabuilder-qt6 -type f -perm -u+x | head -1)
+          test -n "$BIN" || { echo "metabuilder-qt6 was not produced"; exit 1; }
+          echo "built: $BIN"
+          file "$BIN"
+
+      - name: Upload binary
+        uses: actions/upload-artifact@v7
+        with:
+          name: metabuilder-qt6
+          path: frontends/qt6/_build/metabuilder-qt6
+          if-no-files-found: error
