@@ -213,8 +213,18 @@ jobs:
             echo "size: $((SIZE / 1024 / 1024)) MB"
           } >> "$GITHUB_STEP_SUMMARY"
 
+      # Retried because GHCR intermittently answers a blob upload with
+      # "unknown blob" when both arch jobs push to the same package at once.
+      # It is a registry-side transient, so the retry is the fix, not a mask.
       - name: Push
-        run: docker push "$IMAGE:${SHA}-${ARCH}"
+        run: |
+          for attempt in 1 2 3; do
+            docker push "$IMAGE:${SHA}-${ARCH}" && exit 0
+            echo "push attempt ${attempt} failed; retrying in $((attempt * 15))s"
+            sleep $((attempt * 15))
+          done
+          echo "::error::docker push failed after 3 attempts"
+          exit 1
 
   manifest:
     name: manifest (${{ matrix.pkg }})
