@@ -828,7 +828,7 @@ services:
     container_name: metabuilder-frontend-app
     restart: unless-stopped
     env_file:
-      - path: ../../../secrets/vault.env
+      - path: ../../../jenkins/secrets/vault.env
         required: false
     environment:
       NODE_ENV: production
