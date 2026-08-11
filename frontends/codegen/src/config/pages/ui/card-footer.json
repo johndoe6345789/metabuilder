@@ -1,9 +1,0 @@
-{
-  "type": "MetabuilderLayoutCardFooter",
-  "source": "ui",
-  "load": {
-    "path": "@/components/ui/card",
-    "export": "CardFooter"
-  },
-  "props": {}
-}

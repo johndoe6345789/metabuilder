@@ -1,6 +1,0 @@
-{
-  "type": "MetabuilderLayoutModal",
-  "props": {
-    "onClose": "> void"
-  }
-}

@@ -1,9 +1,0 @@
-{
-  "type": "MetabuilderLayoutDrawer",
-  "props": {
-    "onClose": "> void",
-    "sm": "== ",
-    "md": "== ",
-    "lg": "== "
-  }
-}

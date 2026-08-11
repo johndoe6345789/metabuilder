@@ -1,7 +1,0 @@
-{
-  "type": "MetabuilderNavContextMenu",
-  "props": {
-    "onSelect": "> void",
-    "menuItems": "> {"
-  }
-}

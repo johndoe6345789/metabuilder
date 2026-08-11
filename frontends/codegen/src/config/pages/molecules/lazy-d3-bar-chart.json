@@ -1,6 +1,0 @@
-{
-  "type": "MetabuilderDisplaySkeleton",
-  "props": {
-    "library": "useD3()"
-  }
-}

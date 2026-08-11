@@ -1,6 +1,0 @@
-{
-  "type": "MetabuilderWidgetActionBar",
-  "props": {
-    "onClick": "> void"
-  }
-}

@@ -1,7 +1,0 @@
-{
-  "type": "MetabuilderWidgetCalendar",
-  "props": {
-    "onSelect": "> void",
-    "disabled": "> boolean)"
-  }
-}

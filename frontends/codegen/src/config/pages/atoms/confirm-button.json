@@ -1,6 +1,0 @@
-{
-  "type": "Button, ButtonProps",
-  "props": {
-    "onConfirm": "> void | Promise<void>"
-  }
-}

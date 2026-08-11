@@ -1,4 +1,0 @@
-/**
- * Security metric types
- */
-export {};

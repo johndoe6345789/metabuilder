@@ -1,9 +1,0 @@
-{
-  "type": "MetabuilderDataCardContent",
-  "source": "ui",
-  "load": {
-    "path": "@/components/ui/card",
-    "export": "CardContent"
-  },
-  "props": {}
-}

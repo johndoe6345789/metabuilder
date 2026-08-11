@@ -1,7 +1,0 @@
-{
-  "id": "text-small",
-  "type": "MetabuilderDisplayText",
-  "props": {
-    "variant": "small"
-  }
-}

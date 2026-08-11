@@ -1,6 +1,0 @@
-{
-  "type": "MetabuilderWidgetSchemaEditorSidebar",
-  "props": {
-    "onDragStart": "> void"
-  }
-}

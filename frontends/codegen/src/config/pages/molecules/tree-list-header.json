@@ -1,8 +1,0 @@
-{
-  "type": "MetabuilderDataTreeListHeader",
-  "props": {
-    "onCreateNew": "> void",
-    "onImportJson": "> void",
-    "onExportJson": "> void"
-  }
-}

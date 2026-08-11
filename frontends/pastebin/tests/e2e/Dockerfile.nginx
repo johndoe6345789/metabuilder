@@ -1,2 +1,0 @@
-FROM nginx:alpine
-COPY tests/e2e/nginx.e2e.conf /etc/nginx/nginx.conf

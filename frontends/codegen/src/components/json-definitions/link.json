@@ -1,6 +1,0 @@
-{
-  "type": "Link",
-  "props": {
-    "onClick": "> void"
-  }
-}

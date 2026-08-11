@@ -1,6 +1,0 @@
-{
-  "type": "MetabuilderWidgetMonacoEditorPanel",
-  "props": {
-    "onChange": "> void"
-  }
-}

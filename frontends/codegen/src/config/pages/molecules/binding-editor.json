@@ -1,7 +1,0 @@
-{
-  "type": "MetabuilderDisplayLabel",
-  "props": {
-    "onChange": "> void",
-    "prop": "> {"
-  }
-}

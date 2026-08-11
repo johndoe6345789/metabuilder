@@ -1,7 +1,0 @@
-{
-  "type": "MetabuilderNavFileTabs",
-  "props": {
-    "onFileSelect": "> void",
-    "onFileClose": "> void"
-  }
-}

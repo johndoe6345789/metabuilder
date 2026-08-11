@@ -1,6 +1,0 @@
-{
-  "type": "MetabuilderWidgetColorSwatch",
-  "props": {
-    "onClick": "> void"
-  }
-}

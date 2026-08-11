@@ -1,7 +1,0 @@
-{
-  "type": "MetabuilderWidgetSearchInput",
-  "props": {
-    "onChange": "> void",
-    "onClear": "> void"
-  }
-}

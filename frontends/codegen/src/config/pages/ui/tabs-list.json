@@ -1,9 +1,0 @@
-{
-  "type": "TabsList",
-  "source": "ui",
-  "load": {
-    "path": "@/components/ui/tabs",
-    "export": "TabsList"
-  },
-  "props": {}
-}

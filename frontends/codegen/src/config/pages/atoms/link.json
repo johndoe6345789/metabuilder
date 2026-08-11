@@ -1,6 +1,0 @@
-{
-  "type": "MetabuilderNavLink",
-  "props": {
-    "onClick": "> void"
-  }
-}

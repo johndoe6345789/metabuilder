@@ -1,7 +1,0 @@
-{
-  "id": "button-secondary",
-  "type": "MetabuilderFormButton",
-  "props": {
-    "variant": "secondary"
-  }
-}

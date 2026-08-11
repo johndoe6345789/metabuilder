@@ -1,9 +1,0 @@
-{
-  "id": "separator-root",
-  "type": "Separator",
-  "bindings": {
-    "orientation": "orientation",
-    "decorative": "decorative",
-    "className": "className"
-  }
-}

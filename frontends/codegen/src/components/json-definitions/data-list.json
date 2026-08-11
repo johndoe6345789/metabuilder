@@ -1,7 +1,0 @@
-{
-  "type": "DataList",
-  "props": {
-    "renderItem": "> ReactNode",
-    "item": "> {"
-  }
-}

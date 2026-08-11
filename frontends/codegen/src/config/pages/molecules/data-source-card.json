@@ -1,7 +1,0 @@
-{
-  "type": "MetabuilderLayoutDataSourceCard",
-  "props": {
-    "onEdit": "> void",
-    "onDelete": "> void"
-  }
-}

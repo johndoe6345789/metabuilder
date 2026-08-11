@@ -1,8 +1,0 @@
-{
-  "id": "responsive-container-root",
-  "type": "div",
-  "props": {
-    "className": "responsive-container"
-  },
-  "children": "children"
-}

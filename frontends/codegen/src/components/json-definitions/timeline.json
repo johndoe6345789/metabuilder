@@ -1,7 +1,0 @@
-{
-  "id": "timeline-root",
-  "type": "div",
-  "props": {
-    "className": "timeline"
-  }
-}

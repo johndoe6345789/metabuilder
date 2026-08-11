@@ -1,7 +1,0 @@
-{
-  "type": "MetabuilderDataDataList",
-  "props": {
-    "renderItem": "> ReactNode",
-    "item": "> {"
-  }
-}

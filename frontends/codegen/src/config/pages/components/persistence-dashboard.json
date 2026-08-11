@@ -1,9 +1,0 @@
-{
-  "type": "MetabuilderWidgetPersistenceDashboard",
-  "jsonCompatible": true,
-  "load": {
-    "path": "@/lib/json-ui/json-components",
-    "export": "MetabuilderWidgetPersistenceDashboard"
-  },
-  "props": {}
-}

@@ -1,7 +1,0 @@
-{
-  "id": "stepper-root",
-  "type": "div",
-  "props": {
-    "className": "stepper"
-  }
-}

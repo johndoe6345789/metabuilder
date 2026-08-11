@@ -1,7 +1,0 @@
-{
-  "type": "MetabuilderFeedbackEmptyCanvasState",
-  "props": {
-    "onAddFirstComponent": "> void",
-    "onImportSchema": "> void"
-  }
-}

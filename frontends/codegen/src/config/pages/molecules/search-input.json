@@ -1,7 +1,0 @@
-{
-  "type": "MetabuilderFormInput",
-  "props": {
-    "onChange": "> void",
-    "onClear": "> void"
-  }
-}

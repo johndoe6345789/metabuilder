@@ -1,7 +1,0 @@
-{
-  "type": "MetabuilderWidgetEditorActions",
-  "props": {
-    "onExplain": "> void",
-    "onImprove": "> void"
-  }
-}

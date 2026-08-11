@@ -1,9 +1,0 @@
-.featuresGrid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 32px;
-
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}

@@ -1,6 +1,0 @@
-{
-  "type": "MetabuilderLayoutCard",
-  "props": {
-    "onClick": "> void"
-  }
-}

@@ -1,7 +1,0 @@
-{
-  "id": "button-primary",
-  "type": "MetabuilderFormButton",
-  "props": {
-    "variant": "default"
-  }
-}
