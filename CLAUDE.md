@@ -17,12 +17,11 @@ All documentation is executable code. No separate markdown docs.
 ./frontends/postgres/postgres.py --help        # PostgreSQL dashboard
 ./libraries/mojo/mojo.py --help               # Mojo compiler
 cd ../deployment && python3 deployment.py build base --list  # Docker base images (sibling repo)
-
-# Documentation (SQLite3 + FTS5 full-text search)
-cd docs/txt && python3 reports.py search "query"     # 212 reports
-cd docs && python3 docs.py search "query"            # 217 docs, 13 categories
-cd docs && python3 docs.py list --category guides
 ```
+
+There is no `docs/` tree. It was deleted on 2026-08-11 — no SQLite doc store,
+no reports database, no markdown doc set. The code and this file are the
+documentation; anything else is reconstructed on demand rather than stored.
 
 ---
 
@@ -41,7 +40,7 @@ cd docs && python3 docs.py list --category guides
 - **Jan 24**: Dependency fixes, testing library standardization
 - **Jan 23**: Email client (Phases 1-5), Mojo compiler, M3 restructuring, dependency remediation
 
-**Details**: Search `cd docs/txt && python3 reports.py search "topic"` for full completion reports.
+**Details**: These are summaries only — the completion reports they used to link to were in the deleted `docs/` tree.
 
 ---
 
@@ -78,10 +77,7 @@ cd docs && python3 docs.py list --category guides
 | `frontends/repoforge/` | GitHub Android client (Kotlin/Compose) |
 | `packages/` | 84 modular feature packages |
 | `services/` | Background daemons (media, email, plugin-registry, SMTP relay) |
-| `docs/` | SQLite3 (217 docs, 13 categories, FTS5 search) |
-| `docs/txt/` | SQLite3 (212 reports, FTS5, archives) |
-| `docs/old/` | Legacy Spark implementation |
-| `.github/` | GitHub Actions, templates |
+| `.github/` | GitHub Actions, workspace assembly, templates |
 
 ---
 
@@ -458,11 +454,10 @@ Multi-version peer deps. React 18/19, TypeScript 5.9.3, Next.js 14-16, @reduxjs/
 5. CHECK before DELETE - `git show HEAD:path` first
 6. Use subagents for complex work
 7. Update CLAUDE.md with new gotchas/patterns
-8. Reports → `reports.db`, Docs → `docs.db` (SQLite, not markdown files)
+8. Do NOT write reports or docs to disk — there is no doc store any more. Report findings in the conversation; record durable gotchas in this file
 9. Git: `git add` on project root first, then commit
 10. Use `mv` not `cp` (prevents duplicates)
-11. Log long commands: `| tee docs/txt/command-$(date +%Y%m%d-%H%M%S).log`
-12. Search SQLite before browsing files
+11. Log long commands to the session scratchpad: `| tee /tmp/command-$(date +%Y%m%d-%H%M%S).log`
 
 ### Gotchas & Lessons Learned
 
@@ -471,7 +466,7 @@ Multi-version peer deps. React 18/19, TypeScript 5.9.3, Next.js 14-16, @reduxjs/
 | Conan profile in Docker mount | Run `conan profile detect` INSIDE cache-mounted RUN |
 | Missing types after refactor | Verify all referenced types exist before committing |
 | Headers in src/ not include/ | Use relative paths or fix build include dirs |
-| No logs for long commands | ALWAYS pipe to docs/txt/*.log |
+| No logs for long commands | ALWAYS pipe to a scratchpad log: `\| tee /tmp/<name>-$(date +%Y%m%d-%H%M%S).log` |
 | Dockerfile `build/` conflict | Use `_build/` |
 | Drogon wildcard routes | Check docs for path param syntax |
 | `cp` instead of `mv` | ALWAYS use `mv` to relocate |
@@ -518,15 +513,14 @@ Multi-version peer deps. React 18/19, TypeScript 5.9.3, Next.js 14-16, @reduxjs/
 
 ### Critical Folders to Check Before Any Task
 
-`/libraries/redux/`, `/libraries/components/`, `/libraries/scss/`, `/libraries/hooks/`, `/libraries/types/`, `/libraries/interfaces/`, `/libraries/icons/`, `/libraries/workflow/`, `/libraries/schemas/`, `/packages/`, `/docs/docs.db`, `/docs/txt/reports.db`
+`/libraries/redux/`, `/libraries/components/`, `/libraries/scss/`, `/libraries/hooks/`, `/libraries/types/`, `/libraries/interfaces/`, `/libraries/icons/`, `/libraries/workflow/`, `/libraries/schemas/`, `/packages/`
 
 ### Task Workflow
 1. Read relevant CLAUDE.md
-2. Search SQLite docs: `docs.py search` / `reports.py search`
-3. Check if functionality already exists in critical folders
-4. Use Explore agent for codebase questions
-5. Plan affected files before coding
-6. Verify multi-tenant filtering + rate limiting
+2. Check if functionality already exists in critical folders
+3. Use Explore agent for codebase questions
+4. Plan affected files before coding
+5. Verify multi-tenant filtering + rate limiting
 
 ---
 
@@ -536,7 +530,7 @@ A task is complete when:
 - **Builds**: Compiles, core functionality works, type safety reasonable
 - **Tests**: All pass, new tests added, edge cases covered, multi-tenant verified
 - **Deploy**: Docker builds, services healthy, env vars documented, deps install
-- **Docs**: CLAUDE.md updated, reports in SQLite, architecture docs updated
+- **Docs**: CLAUDE.md updated with any new gotcha or pattern (this is the only doc that persists)
 - **Security**: Input validation, no XSS/SQLi, passwords hashed, no secrets, rate limited
 - **Git**: Clear commit message, co-authored tag, no merge conflicts
 
@@ -548,16 +542,13 @@ A task is complete when:
 - Refactoring: ~100 LOC classes, original functionality preserved, tests pass
 - New Adapters: CRUD + bulk + query + metadata ops, connection management, Result<T> errors
 - Docker: Multi-stage, BuildKit cache, <500MB runtime, non-root user, health check
-- Documentation: Imported to SQLite, categorized, searchable via FTS5
 
 ---
 
 ## Project Organization
 
 - **Root**: Minimal - config, CI/CD, build, package files only
-- **Reports**: `docs/txt/reports.db` - create via `cd docs/txt && python3 reports.py create "Title" "Content..."`
-- **Docs**: `docs/docs.db` - create via `cd docs && python3 docs.py create "Title" "Content..." --category guides`
-- **Rule**: Create directly in SQLite, do NOT create markdown files first
+- **Reports and docs**: none are kept. Don't create a `docs/` tree, a SQLite doc store, or standalone markdown reports — summarise in the conversation instead, and put anything worth keeping in this file
 - **File org**: Implementation type first (react/, python/, qml/), component categorization, preserve legacy in archived folders
 
 ---
