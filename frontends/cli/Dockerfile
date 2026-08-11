@@ -26,10 +26,21 @@ RUN conan install . \
          -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake \
     && cmake --build build --config Release
 
-# Minimal runtime image
-FROM debian:bookworm-slim
+# Minimal runtime image.
+#
+# Must be ubuntu:24.04, matching the builder: base-conan-cli derives from
+# base-apt, which is ubuntu:24.04. This was debian:bookworm-slim, whose glibc
+# 2.36 and GCC 12 libstdc++ are older than the ones the binary is compiled
+# against, so the image built fine and then could not run its own entrypoint:
+#
+#   libm.so.6: version `GLIBC_2.38' not found
+#   libstdc++.so.6: version `GLIBCXX_3.4.32' not found
+#
+# The OpenSSL runtime is libssl3t64 on noble, not libssl3 — renamed by the
+# 64-bit time_t transition.
+FROM ubuntu:24.04
 RUN apt-get update && apt-get install -y --no-install-recommends \
-      libssl3 ca-certificates \
+      libssl3t64 ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /app/cli/build/metabuilder-cli /usr/local/bin/metabuilder-cli
