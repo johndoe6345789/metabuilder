@@ -1,6 +1,0 @@
-{
-  "login": "/login",
-  "dashboard": "/",
-  "buckets": "/buckets",
-  "bucketDetail": "/buckets/{name}"
-}
