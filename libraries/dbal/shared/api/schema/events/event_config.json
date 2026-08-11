@@ -1,9 +1,0 @@
-{
-  "version": "1.0",
-  "events": [
-    {
-      "event": "pastebin.User.created",
-      "workflow": "/app/schemas/workflows/pastebin/on_user_created.json"
-    }
-  ]
-}

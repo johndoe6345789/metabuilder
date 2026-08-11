@@ -1,1 +1,0 @@
-"""External tool integration plugins."""
