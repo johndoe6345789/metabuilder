@@ -221,7 +221,7 @@
     {
       "repo": "CPlusPlusQT6Skel",
       "branch": "main",
-      "ref": "ba14d3136843873eea464047b4c71e207f26aa92",
+      "ref": "1ba0478bb96154e72989571b0c01667039ba4ea4",
       "needed_by": [
         "qt6"
       ],
