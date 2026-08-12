@@ -232,12 +232,17 @@ jobs:
               cat /tmp/nginx-health.json
               code=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8088/)
               [ "$code" = "302" ] || { echo "expected / to redirect to /app, got $code"; exit 1; }
-              # Relative, so the browser keeps whatever port it came in on.
-              loc=$(curl -s -o /dev/null -w '%{redirect_url}' http://127.0.0.1:8088/)
+              # Must stay relative so the browser keeps the port it came in
+              # on. Read the raw header: curl's %{redirect_url} resolves a
+              # relative Location into an absolute URL, so it can never
+              # distinguish the two.
+              loc=$(curl -s -o /dev/null -D - http://127.0.0.1:8088/ \
+                    | tr -d '\r' | awk 'tolower($1)=="location:"{print $2}')
               case "$loc" in
-                http*) echo "Location must stay relative, got: $loc"; exit 1 ;;
+                /*) : ;;
+                *)  echo "Location must be relative, got: $loc"; exit 1 ;;
               esac
-              echo "root redirects to /app (Location: ${loc:-/app})"
+              echo "root redirects to $loc (relative)"
               docker rm -f nginx-smoke > /dev/null
               exit 0
             fi
