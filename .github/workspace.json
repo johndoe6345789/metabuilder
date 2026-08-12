@@ -16,56 +16,103 @@
     "the source repo ('.' for the whole repo); 'to' is the path it lands at,",
     "relative to this repo's root."
   ],
-
   "owner": "johndoe6345789",
-
   "repos": [
     {
       "repo": "types",
       "branch": "main",
       "ref": "9d20c7ab1371935410dee638ebdcd9995c2271a5",
-      "needed_by": ["nextjs"],
-      "provides": ["@metabuilder/types"],
-      "mounts": [{ "from": ".", "to": "libraries/types" }]
+      "needed_by": [
+        "nextjs"
+      ],
+      "provides": [
+        "@metabuilder/types"
+      ],
+      "mounts": [
+        {
+          "from": ".",
+          "to": "libraries/types"
+        }
+      ]
     },
     {
       "repo": "interfaces",
       "branch": "main",
       "ref": "1a3dd97e11a013666a7dc3b19d42c302b25d0c03",
-      "needed_by": ["nextjs"],
-      "provides": ["@metabuilder/interfaces"],
-      "mounts": [{ "from": ".", "to": "libraries/interfaces" }]
+      "needed_by": [
+        "nextjs"
+      ],
+      "provides": [
+        "@metabuilder/interfaces"
+      ],
+      "mounts": [
+        {
+          "from": ".",
+          "to": "libraries/interfaces"
+        }
+      ]
     },
     {
       "repo": "translations",
       "branch": "main",
       "ref": "807fb60d6820d46c4e2f82c4dc7c20fbd31f7875",
-      "needed_by": ["nextjs"],
-      "provides": ["@metabuilder/translations"],
-      "mounts": [{ "from": ".", "to": "libraries/translations" }]
+      "needed_by": [
+        "nextjs"
+      ],
+      "provides": [
+        "@metabuilder/translations"
+      ],
+      "mounts": [
+        {
+          "from": ".",
+          "to": "libraries/translations"
+        }
+      ]
     },
     {
       "repo": "hooks",
       "branch": "main",
       "ref": "540fdc2a35048f80bee0ee0ee64b03c3364c6614",
-      "needed_by": ["nextjs"],
-      "provides": ["@metabuilder/hooks", "@metabuilder/hooks-email"],
-      "mounts": [{ "from": ".", "to": "libraries/hooks" }]
+      "needed_by": [
+        "nextjs"
+      ],
+      "provides": [
+        "@metabuilder/hooks",
+        "@metabuilder/hooks-email"
+      ],
+      "mounts": [
+        {
+          "from": ".",
+          "to": "libraries/hooks"
+        }
+      ]
     },
     {
       "repo": "components",
       "branch": "main",
       "ref": "5b59cb55f1f8fe6cc8d55c812cf42b384876d49c",
-      "needed_by": ["nextjs"],
+      "needed_by": [
+        "nextjs"
+      ],
       "_note": "Also satisfies the libraries/components/m3 workspace: the m3 package lives in this repo's m3/ subdirectory.",
-      "provides": ["@metabuilder/components", "@metabuilder/m3"],
-      "mounts": [{ "from": ".", "to": "libraries/components" }]
+      "provides": [
+        "@metabuilder/components",
+        "@metabuilder/m3"
+      ],
+      "mounts": [
+        {
+          "from": ".",
+          "to": "libraries/components"
+        }
+      ]
     },
     {
       "repo": "redux",
       "branch": "main",
       "ref": "7cf7fc335d8ba3245f35f7bf2c16954080017210",
-      "needed_by": ["nextjs"],
+      "needed_by": [
+        "nextjs"
+      ],
       "_note": "Mounted twice on purpose. libraries/redux matches the workspace glob in the root package.json. The bare redux/ is required by the webpack alias in frontends/nextjs/next.config.ts, which resolves '@metabuilder/service-adapters' to path.resolve(monorepoRoot, 'redux/adapters/src') - a root-level path that predates the June 2026 reorg into libraries/. Removing the second mount fails the build with \"Can't resolve '@metabuilder/service-adapters'\". The cleaner fix is to correct that alias to libraries/redux/adapters/src and drop this mount.",
       "provides": [
         "@metabuilder/api-clients",
@@ -77,64 +124,116 @@
         "@metabuilder/service-adapters"
       ],
       "mounts": [
-        { "from": ".", "to": "libraries/redux" },
-        { "from": ".", "to": "redux" }
+        {
+          "from": ".",
+          "to": "libraries/redux"
+        },
+        {
+          "from": ".",
+          "to": "redux"
+        }
       ]
     },
     {
       "repo": "scss",
       "branch": "main",
       "ref": "b3f0742414703a125e77b5f5f8c88039dab351fe",
-      "needed_by": ["nextjs"],
-      "provides": ["@metabuilder/scss"],
-      "mounts": [{ "from": ".", "to": "libraries/scss" }]
+      "needed_by": [
+        "nextjs"
+      ],
+      "provides": [
+        "@metabuilder/scss"
+      ],
+      "mounts": [
+        {
+          "from": ".",
+          "to": "libraries/scss"
+        }
+      ]
     },
     {
       "repo": "icons",
       "branch": "main",
       "ref": "93636a98436570f43f8158198f1a527adab0e00a",
-      "needed_by": ["nextjs"],
+      "needed_by": [
+        "nextjs"
+      ],
       "_note": "Not an npm workspace - it has no root package.json and nothing depends on it by name. libraries/components reaches it purely by relative path ('../../icons/react/m3'), so grepping for @metabuilder/icons will not reveal this dependency. Omitting it fails the build with 'Module not found: Can't resolve ../../../../icons/react/m3'.",
-      "mounts": [{ "from": ".", "to": "libraries/icons" }]
+      "mounts": [
+        {
+          "from": ".",
+          "to": "libraries/icons"
+        }
+      ]
     },
     {
       "repo": "AutoMetabuilder",
       "branch": "master",
-      "ref": "ad06dc1393d1b5ed50f4aa25ab40ef3fd32b09ba",
-      "needed_by": ["nextjs"],
+      "ref": "9a0a13447d9b57da9ff9d83f95212fa6bc240f44",
+      "needed_by": [
+        "nextjs"
+      ],
       "_note": "Default branch is master, not main. Only the workflow-lib subdirectory is the @metabuilder/workflow package; the rest of the repo is the workflowui app.",
-      "provides": ["@metabuilder/workflow"],
-      "mounts": [{ "from": "workflow-lib", "to": "libraries/workflow" }]
+      "provides": [
+        "@metabuilder/workflow"
+      ],
+      "mounts": [
+        {
+          "from": "workflow-lib",
+          "to": "libraries/workflow"
+        }
+      ]
     },
     {
       "repo": "dbal",
       "branch": "main",
       "ref": "b484c79c7e1f966d7de65be1ea976e8b17166d5a",
-      "needed_by": ["nextjs"],
+      "needed_by": [
+        "nextjs"
+      ],
       "_note": "Mounted twice on purpose, because the app disagrees with itself about where this lives: next.config.ts resolves '@dbal-ui' to ../../dbal/shared/ui (root-level), while tsconfig.json maps '@dbal-ui/*' to ../../libraries/dbal/shared/ui/* . Webpack uses the former, tsc the latter, so both paths must exist. In the dbal repo the tree lives under libraries/dbal.",
       "mounts": [
-        { "from": "libraries/dbal", "to": "dbal" },
-        { "from": "libraries/dbal", "to": "libraries/dbal" }
+        {
+          "from": "libraries/dbal",
+          "to": "dbal"
+        },
+        {
+          "from": "libraries/dbal",
+          "to": "libraries/dbal"
+        }
       ]
     },
     {
       "repo": "packages",
       "branch": "main",
       "ref": "e291eecb9af5bb35a57292f7c1b4a8ab0bca6d79",
-      "needed_by": ["nextjs"],
+      "needed_by": [
+        "nextjs"
+      ],
       "_note": "Build-time dependency, not just runtime: frontends/nextjs/scripts/compile-tokens.mjs reads packages/{id}/styles/tokens.json on every build and silently emits an empty stub when absent.",
-      "mounts": [{ "from": ".", "to": "packages" }]
+      "mounts": [
+        {
+          "from": ".",
+          "to": "packages"
+        }
+      ]
     },
     {
       "repo": "CPlusPlusQT6Skel",
       "branch": "main",
       "ref": "ba14d3136843873eea464047b4c71e207f26aa92",
-      "needed_by": ["qt6"],
+      "needed_by": [
+        "qt6"
+      ],
       "_note": "frontends/qt6/CMakeLists.txt references 275 distinct paths under ../../libraries/qml/; all 275 resolve against this repo's qml/ directory.",
-      "mounts": [{ "from": "qml", "to": "libraries/qml" }]
+      "mounts": [
+        {
+          "from": "qml",
+          "to": "libraries/qml"
+        }
+      ]
     }
   ],
-
   "frontends": {
     "nextjs": {
       "_note": "npm workspaces + packages/ for design tokens."
