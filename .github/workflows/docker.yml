@@ -1,8 +1,8 @@
 name: docker
 
-# Builds and publishes the two container images this repo produces —
-# metabuilder/nextjs-app and metabuilder/cli — for linux/amd64 and linux/arm64,
-# then joins each pair under a single multi-arch tag.
+# Builds and publishes the three container images this repo produces —
+# metabuilder/nextjs-app, metabuilder/cli and metabuilder/nginx — for
+# linux/amd64 and linux/arm64, then joins each pair under a multi-arch tag.
 #
 # This runs on every push to main. It can afford to, because it no longer
 # builds a base image: the base-images workflow in the deployment repo
@@ -69,6 +69,19 @@ jobs:
             pkg: nextjs-app
             arch: arm64
             runner: ubuntu-24.04-arm
+          # The reverse proxy for the local stack (deploy/compose.yml). Needs
+          # no base image and no assembled workspace - it is nginx:alpine plus
+          # a config file - so the steps above are skipped for it.
+          - image: nginx
+            pkg: nginx
+            dockerfile: deploy/nginx/Dockerfile
+            arch: amd64
+            runner: ubuntu-latest
+          - image: nginx
+            pkg: nginx
+            dockerfile: deploy/nginx/Dockerfile
+            arch: arm64
+            runner: ubuntu-24.04-arm
 
     env:
       APP: ${{ matrix.image }}
@@ -130,6 +143,7 @@ jobs:
       # repo now. These packages publish public, so no cross-repo grant is
       # needed; a failure here means the base has not been published yet.
       - name: Pull base image
+        if: ${{ matrix.image != 'nginx' }}
         env:
           BASE: ${{ matrix.image == 'cli' && 'conan-cli' || 'node-deps' }}
         run: |
@@ -144,9 +158,11 @@ jobs:
           docker tag "$REMOTE" "metabuilder/base-${BASE}:latest"
 
       - name: Build image
+        env:
+          DOCKERFILE: ${{ matrix.dockerfile || format('frontends/{0}/Dockerfile', matrix.image) }}
         run: |
           docker build \
-            -f "frontends/${APP}/Dockerfile" \
+            -f "$DOCKERFILE" \
             -t "$IMAGE:${SHA}-${ARCH}" \
             .
 
@@ -204,6 +220,29 @@ jobs:
           docker rm -f nextjs-smoke > /dev/null
           exit 1
 
+      # The image build already runs `nginx -t`; this proves the packaged
+      # config also survives a real startup and answers on :80, which a syntax
+      # check does not cover (a bad resolver or upstream name passes -t).
+      - name: Smoke test (nginx)
+        if: ${{ matrix.image == 'nginx' }}
+        run: |
+          docker run -d --name nginx-smoke -p 8088:80 "$IMAGE:${SHA}-${ARCH}"
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8088/healthz > /tmp/nginx-health.json; then
+              cat /tmp/nginx-health.json
+              code=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8088/)
+              [ "$code" = "302" ] || { echo "expected / to redirect to /app, got $code"; exit 1; }
+              echo "root redirects to /app"
+              docker rm -f nginx-smoke > /dev/null
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "nginx did not answer within 30s"
+          docker logs nginx-smoke
+          docker rm -f nginx-smoke > /dev/null
+          exit 1
+
       - name: Report image size
         run: |
           SIZE=$(docker image inspect "$IMAGE:${SHA}-${ARCH}" --format '{{.Size}}')
@@ -236,7 +275,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        pkg: [cli, nextjs-app]
+        pkg: [cli, nextjs-app, nginx]
 
     env:
       IMAGE: ghcr.io/johndoe6345789/metabuilder/${{ matrix.pkg }}
