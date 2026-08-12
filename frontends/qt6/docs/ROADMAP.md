@@ -40,7 +40,6 @@
 ### Phase 4: God Panel Builder Tools (15 Agents)
 - [x] `SchemaEditor.qml` — Visual JSON schema editor (634 LOC)
 - [x] `WorkflowEditor.qml` — Node-based DAG editor with test runner (772 LOC)
-- [x] `LuaEditor.qml` — Code editor, parameters, snippets, security scan (910 LOC)
 - [x] `DatabaseManager.qml` — 14 DBAL backends, connection test, adapter patterns (467 LOC)
 - [x] `PageRoutesManager.qml` — Route table, level/layout config (524 LOC)
 - [x] `ComponentHierarchyEditor.qml` — UI tree editor with properties (468 LOC)
@@ -131,10 +130,9 @@ App.qml (ApplicationWindow)
     ├── CommentsView       (Level 2)
     ├── PackageViewLoader×6 (Level 2 - Forum, Gallery, etc.)
     ├── AdminView          (Level 3 - Django CRUD, DBAL REST)
-    ├── GodPanel           (Level 4 - 14-tab builder)
+    ├── GodPanel           (Level 4 - 12-tab builder)
     │   ├── SchemaEditor      (DBAL REST)
     │   ├── WorkflowEditor
-    │   ├── LuaEditor
     │   ├── DatabaseManager
     │   ├── PageRoutesManager
     │   ├── ComponentHierarchyEditor

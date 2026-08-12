@@ -1,7 +1,7 @@
 [
     { "label": "Schemas",    "valueKey": "schemas",    "accentName": "blue" },
     { "label": "Workflows",  "valueKey": "workflows",  "accentName": "cyan" },
-    { "label": "Lua Scripts", "valueKey": "luaScripts", "accentName": "violet" },
+    { "label": "Node Types", "valueKey": "nodeTypes", "accentName": "violet" },
     { "label": "Packages",   "valueKey": "packages",   "accentName": "blue" },
     { "label": "Pages",      "valueKey": "pages",      "accentName": "cyan" },
     { "label": "Components", "valueKey": "components",  "accentName": "violet" },

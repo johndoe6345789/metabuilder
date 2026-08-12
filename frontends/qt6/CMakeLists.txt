@@ -72,7 +72,6 @@ set_source_files_properties(../../libraries/qml/qt6/FrontPage.qml PROPERTIES QT_
 set_source_files_properties(../../libraries/qml/qt6/GodPanel.qml PROPERTIES QT_RESOURCE_ALIAS GodPanel.qml)
 set_source_files_properties(../../libraries/qml/qt6/LoginDBAL.js PROPERTIES QT_RESOURCE_ALIAS LoginDBAL.js)
 set_source_files_properties(../../libraries/qml/qt6/LoginView.qml PROPERTIES QT_RESOURCE_ALIAS LoginView.qml)
-set_source_files_properties(../../libraries/qml/qt6/LuaEditor.qml PROPERTIES QT_RESOURCE_ALIAS LuaEditor.qml)
 set_source_files_properties(../../libraries/qml/qt6/MaterialLanding.qml PROPERTIES QT_RESOURCE_ALIAS MaterialLanding.qml)
 set_source_files_properties(../../libraries/qml/qt6/MediaServiceCrud.js PROPERTIES QT_RESOURCE_ALIAS MediaServiceCrud.js)
 set_source_files_properties(../../libraries/qml/qt6/MediaServicePanel.qml PROPERTIES QT_RESOURCE_ALIAS MediaServicePanel.qml)
@@ -271,16 +270,6 @@ set_source_files_properties(../../libraries/qml/MetaBuilder/DropdownSidebar.qml 
 set_source_files_properties(../../libraries/qml/MetaBuilder/FeatureCard.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/FeatureCard.qml)
 set_source_files_properties(../../libraries/qml/MetaBuilder/FrontPageLogic.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/FrontPageLogic.js)
 set_source_files_properties(../../libraries/qml/MetaBuilder/HeroSection.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/HeroSection.qml)
-set_source_files_properties(../../libraries/qml/MetaBuilder/LuaCodeEditor.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaCodeEditor.qml)
-set_source_files_properties(../../libraries/qml/MetaBuilder/LuaEditorLogic.js PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaEditorLogic.js)
-set_source_files_properties(../../libraries/qml/MetaBuilder/LuaEditorStatusBar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaEditorStatusBar.qml)
-set_source_files_properties(../../libraries/qml/MetaBuilder/LuaOutputConsole.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaOutputConsole.qml)
-set_source_files_properties(../../libraries/qml/MetaBuilder/LuaOutputPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaOutputPanel.qml)
-set_source_files_properties(../../libraries/qml/MetaBuilder/LuaPropertiesPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaPropertiesPanel.qml)
-set_source_files_properties(../../libraries/qml/MetaBuilder/LuaScriptInfoSection.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaScriptInfoSection.qml)
-set_source_files_properties(../../libraries/qml/MetaBuilder/LuaScriptSidebar.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaScriptSidebar.qml)
-set_source_files_properties(../../libraries/qml/MetaBuilder/LuaSecurityPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaSecurityPanel.qml)
-set_source_files_properties(../../libraries/qml/MetaBuilder/LuaTestInputPanel.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/LuaTestInputPanel.qml)
 set_source_files_properties(../../libraries/qml/MetaBuilder/MediaChannelDetail.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaChannelDetail.qml)
 set_source_files_properties(../../libraries/qml/MetaBuilder/MediaChannelList.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaChannelList.qml)
 set_source_files_properties(../../libraries/qml/MetaBuilder/MediaChannelSchedule.qml PROPERTIES QT_RESOURCE_ALIAS qmllib/MetaBuilder/MediaChannelSchedule.qml)
@@ -352,7 +341,6 @@ qt_add_qml_module(metabuilder-qt6
         ../../libraries/qml/qt6/GodPanel.qml
         ../../libraries/qml/qt6/LoginDBAL.js
         ../../libraries/qml/qt6/LoginView.qml
-        ../../libraries/qml/qt6/LuaEditor.qml
         ../../libraries/qml/qt6/MaterialLanding.qml
         ../../libraries/qml/qt6/MediaServiceCrud.js
         ../../libraries/qml/qt6/MediaServicePanel.qml
@@ -551,16 +539,6 @@ qt_add_qml_module(metabuilder-qt6
         ../../libraries/qml/MetaBuilder/FeatureCard.qml
         ../../libraries/qml/MetaBuilder/FrontPageLogic.js
         ../../libraries/qml/MetaBuilder/HeroSection.qml
-        ../../libraries/qml/MetaBuilder/LuaCodeEditor.qml
-        ../../libraries/qml/MetaBuilder/LuaEditorLogic.js
-        ../../libraries/qml/MetaBuilder/LuaEditorStatusBar.qml
-        ../../libraries/qml/MetaBuilder/LuaOutputConsole.qml
-        ../../libraries/qml/MetaBuilder/LuaOutputPanel.qml
-        ../../libraries/qml/MetaBuilder/LuaPropertiesPanel.qml
-        ../../libraries/qml/MetaBuilder/LuaScriptInfoSection.qml
-        ../../libraries/qml/MetaBuilder/LuaScriptSidebar.qml
-        ../../libraries/qml/MetaBuilder/LuaSecurityPanel.qml
-        ../../libraries/qml/MetaBuilder/LuaTestInputPanel.qml
         ../../libraries/qml/MetaBuilder/MediaChannelDetail.qml
         ../../libraries/qml/MetaBuilder/MediaChannelList.qml
         ../../libraries/qml/MetaBuilder/MediaChannelSchedule.qml

@@ -21,7 +21,7 @@
         "level": "Level 4 - God Builder",
         "role": "god",
         "accentIndex": 3,
-        "desc": "Full builder cockpit (this panel). Schema editor, workflow designer, Lua scripting, page routing, component hierarchy, CSS classes, dropdown configs, database management, and system settings."
+        "desc": "Full builder cockpit (this panel). Schema editor, visual workflow designer, page routing, component hierarchy, CSS classes, dropdown configs, database management, and system settings."
     },
     {
         "level": "Level 5 - Super God",
