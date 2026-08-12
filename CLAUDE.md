@@ -238,6 +238,14 @@ Frontends (CLI C++ | Qt6 QML | Next.js React)
 npm run dev / build / typecheck / lint / test:e2e
 npm run build --workspaces
 
+# Local stack: nginx + frontend + DBAL, entirely from GHCR. Builds nothing —
+# there is no `build:` key in deploy/compose.yml, by design. Runs anywhere
+# Docker does, with no toolchain and no assembled workspace.
+docker compose -f deploy/compose.yml up -d      # -> http://localhost:8080/app
+docker compose -f deploy/compose.yml pull       # take whatever CI last published
+docker compose -f deploy/compose.yml down       # -v also wipes the seeded DBAL data
+TAG=<sha>-arm64 docker compose -f deploy/compose.yml up -d   # before :latest exists
+
 # Base images and the stack live in the sibling deployment repo.
 # In CI you pull the published base rather than building it:
 docker pull ghcr.io/johndoe6345789/deployment/base-node-deps:latest
@@ -499,6 +507,10 @@ Multi-version peer deps. React 18/19, TypeScript 5.9.3, Next.js 14-16, @reduxjs/
 | `AutoMetabuilder` default branch is `master` | Every other sibling repo uses `main`. It's also a **subdirectory** mount: only `workflow-lib/` is `@metabuilder/workflow`; the rest is the workflowui app |
 | `libraries/components/m3` needs no separate mount | The `components` repo already contains `m3/` (`@metabuilder/m3`). Mounting `components` satisfies both workspace entries. The standalone `m3` repo is now just a meta-repo holding `checkout.py` |
 | Two different `playwright.config.ts` exist — use the local one | `frontends/nextjs/playwright.config.ts` is self-contained (`testDir: './e2e'`, chromium, own `next dev` on :3004) and is what CI runs. The **old monorepo root** config now lives in the `metabuilder_e2e` repo and starts `workflowui` + `codesnippet` dev servers — apps that are no longer in this repo — so do **not** mount `metabuilder_e2e` to satisfy the old `--config=../../playwright.config.ts` path. Those stale `--config` flags were removed; Playwright auto-discovers the local config |
+| `NEXT_PUBLIC_*` cannot be set at runtime on a built image | Next inlines them into the browser bundle during `next build`, and `frontends/nextjs/Dockerfile` bakes `NEXT_PUBLIC_DBAL_API_URL=/api/dbal`. No compose env var can repoint the browser at DBAL, which is why the local stack puts nginx in front and serves app and DBAL from one origin rather than exposing DBAL on its own port |
+| DBAL reports healthy while every entity route 503s | `DATABASE_URL` must carry a scheme — `sqlite:///app/data/x.db`, not a bare path. `ConnectionValidator` rejects the path, the daemon starts anyway, and `/health` answers `{"status":"healthy"}` because it never touches the database. Look for `[seed] skipping auto-seed — could not acquire DB client` in the boot log |
+| DBAL entity routes are `/{tenant}/{package}/{Entity}` | Entity is the schema's `"entity"` field, not the filename: `access/PageConfig`, not `core/page_config`. A wrong package or casing answers 422, and callers that guard with `res.ok` swallow it silently |
+| The dbal image has curl, not wget | A healthcheck calling a missing binary leaves the container in `starting` forever rather than `unhealthy`, so `depends_on: service_healthy` on it never releases |
 | Playwright `goto()` must include the `/app` basePath | `playwright.config.ts` sets `baseURL` to the origin only, so `goto('/media-center')` requests a path that does not exist and the page renders Next's 404 — every locator then fails with "element(s) not found", which reads like a render problem rather than a bad URL. `goto('/app/media-center')`. This, not the auth mock, was the larger half of the long-standing `media-center.spec.ts` failure |
 | Mocking `/api/auth/session` alone does not authenticate an E2E test | `authStore.refresh()` reads `sessionStorage['nextjs-web-sso']` first and returns early when absent, so the endpoint is never requested and `auth.user` stays null behind `LevelGate`. Seed a session with `addInitScript` before navigating; `isTokenValid` only decodes the payload and compares `exp`, so an unsigned token with a future `exp` suffices |
 | `next.config.ts` and `tsconfig.json` disagree on the same alias | `@dbal-ui` resolves to root `dbal/shared/ui` in `next.config.ts` but `libraries/dbal/shared/ui` in `tsconfig.json`; webpack uses the former, `tsc` the latter, so **both** paths must exist. Likewise `@metabuilder/service-adapters` is aliased to `path.resolve(monorepoRoot, 'redux/adapters/src')` — a root-level `redux/` that predates the Jun 2026 reorg into `libraries/`. `workspace.json` therefore mounts `redux` and `dbal` at two paths each. Correcting the aliases to the `libraries/` paths would let both second mounts be dropped |
