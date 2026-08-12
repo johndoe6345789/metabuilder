@@ -37,8 +37,33 @@ async function mockRetroSession(route: Route) {
   })
 }
 
+// The auth store only requests /api/auth/session when a persisted session
+// exists: refresh() reads sessionStorage first and returns early when it finds
+// nothing, leaving user null. Mocking the endpoint alone therefore did nothing,
+// LevelGate blocked the page, and no tabs ever rendered. Seed a session so the
+// store gets as far as the mock. isTokenValid only decodes the payload and
+// compares exp, so an unsigned token is enough.
+const SESSION_STORAGE_KEY = 'nextjs-web-sso'
+
+function makeSessionToken(): string {
+  const encode = (value: object): string =>
+    Buffer.from(JSON.stringify(value)).toString('base64url')
+  const exp = Math.floor(Date.now() / 1000) + 3600
+  return [
+    encode({ alg: 'none', typ: 'JWT' }),
+    encode({ sub: 'test-1', exp }),
+    'not-verified',
+  ].join('.')
+}
+
 test.describe('Media Centre', () => {
   test.beforeEach(async ({ page }) => {
+    await page.addInitScript(
+      ([key, token]) => {
+        sessionStorage.setItem(key, JSON.stringify({ token, refreshToken: null }))
+      },
+      [SESSION_STORAGE_KEY, makeSessionToken()] as const
+    )
     await page.route('**/api/auth/session', mockAuth)
     await page.route('**/api/auth/logout', r =>
       r.fulfill({ status: 200, body: '{}' })
@@ -47,7 +72,7 @@ test.describe('Media Centre', () => {
   })
 
   test('page loads with three tabs', async ({ page }) => {
-    await page.goto('/media-center')
+    await page.goto('/app/media-center')
     await expect(page.getByRole('tab', { name: 'Video' })).toBeVisible()
     await expect(page.getByRole('tab', { name: 'Audio' })).toBeVisible()
     await expect(page.getByRole('tab', { name: 'Retro Gaming' })).toBeVisible()
@@ -55,7 +80,7 @@ test.describe('Media Centre', () => {
   })
 
   test('video tab — enters URL and Load button appears', async ({ page }) => {
-    await page.goto('/media-center')
+    await page.goto('/app/media-center')
     await page.getByRole('tab', { name: 'Video' }).click()
 
     const input = page.getByPlaceholder(/localhost:9000.*mp4/i)
@@ -75,7 +100,7 @@ test.describe('Media Centre', () => {
       await route.fulfill({ status: 200, contentType: 'video/mp4', body: '' })
     })
 
-    await page.goto('/media-center')
+    await page.goto('/app/media-center')
     await page.getByRole('tab', { name: 'Video' }).click()
 
     await page
@@ -93,7 +118,7 @@ test.describe('Media Centre', () => {
       r.fulfill({ status: 200, contentType: 'audio/mpeg', body: '' })
     )
 
-    await page.goto('/media-center')
+    await page.goto('/app/media-center')
     await page.getByRole('tab', { name: 'Audio' }).click()
 
     await page
@@ -116,7 +141,7 @@ test.describe('Media Centre', () => {
       r.fulfill({ status: 200, contentType: 'audio/mpeg', body: '' })
     )
 
-    await page.goto('/media-center')
+    await page.goto('/app/media-center')
     await page.getByRole('tab', { name: 'Audio' }).click()
 
     await page
@@ -128,7 +153,7 @@ test.describe('Media Centre', () => {
   })
 
   test('retro tab — shows system picker with 8 systems', async ({ page }) => {
-    await page.goto('/media-center')
+    await page.goto('/app/media-center')
     await page.getByRole('tab', { name: 'Retro Gaming' }).click()
 
     await expect(
@@ -144,7 +169,7 @@ test.describe('Media Centre', () => {
   test('retro tab — Launch button disabled until system + URL both set', async ({
     page,
   }) => {
-    await page.goto('/media-center')
+    await page.goto('/app/media-center')
     await page.getByRole('tab', { name: 'Retro Gaming' }).click()
 
     const launchBtn = page.getByRole('button', { name: /Launch/i })
@@ -167,7 +192,7 @@ test.describe('Media Centre', () => {
     await page.route('**/api/retro/sessions', mockRetroSession)
     await page.route('**/index.m3u8', r => r.fulfill({ status: 404, body: '' }))
 
-    await page.goto('/media-center')
+    await page.goto('/app/media-center')
     await page.getByRole('tab', { name: 'Retro Gaming' }).click()
 
     await page.getByRole('button', { name: 'NES 1983', exact: true }).click()
@@ -194,7 +219,7 @@ test.describe('Media Centre', () => {
     )
     await page.route('**/index.m3u8', r => r.fulfill({ status: 404, body: '' }))
 
-    await page.goto('/media-center')
+    await page.goto('/app/media-center')
     await page.getByRole('tab', { name: 'Retro Gaming' }).click()
     await page.getByRole('button', { name: 'NES 1983', exact: true }).click()
     await page
