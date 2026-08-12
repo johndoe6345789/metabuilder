@@ -12,6 +12,7 @@ import {
   upsertFallbackVaultEntry,
 } from '../vault-fallback-store'
 import { hasValidVaultSession } from '../vault-session'
+import { asString } from '@/lib/api/as-string'
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -19,8 +20,8 @@ function isObject(value: unknown): value is Record<string, unknown> {
 
 function normalizeInstalledPackage(record: Record<string, unknown>) {
   return {
-    packageId: String(record.packageId ?? ''),
-    version: String(record.version ?? '1.0.0'),
+    packageId: asString(record.packageId ?? ''),
+    version: asString(record.version ?? '1.0.0'),
     enabled: Boolean(record.enabled ?? true),
     config:
       typeof record.config === 'string' || record.config === null
@@ -115,14 +116,14 @@ export async function POST(request: Request) {
 
   const now = Date.now()
   const entry = {
-    slug: String(body.slug ?? '').trim(),
-    title: String(body.title ?? '').trim(),
-    username: String(body.username ?? '').trim(),
-    password: String(body.password ?? ''),
-    group: String(body.group ?? 'General').trim() || 'General',
-    notes: String(body.notes ?? '').trim(),
-    loginUrl: String(body.loginUrl ?? '').trim(),
-    appUrl: String(body.appUrl ?? '').trim(),
+    slug: asString(body.slug ?? '').trim(),
+    title: asString(body.title ?? '').trim(),
+    username: asString(body.username ?? '').trim(),
+    password: asString(body.password ?? ''),
+    group: asString(body.group ?? 'General').trim() || 'General',
+    notes: asString(body.notes ?? '').trim(),
+    loginUrl: asString(body.loginUrl ?? '').trim(),
+    appUrl: asString(body.appUrl ?? '').trim(),
     tenantId: 'system',
     createdAt: now,
     updatedAt: now,

@@ -7,6 +7,14 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 // Mock server-only module
 vi.mock('server-only', () => ({}))
 
+// entityApiFetch forwards the caller's session cookie, and next/headers throws
+// outside a request scope - so without this every call lands in the catch and
+// reports 500 rather than reaching the mocked fetch. A cookie is supplied so
+// the forwarding branch is the one under test.
+vi.mock('next/headers', () => ({
+  headers: async () => new Headers({ cookie: 'session=test-session' }),
+}))
+
 import {
   fetchEntityList,
   fetchEntity,
@@ -15,6 +23,11 @@ import {
   deleteEntity,
   type ListQueryParams,
 } from './api-client'
+
+// Node's fetch rejects relative URLs, so the client prefixes this origin.
+// Mirrors the default in api-client.ts.
+const INTERNAL_APP_URL =
+  process.env.METABUILDER_INTERNAL_URL ?? 'http://127.0.0.1:3000/app'
 
 // Mock fetch
 global.fetch = vi.fn()
@@ -371,7 +384,7 @@ describe('API Client', () => {
       await fetchEntityList('acme', 'forum', 'posts', { page: 2, limit: 20 })
 
       expect(fetch).toHaveBeenCalledWith(
-        '/api/v1/acme/forum/posts?page=2&limit=20',
+        `${INTERNAL_APP_URL}/api/v1/acme/forum/posts?page=2&limit=20`,
         expect.any(Object)
       )
     })
@@ -388,7 +401,7 @@ describe('API Client', () => {
       })
 
       const call = vi.mocked(fetch).mock.calls[0]
-      expect(call?.[0]).toContain('/api/v1/acme/forum/posts?')
+      expect(call?.[0]).toContain(`${INTERNAL_APP_URL}/api/v1/acme/forum/posts?`)
       expect(call?.[0]).toContain('filter=')
     })
 
@@ -402,7 +415,7 @@ describe('API Client', () => {
       await fetchEntityList('acme', 'forum', 'posts', { sort: '-createdAt' })
 
       expect(fetch).toHaveBeenCalledWith(
-        '/api/v1/acme/forum/posts?sort=-createdAt',
+        `${INTERNAL_APP_URL}/api/v1/acme/forum/posts?sort=-createdAt`,
         expect.any(Object)
       )
     })
@@ -417,7 +430,7 @@ describe('API Client', () => {
       await fetchEntityList('acme', 'forum', 'posts', {})
 
       expect(fetch).toHaveBeenCalledWith(
-        '/api/v1/acme/forum/posts',
+        `${INTERNAL_APP_URL}/api/v1/acme/forum/posts`,
         expect.any(Object)
       )
     })

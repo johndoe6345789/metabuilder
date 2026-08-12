@@ -1,6 +1,5 @@
 'use client'
 
-import { Typography } from '@/m3'
 import { useComponentTree } from './use-component-tree'
 import { PALETTE, renderNode, type PaletteItem } from './builder-registry'
 import { CATEGORIES } from './component-tree-categories'

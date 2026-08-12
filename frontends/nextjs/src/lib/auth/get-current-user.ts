@@ -33,7 +33,7 @@ export interface CurrentUser {
 export async function getCurrentUser(token: string | null): Promise<CurrentUser | null> {
   try {
     const user = await fetchSession(token)
-    if (user == null || user.id === undefined || user.username === undefined ||
+    if (user?.id === undefined || user.username === undefined ||
         user.email === undefined || user.role === undefined) {
       return null
     }

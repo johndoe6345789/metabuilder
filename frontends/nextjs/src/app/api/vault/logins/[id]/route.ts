@@ -4,6 +4,7 @@ import {
   encodeConfig,
   makeVaultEntry,
   type VaultRecord,
+  type VaultEntry,
 } from '../../vault-records'
 import {
   deleteFallbackVaultEntry,
@@ -11,6 +12,7 @@ import {
   upsertFallbackVaultEntry,
 } from '../../vault-fallback-store'
 import { hasValidVaultSession } from '../../vault-session'
+import { asString } from '@/lib/api/as-string'
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -18,8 +20,8 @@ function isObject(value: unknown): value is Record<string, unknown> {
 
 function normalizeInstalledPackage(record: Record<string, unknown>) {
   return {
-    packageId: String(record.packageId ?? ''),
-    version: String(record.version ?? '1.0.0'),
+    packageId: asString(record.packageId ?? ''),
+    version: asString(record.version ?? '1.0.0'),
     enabled: Boolean(record.enabled ?? true),
     config:
       typeof record.config === 'string' || record.config === null
@@ -68,14 +70,14 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
 
   const updatedAt = Date.now()
   const nextEntry = {
-    slug: String(body.slug ?? currentVault.slug ?? '').trim(),
-    title: String(body.title ?? currentVault.title ?? '').trim(),
-    username: String(body.username ?? currentVault.username ?? '').trim(),
-    password: String(body.password ?? currentVault.password ?? ''),
-    group: String(body.group ?? currentVault.group ?? 'General').trim() || 'General',
-    notes: String(body.notes ?? currentVault.notes ?? '').trim(),
-    loginUrl: String(body.loginUrl ?? currentVault.loginUrl ?? '').trim(),
-    appUrl: String(body.appUrl ?? currentVault.appUrl ?? '').trim(),
+    slug: asString(body.slug ?? currentVault.slug ?? '').trim(),
+    title: asString(body.title ?? currentVault.title ?? '').trim(),
+    username: asString(body.username ?? currentVault.username ?? '').trim(),
+    password: asString(body.password ?? currentVault.password ?? ''),
+    group: asString(body.group ?? currentVault.group ?? 'General').trim() || 'General',
+    notes: asString(body.notes ?? currentVault.notes ?? '').trim(),
+    loginUrl: asString(body.loginUrl ?? currentVault.loginUrl ?? '').trim(),
+    appUrl: asString(body.appUrl ?? currentVault.appUrl ?? '').trim(),
     tenantId: 'system',
     createdAt: currentVault.createdAt,
     updatedAt,
@@ -85,12 +87,12 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
     return NextResponse.json({ error: 'Slug, title, username, and password are required' }, { status: 400 })
   }
 
-  let normalized = null
+  let normalized: VaultEntry | null
   if (current !== null && isObject(current)) {
     try {
       const updated = await db.entity('InstalledPackage').update(id, {
         packageId: id,
-        version: String(current.version ?? '1.0.0'),
+        version: asString(current.version ?? '1.0.0'),
         enabled: Boolean(current.enabled ?? true),
         config: encodeConfig(nextEntry, currentVault.createdAt, updatedAt),
         tenantId: 'system',

@@ -160,3 +160,12 @@ e2e/playwright-report/
 
 # Cloned by the Jenkinsfile; source of truth is github.com/johndoe6345789/deployment
 /deployment/
+
+# Workspace assembly mount points (.github/workspace.json)
+# Sibling micro-repos cloned in by .github/scripts/assemble_workspace.py. CI
+# never commits, but a local assembly followed by `git add -A` would otherwise
+# pull nine repositories into this one. dbal/shared/prisma/ above predates this.
+/libraries/
+/redux/
+/dbal/
+/packages/

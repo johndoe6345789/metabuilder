@@ -62,6 +62,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { authenticate } from '@/lib/middleware/auth-middleware'
 import { applyRateLimit } from '@/lib/middleware/rate-limit'
 import { v4 as uuidv4 } from 'uuid'
+import { asString } from '@/lib/api/as-string'
 
 interface RouteParams {
   params: Promise<{
@@ -264,7 +265,7 @@ export async function POST(
     const workflow = {
       id: workflowId,
       tenantId: tenant,
-      name: String(body.name),
+      name: asString(body.name),
       description: typeof body.description === 'string' ? body.description : '',
       version: '1.0.0',
       createdBy: user.id,
@@ -273,7 +274,7 @@ export async function POST(
       active: body.active !== false,
       locked: false,
       tags: Array.isArray(body.tags) ? (body.tags as unknown[]) : [],
-      category: String(body.category),
+      category: asString(body.category),
       settings: {
         timezone: 'UTC',
         executionTimeout: 300000, // 5 minutes
