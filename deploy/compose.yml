@@ -83,7 +83,9 @@ services:
     volumes:
       - dbal-data:/app/data
     healthcheck:
-      test: ["CMD-SHELL", "wget -q -O- http://127.0.0.1:8080/health | grep -q healthy"]
+      # curl, not wget: the dbal image ships curl only, and a missing binary
+      # leaves the container in "starting" forever rather than failing loudly.
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:8080/health | grep -q healthy"]
       interval: 10s
       timeout: 5s
       retries: 6
