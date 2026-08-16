@@ -9,6 +9,7 @@
 #   dbal        ghcr.io/johndoe6345789/dbal                     (dbal repo)
 #   postgres    postgres:17-alpine                              (Docker Hub)
 #   redis       redis:7-alpine                                  (Docker Hub)
+#   elasticsearch docker.elastic.co/elasticsearch/elasticsearch:8 (Elastic)
 #   postgres-ui ghcr.io/.../metabuilder-small/postgres-dashboard (metabuilder-small)
 #
 # Only nginx publishes a port. The app and DBAL are reachable only on the
@@ -99,6 +100,40 @@ services:
       start_period: 5s
     networks: [metabuilder]
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.3
+    container_name: metabuilder-elasticsearch
+    # Opt-in: it wants ~1GB of heap even idle, which is a lot to impose on
+    # everyone running the stack just to read the app.
+    #   docker compose -f deploy/compose.yml --profile search up -d
+    profiles: [search]
+    restart: unless-stopped
+    environment:
+      discovery.type: single-node
+      # Local dev only. With security on, ES demands TLS and a bootstrap
+      # password before it will answer anything, and DBAL's search layer has
+      # no credential configuration -- so this is off deliberately rather than
+      # by oversight. Do not copy this into a deployed environment.
+      xpack.security.enabled: "false"
+      ES_JAVA_OPTS: ${ES_JAVA_OPTS:--Xms512m -Xmx512m}
+      # Single node means replicas can never be allocated; without this every
+      # index sits yellow and looks broken.
+      cluster.routing.allocation.disk.threshold_enabled: "false"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    healthcheck:
+      # wait_for_status=yellow means yellow-or-better, so this passes on a
+      # green cluster too. It is the right gate rather than green because any
+      # index created with replicas can never allocate them on a single node
+      # and would sit yellow forever -- verified green here with ES 8's
+      # single-node default of 0 replicas.
+      test: ["CMD-SHELL", "curl -fsS 'http://127.0.0.1:9200/_cluster/health?wait_for_status=yellow&timeout=5s' >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 24
+      start_period: 30s
+    networks: [metabuilder]
+
   dbal:
     image: ghcr.io/johndoe6345789/dbal:${DBAL_TAG:-latest}
     container_name: metabuilder-dbal
@@ -123,6 +158,18 @@ services:
       # Requires a dbal image built after the caching layer landed; older
       # images ignore this variable entirely and simply run uncached.
       DBAL_CACHE_URL: ${DBAL_CACHE_URL:-redis://redis:6379/0?ttl=300&pattern=read-through}
+      # Mirrors writes into Elasticsearch and backs
+      # GET /api/dbal/{tenant}/{package}/{Entity}/_search?q=...
+      #
+      # No depends_on for elasticsearch: it is behind the `search` profile, and
+      # depending on a profiled service breaks `up -d` without that profile.
+      # Nothing is lost by starting first -- mirroring is best-effort, so
+      # writes made before ES is up are simply absent from the index until
+      # those records are next written.
+      #
+      # refresh=true so a write is searchable immediately; that costs indexing
+      # throughput and is a local-development choice, not a default to deploy.
+      DBAL_SEARCH_URL: ${DBAL_SEARCH_URL:-http://elasticsearch:9200?index=dbal_search&refresh=true}
       DBAL_AUTO_CREATE_TABLES: "true"
       DBAL_SEED_ON_STARTUP: "true"
       DBAL_SEED_DIR: /app/seeds/database
@@ -215,3 +262,4 @@ volumes:
   dbal-data:
   dbal-keys:
   postgres-data:
+  elasticsearch-data:
