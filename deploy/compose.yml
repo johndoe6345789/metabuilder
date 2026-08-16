@@ -8,6 +8,7 @@
 #   nextjs-app  ghcr.io/johndoe6345789/metabuilder/nextjs-app   (.github/workflows/docker.yml)
 #   dbal        ghcr.io/johndoe6345789/dbal                     (dbal repo)
 #   postgres    postgres:17-alpine                              (Docker Hub)
+#   redis       redis:7-alpine                                  (Docker Hub)
 #   postgres-ui ghcr.io/.../metabuilder-small/postgres-dashboard (metabuilder-small)
 #
 # Only nginx publishes a port. The app and DBAL are reachable only on the
@@ -82,6 +83,22 @@ services:
       start_period: 10s
     networks: [metabuilder]
 
+  redis:
+    image: redis:7-alpine
+    container_name: metabuilder-redis
+    restart: unless-stopped
+    # Cache only. Everything in here is reconstructible from Postgres, so no
+    # volume and no persistence: losing it costs a slow first read, and an
+    # unpersisted cache cannot come back stale after a restart.
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 5s
+    networks: [metabuilder]
+
   dbal:
     image: ghcr.io/johndoe6345789/dbal:${DBAL_TAG:-latest}
     container_name: metabuilder-dbal
@@ -91,11 +108,21 @@ services:
       # Postgres still initialising -- service_started would race it.
       postgres:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
       DBAL_ADAPTER: postgres
       # Host is the compose service name; 5432 is never published, so nothing
       # here collides with a Postgres already running on the host.
       DATABASE_URL: "postgresql://${POSTGRES_USER:-dbal}:${POSTGRES_PASSWORD:-dbal}@postgres:5432/${POSTGRES_DB:-dbal}"
+      # Read-through cache in front of Postgres, not instead of it: a miss
+      # falls through and backfills, and every cache failure degrades to a
+      # database read, so Redis is never authoritative. ttl bounds how long a
+      # write made outside DBAL (psql, a migration) can be masked.
+      #
+      # Requires a dbal image built after the caching layer landed; older
+      # images ignore this variable entirely and simply run uncached.
+      DBAL_CACHE_URL: ${DBAL_CACHE_URL:-redis://redis:6379/0?ttl=300&pattern=read-through}
       DBAL_AUTO_CREATE_TABLES: "true"
       DBAL_SEED_ON_STARTUP: "true"
       DBAL_SEED_DIR: /app/seeds/database
