@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { beginLogin } from '@metabuilder/dbal-sso/core'
+import { beginLogin, friendlySignInError } from '@metabuilder/dbal-sso/core'
 import { dbalSsoConfig } from '@/lib/dbalSsoConfig'
 import s from './page.module.scss'
 
@@ -14,7 +14,7 @@ export default function LoginPage() {
     setError('')
     setLoading(true)
     beginLogin(dbalSsoConfig).catch(e => {
-      setError(e instanceof Error ? e.message : 'Sign-in failed to start')
+      setError(friendlySignInError(e))
       setLoading(false)
     })
   }

@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { completeLogin } from '@metabuilder/dbal-sso/core'
+import { completeLogin, friendlySignInError } from '@metabuilder/dbal-sso/core'
 import { dbalSsoConfig } from '@/lib/dbalSsoConfig'
 import { authStore } from '@/hooks/auth/auth-store'
 import s from '../../login/page.module.scss'
@@ -16,7 +16,7 @@ function AuthCallbackContent() {
     const code = searchParams.get('code')
     const state = searchParams.get('state')
     if (!code || !state) {
-      setError('Missing code/state in callback URL')
+      setError('Your sign-in link looks incomplete or was already used — please try signing in again.')
       return
     }
 
@@ -24,7 +24,7 @@ function AuthCallbackContent() {
       .then(tokens => authStore.applySession(tokens.token, tokens.refreshToken))
       .then(() => { router.replace('/dashboard') })
       .catch(e => {
-        setError(e instanceof Error ? e.message : 'Sign-in failed')
+        setError(friendlySignInError(e))
       })
   }, [searchParams, router])
 
