@@ -1,10 +1,21 @@
 name: bump-workspace-pins
 
-# .github/workspace.json pins every sibling micro-repo to a commit SHA, which
-# is what makes builds here reproducible and immune to other repos' pushes.
-# The trade-off is drift: nothing picks up sibling changes until the pins move.
-# This job moves them on a schedule and opens a PR, so the update is reviewed
-# and CI proves the new set works before it lands.
+# .github/workspace.json records a commit SHA for every sibling micro-repo.
+# Builds no longer resolve to those SHAs -- they take branch heads, so sibling
+# changes arrive without waiting for this job (see assemble_workspace.py). What
+# the pins still buy is a known-good set that --pinned can rebuild from, which
+# is only useful while it is current and still exists: a force-pushed sibling
+# leaves a ref that cannot be fetched at all.
+#
+# So this job's purpose changed rather than disappeared: it keeps that fallback
+# record fetchable and roughly current.
+#
+# Note what it no longer does. The PR it opens touches .github/workspace.json,
+# which does trigger nextjs.yml -- but that run assembles floating like every
+# other run, so it exercises the branch heads, not the SHAs being recorded. A
+# green bump PR is therefore not evidence that the pinned set builds. Nothing
+# routinely proves that any more; --pinned is a best-effort escape hatch, and
+# the further back you reach with it the likelier it is to have rotted.
 
 on:
   schedule:

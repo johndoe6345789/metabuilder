@@ -42,8 +42,8 @@ on:
       - '.github/actions/assemble-workspace/**'
   workflow_dispatch:
     inputs:
-      floating:
-        description: 'Ignore workspace.json pins and use each sibling repo branch head'
+      pinned:
+        description: 'Build from the workspace.json pins instead of sibling branch heads'
         type: boolean
         default: false
 
@@ -73,7 +73,9 @@ jobs:
         with:
           frontend: qt6
           token: ${{ secrets.WORKSPACE_TOKEN }}
-          floating: ${{ inputs.floating && 'true' || 'false' }}
+          # Floating unless a dispatch run explicitly asks to be pinned; on
+          # push there are no inputs, so this falls through to 'true'.
+          floating: ${{ inputs.pinned && 'false' || 'true' }}
 
       # Verify the mount really satisfies CMakeLists before installing Qt: a
       # missing QML tree otherwise fails at configure time with a far less

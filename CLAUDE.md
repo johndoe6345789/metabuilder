@@ -367,11 +367,16 @@ python3 .github/scripts/assemble_workspace.py --all --dry-run
 python3 .github/scripts/bump_pins.py --check                      # pins behind?
 ```
 
-Sibling repos are **pinned to commit SHAs**, so a push in another repo can
-never redden CI here; `bump-workspace-pins.yml` moves the pins via PR so the
-new set is proven by CI before it lands. Set the `WORKSPACE_TOKEN` secret to a
-PAT if any sibling repo is private — the default `GITHUB_TOKEN` only sees this
-repo.
+Sibling repos are assembled at their **branch heads**, not at the SHAs in
+`workspace.json` (changed 2026-08-16 — development across the micro-repos is
+rapid enough that a pinned build was reliably a stale one). Two consequences,
+both deliberate: a push in another repo **can** redden CI here, and a build is
+not reproducible from `workspace.json` after the fact. Pass `--pinned` to the
+script, or `floating: false` to the `assemble-workspace` action, to rebuild
+from the recorded SHAs; `nextjs.yml` exposes this as a `pinned` dispatch input.
+The pins are still bumped by `bump-workspace-pins.yml` so they stay a usable
+record of a known-good set. Set the `WORKSPACE_TOKEN` secret to a PAT if any
+sibling repo is private — the default `GITHUB_TOKEN` only sees this repo.
 
 ### Sibling micro-repo CI (2026-08-11)
 

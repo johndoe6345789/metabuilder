@@ -16,10 +16,13 @@ inputs:
     default: ''
   floating:
     description: >-
-      Set to "true" to use each sibling repo's branch head instead of the SHA
-      pinned in workspace.json.
+      Whether to use each sibling repo's branch head instead of the SHA pinned
+      in workspace.json. Defaults to "true": development across the micro-repos
+      is rapid enough that a pinned build is usually a stale one, and a fix
+      landing in a sibling repo should reach this build without waiting for a
+      pin bump. Set to "false" to reproduce an older build from its pins.
     required: false
-    default: 'false'
+    default: 'true'
 
 runs:
   using: composite
@@ -37,7 +40,7 @@ runs:
         python3 .github/scripts/assemble_workspace.py \
           --frontend "${{ inputs.frontend }}" \
           --force \
-          ${{ inputs.floating == 'true' && '--floating' || '' }}
+          ${{ inputs.floating == 'true' && '--floating' || '--pinned' }}
 
     - name: Summarise mounted workspace
       shell: bash
@@ -47,6 +50,9 @@ runs:
           echo
           if [ "${{ inputs.floating }}" = "true" ]; then
             echo "> Pins ignored — sibling repos taken at branch head."
+            echo "> This build is **not** reproducible from workspace.json."
+          else
+            echo "> Pinned build — sibling repos taken at the SHAs in workspace.json."
           fi
           echo '```'
           for d in libraries packages; do

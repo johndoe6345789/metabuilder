@@ -11,10 +11,16 @@
     "Consumed by .github/scripts/assemble_workspace.py. Pins are bumped by",
     ".github/workflows/bump-workspace-pins.yml (scheduled + manual).",
     "",
-    "Adding a repo: give it a 'ref' (commit SHA, for reproducibility), a 'branch'",
-    "(what the bump job follows), and one or more mounts. 'from' is a path inside",
-    "the source repo ('.' for the whole repo); 'to' is the path it lands at,",
-    "relative to this repo's root."
+    "Builds take each repo's 'branch' head by default; 'ref' is only used when",
+    "something asks to be pinned (--pinned, or floating: false on the action).",
+    "So 'ref' is a record of a known-good set and a way to reproduce an older",
+    "build -- it is not what a normal build resolves to. Keep it current anyway:",
+    "bump-workspace-pins.yml does that through a PR.",
+    "",
+    "Adding a repo: give it a 'branch' (what builds actually follow), a 'ref'",
+    "(a commit SHA on that branch), and one or more mounts. 'from' is a path",
+    "inside the source repo ('.' for the whole repo); 'to' is the path it lands",
+    "at, relative to this repo's root."
   ],
   "owner": "johndoe6345789",
   "repos": [

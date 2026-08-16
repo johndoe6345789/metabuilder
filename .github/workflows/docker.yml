@@ -26,8 +26,8 @@ on:
     branches: [main]
   workflow_dispatch:
     inputs:
-      floating:
-        description: 'Ignore workspace.json pins and use each sibling repo branch head'
+      pinned:
+        description: 'Build from the workspace.json pins instead of sibling branch heads'
         type: boolean
         default: false
 
@@ -114,7 +114,9 @@ jobs:
         with:
           frontend: nextjs
           token: ${{ secrets.WORKSPACE_TOKEN }}
-          floating: ${{ inputs.floating && 'true' || 'false' }}
+          # Floating unless a dispatch run explicitly asks to be pinned; on
+          # push there are no inputs, so this falls through to 'true'.
+          floating: ${{ inputs.pinned && 'false' || 'true' }}
 
       # The committed .npmrc points @esbuild-kit and @metabuilder at a
       # Verdaccio on localhost:4873 for desktop builds. No such registry exists

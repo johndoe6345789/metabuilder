@@ -62,9 +62,12 @@ python3 .github/scripts/assemble_workspace.py --frontend qt6
 
 `.github/workspace.json` is the repo → mount-path map (the mapping
 [reposplit](https://github.com/johndoe6345789/reposplit) leaves as an open
-TODO). Each sibling is pinned to a commit SHA, so a push elsewhere can't break
-CI here; `bump-workspace-pins.yml` moves the pins through a PR so the new set
-is proven before it lands. Run `--help` on either script for the full options.
+TODO). Each sibling is assembled at its branch head, so a fix landing in one of
+them reaches this build straight away — and so a broken push elsewhere can break
+CI here, which is the accepted trade. The commit SHAs recorded there are a
+known-good set rather than what a normal build uses; pass `--pinned` to rebuild
+from them. `bump-workspace-pins.yml` keeps that record current through a PR.
+Run `--help` on either script for the full options.
 
 > Set the `WORKSPACE_TOKEN` secret to a PAT if any sibling repo is private —
 > a workflow's default `GITHUB_TOKEN` can only see this repository.

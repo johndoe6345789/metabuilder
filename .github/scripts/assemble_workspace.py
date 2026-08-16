@@ -13,16 +13,22 @@ This script clones the sibling repos named in .github/workspace.json and mounts
 them at the paths that build configuration expects, so a checkout of this repo
 alone can be built and tested.
 
+Sibling repos are taken at their branch heads by default -- development across
+the micro-repos is rapid, and a fix landing in one of them should reach this
+build without waiting for a pin bump. The SHAs in workspace.json are kept as a
+record of a known-good set and as an escape hatch (--pinned) for reproducing an
+older build; they are not what a normal build uses.
+
 Typical use:
 
-    # Everything the Next.js frontend needs, pinned to workspace.json
+    # Everything the Next.js frontend needs, at sibling branch heads
     python3 .github/scripts/assemble_workspace.py --frontend nextjs
 
     # Just the QML sources for the Qt6 frontend
     python3 .github/scripts/assemble_workspace.py --frontend qt6
 
-    # Ignore the pins and take each repo's current branch head
-    python3 .github/scripts/assemble_workspace.py --frontend nextjs --floating
+    # Reproduce an older build from the SHAs in workspace.json
+    python3 .github/scripts/assemble_workspace.py --frontend nextjs --pinned
 
     # See what would happen, without touching the filesystem
     python3 .github/scripts/assemble_workspace.py --all --dry-run
@@ -49,6 +55,24 @@ MANIFEST = REPO_ROOT / ".github" / "workspace.json"
 
 class AssemblyError(RuntimeError):
     """A mount could not be produced; the workspace is not usable as-is."""
+
+
+def warn(message: str) -> None:
+    """Report a non-fatal problem that changed what got built.
+
+    Goes to stderr, and to the GitHub step summary when running in Actions --
+    stderr alone scrolls out of sight in a long log, and the whole point of
+    these warnings is that someone notices them later, while wondering why a
+    build did not contain what they expected.
+    """
+    print(f"warning: {message}", file=sys.stderr, flush=True)
+    summary = os.environ.get("GITHUB_STEP_SUMMARY")
+    if summary:
+        # Every line needs the marker: an unprefixed continuation line ends the
+        # blockquote, dropping the rest of the message out of the callout.
+        quoted = "\n".join(f"> {line}" for line in message.splitlines())
+        with open(summary, "a", encoding="utf-8") as handle:
+            handle.write(f"\n> [!WARNING]\n{quoted}\n")
 
 
 # --------------------------------------------------------------------------
@@ -128,30 +152,39 @@ def handle_missing_ref(entry: dict, error: AssemblyError) -> str:
     """Decide what to do when a repo's pinned SHA can no longer be fetched.
 
     This happens when a sibling repo is force-pushed or its history rewritten:
-    the SHA recorded in workspace.json stops existing, and every metabuilder
-    build that depends on it starts failing at checkout time.
+    the SHA recorded in workspace.json stops existing, and a build that asked
+    for it fails at checkout time.
 
-    Return the ref to retry with, or raise to fail the build.
+    Only --pinned runs reach here. The default path takes branch heads and has
+    no pin to lose, so this is now the escape hatch's error handling rather
+    than something every build depends on.
 
-    TODO(contribution): choose the policy for this project. The trade-off:
+    Policy: fall back to the branch head and warn loudly.
 
-      * Hard-fail (current behaviour) keeps builds honest and reproducible -
-        you always know exactly what was built - but one force-push in any of
-        the sibling repos bricks CI here until someone bumps the pin by hand.
+    The three options weighed here were hard-fail, unconditional fallback, and
+    a middle path that falls back on pull_request runs but hard-fails on main.
+    This project took the fallback, for the same reason builds float by
+    default: development across the micro-repos is rapid, so a pinned build is
+    usually a stale one, and a pin that has been force-pushed away is stale
+    *and* unfetchable. Hard-failing would strand the caller on a ref that
+    cannot be recovered, to protect a reproducibility guarantee the default
+    build path no longer offers anyway.
 
-      * Falling back to entry["branch"] with a loud warning keeps CI moving,
-        but the build silently stops being reproducible, and the pin in
-        workspace.json becomes a comfortable lie.
+    The cost is real and deliberate: a build that takes this path is not
+    reproducible from workspace.json, and the pin is left describing a commit
+    that no longer exists. Hence the warning -- it goes to stderr and, in CI,
+    to the step summary, so the drift is visible rather than silent.
 
-      * A middle path: fall back on pull_request runs (where a red build is
-        just noise) but hard-fail on main (where reproducibility is the point).
-        os.environ.get("GITHUB_EVENT_NAME") tells you which you are in.
+    Returns the ref to retry with.
     """
-    raise AssemblyError(
-        f"{entry['repo']}: pinned ref {entry['ref']} could not be fetched. "
-        f"It may have been force-pushed away. Re-run the bump-workspace-pins "
-        f"workflow, or re-run this script with --floating.\n  {error}"
+    branch = entry["branch"]
+    warn(
+        f"{entry['repo']}: pinned ref {entry['ref'][:12]} could not be fetched "
+        f"(likely force-pushed away). Falling back to branch {branch!r}. "
+        f"This build is NOT reproducible from workspace.json -- re-run the "
+        f"bump-workspace-pins workflow to record a ref that exists.\n  {error}"
     )
+    return branch
 
 
 # --------------------------------------------------------------------------
@@ -306,10 +339,20 @@ def main() -> int:
         help="GitHub token for private repos. Defaults to $WORKSPACE_TOKEN, "
              "then $GITHUB_TOKEN.",
     )
-    parser.add_argument(
+    pinning = parser.add_mutually_exclusive_group()
+    pinning.add_argument(
         "--floating",
+        dest="floating",
         action="store_true",
-        help="Use each repo's branch head instead of its pinned SHA.",
+        default=True,
+        help="Use each repo's branch head instead of its pinned SHA (default).",
+    )
+    pinning.add_argument(
+        "--pinned",
+        dest="floating",
+        action="store_false",
+        help="Use the SHAs pinned in workspace.json, to reproduce an older "
+             "build. The default is to take branch heads.",
     )
     parser.add_argument(
         "--force",
