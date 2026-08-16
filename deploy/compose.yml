@@ -80,8 +80,32 @@ services:
       # Same-origin through nginx, so no cross-origin request is ever made.
       DBAL_CORS_ORIGIN: ${DBAL_CORS_ORIGIN:-*}
       DBAL_LOG_LEVEL: ${DBAL_LOG_LEVEL:-info}
+      # --- OIDC provider (the /app/login button is dead without this) --------
+      # Unset, server_routes.cpp logs "OIDC provider is DISABLED" at boot and
+      # every /oidc/* route 404s, so the login page's redirect lands on
+      # Drogon's 404 page rather than a sign-in form.
+      #
+      # The issuer is the browser-facing base URL, not the container address:
+      # oidc_service.cpp derives authorization_endpoint, token_endpoint, jwks_uri
+      # and the "iss" claim from it by string concatenation. dbal:8080 would
+      # mint tokens no browser could ever resolve.
+      DBAL_OIDC_ISSUER: ${DBAL_OIDC_ISSUER:-http://localhost:${HTTP_PORT:-8080}/api/dbal}
+      # nginx strips /api/dbal before proxying, so DBAL sees /oidc/authorize at
+      # its root and builds Location headers and <form action> the same way.
+      # Without the prefix it redirects to /oidc/login, which nginx routes to
+      # the Next.js app instead of back here.
+      DBAL_PUBLIC_PATH_PREFIX: ${DBAL_PUBLIC_PATH_PREFIX:-/api/dbal}
     volumes:
       - dbal-data:/app/data
+      # The image ships no clients.json, and a missing one throws inside the
+      # try/catch that disables the provider. Mounted at the path
+      # DBAL_OIDC_CLIENTS_CONFIG defaults to.
+      - ./oidc/clients.json:/app/schemas/oidc/clients.json:ro
+      # RsaKeypair generates a key when the path is empty, so no PEM is
+      # committed -- but /app/keys is baked into the image, so without a volume
+      # a fresh key is minted on every restart and all outstanding tokens
+      # silently stop verifying.
+      - dbal-keys:/app/keys
     healthcheck:
       # curl, not wget: the dbal image ships curl only, and a missing binary
       # leaves the container in "starting" forever rather than failing loudly.
@@ -98,3 +122,4 @@ networks:
 
 volumes:
   dbal-data:
+  dbal-keys:

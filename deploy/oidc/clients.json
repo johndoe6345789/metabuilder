@@ -1,0 +1,43 @@
+{
+  "version": "1.0",
+  "_comment": [
+    "OIDC client registry for the local stack (deploy/compose.yml), mounted at",
+    "/app/schemas/oidc/clients.json -- the path DBAL's server_routes.cpp defaults",
+    "to. The dbal image ships no clients.json of its own, so without this mount",
+    "the provider fails to initialize even with DBAL_OIDC_ISSUER set.",
+    "",
+    "Only nextjs-web is registered: this stack runs exactly one app. The wider",
+    "registry (pastebin, codegen, workflowui, ...) lives in the dbal repo at",
+    "libraries/dbal/shared/api/schema/oidc/clients.json and is the source of",
+    "truth for deployments that serve more than one client.",
+    "",
+    "redirect_uris are matched exactly, port included. 8080 is HTTP_PORT's",
+    "default; if you start the stack on another port, add that origin here or",
+    "/oidc/authorize will reject the callback as unregistered."
+  ],
+  "clients": [
+    {
+      "client_id": "nextjs-web",
+      "client_name": "MetaBuilder",
+      "token_endpoint_auth_method": "none",
+      "grant_types": ["authorization_code", "refresh_token"],
+      "response_types": ["code"],
+      "redirect_uris": [
+        "http://localhost:8080/app/auth/callback",
+        "http://127.0.0.1:8080/app/auth/callback",
+        "http://localhost:3000/app/auth/callback"
+      ],
+      "post_logout_redirect_uris": [
+        "http://localhost:8080/app/",
+        "http://127.0.0.1:8080/app/",
+        "http://localhost:3000/app/"
+      ],
+      "require_pkce": true,
+      "pkce_methods": ["S256"],
+      "scope": "openid profile email offline_access",
+      "access_token_ttl_seconds": 900,
+      "refresh_token_ttl_seconds": 1209600,
+      "id_token_ttl_seconds": 900
+    }
+  ]
+}
