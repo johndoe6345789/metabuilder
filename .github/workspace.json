@@ -109,7 +109,7 @@
     {
       "repo": "redux",
       "branch": "main",
-      "ref": "7cf7fc335d8ba3245f35f7bf2c16954080017210",
+      "ref": "30e85fe6ed90c2db91ee5fb526d2fd8b49e7373d",
       "needed_by": [
         "nextjs"
       ],
