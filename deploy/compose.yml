@@ -10,7 +10,7 @@
 #   postgres    postgres:17-alpine                              (Docker Hub)
 #   redis       redis:7-alpine                                  (Docker Hub)
 #   elasticsearch docker.elastic.co/elasticsearch/elasticsearch:8 (Elastic)
-#   postgres-ui ghcr.io/.../metabuilder-small/postgres-dashboard (metabuilder-small)
+#   postgres-ui ghcr.io/johndoe6345789/postgres                    (postgres repo)
 #
 # Only nginx publishes a port. The app and DBAL are reachable only on the
 # internal network, which matches how the browser actually talks to them: the
@@ -223,15 +223,13 @@ services:
   #   docker compose -f deploy/compose.yml --profile tools up -d
   #   open http://localhost:3100/postgres
   postgres-ui:
-    image: ghcr.io/johndoe6345789/metabuilder-small/postgres-dashboard:${PGUI_TAG:-latest}
+    image: ghcr.io/johndoe6345789/postgres:${PGUI_TAG:-latest}
     container_name: metabuilder-postgres-ui
     profiles: [tools]
     restart: unless-stopped
-    # The published image is amd64-only, so this runs emulated on Apple
-    # silicon. Remove once metabuilder-small's gated-pipeline.yml publishes a
-    # dual-arch manifest -- without it, `pull` fails outright on arm64 with
-    # "no matching manifest for linux/arm64/v8".
-    platform: linux/amd64
+    # No platform pin: this image is dual-arch and runs natively. It previously
+    # came from metabuilder-small, whose pipeline is retired -- that image was a
+    # frozen amd64-only artifact nothing rebuilt, and had to run emulated here.
     depends_on:
       postgres:
         condition: service_healthy
