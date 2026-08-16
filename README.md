@@ -10,14 +10,26 @@ frontends; everything they depend on lives in sibling repos (see [Related repos]
 
 ## Run it
 
-The local stack is nginx + the Next.js frontend + the DBAL daemon, pulled from GHCR.
-It builds nothing and needs no toolchain — just Docker.
+The local stack is nginx, the Next.js frontend, the DBAL daemon, Postgres and
+Redis, pulled from GHCR and Docker Hub. It builds nothing and needs no
+toolchain — just Docker.
 
 ```bash
 docker compose -f deploy/compose.yml up -d
 ```
 
 Then open **<http://localhost:8080/app>**.
+
+Two services are opt-in, behind profiles, because they cost real memory and are
+not needed to read the app:
+
+```bash
+# Elasticsearch, backing DBAL's full-text search (~1GB heap)
+docker compose -f deploy/compose.yml --profile search up -d
+
+# The Postgres admin dashboard, at http://localhost:3100/postgres
+docker compose -f deploy/compose.yml --profile tools up -d
+```
 
 > **Use `localhost`, not `0.0.0.0`.** Browsers do not treat `http://0.0.0.0` as a
 > [secure context](https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts),

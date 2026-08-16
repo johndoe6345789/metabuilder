@@ -164,10 +164,25 @@ dbal/
 **Config**: `DBAL_SCHEMA_DIR`, `DBAL_TEMPLATE_DIR`, `DATABASE_URL` (adapter options as query strings)
 **Endpoints**: `/health`, `/version`, `/status`, `/{tenant}/{package}/{entity}` (RESTful CRUD)
 
-**Multi-Adapter Patterns**:
+**Multi-Adapter Patterns** (both implemented 2026-08-16; before that the two
+variables below were documented here and in `.env.example` but read by no code
+at all — setting them got you a healthy, permanently idle container):
 - **Redis caching**: `DBAL_CACHE_URL=redis://localhost:6379/0?ttl=300&pattern=read-through`
+  — `CachingAdapter` decorates the primary adapter. Caches `read(entity, id)` only;
+  writes invalidate, bulk writes SCAN+UNLINK the entity. Deliberately never caches
+  `readIncludingSensitive()` (password hashes) or list/query results (no way to know
+  which query keys a write invalidates).
 - **Elasticsearch search**: `DBAL_SEARCH_URL=http://localhost:9200?index=dbal_search&refresh=true`
-- Patterns: read-through, write-through, cache-aside, dual-write, CDC, search-first
+  — `SearchingAdapter` mirrors writes and answers
+  `GET /{tenant}/{package}/{Entity}/_search?q=`. Mirroring is best-effort: a failed
+  mirror logs and the primary write still succeeds, so the index can drift with no TTL
+  bounding it. Bulk operations are not mirrored at all.
+- Chain order is primary → search → cache. Each layer must forward any capability it
+  does not implement, or the outermost one answers for all of them — `CachingAdapter`
+  forwards `search()` for exactly this reason.
+- **read-through is the only pattern that exists.** write-through, cache-aside,
+  dual-write, CDC and search-first were listed here for a long time and were never
+  implemented; a URL naming one is now refused rather than silently downgraded.
 
 ### Workflow Engine (`libraries/workflow/`)
 
@@ -534,6 +549,12 @@ Multi-version peer deps. React 18/19, TypeScript 5.9.3, Next.js 14-16, @reduxjs/
 | `deploy/compose.yml` login button 404s | The local stack has to *opt in* to OIDC: `DBAL_OIDC_ISSUER` unset makes `server_routes.cpp` log `OIDC provider is DISABLED` and every `/oidc/*` route 404s. Three things are needed together — the issuer (browser-facing URL, e.g. `http://localhost:8080/api/dbal`, since `oidc_service.cpp` concatenates all endpoint URLs and the `iss` claim from it; `dbal:8080` mints unusable tokens), `DBAL_PUBLIC_PATH_PREFIX=/api/dbal` (nginx strips the prefix, so DBAL must re-add it to Location headers and the login `<form action>` or the redirect lands on the Next.js app), and a mounted `clients.json` (the dbal image ships none, and the missing file throws inside the try/catch that silently disables the provider). Mount `/app/keys` on a volume too — `RsaKeypair` generates a key when absent, so a baked-in path re-mints it every restart and invalidates all live tokens |
 | OIDC `redirect_uris` are matched exactly, port included | `clients.json` in the dbal repo registers `nextjs-web` for ports 3000/8900 and the prod domain only, but `deploy/compose.yml` defaults to `HTTP_PORT=8080` — so `/authorize` rejects with `redirect_uri not registered for this client` (HTTP 400) before it ever renders the login form. `deploy/oidc/clients.json` covers the local stack; changing `HTTP_PORT` means adding that origin there too |
 | `Workflow.status` is authoritative, `Workflow.enabled` is vestigial | Three overlapping state fields existed. `status` (`'draft' \| 'active' \| 'paused' \| 'archived'`) is what the UI renders (`WorkflowStatusBadge`), what `useWorkflowsPage` filters on, what two indexes and the `workflows:{tenantId}:{status}` cache key target, and what the seeds set. `isPublished` is a real secondary flag (indexed, raises `workflow.published`). `enabled` is read by **nothing** — the `enabled` flags in `workflow/executor/ts/types.ts` belong to triggers/retry/rate-limit policies, not the entity — and it was `required: true` while no seed ever set it, i.e. unsatisfiable. It's now nullable and marked deprecated rather than dropped, because `operations/entities/workflow.ops.json` still lists it as required on create; remove from both together. Note `ops.json` mirrors the `fields` block field-for-field, so it is **not** independent evidence when deciding what a field means |
+| A GLOB_RECURSE build plus a hand-written dependency list | Adding a *file* is free; adding an *include* is not, and nothing connects the two until the linker complains. `src/adapters/redis/` is excluded from dbal's build (`list(FILTER ... EXCLUDE REGEX ".*/adapters/redis/.*")`), so redis-plus-plus had never been needed and was absent from `conanfile.py` — then `src/cache/caching_adapter.cpp` included `<sw/redis++/redis++.h>` and was picked up by the same glob that skips `adapters/redis/`. main did not build. Excluded-from-build code is worse than deleted code: it reads as a working reference for APIs and idioms while being compiled by nothing |
+| Wrapping an adapter in a decorator | The move happens when the *parameter* is constructed, before the constructor body runs. `make_unique<CachingAdapter>(std::move(adapter_), cfg)` therefore consumes `adapter_` and then, if the body throws, destroys the wrapped adapter during unwinding — turning "cache unavailable, carry on" into a null-pointer crash on the first query. Use a static `tryCreate(std::unique_ptr<Adapter>& inner, ...)` that takes the adapter by reference and moves from it only after everything fallible has succeeded. `CachingAdapter` and `SearchingAdapter` both do |
+| A gate named after the property it does not check | metabuilder-small's "Gate 7: Multi-Arch Manifests" inspected only the base images (already correct), used `docker manifest inspect` — which proves a manifest exists, not which architectures are in it — and ended every check with `\|\| echo "WARNING: ..."`, so it exited 0 unconditionally. App images shipped amd64-only for months behind a green tick. Verify the *artifact* (`imagetools inspect --raw`, then grep for each arch) and let the step fail |
+| Extracting a repo from the monorepo | Flat `node_modules` means a package resolves anything *any* sibling installed, so manifests can be wrong for years with no symptom. Extraction is what audits them. The postgres dashboard needed three undeclared deps found one at a time (`@monaco-editor/react` in m3, `sass` and `@tailwindcss/postcss` in the app) plus a workspace-layout rebuild, and had never once had a green CI run |
+| npm workspace globs vs a hand-listed COPY | A glob like `libraries/redux/*` only matches directories that exist *at that layer*, so a selective `COPY libraries/x/package.json` silently shrinks the workspace set. Because `@metabuilder` is unpublished, the symptom is a registry 404 naming a package — pointing nowhere near the copy list. This bit four times in one change (types ×3, then redux-slices) before the fix became "copy `libraries/` wholesale" |
+| Peer ranges that predate a major | Reach for nested `overrides` (`{"eslint-plugin-x": {"eslint": "^10"}}`), not `--legacy-peer-deps`: the flag switches peer resolution off for the whole tree and would equally absorb a real incompatibility later. Derive the set by rule from `package.json` (every `eslint-plugin-*`/`eslint-config-*`) rather than listing them — pinning one surfaces the next. npm honours `overrides` only in the *root* package.json; those in a workspace are ignored |
 | GHCR package naming | This account nests packages under the publishing repo — `metabuilder/nextjs-app`, `deployment/base-apt`, `businessplanner/businessplanner-base-apt`. Follow that; a flat `metabuilder-base-apt` works but is the odd one out. This repo publishes exactly two: `metabuilder/nextjs-app` and `metabuilder/cli`. Packages published by Actions here come out **public**, so no cross-repo grant is needed — the pull from the deployment repo's packages just works |
 
 ### Critical Folders to Check Before Any Task
