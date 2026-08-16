@@ -7,6 +7,7 @@
 #   nginx       ghcr.io/johndoe6345789/metabuilder/nginx        (.github/workflows/docker.yml)
 #   nextjs-app  ghcr.io/johndoe6345789/metabuilder/nextjs-app   (.github/workflows/docker.yml)
 #   dbal        ghcr.io/johndoe6345789/dbal                     (dbal repo)
+#   postgres    postgres:17-alpine                              (Docker Hub)
 #
 # Only nginx publishes a port. The app and DBAL are reachable only on the
 # internal network, which matches how the browser actually talks to them: the
@@ -60,16 +61,40 @@ services:
       start_period: 20s
     networks: [metabuilder]
 
+  postgres:
+    image: postgres:17-alpine
+    container_name: metabuilder-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-dbal}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dbal}
+      POSTGRES_DB: ${POSTGRES_DB:-dbal}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      # -U must match POSTGRES_USER: pg_isready defaults to the OS user (root),
+      # which does not exist as a role here, so the check would never pass.
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-dbal} -d ${POSTGRES_DB:-dbal}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+    networks: [metabuilder]
+
   dbal:
     image: ghcr.io/johndoe6345789/dbal:${DBAL_TAG:-latest}
     container_name: metabuilder-dbal
     restart: unless-stopped
+    depends_on:
+      # DBAL creates tables and seeds at boot, so it must not start against a
+      # Postgres still initialising -- service_started would race it.
+      postgres:
+        condition: service_healthy
     environment:
-      DBAL_ADAPTER: sqlite
-      # sqlite keeps the stack to three images. The scheme is required -
-      # ConnectionValidator rejects a bare path, and the daemon then answers
-      # /health as "healthy" while every entity route returns 503.
-      DATABASE_URL: "sqlite:///app/data/metabuilder.db"
+      DBAL_ADAPTER: postgres
+      # Host is the compose service name; 5432 is never published, so nothing
+      # here collides with a Postgres already running on the host.
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-dbal}:${POSTGRES_PASSWORD:-dbal}@postgres:5432/${POSTGRES_DB:-dbal}"
       DBAL_AUTO_CREATE_TABLES: "true"
       DBAL_SEED_ON_STARTUP: "true"
       DBAL_SEED_DIR: /app/seeds/database
@@ -121,5 +146,8 @@ networks:
     driver: bridge
 
 volumes:
+  # Still mounted at /app/data even on Postgres: the path is baked into the
+  # image and DBAL writes there for things other than the old sqlite file.
   dbal-data:
   dbal-keys:
+  postgres-data:
