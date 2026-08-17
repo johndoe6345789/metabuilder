@@ -332,10 +332,9 @@ Run it
 ------
 {run_hint}
 
-The app talks to a DBAL server. Point it at yours with:
+The app talks to a DBAL server. By default it uses:
 
-    METABUILDER_DBAL_URL=http://your-host:8080
-
+    http://localhost:8080
 Note that this build is not signed with a paid platform certificate, so your
 operating system will warn you the first time you open it.
 {platform_note}
