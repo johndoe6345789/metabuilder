@@ -55,6 +55,14 @@ services:
       # The app's server components call its own API over HTTP, and Node's
       # fetch rejects relative URLs (src/lib/entities/api-client.ts).
       METABUILDER_INTERNAL_URL: http://127.0.0.1:3000/app
+      # Blob storage (src/lib/object-store/client.ts). AuthFilter there
+      # checks "Authorization: AWS <key>:<secret>" against an api_keys DB
+      # row, not an env var on that service -- these must match whatever's
+      # actually seeded (migrations/002_seed_data.sql), not be invented
+      # here. Default is that seed's dev key.
+      OBJECT_STORE_URL: http://object-store:9000
+      OBJECT_STORE_ACCESS_KEY: ${OBJECTSTORE_ACCESS_KEY:-minioadmin}
+      OBJECT_STORE_SECRET_KEY: ${OBJECTSTORE_SECRET_KEY:-minioadmin}
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "-O", "/dev/null",
              "http://127.0.0.1:3000/app/api/health"]
@@ -216,6 +224,67 @@ services:
       start_period: 10s
     networks: [metabuilder]
 
+  # S3-compatible object store (github.com/johndoe6345789/object-store) --
+  # for blobs (uploads, package assets, media); DBAL keeps structured/text
+  # data as it already does. Not behind a profile like elasticsearch: its
+  # own Postgres is a lightweight alpine instance with a handful of tables
+  # (buckets/objects), nothing like ES's footprint, and this is meant to be
+  # a first-class capability rather than opt-in dev tooling.
+  objectstore-postgres:
+    image: postgres:17-alpine
+    container_name: metabuilder-objectstore-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${OBJECTSTORE_POSTGRES_USER:-objectstore}
+      POSTGRES_PASSWORD: ${OBJECTSTORE_POSTGRES_PASSWORD:-objectstore}
+      POSTGRES_DB: ${OBJECTSTORE_POSTGRES_DB:-objectstore}
+    volumes:
+      - objectstore-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${OBJECTSTORE_POSTGRES_USER:-objectstore} -d ${OBJECTSTORE_POSTGRES_DB:-objectstore}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+    networks: [metabuilder]
+
+  object-store:
+    image: ghcr.io/johndoe6345789/object-store:${OBJECTSTORE_TAG:-latest}
+    container_name: metabuilder-object-store
+    restart: unless-stopped
+    depends_on:
+      objectstore-postgres:
+        condition: service_healthy
+    environment:
+      # entrypoint.sh's migration step reads these PG* vars directly (psql
+      # convention). The server binary itself does NOT -- it only reads
+      # S3_DB_CONN, a single libpq keyword/value string (see main.cpp's
+      # default: "host=localhost port=5432 dbname=s3server user=s3user
+      # password=s3pass"), so both have to be set and have to agree.
+      PGHOST: objectstore-postgres
+      PGPORT: "5432"
+      PGUSER: ${OBJECTSTORE_POSTGRES_USER:-objectstore}
+      PGPASSWORD: ${OBJECTSTORE_POSTGRES_PASSWORD:-objectstore}
+      PGDATABASE: ${OBJECTSTORE_POSTGRES_DB:-objectstore}
+      S3_DB_CONN: "host=objectstore-postgres port=5432 dbname=${OBJECTSTORE_POSTGRES_DB:-objectstore} user=${OBJECTSTORE_POSTGRES_USER:-objectstore} password=${OBJECTSTORE_POSTGRES_PASSWORD:-objectstore}"
+      S3_PORT: "9000"
+      # AuthFilter expects "Authorization: AWS <key>:<secret>" checked
+      # against an api_keys DB table, not an env var -- there is no
+      # S3_ACCESS_KEY/S3_SECRET_KEY the binary reads. Credentials come from
+      # migrations/002_seed_data.sql's seeded row (access_key=secret_key=
+      # 'minioadmin', permissions='read,write,admin'). The Next.js client
+      # (OBJECT_STORE_ACCESS_KEY/SECRET_KEY on nextjs-app, below) must match
+      # this seed, not the other way around.
+    volumes:
+      - objectstore-data:/data/s3
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:9000/health >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+    networks: [metabuilder]
+
   # Postgres admin UI (github.com/johndoe6345789/postgres), pointed at the
   # stack's database rather than the one its own docker-compose.yml bundles.
   # Opt-in, since it is an admin surface: `--profile tools`.
@@ -261,3 +330,5 @@ volumes:
   dbal-keys:
   postgres-data:
   elasticsearch-data:
+  objectstore-postgres-data:
+  objectstore-data:

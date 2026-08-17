@@ -1,18 +1,31 @@
 'use client'
 
 import { Button, Chip, TextField, Typography } from '@/m3'
-import { useInstalledPackages } from '@/hooks/useInstalledPackages'
+import { SearchSelect } from '@/components/search-select/SearchSelect'
 import {
   usePackageRegistry,
+  type PackageRef,
   type RegistryPackage,
 } from './use-package-registry'
 import { usePackageManagerUi } from './use-package-manager-ui'
+import { PackageContentsList } from './PackageContentsList'
 import s from './PackageManager.module.scss'
+
+const CATEGORIES: RegistryPackage['manifest']['category'][] = [
+  'social', 'entertainment', 'productivity', 'gaming', 'ecommerce', 'content', 'other',
+]
+
+// A curated set rather than the full 421-icon library (@metabuilder/icons)
+// -- enough variety for a package badge without building a searchable icon
+// browser just for this.
+const ICONS = [
+  'deployed_code', 'widgets', 'web', 'chat', 'forum', 'groups',
+  'shield', 'bolt', 'star', 'extension', 'dashboard', 'palette',
+]
 
 export function PackageManager({ tenant }: { tenant: string }) {
   const reg = usePackageRegistry()
   const ui = usePackageManagerUi()
-  const inst = useInstalledPackages(tenant)
 
   const visible = reg.packages.filter(p => p.archived === ui.showArchived)
 
@@ -27,10 +40,20 @@ export function PackageManager({ tenant }: { tenant: string }) {
     ui.cancelEdit()
     ui.setFlash('Saved')
   }
-  const toggleInstall = async (p: RegistryPackage) => {
-    const rec = inst.installedRecord(p.manifest.id)
-    if (rec) await inst.uninstall(rec.id)
-    else await inst.install(p.manifest.id)
+  const doPublish = async (p: RegistryPackage) => {
+    const ok = await reg.publish(p.manifest.id, tenant)
+    ui.setFlash(ok ? 'Published' : 'Publish failed')
+  }
+
+  const addWorkflow = (id: string, item: PackageRef) => {
+    const p = reg.packages.find(pkg => pkg.manifest.id === id)
+    if (!p || p.workflows.some(w => w.id === item.id)) return
+    reg.updateContents(id, { workflows: [...p.workflows, item] })
+  }
+  const addPageConfig = (id: string, item: PackageRef) => {
+    const p = reg.packages.find(pkg => pkg.manifest.id === id)
+    if (!p || p.pageConfigs.some(pc => pc.id === item.id)) return
+    reg.updateContents(id, { pageConfigs: [...p.pageConfigs, item] })
   }
 
   return (
@@ -75,12 +98,8 @@ export function PackageManager({ tenant }: { tenant: string }) {
       <div className={s.grid}>
         {visible.map(p => {
           const editing = ui.editingId === p.manifest.id
-          const installed = inst.isInstalled(p.manifest.id)
           return (
-            <div
-              key={p.manifest.id}
-              className={`${s.card} ${installed ? s.on : ''}`}
-            >
+            <div key={p.manifest.id} className={s.card}>
               {editing ? (
                 <div className={s.editForm}>
                   <TextField
@@ -93,20 +112,45 @@ export function PackageManager({ tenant }: { tenant: string }) {
                   />
                   <TextField
                     size="small"
-                    label="Version"
-                    value={ui.draft.version}
-                    onChange={e => {
-                      ui.patchDraft({ version: e.target.value })
-                    }}
-                  />
-                  <TextField
-                    size="small"
                     label="Description"
                     value={ui.draft.description}
                     onChange={e => {
                       ui.patchDraft({ description: e.target.value })
                     }}
                   />
+
+                  <Typography variant="caption" color="text.secondary">Category</Typography>
+                  <div className={s.chips}>
+                    {CATEGORIES.map(cat => (
+                      <Chip
+                        key={cat}
+                        label={cat}
+                        size="small"
+                        color={ui.draft.category === cat ? 'primary' : 'default'}
+                        variant={ui.draft.category === cat ? 'filled' : 'outlined'}
+                        onClick={() => {
+                          ui.patchDraft({ category: cat })
+                        }}
+                      />
+                    ))}
+                  </div>
+
+                  <Typography variant="caption" color="text.secondary">Icon</Typography>
+                  <div className={s.chips}>
+                    {ICONS.map(icon => (
+                      <button
+                        key={icon}
+                        type="button"
+                        className={`${s.iconChip} ${ui.draft.icon === icon ? s.iconChipActive : ''}`}
+                        onClick={() => {
+                          ui.patchDraft({ icon })
+                        }}
+                      >
+                        <span className="material-symbols-rounded">{icon}</span>
+                      </button>
+                    ))}
+                  </div>
+
                   <div className={s.row}>
                     <Button
                       size="small"
@@ -134,22 +178,91 @@ export function PackageManager({ tenant }: { tenant: string }) {
                         v{p.manifest.version} · {p.manifest.category}
                       </span>
                     </div>
-                    {installed && (
-                      <Chip label="Installed" size="small" color="success" />
-                    )}
+                    <Chip
+                      label={p.publishedId != null ? 'Published' : 'Draft'}
+                      size="small"
+                      color={p.publishedId != null ? 'success' : 'default'}
+                    />
                   </div>
                   {p.manifest.description && (
                     <p className={s.desc}>{p.manifest.description}</p>
                   )}
+
+                  <Typography variant="caption" color="text.secondary">
+                    Package contents
+                  </Typography>
+                  <SearchSelect
+                    tenant={tenant}
+                    packageName="core"
+                    entity="Workflow"
+                    placeholder="Search workflows to add…"
+                    getLabel={r => (typeof r.name === 'string' ? r.name : String(r.id))}
+                    onSelect={item => {
+                      addWorkflow(p.manifest.id, item)
+                    }}
+                  />
+                  <PackageContentsList
+                    items={p.workflows}
+                    onReorder={(from, to) => {
+                      const next = [...p.workflows]
+                      const [moved] = next.splice(from, 1)
+                      if (moved) next.splice(to, 0, moved)
+                      reg.updateContents(p.manifest.id, { workflows: next })
+                    }}
+                    onRemove={id => {
+                      reg.updateContents(p.manifest.id, {
+                        workflows: p.workflows.filter(w => w.id !== id),
+                      })
+                    }}
+                  />
+
+                  <SearchSelect
+                    tenant={tenant}
+                    packageName="access"
+                    entity="PageConfig"
+                    placeholder="Search pages to add…"
+                    getLabel={r => (typeof r.title === 'string' ? r.title : String(r.id))}
+                    onSelect={item => {
+                      addPageConfig(p.manifest.id, item)
+                    }}
+                  />
+                  <PackageContentsList
+                    items={p.pageConfigs}
+                    onReorder={(from, to) => {
+                      const next = [...p.pageConfigs]
+                      const [moved] = next.splice(from, 1)
+                      if (moved) next.splice(to, 0, moved)
+                      reg.updateContents(p.manifest.id, { pageConfigs: next })
+                    }}
+                    onRemove={id => {
+                      reg.updateContents(p.manifest.id, {
+                        pageConfigs: p.pageConfigs.filter(pc => pc.id !== id),
+                      })
+                    }}
+                  />
+
+                  <Chip
+                    label={p.themeId != null ? '✓ Includes current theme' : 'Include current theme'}
+                    size="small"
+                    color={p.themeId != null ? 'primary' : 'default'}
+                    variant={p.themeId != null ? 'filled' : 'outlined'}
+                    onClick={() => {
+                      reg.updateContents(p.manifest.id, {
+                        themeId: p.themeId != null ? null : tenant,
+                      })
+                    }}
+                  />
+
                   <div className={s.actions}>
                     <Button
                       size="small"
-                      variant={installed ? 'outlined' : 'contained'}
+                      variant="contained"
+                      disabled={reg.publishing === p.manifest.id}
                       onClick={() => {
-                        void toggleInstall(p)
+                        void doPublish(p)
                       }}
                     >
-                      {installed ? 'Uninstall' : 'Install'}
+                      {reg.publishing === p.manifest.id ? 'Publishing…' : '⇧ Publish'}
                     </Button>
                     <Button
                       size="small"
@@ -157,8 +270,9 @@ export function PackageManager({ tenant }: { tenant: string }) {
                       onClick={() => {
                         ui.beginEdit(p.manifest.id, {
                           name: p.manifest.name,
-                          version: p.manifest.version,
                           description: p.manifest.description,
+                          category: p.manifest.category,
+                          icon: p.manifest.icon,
                         })
                       }}
                     >

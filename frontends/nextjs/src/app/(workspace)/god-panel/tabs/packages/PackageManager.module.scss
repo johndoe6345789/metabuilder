@@ -27,7 +27,7 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 14px;
 }
 
@@ -89,4 +89,33 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.iconChip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--mat-sys-outline-variant, #30363d);
+  background: transparent;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--mat-sys-surface-container-high, #21262d);
+  }
+}
+
+.iconChipActive {
+  border-color: var(--mat-sys-primary, #4493f8);
+  color: var(--mat-sys-primary, #4493f8);
+  background: color-mix(in srgb, var(--mat-sys-primary, #4493f8) 12%, transparent);
 }
