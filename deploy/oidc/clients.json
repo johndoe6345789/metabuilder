@@ -19,7 +19,19 @@
     "8080' forwarding to this same nginx over a Tailscale-issued HTTPS cert --",
     "needed because browsers only treat https://, localhost and 127.0.0.1 as a",
     "secure context, and PKCE's crypto.subtle is unavailable outside one. A",
-    "bare Tailscale MagicDNS hostname over plain http:// will still fail."
+    "bare Tailscale MagicDNS hostname over plain http:// will still fail.",
+    "",
+    "http://0.0.0.0:8080 is registered as a convenience for local development.",
+    "It is NOT a secure context and never will be -- no browser flag or server",
+    "setting grants crypto.subtle to it. It works only because dbal-sso's",
+    "pkce.ts falls back to a JavaScript SHA-256 when crypto.subtle is absent,",
+    "which needs a redux build at or after the fallback commit; an older pin",
+    "still throws before any request reaches here. Tokens cross this origin in",
+    "plaintext HTTP, so keep it to a laptop. Note DBAL_OIDC_ISSUER still",
+    "defaults to the localhost origin: the browser flow stays on 0.0.0.0",
+    "because dbalOidcBase is the relative /api/dbal, but the minted 'iss' claim",
+    "will read localhost. Override DBAL_OIDC_ISSUER to the 0.0.0.0 origin if",
+    "anything ever starts validating it."
   ],
   "clients": [
     {
@@ -31,12 +43,14 @@
       "redirect_uris": [
         "http://localhost:8080/app/auth/callback",
         "http://127.0.0.1:8080/app/auth/callback",
+        "http://0.0.0.0:8080/app/auth/callback",
         "http://localhost:3000/app/auth/callback",
         "https://rmacs-macbook-pro-1.taild98fe6.ts.net/app/auth/callback"
       ],
       "post_logout_redirect_uris": [
         "http://localhost:8080/app/",
         "http://127.0.0.1:8080/app/",
+        "http://0.0.0.0:8080/app/",
         "http://localhost:3000/app/",
         "https://rmacs-macbook-pro-1.taild98fe6.ts.net/app/"
       ],

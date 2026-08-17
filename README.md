@@ -31,10 +31,16 @@ docker compose -f deploy/compose.yml --profile search up -d
 docker compose -f deploy/compose.yml --profile tools up -d
 ```
 
-> **Use `localhost`, not `0.0.0.0`.** Browsers do not treat `http://0.0.0.0` as a
+> **Prefer `localhost`; `0.0.0.0` now works too.** Browsers do not treat
+> `http://0.0.0.0` as a
 > [secure context](https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts),
-> so `crypto.subtle` is undefined and the PKCE step of sign-in cannot run. The app
-> will tell you so, but the address bar is the fix.
+> so `crypto.subtle` is undefined there. Sign-in used to fail outright; `dbal-sso`
+> now falls back to a JavaScript SHA-256 for the PKCE challenge, and
+> `http://0.0.0.0:8080/app/auth/callback` is registered in
+> `deploy/oidc/clients.json`. That makes the origin usable on a laptop — it does
+> not make it safe: tokens still cross it in plaintext HTTP. For anything shared,
+> front the stack with real HTTPS (`tailscale serve --bg 8080`) and register that
+> origin instead.
 
 | | |
 |---|---|
