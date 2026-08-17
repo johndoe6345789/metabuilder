@@ -24,11 +24,12 @@ const DEFAULTS: PageRouteInput = {
   path: '/',
   title: '',
   description: null,
-  level: 1,
+  level: 0,
   requiresAuth: false,
   requiredRole: null,
   componentTree: '{\n  "type": "Box",\n  "props": {},\n  "children": []\n}',
   isActive: true,
+  sortOrder: 0,
   tenantId: null,
   packageId: null,
 }

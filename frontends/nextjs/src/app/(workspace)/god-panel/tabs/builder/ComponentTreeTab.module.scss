@@ -3,7 +3,29 @@
   flex-direction: column;
 }
 
-/* stage → publish bar */
+/* stage → target picker → publish bar */
+.targetPicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+  margin-bottom: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--mat-sys-surface-container-low, #161b22);
+  border: 1px solid var(--mat-sys-outline-variant, #30363d);
+}
+.targetPickerRow {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
 .publishBar {
   display: flex;
   align-items: center;

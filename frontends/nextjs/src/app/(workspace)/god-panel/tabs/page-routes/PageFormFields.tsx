@@ -12,9 +12,12 @@ interface PageFormFieldsProps {
   ) => void
 }
 
+// Matches ROLE_LEVELS (src/lib/constants.ts): 0=public, 1=user, 2=moderator,
+// 3=admin, 4=god, 5=supergod.
 const LEVELS = [
-  { value: 1, label: 'Public', desc: 'Anyone can view' },
-  { value: 2, label: 'User', desc: 'Logged-in users' },
+  { value: 0, label: 'Public', desc: 'Anyone can view' },
+  { value: 1, label: 'User', desc: 'Logged-in users' },
+  { value: 2, label: 'Moderator', desc: 'Moderators and up' },
   { value: 3, label: 'Admin', desc: 'Admin only' },
   { value: 4, label: 'God', desc: 'God tier' },
   { value: 5, label: 'SuperGod', desc: 'SuperGod only' },

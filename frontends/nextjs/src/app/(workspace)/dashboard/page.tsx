@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
 import { LevelGate } from '@/components/layout/LevelGate'
+import { WorkspacePageSlot } from '@/components/workspace/WorkspacePageSlot'
 import { getRoleLevel } from '@/lib/constants'
 import { getLevelLabel } from '@/lib/packages/navigation'
 import { tenantGodPanelPath } from '@/lib/tenant/workspace-paths'
@@ -123,46 +124,56 @@ function DashboardContent() {
         ))}
       </div>
 
-      {/* Five levels of power */}
-      <p className={s.sectionTitle}>Five Levels of Power</p>
-      <div className={s.levelsGrid}>
-        {LEVELS.map(({ level, name, desc }) => {
-          const unlocked = userLevel >= level
-          const isAmber = level === 5
-          return (
-            <div
-              key={level}
-              className={[
-                s.levelCard,
-                unlocked ? s.levelCardUnlocked : '',
-                isAmber ? s.levelCardAmber : '',
-              ].join(' ')}
-            >
-              <div
-                className={s.levelIcon}
-                style={{ background: iconGradient(level) }}
-              >
-                {level}
-              </div>
-              <p className={s.levelName}>{name}</p>
-              <p className={s.levelDesc}>{desc}</p>
-              <span
-                className={`${s.levelBadge} ${unlocked ? '' : s.levelBadgeLocked}`}
-                style={
-                  unlocked
-                    ? {
-                        background:
-                          LEVEL_COLORS[level as keyof typeof LEVEL_COLORS].from,
-                      }
-                    : {}
-                }
-              >
-                {unlocked ? 'Unlocked' : 'Locked'}
-              </span>
-            </div>
-          )
-        })}
-      </div>
+      {/* Admin+ get the permission-tier reference; User/Moderator get
+          whatever's published to /dashboard/community via God Panel
+          (a welcome/community section by default — see WorkspacePageSlot). */}
+      {userLevel >= 3 ? (
+        <>
+          <p className={s.sectionTitle}>Five Levels of Power</p>
+          <div className={s.levelsGrid}>
+            {LEVELS.map(({ level, name, desc }) => {
+              const unlocked = userLevel >= level
+              const isAmber = level === 5
+              return (
+                <div
+                  key={level}
+                  className={[
+                    s.levelCard,
+                    unlocked ? s.levelCardUnlocked : '',
+                    isAmber ? s.levelCardAmber : '',
+                  ].join(' ')}
+                >
+                  <div
+                    className={s.levelIcon}
+                    style={{ background: iconGradient(level) }}
+                  >
+                    {level}
+                  </div>
+                  <p className={s.levelName}>{name}</p>
+                  <p className={s.levelDesc}>{desc}</p>
+                  <span
+                    className={`${s.levelBadge} ${unlocked ? '' : s.levelBadgeLocked}`}
+                    style={
+                      unlocked
+                        ? {
+                            background:
+                              LEVEL_COLORS[level as keyof typeof LEVEL_COLORS].from,
+                          }
+                        : {}
+                    }
+                  >
+                    {unlocked ? 'Unlocked' : 'Locked'}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
+        </>
+      ) : (
+        <WorkspacePageSlot path="/dashboard/community">
+          <p className={s.sectionTitle}>Welcome</p>
+        </WorkspacePageSlot>
+      )}
     </div>
   )
 }
