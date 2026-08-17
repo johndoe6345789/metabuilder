@@ -115,19 +115,19 @@ export function PageFormFields({ form, onChange }: PageFormFieldsProps) {
           <Chip
             label="Live"
             onClick={() => {
-              onChange('isActive', true)
+              onChange('isPublished', true)
             }}
-            color={form.isActive !== false ? 'success' : 'default'}
-            variant={form.isActive !== false ? 'filled' : 'outlined'}
+            color={form.isPublished !== false ? 'success' : 'default'}
+            variant={form.isPublished !== false ? 'filled' : 'outlined'}
             size="small"
           />
           <Chip
             label="Draft"
             onClick={() => {
-              onChange('isActive', false)
+              onChange('isPublished', false)
             }}
-            color={form.isActive === false ? 'warning' : 'default'}
-            variant={form.isActive === false ? 'filled' : 'outlined'}
+            color={form.isPublished === false ? 'warning' : 'default'}
+            variant={form.isPublished === false ? 'filled' : 'outlined'}
             size="small"
           />
         </div>

@@ -14,7 +14,10 @@ export interface PageRoute {
   requiresAuth: boolean
   requiredRole?: string | null
   componentTree: string
-  isActive: boolean
+  // Matches PageConfig's actual field name (DBAL schema) -- this was
+  // "isActive" before, which isn't a real field, so every create/update
+  // 422'd on "isPublished: Field is required".
+  isPublished: boolean
   sortOrder: number
   tenantId?: string | null
   packageId?: string | null

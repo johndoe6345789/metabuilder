@@ -89,8 +89,8 @@ export function PageList({
               </TableCell>
               <TableCell>
                 <Chip
-                  label={page.isActive ? 'Live' : 'Draft'}
-                  color={page.isActive ? 'success' : 'default'}
+                  label={page.isPublished ? 'Live' : 'Draft'}
+                  color={page.isPublished ? 'success' : 'default'}
                   size="small"
                 />
               </TableCell>

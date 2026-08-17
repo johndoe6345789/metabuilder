@@ -62,7 +62,7 @@ export function PageRoutesTab() {
     setDeletePage(null)
   }
 
-  const live = pages.filter(p => p.isActive).length
+  const live = pages.filter(p => p.isPublished).length
   const draft = pages.length - live
 
   return (
