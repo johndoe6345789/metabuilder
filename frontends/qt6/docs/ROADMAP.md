@@ -1,7 +1,7 @@
 # Qt6 Frontend Roadmap
 
 **Status**: Compiles and links (26 QML views, ~14,500 LOC)
-**Last Build**: 2026-03-19 | Qt 6.7.3 via Conan | MSVC 19.5 | C++20
+**Last Build**: 2026-03-19 | Qt 6.11.1 via Conan | MSVC 19.5 | C++20
 
 ---
 

@@ -1,0 +1,408 @@
+name: qt6-release
+
+# A downloadable desktop app for every commit on main.
+#
+# Five targets, all built natively -- Qt publishes prebuilt binaries for each
+# host, and GitHub now offers ARM64 runners for both Linux and Windows, so
+# nothing here cross-compiles. Cross-building Qt Quick is possible but needs a
+# matching host Qt for the QML tooling, and a native runner is simpler than the
+# QT_HOST_PATH dance for the same result.
+#
+#   linux-x86_64     ubuntu-24.04       linux / linux_gcc_64
+#   linux-arm64      ubuntu-24.04-arm   linux_arm64 / linux_gcc_arm64
+#   windows-x86_64   windows-2022       windows / win64_msvc*_64
+#   windows-arm64    windows-11-arm     windows_arm64 / win64_msvc*_arm64
+#   macos-universal  macos-14           mac / clang_64, built for both slices
+#
+# macOS gets one universal binary rather than two downloads: Qt's macOS
+# binaries are universal, the platform's own convention is a single fat app,
+# and it halves what a user has to understand before clicking.
+#
+# Qt comes from aqtinstall rather than Conan. conanfile.txt asks for a Qt that
+# Conan has no prebuilt binary for, so a Conan build compiles Qt from source --
+# hours per runner, five runners per commit. The version is read from
+# cmake_config.json (the declarative source of truth for this frontend) and
+# checked against conanfile.txt so the two cannot drift.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Publish a GitHub release (off: build and keep artifacts only)'
+        type: boolean
+        default: false
+      pinned:
+        description: 'Build from the workspace.json pins instead of sibling branch heads'
+        type: boolean
+        default: false
+  # Lets the sibling QML repo trigger a rebuild when its components change,
+  # since those are as much a part of the app as the code in this repo.
+  repository_dispatch:
+    types: [qt6-release]
+
+# Deliberately no cancel-in-progress: each commit is meant to end up as its own
+# release, so a run must not be killed by the next push.
+concurrency:
+  group: qt6-release-${{ github.sha }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    name: Prepare
+    runs-on: ubuntu-latest
+    outputs:
+      qt_version: ${{ steps.meta.outputs.qt_version }}
+      app_version: ${{ steps.meta.outputs.app_version }}
+      version: ${{ steps.meta.outputs.version }}
+      tag: ${{ steps.meta.outputs.tag }}
+      previous_tag: ${{ steps.meta.outputs.previous_tag }}
+      publish: ${{ steps.meta.outputs.publish }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Resolve versions
+        id: meta
+        run: |
+          set -euo pipefail
+          cd frontends/qt6
+
+          qt_version=$(python3 -c "import json;print(json.load(open('cmake_config.json'))['qt']['version'])")
+          app_version=$(python3 -c "import json;print(json.load(open('cmake_config.json'))['project']['version'])")
+
+          # conanfile.txt is what a local Conan build uses; if it disagrees with
+          # cmake_config.json then a developer and CI are building different
+          # Qt versions, which is exactly the sort of thing that is only
+          # noticed once something behaves differently in a release.
+          conan_qt=$(sed -nE 's|^qt/([0-9][0-9.]*).*|\1|p' conanfile.txt | head -1)
+          if [ "$conan_qt" != "$qt_version" ]; then
+            echo "::error::Qt version mismatch: cmake_config.json says $qt_version, conanfile.txt says $conan_qt"
+            exit 1
+          fi
+
+          version="${app_version}.${{ github.run_number }}"
+          {
+            echo "qt_version=$qt_version"
+            echo "app_version=$app_version"
+            echo "version=$version"
+            echo "tag=qt6-v$version"
+          } >> "$GITHUB_OUTPUT"
+
+          # The release these notes are measured against. Tags are listed by
+          # creation order rather than version sort: version sort mis-orders
+          # 0.1.9 against 0.1.10, and creation order is what actually happened.
+          previous=$(git tag --list 'qt6-v*' --sort=-creatordate | head -1)
+          echo "previous_tag=$previous" >> "$GITHUB_OUTPUT"
+
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "publish=${{ inputs.publish }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          fi
+
+          echo "Building $version (Qt $qt_version), previous release: ${previous:-none}"
+
+  build:
+    name: ${{ matrix.target }}
+    needs: prepare
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 90
+
+    strategy:
+      # One broken platform should not cost the other four: a release with
+      # four downloads and a note about the fifth beats no release at all.
+      fail-fast: false
+      matrix:
+        include:
+          - target: linux-x86_64
+            runner: ubuntu-24.04
+            aqt_host: linux
+            aqt_arch: '^linux_gcc_64$'
+          - target: linux-arm64
+            runner: ubuntu-24.04-arm
+            aqt_host: linux_arm64
+            aqt_arch: '^linux_gcc_arm64$'
+          - target: windows-x86_64
+            runner: windows-2022
+            aqt_host: windows
+            aqt_arch: '^win64_msvc[0-9]+_64$'
+          - target: windows-arm64
+            runner: windows-11-arm
+            aqt_host: windows_arm64
+            aqt_arch: '^win64_msvc[0-9]+_arm64$'
+          - target: macos-universal
+            runner: macos-14
+            aqt_host: mac
+            aqt_arch: '^clang_64$'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Assemble workspace
+        uses: ./.github/actions/assemble-workspace
+        with:
+          frontend: qt6
+          token: ${{ secrets.WORKSPACE_TOKEN }}
+          floating: ${{ inputs.pinned && 'false' || 'true' }}
+
+      - name: Record QML component revision
+        id: qml
+        shell: bash
+        run: |
+          # Goes into the release notes: with floating sibling repos, two
+          # releases from the same metabuilder commit can still differ, and
+          # this is the only record of which UI sources went in.
+          ref=$(git -C libraries/qml rev-parse HEAD 2>/dev/null || echo "")
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Install Linux build dependencies
+        if: startsWith(matrix.target, 'linux')
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential ninja-build pkg-config \
+            libgl1-mesa-dev libglu1-mesa-dev libegl1-mesa-dev \
+            libxkbcommon-dev libxkbcommon-x11-dev \
+            libx11-dev libx11-xcb-dev libxcb1-dev libxcb-glx0-dev \
+            libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev \
+            libxcb-randr0-dev libxcb-render-util0-dev libxcb-shape0-dev \
+            libxcb-shm0-dev libxcb-sync-dev libxcb-util-dev \
+            libxcb-xfixes0-dev libxcb-xinerama0-dev libxcb-xkb-dev \
+            libxcb-cursor-dev libfontconfig1-dev libfreetype6-dev
+
+      - name: Install Ninja
+        if: startsWith(matrix.target, 'macos')
+        run: python3 -m pip install ninja
+
+      - name: Cache Qt
+        id: qt_cache
+        uses: actions/cache@v6
+        with:
+          path: ${{ github.workspace }}/Qt
+          key: qt-${{ matrix.target }}-${{ needs.prepare.outputs.qt_version }}-v2
+
+      - name: Install Qt
+        if: steps.qt_cache.outputs.cache-hit != 'true'
+        shell: bash
+        env:
+          QT_VERSION: ${{ needs.prepare.outputs.qt_version }}
+        run: |
+          set -euo pipefail
+          python3 -m pip install --upgrade aqtinstall
+
+          # Resolve the architecture rather than hardcoding it: the MSVC year
+          # in Qt's Windows package names changes between releases, so a
+          # literal 'win64_msvc2019_64' silently stops existing on a Qt bump.
+          arch=$(python3 -m aqt list-qt "${{ matrix.aqt_host }}" desktop --arch "$QT_VERSION" \
+                 | tr ' ' '\n' | grep -E "${{ matrix.aqt_arch }}" | head -1)
+          if [ -z "$arch" ]; then
+            echo "::error::No architecture matching ${{ matrix.aqt_arch }} for Qt $QT_VERSION on ${{ matrix.aqt_host }}"
+            exit 1
+          fi
+          echo "Installing Qt $QT_VERSION ($arch) for ${{ matrix.aqt_host }}"
+
+          # qtshadertools: required by QtQuick.Effects, which the UI imports.
+          # qtimageformats: Qt's own Controls styles draw the busy indicator
+          # from a .webp, and without this plugin it fails to load at runtime
+          # while everything else looks fine.
+          python3 -m aqt install-qt "${{ matrix.aqt_host }}" desktop "$QT_VERSION" "$arch" \
+            --outputdir "${{ github.workspace }}/Qt" \
+            --modules qtshadertools qtimageformats
+
+      - name: Locate Qt
+        id: qtdir
+        shell: bash
+        env:
+          QT_VERSION: ${{ needs.prepare.outputs.qt_version }}
+        run: |
+          set -euo pipefail
+          root=$(find "${{ github.workspace }}/Qt/$QT_VERSION" -maxdepth 1 -mindepth 1 -type d | head -1)
+          if [ -z "$root" ] || [ ! -d "$root/lib/cmake" ]; then
+            echo "::error::Qt $QT_VERSION not found under ${{ github.workspace }}/Qt"
+            find "${{ github.workspace }}/Qt" -maxdepth 3 -type d | head -20
+            exit 1
+          fi
+          echo "root=$root" >> "$GITHUB_OUTPUT"
+          echo "Qt at $root"
+
+      - name: Configure
+        shell: bash
+        env:
+          QT_ROOT: ${{ steps.qtdir.outputs.root }}
+        run: |
+          set -euo pipefail
+          # Windows uses the Visual Studio generator rather than Ninja: Ninja
+          # needs a developer command prompt, which in Actions means either a
+          # third-party action or hand-rolled vcvarsall wrapping around every
+          # subsequent step. The VS generator finds its own toolchain, and
+          # picks the ARM64 one from -A alone on the ARM64 runner.
+          case "${{ matrix.target }}" in
+            windows-arm64)
+              generator=(-G "Visual Studio 17 2022" -A ARM64) ;;
+            windows-x86_64)
+              generator=(-G "Visual Studio 17 2022" -A x64) ;;
+            macos-universal)
+              # One binary carrying both slices. Qt's macOS libraries are
+              # universal, so this costs compile time and nothing else.
+              generator=(-G Ninja "-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64") ;;
+            *)
+              generator=(-G Ninja) ;;
+          esac
+
+          cmake -S frontends/qt6 -B frontends/qt6/_build \
+            "${generator[@]}" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="$QT_ROOT"
+
+      - name: Build
+        shell: bash
+        run: cmake --build frontends/qt6/_build --config Release --parallel
+
+      - name: Package
+        id: package
+        shell: bash
+        env:
+          QT_ROOT: ${{ steps.qtdir.outputs.root }}
+        run: |
+          python3 .github/scripts/package_qt6.py \
+            --build-dir frontends/qt6/_build \
+            --source-dir frontends/qt6 \
+            --qt-root "$QT_ROOT" \
+            --target "${{ matrix.target }}" \
+            --version "${{ needs.prepare.outputs.version }}" \
+            --output-dir dist
+
+      # Building proves the code compiles; it says nothing about whether the
+      # thing that was packaged can start. This catches a missing Qt library,
+      # plugin or QML module -- the failure mode that only ever appears on a
+      # machine other than the one that built it.
+      - name: Launch the packaged app
+        shell: bash
+        env:
+          PAYLOAD: ${{ steps.package.outputs.payload }}
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          set -uo pipefail
+          case "${{ matrix.target }}" in
+            # The Linux launcher, not the binary under bin/: it sets the
+            # LD_LIBRARY_PATH that the bundled Qt needs, so running the binary
+            # directly tests something no user will do.
+            linux-*)   exe="$PAYLOAD/metabuilder-qt6" ;;
+            windows-*) exe="$PAYLOAD/bin/metabuilder-qt6.exe" ;;
+            macos-*)   exe="$PAYLOAD/metabuilder-qt6.app/Contents/MacOS/metabuilder-qt6" ;;
+          esac
+
+          "$exe" > launch.log 2>&1 &
+          pid=$!
+          sleep 25
+
+          if kill -0 "$pid" 2>/dev/null; then
+            kill "$pid" 2>/dev/null || true
+            echo "App started and stayed up."
+          else
+            echo "::error::The packaged app exited on its own; it is not usable."
+            tail -40 launch.log
+            exit 1
+          fi
+
+          # A running process is not proof of a working UI: a failed QML import
+          # leaves the event loop running with no window at all.
+          if grep -qE 'is not installed|QQmlApplicationEngine failed' launch.log; then
+            echo "::error::The app started but could not load its UI."
+            grep -E 'is not installed|QQmlApplicationEngine failed' launch.log | head -10
+            exit 1
+          fi
+          echo "UI loaded with no missing QML modules."
+
+      - name: Upload package
+        uses: actions/upload-artifact@v7
+        with:
+          name: qt6-${{ matrix.target }}
+          path: |
+            dist/*.tar.gz
+            dist/*.zip
+            dist/*.dmg
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Record QML revision for the release notes
+        if: matrix.target == 'linux-x86_64'
+        run: echo "${{ steps.qml.outputs.ref }}" > qml-ref.txt
+
+      - name: Upload QML revision
+        if: matrix.target == 'linux-x86_64'
+        uses: actions/upload-artifact@v7
+        with:
+          name: qt6-qml-ref
+          path: qml-ref.txt
+
+  release:
+    name: Publish release
+    needs: [prepare, build]
+    # Runs even when a platform failed, so the other four still ship; the notes
+    # say which ones are missing.
+    if: always() && needs.prepare.result == 'success' && needs.prepare.outputs.publish == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Download packages
+        uses: actions/download-artifact@v7
+        with:
+          pattern: qt6-*
+          path: artifacts
+          merge-multiple: true
+
+      - name: Check something was built
+        id: check
+        run: |
+          count=$(find artifacts -type f \( -name '*.tar.gz' -o -name '*.zip' -o -name '*.dmg' \) | wc -l)
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          if [ "$count" -eq 0 ]; then
+            echo "::error::Every platform failed to build; there is nothing to release."
+            exit 1
+          fi
+          echo "$count package(s) to publish."
+
+      - name: Write release notes
+        run: |
+          qml_ref=""
+          [ -f artifacts/qml-ref.txt ] && qml_ref=$(cat artifacts/qml-ref.txt)
+          python3 .github/scripts/release_notes.py \
+            --repo "${{ github.repository }}" \
+            --tag "${{ needs.prepare.outputs.tag }}" \
+            --version "${{ needs.prepare.outputs.version }}" \
+            --previous-tag "${{ needs.prepare.outputs.previous_tag }}" \
+            --sha "${{ github.sha }}" \
+            --artifacts-dir artifacts \
+            --qt-version "${{ needs.prepare.outputs.qt_version }}" \
+            --qml-ref "$qml_ref" \
+            --output notes.md
+          cat notes.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release create "${{ needs.prepare.outputs.tag }}" \
+            --title "MetaBuilder Desktop ${{ needs.prepare.outputs.version }}" \
+            --notes-file notes.md \
+            --target "${{ github.sha }}" \
+            $(find artifacts -type f \( -name '*.tar.gz' -o -name '*.zip' -o -name '*.dmg' \))

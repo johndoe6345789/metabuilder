@@ -18,6 +18,7 @@ import argparse
 import json
 import os
 import sys
+import textwrap
 from pathlib import Path
 from typing import Optional
 
@@ -182,6 +183,126 @@ def find_cpp_sources(root_dir: Path) -> dict[str, list[str]]:
         str(f.relative_to(root_dir)) for f in headers
     )
     return result
+
+
+def _packaging_config(config: dict) -> dict:
+    """Return the packaging block, with the historical defaults filled in."""
+    packaging = config.get("packaging", {})
+    executable = config["project"]["executable"]
+    bundle = packaging.get("macos_bundle", {})
+    data = packaging.get("data_destination", {})
+    return {
+        "bundle_enabled": bundle.get("enabled", True),
+        "bundle_name": bundle.get("name", "MetaBuilder"),
+        "bundle_identifier": bundle.get("identifier", f"local.{executable}"),
+        "data_apple": data.get("apple", f"{executable}.app/Contents/Resources"),
+        "data_other": data.get("other", "share/metabuilder-qt6"),
+        "install_dirs": packaging.get("install_dirs", []),
+    }
+
+
+def _packaging_layout_block(config: dict) -> list[str]:
+    """Emit the macOS bundle properties and the data install destination.
+
+    Both come from the "packaging" block of cmake_config.json. The destination
+    is a variable rather than a literal because the install rules below and the
+    lookup order in src/ResourceRoot.hpp have to agree about where runtime data
+    lands; a released build reads it from there, not from SRCDIR.
+    """
+    pkg = _packaging_config(config)
+    executable = config["project"]["executable"]
+
+    lines = [
+        "# Packaging layout (from the \"packaging\" block of cmake_config.json)",
+        "#",
+        "# Most of the app is compiled into Qt resources, but some directories are",
+        "# read from disk at runtime. src/ResourceRoot.hpp locates them relative to",
+        "# the executable, so the install tree below is what a released build",
+        "# actually reads -- SRCDIR is a developer-build fallback that does not",
+        "# exist on a user's machine.",
+        "if(APPLE)",
+    ]
+    if pkg["bundle_enabled"]:
+        lines += [
+            f"    set_target_properties({executable} PROPERTIES",
+            "        MACOSX_BUNDLE TRUE",
+            f'        MACOSX_BUNDLE_BUNDLE_NAME "{pkg["bundle_name"]}"',
+            f'        MACOSX_BUNDLE_GUI_IDENTIFIER "{pkg["bundle_identifier"]}"',
+            '        MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION}"',
+            '        MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION}"',
+            "    )",
+        ]
+    lines += [
+        f'    set(METABUILDER_DATA_DESTINATION "{pkg["data_apple"]}")',
+        "else()",
+        f'    set(METABUILDER_DATA_DESTINATION "{pkg["data_other"]}")',
+        "endif()",
+        "",
+    ]
+    return lines
+
+
+def _install_block(config: dict) -> list[str]:
+    """Emit install rules for the executable and every packaged data directory.
+
+    Entries carrying "requires" are installed only when that file is present,
+    so a checkout without its sibling repos assembled still configures -- it
+    just warns, because the resulting install would start and then fail.
+    """
+    pkg = _packaging_config(config)
+    executable = config["project"]["executable"]
+
+    lines = [
+        f"install(TARGETS {executable}",
+        "    BUNDLE  DESTINATION .",
+        "    RUNTIME DESTINATION bin",
+        ")",
+        "",
+    ]
+
+    for index, entry in enumerate(pkg["install_dirs"]):
+        source = entry["source"]
+        destination = entry.get("destination", "")
+        why = entry.get("why")
+        if why:
+            lines += [f"# {line}" for line in textwrap.wrap(why, width=76)]
+
+        # "destination" is always the final path of the installed directory,
+        # relative to the data destination. CMake's install(DIRECTORY) has two
+        # modes and the difference is a single trailing slash, so spell both
+        # out rather than leaving it to be noticed: "src/" installs the
+        # *contents* into DESTINATION (which is how a directory gets renamed on
+        # the way in), while "src" nests the directory under DESTINATION.
+        source_expr = f"${{CMAKE_CURRENT_SOURCE_DIR}}/{source}"
+        data = "${METABUILDER_DATA_DESTINATION}"
+        if source.endswith("/"):
+            dest_expr = f"{data}/{destination}" if destination else data
+        else:
+            parent = str(Path(destination).parent)
+            dest_expr = data if parent == "." else f"{data}/{parent}"
+
+        requires = entry.get("requires")
+        if requires:
+            guard = f"_install_dir_{index}"
+            lines += [
+                f'set({guard} "{source_expr}")',
+                f'if(EXISTS "${{{guard}}}{requires}")',
+                f'    install(DIRECTORY "${{{guard}}}"',
+                f'            DESTINATION "{dest_expr}")',
+                "else()",
+                "    message(WARNING",
+                f'        "{entry.get("missing_message", f"{source} is missing from this checkout.")}")',
+                "endif()",
+                "",
+            ]
+        else:
+            lines += [
+                f'install(DIRECTORY "{source_expr}"',
+                f'        DESTINATION "{dest_expr}")',
+                "",
+            ]
+
+    return lines
 
 
 def generate_cmake(config: dict, root_dir: Path) -> str:
@@ -354,6 +475,11 @@ target_link_libraries({proj["executable"]} PRIVATE ${{OPENMPT_LIBRARIES}})""")
     lines.append("endforeach()")
     lines.append("")
 
+    # Redistributable layout, driven by the "packaging" block in
+    # cmake_config.json. Must precede qt_finalize_executable(): on macOS the
+    # finalizer inspects MACOSX_BUNDLE to decide what to generate.
+    lines.extend(_packaging_layout_block(config))
+
     # Finalize
     lines.append(f"qt_finalize_executable({proj['executable']})")
     lines.append("")
@@ -368,10 +494,7 @@ target_link_libraries({proj["executable"]} PRIVATE ${{OPENMPT_LIBRARIES}})""")
     lines.append("")
 
     # Install
-    lines.append(f"install(TARGETS {proj['executable']}")
-    lines.append("    RUNTIME DESTINATION bin")
-    lines.append(")")
-    lines.append("")
+    lines.extend(_install_block(config))
 
     return "\n".join(lines)
 
