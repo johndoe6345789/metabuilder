@@ -209,29 +209,24 @@ jobs:
 
       - name: Install Qt
         if: steps.qt_cache.outputs.cache-hit != 'true'
+        id: qt_install
         shell: bash
         env:
           QT_VERSION: ${{ needs.prepare.outputs.qt_version }}
         run: |
           set -euo pipefail
-          python3 -m pip install --upgrade aqtinstall
-
-          # Resolve the architecture rather than hardcoding it: the MSVC year
-          # in Qt's Windows package names changes between releases, so a
-          # literal 'win64_msvc2019_64' silently stops existing on a Qt bump.
-          arch=$(python3 -m aqt list-qt "${{ matrix.aqt_host }}" desktop --arch "$QT_VERSION" \
-                 | tr ' ' '\n' | grep -E "${{ matrix.aqt_arch }}" | head -1)
-          if [ -z "$arch" ]; then
-            echo "::error::No architecture matching ${{ matrix.aqt_arch }} for Qt $QT_VERSION on ${{ matrix.aqt_host }}"
-            exit 1
-          fi
-          echo "Installing Qt $QT_VERSION ($arch) for ${{ matrix.aqt_host }}"
-
+          # Mirror failover, architecture discovery and the aqtinstall pin all
+          # live in the script; see its docstring for why each is needed.
+          #
           # qtshadertools: required by QtQuick.Effects, which the UI imports.
           # qtimageformats: Qt's own Controls styles draw the busy indicator
-          # from a .webp, and without this plugin it fails to load at runtime
-          # while everything else looks fine.
-          python3 -m aqt install-qt "${{ matrix.aqt_host }}" desktop "$QT_VERSION" "$arch" \
+          # from a .webp, and without that plugin it fails at runtime while
+          # everything else looks fine.
+          python3 .github/scripts/install_qt.py \
+            --ensure-aqt \
+            --host "${{ matrix.aqt_host }}" \
+            --version "$QT_VERSION" \
+            --arch-pattern "${{ matrix.aqt_arch }}" \
             --outputdir "${{ github.workspace }}/Qt" \
             --modules qtshadertools qtimageformats
 

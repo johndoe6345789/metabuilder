@@ -134,26 +134,18 @@ jobs:
 
       - name: Install Qt
         if: ${{ steps.qt_cache.outputs.cache-hit != 'true' }}
+        working-directory: ${{ github.workspace }}
         env:
           QT_VERSION: ${{ steps.qt.outputs.version }}
         run: |
-          python3 -m pip install --upgrade aqtinstall
-
-          # Resolve the architecture rather than assuming it, so a version
-          # bump in cmake_config.json does not silently break this step.
-          ARCH=$(python3 -m aqt list-qt linux desktop --arch "$QT_VERSION" \
-                 | tr ' ' '\n' | grep -E 'gcc_64$' | head -1)
-          if [ -z "$ARCH" ]; then
-            echo "No gcc_64 desktop architecture published for Qt $QT_VERSION"
-            exit 1
-          fi
-          echo "Installing Qt $QT_VERSION ($ARCH)"
-
-          # qtdeclarative (Qt Quick) is in the base install; qtshadertools and
-          # qtimageformats are separate modules. Keep this list identical to
-          # qt6-release.yml, or a PR passes against a Qt the release does not
-          # have.
-          python3 -m aqt install-qt linux desktop "$QT_VERSION" "$ARCH" \
+          # Same installer as qt6-release.yml, so a PR cannot pass against a
+          # Qt the release build cannot get: it handles mirror failover, Qt's
+          # per-host repository layouts, and the aqtinstall pin they need.
+          python3 .github/scripts/install_qt.py \
+            --ensure-aqt \
+            --host linux \
+            --version "$QT_VERSION" \
+            --arch-pattern '^linux_gcc_64$' \
             --outputdir "${{ github.workspace }}/Qt" \
             --modules qtshadertools qtimageformats
 

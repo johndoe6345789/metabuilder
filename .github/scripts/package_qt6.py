@@ -104,20 +104,42 @@ def install_tree(build_dir: Path, stage: Path) -> None:
 # ---------------------------------------------------------------------------
 
 
-def linux_shared_libs(binary: Path) -> list[Path]:
+def linux_shared_libs(binary: Path, qt_root: Path) -> list[Path]:
     """Resolve a binary's shared library dependencies via ldd.
 
-    Only absolute paths are returned; the linker's own entries (linux-vdso,
-    ld-linux) have no path and are filtered out by that alone.
+    ldd is run with the Qt installation on LD_LIBRARY_PATH, which is not a
+    convenience: the installed binary has no RPATH pointing at Qt (CMake
+    strips the build-tree one on install, and the install RPATH points into a
+    lib/ that this function is in the middle of filling), so without it every
+    Qt line comes back as "libQt6Gui.so.6 => not found", with no path to
+    match. The closure then silently copies nothing and the package ships
+    without Qt -- which fails at startup, long after packaging reported
+    success.
+
+    Lines that still resolve to nothing are looked up in the Qt lib directory
+    directly, so a dependency of a plugin is found even when the plugin does
+    not name it in a way the linker can follow.
     """
+    env = dict(os.environ)
+    qt_lib = qt_root / "lib"
+    env["LD_LIBRARY_PATH"] = os.pathsep.join(
+        [str(qt_lib)] + [p for p in [env.get("LD_LIBRARY_PATH")] if p]
+    )
     out = subprocess.run(
-        ["ldd", str(binary)], capture_output=True, text=True
+        ["ldd", str(binary)], capture_output=True, text=True, env=env
     ).stdout
+
     libs = []
     for line in out.splitlines():
         match = re.search(r"=>\s+(/\S+)", line)
         if match:
             libs.append(Path(match.group(1)))
+            continue
+        missing = re.match(r"\s*(\S+)\s+=>\s+not found", line)
+        if missing:
+            candidate = qt_lib / missing.group(1)
+            if candidate.exists():
+                libs.append(candidate)
     return libs
 
 
@@ -191,12 +213,28 @@ def package_linux(
     seen: set[str] = set()
     while pending:
         current = pending.pop()
-        for lib in linux_shared_libs(current):
+        for lib in linux_shared_libs(current, qt_root):
             if lib.name in seen or not is_bundled(lib, qt_root):
                 continue
             seen.add(lib.name)
             copy_lib(lib, lib_dir)
             pending.append(lib)
+
+    # Fail here rather than at the user's first launch. The ldd closure has
+    # already gone wrong once by copying nothing at all, and a package with an
+    # empty lib/ builds, uploads and publishes perfectly happily -- the only
+    # symptom is "libQt6Gui.so.6: cannot open shared object file" on a machine
+    # far away from the log that could explain it.
+    essential = ["libQt6Core.so.6", "libQt6Gui.so.6", "libQt6Quick.so.6"]
+    missing = [name for name in essential if not (lib_dir / name).exists()]
+    if missing:
+        raise SystemExit(
+            "the Qt libraries were not bundled: missing "
+            + ", ".join(missing)
+            + f"\nlib/ contains {len(list(lib_dir.glob('*'))) if lib_dir.exists() else 0} file(s)."
+            "\nThis usually means ldd could not resolve the binary's"
+            " dependencies, so nothing matched and nothing was copied."
+        )
 
     # qt.conf tells Qt where plugins and QML modules live, relative to the
     # binary; without it Qt looks at the absolute paths its build was

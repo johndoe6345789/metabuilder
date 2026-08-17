@@ -676,6 +676,17 @@ if(APPLE)
     set(METABUILDER_DATA_DESTINATION "metabuilder-qt6.app/Contents/Resources")
 else()
     set(METABUILDER_DATA_DESTINATION "share/metabuilder-qt6")
+
+    # A released Linux build ships its Qt libraries in lib/ next to bin/.
+    # Without an RPATH the executable resolves them through the system linker,
+    # which knows nothing about them, and dies before main() with
+    # 'libQt6Gui.so.6: cannot open shared object file'. $ORIGIN makes the
+    # lookup relative to the executable, so the package works wherever it is
+    # unpacked.
+    set_target_properties(metabuilder-qt6 PROPERTIES
+        INSTALL_RPATH "$ORIGIN/../lib"
+        BUILD_WITH_INSTALL_RPATH FALSE
+    )
 endif()
 
 qt_finalize_executable(metabuilder-qt6)

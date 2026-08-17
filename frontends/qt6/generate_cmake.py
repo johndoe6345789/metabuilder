@@ -197,6 +197,7 @@ def _packaging_config(config: dict) -> dict:
         "bundle_identifier": bundle.get("identifier", f"local.{executable}"),
         "data_apple": data.get("apple", f"{executable}.app/Contents/Resources"),
         "data_other": data.get("other", "share/metabuilder-qt6"),
+        "linux_rpath": packaging.get("linux_rpath", {}).get("value", ""),
         "install_dirs": packaging.get("install_dirs", []),
     }
 
@@ -236,10 +237,27 @@ def _packaging_layout_block(config: dict) -> list[str]:
         f'    set(METABUILDER_DATA_DESTINATION "{pkg["data_apple"]}")',
         "else()",
         f'    set(METABUILDER_DATA_DESTINATION "{pkg["data_other"]}")',
+    ]
+    if pkg["linux_rpath"]:
+        why = _packaging_config_rpath_why(config)
+        lines += ["", *[f"    # {line}" for line in why]] if why else []
+        lines += [
+            f"    set_target_properties({executable} PROPERTIES",
+            f'        INSTALL_RPATH "{pkg["linux_rpath"]}"',
+            "        BUILD_WITH_INSTALL_RPATH FALSE",
+            "    )",
+        ]
+    lines += [
         "endif()",
         "",
     ]
     return lines
+
+
+def _packaging_config_rpath_why(config: dict) -> list[str]:
+    """Wrap the rpath rationale from cmake_config.json as comment lines."""
+    why = config.get("packaging", {}).get("linux_rpath", {}).get("why", "")
+    return textwrap.wrap(why, width=72) if why else []
 
 
 def _install_block(config: dict) -> list[str]:
