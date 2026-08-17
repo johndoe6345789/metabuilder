@@ -21,10 +21,9 @@ int main(int argc, char *argv[]) {
     app.setApplicationName("MetaBuilder");
     QQmlApplicationEngine engine;
 
-    // QML import path: imports/QmlComponents is a symlink to
-    // libraries/qml/ so Qt resolves "import QmlComponents 1.0"
-    // by finding imports/QmlComponents/qmldir. Developer builds only -- a
-    // released build has every QML file compiled into its resources.
+    // QML import path: developer builds reach imports/QmlComponents through a
+    // symlink to libraries/qml/, while packaged builds install the module
+    // under imports/. ResourceRoot resolves both layouts.
     const QString importsDir = metabuilder::resourcePath(QStringLiteral("imports"));
     if (!importsDir.isEmpty() && QDir(importsDir).exists()) {
         engine.addImportPath(importsDir);
