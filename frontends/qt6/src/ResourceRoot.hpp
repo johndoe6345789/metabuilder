@@ -6,7 +6,7 @@
 #include <QString>
 #include <QStringList>
 #include <QtGlobal>
-
+#include <utility>
 /**
  * @file ResourceRoot.hpp
  * @brief Locate the directory holding the app's on-disk runtime data.
