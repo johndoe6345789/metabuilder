@@ -37,6 +37,17 @@ on:
         description: 'Build from the workspace.json pins instead of sibling branch heads'
         type: boolean
         default: false
+  # Building the release on a PR that touches the pipeline itself, without
+  # publishing anything. The release path is otherwise only exercised after
+  # merge, which is a poor place to discover that it does not work.
+  pull_request:
+    paths:
+      - '.github/workflows/qt6-release.yml'
+      - '.github/scripts/package_qt6.py'
+      - '.github/scripts/release_notes.py'
+      - 'frontends/qt6/cmake_config.json'
+      - 'frontends/qt6/CMakeLists.txt'
+      - 'frontends/qt6/generate_cmake.py'
   # Lets the sibling QML repo trigger a rebuild when its components change,
   # since those are as much a part of the app as the code in this repo.
   repository_dispatch:
@@ -101,11 +112,13 @@ jobs:
           previous=$(git tag --list 'qt6-v*' --sort=-creatordate | head -1)
           echo "previous_tag=$previous" >> "$GITHUB_OUTPUT"
 
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "publish=${{ inputs.publish }}" >> "$GITHUB_OUTPUT"
-          else
-            echo "publish=true" >> "$GITHUB_OUTPUT"
-          fi
+          # Only a real push (or an explicit request) produces a release. A
+          # pull request builds the same five packages and stops there.
+          case "${{ github.event_name }}" in
+            push|repository_dispatch) echo "publish=true" >> "$GITHUB_OUTPUT" ;;
+            workflow_dispatch)        echo "publish=${{ inputs.publish }}" >> "$GITHUB_OUTPUT" ;;
+            *)                        echo "publish=false" >> "$GITHUB_OUTPUT" ;;
+          esac
 
           echo "Building $version (Qt $qt_version), previous release: ${previous:-none}"
 
