@@ -7,6 +7,11 @@ import { Typography, Paper, Button, TextField, Avatar } from '@/m3'
 import s from './page.module.scss'
 
 const DBAL_URL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
+// ProfileComment lives under the pastebin package (entities/pastebin/profile_comment.json),
+// not core -- the route is /{tenant}/{package}/{Entity}, Entity from the schema's own
+// "entity" field (PascalCase), not the filename. This page previously called
+// /v1/default/core/profile_comment, which matches no real route at all.
+const COMMENTS_URL = `${DBAL_URL}/system/pastebin/ProfileComment`
 
 interface Comment {
   id: string
@@ -18,7 +23,8 @@ interface Comment {
 
 interface DbalComment {
   id: string
-  createdBy: string
+  authorId: string
+  authorUsername: string
   content: string
   createdAt?: number
 }
@@ -30,18 +36,19 @@ function CommentsContent() {
   const [comments, setComments] = useState<Comment[]>([])
 
   useEffect(() => {
-    fetch(`${DBAL_URL}/v1/default/core/profile_comment`, {
+    fetch(COMMENTS_URL, {
       credentials: 'include',
       signal: AbortSignal.timeout(5000),
     })
       .then(res => (res.ok ? res.json() : null))
-      .then((json: { data?: DbalComment[] } | null) => {
-        if (json?.data != null) {
+      .then((json: { data?: { data?: DbalComment[] } } | null) => {
+        const rows = json?.data?.data
+        if (rows != null) {
           setComments(
-            json.data.map(c => ({
+            rows.map(c => ({
               id: c.id,
-              userId: c.createdBy,
-              username: c.createdBy,
+              userId: c.authorId,
+              username: c.authorUsername,
               content: c.content,
               createdAt: c.createdAt ?? Date.now(),
             }))
@@ -63,27 +70,32 @@ function CommentsContent() {
 
   const handlePost = () => {
     if (newComment.trim() === '') return
-    fetch(`${DBAL_URL}/v1/default/core/profile_comment`, {
+    const id = crypto.randomUUID()
+    const authorId = user?.id ?? 'unknown'
+    const authorUsername = user?.username ?? 'Anonymous'
+    fetch(COMMENTS_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
       body: JSON.stringify({
+        id,
+        // Posting to the shared community board, not a specific user's
+        // wall, so this page has no other profile to target -- own id
+        // matches "Your Comments"/"All Comments" already being sitewide,
+        // not per-profile, sections below.
+        profileUserId: authorId,
+        authorId,
+        authorUsername,
         content: newComment,
-        createdBy: user?.id ?? 'unknown',
+        createdAt: Date.now(),
+        tenantId: 'system',
       }),
     })
-      .then(res => (res.ok ? res.json() : null))
-      .then((json: { data?: DbalComment } | null) => {
-        const id = json?.data?.id ?? `local_${Date.now()}`
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
         setComments(prev => [
           ...prev,
-          {
-            id,
-            userId: user?.id ?? 'unknown',
-            username: user?.username ?? 'Anonymous',
-            content: newComment,
-            createdAt: Date.now(),
-          },
+          { id, userId: authorId, username: authorUsername, content: newComment, createdAt: Date.now() },
         ])
         setNewComment('')
       })
@@ -93,7 +105,7 @@ function CommentsContent() {
   }
 
   const handleDelete = (id: string) => {
-    fetch(`${DBAL_URL}/v1/default/core/profile_comment/${id}`, {
+    fetch(`${COMMENTS_URL}/${id}`, {
       method: 'DELETE',
       credentials: 'include',
     })
