@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
 import { LevelGate } from '@/components/layout/LevelGate'
+import { WorkspacePageSlot } from '@/components/workspace/WorkspacePageSlot'
 import { Typography, Paper, Button, TextField, Avatar } from '@/m3'
 import s from './page.module.scss'
 
@@ -29,7 +30,7 @@ interface DbalComment {
   createdAt?: number
 }
 
-function CommentsContent() {
+export function CommentsContent() {
   const auth = useAuthContext()
   const user = auth.user
   const [newComment, setNewComment] = useState('')
@@ -219,8 +220,10 @@ function CommentsContent() {
 
 export default function CommentsPage() {
   return (
-    <LevelGate minLevel={1} levelName="User">
-      <CommentsContent />
-    </LevelGate>
+    <WorkspacePageSlot path="/comments">
+      <LevelGate minLevel={1} levelName="User">
+        <CommentsContent />
+      </LevelGate>
+    </WorkspacePageSlot>
   )
 }

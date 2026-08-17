@@ -30,7 +30,7 @@ function iconGradient(level: number) {
   return `linear-gradient(135deg, ${c.from} 0%, ${c.to} 100%)`
 }
 
-function DashboardContent() {
+export function DashboardContent() {
   const auth = useAuthContext()
   const user = auth.user
   const userLevel = getRoleLevel(user?.role ?? 'user')
@@ -180,8 +180,10 @@ function DashboardContent() {
 
 export default function DashboardPage() {
   return (
-    <LevelGate minLevel={1} levelName="User">
-      <DashboardContent />
-    </LevelGate>
+    <WorkspacePageSlot path="/dashboard">
+      <LevelGate minLevel={1} levelName="User">
+        <DashboardContent />
+      </LevelGate>
+    </WorkspacePageSlot>
   )
 }
