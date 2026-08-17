@@ -5,6 +5,7 @@ import {
   LIGHT_DEFAULTS, DARK_DEFAULTS, applyColorsToRoot,
 } from './theme-defaults'
 import type { ThemeColors, ThemeEditorState } from './theme-defaults'
+import { resolveTenantTheme, applyTenantTheme } from './apply-tenant-theme'
 
 export type { ThemeColors, ThemeEditorState }
 
@@ -14,70 +15,27 @@ const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 // publish flow in this pass uses (ComponentTreeTab, PackagesTab).
 const TENANT = 'system'
 
-function applyStored(
-  light: ThemeColors, dark: ThemeColors,
-  setLightColors: (c: ThemeColors) => void,
-  setDarkColors: (c: ThemeColors) => void,
-): void {
-  setLightColors(light)
-  setDarkColors(dark)
-  const isDark =
-    document.documentElement.getAttribute('data-theme') === 'dark'
-  applyColorsToRoot(isDark ? dark : light)
-}
-
-function loadFromLocalStorage(
-  setLightColors: (c: ThemeColors) => void,
-  setDarkColors: (c: ThemeColors) => void,
-): void {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored == null) return
-    const parsed = JSON.parse(stored) as {
-      light?: ThemeColors; dark?: ThemeColors
-    }
-    applyStored(
-      { ...LIGHT_DEFAULTS, ...(parsed.light ?? {}) },
-      { ...DARK_DEFAULTS, ...(parsed.dark ?? {}) },
-      setLightColors, setDarkColors,
-    )
-  } catch {
-    // ignore malformed storage
-  }
-}
-
 export function useThemeEditor(): ThemeEditorState {
   const [activeTab, setActiveTab] = useState<'light' | 'dark'>('light')
   const [lightColors, setLightColors] = useState<ThemeColors>(LIGHT_DEFAULTS)
   const [darkColors, setDarkColors] = useState<ThemeColors>(DARK_DEFAULTS)
 
-  // DBAL (shared, tenant-wide) first, falling back to localStorage (per-
-  // browser) if DBAL has nothing yet or is unreachable — same fail-safe
-  // pattern WorkspacePageSlot uses for component trees.
+  // Same resolution Providers uses app-wide (DBAL, falling back to
+  // localStorage) -- this additionally syncs the editor's own light/dark
+  // state so the swatches reflect what's actually applied, not just the
+  // built-in defaults.
   useEffect(() => {
     let cancelled = false
-    fetch(`${DBAL}/${TENANT}/core/TenantTheme/${TENANT}`, {
-      signal: AbortSignal.timeout(6000),
+    resolveTenantTheme().then(theme => {
+      if (cancelled) return
+      setLightColors(theme.light)
+      setDarkColors(theme.dark)
+      const isDark =
+        document.documentElement.getAttribute('data-theme') === 'dark'
+      applyTenantTheme(theme, isDark ? 'dark' : 'light')
+    }).catch(() => {
+      // resolveTenantTheme already falls back internally; nothing left to do
     })
-      .then(res => (res.ok ? res.json() : null))
-      .then((json: { data?: Record<string, unknown> } | null) => {
-        if (cancelled) return
-        const row = json?.data
-        const rawLight = row?.lightColors
-        const rawDark = row?.darkColors
-        if (typeof rawLight === 'string' && typeof rawDark === 'string') {
-          applyStored(
-            { ...LIGHT_DEFAULTS, ...(JSON.parse(rawLight) as ThemeColors) },
-            { ...DARK_DEFAULTS, ...(JSON.parse(rawDark) as ThemeColors) },
-            setLightColors, setDarkColors,
-          )
-          return
-        }
-        loadFromLocalStorage(setLightColors, setDarkColors)
-      })
-      .catch(() => {
-        if (!cancelled) loadFromLocalStorage(setLightColors, setDarkColors)
-      })
     return () => {
       cancelled = true
     }

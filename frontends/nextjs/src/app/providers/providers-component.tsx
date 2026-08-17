@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { CssBaseline } from '@/m3'
 import { store, persistor } from '@/store/store'
 import { RetryableErrorBoundary } from '@/components/RetryableErrorBoundary'
+import { resolveTenantTheme, applyTenantTheme } from '@/components/theme-editor/apply-tenant-theme'
 
 import { ThemeContext, type ThemeMode } from './theme-context'
 
@@ -39,6 +40,25 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
     root.dataset.theme = resolvedMode
     root.style.colorScheme = resolvedMode
+  }, [resolvedMode])
+
+  // God Panel's Theme tab persists color overrides to a per-tenant DBAL row
+  // (see apply-tenant-theme.ts) precisely so they're visible to every
+  // visitor, not just an editor who happens to have that tab open -- this is
+  // the app-wide consumer that makes that true. Runs once per mount; a
+  // change made mid-session by someone else appears on this visitor's next
+  // load, not live, which matches how the rest of the app's God-Panel-
+  // published content (WorkspacePageSlot) behaves.
+  useEffect(() => {
+    let cancelled = false
+    resolveTenantTheme().then(theme => {
+      if (!cancelled) applyTenantTheme(theme, resolvedMode)
+    }).catch(() => {
+      // resolveTenantTheme already falls back internally; nothing left to do
+    })
+    return () => {
+      cancelled = true
+    }
   }, [resolvedMode])
 
   const toggleTheme = () => {
