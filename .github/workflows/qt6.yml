@@ -8,31 +8,27 @@ name: qt6
 #
 #   2. Qt 6 itself.
 #
-# On (2): frontends/qt6/conanfile.txt asks Conan for qt/6.7.3, and Conan has no
-# prebuilt binary for that configuration, so it would compile Qt from source -
-# hours of runner time and enough disk to routinely exhaust the runner. This
-# workflow instead installs the same Qt version as a prebuilt binary via
-# aqtinstall, which is the approach the CPlusPlusQT6Skel repo already takes
-# (see its python/download_qt6/). Minutes instead of hours, no disk pressure.
+# On (2): frontends/qt6/cmake_config.json pins the Qt version, and Conan has no
+# prebuilt binary for it, so a Conan build would compile Qt from source - hours
+# of runner time and enough disk to routinely exhaust the runner. This workflow
+# instead installs the same Qt version as a prebuilt binary via aqtinstall,
+# which is the approach the CPlusPlusQT6Skel repo already takes (see its
+# python/download_qt6/). Minutes instead of hours, no disk pressure.
 #
-# conanfile.txt is deliberately left untouched and is still the source of truth
-# for the version - the step below parses it rather than hardcoding 6.7.3, so
-# the two cannot drift. Conan is not invoked at all here; CMakeLists.txt
-# includes conan_toolchain.cmake with OPTIONAL, so its absence is fine, and Qt
-# is located through CMAKE_PREFIX_PATH instead.
+# cmake_config.json is the declarative source of truth for this frontend, so
+# the version is read from there rather than hardcoded; qt6-release.yml checks
+# it against conanfile.txt so a local Conan build cannot drift from CI. Conan
+# is not invoked here at all; CMakeLists.txt includes conan_toolchain.cmake
+# with OPTIONAL, so its absence is fine, and Qt is found via CMAKE_PREFIX_PATH.
 #
 # The conanfile's qtdeclarative and qtshadertools options are preserved:
 # qtdeclarative ships in the aqt base install, qtshadertools is added with -m.
+# qtimageformats comes too, because Qt's own Controls styles load a .webp.
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'frontends/qt6/**'
-      - '.github/workflows/qt6.yml'
-      - '.github/workspace.json'
-      - '.github/scripts/assemble_workspace.py'
-      - '.github/actions/assemble-workspace/**'
+  # main is covered by qt6-release.yml, which builds all five release targets
+  # and publishes them; duplicating a Linux build here would only slow the
+  # release down. This workflow is the pre-merge check.
   pull_request:
     paths:
       - 'frontends/qt6/**'
@@ -102,16 +98,16 @@ jobs:
 
       # Read the version Conan is pinned to, so switching to prebuilt binaries
       # cannot silently build a different Qt than the project declares.
-      - name: Resolve Qt version from conanfile.txt
+      - name: Resolve Qt version from cmake_config.json
         id: qt
         run: |
-          version=$(sed -nE 's|^qt/([0-9][0-9.]*).*|\1|p' conanfile.txt | head -1)
+          version=$(python3 -c "import json;print(json.load(open('cmake_config.json'))['qt']['version'])")
           if [ -z "$version" ]; then
-            echo "Could not read the qt/<version> requirement from conanfile.txt"
+            echo "Could not read qt.version from cmake_config.json"
             exit 1
           fi
           echo "version=$version" >> "$GITHUB_OUTPUT"
-          echo "Qt version from conanfile.txt: $version"
+          echo "Qt version from cmake_config.json: $version"
 
       # Prebuilt Qt still links against the host's X11/OpenGL/fontconfig stack.
       # This is a much smaller set than a source build of Qt would need.
@@ -138,27 +134,20 @@ jobs:
 
       - name: Install Qt
         if: ${{ steps.qt_cache.outputs.cache-hit != 'true' }}
+        working-directory: ${{ github.workspace }}
         env:
           QT_VERSION: ${{ steps.qt.outputs.version }}
         run: |
-          python3 -m pip install --upgrade aqtinstall
-
-          # linux_gcc_64 is the only desktop architecture published for Qt 6.7
-          # on Linux, but resolve it rather than assuming, so a version bump in
-          # conanfile.txt does not silently break this step.
-          ARCH=$(python3 -m aqt list-qt linux desktop --arch "$QT_VERSION" \
-                 | tr ' ' '\n' | grep -E 'gcc_64$' | head -1)
-          if [ -z "$ARCH" ]; then
-            echo "No gcc_64 desktop architecture published for Qt $QT_VERSION"
-            exit 1
-          fi
-          echo "Installing Qt $QT_VERSION ($ARCH)"
-
-          # qtdeclarative (Qt Quick) is in the base install; qtshadertools is a
-          # separate module. Both are switched on in conanfile.txt.
-          python3 -m aqt install-qt linux desktop "$QT_VERSION" "$ARCH" \
+          # Same installer as qt6-release.yml, so a PR cannot pass against a
+          # Qt the release build cannot get: it handles mirror failover, Qt's
+          # per-host repository layouts, and the aqtinstall pin they need.
+          python3 .github/scripts/install_qt.py \
+            --ensure-aqt \
+            --host linux \
+            --version "$QT_VERSION" \
+            --arch-pattern '^linux_gcc_64$' \
             --outputdir "${{ github.workspace }}/Qt" \
-            --modules qtshadertools
+            --modules qtshadertools qtimageformats
 
       - name: Locate Qt
         id: qtdir

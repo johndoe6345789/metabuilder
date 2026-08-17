@@ -1,5 +1,7 @@
 #include "PackageLoader.h"
 
+#include "ResourceRoot.hpp"
+
 #include <QDir>
 #include <QFile>
 #include <QJsonDocument>
@@ -9,7 +11,7 @@
 
 PackageLoader::PackageLoader(QObject *parent)
     : QObject(parent)
-    , m_packagesDir(QDir(QStringLiteral(SRCDIR) + QStringLiteral("/packages")).absolutePath())
+    , m_packagesDir(metabuilder::resourcePath(QStringLiteral("packages")))
     , m_watching(false)
     , m_watcher(nullptr)
 {

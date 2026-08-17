@@ -1,5 +1,5 @@
 [requires]
-qt/6.7.3
+qt/6.11.1
 
 [generators]
 CMakeDeps

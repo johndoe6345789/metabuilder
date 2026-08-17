@@ -5,7 +5,7 @@
     "executable": "metabuilder-qt6"
   },
   "qt": {
-    "version": "6.7.3",
+    "version": "6.11.1",
     "components": [
       "Core",
       "Gui",
@@ -24,6 +24,42 @@
   "features": {
     "libopenmpt": false,
     "qt_multimedia": false
+  },
+  "packaging": {
+    "_comment": [
+      "How a released build is laid out on disk. Most of the app is compiled",
+      "into Qt resources, but a few directories are read from the filesystem at",
+      "runtime, and src/ResourceRoot.hpp looks for them relative to the",
+      "executable. Anything listed here is what a user's copy actually reads;",
+      "SRCDIR is only a developer-build fallback."
+    ],
+    "macos_bundle": {
+      "enabled": true,
+      "name": "MetaBuilder",
+      "identifier": "local.metabuilder.qt6"
+    },
+    "data_destination": {
+      "apple": "metabuilder-qt6.app/Contents/Resources",
+      "other": "share/metabuilder-qt6"
+    },
+    "linux_rpath": {
+      "value": "$ORIGIN/../lib",
+      "why": "A released Linux build ships its Qt libraries in lib/ next to bin/. Without an RPATH the executable resolves them through the system linker, which knows nothing about them, and dies before main() with 'libQt6Gui.so.6: cannot open shared object file'. $ORIGIN makes the lookup relative to the executable, so the package works wherever it is unpacked."
+    },
+    "install_dirs": [
+      {
+        "source": "packages",
+        "destination": "packages",
+        "why": "PackageLoader scans and watches this directory at runtime."
+      },
+      {
+        "source": "../../libraries/qml/",
+        "destination": "imports/QmlComponents",
+        "requires": "qmldir",
+        "why": "App.qml opens with `import QmlComponents`, resolved from disk. A developer build reaches it through the imports/QmlComponents symlink, which cannot be installed because it points outside the install tree. Without this an installed build dies at startup with 'module \"QmlComponents\" is not installed'.",
+        "missing_message": "libraries/qml is missing; an installed build will fail to load its UI. Run .github/scripts/assemble_workspace.py --frontend qt6."
+      }
+    ]
   },
   "compile_definitions": {
     "SRCDIR": "${CMAKE_CURRENT_SOURCE_DIR}"
