@@ -9,8 +9,9 @@ export interface InstalledPackage {
   id: string
   packageId: string
   tenantId: string
-  installedAt: string
-  status: 'active' | 'disabled'
+  installedAt: number
+  version: string
+  enabled: boolean
 }
 
 function extractList(raw: unknown): InstalledPackage[] {
@@ -55,8 +56,9 @@ export function useInstalledPackages(tenant: string) {
         body: JSON.stringify({
           packageId,
           tenantId: tenant,
-          status: 'active',
-          installedAt: new Date().toISOString(),
+          version: '1.0.0',
+          enabled: true,
+          installedAt: Date.now(),
         }),
       })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
@@ -76,17 +78,13 @@ export function useInstalledPackages(tenant: string) {
 
   const isInstalled = useCallback(
     (packageId: string): boolean =>
-      installed.some(
-        p => p.packageId === packageId && p.status === 'active',
-      ),
+      installed.some(p => p.packageId === packageId && p.enabled),
     [installed],
   )
 
   const installedRecord = useCallback(
     (packageId: string): InstalledPackage | undefined =>
-      installed.find(
-        p => p.packageId === packageId && p.status === 'active',
-      ),
+      installed.find(p => p.packageId === packageId && p.enabled),
     [installed],
   )
 
