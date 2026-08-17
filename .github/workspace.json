@@ -27,7 +27,7 @@
     {
       "repo": "types",
       "branch": "main",
-      "ref": "9d20c7ab1371935410dee638ebdcd9995c2271a5",
+      "ref": "f1fce969a6f14c9468ea35ac7621b6a571b1d86e",
       "needed_by": [
         "nextjs"
       ],
@@ -44,7 +44,7 @@
     {
       "repo": "interfaces",
       "branch": "main",
-      "ref": "1a3dd97e11a013666a7dc3b19d42c302b25d0c03",
+      "ref": "828bcf99bb4a0b4d8aedfc190dde2f53e7149884",
       "needed_by": [
         "nextjs"
       ],
@@ -61,7 +61,7 @@
     {
       "repo": "translations",
       "branch": "main",
-      "ref": "807fb60d6820d46c4e2f82c4dc7c20fbd31f7875",
+      "ref": "ce3e4d3e5e20cb659cadad0533045983150fc423",
       "needed_by": [
         "nextjs"
       ],
@@ -78,7 +78,7 @@
     {
       "repo": "hooks",
       "branch": "main",
-      "ref": "540fdc2a35048f80bee0ee0ee64b03c3364c6614",
+      "ref": "730cca1ed793267dba9156aa11a5671339aa6686",
       "needed_by": [
         "nextjs"
       ],
@@ -96,7 +96,7 @@
     {
       "repo": "components",
       "branch": "main",
-      "ref": "5b59cb55f1f8fe6cc8d55c812cf42b384876d49c",
+      "ref": "40e3d95652c002e7e54c2aa621eb3a2243f72b5f",
       "needed_by": [
         "nextjs"
       ],
@@ -115,7 +115,7 @@
     {
       "repo": "redux",
       "branch": "main",
-      "ref": "30e85fe6ed90c2db91ee5fb526d2fd8b49e7373d",
+      "ref": "98a4260be384f8e6aa9e02d319499ed3bd83a4fa",
       "needed_by": [
         "nextjs"
       ],
@@ -143,7 +143,7 @@
     {
       "repo": "scss",
       "branch": "main",
-      "ref": "b3f0742414703a125e77b5f5f8c88039dab351fe",
+      "ref": "9966996aa7c7592f6eb61cc256a92522b7f67deb",
       "needed_by": [
         "nextjs"
       ],
@@ -160,7 +160,7 @@
     {
       "repo": "icons",
       "branch": "main",
-      "ref": "93636a98436570f43f8158198f1a527adab0e00a",
+      "ref": "14dd3e7764a89b2220e7f47e9f0b62ee54c31663",
       "needed_by": [
         "nextjs"
       ],
@@ -175,7 +175,7 @@
     {
       "repo": "AutoMetabuilder",
       "branch": "master",
-      "ref": "9a0a13447d9b57da9ff9d83f95212fa6bc240f44",
+      "ref": "7cfcc4acb9cabfb23f477b05c40219c5265b5106",
       "needed_by": [
         "nextjs"
       ],
@@ -193,7 +193,7 @@
     {
       "repo": "dbal",
       "branch": "main",
-      "ref": "b484c79c7e1f966d7de65be1ea976e8b17166d5a",
+      "ref": "6392a3b8686c5e44f99362197685908be3c5b80a",
       "needed_by": [
         "nextjs"
       ],
@@ -212,7 +212,7 @@
     {
       "repo": "packages",
       "branch": "main",
-      "ref": "e291eecb9af5bb35a57292f7c1b4a8ab0bca6d79",
+      "ref": "21a2fbaf21344bddde8a25568e31e9913c90b0b5",
       "needed_by": [
         "nextjs"
       ],
@@ -227,7 +227,7 @@
     {
       "repo": "CPlusPlusQT6Skel",
       "branch": "main",
-      "ref": "1ba0478bb96154e72989571b0c01667039ba4ea4",
+      "ref": "ef90b5145d5f1a997ef83322edae9c2ae4c9e0f4",
       "needed_by": [
         "qt6"
       ],
