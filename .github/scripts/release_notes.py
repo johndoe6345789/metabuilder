@@ -87,6 +87,21 @@ AREA_NAMES = {
     "deploy": "deployment",
 }
 
+# Shown instead of a changelog when there is no previous release to compare
+# against. "What changed" is meaningless for a first release, and answering it
+# from the whole repository history is worse than saying nothing.
+FIRST_RELEASE_INTRO = [
+    "### The first published build of the MetaBuilder desktop app.",
+    "",
+    "Until now this app could only be run by building it yourself. These are",
+    "ready-to-run downloads for Linux, Windows and macOS, on both Intel/AMD",
+    "and ARM machines.",
+    "",
+    "Every future commit publishes a new release automatically, and those will",
+    "list exactly what changed since the build before them.",
+    "",
+]
+
 DOWNLOADS = [
     ("linux-x86_64", "Linux", "Intel / AMD 64-bit", "most desktops and servers"),
     ("linux-arm64", "Linux", "ARM64", "Raspberry Pi 5, Ampere, ARM cloud VMs"),
@@ -111,8 +126,19 @@ def git(*args: str) -> str:
 
 
 def read_commits(previous_tag: str | None, sha: str) -> list[Commit]:
-    """Commits included in this release, newest first."""
-    span = f"{previous_tag}..{sha}" if previous_tag else sha
+    """Commits included in this release, newest first.
+
+    With no previous tag there is no sensible span: walking to the start of
+    the repository describes every commit that ever happened rather than what
+    is new, which for the first release meant a changelog of several thousand
+    entries about work that predates the app being downloadable at all. In
+    that case the release is introduced rather than itemised, so this returns
+    nothing and the caller writes a first-release note instead.
+    """
+    if not previous_tag:
+        return []
+
+    span = f"{previous_tag}..{sha}"
     # A record separator that cannot appear in a commit message.
     fmt = "%H%x1f%s%x1f%b%x1e"
     try:
@@ -264,6 +290,7 @@ def main() -> int:
     parser.add_argument("--qml-ref", default="", help="SHA of the QML sibling repo used")
     parser.add_argument("--output", type=Path)
     parser.add_argument("--max-entries", type=int, default=40)
+    parser.add_argument("--max-per-section", type=int, default=10)
     args = parser.parse_args()
 
     previous = args.previous_tag or None
@@ -276,31 +303,40 @@ def main() -> int:
         grouped[section].append((humanise(subject), commit.sha))
 
     lines: list[str] = []
-    lines.append(f"### {summary_line(commits, areas)}")
-    lines.append("")
 
-    shown = 0
-    for key, heading in SECTIONS:
-        entries = dedupe(grouped[key])
-        if not entries:
-            continue
-        lines.append(f"#### {heading}")
-        for text, sha in entries:
-            if shown >= args.max_entries:
-                break
+    if previous is None:
+        lines += FIRST_RELEASE_INTRO
+    else:
+        lines.append(f"### {summary_line(commits, areas)}")
+        lines.append("")
+
+        # Budgeted per section rather than globally: a single busy section
+        # would otherwise spend the whole allowance and push every other
+        # heading out, so a release with one big feature and three bug fixes
+        # would show the feature commits and hide the fixes.
+        shown = 0
+        for key, heading in SECTIONS:
+            entries = dedupe(grouped[key])
+            if not entries:
+                continue
+            lines.append(f"#### {heading}")
+            for text, sha in entries[: args.max_per_section]:
+                lines.append(
+                    f"- {text} "
+                    f"([`{sha[:7]}`](https://github.com/{args.repo}/commit/{sha}))"
+                )
+                shown += 1
+            hidden = len(entries) - args.max_per_section
+            if hidden > 0:
+                lines.append(f"- …and {hidden} more")
+            lines.append("")
+
+        remaining = len(commits) - shown
+        if remaining > 0:
             lines.append(
-                f"- {text} "
-                f"([`{sha[:7]}`](https://github.com/{args.repo}/commit/{sha}))"
+                f"…and {remaining} more commit(s) — see the full changelog below."
             )
-            shown += 1
-        lines.append("")
-        if shown >= args.max_entries:
-            break
-
-    remaining = len(commits) - shown
-    if remaining > 0:
-        lines.append(f"…and {remaining} more commit(s) — see the full changelog below.")
-        lines.append("")
+            lines.append("")
 
     artifacts: dict[str, Path] = {}
     if args.artifacts_dir and args.artifacts_dir.is_dir():
