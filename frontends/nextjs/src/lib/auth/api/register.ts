@@ -11,6 +11,7 @@
 import type { User } from '@/lib/types/level-types'
 import type { DbalUserRecord } from '@/lib/auth/types'
 import { db } from '@/lib/db-client'
+import { DEFAULT_TENANT_ID } from '@/lib/tenant/workspace-paths'
 import crypto from 'crypto'
 
 const DBAL_URL =
@@ -92,7 +93,15 @@ export async function register(username: string, email: string, password: string
       role: 'user',
       createdAt: Date.now(),
       isInstanceOwner: false,
-      tenantId: null,
+      // Every DBAL list/filter query auto-adds `WHERE tenantId = '{route
+      // tenant}'` (list_handler.cpp) -- this route is /system/core/User
+      // (db-client.ts's TENANT default), so a row written with tenantId:
+      // null here is permanently invisible to that filter afterward, even
+      // though it's readable by direct id. That includes the exact list
+      // query fetchSession() uses to resolve a login token to a user, so a
+      // null tenantId here made every signup unable to log in at all, not
+      // just miss some content.
+      tenantId: DEFAULT_TENANT_ID,
       profilePicture: null,
       bio: null,
     }) as unknown as DbalUserRecord
