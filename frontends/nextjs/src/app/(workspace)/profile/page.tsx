@@ -38,7 +38,7 @@ function ProfileContent() {
 
   const handleSave = () => {
     if (user?.id == null) return
-    fetch(`${DBAL_URL}/v1/default/core/user/${user.id}`, {
+    fetch(`${DBAL_URL}/system/core/User/${user.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
