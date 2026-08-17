@@ -7,10 +7,11 @@
 'use client'
 
 import { LevelGate } from '@/components/layout/LevelGate'
+import { WorkspacePageSlot } from '@/components/workspace/WorkspacePageSlot'
 import { IrcChatShell } from '@/components/irc-webchat'
 import styles from './page.module.scss'
 
-function ChatContent() {
+export function ChatContent() {
   return (
     <div className={styles.wrapper}>
       <IrcChatShell />
@@ -20,8 +21,10 @@ function ChatContent() {
 
 export default function ChatPage() {
   return (
-    <LevelGate minLevel={1} levelName="User">
-      <ChatContent />
-    </LevelGate>
+    <WorkspacePageSlot path="/irc">
+      <LevelGate minLevel={1} levelName="User">
+        <ChatContent />
+      </LevelGate>
+    </WorkspacePageSlot>
   )
 }
