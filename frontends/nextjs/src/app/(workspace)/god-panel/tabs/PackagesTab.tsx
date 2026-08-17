@@ -27,7 +27,7 @@ async function createDefaultPages(
         body: JSON.stringify({
           path: route.path,
           title: route.title,
-          isActive: true,
+          isPublished: true,
           level: 0, // public, per ROLE_LEVELS
           requiresAuth: false,
           sortOrder: 0,
