@@ -1,5 +1,5 @@
 /**
- * Admin Panel Page (Level 2+: Moderator/Admin)
+ * Admin Panel Page (Level 3+: Admin)
  *
  * Mirrors old/src/components/Level3.tsx admin panel
  * Django-style data management with CRUD for users and entities
@@ -262,7 +262,7 @@ function AdminContent() {
 
 export default function AdminPage() {
   return (
-    <LevelGate minLevel={2} levelName="Admin">
+    <LevelGate minLevel={3} levelName="Admin">
       <AdminContent />
     </LevelGate>
   )

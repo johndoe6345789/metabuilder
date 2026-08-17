@@ -15,6 +15,7 @@ export interface PageRoute {
   requiredRole?: string | null
   componentTree: string
   isActive: boolean
+  sortOrder: number
   tenantId?: string | null
   packageId?: string | null
 }

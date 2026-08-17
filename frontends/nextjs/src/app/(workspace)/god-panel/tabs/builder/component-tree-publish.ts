@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from 'react'
 import { useAppDispatch } from '@/store/hooks'
-import { clearDirty } from '@/store/slices/god-slice'
+import { clearDirty, setTree } from '@/store/slices/god-slice'
 import { snapshot } from '@/lib/persist/versions'
 import type { TreeNode } from './builder-registry'
 
@@ -13,12 +13,31 @@ function pageId(tenant: string, path: string): string {
   return `page_${tenant}_${slug.length > 0 ? slug : 'home'}`
 }
 
+export interface PublishTarget {
+  tenant: string
+  path: string
+  title: string
+  /** 0=public, 1=user, 2=moderator, 3=admin, 4=god, 5=supergod — see ROLE_LEVELS */
+  level: number
+  requiresAuth: boolean
+}
+
+export const DEFAULT_PUBLISH_TARGET: PublishTarget = {
+  tenant: 'system',
+  path: '/',
+  title: 'Home',
+  level: 0,
+  requiresAuth: false,
+}
+
 export function useComponentTreePublish(tree: TreeNode) {
   const dispatch = useAppDispatch()
   const [publishing, setPublishing] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const publish = useCallback(
-    async (tenant = 'system', path = '/', title = 'Home'): Promise<boolean> => {
+    async (target: PublishTarget = DEFAULT_PUBLISH_TARGET): Promise<boolean> => {
+      const { tenant, path, title, level, requiresAuth } = target
       setPublishing(true)
       try {
         const id = pageId(tenant, path)
@@ -29,8 +48,9 @@ export function useComponentTreePublish(tree: TreeNode) {
           packageId: 'god_builder',
           component: 'component_tree',
           isPublished: true,
-          level: 1,
-          requiresAuth: false,
+          level,
+          requiresAuth,
+          sortOrder: 0,
           tenantId: tenant,
           componentTree: JSON.stringify(tree),
           updatedAt: Date.now(),
@@ -62,5 +82,40 @@ export function useComponentTreePublish(tree: TreeNode) {
     [tree, dispatch]
   )
 
-  return { publish, publishing }
+  /** Loads an existing page's tree into the editor, returning its
+   * level/requiresAuth too so a re-publish doesn't silently reset them to
+   * DEFAULT_PUBLISH_TARGET's public/no-auth values. Null if no row exists
+   * for this tenant+path yet, or the row has no parseable componentTree. */
+  const load = useCallback(
+    async (tenant: string, path: string): Promise<Omit<PublishTarget, 'tenant' | 'path'> | null> => {
+      setLoading(true)
+      try {
+        const params = new URLSearchParams({ 'filter.path': path })
+        const res = await fetch(`${DBAL}/${tenant}/core/PageConfig?${params.toString()}`, {
+          signal: AbortSignal.timeout(6000),
+        })
+        if (!res.ok) return null
+        const json = await res.json() as { data?: { data?: Record<string, unknown>[] } }
+        const row = json.data?.data?.[0]
+        if (row === undefined) return null
+        const raw = row.componentTree
+        const parsed: unknown = typeof raw === 'string' ? JSON.parse(raw) : raw
+        if (parsed === null || typeof parsed !== 'object') return null
+        dispatch(setTree(parsed as TreeNode))
+        dispatch(clearDirty('tree'))
+        return {
+          title: typeof row.title === 'string' ? row.title : path,
+          level: typeof row.level === 'number' ? row.level : 0,
+          requiresAuth: typeof row.requiresAuth === 'boolean' ? row.requiresAuth : false,
+        }
+      } catch {
+        return null
+      } finally {
+        setLoading(false)
+      }
+    },
+    [dispatch]
+  )
+
+  return { publish, publishing, load, loading }
 }

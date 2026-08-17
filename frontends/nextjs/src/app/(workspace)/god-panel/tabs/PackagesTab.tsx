@@ -28,8 +28,9 @@ async function createDefaultPages(
           path: route.path,
           title: route.title,
           isActive: true,
-          level: 1,
+          level: 0, // public, per ROLE_LEVELS
           requiresAuth: false,
+          sortOrder: 0,
           packageId: pkg.id,
           tenantId: tenant,
           componentTree: defaultComponentTree(route.title),

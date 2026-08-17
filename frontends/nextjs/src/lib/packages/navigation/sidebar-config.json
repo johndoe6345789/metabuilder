@@ -47,7 +47,7 @@
       "label": "Admin Panel",
       "icon": "admin",
       "path": "/admin",
-      "level": 2
+      "level": 3
     },
     {
       "id": "god-panel",

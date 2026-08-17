@@ -23,7 +23,7 @@ export function useComponentTree() {
   const selected = getSelectedTreeNode(tree, selectedId)
   const { addNode, updateProps, deleteNode, moveNode } =
     useComponentTreeActions(tree, selected, commit, setSelectedId)
-  const { publish, publishing } = useComponentTreePublish(tree)
+  const { publish, publishing, load, loading } = useComponentTreePublish(tree)
   return {
     tree,
     selected,
@@ -36,5 +36,7 @@ export function useComponentTree() {
     dirty,
     publish,
     publishing,
+    load,
+    loading,
   }
 }

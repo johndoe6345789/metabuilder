@@ -14,7 +14,7 @@
 
 import dynamic from 'next/dynamic'
 import type { ReactNode } from 'react'
-import { Button, Card, Typography } from '@/m3'
+import { Avatar, Button, Card, Typography } from '@/m3'
 import { runWorkflow } from '@/lib/workflow/run-workflow'
 import { store } from '@/store/store'
 import type { RootState } from '@/store/store'
@@ -90,6 +90,10 @@ function propGap(value: unknown): number {
   return typeof value === 'number' ? value : 12
 }
 
+function propNumber(value: unknown, fallback: number): number {
+  return typeof value === 'number' ? value : fallback
+}
+
 function renderButton(p: Record<string, unknown>): ReactNode {
   const href = propText(p.href)
   const variant = propText(p.variant, 'contained')
@@ -126,10 +130,87 @@ const DEFS: BlockDef[] = [
     } },
   { meta: m('card', 'Card', 'crop_square', 'Layout', true),
     render: (_p, kids) => <Card style={{ padding: 16 }}>{kids}</Card> },
+  { meta: m('grid', 'Grid', 'grid_on', 'Layout', true, { columns: 3, gap: 16 }),
+    render: (p, kids) => (
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: `repeat(${propNumber(p.columns, 3)}, 1fr)`,
+          gap: propGap(p.gap),
+        }}
+      >
+        {kids}
+      </div>
+    ) },
+  { meta: m('divider', 'Divider', 'horizontal_rule', 'Layout', false, { margin: 16 }),
+    render: (p) => (
+      <hr
+        style={{
+          border: 'none',
+          borderTop: '1px solid var(--mat-sys-outline-variant, #30363d)',
+          margin: `${propNumber(p.margin, 16)}px 0`,
+        }}
+      />
+    ) },
   { meta: m('heading', 'Heading', 'title', 'Content', false, { text: 'Heading' }),
     render: (p) => <Typography variant="h5">{propText(p.text, 'Heading')}</Typography> },
   { meta: m('text', 'Text', 'notes', 'Content', false, { text: 'Some text' }),
     render: (p) => <Typography variant="body1">{propText(p.text)}</Typography> },
+  { meta: m('image', 'Image', 'image', 'Content', false, { src: '', alt: '', radius: 0 }),
+    render: (p) => {
+      const src = propText(p.src)
+      if (src.length === 0) return <em>Image: no src set</em>
+      return (
+        <img
+          src={src}
+          alt={propText(p.alt)}
+          style={{
+            maxWidth: '100%',
+            borderRadius: propNumber(p.radius, 0),
+          }}
+        />
+      )
+    } },
+  { meta: m('avatar', 'Avatar', 'account_circle', 'Content', false, { initials: 'U', size: 'md' }),
+    render: (p) => {
+      const size = propText(p.size, 'md')
+      const src = propText(p.src)
+      return (
+        <Avatar
+          src={src.length > 0 ? src : undefined}
+          sm={size === 'sm'}
+          md={size === 'md'}
+          lg={size === 'lg'}
+          xl={size === 'xl'}
+        >
+          {propText(p.initials, 'U')}
+        </Avatar>
+      )
+    } },
+  { meta: m('stat', 'Stat', 'monitoring', 'Content', false, { label: 'Members', value: '0' }),
+    render: (p) => (
+      <div>
+        <Typography variant="h4">{propText(p.value, '0')}</Typography>
+        <Typography variant="body2" color="text.secondary">
+          {propText(p.label, 'Label')}
+        </Typography>
+      </div>
+    ) },
+  { meta: m('list-item', 'List Item', 'list', 'Content', false,
+      { icon: 'notifications', title: 'Title', description: 'Description' }),
+    render: (p) => (
+      <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+        <span className="material-symbols-rounded" aria-hidden="true">
+          {propText(p.icon, 'notifications')}
+        </span>
+        <div>
+          <Typography variant="body1">{propText(p.title, 'Title')}</Typography>
+          <Typography variant="body2" color="text.secondary">
+            {propText(p.description)}
+          </Typography>
+        </div>
+      </div>
+    ) },
   { meta: m('button', 'Button', 'smart_button', 'Inputs', false, { label: 'Click me' }),
     render: renderButton },
   { meta: m('pkg.webchat', 'Webchat', 'chat', 'Community', false, { channel: '#general' }),

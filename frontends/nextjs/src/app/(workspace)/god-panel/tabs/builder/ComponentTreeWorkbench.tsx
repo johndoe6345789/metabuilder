@@ -1,23 +1,41 @@
 'use client'
 
+import { useState } from 'react'
 import { useComponentTree } from './use-component-tree'
 import { PALETTE, renderNode, type PaletteItem } from './builder-registry'
 import { CATEGORIES } from './component-tree-categories'
 import { ComponentTreeOutline } from './ComponentTreeOutline'
 import { ComponentTreePropsEditor } from './ComponentTreePropsEditor'
 import { ComponentTreePublishBar } from './ComponentTreePublishBar'
+import { ComponentTreeTargetPicker } from './ComponentTreeTargetPicker'
+import { DEFAULT_PUBLISH_TARGET, type PublishTarget } from './component-tree-publish'
 import s from './ComponentTreeTab.module.scss'
 
 export function ComponentTreeWorkbench() {
   const t = useComponentTree()
+  const [target, setTarget] = useState<PublishTarget>(DEFAULT_PUBLISH_TARGET)
 
   return (
     <div className={s.root}>
+      <ComponentTreeTargetPicker
+        target={target}
+        onChange={patch => {
+          setTarget(prev => ({ ...prev, ...patch }))
+        }}
+        loading={t.loading}
+        onLoad={() => {
+          void t.load(target.tenant, target.path).then(loaded => {
+            if (loaded !== null) {
+              setTarget(prev => ({ ...prev, ...loaded }))
+            }
+          })
+        }}
+      />
       <ComponentTreePublishBar
         dirty={t.dirty}
         publishing={t.publishing}
         onPublish={() => {
-          void t.publish()
+          void t.publish(target)
         }}
       />
 
