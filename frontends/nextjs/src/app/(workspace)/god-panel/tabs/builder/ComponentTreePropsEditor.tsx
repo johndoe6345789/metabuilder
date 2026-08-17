@@ -10,7 +10,6 @@ import { ComponentTreeAvatarProps } from './ComponentTreeAvatarProps'
 import { ComponentTreeStatProps } from './ComponentTreeStatProps'
 import { ComponentTreeListItemProps } from './ComponentTreeListItemProps'
 import { ComponentTreeGridProps } from './ComponentTreeGridProps'
-import s from './ComponentTreeTab.module.scss'
 
 const propText = (value: unknown, fallback = ''): string =>
   typeof value === 'string' ||
