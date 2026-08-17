@@ -9,6 +9,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { LevelGate } from '@/components/layout/LevelGate'
+import { WorkspacePageSlot } from '@/components/workspace/WorkspacePageSlot'
 import {
   Typography,
   Paper,
@@ -43,7 +44,7 @@ interface EntityStats {
   icon: string
 }
 
-function AdminContent() {
+export function AdminContent() {
   const [activeTab, setActiveTab] = useState(0)
   const [search, setSearch] = useState('')
   const [users, setUsers] = useState<UserRecord[]>([])
@@ -262,8 +263,10 @@ function AdminContent() {
 
 export default function AdminPage() {
   return (
-    <LevelGate minLevel={3} levelName="Admin">
-      <AdminContent />
-    </LevelGate>
+    <WorkspacePageSlot path="/admin/users">
+      <LevelGate minLevel={3} levelName="Admin">
+        <AdminContent />
+      </LevelGate>
+    </WorkspacePageSlot>
   )
 }
