@@ -48,9 +48,9 @@ inline QString resourceRoot()
 {
     QStringList candidates;
 
-    const QByteArray override = qgetenv("METABUILDER_QT6_ROOT");
-    if (!override.isEmpty())
-        candidates << QString::fromLocal8Bit(override);
+    const QByteArray rootOverride = qgetenv("METABUILDER_QT6_ROOT");
+    if (!rootOverride.isEmpty())
+        candidates << QString::fromLocal8Bit(rootOverride);
 
     const QString exeDir = QCoreApplication::applicationDirPath();
     if (!exeDir.isEmpty()) {
