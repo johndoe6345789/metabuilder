@@ -36,8 +36,8 @@ inline constexpr auto kResourceMarker = "packages";
  *
  *  1. `$METABUILDER_QT6_ROOT` -- explicit override, for unusual installs.
  *  2. `<exe>/../Resources` -- inside a macOS .app bundle.
- *  3. `<exe>/../share/metabuilder-qt6` -- the Linux tarball layout.
- *  4. `<exe>` -- the Windows zip layout, where data sits beside the binary.
+ *  3. `<exe>/../share/metabuilder-qt6` -- release install layout on Linux/Windows.
+ *  4. `<exe>` -- fallback for installs where data sits beside the binary.
  *  5. `SRCDIR` -- the source tree, for builds run from the build directory.
  *
  * @return An absolute path, or an empty string when nothing was found (in
