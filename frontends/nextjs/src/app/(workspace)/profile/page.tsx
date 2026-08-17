@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
 import { LevelGate } from '@/components/layout/LevelGate'
+import { WorkspacePageSlot } from '@/components/workspace/WorkspacePageSlot'
 import { Typography, Button, TextField, Avatar } from '@/m3'
 import { getRoleLevel } from '@/lib/constants'
 import { getLevelColor } from '@/lib/packages/navigation'
@@ -10,7 +11,7 @@ import s from './page.module.scss'
 
 const DBAL_URL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
-function ProfileContent() {
+export function ProfileContent() {
   const auth = useAuthContext()
   const user = auth.user
   const role = user?.role ?? 'user'
@@ -233,8 +234,10 @@ function ProfileContent() {
 
 export default function ProfilePage() {
   return (
-    <LevelGate minLevel={1} levelName="User">
-      <ProfileContent />
-    </LevelGate>
+    <WorkspacePageSlot path="/profile">
+      <LevelGate minLevel={1} levelName="User">
+        <ProfileContent />
+      </LevelGate>
+    </WorkspacePageSlot>
   )
 }

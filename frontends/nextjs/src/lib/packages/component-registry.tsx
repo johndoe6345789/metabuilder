@@ -23,10 +23,14 @@
 import type { ComponentType } from 'react'
 import { DashboardContent } from '@/app/(workspace)/dashboard/page'
 import { AdminContent } from '@/app/(workspace)/admin/page'
+import { ProfileContent } from '@/app/(workspace)/profile/page'
+import { CommentsContent } from '@/app/(workspace)/comments/page'
 
 export const COMPONENT_REGISTRY: Record<string, ComponentType> = {
   dashboard_home: DashboardContent,
   user_list_admin: AdminContent,
+  user_profile: ProfileContent,
+  comments_wall: CommentsContent,
 }
 
 export function resolveComponent(name: string | null | undefined): ComponentType | null {
