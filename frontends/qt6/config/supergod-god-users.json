@@ -1,7 +1,0 @@
-[
-    { "username": "admin", "initials": "AD", "role": "supergod", "level": 5, "tenant": "default", "status": "online" },
-    { "username": "platform-admin", "initials": "PA", "role": "supergod", "level": 5, "tenant": "production", "status": "online" },
-    { "username": "devops", "initials": "DO", "role": "god", "level": 4, "tenant": "staging", "status": "online" },
-    { "username": "builder01", "initials": "B1", "role": "god", "level": 4, "tenant": "default", "status": "offline" },
-    { "username": "builder02", "initials": "B2", "role": "god", "level": 4, "tenant": "production", "status": "away" }
-]

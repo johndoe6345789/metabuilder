@@ -91,7 +91,6 @@ in the seed file itself because they cannot be recovered from the hashes.
 |----------|-------|-------------|
 | `frontends/nextjs` | Next.js 16, React 19, App Router | The platform runtime — a thin shell that loads features from packages. Six-level permission system (Public → SuperGod), `/{tenant}/{package}/{entity}` routing, JSON workflow execution, God Panel. |
 | `frontends/cli` | C++, Lua runtime | Command-line interface targeting MetaBuilder services over HTTP. Lua scripting for package execution. Conan + CMake. |
-| `frontends/qt6` | Qt6, QML | Desktop app — a Qt Quick replica of the MetaBuilder landing page. |
 
 Plus `config/` (lint, test and misc configs), `scripts/` (mirrored in
 [metabuilder-scripts](https://github.com/johndoe6345789/metabuilder-scripts)), and
@@ -111,17 +110,17 @@ publishes the base images this repo builds against to GHCR.
 ## Building from source
 
 MetaBuilder is split across micro-repos, so **only `frontends/cli` builds from a bare
-checkout**. The other two need their dependencies mounted first: the root `package.json`
-declares npm workspaces under `libraries/*`, and `frontends/qt6/CMakeLists.txt`
-references a few hundred paths under `libraries/qml/` — none of which live here any more.
+checkout**. `frontends/nextjs` needs its dependencies mounted first: the root
+`package.json` declares npm workspaces under `libraries/*`, which do not live here.
+
+The Qt6 desktop app has its own repository, [metabuilder-qt6-frontend](https://github.com/johndoe6345789/metabuilder-qt6-frontend),
+which builds from a bare checkout and publishes its own releases.
 
 ```bash
 # Mount the 11 sibling repos the Next.js frontend needs, into libraries/ and packages/
 python3 .github/scripts/assemble_workspace.py --frontend nextjs
 npm install
 
-# Just the QML sources for the Qt6 frontend
-python3 .github/scripts/assemble_workspace.py --frontend qt6
 ```
 
 Re-running assembly after `npm install` leaves `node_modules/@metabuilder/*` symlinks
@@ -145,14 +144,8 @@ current through a PR. Run `--help` on either script for the full options.
 |----------|--------------|
 | `nextjs.yml` | Lint, typecheck, unit tests, build, Playwright E2E |
 | `cli.yml` | Conan + CMake build (Release and Debug), uploads the binary |
-| `qt6.yml` | CMake build against a prebuilt Qt (via `aqtinstall`), uploads the binary |
 | `docker.yml` | Publishes `metabuilder/{nextjs-app,cli}` to GHCR on every push to main, multi-arch |
 | `bump-workspace-pins.yml` | Weekly refresh of the sibling-repo pin record, via PR |
-
-`qt6.yml` deliberately skips Conan: `conanfile.txt` asks for `qt/6.7.3`, which Conan has
-no prebuilt binary for, so it would compile Qt from source and tie up (or exhaust) the
-runner for hours. The workflow installs that same version as a binary instead, parsing
-the version out of `conanfile.txt` so the two cannot drift.
 
 Jenkins pipelines and the Drogon C++ credential vault that rotates secrets across the
 stack both live in the [jenkins](https://github.com/johndoe6345789/jenkins) repo.
@@ -166,7 +159,7 @@ This repo was a large monorepo (`packages/`, `libraries/`, `services/`, most of
 [reposplit README](https://github.com/johndoe6345789/reposplit#readme) has the full
 source → destination mapping:
 
-- **`libraries/`** → `mojo`, `qml` (merged into `CPlusPlusQT6Skel`), `workflow` (merged
+- **`libraries/`** → `mojo`, `qml` (now part of [metabuilder-qt6-frontend](https://github.com/johndoe6345789/metabuilder-qt6-frontend)), `workflow` (merged
   into `AutoMetabuilder`), plus `cadquerywrapper`, `components`, `dbal`, `hooks`,
   `icons`, `interfaces`, `pcbgenerator`, `redux`, `schemas`, `scss`, `SparkOS`,
   `translations`, `types`

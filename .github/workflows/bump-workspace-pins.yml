@@ -93,7 +93,7 @@ jobs:
             echo
             printf '%s\n' "$CHANGED" | tr ',' '\n' | sed 's/^/- /'
             echo
-            echo "The nextjs and qt6 workflows run against these new pins on this"
+            echo "The nextjs workflow runs against these new pins on this"
             echo "PR, so merging it means the updated set is known to build."
           } > /tmp/pr-body.md
 

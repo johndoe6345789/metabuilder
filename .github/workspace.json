@@ -5,7 +5,6 @@
     "MetaBuilder follows a micro-repo model: this repo holds only three frontends,",
     "while their dependencies live in sibling repos on the same GitHub account.",
     "The npm workspaces in the root package.json, and the QML paths in",
-    "frontends/qt6/CMakeLists.txt, both assume a monorepo layout that no longer",
     "exists on disk. This file records how to rebuild that layout.",
     "",
     "Consumed by .github/scripts/assemble_workspace.py. Pins are bumped by",
@@ -223,29 +222,11 @@
           "to": "packages"
         }
       ]
-    },
-    {
-      "repo": "CPlusPlusQT6Skel",
-      "branch": "main",
-      "ref": "ef90b5145d5f1a997ef83322edae9c2ae4c9e0f4",
-      "needed_by": [
-        "qt6"
-      ],
-      "_note": "frontends/qt6/CMakeLists.txt references 275 distinct paths under ../../libraries/qml/; all 275 resolve against this repo's qml/ directory.",
-      "mounts": [
-        {
-          "from": "qml",
-          "to": "libraries/qml"
-        }
-      ]
     }
   ],
   "frontends": {
     "nextjs": {
       "_note": "npm workspaces + packages/ for design tokens."
-    },
-    "qt6": {
-      "_note": "QML sources only; Qt itself comes from Conan."
     },
     "cli": {
       "_note": "Self-contained. Needs no mounts - all sources live under frontends/cli/src and every dependency (cpr, lua, sol2, nlohmann_json) comes from Conan."

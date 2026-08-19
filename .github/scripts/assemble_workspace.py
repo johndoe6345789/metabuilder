@@ -6,7 +6,6 @@ This repo now holds only three frontends, but their build configuration still
 assumes the old monorepo layout:
 
   * the root package.json declares npm workspaces under libraries/*
-  * frontends/qt6/CMakeLists.txt references ../../libraries/qml/*
   * frontends/nextjs/scripts/compile-tokens.mjs reads packages/*/styles/tokens.json
 
 This script clones the sibling repos named in .github/workspace.json and mounts
@@ -25,7 +24,6 @@ Typical use:
     python3 .github/scripts/assemble_workspace.py --frontend nextjs
 
     # Just the QML sources for the Qt6 frontend
-    python3 .github/scripts/assemble_workspace.py --frontend qt6
 
     # Reproduce an older build from the SHAs in workspace.json
     python3 .github/scripts/assemble_workspace.py --frontend nextjs --pinned
@@ -313,7 +311,7 @@ def main() -> int:
     target = parser.add_mutually_exclusive_group(required=True)
     target.add_argument(
         "--frontend",
-        choices=["nextjs", "qt6", "cli"],
+        choices=["nextjs", "cli"],
         help="Mount only what this frontend needs.",
     )
     target.add_argument(

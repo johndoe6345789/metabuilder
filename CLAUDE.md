@@ -58,7 +58,6 @@ documentation; anything else is reconstructed on demand rather than stored.
 | `libraries/mojo/` | Mojo compiler + language examples |
 | `libraries/cadquerywrapper/` | Parametric 3D CAD (Python/CadQuery) |
 | `libraries/pcbgenerator/` | PCB design automation (Python) |
-| `libraries/qml/` | Qt6 QML components |
 | `libraries/sparkos/` | Minimal Linux distro (C++/Qt6) |
 | `frontends/gameengine/` | SDL3 GPU C++ game engine — Quake 3 playable, **212 workflow steps** |
 | `frontends/pastebin/` | Code snippet sharing (Next.js + C++/Drogon + DBAL) |
@@ -69,7 +68,6 @@ documentation; anything else is reconstructed on demand rather than stored.
 | `frontends/packagerepo/` | Multi-format package registry (PyPI/Maven/Go/Cargo/Ruby/Nuget) |
 | `frontends/nextjs/` | Primary web UI (Next.js) |
 | `frontends/cli/` | C++ command-line interface |
-| `frontends/qt6/` | Desktop app (Qt6/QML) |
 | `frontends/dockerterminal/` | Docker Swarm management UI |
 | `frontends/storybook/` | Component documentation and testing |
 | `frontends/exploded-diagrams/` | Interactive 3D exploded diagrams |
@@ -239,7 +237,7 @@ Rate limits: Login 5/min, Register 3/min, List 100/min, Mutations 50/min.
 ## Architecture
 
 ```
-Frontends (CLI C++ | Qt6 QML | Next.js React)
+Frontends (CLI C++ | Next.js React)
     → Redux + redux-persist (IndexedDB, client-side state)
     → DBAL C++ daemon (REST API, 14 backends)
         → Database (SQLite dev | PostgreSQL prod)
@@ -342,7 +340,6 @@ packages and DBAL that no longer live here).
 |----------|--------|-------|
 | `nextjs.yml` | lint, typecheck, unit, build, E2E | Needs 11 repos / 13 mounts |
 | `cli.yml` | Conan + CMake, Release & Debug | Self-contained; no mounts |
-| `qt6.yml` | CMake + prebuilt Qt (aqtinstall) | **No Conan** — see below |
 | `docker.yml` | Publishes `metabuilder/{nextjs-app,cli}` to GHCR | Every push to main; multi-arch |
 | `bump-workspace-pins.yml` | Weekly pin refresh → PR | Manual dispatch too |
 
@@ -358,26 +355,8 @@ Dockerfile change). A stale base costs build minutes, never correctness — the
 app Dockerfiles re-run `npm install` / `conan install --build=missing`
 themselves — which is why the app pipeline never blocks on the base pipeline.
 
-**Qt6 does not use Conan in CI.** `conanfile.txt` requests `qt/6.7.3`, for which
-Conan has no prebuilt binary, so `--build=missing` would compile Qt from source
-— hours of runner time and enough disk to exhaust the runner. `qt6.yml` instead
-installs the same version prebuilt via `aqtinstall` (the approach
-`CPlusPlusQT6Skel/python/download_qt6/` already uses) and points CMake at it
-with `CMAKE_PREFIX_PATH`. `conanfile.txt` is left untouched and is still the
-source of truth for the **version** — the workflow parses `qt/<version>` out of
-it rather than hardcoding, so the two cannot drift. This works because
-`CMakeLists.txt` includes `conan_toolchain.cmake` with `OPTIONAL`.
-
-**Workspace assembly** — metabuilder follows a micro-repo model, so the npm
-workspaces under `libraries/*` and the QML paths in
-`frontends/qt6/CMakeLists.txt` point at directories that no longer exist here.
-`.github/workspace.json` records the repo → mount-path map (this is the
-mapping the reposplit README left as a TODO), and
-`.github/scripts/assemble_workspace.py` clones them into place.
-
 ```bash
 python3 .github/scripts/assemble_workspace.py --frontend nextjs   # 9 repos
-python3 .github/scripts/assemble_workspace.py --frontend qt6      # QML only
 python3 .github/scripts/assemble_workspace.py --all --dry-run
 python3 .github/scripts/bump_pins.py --check                      # pins behind?
 ```
@@ -522,7 +501,7 @@ Multi-version peer deps. React 18/19, TypeScript 5.9.3, Next.js 14-16, @reduxjs/
 | Merging Conan caches across images | A raw `COPY /root/.conan2` from multiple images clobbers the Conan 2 sqlite index. Use `conan cache save`/`conan cache restore` (Conan >= 2.1) — see `Dockerfile.devcontainer` |
 | `.github/workflows/gated-pipeline.yml` still references conan-deps | The GitHub Actions pipeline (separate from the Jenkins stack) still builds `base-conan-deps`/`Dockerfile.conan-deps`; update its Tier-2 matrix + verify loop to the split images before relying on GH CI |
 | New app Dockerfile uses selective `COPY` but misses transitive workspace deps | Frontend Dockerfiles `COPY` only the workspaces the app imports. `@metabuilder/types` is imported by `redux/slices` et al., and `types/project.ts` imports `../interfaces/requests`. So any Dockerfile that builds `redux/*` MUST `COPY types/ interfaces/ translations/` (the full set), not just `types/` — a partial set yields `TS2307: Cannot find module '@metabuilder/types'` / `'../interfaces/requests'`. Mirror the COPY set of `frontends/codegen` or `frontends/workflowui`. Also: app `name` in `deployment/cli/commands.json` MUST equal the compose service name (== `local` minus `deployment-`/`:latest`) or the per-app Jenkins loop fails with `Unknown or non-buildable service`. |
-| Building any frontend from a bare checkout | Won't work for `nextjs` or `qt6` — their dependencies are in sibling micro-repos. Run `.github/scripts/assemble_workspace.py --frontend <name>` first. Only `cli` is self-contained. |
+| Building any frontend from a bare checkout | Won't work for `nextjs` — its dependencies are in sibling micro-repos. Run `.github/scripts/assemble_workspace.py --frontend nextjs` first. `cli` is self-contained. |
 | `compile-tokens.mjs` fails silently | It runs on every `nextjs` build and reads `packages/{id}/styles/tokens.json`. When `packages/` isn't mounted it writes a `/* tokens.json not found */` stub and **exits 0** — you get a tokenless app, not a failed build. `assemble_workspace.py` verifies mounts are non-empty precisely because of this class of failure |
 | `typecheck.cjs` silently stops checking | It suppresses `TS2307`/`TS2339`/`TS18046`/`TS7006`/`TS2353` on the assumption that CI ran `npm run build --workspaces` first. Skip that build step and typecheck still passes — while no longer checking most of the app. Always build workspaces before typechecking |
 | `AutoMetabuilder` default branch is `master` | Every other sibling repo uses `main`. It's also a **subdirectory** mount: only `workflow-lib/` is `@metabuilder/workflow`; the rest is the workflowui app |
@@ -557,12 +536,7 @@ Multi-version peer deps. React 18/19, TypeScript 5.9.3, Next.js 14-16, @reduxjs/
 | npm workspace globs vs a hand-listed COPY | A glob like `libraries/redux/*` only matches directories that exist *at that layer*, so a selective `COPY libraries/x/package.json` silently shrinks the workspace set. Because `@metabuilder` is unpublished, the symptom is a registry 404 naming a package — pointing nowhere near the copy list. This bit four times in one change (types ×3, then redux-slices) before the fix became "copy `libraries/` wholesale" |
 | Peer ranges that predate a major | Reach for nested `overrides` (`{"eslint-plugin-x": {"eslint": "^10"}}`), not `--legacy-peer-deps`: the flag switches peer resolution off for the whole tree and would equally absorb a real incompatibility later. Derive the set by rule from `package.json` (every `eslint-plugin-*`/`eslint-config-*`) rather than listing them — pinning one surfaces the next. npm honours `overrides` only in the *root* package.json; those in a workspace are ignored |
 | GHCR package naming | This account nests packages under the publishing repo — `metabuilder/nextjs-app`, `deployment/base-apt`, `businessplanner/businessplanner-base-apt`. Follow that; a flat `metabuilder-base-apt` works but is the odd one out. This repo publishes exactly two: `metabuilder/nextjs-app` and `metabuilder/cli`. Packages published by Actions here come out **public**, so no cross-repo grant is needed — the pull from the deployment repo's packages just works |
-| A Qt frontend that only runs from its build tree | `SRCDIR` is a compile-time absolute path to the machine that compiled the binary, so anything read through it works forever in development and never works for a user. `frontends/qt6` read `packages/` and its QML through it, and `imports/QmlComponents` is a **symlink pointing outside the source tree**, which cannot be installed at all — so the first real package launched, showed nothing, and died with `module "QmlComponents" is not installed`. `src/ResourceRoot.hpp` resolves data relative to the executable now, and the layout lives in the `packaging` block of `cmake_config.json` (the declarative source of truth for this frontend), not in `generate_cmake.py`. Regenerate `CMakeLists.txt` after touching either |
-| "Did the app start?" is not a smoke test for a Qt app | A failed QML import leaves the process alive with the event loop running and no window, so a liveness check passes on a package that shows the user nothing. `qt6-release.yml` requires both: the process survives, **and** the log contains no `is not installed` / `QQmlApplicationEngine failed` |
-| Qt's base install has no webp plugin | Qt's own macOS Controls style draws its busy indicator from `busyindicator-dark.webp`, so without the `qtimageformats` module it fails at runtime while everything else looks completely fine. Install it alongside `qtshadertools` (needed by `QtQuick.Effects`) in every workflow that installs Qt — a PR job with a smaller module set than the release job is a PR that passes against a Qt the release cannot build with |
-| aqtinstall 3.3.0 cannot install Windows x86_64 Qt ≥ 6.11 | Qt changed the Windows desktop layout in 6.11.0 to per-compiler repositories (`qt6_6111/qt6_6111_msvc2022_64/`) and dropped the combined `qt6_6111/qt6_6111/` folder. aqt 3.3.0 — still the newest PyPI release — only knows the old shape, and fails with `Failed to download checksum for the file 'Updates.xml'`, which reads exactly like a flaky mirror. It is not: no mirror has a folder Qt never published, and retrying or switching mirrors cannot fix it. Windows ARM64, Linux and macOS kept the combined layout, so only one of five jobs fails, which makes it look even more like bad luck. Upstream fixed it in miurahr/aqtinstall#1000 without releasing it, so `.github/scripts/install_qt.py` pins that commit — drop the pin once a release above 3.3.0 exists |
 | `aqt list-qt` ignores your mirror | `install-qt` takes `-b/--base`, `list-qt` does not, so architecture discovery always hits download.qt.io no matter which mirror the download uses — mirror failover that covers only half the operation. `install_qt.py` reads the architectures from the repository listing itself (falling back to the combined repo's `Updates.xml`), which is both mirror-aware and layout-aware |
-| A Linux package that builds, uploads and publishes with no Qt in it | CMake strips the build-tree RPATH on install, so `ldd` on the freshly installed binary answers `libQt6Gui.so.6 => not found` — no path, nothing for a dependency-closure regex to match, so the closure copied **nothing** and the tarball shipped without Qt. The only symptom is `cannot open shared object file` on a user's machine. Run `ldd` with Qt on `LD_LIBRARY_PATH`, give the installed binary an `$ORIGIN/../lib` RPATH, and assert the Qt libraries are present before writing an archive |
 
 ### Critical Folders to Check Before Any Task
 

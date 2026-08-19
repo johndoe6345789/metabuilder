@@ -94,7 +94,6 @@ Tests are placed in the appropriate package directory:
 
 - `frontends/nextjs/*.test.ts` → `packages/nextjs_frontend/unit-tests/tests.json`
 - `frontends/cli/*.test.ts` → `packages/cli_frontend/unit-tests/tests.json`
-- `frontends/qt6/*.test.ts` → `packages/qt6_frontend/unit-tests/tests.json`
 - Others → `packages/[extracted_name]/unit-tests/tests.json`
 
 ## JSON Test Format

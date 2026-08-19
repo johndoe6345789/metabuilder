@@ -1,6 +1,0 @@
-{
-    "staticViews": [
-        "frontpage", "login", "dashboard", "profile",
-        "moderator", "admin", "god-panel", "supergod", "settings", "comments"
-    ]
-}

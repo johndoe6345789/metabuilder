@@ -131,9 +131,6 @@ export class TestMigrator {
     if (testFile.includes('frontends/cli')) {
       return 'cli_frontend';
     }
-    if (testFile.includes('frontends/qt6')) {
-      return 'qt6_frontend';
-    }
 
     // Fallback: extract from path
     const match = testFile.match(/frontends\/([^/]+)\//);

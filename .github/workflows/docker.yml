@@ -19,7 +19,6 @@ name: docker
 # nextjs additionally cannot build from a checkout of this repo alone: its
 # workspaces live in sibling micro-repos and are mounted by
 # .github/scripts/assemble_workspace.py before the build context is handed to
-# Docker. qt6 has no Dockerfile and so is not built here.
 
 on:
   push:
