@@ -169,3 +169,6 @@ e2e/playwright-report/
 /redux/
 /dbal/
 /packages/
+/act
+/act_Linux_x86_64.tar.gz
+/act_runner-*
