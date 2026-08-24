@@ -2,10 +2,12 @@
 
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
+import type { CSSProperties } from 'react'
 import {
   getSidebarItems,
   getBottomSidebarItems,
   getLevelLabel,
+  getLevelColor,
 } from '@/lib/packages/navigation'
 import type { PackageNavItem } from '@/lib/packages/navigation'
 import { tenantGodPanelPath } from '@/lib/tenant/workspace-paths'
@@ -55,14 +57,18 @@ export function Sidebar({
   const bottomItems = getBottomSidebarItems(userLevel)
   const levelLabel = getLevelLabel(userLevel)
   const navigable = packages.filter(p => p.showInNav && p.level <= userLevel)
+  const levelColor = getLevelColor(userLevel)
   const itemHref = (path: string) =>
     path === '/god-panel' ? tenantGodPanelPath(tenantId) : path
 
   return (
-    <aside className={s.paper}>
+    <aside
+      className={s.paper}
+      style={{ '--level-accent': levelColor } as CSSProperties}
+    >
       <div className={s.userHeader}>
         <div className={s.userRow}>
-          <div className={s.icon}>{username.charAt(0).toUpperCase()}</div>
+          <div className={s.avatar}>{username.charAt(0).toUpperCase()}</div>
           <div className={s.userText}>
             <div className={s.userName}>{username}</div>
             <div className={s.userRole}>{role}</div>

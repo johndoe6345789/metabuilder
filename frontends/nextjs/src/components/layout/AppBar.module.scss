@@ -1,215 +1,546 @@
+// Top app bar.
+//
+// IMPORTANT: every responsive rule below is a @container query, resolved
+// against `.appBarSlot` (AppShell.module.scss), which sets
+// `container-type: inline-size`. The bar sits beside a 288px sidebar, so the
+// viewport width is NOT the width the bar gets — @media here would collapse
+// things at the wrong moments (and did: the brand slid under the level chip).
+
 .root {
-  min-height: 56px;
+  position: relative;
+  min-height: 60px;
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
   column-gap: 12px;
-  row-gap: 4px;
-  max-width: 100vw;
+  max-width: 100%;
   overflow-x: clip;
   z-index: 1200;
-  padding: 4px 16px;
+  padding: 6px 16px;
   border-bottom: 1px solid
-    color-mix(in srgb, var(--mat-sys-outline-variant) 72%, transparent);
-  background: color-mix(in srgb, var(--mat-sys-surface) 92%, transparent);
+    color-mix(in srgb, var(--mat-sys-outline-variant) 60%, transparent);
+  background:
+    linear-gradient(
+      120deg,
+      color-mix(in srgb, var(--level-accent, #7c3aed) 9%, transparent) 0%,
+      transparent 42%
+    ),
+    color-mix(in srgb, var(--mat-sys-surface) 88%, transparent);
   color: var(--mat-sys-on-surface);
   box-shadow: var(--mat-sys-elevation-level1);
-  backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px) saturate(140%);
 }
 
-.menuButton {
+// Accent hairline tinted by the user's level — the bar's one loud moment.
+.root::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 -1px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--level-accent, #7c3aed),
+    color-mix(in srgb, var(--level-accent, #7c3aed) 35%, transparent) 42%,
+    transparent 78%
+  );
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+// ── Zones ────────────────────────────────────────────────────────────────
+// Left may shrink (and ellipsize); the right-hand controls never do.
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.levelNav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
   flex: 0 0 auto;
-  margin-right: 4px;
+  margin-inline: auto;
+  padding: 3px;
+  border-radius: 999px;
+  border: 1px solid
+    color-mix(in srgb, var(--mat-sys-outline-variant) 55%, transparent);
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 4%, transparent);
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+// ── Buttons ──────────────────────────────────────────────────────────────
+
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    background 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease;
+
+  &:hover {
+    background: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
+    border-color: color-mix(in srgb, var(--mat-sys-primary) 22%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 2px;
+  }
 }
 
 .menuIcon {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
+  line-height: 1;
 }
+
+.navButton {
+  padding: 7px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  white-space: nowrap;
+  opacity: 0.72;
+  cursor: pointer;
+  transition:
+    background 150ms ease,
+    opacity 150ms ease,
+    color 150ms ease;
+
+  &:hover {
+    opacity: 1;
+    background: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 1px;
+  }
+}
+
+.navButtonActive {
+  opacity: 1;
+  color: var(--mat-sys-on-primary);
+  background: linear-gradient(
+    135deg,
+    var(--level-accent, #7c3aed),
+    color-mix(in srgb, var(--level-accent, #7c3aed) 72%, #0ea5e9)
+  );
+  box-shadow: 0 4px 12px
+    color-mix(in srgb, var(--level-accent, #7c3aed) 32%, transparent);
+
+  &:hover {
+    background: linear-gradient(
+      135deg,
+      var(--level-accent, #7c3aed),
+      color-mix(in srgb, var(--level-accent, #7c3aed) 72%, #0ea5e9)
+    );
+  }
+}
+
+.primaryButton,
+.ghostButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: 0 0 auto;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background 150ms ease,
+    border-color 150ms ease,
+    transform 150ms ease;
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 2px;
+  }
+}
+
+.primaryButton {
+  border: 0;
+  color: var(--mat-sys-on-primary);
+  background: linear-gradient(
+    135deg,
+    var(--mat-sys-primary),
+    color-mix(in srgb, var(--mat-sys-primary) 70%, #0ea5e9)
+  );
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+}
+
+.ghostButton {
+  border: 1px solid
+    color-mix(in srgb, var(--mat-sys-outline-variant) 70%, transparent);
+  background: transparent;
+  color: inherit;
+
+  &:hover {
+    background: color-mix(in srgb, var(--mat-sys-primary) 9%, transparent);
+    border-color: color-mix(in srgb, var(--mat-sys-primary) 30%, transparent);
+  }
+}
+
+.ghostButtonIcon {
+  display: none;
+  flex-shrink: 0;
+}
+
+// ── Brand ────────────────────────────────────────────────────────────────
 
 .brand {
   display: flex;
   align-items: center;
   flex: 0 1 auto;
-  gap: 9px;
+  gap: 10px;
   min-width: 0;
   padding: 4px 8px;
-  border-radius: 16px;
+  border-radius: 14px;
   color: inherit;
   text-decoration: none;
 
   &:hover {
     background: color-mix(in srgb, var(--mat-sys-primary) 8%, transparent);
   }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 2px;
+  }
 }
 
+.brandText {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  min-width: 0;
+}
+
+// m3's `noWrap` is only `white-space: nowrap`, so long titles used to spill
+// out and slide under the level chip. Truncate for real.
 .brandTitle {
-  font-weight: 700;
-  letter-spacing: 0;
+  font-family: var(--mat-sys-heading-font, 'Space Grotesk', sans-serif);
+  font-size: 1.06rem;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   min-width: 0;
 }
 
 .version {
-  align-self: flex-end;
-  margin-bottom: 3px;
-  font-size: 0.88rem;
-  font-weight: 650;
-  letter-spacing: 0;
-  opacity: 0.45;
+  flex: 0 0 auto;
+  font-size: 0.74rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+  opacity: 0.6;
 }
 
 .levelChip {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
   height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
   color: #fff;
-  font-size: 0.84rem;
-  font-weight: 750;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  background: linear-gradient(
+    135deg,
+    var(--level-accent, #7c3aed),
+    color-mix(in srgb, var(--level-accent, #7c3aed) 68%, #0ea5e9)
+  );
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.2),
+    0 3px 10px color-mix(in srgb, var(--level-accent, #7c3aed) 34%, transparent);
 }
 
-.dbalStatus,
-.levelNav,
-.authControls {
-  display: flex;
-  align-items: center;
+.levelChipShort {
+  display: none;
 }
+
+// ── DBAL status ──────────────────────────────────────────────────────────
 
 .dbalStatus {
-  gap: 4px;
-  margin-left: 4px;
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 7px;
+  height: 30px;
+  padding: 0 11px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--dbal-color) 35%, transparent);
+  background: color-mix(in srgb, var(--dbal-color) 12%, transparent);
+  color: color-mix(in srgb, var(--dbal-color) 82%, var(--mat-sys-on-surface));
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.online {
+  --dbal-color: #22c55e;
+}
+
+.offline {
+  --dbal-color: #ef4444;
+}
+
+.checking {
+  --dbal-color: #f59e0b;
 }
 
 .dbalDot {
   width: 8px;
   height: 8px;
-  border-radius: 10px;
-}
-
-.dbalText,
-.userLabel {
-  font-size: 0.95rem;
-  font-weight: 650;
-  opacity: 0.85;
-}
-
-.textButton,
-.navButton {
-  color: inherit;
+  flex: 0 0 auto;
   border-radius: 999px;
-  text-transform: none;
+  background: var(--dbal-color);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--dbal-color) 60%, transparent);
 }
 
-.textButton {
-  min-width: auto;
+.online .dbalDot {
+  animation: dbalPulse 2.4s ease-out infinite;
 }
 
-.spacer {
-  flex: 1 1 auto;
-  min-width: 0;
+.checking .dbalDot {
+  animation: dbalBlink 1s ease-in-out infinite;
 }
 
-.smallSpacer {
-  width: 8px;
+@keyframes dbalPulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--dbal-color) 55%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 6px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
 }
 
-.levelNav {
-  gap: 4px;
+@keyframes dbalBlink {
+  50% {
+    opacity: 0.35;
+  }
 }
 
-.navButton {
-  min-height: 36px;
-  font-size: 0.95rem;
-  font-weight: 700;
-  opacity: 0.85;
+@media (prefers-reduced-motion: reduce) {
+  .online .dbalDot,
+  .checking .dbalDot {
+    animation: none;
+  }
 }
 
-.navButton:hover {
-  opacity: 1;
-  background: color-mix(in srgb, var(--mat-sys-primary) 8%, transparent);
+// ── Auth ─────────────────────────────────────────────────────────────────
+
+.rule {
+  width: 1px;
+  height: 24px;
+  flex: 0 0 auto;
+  background: color-mix(in srgb, var(--mat-sys-outline-variant) 70%, transparent);
 }
 
 .authControls {
+  display: flex;
+  align-items: center;
   flex: 0 0 auto;
   gap: 8px;
 }
 
-@media (max-width: 599px) {
-  .userLabel {
+.userChip {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 9px;
+  max-width: 190px;
+  padding: 3px 12px 3px 3px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 5%, transparent);
+}
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 0.86rem;
+  font-weight: 800;
+  background: linear-gradient(
+    135deg,
+    var(--level-accent, #7c3aed),
+    color-mix(in srgb, var(--level-accent, #7c3aed) 60%, #0ea5e9)
+  );
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.22);
+}
+
+.userText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.15;
+}
+
+.userName {
+  font-size: 0.88rem;
+  font-weight: 750;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.userRole {
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// ── Responsive ladder ────────────────────────────────────────────────────
+// Widths below are the BAR's width, not the window's. The ladder is ordered
+// least- to most-missed: each step drops the cheapest remaining thing.
+//
+// Note this reads better than it sounds: when the sidebar is OPEN the bar is
+// narrow, but the sidebar is already showing the user card and the nav — so
+// the things we drop here are exactly the ones being duplicated. Close the
+// sidebar and the bar gets wide again and takes them back.
+
+// 1. Version chip — decorative.
+@container (max-width: 1080px) {
+  .version {
     display: none;
   }
 }
 
-@media (max-width: 720px) {
-  .root {
-    column-gap: 8px;
+// 2. Level nav — duplicated by the sidebar's Dashboard/Admin/God entries.
+@container (max-width: 940px) {
+  .levelNav {
+    display: none;
+  }
+}
+
+// 3. Role line under the username.
+@container (max-width: 780px) {
+  .userRole {
+    display: none;
   }
 
-  .version,
+  .userChip {
+    max-width: 150px;
+  }
+}
+
+// 4. Username text, DBAL label, long level label. Keeps the wordmark whole
+//    rather than letting it ellipsize to "Met…".
+@container (max-width: 620px) {
+  .root {
+    column-gap: 8px;
+    padding-inline: 12px;
+  }
+
   .dbalText {
     display: none;
   }
 
-  .brand {
-    max-width: 170px;
-    padding-inline: 6px;
-  }
-
-  .levelChip {
-    padding-inline: 10px;
-  }
-
   .dbalStatus {
-    margin-left: 0;
+    padding-inline: 9px;
+  }
+
+  .levelChipLong {
+    display: none;
+  }
+
+  .levelChipShort {
+    display: inline;
+  }
+
+  .levelChip {
+    padding-inline: 9px;
+  }
+
+  .userText,
+  .rule {
+    display: none;
+  }
+
+  .userChip {
+    max-width: none;
+    padding: 3px;
+    background: transparent;
   }
 }
 
-@media (max-width: 480px) {
-  .brand {
-    max-width: 56px;
+// 5. Logout collapses to its icon.
+@container (max-width: 500px) {
+  .ghostButtonLabel {
+    display: none;
   }
 
+  .ghostButtonIcon {
+    display: block;
+  }
+
+  .ghostButton {
+    padding: 9px;
+  }
+}
+
+// 6. Last resort: logo only.
+@container (max-width: 400px) {
   .brandTitle,
   .levelChip {
     display: none;
   }
-}
-
-@container (max-width: 460px) {
-  .root {
-    column-gap: 6px;
-    padding-inline: 10px;
-  }
-
-  .menuButton {
-    margin-right: 0;
-  }
 
   .brand {
-    max-width: 48px;
     padding-inline: 4px;
-  }
-
-  .brandTitle,
-  .version,
-  .levelChip,
-  .dbalStatus,
-  .userLabel {
-    display: none;
-  }
-
-  .smallSpacer {
-    width: 0;
-  }
-
-  .textButton {
-    min-width: 0;
-    padding-inline: 10px;
-  }
-
-  .authControls {
-    gap: 0;
-  }
-}
-
-@media (max-width: 899px) {
-  .navButton {
-    display: none;
   }
 }

@@ -24,6 +24,23 @@
     var(--mat-sys-elevation-level3),
     inset -1px 0 color-mix(in srgb, var(--sidebar-fg) 5%, transparent);
 
+  // Ambient level-tinted glow behind the user header — stops the rail
+  // reading as a flat grey slab.
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -40% -30% auto -30%;
+    height: 260px;
+    background: radial-gradient(
+      60% 60% at 50% 50%,
+      color-mix(in srgb, var(--level-accent, #7c3aed) 26%, transparent),
+      transparent 70%
+    );
+    filter: blur(26px);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
   @media (max-width: 767px) {
     height: 100%;
     box-shadow: 4px 0 24px oklch(0 0 0 / 0.18);
@@ -34,10 +51,11 @@
   padding: 22px 18px 18px;
   border-bottom: 1px solid var(--sidebar-border);
   flex-shrink: 0;
-  background: color-mix(
-    in srgb,
-    var(--mat-sys-primary) 5%,
-    transparent
+  position: relative;
+  background: linear-gradient(
+    150deg,
+    color-mix(in srgb, var(--level-accent, #7c3aed) 14%, transparent),
+    transparent 72%
   );
 }
 
@@ -45,7 +63,28 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #fff;
+  background: linear-gradient(
+    135deg,
+    var(--level-accent, #7c3aed),
+    color-mix(in srgb, var(--level-accent, #7c3aed) 58%, #0ea5e9)
+  );
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.22),
+    0 6px 16px color-mix(in srgb, var(--level-accent, #7c3aed) 34%, transparent);
 }
 
 .userText {
@@ -74,9 +113,34 @@
   border-radius: 99px;
   font-size: 0.88rem;
   font-weight: 750;
-  background: var(--mat-sys-primary);
-  color: var(--mat-sys-on-primary);
+  background: linear-gradient(
+    135deg,
+    var(--level-accent, #7c3aed),
+    color-mix(in srgb, var(--level-accent, #7c3aed) 66%, #0ea5e9)
+  );
+  color: #fff;
   letter-spacing: 0.04em;
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.2),
+    0 3px 10px color-mix(in srgb, var(--level-accent, #7c3aed) 32%, transparent);
+}
+
+.navLabel,
+.sectionLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--sidebar-fg) 16%, transparent),
+      transparent
+    );
+  }
 }
 
 .navLabel {
@@ -89,6 +153,7 @@
 }
 
 .navList {
+  position: relative;
   flex: 1;
   overflow-y: auto;
   padding: 6px 12px 12px;
@@ -142,17 +207,17 @@
   }
 
   &.active {
-    background: color-mix(
-      in srgb,
-      var(--sidebar-active-bg) 88%,
-      var(--mat-sys-primary) 12%
+    background: linear-gradient(
+      100deg,
+      color-mix(in srgb, var(--level-accent, #7c3aed) 22%, transparent),
+      color-mix(in srgb, var(--sidebar-active-bg) 88%, transparent) 78%
     );
     color: var(--sidebar-fg);
-    border-color: color-mix(in srgb, var(--mat-sys-primary) 24%, transparent);
+    border-color: color-mix(in srgb, var(--level-accent, #7c3aed) 30%, transparent);
     font-weight: 750;
     box-shadow:
-      inset 3px 0 var(--mat-sys-primary),
-      0 8px 20px color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
+      inset 3px 0 var(--level-accent, #7c3aed),
+      0 8px 20px color-mix(in srgb, var(--level-accent, #7c3aed) 14%, transparent);
   }
 }
 
@@ -179,8 +244,13 @@
   }
 
   .active & {
-    background: var(--mat-sys-primary);
-    color: var(--mat-sys-on-primary);
+    background: linear-gradient(
+      135deg,
+      var(--level-accent, #7c3aed),
+      color-mix(in srgb, var(--level-accent, #7c3aed) 62%, #0ea5e9)
+    );
+    color: #fff;
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.2);
   }
 }
 

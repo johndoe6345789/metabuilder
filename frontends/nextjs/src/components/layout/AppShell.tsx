@@ -65,11 +65,16 @@ export function AppShell({ children }: AppShellProps) {
     setSidebarOpen(prev => !prev)
   }, [])
 
+  // The grid column must track whether the Sidebar actually renders, not just
+  // whether it is toggled open -- logged out it renders nothing, and reserving
+  // the column anyway left a 288px dead gap beside every public page.
+  const showSidebar = auth.isAuthenticated && sidebarOpen
+
   return (
-    <div className={`${s.shell} ${sidebarOpen ? s.sidebarOpen : ''}`}>
+    <div className={`${s.shell} ${showSidebar ? s.sidebarOpen : ''}`}>
       <PackageStyleLoader packages={LEVEL_PACKAGES[userLevel] ?? []} />
 
-      {auth.isAuthenticated && sidebarOpen && (
+      {showSidebar && (
         <div className={s.sidebarSlot}>
           <Sidebar
             userLevel={userLevel}

@@ -7,15 +7,20 @@
  * - Level navigation buttons (visible based on user level)
  * - Theme toggle
  * - Auth controls (login/logout)
+ *
+ * Responsiveness is driven by @container queries against `.appBarSlot`
+ * (AppShell.module.scss), not the viewport — the bar shares its row with the
+ * sidebar, so window width says nothing about the space it actually has.
  */
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import type { CSSProperties } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { AppBar as MuiAppBar, Typography, Button, Chip, IconButton } from '@/m3'
 import { getLevelColor } from '@/lib/packages/navigation'
 import { Logo } from '@/components/brand/Logo'
+import { SunIcon, MoonIcon, LogoutIcon } from './AppBarIcons'
 import { tenantGodPanelPath } from '@/lib/tenant/workspace-paths'
 import s from './AppBar.module.scss'
 
@@ -41,6 +46,12 @@ const levelNavItems = [
   { label: 'Super God', level: 5, path: '/super-god-panel' },
 ]
 
+function isActivePath(pathname: string, path: string): boolean {
+  return path === '/'
+    ? pathname === '/'
+    : pathname === path || pathname.startsWith(path + '/')
+}
+
 export function AppBarComponent({
   username,
   role,
@@ -54,6 +65,7 @@ export function AppBarComponent({
   dbalConnected = false,
 }: AppBarProps) {
   const router = useRouter()
+  const pathname = usePathname()
   const [checkingDbal, setCheckingDbal] = useState(true)
   const [dbalStatus, setDbalStatus] = useState(dbalConnected)
 
@@ -77,125 +89,137 @@ export function AppBarComponent({
       ? { ...item, path: tenantGodPanelPath(tenantId) }
       : item
   )
+  const visibleLevelItems = levelItems.filter(item =>
+    isAuthenticated ? item.level <= userLevel : item.level <= 1
+  )
+
+  const dbalState = checkingDbal ? 'checking' : dbalStatus ? 'online' : 'offline'
+  const dbalTitle = `DBAL ${dbalState}`
+  const initial = (username ?? '?').charAt(0).toUpperCase()
 
   return (
-    <MuiAppBar position="sticky" className={s.root}>
-      {/* Menu toggle (for mobile) */}
-      {isAuthenticated && onToggleSidebar != null && (
-        <IconButton
-          color="inherit"
-          onClick={onToggleSidebar}
-          className={s.menuButton}
-          aria-label="Toggle sidebar"
-        >
-          <span className={s.menuIcon}>&#9776;</span>
-        </IconButton>
-      )}
+    <header
+      role="banner"
+      className={s.root}
+      style={{ '--level-accent': levelColor } as CSSProperties}
+    >
+      {/* ── Left zone: menu, brand, level badge ─────────────────────── */}
+      <div className={s.left}>
+        {isAuthenticated && onToggleSidebar != null && (
+          <button
+            type="button"
+            onClick={onToggleSidebar}
+            className={s.iconButton}
+            aria-label="Toggle sidebar"
+          >
+            <span className={s.menuIcon} aria-hidden="true">
+              &#9776;
+            </span>
+          </button>
+        )}
 
-      {/* Branding */}
-      <Link href="/" className={s.brand}>
-        <Logo size={32} />
-        <Typography variant="h6" noWrap className={s.brandTitle}>
-          MetaBuilder
-        </Typography>
-        <Typography variant="caption" noWrap className={s.version}>
-          v{process.env.NEXT_PUBLIC_APP_VERSION ?? '0.1.0'}
-        </Typography>
-      </Link>
+        <Link href="/" className={s.brand}>
+          <Logo size={30} />
+          <span className={s.brandText}>
+            <span className={s.brandTitle}>MetaBuilder</span>
+            <span className={s.version}>
+              v{process.env.NEXT_PUBLIC_APP_VERSION ?? '0.1.0'}
+            </span>
+          </span>
+        </Link>
 
-      {/* Level badge */}
-      {isAuthenticated && (
-        <Chip
-          label={`Level ${userLevel}`}
-          size="small"
-          className={s.levelChip}
-          style={{ backgroundColor: levelColor }}
-        />
-      )}
-
-      {/* DBAL connection status */}
-      <div className={s.dbalStatus}>
-        <div
-          className={s.dbalDot}
-          style={{
-            backgroundColor: checkingDbal
-              ? '#ff9800'
-              : dbalStatus
-                ? '#4caf50'
-                : '#f44336',
-          }}
-        />
-        <Typography variant="caption" className={s.dbalText}>
-          DBAL
-        </Typography>
+        {isAuthenticated && (
+          <span className={s.levelChip} title={`Level ${userLevel}`}>
+            <span className={s.levelChipLong}>Level {userLevel}</span>
+            <span className={s.levelChipShort}>L{userLevel}</span>
+          </span>
+        )}
       </div>
 
-      {/* Theme toggle */}
-      {onToggleTheme != null && (
-        <Button
-          variant="text"
-          size="small"
-          onClick={onToggleTheme}
-          className={s.textButton}
-        >
-          {themeMode === 'dark' ? 'Light' : 'Dark'}
-        </Button>
-      )}
-
-      {/* Spacer */}
-      <div className={s.spacer} />
-
-      {/* Level navigation (mirrors Qt6 Repeater) */}
-      <div className={s.levelNav}>
-        {levelItems
-          .filter(item =>
-            isAuthenticated ? item.level <= userLevel : item.level <= 1
-          )
-          .map(item => (
-            <Button
+      {/* ── Centre zone: level navigation (segmented) ───────────────── */}
+      {visibleLevelItems.length > 0 && (
+        <nav className={s.levelNav} aria-label="Level navigation">
+          {visibleLevelItems.map(item => (
+            <button
               key={item.path}
-              variant="text"
-              size="small"
+              type="button"
               onClick={() => {
                 router.push(item.path)
               }}
-              className={s.navButton}
+              className={`${s.navButton} ${
+                isActivePath(pathname, item.path) ? s.navButtonActive : ''
+              }`}
+              aria-current={
+                isActivePath(pathname, item.path) ? 'page' : undefined
+              }
             >
               {item.label}
-            </Button>
+            </button>
           ))}
-      </div>
-
-      {/* Spacer */}
-      <div className={s.smallSpacer} />
-
-      {/* Auth controls */}
-      {!isAuthenticated ? (
-        <Button
-          variant="contained"
-          size="small"
-          onClick={() => {
-            router.push('/login')
-          }}
-          className={s.textButton}
-        >
-          Login
-        </Button>
-      ) : (
-        <div className={s.authControls}>
-          <Typography variant="body2" className={s.userLabel}>
-            {username} ({role})
-          </Typography>
-          <Button
-            variant="text"
-            size="small"
-            onClick={onLogout}
-            className={s.textButton}
-          >
-            Logout
-          </Button>
-        </div>
+        </nav>
       )}
-    </MuiAppBar>
+
+      {/* ── Right zone: status, theme, auth ─────────────────────────── */}
+      <div className={s.right}>
+        <span
+          className={`${s.dbalStatus} ${s[dbalState]}`}
+          title={dbalTitle}
+          aria-label={dbalTitle}
+        >
+          <span className={s.dbalDot} aria-hidden="true" />
+          <span className={s.dbalText}>DBAL</span>
+        </span>
+
+        {onToggleTheme != null && (
+          <button
+            type="button"
+            onClick={onToggleTheme}
+            className={s.iconButton}
+            title={`Switch to ${themeMode === 'dark' ? 'light' : 'dark'} theme`}
+            aria-label={`Switch to ${
+              themeMode === 'dark' ? 'light' : 'dark'
+            } theme`}
+          >
+            {themeMode === 'dark' ? <SunIcon /> : <MoonIcon />}
+          </button>
+        )}
+
+        <span className={s.rule} aria-hidden="true" />
+
+        {!isAuthenticated ? (
+          <button
+            type="button"
+            onClick={() => {
+              router.push('/login')
+            }}
+            className={s.primaryButton}
+          >
+            Login
+          </button>
+        ) : (
+          <div className={s.authControls}>
+            <span className={s.userChip} title={`${username} (${role})`}>
+              <span className={s.avatar} aria-hidden="true">
+                {initial}
+              </span>
+              <span className={s.userText}>
+                <span className={s.userName}>{username}</span>
+                <span className={s.userRole}>{role}</span>
+              </span>
+            </span>
+            <button
+              type="button"
+              onClick={onLogout}
+              className={s.ghostButton}
+              title="Logout"
+              aria-label="Logout"
+            >
+              <span className={s.ghostButtonLabel}>Logout</span>
+              <LogoutIcon className={s.ghostButtonIcon} />
+            </button>
+          </div>
+        )}
+      </div>
+    </header>
   )
 }
