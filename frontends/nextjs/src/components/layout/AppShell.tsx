@@ -29,6 +29,10 @@ import {
 import { normalizeTenantId } from '@/lib/tenant/workspace-paths'
 import s from './AppShell.module.scss'
 
+/** Below this the sidebar is an overlay drawer rather than a column.
+ *  Kept in sync with the same breakpoint in AppShell.module.scss. */
+const NARROW = '(max-width: 899px)'
+
 export interface AppShellProps {
   children: React.ReactNode
 }
@@ -38,9 +42,11 @@ export function AppShell({ children }: AppShellProps) {
   const { toggleTheme, resolvedMode } = useTheme()
   const router = useRouter()
   const params = useParams<{ tenantSlug?: string }>()
-  const [sidebarOpen, setSidebarOpen] = useState(
-    typeof window !== 'undefined' ? window.innerWidth >= 768 : true
-  )
+  // Starts closed so the server and the first client render agree; the
+  // effect below opens it on wide viewports. Reading window.innerWidth in
+  // the initial state instead made narrow clients hydrate against a server
+  // render that had assumed `true`.
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const [dbalOffline, setDbalOffline] = useState(false)
   const [packages, setPackages] = useState<PackageNavItem[]>([])
 
@@ -56,6 +62,24 @@ export function AppShell({ children }: AppShellProps) {
     void fetchNavigablePackages().then(setPackages)
   }, [])
 
+  // The open/closed state used to be decided once, at mount. Resizing the
+  // window never re-ran it, so loading wide and then narrowing left a 288px
+  // sidebar pinned over a window that no longer had room for it.
+  useEffect(() => {
+    const mq = window.matchMedia(NARROW)
+    const apply = (narrow: boolean) => {
+      setSidebarOpen(!narrow)
+    }
+    apply(mq.matches)
+    const onChange = (event: MediaQueryListEvent) => {
+      apply(event.matches)
+    }
+    mq.addEventListener('change', onChange)
+    return () => {
+      mq.removeEventListener('change', onChange)
+    }
+  }, [])
+
   const handleLogout = useCallback(async () => {
     await auth.logout()
     router.push('/')
@@ -63,6 +87,15 @@ export function AppShell({ children }: AppShellProps) {
 
   const handleToggleSidebar = useCallback(() => {
     setSidebarOpen(prev => !prev)
+  }, [])
+
+  // Checked at click time rather than read from state, so following a link
+  // always closes the drawer on a narrow viewport even if the breakpoint
+  // listener never fired.
+  const handleNavigate = useCallback(() => {
+    if (window.matchMedia(NARROW).matches) {
+      setSidebarOpen(false)
+    }
   }, [])
 
   // The grid column must track whether the Sidebar actually renders, not just
@@ -74,6 +107,18 @@ export function AppShell({ children }: AppShellProps) {
     <div className={`${s.shell} ${showSidebar ? s.sidebarOpen : ''}`}>
       <PackageStyleLoader packages={LEVEL_PACKAGES[userLevel] ?? []} />
 
+      {/* Rendered whenever the sidebar is; CSS hides it above the breakpoint.
+          Deciding that here from React state instead would leave the drawer
+          uncovered if a breakpoint change were ever missed. */}
+      {showSidebar && (
+        <button
+          type="button"
+          className={s.backdrop}
+          aria-label="Close sidebar"
+          onClick={handleToggleSidebar}
+        />
+      )}
+
       {showSidebar && (
         <div className={s.sidebarSlot}>
           <Sidebar
@@ -82,6 +127,7 @@ export function AppShell({ children }: AppShellProps) {
             username={username}
             role={role}
             packages={packages}
+            onNavigate={handleNavigate}
           />
         </div>
       )}

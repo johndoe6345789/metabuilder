@@ -43,6 +43,9 @@ export interface SidebarProps {
   username: string
   role: string
   packages?: PackageNavItem[]
+  /** Set on narrow viewports, where the sidebar is an overlay that has to
+   *  close itself after a link is followed. */
+  onNavigate?: () => void
 }
 
 export function Sidebar({
@@ -51,6 +54,7 @@ export function Sidebar({
   username,
   role,
   packages = [],
+  onNavigate,
 }: SidebarProps) {
   const pathname = usePathname()
   const staticItems = getSidebarItems(userLevel)
@@ -90,6 +94,7 @@ export function Sidebar({
               key={item.id}
               href={href}
               className={`${s.navItem} ${active ? s.active : ''}`}
+              onClick={onNavigate}
             >
               <span className={s.icon}>{iconChar(item.icon)}</span>
               {item.label}
@@ -110,6 +115,7 @@ export function Sidebar({
                   key={pkg.packageId}
                   href={path}
                   className={`${s.navItem} ${active ? s.active : ''}`}
+                  onClick={onNavigate}
                 >
                   <span className={s.icon}>
                     {pkg.icon.charAt(0).toUpperCase()}
@@ -132,6 +138,7 @@ export function Sidebar({
               key={item.id}
               href={href}
               className={`${s.navItem} ${active ? s.active : ''}`}
+              onClick={onNavigate}
             >
               <span className={s.icon}>{iconChar(item.icon)}</span>
               {item.label}

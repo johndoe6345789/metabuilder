@@ -20,6 +20,43 @@
   grid-template-columns: var(--app-sidebar-width) minmax(0, 1fr);
 }
 
+// Below this width the sidebar stops being a column and floats over the
+// content instead. As a fixed 288px column it was taking more than half of a
+// narrow window, squeezing the page into a sliver.
+@media (max-width: 899px) {
+  .sidebarOpen {
+    grid-template-columns: 0 minmax(0, 1fr);
+  }
+
+  .sidebarSlot {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: min(var(--app-sidebar-width), 86vw);
+    box-shadow: 4px 0 28px rgb(0 0 0 / 0.4);
+  }
+}
+
+// Sits above the page but below the drawer, so tapping the page closes it.
+// Only exists below the breakpoint -- above it the sidebar is a column and
+// there is nothing to dismiss.
+.backdrop {
+  display: none;
+}
+
+@media (max-width: 899px) {
+  .backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 1250;
+    padding: 0;
+    border: 0;
+    cursor: pointer;
+    background: rgb(0 0 0 / 0.45);
+    backdrop-filter: blur(2px);
+  }
+}
+
 .sidebarSlot {
   grid-row: 1 / 4;
   grid-column: 1;

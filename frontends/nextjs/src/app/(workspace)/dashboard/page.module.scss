@@ -34,6 +34,10 @@
 
 .profileInfo {
   flex: 1;
+  // Without this a flex item will not shrink below its content's intrinsic
+  // width, so a long email pushed this wider than the card and the badges
+  // were clipped off the right edge.
+  min-width: 0;
 }
 
 .profileName {
@@ -47,6 +51,7 @@
   font-size: 0.8125rem;
   color: var(--muted-foreground);
   margin: 0 0 8px;
+  overflow-wrap: anywhere;
 }
 
 .profileBadges {
