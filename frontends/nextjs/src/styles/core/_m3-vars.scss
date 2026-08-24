@@ -11,6 +11,17 @@
   --mat-sys-surface-container: var(--muted);
   --mat-sys-surface-container-high: var(--muted);
   --mat-sys-surface-container-low: var(--background);
+  // These four were never aliased, so every consumer fell through to its own
+  // hardcoded fallback -- in the God Panel builder that meant a #0d1117 pane
+  // behind --mat-sys-on-surface text, which in light theme is near-black on
+  // near-black. Files that use them without a fallback (editor,
+  // notifications, workflow-editor atoms) got an invalid value instead.
+  // -lowest pairs with --card so it always contrasts with --card-foreground,
+  // which is what --mat-sys-on-surface resolves to.
+  --mat-sys-surface-container-lowest: var(--card);
+  --mat-sys-surface-container-highest: var(--muted);
+  --mat-sys-surface-bright: var(--card);
+  --mat-sys-surface-dim: var(--muted);
   --mat-sys-surface-variant: var(--muted);
   --mat-sys-on-surface-variant: var(--muted-foreground);
 
