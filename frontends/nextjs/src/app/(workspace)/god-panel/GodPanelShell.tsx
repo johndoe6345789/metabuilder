@@ -10,8 +10,8 @@ import { WALK_ME_STEPS } from './tabs/god-panel-config'
 import { useGodPanelState } from './use-god-panel-state'
 import s from './page.module.scss'
 
-export function GodPanelShell() {
-  const state = useGodPanelState()
+export function GodPanelShell({ activeTabId }: { activeTabId: string }) {
+  const state = useGodPanelState(activeTabId)
 
   return (
     <div className={s.root}>
@@ -30,7 +30,7 @@ export function GodPanelShell() {
       <GodPanelTabNav
         tabs={state.tabs}
         activeTab={state.activeTab}
-        onSelectTab={state.setActiveTab}
+        tabHref={state.tabHref}
       />
       <GodPanelContextBar
         tab={state.activeTabConfig}

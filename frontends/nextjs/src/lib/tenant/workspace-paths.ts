@@ -6,6 +6,13 @@ export function normalizeTenantId(value?: string | null): string {
   return trimmed.replaceAll('/', '-')
 }
 
-export function tenantGodPanelPath(value?: string | null): string {
-  return `/${encodeURIComponent(normalizeTenantId(value))}/god-panel`
+/** The God Panel tab shown when a URL names no tab. */
+export const DEFAULT_GOD_PANEL_TAB = 'overview'
+
+export function tenantGodPanelPath(
+  value?: string | null,
+  tabId?: string
+): string {
+  const base = `/${encodeURIComponent(normalizeTenantId(value))}/god-panel`
+  return tabId == null ? base : `${base}/${encodeURIComponent(tabId)}`
 }

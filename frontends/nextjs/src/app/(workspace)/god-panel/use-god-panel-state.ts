@@ -2,6 +2,10 @@
 
 import { useCallback, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
+import {
+  normalizeTenantId,
+  tenantGodPanelPath,
+} from '@/lib/tenant/workspace-paths'
 import { useNerdMode } from '@/components/nerd-mode-ide'
 import {
   useAuthContext,
@@ -10,8 +14,7 @@ import { godPanelConfig } from '@/lib/packages/navigation'
 import { useGodPanelRedirect } from './use-god-panel-redirect'
 import { WALK_ME_STEPS } from './tabs/god-panel-config'
 
-export function useGodPanelState() {
-  const [activeTab, setActiveTab] = useState(0)
+export function useGodPanelState(activeTabId: string) {
   const [guideOpen, setGuideOpen] = useState(false)
   const [guideStep, setGuideStep] = useState(0)
   const nerd = useNerdMode()
@@ -20,16 +23,33 @@ export function useGodPanelState() {
   const params = useParams<{ tenantSlug?: string }>()
   const routeTenantId = params.tenantSlug
   const tabs = godPanelConfig.tabs
+
+  // The active tab is whatever the URL says, not component state -- so a tab
+  // is linkable, survives a refresh, and Back returns to the previous one.
+  const activeTab = Math.max(
+    tabs.findIndex(tab => tab.id === activeTabId),
+    0
+  )
   const activeTabConfig = tabs[activeTab] ?? tabs[0]
 
   useGodPanelRedirect(routeTenantId, auth.user?.tenantId, auth.isLoading)
 
+  const tenantForPaths = normalizeTenantId(
+    routeTenantId ?? auth.user?.tenantId
+  )
+
+  const tabHref = useCallback(
+    (tabId: string) => tenantGodPanelPath(tenantForPaths, tabId),
+    [tenantForPaths]
+  )
+
   const openTabById = useCallback(
     (tabId: string) => {
-      const index = tabs.findIndex(tab => tab.id === tabId)
-      if (index >= 0) setActiveTab(index)
+      if (tabs.some(tab => tab.id === tabId)) {
+        router.push(tenantGodPanelPath(tenantForPaths, tabId))
+      }
     },
-    [tabs]
+    [tabs, router, tenantForPaths]
   )
 
   const preview = useCallback(
@@ -51,8 +71,8 @@ export function useGodPanelState() {
   return {
     tabs,
     activeTab,
-    setActiveTab,
     activeTabConfig,
+    tabHref,
     guideOpen,
     setGuideOpen,
     guideStep,
