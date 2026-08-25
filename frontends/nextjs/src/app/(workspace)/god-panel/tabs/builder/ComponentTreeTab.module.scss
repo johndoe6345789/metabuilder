@@ -1,6 +1,10 @@
 .root {
   display: flex;
   flex-direction: column;
+  // The builder shares its row with a 288px sidebar, so the viewport says
+  // nothing about the width it actually gets. Everything below measures this
+  // element instead.
+  container-type: inline-size;
 }
 
 /* stage → target picker → publish bar */
@@ -209,11 +213,35 @@
   background: var(--mat-sys-surface, #0d1117);
 }
 
-@media (max-width: 900px) {
+// Three columns need 200 + 240 + 320 plus two 14px gaps = 788px before any
+// of them can shrink. The old rule was @media (max-width: 900px), measuring
+// the window -- so with the sidebar open at a 900-1076px viewport the query
+// stayed silent while the panes had only ~612-788px, and the preview was
+// pushed off the right edge.
+@container (max-width: 820px) {
   .grid {
-    grid-template-columns: 1fr;
+    // Palette and tree stay side by side; the preview takes a full-width row
+    // beneath them, where it is more useful anyway.
+    grid-template-columns: 180px minmax(0, 1fr);
+    grid-template-rows: minmax(320px, 1fr) minmax(240px, 0.8fr);
     height: auto;
   }
+
+  .previewWrap {
+    grid-column: 1 / -1;
+  }
+}
+
+@container (max-width: 520px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+  }
+
+  .previewWrap {
+    grid-column: auto;
+  }
+
   .palette,
   .middle,
   .previewWrap {
