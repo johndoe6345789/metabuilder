@@ -1,6 +1,11 @@
 'use client'
 
 import { useCallback, useState } from 'react'
+import {
+  saveGraph,
+  type GraphEdges,
+  type GraphNode,
+} from '@/lib/workflow/workflow-graph'
 import type { Workflow } from '@/workflow-editor'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { setWorkflow, clearDirty } from '@/store/slices/god-slice'
@@ -37,12 +42,21 @@ export function useGodWorkflow(tenant = 'system') {
           tenantId: tenant,
           name: workflow.name,
           description: workflow.description,
-          nodes: JSON.stringify(workflow.nodes),
-          edges: JSON.stringify(workflow.connections),
         }),
         signal: AbortSignal.timeout(6000),
       })
-      if (!res.ok) return false
+      // 409 means the workflow row is already there; the graph still needs
+      // writing, so only a real failure stops here.
+      if (!res.ok && res.status !== 409) return false
+
+      const wrote = await saveGraph(
+        DBAL,
+        tenant,
+        workflow.id,
+        workflow.nodes as unknown as GraphNode[],
+        workflow.connections as unknown as GraphEdges
+      )
+      if (!wrote) return false
       await snapshot('god.workflow', workflow, `Published ${workflow.name}`)
       dispatch(clearDirty('workflow'))
       return true
