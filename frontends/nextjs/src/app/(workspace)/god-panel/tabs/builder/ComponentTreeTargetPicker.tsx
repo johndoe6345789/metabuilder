@@ -3,6 +3,7 @@
 import { Button, Chip, TextField, Typography } from '@/m3'
 import type { PublishTarget } from './component-tree-publish'
 import s from './ComponentTreeTab.module.scss'
+import { TenantSelect } from '@/components/tenant/TenantSelect'
 
 /** 0=public, 1=user, 2=moderator, 3=admin, 4=god, 5=supergod — ROLE_LEVELS */
 const LEVELS = [
@@ -29,12 +30,11 @@ export function ComponentTreeTargetPicker({
 }: Props) {
   return (
     <div className={s.targetPicker}>
-      <TextField
-        size="small"
-        label="Tenant"
+      <TenantSelect
+        id="builder-target-tenant"
         value={target.tenant}
-        onChange={event => {
-          onChange({ tenant: event.target.value })
+        onChange={tenant => {
+          onChange({ tenant })
         }}
       />
       <TextField

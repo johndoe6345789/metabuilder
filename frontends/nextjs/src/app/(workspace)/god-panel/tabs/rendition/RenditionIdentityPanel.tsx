@@ -6,6 +6,7 @@ import type { ChangeEvent } from 'react'
 import { RenditionDesignControls } from './RenditionDesignControls'
 import type { RenditionConfigController } from './use-rendition-config'
 import s from './RenditionTab.module.scss'
+import { TenantSelect } from '@/components/tenant/TenantSelect'
 
 interface RenditionIdentityPanelProps {
   cfg: RenditionConfigController
@@ -25,11 +26,13 @@ export function RenditionIdentityPanel({ cfg }: RenditionIdentityPanelProps) {
         Identity
       </div>
       <div className={s.formGrid}>
-        <TextField
-          size="small"
+        <TenantSelect
+          id="rendition-tenant"
           label="Tenant ID"
           value={rendition.tenantId}
-          onChange={patchText('tenantId')}
+          onChange={tenantId => {
+            cfg.patch({ tenantId })
+          }}
         />
         <TextField
           size="small"

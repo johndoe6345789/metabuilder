@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Typography, Button, TextField, Chip, Alert } from '@/m3'
+import { Typography, Button, Chip, Alert } from '@/m3'
 import { usePageRoutes } from '@/hooks/usePageRoutes'
 import type { PageRoute, PageRouteInput } from '@/hooks/usePageRoutes'
 import { BASE_PATH } from '@/lib/app-config'
@@ -9,6 +9,7 @@ import { PageList } from './page-routes/PageList'
 import { PageFormDialog } from './page-routes/PageFormDialog'
 import { DeletePageDialog } from './page-routes/DeletePageDialog'
 import s from './PageRoutesTab.module.scss'
+import { TenantSelect } from '@/components/tenant/TenantSelect'
 
 const SYSTEM_TENANT = 'system'
 
@@ -48,8 +49,8 @@ export function PageRoutesTab() {
     window.open(previewUrl, '_blank', 'noopener')
   }
 
-  const applyTenant = () => {
-    const trimmed = tenantInput.trim()
+  const applyTenant = (next?: string) => {
+    const trimmed = (next ?? tenantInput).trim()
     setTenant(trimmed.length > 0 ? trimmed : SYSTEM_TENANT)
   }
 
@@ -83,19 +84,21 @@ export function PageRoutesTab() {
       </div>
 
       <div className={s.tenantRow}>
-        <TextField
-          label="Tenant"
+        <TenantSelect
+          id="page-routes-tenant"
           value={tenantInput}
-          onChange={e => {
-            setTenantInput(e.target.value)
-          }}
-          size="small"
-          style={{ width: 200 }}
-          onKeyDown={e => {
-            if (e.key === 'Enter') applyTenant()
+          onChange={next => {
+            setTenantInput(next)
+            applyTenant(next)
           }}
         />
-        <Button variant="outlined" size="small" onClick={applyTenant}>
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={() => {
+            applyTenant()
+          }}
+        >
           Load
         </Button>
         <Chip label={`/${tenant}/`} size="small" variant="outlined" />

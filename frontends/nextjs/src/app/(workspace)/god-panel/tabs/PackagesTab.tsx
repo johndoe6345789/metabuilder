@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Typography, Alert, Chip, TextField, Button } from '@/m3'
+import { Typography, Alert, Chip, Button } from '@/m3'
 import { useInstalledPackages } from '@/hooks/useInstalledPackages'
 import {
   PRODUCT_PACKAGES,
@@ -9,6 +9,7 @@ import {
 } from '@/lib/packages/product-packages'
 import { PackageManager } from './packages/PackageManager'
 import s from './PackagesTab.module.scss'
+import { TenantSelect } from '@/components/tenant/TenantSelect'
 
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
@@ -48,8 +49,8 @@ export function PackagesTab() {
   const [busy, setBusy] = useState<string | null>(null)
   const [flash, setFlash] = useState<string | null>(null)
 
-  const applyTenant = () => {
-    const t = tenantInput.trim()
+  const applyTenant = (next?: string) => {
+    const t = (next ?? tenantInput).trim()
     setTenant(t.length > 0 ? t : SYSTEM)
   }
 
@@ -91,18 +92,21 @@ export function PackagesTab() {
           instantly.
         </Typography>
         <div className={s.tenantRow}>
-          <TextField
-            label="Tenant"
-            size="small"
+          <TenantSelect
+            id="packages-tenant"
             value={tenantInput}
-            onChange={e => {
-              setTenantInput(e.target.value)
-            }}
-            onKeyDown={e => {
-              if (e.key === 'Enter') applyTenant()
+            onChange={next => {
+              setTenantInput(next)
+              applyTenant(next)
             }}
           />
-          <Button variant="outlined" size="small" onClick={applyTenant}>
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={() => {
+              applyTenant()
+            }}
+          >
             Load
           </Button>
         </div>
