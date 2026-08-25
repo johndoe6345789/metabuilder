@@ -1,0 +1,144 @@
+// DBAL reachability panel.
+//
+// Every colour derives from one --status custom property set per state, so
+// adding a state is one block rather than a hunt through the file. The old
+// version hardcoded #4caf50 / #f44336 and rendered inside a Paper that
+// computed to padding:0 on a transparent background -- a 24px hairline of
+// text for the most important fact on the page.
+
+.card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding: 18px 20px 18px 22px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--status) 32%, transparent);
+  border-radius: 18px;
+  background: linear-gradient(
+    120deg,
+    color-mix(in srgb, var(--status) 12%, transparent),
+    color-mix(in srgb, var(--status) 4%, transparent) 55%,
+    transparent
+  ),
+  var(--mat-sys-surface-container-lowest);
+  box-shadow: var(--mat-sys-elevation-level1);
+
+  &[data-state='online']   { --status: #16a34a; }
+  &[data-state='offline']  { --status: #dc2626; }
+  &[data-state='checking'] { --status: #d97706; }
+}
+
+// Full-height accent edge -- reads as a state without relying on the dot.
+.rail {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: var(--status);
+}
+
+.dot {
+  position: relative;
+  flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--status);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--status) 18%, transparent);
+}
+
+[data-state='online'] .dot {
+  animation: pulse 2.4s ease-out infinite;
+}
+
+[data-state='checking'] .dot {
+  animation: blink 1.1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--status) 45%, transparent); }
+  70%  { box-shadow: 0 0 0 10px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+@keyframes blink {
+  50% { opacity: 0.3; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot { animation: none !important; }
+}
+
+.text {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--mat-sys-on-surface);
+}
+
+.state {
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--status) 62%, var(--mat-sys-on-surface));
+  background: color-mix(in srgb, var(--status) 15%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--status) 30%, transparent);
+}
+
+.detail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  margin: 4px 0 0;
+  font-size: 0.85rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.endpoint {
+  font-family: var(--mat-sys-mono-font, ui-monospace, monospace);
+  font-size: 0.8rem;
+  padding: 1px 7px;
+  border-radius: 6px;
+  overflow-wrap: anywhere;
+  color: var(--mat-sys-on-surface);
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 7%, transparent);
+}
+
+.version {
+  flex-shrink: 0;
+  align-self: flex-start;
+  padding: 4px 11px;
+  border-radius: 999px;
+  font-family: var(--mat-sys-mono-font, ui-monospace, monospace);
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--status) 62%, var(--mat-sys-on-surface));
+  background: color-mix(in srgb, var(--status) 13%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--status) 28%, transparent);
+}
+
+@media (max-width: 560px) {
+  .card {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .title {
+    flex-wrap: wrap;
+  }
+}

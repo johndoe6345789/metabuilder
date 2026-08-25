@@ -1,36 +1,13 @@
-.statusRow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 12px;
-  flex-shrink: 0;
-}
-
-.dotOnline {
-  background-color: #4caf50;
-}
-.dotOffline {
-  background-color: #f44336;
-}
-
-.chipRow {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
 .alert {
   margin-bottom: 16px;
 }
 
 .fileInput {
   display: none;
+}
+
+.sectionTitle {
+  margin-top: 4px;
 }
 
 .toolsGrid {

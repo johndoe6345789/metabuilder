@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Typography, Paper, Chip, Alert } from '@/m3'
+import { Typography, Alert } from '@/m3'
+import { DbalStatusCard, type DbalState } from './DbalStatusCard'
 import { godPanelConfig } from '@/lib/packages/navigation'
 import { BASE_PATH } from '@/lib/app-config'
 import s from './OverviewTab.module.scss'
@@ -9,9 +10,10 @@ import s from './OverviewTab.module.scss'
 const DBAL_URL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
 interface DbalStatus {
-  connected: boolean
+  /** 'checking' until /health answers -- the old shape started at
+   *  `connected: false`, so a healthy daemon still flashed red on load. */
+  state: DbalState
   version?: string
-  uptime?: string
 }
 
 type Flash = { severity: 'success' | 'info' | 'warning'; message: string }
@@ -21,17 +23,17 @@ export function OverviewTab() {
   const importRef = useRef<HTMLInputElement | null>(null)
   const [flash, setFlash] = useState<Flash | null>(null)
   const [dbalStatus, setDbalStatus] = useState<DbalStatus>({
-    connected: false,
+    state: 'checking',
   })
 
   useEffect(() => {
     fetch(`${DBAL_URL}/health`, { signal: AbortSignal.timeout(3000) })
       .then(res => (res.ok ? res.json() : null))
       .then((json: Record<string, string> | null) => {
-        if (json != null) setDbalStatus(s => ({ ...s, connected: true }))
+        setDbalStatus(s => ({ ...s, state: json != null ? 'online' : 'offline' }))
       })
       .catch(() => {
-        setDbalStatus({ connected: false })
+        setDbalStatus(s => ({ ...s, state: 'offline' }))
       })
 
     // The DBAL exposes its version at /version (not /health).
@@ -170,26 +172,13 @@ export function OverviewTab() {
         }}
       />
 
-      <Paper>
-        <div className={s.statusRow}>
-          <div
-            className={`${s.dot} ${
-              dbalStatus.connected ? s.dotOnline : s.dotOffline
-            }`}
-          />
-          <Typography variant="subtitle2">
-            DBAL Daemon: {dbalStatus.connected ? 'Connected' : 'Offline'}
-          </Typography>
-        </div>
-        {dbalStatus.connected && dbalStatus.version != null && (
-          <div className={s.chipRow}>
-            <Chip label={`v${dbalStatus.version}`} size="small" />
-            <Chip label="running" size="small" variant="outlined" />
-          </div>
-        )}
-      </Paper>
+      <DbalStatusCard
+        state={dbalStatus.state}
+        version={dbalStatus.version}
+        endpoint={DBAL_URL}
+      />
 
-      <Typography variant="subtitle2" gutterBottom>
+      <Typography variant="subtitle2" gutterBottom className={s.sectionTitle}>
         Quick Actions
       </Typography>
       <div className={s.toolsGrid}>
