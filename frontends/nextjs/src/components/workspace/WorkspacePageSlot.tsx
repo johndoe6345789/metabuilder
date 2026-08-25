@@ -35,8 +35,6 @@ interface SlotConfig {
   componentTree: TreeNode | null
 }
 
-const DBAL_BASE = DBAL
-
 async function fetchSlot(tenant: string, path: string): Promise<SlotConfig | null> {
   try {
     const params = new URLSearchParams({ 'filter.path': path })
@@ -53,7 +51,7 @@ async function fetchSlot(tenant: string, path: string): Promise<SlotConfig | nul
     const componentTree =
       treeId === null
         ? null
-        : ((await loadTree(DBAL_BASE, tenant, treeId)) as TreeNode | null)
+        : ((await loadTree(DBAL, tenant, treeId)) as TreeNode | null)
 
     // Nothing this slot can actually render -- same as no row at all.
     if (component === null && componentTree === null) return null
@@ -108,8 +106,18 @@ export function WorkspacePageSlot({
   // dynamically without tripping a rule aimed at a different mistake.
   const Resolved = useMemo(() => resolveComponent(slot?.component ?? null), [slot?.component])
 
-  // undefined = still loading, null = no row published for this path yet.
-  if (slot === undefined || slot === null) {
+  // Still loading. Renders nothing rather than `children`: children are the
+  // fallback for "nothing is published at this path", and showing them before
+  // the fetch resolves does not just flash content that is about to be
+  // replaced -- it *runs their effects*. /{tenant}'s fallback redirects to the
+  // panel on mount, so every visit to a tenant home page navigated away before
+  // its own published tree could arrive.
+  if (slot === undefined) {
+    return null
+  }
+
+  // Resolved, and nothing is published for this path.
+  if (slot === null) {
     return <>{children}</>
   }
 
