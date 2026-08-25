@@ -123,6 +123,8 @@ export function ComponentTreeWorkbench() {
       )}
 
       <ComponentTreePublishBar
+        path={target.path}
+        tenant={tenant}
         dirty={t.dirty}
         publishing={t.publishing}
         onPublish={() => {

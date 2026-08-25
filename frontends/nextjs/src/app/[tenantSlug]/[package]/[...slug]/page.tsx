@@ -11,6 +11,9 @@
  */
 
 import { notFound } from 'next/navigation'
+import { fetchTenantPage } from '@/lib/tenant/fetch-tenant-page'
+import { UIPageRenderer } from '@/components/ui-page-renderer/UIPageRenderer'
+import type { JSONComponent } from '@/lib/packages/json/types'
 import { loadEntitySchema } from '@/lib/entities/load-entity-schema'
 import { fetchEntityList, fetchEntity } from '@/lib/entities/api-client'
 
@@ -30,6 +33,26 @@ export default async function EntityPage({ params }: EntityPageProps) {
 
   if (tenantSlug.length === 0 || pkg.length === 0 || slug.length === 0) {
     notFound()
+  }
+
+  // A nested path may be a database-driven page rather than an entity view.
+  // /{tenant}/{page} already falls back this way in ../page.tsx; without the
+  // same fallback here, /{tenant}/tree-demo/primitives reached the entity
+  // browser and reported "Invalid package ID" instead of rendering the page.
+  const pagePath = `/${pkg}/${slug.join('/')}`
+  const tenantPage = await fetchTenantPage(tenantSlug, pagePath)
+  if (
+    tenantPage !== null &&
+    tenantPage.isActive &&
+    tenantPage.componentTree !== null &&
+    tenantPage.componentTree !== undefined
+  ) {
+    return (
+      <UIPageRenderer
+        layout={tenantPage.componentTree as JSONComponent}
+        actions={{}}
+      />
+    )
   }
 
   const entity = slug[0] as string // Safe: checked slug.length > 0
