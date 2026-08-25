@@ -28,6 +28,7 @@ export function useTenantUrl(
     if (isLoading || !isAuthenticated || tenantId === undefined) return
     const tenant = normalizeTenantId(tenantId)
     if (pathname === `/${tenant}` || pathname.startsWith(`/${tenant}/`)) return
-    router.replace(`/${tenant}${pathname}`)
+    // "/" would otherwise become "/{tenant}/", which only 308s back.
+    router.replace(pathname === '/' ? `/${tenant}` : `/${tenant}${pathname}`)
   }, [tenantId, isAuthenticated, isLoading, pathname, router])
 }
