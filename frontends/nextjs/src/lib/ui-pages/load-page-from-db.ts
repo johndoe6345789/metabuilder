@@ -4,6 +4,13 @@
 
 import type { PageConfig } from '../types/level-types'
 import { db } from '@/lib/db-client'
+import { loadTree } from '@/lib/tenant/page-tree'
+
+const DBAL =
+  process.env.DBAL_ENDPOINT ??
+  process.env.DBAL_API_URL ??
+  process.env.NEXT_PUBLIC_DBAL_API_URL ??
+  'http://localhost:8080'
 
 export async function loadPageFromDb(path: string, tenantId?: string): Promise<PageConfig | null> {
   const filter: Record<string, unknown> = { path, isPublished: true }
@@ -27,7 +34,10 @@ export async function loadPageFromDb(path: string, tenantId?: string): Promise<P
     description: page.description as string | undefined,
     icon: page.icon as string | undefined,
     component: page.component as string,
-    componentTree: JSON.parse((page.componentTree as string | null) ?? '{}'),
+    componentTree:
+      typeof page.pageTreeId === 'string'
+        ? await loadTree(DBAL, (page.tenantId as string | null) ?? 'system', page.pageTreeId)
+        : null,
     level: page.level as number,
     requiresAuth: page.requiresAuth as boolean,
     requiredRole: page.requiredRole as string | undefined,

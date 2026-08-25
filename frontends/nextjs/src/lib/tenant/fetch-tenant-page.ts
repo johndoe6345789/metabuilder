@@ -1,5 +1,7 @@
 import 'server-only'
 
+import { loadTree } from '@/lib/tenant/page-tree'
+
 const DBAL =
   process.env.DBAL_ENDPOINT ??
   process.env.DBAL_API_URL ??
@@ -13,7 +15,10 @@ export interface TenantPage {
   level: number
   requiresAuth: boolean
   requiredRole: string | null
+  /** Resolved from PageTreeNode/PageTreeProp; null until hydrated. */
   componentTree: unknown
+  /** The tree this page renders, if any. */
+  pageTreeId: string | null
   isActive: boolean
   tenantId?: string | null
   packageId?: string | null
@@ -42,7 +47,11 @@ export async function fetchTenantPage(
       return active === true
     })
     if (first === undefined) return null
-    return normalize(first)
+    const page = normalize(first)
+    if (page.pageTreeId !== null) {
+      page.componentTree = await loadTree(DBAL, tenant, page.pageTreeId)
+    }
+    return page
   } catch {
     return null
   }
@@ -84,7 +93,6 @@ function extractArray(raw: unknown): Record<string, unknown>[] {
 }
 
 function normalize(p: Record<string, unknown>): TenantPage {
-  const tree = p.componentTree as string | Record<string, unknown> | null
   return {
     id: p.id as string,
     path: p.path as string,
@@ -94,8 +102,8 @@ function normalize(p: Record<string, unknown>): TenantPage {
       (p.requiresAuth as boolean | undefined) ?? false,
     requiredRole:
       (p.requiredRole as string | null | undefined) ?? null,
-    componentTree:
-      typeof tree === 'string' ? JSON.parse(tree) : (tree ?? null),
+    pageTreeId: (p.pageTreeId as string | null | undefined) ?? null,
+    componentTree: null,
     isActive:
       (p.isActive as boolean | undefined) ??
       (p.isPublished as boolean | undefined) ??

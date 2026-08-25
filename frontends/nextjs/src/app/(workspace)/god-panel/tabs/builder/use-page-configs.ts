@@ -10,21 +10,23 @@ export interface PageConfigRow {
   title: string
   /** Registered component name, or 'component_tree' for builder-authored pages. */
   component: string | null
-  /** True when this row carries a tree the builder can load. */
+  /** True when this route points at a PageTree the builder can load. */
   hasTree: boolean
+  pageTreeId: string | null
   packageId: string | null
 }
 
 function toRow(raw: Record<string, unknown>): PageConfigRow | null {
   const path = typeof raw.path === 'string' ? raw.path : null
   if (path === null) return null
-  const tree = raw.componentTree
+  const treeId = typeof raw.pageTreeId === 'string' ? raw.pageTreeId : null
   return {
     id: typeof raw.id === 'string' ? raw.id : '',
     path,
     title: typeof raw.title === 'string' ? raw.title : path,
     component: typeof raw.component === 'string' ? raw.component : null,
-    hasTree: tree !== null && tree !== undefined && tree !== '',
+    hasTree: treeId !== null && treeId.length > 0,
+    pageTreeId: treeId,
     packageId: typeof raw.packageId === 'string' ? raw.packageId : null,
   }
 }

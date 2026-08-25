@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from 'react'
 import { useAppDispatch } from '@/store/hooks'
+import { loadTree, propValueType } from '@/lib/tenant/page-tree'
 import { clearDirty, setTree } from '@/store/slices/god-slice'
 import { snapshot } from '@/lib/persist/versions'
 import type { TreeNode } from './builder-registry'
@@ -92,6 +93,79 @@ export function useComponentTreePublish(tree: TreeNode) {
               'setting that component back and clearing the tree.'
         )
 
+        const treeId = `tree_${id}`
+
+        // Replace the tree wholesale: deleting the PageTree cascades its
+        // nodes and their properties, so there is nothing to reconcile.
+        await fetch(`${DBAL}/${tenant}/core/PageTree/${treeId}`, {
+          method: 'DELETE',
+          signal: AbortSignal.timeout(6000),
+        }).catch(() => null)
+
+        const stamp = Date.now()
+        const treeRes = await fetch(`${DBAL}/${tenant}/core/PageTree`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: treeId,
+            tenantId: tenant,
+            name: title,
+            description: `Published from the God Panel for ${path}`,
+            createdAt: stamp,
+            updatedAt: stamp,
+          }),
+          signal: AbortSignal.timeout(6000),
+        })
+        if (!treeRes.ok) return false
+
+        const writeNode = async (
+          node: TreeNode,
+          parent: string | null,
+          order: number
+        ): Promise<boolean> => {
+          const nodeId = `${treeId}__${node.id}`
+          const nodeRes = await fetch(`${DBAL}/${tenant}/core/PageTreeNode`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              id: nodeId,
+              tenantId: tenant,
+              treeId,
+              parentId: parent,
+              type: node.type,
+              sortOrder: order,
+            }),
+            signal: AbortSignal.timeout(6000),
+          })
+          if (!nodeRes.ok) return false
+
+          for (const [name, raw] of Object.entries(node.props ?? {})) {
+            const { valueType, value } = propValueType(raw)
+            const propRes = await fetch(`${DBAL}/${tenant}/core/PageTreeProp`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                id: `${nodeId}__${name}`,
+                tenantId: tenant,
+                nodeId,
+                treeId,
+                name,
+                value,
+                valueType,
+              }),
+              signal: AbortSignal.timeout(6000),
+            })
+            if (!propRes.ok) return false
+          }
+
+          for (const [i, child] of (node.children ?? []).entries()) {
+            if (!(await writeNode(child, nodeId, i))) return false
+          }
+          return true
+        }
+
+        if (!(await writeNode(tree, null, 0))) return false
+
         const payload = {
           id,
           path,
@@ -103,8 +177,8 @@ export function useComponentTreePublish(tree: TreeNode) {
           requiresAuth,
           sortOrder: 0,
           tenantId: tenant,
-          componentTree: JSON.stringify(tree),
-          updatedAt: Date.now(),
+          pageTreeId: treeId,
+          updatedAt: stamp,
         }
 
         const res =
@@ -112,7 +186,7 @@ export function useComponentTreePublish(tree: TreeNode) {
             ? await fetch(`${DBAL}/${tenant}/core/PageConfig`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...payload, createdAt: Date.now() }),
+                body: JSON.stringify({ ...payload, createdAt: stamp }),
                 signal: AbortSignal.timeout(6000),
               })
             : await fetch(`${DBAL}/${tenant}/core/PageConfig/${id}`, {
@@ -121,6 +195,7 @@ export function useComponentTreePublish(tree: TreeNode) {
                 body: JSON.stringify(payload),
                 signal: AbortSignal.timeout(6000),
               })
+
         if (!res.ok) return false
         await snapshot('god.componentTree', tree, 'Published page')
         dispatch(clearDirty('tree'))
@@ -150,9 +225,10 @@ export function useComponentTreePublish(tree: TreeNode) {
         const json = await res.json() as { data?: { data?: Record<string, unknown>[] } }
         const row = json.data?.data?.[0]
         if (row === undefined) return null
-        const raw = row.componentTree
-        const parsed: unknown = typeof raw === 'string' ? JSON.parse(raw) : raw
-        if (parsed === null || typeof parsed !== 'object') return null
+        const treeId = row.pageTreeId
+        if (typeof treeId !== 'string' || treeId.length === 0) return null
+        const parsed = await loadTree(DBAL, tenant, treeId)
+        if (parsed === null) return null
         dispatch(setTree(parsed as TreeNode))
         dispatch(clearDirty('tree'))
         return {

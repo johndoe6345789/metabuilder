@@ -25,6 +25,7 @@ import { LevelGate } from '@/components/layout/LevelGate'
 import { UIPageRenderer } from '@/components/ui-page-renderer/UIPageRenderer'
 import type { TreeNode } from '@/components/blocks/block-registry'
 import { resolveComponent } from '@/lib/packages/component-registry'
+import { loadTree } from '@/lib/tenant/page-tree'
 
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
@@ -34,14 +35,7 @@ interface SlotConfig {
   componentTree: TreeNode | null
 }
 
-function parseTree(raw: unknown): TreeNode | null {
-  try {
-    const value: unknown = typeof raw === 'string' ? JSON.parse(raw) : raw
-    return value !== null && typeof value === 'object' ? (value as TreeNode) : null
-  } catch {
-    return null
-  }
-}
+const DBAL_BASE = DBAL
 
 async function fetchSlot(tenant: string, path: string): Promise<SlotConfig | null> {
   try {
@@ -51,18 +45,16 @@ async function fetchSlot(tenant: string, path: string): Promise<SlotConfig | nul
     })
     if (!res.ok) return null
     const json = await res.json() as { data?: { data?: Record<string, unknown>[] } }
-    const published = (json.data?.data ?? []).filter(r => r.isPublished !== false)
-    // PageConfig.path carries a UNIQUE index, so this is at most one row. The
-    // tree-first pick is belt and braces for a backend that ever relaxes that:
-    // a page the builder has taken over should win over a seeded component.
-    const row =
-      published.find(r => {
-        const tree = r.componentTree
-        return tree !== null && tree !== undefined && tree !== ''
-      }) ?? published[0]
+    const row = (json.data?.data ?? []).find(r => r.isPublished !== false)
     if (row === undefined) return null
+
     const component = typeof row.component === 'string' ? row.component : null
-    const componentTree = parseTree(row.componentTree)
+    const treeId = typeof row.pageTreeId === 'string' ? row.pageTreeId : null
+    const componentTree =
+      treeId === null
+        ? null
+        : ((await loadTree(DBAL_BASE, tenant, treeId)) as TreeNode | null)
+
     // Nothing this slot can actually render -- same as no row at all.
     if (component === null && componentTree === null) return null
     return {
