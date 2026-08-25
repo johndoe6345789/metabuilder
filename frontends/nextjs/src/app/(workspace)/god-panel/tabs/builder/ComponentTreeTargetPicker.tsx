@@ -4,11 +4,9 @@ import { Button, Chip, FormControl, FormLabel, Select, TextField, Typography } f
 import type { PublishTarget } from './component-tree-publish'
 import type { PageConfigRow } from './use-page-configs'
 import s from './ComponentTreeTab.module.scss'
-import { TenantSelect } from '@/components/tenant/TenantSelect'
 
-/** Sentinel for "not one of the saved routes / trees". */
+/** Sentinel for a path that is not one of the saved routes. */
 const CUSTOM = '__custom__'
-const BLANK = '__blank__'
 
 /** 0=public, 1=user, 2=moderator, 3=admin, 4=god, 5=supergod — ROLE_LEVELS */
 const LEVELS = [
@@ -29,8 +27,6 @@ type Props = {
   pages: PageConfigRow[]
   /** Point the editor at a saved route, loading whatever it holds. */
   onPickRoute: (path: string) => void
-  /** Load a specific saved tree, or start from an empty one. */
-  onPickTree: (path: string | null) => void
 }
 
 export function ComponentTreeTargetPicker({
@@ -40,19 +36,10 @@ export function ComponentTreeTargetPicker({
   loading,
   pages,
   onPickRoute,
-  onPickTree,
 }: Props) {
   const known = pages.some(p => p.path === target.path)
-  const trees = pages.filter(p => p.hasTree)
   return (
     <div className={s.targetPicker}>
-      <TenantSelect
-        id="builder-target-tenant"
-        value={target.tenant}
-        onChange={tenant => {
-          onChange({ tenant })
-        }}
-      />
       <FormControl>
         <FormLabel htmlFor="builder-route">Page route</FormLabel>
         <Select
@@ -71,30 +58,6 @@ export function ComponentTreeTargetPicker({
             <option key={p.id} value={p.path}>
               {p.path}
               {p.hasTree ? '  (tree)' : ''}
-            </option>
-          ))}
-        </Select>
-      </FormControl>
-
-      <FormControl>
-        <FormLabel htmlFor="builder-tree">Component tree</FormLabel>
-        <Select
-          native
-          value={trees.some(t => t.path === target.path) ? target.path : BLANK}
-          inputProps={{ id: 'builder-tree' }}
-          onChange={
-            ((event: React.ChangeEvent<HTMLSelectElement>) => {
-              const v = event.target.value
-              onPickTree(v === BLANK ? null : v)
-            }) as never
-          }
-        >
-          <option value={BLANK}>
-            {trees.length > 0 ? 'Blank tree' : 'Blank tree — none saved yet'}
-          </option>
-          {trees.map(t => (
-            <option key={t.id} value={t.path}>
-              {t.title} — {t.path}
             </option>
           ))}
         </Select>

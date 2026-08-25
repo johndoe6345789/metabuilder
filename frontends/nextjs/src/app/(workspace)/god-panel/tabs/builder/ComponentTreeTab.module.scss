@@ -310,3 +310,16 @@
   border: 1px solid color-mix(in srgb, #dc2626 40%, transparent);
   background: color-mix(in srgb, #dc2626 12%, transparent);
 }
+
+/* The tree picker sits above everything else: which tree you are editing is
+   the first decision, before which route it publishes to. */
+.treeBar {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--mat-sys-surface-container-low, #161b22);
+  border: 1px solid var(--mat-sys-outline-variant, #30363d);
+}

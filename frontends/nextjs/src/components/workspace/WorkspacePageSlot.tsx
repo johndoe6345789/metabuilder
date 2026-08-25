@@ -51,7 +51,18 @@ async function fetchSlot(tenant: string, path: string): Promise<SlotConfig | nul
     })
     if (!res.ok) return null
     const json = await res.json() as { data?: { data?: Record<string, unknown>[] } }
-    const row = json.data?.data?.find(r => r.isPublished !== false)
+    const published = (json.data?.data ?? []).filter(r => r.isPublished !== false)
+    // A path can hold both a seeded, component-backed row and a row the God
+    // Panel builder published for it. A tree wins: that is how the builder
+    // takes over a page without touching the package's own row, and deleting
+    // the builder's row hands the page straight back. Picking with .find()
+    // took whichever the API happened to return first, so which of the two
+    // rendered was luck.
+    const row =
+      published.find(r => {
+        const tree = r.componentTree
+        return tree !== null && tree !== undefined && tree !== ''
+      }) ?? published[0]
     if (row === undefined) return null
     const component = typeof row.component === 'string' ? row.component : null
     const componentTree = parseTree(row.componentTree)

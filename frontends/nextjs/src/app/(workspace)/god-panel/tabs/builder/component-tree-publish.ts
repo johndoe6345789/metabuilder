@@ -18,6 +18,8 @@ interface ConflictingRow {
   id: string
   packageId?: string
   component?: string
+  /** True when that row also carries a tree -- the one ambiguous case. */
+  hasTree: boolean
 }
 
 /** A published PageConfig for this path under a different id, if one exists. */
@@ -39,10 +41,12 @@ async function findConflictingRow(
       r => r.id !== ownId && r.isPublished !== false
     )
     if (row === undefined) return null
+    const tree = row.componentTree
     return {
       id: String(row.id),
       packageId: typeof row.packageId === 'string' ? row.packageId : undefined,
       component: typeof row.component === 'string' ? row.component : undefined,
+      hasTree: tree !== null && tree !== undefined && tree !== '',
     }
   } catch {
     // Never block publishing because the lookup itself failed.
@@ -87,17 +91,26 @@ export function useComponentTreePublish(tree: TreeNode) {
         // page_system_home. Publishing anyway leaves two published rows for
         // one path, and WorkspacePageSlot renders whichever the API returns
         // first, so the live page would flip unpredictably. Refuse instead.
+        // Shadowing a package's component-backed row is the supported way to
+        // take a page over: WorkspacePageSlot prefers a row with a tree, and
+        // deleting this one hands the page back untouched. Two rows that both
+        // carry a tree is the genuinely ambiguous case, so that still stops.
         const clash = await findConflictingRow(tenant, path, id)
-        if (clash !== null) {
+        if (clash?.hasTree === true) {
           setConflict(
-            `"${path}" is already published by ${clash.packageId ?? 'another package'} ` +
-            `(row ${clash.id}${clash.component != null ? `, component "${clash.component}"` : ''}). ` +
-            'Publishing would leave two rows for this path. Remove or repoint ' +
-            'that row first.'
+            `"${path}" already has a component tree published by ` +
+            `${clash.packageId ?? 'another package'} (row ${clash.id}). ` +
+            'Two trees on one path is ambiguous — remove that row first.'
           )
           return false
         }
-        setConflict(null)
+        setConflict(
+          clash === null
+            ? null
+            : `Publishing shadows ${clash.packageId ?? 'the seeded page'} ` +
+              `(row ${clash.id}, component "${clash.component ?? '?'}"). ` +
+              'That row is left untouched; delete this one to hand the page back.'
+        )
 
         const payload = {
           id,

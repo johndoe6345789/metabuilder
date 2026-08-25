@@ -1,6 +1,9 @@
 'use client'
 
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { FormControl, FormLabel, Select } from '@/m3'
+import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
+import { normalizeTenantId } from '@/lib/tenant/workspace-paths'
 import { useComponentTree } from './use-component-tree'
 import { PALETTE, renderNode, type PaletteItem } from './builder-registry'
 import { CATEGORIES } from './component-tree-categories'
@@ -15,12 +18,24 @@ import { DEFAULT_PUBLISH_TARGET, type PublishTarget } from './component-tree-pub
 import { usePageConfigs } from './use-page-configs'
 import s from './ComponentTreeTab.module.scss'
 
+const BLANK = '__blank__'
+
 export function ComponentTreeWorkbench() {
   const t = useComponentTree()
-  const [target, setTarget] = useState<PublishTarget>(DEFAULT_PUBLISH_TARGET)
+  const auth = useAuthContext()
+  // The tenant is whoever is signed in -- it was never a choice to make here.
+  const tenant = normalizeTenantId(auth.user?.tenantId)
+  const [target, setTarget] = useState<PublishTarget>({
+    ...DEFAULT_PUBLISH_TARGET,
+    tenant,
+  })
+
+  useEffect(() => {
+    setTarget(prev => (prev.tenant === tenant ? prev : { ...prev, tenant }))
+  }, [tenant])
   // Collapse state is held here rather than inside the recursive outline, so
   // it survives the re-render every tree edit causes.
-  const { rows: pages } = usePageConfigs(target.tenant)
+  const { rows: pages } = usePageConfigs(tenant)
   const [collapsed, setCollapsed] = useState<ReadonlySet<string>>(new Set())
   const toggleCollapse = useCallback((id: string) => {
     setCollapsed(prev => {
@@ -34,8 +49,49 @@ export function ComponentTreeWorkbench() {
     })
   }, [])
 
+  const trees = pages.filter(p => p.hasTree)
+  const currentTree = trees.some(x => x.path === target.path)
+    ? target.path
+    : BLANK
+
   return (
     <div className={s.root}>
+      <div className={s.treeBar}>
+        <FormControl>
+          <FormLabel htmlFor="builder-tree">Component tree</FormLabel>
+          <Select
+            native
+            value={currentTree}
+            inputProps={{ id: 'builder-tree' }}
+            onChange={
+              ((event: React.ChangeEvent<HTMLSelectElement>) => {
+                const value = event.target.value
+                if (value === BLANK) {
+                  t.resetTree()
+                  return
+                }
+                const row = pages.find(p => p.path === value)
+                setTarget(prev => ({
+                  ...prev,
+                  path: value,
+                  title: row?.title ?? prev.title,
+                }))
+                void t.load(tenant, value)
+              }) as never
+            }
+          >
+            <option value={BLANK}>
+              {trees.length > 0 ? 'Blank tree' : 'Blank tree — none saved yet'}
+            </option>
+            {trees.map(x => (
+              <option key={x.id} value={x.path}>
+                {x.title} — {x.path}
+              </option>
+            ))}
+          </Select>
+        </FormControl>
+      </div>
+
       <ComponentTreeTargetPicker
         pages={pages}
         onPickRoute={path => {
@@ -45,14 +101,7 @@ export function ComponentTreeWorkbench() {
             path,
             title: row?.title ?? prev.title,
           }))
-          void t.load(target.tenant, path)
-        }}
-        onPickTree={path => {
-          if (path === null) {
-            t.resetTree()
-            return
-          }
-          void t.load(target.tenant, path)
+          void t.load(tenant, path)
         }}
         target={target}
         onChange={patch => {
