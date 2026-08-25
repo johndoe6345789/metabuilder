@@ -5,6 +5,12 @@ import type { JSONComponent } from '@/lib/packages/json/types'
 import { UIPageRenderer } from '@/components/ui-page-renderer/UIPageRenderer'
 import { loadPageFromDb } from '@/lib/ui-pages/load-page-from-db'
 
+// This route reads its page out of DBAL on every request, so it cannot be
+// prerendered: Next was statically generating it at build time and then
+// throwing "Page changed from static to dynamic at runtime" on the no-store
+// fetch, which is a 500 for every database-driven page.
+export const dynamic = 'force-dynamic'
+
 interface PageProps {
   params: Promise<{
     slug?: string[]
