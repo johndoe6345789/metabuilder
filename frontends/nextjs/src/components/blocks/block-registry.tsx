@@ -14,7 +14,11 @@
 
 import dynamic from 'next/dynamic'
 import type { ReactNode } from 'react'
-import { Avatar, Button, Card, Typography } from '@/m3'
+import {
+  Accordion, AccordionDetails, AccordionSummary, Alert, Avatar, Badge, Button,
+  Card, Checkbox, Chip, CircularProgress, LinearProgress, Paper, Skeleton,
+  Switch, TextField, Tooltip, Typography,
+} from '@/m3'
 import { runWorkflow } from '@/lib/workflow/run-workflow'
 import { store } from '@/store/store'
 import type { RootState } from '@/store/store'
@@ -26,7 +30,14 @@ export interface TreeNode {
   children: TreeNode[]
 }
 
-export type BlockCategory = 'Layout' | 'Content' | 'Inputs' | 'Community' | 'MetaBuilder'
+export type BlockCategory =
+  | 'HTML'
+  | 'Layout'
+  | 'Content'
+  | 'Inputs'
+  | 'Feedback'
+  | 'Community'
+  | 'MetaBuilder'
 
 export interface PaletteItem {
   type: string
@@ -221,6 +232,109 @@ const DEFS: BlockDef[] = [
     render: () => <PackageManagerBlock /> },
   { meta: m('mb.SchemaEditor', 'Schema Editor', 'schema', 'MetaBuilder', false),
     render: () => <SchemaEditorBlock /> },
+  // ---- HTML primitives -------------------------------------------------
+  // The tree is meant to build whole pages, which needs the plain elements
+  // as well as the styled ones.
+  { meta: m('html.div', 'Div', 'check_box_outline_blank', 'HTML', true,
+      { padding: 0 }),
+    render: (p, kids) => (
+      <div style={{ padding: propNumber(p.padding, 0) }}>{kids}</div>
+    ) },
+  { meta: m('html.section', 'Section', 'article', 'HTML', true, {}),
+    render: (_p, kids) => <section>{kids}</section> },
+  { meta: m('html.span', 'Span', 'text_fields', 'HTML', false, { text: 'span' }),
+    render: (p) => <span>{propText(p.text, 'span')}</span> },
+  { meta: m('html.p', 'Paragraph', 'notes', 'HTML', false,
+      { text: 'Paragraph text.' }),
+    render: (p) => <p>{propText(p.text, 'Paragraph text.')}</p> },
+  { meta: m('html.h1', 'H1', 'format_h1', 'HTML', false, { text: 'Heading 1' }),
+    render: (p) => <h1>{propText(p.text, 'Heading 1')}</h1> },
+  { meta: m('html.h2', 'H2', 'format_h2', 'HTML', false, { text: 'Heading 2' }),
+    render: (p) => <h2>{propText(p.text, 'Heading 2')}</h2> },
+  { meta: m('html.h3', 'H3', 'format_h3', 'HTML', false, { text: 'Heading 3' }),
+    render: (p) => <h3>{propText(p.text, 'Heading 3')}</h3> },
+  { meta: m('html.ul', 'List (ul)', 'format_list_bulleted', 'HTML', true, {}),
+    render: (_p, kids) => <ul>{kids}</ul> },
+  { meta: m('html.li', 'List item (li)', 'chevron_right', 'HTML', true,
+      { text: 'Item' }),
+    render: (p, kids) => <li>{propText(p.text, 'Item')}{kids}</li> },
+  { meta: m('html.a', 'Link', 'link', 'HTML', false,
+      { text: 'Link', href: '#' }),
+    render: (p) => (
+      <a href={propText(p.href, '#')}>{propText(p.text, 'Link')}</a>
+    ) },
+
+  // ---- More of the existing component library --------------------------
+  { meta: m('m3.paper', 'Paper', 'layers', 'Layout', true, { padding: 16 }),
+    render: (p, kids) => (
+      <Paper style={{ padding: propNumber(p.padding, 16) }}>{kids}</Paper>
+    ) },
+  { meta: m('m3.accordion', 'Accordion', 'expand_more', 'Layout', true,
+      { title: 'Details' }),
+    render: (p, kids) => (
+      <Accordion>
+        <AccordionSummary>{propText(p.title, 'Details')}</AccordionSummary>
+        <AccordionDetails>{kids}</AccordionDetails>
+      </Accordion>
+    ) },
+  { meta: m('m3.chip', 'Chip', 'label', 'Content', false, { label: 'Chip' }),
+    render: (p) => <Chip label={propText(p.label, 'Chip')} size="small" /> },
+  { meta: m('m3.badge', 'Badge', 'notifications', 'Content', true,
+      { count: 1 }),
+    render: (p, kids) => (
+      <Badge content={propNumber(p.count, 1)}>{kids}</Badge>
+    ) },
+  { meta: m('m3.alert', 'Alert', 'info', 'Feedback', false,
+      { severity: 'info', text: 'Something worth knowing.' }),
+    render: (p) => (
+      <Alert severity={propText(p.severity, 'info') as 'info'}>
+        {propText(p.text, 'Something worth knowing.')}
+      </Alert>
+    ) },
+  { meta: m('m3.progress', 'Progress bar', 'linear_scale', 'Feedback', false,
+      { value: 40 }),
+    render: (p) => (
+      <LinearProgress variant="determinate" value={propNumber(p.value, 40)} />
+    ) },
+  { meta: m('m3.spinner', 'Spinner', 'progress_activity', 'Feedback', false, {}),
+    render: () => <CircularProgress /> },
+  { meta: m('m3.skeleton', 'Skeleton', 'view_stream', 'Feedback', false,
+      { height: 24 }),
+    render: (p) => (
+      <Skeleton variant="rectangular" height={propNumber(p.height, 24)} />
+    ) },
+  { meta: m('m3.tooltip', 'Tooltip', 'help', 'Feedback', true,
+      { title: 'Explanation' }),
+    render: (p, kids) => (
+      <Tooltip title={propText(p.title, 'Explanation')}>
+        <span>{kids}</span>
+      </Tooltip>
+    ) },
+  { meta: m('m3.textfield', 'Text field', 'edit', 'Inputs', false,
+      { label: 'Label', placeholder: '' }),
+    render: (p) => (
+      <TextField
+        size="small"
+        label={propText(p.label, 'Label')}
+        placeholder={propText(p.placeholder)}
+      />
+    ) },
+  { meta: m('m3.checkbox', 'Checkbox', 'check_box', 'Inputs', false,
+      { label: 'Checkbox' }),
+    render: (p) => (
+      <label style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+        <Checkbox />
+        {propText(p.label, 'Checkbox')}
+      </label>
+    ) },
+  { meta: m('m3.switch', 'Switch', 'toggle_on', 'Inputs', false,
+      { label: 'Switch' }),
+    render: (p) => (
+      <label style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+        <Switch />
+        {propText(p.label, 'Switch')}
+      </label>
+    ) },
 ]
 
 export const BLOCK_REGISTRY: Partial<Record<string, BlockDef>> =

@@ -23,6 +23,11 @@ export function useComponentTree() {
   const selected = getSelectedTreeNode(tree, selectedId)
   const { addNode, updateProps, deleteNode, moveNode } =
     useComponentTreeActions(tree, selected, commit, setSelectedId)
+  /** Start over from an empty root, for the "Blank tree" option. */
+  const resetTree = useCallback(() => {
+    commit({ id: 'root', type: 'container', props: {}, children: [] })
+    setSelectedId('root')
+  }, [commit])
   const { publish, publishing, conflict, load, loading } =
     useComponentTreePublish(tree)
   return {
@@ -34,6 +39,7 @@ export function useComponentTree() {
     updateProps,
     deleteNode,
     moveNode,
+    resetTree,
     dirty,
     publish,
     publishing,

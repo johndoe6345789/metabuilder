@@ -12,6 +12,7 @@ import { ComponentTreePropsEditor } from './ComponentTreePropsEditor'
 import { ComponentTreePublishBar } from './ComponentTreePublishBar'
 import { ComponentTreeTargetPicker } from './ComponentTreeTargetPicker'
 import { DEFAULT_PUBLISH_TARGET, type PublishTarget } from './component-tree-publish'
+import { usePageConfigs } from './use-page-configs'
 import s from './ComponentTreeTab.module.scss'
 
 export function ComponentTreeWorkbench() {
@@ -19,6 +20,7 @@ export function ComponentTreeWorkbench() {
   const [target, setTarget] = useState<PublishTarget>(DEFAULT_PUBLISH_TARGET)
   // Collapse state is held here rather than inside the recursive outline, so
   // it survives the re-render every tree edit causes.
+  const { rows: pages } = usePageConfigs(target.tenant)
   const [collapsed, setCollapsed] = useState<ReadonlySet<string>>(new Set())
   const toggleCollapse = useCallback((id: string) => {
     setCollapsed(prev => {
@@ -35,6 +37,23 @@ export function ComponentTreeWorkbench() {
   return (
     <div className={s.root}>
       <ComponentTreeTargetPicker
+        pages={pages}
+        onPickRoute={path => {
+          const row = pages.find(p => p.path === path)
+          setTarget(prev => ({
+            ...prev,
+            path,
+            title: row?.title ?? prev.title,
+          }))
+          void t.load(target.tenant, path)
+        }}
+        onPickTree={path => {
+          if (path === null) {
+            t.resetTree()
+            return
+          }
+          void t.load(target.tenant, path)
+        }}
         target={target}
         onChange={patch => {
           setTarget(prev => ({ ...prev, ...patch }))
