@@ -7,12 +7,6 @@
       "description": "System health and quick actions"
     },
     {
-      "id": "rendition",
-      "label": "Rendition",
-      "icon": "architecture",
-      "description": "Tenant shell and control panel designer"
-    },
-    {
       "id": "plan",
       "label": "Plan",
       "icon": "checklist",
@@ -115,21 +109,27 @@
       "label": "Preview Level 1",
       "icon": "visibility",
       "action": "previewLevel",
-      "params": { "level": 1 }
+      "params": {
+        "level": 1
+      }
     },
     {
       "id": "preview-l2",
       "label": "Preview Level 2",
       "icon": "visibility",
       "action": "previewLevel",
-      "params": { "level": 2 }
+      "params": {
+        "level": 2
+      }
     },
     {
       "id": "preview-l3",
       "label": "Preview Level 3",
       "icon": "visibility",
       "action": "previewLevel",
-      "params": { "level": 3 }
+      "params": {
+        "level": 3
+      }
     }
   ]
 }

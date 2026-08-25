@@ -1,7 +1,6 @@
 'use client'
 
 import { OverviewTab } from './OverviewTab'
-import { RenditionTab } from './rendition/RenditionTab'
 import { SchemasTab } from './SchemasTab'
 import { WorkflowsTab } from './WorkflowsTab'
 import { PackagesTab } from './PackagesTab'
@@ -19,7 +18,6 @@ import { DeployTab } from './deploy/DeployTab'
 
 export const TAB_COMPONENTS = {
   overview: OverviewTab,
-  rendition: RenditionTab,
   schemas: SchemasTab,
   workflows: WorkflowsTab,
   packages: PackagesTab,

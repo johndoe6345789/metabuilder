@@ -51,7 +51,10 @@ export function GodPanelShell({ activeTabId }: { activeTabId: string }) {
           state.moveGuide(nextStep)
         }}
         onNext={() => {
-          const nextStep = Math.min(state.guideStep + 1, 8)
+          const nextStep = Math.min(
+            state.guideStep + 1,
+            WALK_ME_STEPS.length - 1
+          )
           state.moveGuide(nextStep)
         }}
         onSelectStep={index => {

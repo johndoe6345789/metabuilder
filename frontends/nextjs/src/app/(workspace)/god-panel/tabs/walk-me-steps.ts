@@ -15,13 +15,6 @@ export const WALK_ME_STEPS = [
       'you need export, import, or preview.',
   },
   {
-    tabId: 'rendition',
-    title: 'Shape this tenant',
-    body:
-      'Define the branded shell, enabled control panel modules, and ' +
-      'navigation before assembling pages.',
-  },
-  {
     tabId: 'plan',
     title: 'Turn intent into tasks',
     body:
