@@ -1,10 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useComponentTree } from './use-component-tree'
 import { PALETTE, renderNode, type PaletteItem } from './builder-registry'
 import { CATEGORIES } from './component-tree-categories'
-import { ComponentTreeOutline } from './ComponentTreeOutline'
+import {
+  ComponentTreeOutline,
+  PALETTE_MIME,
+} from './ComponentTreeOutline'
 import { ComponentTreePropsEditor } from './ComponentTreePropsEditor'
 import { ComponentTreePublishBar } from './ComponentTreePublishBar'
 import { ComponentTreeTargetPicker } from './ComponentTreeTargetPicker'
@@ -14,6 +17,20 @@ import s from './ComponentTreeTab.module.scss'
 export function ComponentTreeWorkbench() {
   const t = useComponentTree()
   const [target, setTarget] = useState<PublishTarget>(DEFAULT_PUBLISH_TARGET)
+  // Collapse state is held here rather than inside the recursive outline, so
+  // it survives the re-render every tree edit causes.
+  const [collapsed, setCollapsed] = useState<ReadonlySet<string>>(new Set())
+  const toggleCollapse = useCallback((id: string) => {
+    setCollapsed(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) {
+        next.delete(id)
+      } else {
+        next.add(id)
+      }
+      return next
+    })
+  }, [])
 
   return (
     <div className={s.root}>
@@ -31,6 +48,12 @@ export function ComponentTreeWorkbench() {
           })
         }}
       />
+      {t.conflict !== null && (
+
+        <div className={s.conflict} role="alert">{t.conflict}</div>
+
+      )}
+
       <ComponentTreePublishBar
         dirty={t.dirty}
         publishing={t.publishing}
@@ -48,6 +71,11 @@ export function ComponentTreeWorkbench() {
                 <button
                   key={i.type}
                   className={s.palItem}
+                  draggable
+                  onDragStart={event => {
+                    event.dataTransfer.setData(PALETTE_MIME, i.type)
+                    event.dataTransfer.effectAllowed = 'copy'
+                  }}
                   onClick={() => {
                     t.addNode(i.type)
                   }}
@@ -67,6 +95,9 @@ export function ComponentTreeWorkbench() {
               node={t.tree}
               depth={0}
               selectedId={t.selectedId}
+              collapsed={collapsed}
+              onToggleCollapse={toggleCollapse}
+              onAdd={t.addNode}
               onSelect={t.setSelectedId}
               onDelete={t.deleteNode}
               onMove={t.moveNode}

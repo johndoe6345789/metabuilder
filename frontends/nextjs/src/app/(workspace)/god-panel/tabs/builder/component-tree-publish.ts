@@ -13,6 +13,43 @@ function pageId(tenant: string, path: string): string {
   return `page_${tenant}_${slug.length > 0 ? slug : 'home'}`
 }
 
+
+interface ConflictingRow {
+  id: string
+  packageId?: string
+  component?: string
+}
+
+/** A published PageConfig for this path under a different id, if one exists. */
+async function findConflictingRow(
+  tenant: string,
+  path: string,
+  ownId: string
+): Promise<ConflictingRow | null> {
+  try {
+    const params = new URLSearchParams({ 'filter.path': path })
+    const res = await fetch(`${DBAL}/${tenant}/core/PageConfig?${params.toString()}`, {
+      signal: AbortSignal.timeout(6000),
+    })
+    if (!res.ok) return null
+    const json = (await res.json()) as {
+      data?: { data?: Record<string, unknown>[] }
+    }
+    const row = (json.data?.data ?? []).find(
+      r => r.id !== ownId && r.isPublished !== false
+    )
+    if (row === undefined) return null
+    return {
+      id: String(row.id),
+      packageId: typeof row.packageId === 'string' ? row.packageId : undefined,
+      component: typeof row.component === 'string' ? row.component : undefined,
+    }
+  } catch {
+    // Never block publishing because the lookup itself failed.
+    return null
+  }
+}
+
 export interface PublishTarget {
   tenant: string
   path: string
@@ -33,6 +70,8 @@ export const DEFAULT_PUBLISH_TARGET: PublishTarget = {
 export function useComponentTreePublish(tree: TreeNode) {
   const dispatch = useAppDispatch()
   const [publishing, setPublishing] = useState(false)
+  /** Why the last publish was refused, if it was. */
+  const [conflict, setConflict] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
   const publish = useCallback(
@@ -41,6 +80,25 @@ export function useComponentTreePublish(tree: TreeNode) {
       setPublishing(true)
       try {
         const id = pageId(tenant, path)
+
+        // A path can already be owned by a seeded row under a different id --
+        // '/' is page_ui_home_root from the ui_home package, rendered by the
+        // registered `home_page` component, while this would write
+        // page_system_home. Publishing anyway leaves two published rows for
+        // one path, and WorkspacePageSlot renders whichever the API returns
+        // first, so the live page would flip unpredictably. Refuse instead.
+        const clash = await findConflictingRow(tenant, path, id)
+        if (clash !== null) {
+          setConflict(
+            `"${path}" is already published by ${clash.packageId ?? 'another package'} ` +
+            `(row ${clash.id}${clash.component != null ? `, component "${clash.component}"` : ''}). ` +
+            'Publishing would leave two rows for this path. Remove or repoint ' +
+            'that row first.'
+          )
+          return false
+        }
+        setConflict(null)
+
         const payload = {
           id,
           path,
@@ -117,5 +175,5 @@ export function useComponentTreePublish(tree: TreeNode) {
     [dispatch]
   )
 
-  return { publish, publishing, load, loading }
+  return { publish, publishing, conflict, load, loading }
 }

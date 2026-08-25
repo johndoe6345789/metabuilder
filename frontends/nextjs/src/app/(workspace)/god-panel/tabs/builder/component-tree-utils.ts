@@ -78,3 +78,13 @@ export function insertAfter(
     ),
   }
 }
+
+/** The node whose children contain `id`, or null for the root / a missing id. */
+export function parentOf(node: TreeNode, id: string): TreeNode | null {
+  for (const child of node.children) {
+    if (child.id === id) return node
+    const found = parentOf(child, id)
+    if (found !== null) return found
+  }
+  return null
+}

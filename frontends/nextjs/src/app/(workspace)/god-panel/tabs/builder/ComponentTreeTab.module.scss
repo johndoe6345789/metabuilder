@@ -248,3 +248,65 @@
     max-height: 340px;
   }
 }
+
+/* Expand / collapse twisty. Always occupies its slot so rows with and
+   without children keep the same text alignment. */
+.twisty {
+  width: 14px;
+  flex-shrink: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-size: 10px;
+  line-height: 1;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+
+  &:hover {
+    color: var(--mat-sys-on-surface, #e6edf3);
+  }
+}
+
+.twistyLeaf {
+  cursor: default;
+  visibility: hidden;
+}
+
+/* How many children are hidden behind a collapsed row. */
+.childCount {
+  min-width: 18px;
+  padding: 0 6px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 10%, transparent);
+}
+
+/* Drop target: without feedback there is no way to tell which row will
+   receive a dragged palette item. */
+.rowDropping {
+  border-left-color: var(--mat-sys-primary, #4493f8);
+  background: color-mix(in srgb, var(--mat-sys-primary) 14%, transparent);
+}
+
+.palItem[draggable='true'] {
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+/* Why a publish was refused. */
+.conflict {
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--mat-sys-on-surface, #e6edf3);
+  border: 1px solid color-mix(in srgb, #dc2626 40%, transparent);
+  background: color-mix(in srgb, #dc2626 12%, transparent);
+}

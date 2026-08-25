@@ -10,6 +10,7 @@ import {
   isDescendant,
   mapTree,
   nid,
+  parentOf,
   removeNode,
 } from './component-tree-utils'
 type Commit = (next: TreeNode) => void
@@ -20,7 +21,11 @@ export function useComponentTreeActions(
   setSelectedId: (id: string) => void
 ) {
   const addNode = useCallback(
-    (type: string) => {
+    /** `parentId` is set when a palette item is dropped onto a specific row;
+     *  clicking the palette falls back to the selection as before. A drop onto
+     *  a non-container lands beside it, in that node's parent, which is what
+     *  dropping "on" a leaf visually implies. */
+    (type: string, parentId?: string) => {
       const item = paletteItem(type)
       if (!item) return
       const node: TreeNode = {
@@ -29,9 +34,16 @@ export function useComponentTreeActions(
         props: { ...item.defaults },
         children: [],
       }
-      const parent = paletteItem(selected.type)?.container
-        ? selected.id
-        : 'root'
+      let parent: string
+      if (parentId === undefined) {
+        parent = paletteItem(selected.type)?.container ? selected.id : 'root'
+      } else {
+        const target = findNode(tree, parentId)
+        parent =
+          target !== null && paletteItem(target.type)?.container
+            ? parentId
+            : (parentOf(tree, parentId)?.id ?? 'root')
+      }
       commit(insertChild(tree, parent, node))
       setSelectedId(node.id)
     },
