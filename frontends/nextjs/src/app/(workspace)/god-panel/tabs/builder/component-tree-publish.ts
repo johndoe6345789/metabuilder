@@ -14,20 +14,17 @@ function pageId(tenant: string, path: string): string {
 }
 
 
-interface ConflictingRow {
+interface PathOwner {
   id: string
   packageId?: string
   component?: string
-  /** True when that row also carries a tree -- the one ambiguous case. */
-  hasTree: boolean
 }
 
-/** A published PageConfig for this path under a different id, if one exists. */
-async function findConflictingRow(
+/** The single row that owns this path, if there is one. `path` is unique. */
+async function findRowForPath(
   tenant: string,
-  path: string,
-  ownId: string
-): Promise<ConflictingRow | null> {
+  path: string
+): Promise<PathOwner | null> {
   try {
     const params = new URLSearchParams({ 'filter.path': path })
     const res = await fetch(`${DBAL}/${tenant}/core/PageConfig?${params.toString()}`, {
@@ -37,19 +34,15 @@ async function findConflictingRow(
     const json = (await res.json()) as {
       data?: { data?: Record<string, unknown>[] }
     }
-    const row = (json.data?.data ?? []).find(
-      r => r.id !== ownId && r.isPublished !== false
-    )
+    const row = (json.data?.data ?? [])[0]
     if (row === undefined) return null
-    const tree = row.componentTree
     return {
       id: String(row.id),
       packageId: typeof row.packageId === 'string' ? row.packageId : undefined,
       component: typeof row.component === 'string' ? row.component : undefined,
-      hasTree: tree !== null && tree !== undefined && tree !== '',
     }
   } catch {
-    // Never block publishing because the lookup itself failed.
+    // Fall through to a plain create rather than blocking on a failed lookup.
     return null
   }
 }
@@ -83,40 +76,27 @@ export function useComponentTreePublish(tree: TreeNode) {
       const { tenant, path, title, level, requiresAuth } = target
       setPublishing(true)
       try {
-        const id = pageId(tenant, path)
+        // "path" carries a UNIQUE index, so a path can only ever have one
+        // row. Taking a page over therefore means repointing whichever row
+        // already owns the path -- posting a second one just 409s. Its id and
+        // packageId are preserved, so restoring the original is a matter of
+        // putting `component` back and clearing `componentTree`.
+        const owner = await findRowForPath(tenant, path)
+        const id = owner?.id ?? pageId(tenant, path)
 
-        // A path can already be owned by a seeded row under a different id --
-        // '/' is page_ui_home_root from the ui_home package, rendered by the
-        // registered `home_page` component, while this would write
-        // page_system_home. Publishing anyway leaves two published rows for
-        // one path, and WorkspacePageSlot renders whichever the API returns
-        // first, so the live page would flip unpredictably. Refuse instead.
-        // Shadowing a package's component-backed row is the supported way to
-        // take a page over: WorkspacePageSlot prefers a row with a tree, and
-        // deleting this one hands the page back untouched. Two rows that both
-        // carry a tree is the genuinely ambiguous case, so that still stops.
-        const clash = await findConflictingRow(tenant, path, id)
-        if (clash?.hasTree === true) {
-          setConflict(
-            `"${path}" already has a component tree published by ` +
-            `${clash.packageId ?? 'another package'} (row ${clash.id}). ` +
-            'Two trees on one path is ambiguous — remove that row first.'
-          )
-          return false
-        }
         setConflict(
-          clash === null
+          owner === null || owner.component === 'component_tree'
             ? null
-            : `Publishing shadows ${clash.packageId ?? 'the seeded page'} ` +
-              `(row ${clash.id}, component "${clash.component ?? '?'}"). ` +
-              'That row is left untouched; delete this one to hand the page back.'
+            : `Taking over "${path}" from ${owner.packageId ?? 'a package'} ` +
+              `(was rendering "${owner.component ?? '?'}"). Restore it by ` +
+              'setting that component back and clearing the tree.'
         )
 
         const payload = {
           id,
           path,
           title,
-          packageId: 'god_builder',
+          packageId: owner?.packageId ?? 'god_builder',
           component: 'component_tree',
           isPublished: true,
           level,
@@ -126,20 +106,21 @@ export function useComponentTreePublish(tree: TreeNode) {
           componentTree: JSON.stringify(tree),
           updatedAt: Date.now(),
         }
-        let res = await fetch(`${DBAL}/${tenant}/core/PageConfig`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...payload, createdAt: Date.now() }),
-          signal: AbortSignal.timeout(6000),
-        })
-        if (res.status === 409) {
-          res = await fetch(`${DBAL}/${tenant}/core/PageConfig/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-            signal: AbortSignal.timeout(6000),
-          })
-        }
+
+        const res =
+          owner === null
+            ? await fetch(`${DBAL}/${tenant}/core/PageConfig`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ...payload, createdAt: Date.now() }),
+                signal: AbortSignal.timeout(6000),
+              })
+            : await fetch(`${DBAL}/${tenant}/core/PageConfig/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+                signal: AbortSignal.timeout(6000),
+              })
         if (!res.ok) return false
         await snapshot('god.componentTree', tree, 'Published page')
         dispatch(clearDirty('tree'))
