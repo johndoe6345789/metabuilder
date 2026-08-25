@@ -16,3 +16,18 @@ export function tenantGodPanelPath(
   const base = `/${encodeURIComponent(normalizeTenantId(value))}/god-panel`
   return tabId == null ? base : `${base}/${encodeURIComponent(tabId)}`
 }
+
+/**
+ * Prefix a workspace route with its tenant: "/dashboard" -> "/acme/dashboard".
+ *
+ * Signed in, every workspace route is served from its tenant-scoped twin
+ * under [tenantSlug]/(workspace). Linking straight there avoids a visible
+ * bounce through the redirect in the workspace layout.
+ */
+export function tenantPath(value: string | null | undefined, path: string): string {
+  const tenant = encodeURIComponent(normalizeTenantId(value))
+  const clean = path.startsWith('/') ? path : `/${path}`
+  if (clean === '/') return `/${tenant}`
+  if (clean === `/${tenant}` || clean.startsWith(`/${tenant}/`)) return clean
+  return `/${tenant}${clean}`
+}

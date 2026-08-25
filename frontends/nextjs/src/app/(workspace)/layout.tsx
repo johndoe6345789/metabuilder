@@ -13,12 +13,23 @@
 'use client'
 
 import { AuthProvider } from '@/app/_components/auth-provider'
+import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
 import { AppShell } from '@/components/layout'
+import { useTenantUrl } from '@/lib/tenant/use-tenant-url'
+
+/** Sends a signed-in visitor to the tenant-scoped twin of this route. */
+function TenantUrlGuard({ children }: { children: React.ReactNode }) {
+  const auth = useAuthContext()
+  useTenantUrl(auth.user?.tenantId, auth.isAuthenticated, auth.isLoading)
+  return <>{children}</>
+}
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <AuthProvider>
-      <AppShell>{children}</AppShell>
+      <TenantUrlGuard>
+        <AppShell>{children}</AppShell>
+      </TenantUrlGuard>
     </AuthProvider>
   )
 }

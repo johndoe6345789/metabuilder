@@ -21,7 +21,7 @@ import Link from 'next/link'
 import { getLevelColor } from '@/lib/packages/navigation'
 import { Logo } from '@/components/brand/Logo'
 import { SunIcon, MoonIcon, LogoutIcon } from './AppBarIcons'
-import { tenantGodPanelPath } from '@/lib/tenant/workspace-paths'
+import { tenantGodPanelPath, tenantPath } from '@/lib/tenant/workspace-paths'
 import s from './AppBar.module.scss'
 
 export interface AppBarProps {
@@ -84,11 +84,14 @@ export function AppBarComponent({
   }, [])
 
   const levelColor = getLevelColor(userLevel)
-  const levelItems = levelNavItems.map(item =>
-    item.path === '/god-panel'
-      ? { ...item, path: tenantGodPanelPath(tenantId) }
-      : item
-  )
+  // Public stays at the site root; the rest are tenant-scoped once signed in.
+  const levelItems = levelNavItems.map(item => {
+    if (item.path === '/god-panel') {
+      return { ...item, path: tenantGodPanelPath(tenantId) }
+    }
+    if (item.path === '/' || !isAuthenticated) return item
+    return { ...item, path: tenantPath(tenantId, item.path) }
+  })
   const visibleLevelItems = levelItems.filter(item =>
     isAuthenticated ? item.level <= userLevel : item.level <= 1
   )

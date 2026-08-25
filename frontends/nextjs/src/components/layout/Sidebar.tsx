@@ -10,7 +10,7 @@ import {
   getLevelColor,
 } from '@/lib/packages/navigation'
 import type { PackageNavItem } from '@/lib/packages/navigation'
-import { tenantGodPanelPath } from '@/lib/tenant/workspace-paths'
+import { tenantGodPanelPath, tenantPath } from '@/lib/tenant/workspace-paths'
 import s from './Sidebar.module.scss'
 
 const iconMap: Record<string, string> = {
@@ -62,8 +62,9 @@ export function Sidebar({
   const levelLabel = getLevelLabel(userLevel)
   const navigable = packages.filter(p => p.showInNav && p.level <= userLevel)
   const levelColor = getLevelColor(userLevel)
+  // Every workspace route has a tenant-scoped twin; link there directly.
   const itemHref = (path: string) =>
-    path === '/god-panel' ? tenantGodPanelPath(tenantId) : path
+    path === '/god-panel' ? tenantGodPanelPath(tenantId) : tenantPath(tenantId, path)
 
   return (
     <aside
@@ -107,7 +108,7 @@ export function Sidebar({
             <div className={s.divider} />
             <div className={s.sectionLabel}>Packages</div>
             {navigable.map(pkg => {
-              const path = `/packages/${pkg.packageId}`
+              const path = tenantPath(tenantId, `/packages/${pkg.packageId}`)
               const active =
                 pathname === path || pathname.startsWith(path + '/')
               return (
