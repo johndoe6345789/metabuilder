@@ -13,7 +13,8 @@ export interface PageRoute {
   level: number
   requiresAuth: boolean
   requiredRole?: string | null
-  componentTree: string
+  /** The PageTree this route renders, if any. */
+  pageTreeId: string | null
   // Matches PageConfig's actual field name (DBAL schema) -- this was
   // "isActive" before, which isn't a real field, so every create/update
   // 422'd on "isPublished: Field is required".

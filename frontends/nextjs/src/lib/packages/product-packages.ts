@@ -167,8 +167,11 @@ export function tierById(id: string): ProductTier | undefined {
   return PRODUCT_TIERS.find(t => t.id === id)
 }
 
-export function defaultComponentTree(title: string): string {
-  return JSON.stringify({
+/** The starter tree a package's route gets, as a node. Written to
+ *  PageTreeNode/PageTreeProp rows, never stored as a document. */
+export function defaultComponentTree(title: string): Record<string, unknown> {
+  return {
+    id: 'root',
     type: 'Box',
     props: {},
     children: [
@@ -186,5 +189,5 @@ export function defaultComponentTree(title: string): string {
         }],
       },
     ],
-  }, null, 2)
+  }
 }

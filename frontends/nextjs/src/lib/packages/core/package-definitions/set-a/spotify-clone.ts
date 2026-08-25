@@ -110,7 +110,6 @@ export const spotifyClonePackage = (): { manifest: PackageManifest; content: Pac
         path: '/music',
         title: 'Music Home',
         level: 2,
-        componentTree: [],
         requiresAuth: false,
       },
       {
@@ -118,7 +117,6 @@ export const spotifyClonePackage = (): { manifest: PackageManifest; content: Pac
         path: '/search',
         title: 'Search Music',
         level: 2,
-        componentTree: [],
         requiresAuth: false,
       },
       {
@@ -126,7 +124,6 @@ export const spotifyClonePackage = (): { manifest: PackageManifest; content: Pac
         path: '/artist/:id',
         title: 'Artist',
         level: 2,
-        componentTree: [],
         requiresAuth: false,
       },
       {
@@ -134,7 +131,6 @@ export const spotifyClonePackage = (): { manifest: PackageManifest; content: Pac
         path: '/album/:id',
         title: 'Album',
         level: 2,
-        componentTree: [],
         requiresAuth: false,
       },
       {
@@ -142,7 +138,6 @@ export const spotifyClonePackage = (): { manifest: PackageManifest; content: Pac
         path: '/playlist/:id',
         title: 'Playlist',
         level: 2,
-        componentTree: [],
         requiresAuth: false,
       },
     ],

@@ -27,7 +27,7 @@ const DEFAULTS: PageRouteInput = {
   level: 0,
   requiresAuth: false,
   requiredRole: null,
-  componentTree: '{\n  "type": "Box",\n  "props": {},\n  "children": []\n}',
+  pageTreeId: null,
   isPublished: true,
   sortOrder: 0,
   tenantId: null,

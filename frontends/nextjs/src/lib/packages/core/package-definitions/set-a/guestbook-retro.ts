@@ -53,7 +53,6 @@ export const guestbookRetroPackage = (): {
         path: '/guestbook',
         title: 'Guestbook',
         level: 1,
-        componentTree: [],
         requiresAuth: false,
       },
     ],

@@ -110,3 +110,88 @@ export async function loadTree(
   }
   return root
 }
+
+/**
+ * Write a tree as rows, replacing whatever `treeId` held.
+ *
+ * Deleting the PageTree first cascades its nodes and their properties away,
+ * so a republish replaces a tree instead of merging into it.
+ */
+export async function saveTree(
+  dbal: string,
+  tenant: string,
+  treeId: string,
+  name: string,
+  root: TreeNodeShape,
+  description = ''
+): Promise<boolean> {
+  const base = `${dbal}/${tenant}/core`
+  const json = { 'Content-Type': 'application/json' }
+
+  await fetch(`${base}/PageTree/${treeId}`, { method: 'DELETE' }).catch(
+    () => null
+  )
+
+  const stamp = Date.now()
+  const tree = await fetch(`${base}/PageTree`, {
+    method: 'POST',
+    headers: json,
+    body: JSON.stringify({
+      id: treeId,
+      tenantId: tenant,
+      name,
+      description,
+      createdAt: stamp,
+      updatedAt: stamp,
+    }),
+  })
+  if (!tree.ok) return false
+
+  let counter = 0
+  const write = async (
+    node: TreeNodeShape,
+    parentId: string | null,
+    order: number
+  ): Promise<boolean> => {
+    counter += 1
+    const nodeId = `${treeId}__${node.id || `n${counter}`}`
+    const nodeRes = await fetch(`${base}/PageTreeNode`, {
+      method: 'POST',
+      headers: json,
+      body: JSON.stringify({
+        id: nodeId,
+        tenantId: tenant,
+        treeId,
+        parentId,
+        type: node.type,
+        sortOrder: order,
+      }),
+    })
+    if (!nodeRes.ok) return false
+
+    for (const [name_, raw] of Object.entries(node.props ?? {})) {
+      const { valueType, value } = propValueType(raw)
+      const propRes = await fetch(`${base}/PageTreeProp`, {
+        method: 'POST',
+        headers: json,
+        body: JSON.stringify({
+          id: `${nodeId}__${name_}`,
+          tenantId: tenant,
+          nodeId,
+          treeId,
+          name: name_,
+          value,
+          valueType,
+        }),
+      })
+      if (!propRes.ok) return false
+    }
+
+    for (const [index, child] of (node.children ?? []).entries()) {
+      if (!(await write(child, nodeId, index))) return false
+    }
+    return true
+  }
+
+  return write(root, null, 0)
+}

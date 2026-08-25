@@ -10,6 +10,7 @@ import {
 import { PackageManager } from './packages/PackageManager'
 import s from './PackagesTab.module.scss'
 import { TenantSelect } from '@/components/tenant/TenantSelect'
+import { saveTree, type TreeNodeShape } from '@/lib/tenant/page-tree'
 
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
@@ -21,8 +22,19 @@ async function createDefaultPages(
 ): Promise<void> {
   const base = `${DBAL}/${tenant}/core/PageConfig`
   await Promise.all(
-    pkg.defaultRoutes.map(route =>
-      fetch(base, {
+    pkg.defaultRoutes.map(async route => {
+      // The starter layout is rows, so the route can point at a tree rather
+      // than carry one.
+      const treeId = `tree_${pkg.id}_${route.path.replace(/[^a-z0-9]+/gi, '_')}`
+      const wrote = await saveTree(
+        DBAL,
+        tenant,
+        treeId,
+        route.title,
+        defaultComponentTree(route.title) as unknown as TreeNodeShape,
+        `Starter layout for ${pkg.id}`
+      )
+      return fetch(base, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -34,10 +46,10 @@ async function createDefaultPages(
           sortOrder: 0,
           packageId: pkg.id,
           tenantId: tenant,
-          componentTree: defaultComponentTree(route.title),
+          pageTreeId: wrote ? treeId : null,
         }),
       })
-    )
+    })
   )
 }
 

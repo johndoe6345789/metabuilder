@@ -24,11 +24,8 @@ const LEVELS = [
 ]
 
 export function PageFormFields({ form, onChange }: PageFormFieldsProps) {
-  const treeStr =
-    typeof form.componentTree === 'string'
-      ? form.componentTree
-      : JSON.stringify({}, null, 2)
-
+  // A page's layout is edited in the God Panel builder and stored as rows;
+  // there is no JSON for anyone to paste here any more.
   return (
     <div className={s.fields}>
       <TextField
@@ -133,23 +130,6 @@ export function PageFormFields({ form, onChange }: PageFormFieldsProps) {
         </div>
       </div>
 
-      <div className={s.fieldGroup}>
-        <Typography variant="caption" className={s.fieldLabel}>
-          Component Tree (JSON)
-        </Typography>
-        <Textarea
-          value={treeStr}
-          onChange={e => {
-            onChange('componentTree', e.target.value)
-          }}
-          rows={10}
-          placeholder='{"type":"Box","props":{},"children":[]}'
-          className={s.jsonEditor}
-        />
-        <Typography variant="caption" color="text.secondary">
-          JSON component tree definition
-        </Typography>
-      </div>
     </div>
   )
 }

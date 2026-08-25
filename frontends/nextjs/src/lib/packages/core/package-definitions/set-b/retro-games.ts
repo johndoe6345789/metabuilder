@@ -85,7 +85,6 @@ export const retroGamesPackage = (): { manifest: PackageManifest; content: Packa
         path: '/arcade',
         title: 'Arcade Home',
         level: 2,
-        componentTree: [],
         requiresAuth: false,
       },
       {
@@ -93,7 +92,6 @@ export const retroGamesPackage = (): { manifest: PackageManifest; content: Packa
         path: '/arcade/play/:id',
         title: 'Play Game',
         level: 2,
-        componentTree: [],
         requiresAuth: false,
       },
       {
@@ -101,7 +99,6 @@ export const retroGamesPackage = (): { manifest: PackageManifest; content: Packa
         path: '/arcade/leaderboard',
         title: 'Leaderboard',
         level: 2,
-        componentTree: [],
         requiresAuth: false,
       },
     ],

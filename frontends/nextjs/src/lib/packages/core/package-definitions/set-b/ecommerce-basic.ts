@@ -91,7 +91,6 @@ export const ecommerceBasicPackage = (): {
         path: '/shop',
         title: 'Shop',
         level: 2,
-        componentTree: [],
         requiresAuth: false,
       },
       {
@@ -99,7 +98,6 @@ export const ecommerceBasicPackage = (): {
         path: '/product/:id',
         title: 'Product Details',
         level: 2,
-        componentTree: [],
         requiresAuth: false,
       },
       {
@@ -107,7 +105,6 @@ export const ecommerceBasicPackage = (): {
         path: '/cart',
         title: 'Shopping Cart',
         level: 2,
-        componentTree: [],
         requiresAuth: true,
         requiredRole: 'user',
       },
@@ -116,7 +113,6 @@ export const ecommerceBasicPackage = (): {
         path: '/checkout',
         title: 'Checkout',
         level: 2,
-        componentTree: [],
         requiresAuth: true,
         requiredRole: 'user',
       },

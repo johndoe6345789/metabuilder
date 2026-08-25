@@ -96,7 +96,6 @@ export const youtubeClonePackage = (): { manifest: PackageManifest; content: Pac
         path: '/videos',
         title: 'Video Home',
         level: 2,
-        componentTree: [],
         requiresAuth: false,
       },
       {
@@ -104,7 +103,6 @@ export const youtubeClonePackage = (): { manifest: PackageManifest; content: Pac
         path: '/watch/:id',
         title: 'Watch Video',
         level: 2,
-        componentTree: [],
         requiresAuth: false,
       },
       {
@@ -112,7 +110,6 @@ export const youtubeClonePackage = (): { manifest: PackageManifest; content: Pac
         path: '/upload',
         title: 'Upload Video',
         level: 2,
-        componentTree: [],
         requiresAuth: true,
         requiredRole: 'user',
       },
@@ -121,7 +118,6 @@ export const youtubeClonePackage = (): { manifest: PackageManifest; content: Pac
         path: '/channel/:id',
         title: 'Channel',
         level: 2,
-        componentTree: [],
         requiresAuth: false,
       },
     ],

@@ -39,16 +39,16 @@ const SEED_PACKAGES = [
 ]
 
 const SEED_PAGE_CONFIGS = [
-  { path: '/', title: 'MetaBuilder', description: 'Data-driven application platform', packageId: 'ui_home', component: 'home_page', componentTree: '{}', level: 0, requiresAuth: false, isPublished: true, sortOrder: 0 },
-  { path: '/dashboard', title: 'Dashboard', packageId: 'dashboard', component: 'dashboard_home', componentTree: '{}', level: 1, requiresAuth: true, isPublished: true, sortOrder: 0 },
-  { path: '/profile', title: 'User Profile', packageId: 'dashboard', component: 'user_profile', componentTree: '{}', level: 1, requiresAuth: true, isPublished: true, sortOrder: 50 },
-  { path: '/login', title: 'Login', packageId: 'ui_login', component: 'login_page', componentTree: '{}', level: 0, requiresAuth: false, isPublished: true, sortOrder: 0 },
-  { path: '/admin', title: 'Administration', packageId: 'admin_dialog', component: 'admin_panel', componentTree: '{}', level: 4, requiresAuth: true, isPublished: true, sortOrder: 0 },
-  { path: '/admin/users', title: 'User Management', packageId: 'user_manager', component: 'user_list', componentTree: '{}', level: 4, requiresAuth: true, isPublished: true, sortOrder: 10 },
-  { path: '/admin/roles', title: 'Role Editor', packageId: 'role_editor', component: 'role_editor', componentTree: '{}', level: 4, requiresAuth: true, isPublished: true, sortOrder: 20 },
-  { path: '/admin/database', title: 'Database Manager', packageId: 'database_manager', component: 'database_manager', componentTree: '{}', level: 5, requiresAuth: true, isPublished: true, sortOrder: 30 },
-  { path: '/admin/schema', title: 'Schema Editor', packageId: 'schema_editor', component: 'schema_editor', componentTree: '{}', level: 5, requiresAuth: true, isPublished: true, sortOrder: 40 },
-  { path: '/admin/packages', title: 'Package Manager', packageId: 'package_manager', component: 'package_list', componentTree: '{}', level: 4, requiresAuth: true, isPublished: true, sortOrder: 50 },
+  { path: '/', title: 'MetaBuilder', description: 'Data-driven application platform', packageId: 'ui_home', component: 'home_page', level: 0, requiresAuth: false, isPublished: true, sortOrder: 0 },
+  { path: '/dashboard', title: 'Dashboard', packageId: 'dashboard', component: 'dashboard_home', level: 1, requiresAuth: true, isPublished: true, sortOrder: 0 },
+  { path: '/profile', title: 'User Profile', packageId: 'dashboard', component: 'user_profile', level: 1, requiresAuth: true, isPublished: true, sortOrder: 50 },
+  { path: '/login', title: 'Login', packageId: 'ui_login', component: 'login_page', level: 0, requiresAuth: false, isPublished: true, sortOrder: 0 },
+  { path: '/admin', title: 'Administration', packageId: 'admin_dialog', component: 'admin_panel', level: 4, requiresAuth: true, isPublished: true, sortOrder: 0 },
+  { path: '/admin/users', title: 'User Management', packageId: 'user_manager', component: 'user_list', level: 4, requiresAuth: true, isPublished: true, sortOrder: 10 },
+  { path: '/admin/roles', title: 'Role Editor', packageId: 'role_editor', component: 'role_editor', level: 4, requiresAuth: true, isPublished: true, sortOrder: 20 },
+  { path: '/admin/database', title: 'Database Manager', packageId: 'database_manager', component: 'database_manager', level: 5, requiresAuth: true, isPublished: true, sortOrder: 30 },
+  { path: '/admin/schema', title: 'Schema Editor', packageId: 'schema_editor', component: 'schema_editor', level: 5, requiresAuth: true, isPublished: true, sortOrder: 40 },
+  { path: '/admin/packages', title: 'Package Manager', packageId: 'package_manager', component: 'package_list', level: 4, requiresAuth: true, isPublished: true, sortOrder: 50 },
 ]
 
 const DEMO_SITE_TENANT = {
@@ -61,16 +61,10 @@ const DEMO_SITE_TENANT = {
   tenantId: 'demo-site',
 }
 
-function pageShell(template: Record<string, unknown>): string {
-  return JSON.stringify({
-    id: template.id ?? `page-${Math.random().toString(36).slice(2, 10)}`,
-    name: template.name ?? 'DemoPage',
-    description: template.description ?? 'Demo site page',
-    render: {
-      type: 'page',
-      template: template.render,
-    },
-  })
+/** The tree a demo page renders. Returned as a node, not a string: it is
+ *  written to PageTreeNode/PageTreeProp rows, not stored as a document. */
+function pageShell(template: Record<string, unknown>): Record<string, unknown> {
+  return template.render as Record<string, unknown>
 }
 
 function stack(
@@ -126,7 +120,7 @@ const DEMO_SITE_PAGE_CONFIGS = [
     description: 'Interactive showcase site for MetaBuilder.',
     icon: 'web',
     component: 'page',
-    componentTree: pageShell({
+    tree: pageShell({
       id: 'demo-site-home',
       name: 'DemoSiteHome',
       description: 'Home page for the demo tenant',
@@ -164,7 +158,7 @@ const DEMO_SITE_PAGE_CONFIGS = [
     description: 'Overview of the seeded tenant experience.',
     icon: 'info',
     component: 'page',
-    componentTree: pageShell({
+    tree: pageShell({
       id: 'demo-site-about',
       name: 'DemoSiteAbout',
       description: 'About page for the demo tenant',
@@ -200,7 +194,7 @@ const DEMO_SITE_PAGE_CONFIGS = [
     description: 'Service overview for the demo tenant.',
     icon: 'build',
     component: 'page',
-    componentTree: pageShell({
+    tree: pageShell({
       id: 'demo-site-services',
       name: 'DemoSiteServices',
       description: 'Service page for the demo tenant',
@@ -234,7 +228,7 @@ const DEMO_SITE_PAGE_CONFIGS = [
     description: 'Simple plan cards for the demo tenant.',
     icon: 'payments',
     component: 'page',
-    componentTree: pageShell({
+    tree: pageShell({
       id: 'demo-site-pricing',
       name: 'DemoSitePricing',
       description: 'Pricing page for the demo tenant',
@@ -265,7 +259,7 @@ const DEMO_SITE_PAGE_CONFIGS = [
     description: 'Contact form and call to action.',
     icon: 'mail',
     component: 'page',
-    componentTree: pageShell({
+    tree: pageShell({
       id: 'demo-site-contact',
       name: 'DemoSiteContact',
       description: 'Contact page for the demo tenant',
@@ -299,7 +293,7 @@ const DEMO_SITE_PAGE_CONFIGS = [
     description: 'Frequently asked questions.',
     icon: 'help',
     component: 'page',
-    componentTree: pageShell({
+    tree: pageShell({
       id: 'demo-site-faq',
       name: 'DemoSiteFaq',
       description: 'FAQ page for the demo tenant',
@@ -329,7 +323,7 @@ const DEMO_SITE_PAGE_CONFIGS = [
     description: 'Demo tenant dashboard surface.',
     icon: 'dashboard',
     component: 'page',
-    componentTree: pageShell({
+    tree: pageShell({
       id: 'demo-site-dashboard',
       name: 'DemoSiteDashboard',
       description: 'Dashboard page for the demo tenant',
@@ -362,7 +356,7 @@ const DEMO_SITE_PAGE_CONFIGS = [
     description: 'Thank-you page after contact.',
     icon: 'check_circle',
     component: 'page',
-    componentTree: pageShell({
+    tree: pageShell({
       id: 'demo-site-thanks',
       name: 'DemoSiteThanks',
       description: 'Thanks page for the demo tenant',
@@ -388,7 +382,7 @@ const DEMO_SITE_PAGE_CONFIGS = [
     description: 'A page rendered from the website builder tree format.',
     icon: 'construction',
     component: 'component_tree',
-    componentTree: JSON.stringify({
+    tree: {
       id: 'root',
       type: 'container',
       props: { direction: 'column', gap: 14 },
@@ -449,7 +443,7 @@ const DEMO_SITE_PAGE_CONFIGS = [
           ],
         },
       ],
-    }),
+    },
     level: 1,
     requiresAuth: false,
     isPublished: true,
@@ -460,6 +454,88 @@ const DEMO_SITE_PAGE_CONFIGS = [
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
+
+async function dbalDelete(entity: string, id: string): Promise<void> {
+  await fetch(`${ENTITY_BASE}/${entity}/${id}`, { method: 'DELETE' }).catch(
+    () => null
+  )
+}
+
+/**
+ * Write a page's tree as rows: one PageTree, one PageTreeNode per node, one
+ * PageTreeProp per property. Deleting the PageTree first cascades its nodes
+ * and properties away, so re-seeding replaces a tree rather than merging
+ * into it. Returns the tree id to hang off PageConfig.pageTreeId.
+ */
+async function seedPageTree(
+  pageId: string,
+  title: string,
+  root: Record<string, unknown>,
+): Promise<string | null> {
+  const treeId = `tree_${pageId}`
+  await dbalDelete('PageTree', treeId)
+
+  const stamp = Date.now()
+  const created = await dbalPost('PageTree', {
+    id: treeId,
+    tenantId: 'system',
+    name: title,
+    description: `Seeded for ${pageId}`,
+    createdAt: stamp,
+    updatedAt: stamp,
+  })
+  if (!created.ok) return null
+
+  let counter = 0
+  const writeNode = async (
+    node: Record<string, unknown>,
+    parentId: string | null,
+    order: number,
+  ): Promise<boolean> => {
+    counter += 1
+    const rawId = node.id
+    const nodeId = `${treeId}__${typeof rawId === 'string' && rawId.length > 0 ? rawId : `n${counter}`}`
+    const nodeRes = await dbalPost('PageTreeNode', {
+      id: nodeId,
+      tenantId: 'system',
+      treeId,
+      parentId,
+      type: typeof node.type === 'string' ? node.type : 'container',
+      sortOrder: order,
+    })
+    if (!nodeRes.ok) return false
+
+    const props = (node.props ?? {}) as Record<string, unknown>
+    for (const [name, raw] of Object.entries(props)) {
+      const valueType =
+        typeof raw === 'boolean'
+          ? 'boolean'
+          : typeof raw === 'number'
+            ? 'number'
+            : 'string'
+      const value =
+        typeof raw === 'string' ? raw : raw == null ? '' : JSON.stringify(raw)
+      const propRes = await dbalPost('PageTreeProp', {
+        id: `${nodeId}__${name}`,
+        tenantId: 'system',
+        nodeId,
+        treeId,
+        name,
+        value,
+        valueType,
+      })
+      if (!propRes.ok) return false
+    }
+
+    const kids = (node.children ?? []) as Record<string, unknown>[]
+    for (const [index, child] of kids.entries()) {
+      if (!(await writeNode(child, nodeId, index))) return false
+    }
+    return true
+  }
+
+  return (await writeNode(root, null, 0)) ? treeId : null
+}
 
 async function dbalPost(
   entity: string,
@@ -535,7 +611,21 @@ export async function POST(request: NextRequest) {
 
   for (const page of DEMO_SITE_PAGE_CONFIGS) {
     try {
-      const res = await dbalUpsert('PageConfig', page.id, page)
+      const { tree, ...row } = page as Record<string, unknown> & {
+        tree?: Record<string, unknown>
+      }
+      const treeId =
+        tree === undefined
+          ? null
+          : await seedPageTree(
+              String(row.id),
+              String(row.title ?? row.path),
+              tree,
+            )
+      const res = await dbalUpsert('PageConfig', page.id, {
+        ...row,
+        pageTreeId: treeId,
+      })
       if (res.ok) {
         results.pages++
         console.warn(`[Seed] Upserted demo page: ${page.path}`)

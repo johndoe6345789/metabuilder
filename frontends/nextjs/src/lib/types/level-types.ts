@@ -38,7 +38,10 @@ export interface PageConfig {
   description?: string | null
   icon?: string | null
   component?: string | null
-  componentTree?: unknown // JSON: full component tree
+  /** Rows in PageTreeNode/PageTreeProp, resolved by loadTree(). */
+  componentTree?: unknown
+  /** FK to PageTree. */
+  pageTreeId?: string | null
   level?: number
   requiresAuth?: boolean
   requiredRole?: string | null
