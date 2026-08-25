@@ -170,5 +170,8 @@ e2e/playwright-report/
 /dbal/
 /packages/
 /act
+# Written by assemble_workspace.py: records which commit each mount came from,
+# so deployment.py can tell a current tree from a stale one. Per-machine.
+/.workspace-lock.json
 /act_Linux_x86_64.tar.gz
 /act_runner-*

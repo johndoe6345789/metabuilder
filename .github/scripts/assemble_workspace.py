@@ -45,10 +45,13 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from datetime import datetime, timezone
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = REPO_ROOT / ".github" / "workspace.json"
+# Records what assemble actually put on disk; read by deployment.py's preflight.
+LOCK_FILE = ".workspace-lock.json"
 
 
 class AssemblyError(RuntimeError):
@@ -241,13 +244,19 @@ def assemble(
     floating: bool,
     force: bool,
     dry_run: bool,
-) -> list[Path]:
-    """Fetch and mount every selected repo. Returns the mounted paths."""
+) -> tuple[list[Path], dict[str, str]]:
+    """Fetch and mount every selected repo.
+
+    Returns the mounted paths and a repo -> resolved SHA map. The map is what
+    lets a consumer tell what is actually on disk: a mount is a plain copy
+    with no .git, so nothing else records which commit it came from.
+    """
     owner = manifest.get("owner")
     if not owner:
         raise AssemblyError("manifest has no 'owner'")
 
     mounted: list[Path] = []
+    resolved: dict[str, str] = {}
 
     for entry in repos:
         name = entry["repo"]
@@ -273,6 +282,9 @@ def assemble(
                 shutil.rmtree(work, ignore_errors=True)
                 fetch_repo(url, retry_ref, work, display)
 
+            # Read the SHA before mounting: the last mount may move the tree.
+            resolved[name] = run_git(["rev-parse", "HEAD"], cwd=work).stdout.strip()
+
             # The last mount may consume the fetched tree; earlier ones copy.
             last = len(entry["mounts"]) - 1
             for index, mount in enumerate(entry["mounts"]):
@@ -282,7 +294,7 @@ def assemble(
                 mounted.append(path)
                 print(f"    {mount['to']}", flush=True)
 
-    return mounted
+    return mounted, resolved
 
 
 def verify_mounts(paths: list[Path]) -> None:
@@ -302,6 +314,30 @@ def verify_mounts(paths: list[Path]) -> None:
 # --------------------------------------------------------------------------
 # entry point
 # --------------------------------------------------------------------------
+
+def write_lock(dest_root: Path, floating: bool, resolved: dict[str, str]) -> Path:
+    """Record what was assembled, next to the mounts it describes.
+
+    Mounts are gitignored copies with no .git, so without this there is no way
+    to tell a current tree from one assembled weeks ago -- and a deploy that
+    skipped assembly looks exactly like one that ran it.
+    """
+    lock = dest_root / LOCK_FILE
+    lock.write_text(
+        json.dumps(
+            {
+                "assembled_at": datetime.now(timezone.utc).isoformat(
+                    timespec="seconds"
+                ),
+                "floating": floating,
+                "repos": dict(sorted(resolved.items())),
+            },
+            indent=2,
+        )
+        + "\n"
+    )
+    return lock
+
 
 def main() -> int:
     parser = argparse.ArgumentParser(
@@ -374,7 +410,7 @@ def main() -> int:
             print(f"Nothing to mount for {frontend}. {note}".rstrip())
             return 0
 
-        mounted = assemble(
+        mounted, resolved = assemble(
             manifest,
             repos,
             args.dest,
@@ -386,6 +422,8 @@ def main() -> int:
 
         if not args.dry_run:
             verify_mounts(mounted)
+            lock = write_lock(args.dest, args.floating, resolved)
+            print(f"Wrote {lock.name} ({len(resolved)} repo(s)).")
 
         print(f"\nMounted {len(mounted)} path(s).")
         return 0

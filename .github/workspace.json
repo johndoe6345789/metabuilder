@@ -142,7 +142,7 @@
     {
       "repo": "scss",
       "branch": "main",
-      "ref": "9966996aa7c7592f6eb61cc256a92522b7f67deb",
+      "ref": "c18074daa1c1acbc7ccb4578b3a3a41edcc61e98",
       "needed_by": [
         "nextjs"
       ],
@@ -174,7 +174,7 @@
     {
       "repo": "AutoMetabuilder",
       "branch": "master",
-      "ref": "7cfcc4acb9cabfb23f477b05c40219c5265b5106",
+      "ref": "f17976c02422e25c1d5e1d8742562e4aa6c6382e",
       "needed_by": [
         "nextjs"
       ],
@@ -192,7 +192,7 @@
     {
       "repo": "dbal",
       "branch": "main",
-      "ref": "6392a3b8686c5e44f99362197685908be3c5b80a",
+      "ref": "e98c6910902752defb3ee4c299b7e4b0ed52cf2e",
       "needed_by": [
         "nextjs"
       ],
@@ -211,7 +211,7 @@
     {
       "repo": "packages",
       "branch": "main",
-      "ref": "21a2fbaf21344bddde8a25568e31e9913c90b0b5",
+      "ref": "6ac464df18dde86134e572100bad02dfbd6f1f29",
       "needed_by": [
         "nextjs"
       ],
