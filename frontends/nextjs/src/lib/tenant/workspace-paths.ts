@@ -9,25 +9,30 @@ export function normalizeTenantId(value?: string | null): string {
 /** The God Panel tab shown when a URL names no tab. */
 export const DEFAULT_GOD_PANEL_TAB = 'overview'
 
+/** /{tenant}/panel — where the app bar and sidebar live. */
+export function tenantPanelPath(value?: string | null, section?: string): string {
+  const base = `/${encodeURIComponent(normalizeTenantId(value))}/panel`
+  return section == null ? base : `${base}/${section.replace(/^\/+/, '')}`
+}
+
 export function tenantGodPanelPath(
   value?: string | null,
   tabId?: string
 ): string {
-  const base = `/${encodeURIComponent(normalizeTenantId(value))}/god-panel`
+  const base = tenantPanelPath(value, 'god')
   return tabId == null ? base : `${base}/${encodeURIComponent(tabId)}`
 }
 
 /**
- * Prefix a workspace route with its tenant: "/dashboard" -> "/acme/dashboard".
+ * Where a workspace route lives: "/dashboard" -> "/acme/panel/dashboard".
  *
- * Signed in, every workspace route is served from its tenant-scoped twin
- * under [tenantSlug]/(workspace). Linking straight there avoids a visible
- * bounce through the redirect in the workspace layout.
+ * These are the pages with chrome, so they sit under the panel. A published
+ * page keeps the bare /{tenant}/{route} shape and does not go through here.
  */
 export function tenantPath(value: string | null | undefined, path: string): string {
   const tenant = encodeURIComponent(normalizeTenantId(value))
   const clean = path.startsWith('/') ? path : `/${path}`
-  if (clean === '/') return `/${tenant}`
-  if (clean === `/${tenant}` || clean.startsWith(`/${tenant}/`)) return clean
-  return `/${tenant}${clean}`
+  if (clean === '/') return `/${tenant}/panel`
+  if (clean.startsWith(`/${tenant}/panel`)) return clean
+  return `/${tenant}/panel${clean}`
 }

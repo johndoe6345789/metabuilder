@@ -9,7 +9,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
-import { tenantPath } from '@/lib/tenant/workspace-paths'
+import { tenantPanelPath } from '@/lib/tenant/workspace-paths'
 import { Typography, Paper, Button } from '@/m3'
 import s from './page.module.scss'
 
@@ -19,7 +19,7 @@ export default function AppRootPage() {
 
   useEffect(() => {
     if (auth.isAuthenticated && !auth.isLoading) {
-      router.replace(tenantPath(auth.user?.tenantId, '/'))
+      router.replace(tenantPanelPath(auth.user?.tenantId))
     }
   }, [auth.isAuthenticated, auth.isLoading, auth.user?.tenantId, router])
 
