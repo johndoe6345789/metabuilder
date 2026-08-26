@@ -46,11 +46,19 @@ export function TreeNodeRow({
     >
       <button
         type="button"
-        className={s.caret}
+        className={`${s.caret} ${childCount > 0 && isExpanded ? s.caretOpen : ''}`}
         aria-label={isExpanded ? 'Collapse' : 'Expand'}
+        aria-expanded={childCount > 0 ? isExpanded : undefined}
         onClick={onCaretClick}
       >
-        {childCount > 0 ? (isExpanded ? '▼' : '▶') : ' '}
+        {childCount > 0 && (
+          <span
+            className={`material-symbols-rounded ${s.caretIcon}`}
+            aria-hidden="true"
+          >
+            chevron_right
+          </span>
+        )}
       </button>
 
       <Typography variant="body2" className={s.label}>{type}</Typography>

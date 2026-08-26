@@ -41,22 +41,49 @@
 }
 
 .caret {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.65rem;
   background: none;
   border: none;
   cursor: pointer;
   color: var(--md-sys-color-on-surface-variant, #49454f);
   padding: 0;
   flex-shrink: 0;
-  border-radius: 10px;
+  border-radius: 11px;
 
   &:hover {
     background: var(--md-sys-color-outline-variant, #cac4d0);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--md-sys-color-primary, #6750a4);
+    outline-offset: 1px;
+  }
+}
+
+/* The glyph, not the button, was the problem: a 20px box held a 0.65rem
+   (~10px) triangle. One chevron rotated by state also avoids the two
+   characters rendering at different sizes across platforms.
+   .caretIcon is a module class rather than a descendant rule on
+   .material-symbols-rounded, which is global -- inside a CSS module that
+   selector gets hashed and silently matches nothing -- and is qualified by
+   .caret so it out-specifies the global 24px icon size. */
+.caret .caretIcon {
+  font-size: 20px;
+  color: inherit;
+  transition: transform 0.12s ease;
+}
+
+.caretOpen .caretIcon {
+  transform: rotate(90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caretIcon {
+    transition: none;
   }
 }
 
