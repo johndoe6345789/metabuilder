@@ -3,7 +3,28 @@
 import { Button, TextField, Typography } from '@/m3'
 import { useCssClasses } from './use-css-classes'
 import { useCssUi } from './use-css-ui'
+import { StyleVisualEditor } from './StyleVisualEditor'
+import { toClassName, toCssText } from './style-controls'
 import s from './CssClassesTab.module.scss'
+
+/**
+ * What a style looks like applied to something.
+ *
+ * Rendered as a real stylesheet rule rather than an inline style object:
+ * React ignores hyphenated keys in `style`, so half of every rule -- the half
+ * written as actual CSS -- was silently dropped and the preview showed a
+ * style nobody would get. A rule in a <style> tag is also exactly what the
+ * published page will use.
+ */
+function StylePreview({ id, css }: { id: string; css: Record<string, string> }) {
+  const scope = `sp-${id.replace(/[^a-zA-Z0-9_-]/g, '')}`
+  return (
+    <div className={s.preview}>
+      <style>{`.${scope} {\n${toCssText(css)}\n}`}</style>
+      <div className={scope}>The quick brown fox jumps over the lazy dog.</div>
+    </div>
+  )
+}
 
 export function CssClassesTab() {
   const css = useCssClasses()
@@ -12,14 +33,9 @@ export function CssClassesTab() {
     css.classes.find(c => c.id === ui.selectedId) ?? css.classes[0]
 
   const addClass = () => {
-    if (!ui.newName.trim()) return
-    ui.setSelectedId(css.create(ui.newName))
+    if (ui.newName.trim() === '') return
+    ui.setSelectedId(css.create(toClassName(ui.newName)))
     ui.setNewName('')
-  }
-  const addProp = () => {
-    if (!selected || !ui.propKey.trim()) return
-    css.setProp(selected.id, ui.propKey.trim(), ui.propVal)
-    ui.resetNewProp()
   }
 
   return (
@@ -49,7 +65,8 @@ export function CssClassesTab() {
           <div className={s.addRow}>
             <TextField
               size="small"
-              label="New class"
+              label="New style"
+              placeholder="Big red heading"
               value={ui.newName}
               onChange={e => {
                 ui.setNewName(e.target.value)
@@ -70,7 +87,7 @@ export function CssClassesTab() {
                 ui.setSelectedId(c.id)
               }}
             >
-              <span className={s.dotClass}>.{c.name}</span>
+              <span className={s.dotClass}>{c.name}</span>
               <button
                 className={s.del}
                 onClick={e => {
@@ -90,81 +107,53 @@ export function CssClassesTab() {
               <TextField
                 size="small"
                 fullWidth
-                label="Class name"
+                label="Style name"
                 value={selected.name}
+                helperText={`Applied to a component as "${selected.name}"`}
                 onChange={e => {
                   css.rename(selected.id, e.target.value)
                 }}
+                onBlur={e => {
+                  // Tidied on the way out rather than as they type, so the
+                  // field does not fight the person using it.
+                  css.rename(selected.id, toClassName(e.target.value))
+                }}
               />
 
-              <div className={s.propsHead}>Properties</div>
-              {Object.entries(selected.props).map(([k, v]) => (
-                <div key={k} className={s.propRow}>
-                  <span className={s.propKey}>{k}</span>
-                  <TextField
-                    size="small"
-                    value={v}
-                    onChange={e => {
-                      css.setProp(selected.id, k, e.target.value)
-                    }}
-                  />
-                  <button
-                    className={s.del}
-                    onClick={() => {
-                      css.removeProp(selected.id, k)
-                    }}
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
-
-              <div className={s.addProp}>
-                <TextField
-                  size="small"
-                  label="property"
-                  value={ui.propKey}
-                  onChange={e => {
-                    ui.setPropKey(e.target.value)
-                  }}
-                />
-                <TextField
-                  size="small"
-                  label="value"
-                  value={ui.propVal}
-                  onChange={e => {
-                    ui.setPropVal(e.target.value)
-                  }}
-                  onKeyDown={e => {
-                    if (e.key === 'Enter') addProp()
-                  }}
-                />
-                <Button size="small" variant="outlined" onClick={addProp}>
-                  Add
-                </Button>
-              </div>
+              <StyleVisualEditor
+                props={selected.props}
+                onSet={(prop, value) => {
+                  css.setProp(selected.id, prop, value)
+                }}
+                onClear={prop => {
+                  css.removeProp(selected.id, prop)
+                }}
+              />
             </>
           ) : (
             <Typography variant="body2" color="text.secondary">
-              Create a class to start styling.
+              Name a style above to start. A style is a look you can reuse —
+              give it a name, set how it should look, then apply it to any
+              component in the builder.
             </Typography>
           )}
         </section>
 
         <section className={s.previewWrap}>
           <div className={s.previewTitle}>Preview</div>
-          <div className={s.preview}>
-            <div style={selected?.props as React.CSSProperties}>
-              .{selected?.name}
-            </div>
-          </div>
-          <pre className={s.code}>
-            {selected
-              ? `.${selected.name} {\n${Object.entries(selected.props)
-                  .map(([k, v]) => `  ${k}: ${v};`)
-                  .join('\n')}\n}`
-              : ''}
-          </pre>
+          {selected ? (
+            <StylePreview id={selected.id} css={selected.props} />
+          ) : (
+            <div className={s.preview} />
+          )}
+          <details className={s.codeWrap}>
+            <summary className={s.codeSummary}>Show the CSS</summary>
+            <pre className={s.code}>
+              {selected
+                ? `.${selected.name} {\n${toCssText(selected.props)}\n}`
+                : ''}
+            </pre>
+          </details>
         </section>
       </div>
     </div>

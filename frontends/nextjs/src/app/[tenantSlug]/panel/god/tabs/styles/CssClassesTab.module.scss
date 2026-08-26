@@ -1,6 +1,9 @@
 .root {
   display: flex;
   flex-direction: column;
+  // Shares its row with a 288px sidebar, so the viewport width says nothing
+  // about the width this pane actually gets. Measure this element instead.
+  container-type: inline-size;
 }
 
 .publishBar {
@@ -159,8 +162,172 @@
   white-space: pre;
 }
 
-@media (max-width: 900px) {
+// Three columns need 220 + 280 + 260 plus two 14px gaps before any can
+// shrink; below that the list sits above a stacked editor and preview.
+@container (max-width: 800px) {
   .grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+  .previewWrap {
+    grid-column: 1 / -1;
+  }
+}
+
+@container (max-width: 520px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .previewWrap {
+    grid-column: auto;
+  }
+}
+
+
+/* ── plain-English style controls ────────────────────────────────────── */
+.groups {
+  display: flex;
+  flex-direction: column;
+  margin-top: 12px;
+}
+.group {
+  border-top: 1px solid var(--mat-sys-outline-variant, #30363d);
+}
+.groupHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 2px;
+  border: 0;
+  background: transparent;
+  color: var(--mat-sys-on-surface, #e6edf3);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+
+  :global(.material-symbols-rounded) {
+    font-size: 18px;
+    color: var(--mat-sys-on-surface-variant, #8b949e);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary, #4493f8);
+    outline-offset: 1px;
+  }
+}
+.groupTwist {
+  transition: transform 0.12s ease;
+}
+.groupTwistOpen {
+  transform: rotate(90deg);
+}
+.groupCount {
+  min-width: 18px;
+  margin-left: auto;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--mat-sys-primary) 18%, transparent);
+  color: var(--mat-sys-primary, #4493f8);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+.groupBody {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 4px 2px 18px;
+}
+
+.ctrl {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ctrlHead {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.ctrlLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface, #e6edf3);
+}
+.ctrlValue {
+  margin-left: 6px;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+.ctrlClear {
+  margin-left: auto;
+  padding: 2px 6px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+  font-size: 11px;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--mat-sys-error, #f85149);
+  }
+}
+.ctrlHint {
+  display: block;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+}
+.ctrlChoices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.ctrlChoice {
+  min-height: 34px;
+  padding: 6px 12px;
+  border: 1px solid var(--mat-sys-outline-variant, #30363d);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+  font-size: 12px;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary, #4493f8);
+    outline-offset: 1px;
+  }
+}
+.ctrlChoiceOn {
+  border-color: var(--mat-sys-primary, #4493f8);
+  background: color-mix(in srgb, var(--mat-sys-primary) 16%, transparent);
+  color: var(--mat-sys-primary, #4493f8);
+  font-weight: 600;
+}
+.ctrlToggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface, #e6edf3);
+  cursor: pointer;
+}
+
+.codeWrap {
+  margin-top: 10px;
+}
+.codeSummary {
+  padding: 6px 0;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .groupTwist {
+    transition: none;
   }
 }
