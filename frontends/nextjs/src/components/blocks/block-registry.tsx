@@ -59,13 +59,13 @@ const Webchat = dynamic(
   () => import('@/components/webchat/Webchat').then((m) => ({ default: m.Webchat })),
   { ssr: false, loading })
 const WorkflowEditorBlock = dynamic(
-  () => import('@/app/(workspace)/god-panel/blocks/metabuilder-blocks').then((m) => ({ default: m.WorkflowEditorBlock })),
+  () => import('@/app/[tenantSlug]/panel/god/blocks/metabuilder-blocks').then((m) => ({ default: m.WorkflowEditorBlock })),
   { ssr: false, loading })
 const PackageManagerBlock = dynamic(
-  () => import('@/app/(workspace)/god-panel/blocks/metabuilder-blocks').then((m) => ({ default: m.PackageManagerBlock })),
+  () => import('@/app/[tenantSlug]/panel/god/blocks/metabuilder-blocks').then((m) => ({ default: m.PackageManagerBlock })),
   { ssr: false, loading })
 const SchemaEditorBlock = dynamic(
-  () => import('@/app/(workspace)/god-panel/blocks/metabuilder-blocks').then((m) => ({ default: m.SchemaEditorBlock })),
+  () => import('@/app/[tenantSlug]/panel/god/blocks/metabuilder-blocks').then((m) => ({ default: m.SchemaEditorBlock })),
   { ssr: false, loading })
 
 // Fire the wired workflow when a bound button is clicked (route→tree→workflow).

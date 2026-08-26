@@ -21,12 +21,12 @@
  */
 
 import type { ComponentType } from 'react'
-import { DashboardContent } from '@/app/(workspace)/dashboard/page'
-import { AdminContent } from '@/app/(workspace)/admin/page'
-import { ProfileContent } from '@/app/(workspace)/profile/page'
-import { CommentsContent } from '@/app/(workspace)/comments/page'
-import { ChatContent } from '@/app/(workspace)/chat/page'
-import { VaultShell } from '@/app/(workspace)/vault/VaultShell'
+import { DashboardContent } from '@/app/[tenantSlug]/panel/dashboard/page'
+import { AdminContent } from '@/app/[tenantSlug]/panel/admin/page'
+import { ProfileContent } from '@/app/[tenantSlug]/panel/profile/page'
+import { CommentsContent } from '@/app/[tenantSlug]/panel/comments/page'
+import { ChatContent } from '@/app/[tenantSlug]/panel/chat/page'
+import { VaultShell } from '@/app/[tenantSlug]/panel/vault/VaultShell'
 
 export const COMPONENT_REGISTRY: Record<string, ComponentType> = {
   dashboard_home: DashboardContent,

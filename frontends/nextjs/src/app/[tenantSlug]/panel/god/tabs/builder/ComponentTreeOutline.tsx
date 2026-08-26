@@ -74,7 +74,13 @@ export function ComponentTreeOutline({
       >
         <button
           type="button"
-          className={`${s.twisty} ${hasChildren ? '' : s.twistyLeaf}`}
+          className={[
+            s.twisty,
+            hasChildren ? '' : s.twistyLeaf,
+            hasChildren && !isCollapsed ? s.twistyOpen : '',
+          ]
+            .filter(Boolean)
+            .join(' ')}
           aria-label={isCollapsed ? 'Expand' : 'Collapse'}
           aria-expanded={hasChildren ? !isCollapsed : undefined}
           onClick={event => {
@@ -82,7 +88,16 @@ export function ComponentTreeOutline({
             if (hasChildren) onToggleCollapse(node.id)
           }}
         >
-          {hasChildren ? (isCollapsed ? '▸' : '▾') : ''}
+          {/* One glyph rotated by state rather than two characters: the
+              text triangles rendered at wildly different sizes across
+              platforms, and a single rotating chevron matches the icon
+              set the rest of the row already uses. */}
+          <span
+            className={`material-symbols-rounded ${s.twistyIcon}`}
+            aria-hidden="true"
+          >
+            chevron_right
+          </span>
         </button>
         <span className={s.grip}>⠿</span>
         <span className="material-symbols-rounded">

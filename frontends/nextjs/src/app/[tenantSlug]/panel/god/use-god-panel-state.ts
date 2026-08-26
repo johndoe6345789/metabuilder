@@ -7,11 +7,7 @@ import {
   tenantGodPanelPath,
 } from '@/lib/tenant/workspace-paths'
 import { useNerdMode } from '@/components/nerd-mode-ide'
-import {
-  useAuthContext,
-} from '@/app/_components/auth-provider/auth-provider-component'
 import { godPanelConfig } from '@/lib/packages/navigation'
-import { useGodPanelRedirect } from './use-god-panel-redirect'
 import { WALK_ME_STEPS } from './tabs/god-panel-config'
 
 export function useGodPanelState(activeTabId: string) {
@@ -19,7 +15,6 @@ export function useGodPanelState(activeTabId: string) {
   const [guideStep, setGuideStep] = useState(0)
   const nerd = useNerdMode()
   const router = useRouter()
-  const auth = useAuthContext()
   const params = useParams<{ tenantSlug?: string }>()
   const routeTenantId = params.tenantSlug
   const tabs = godPanelConfig.tabs
@@ -32,11 +27,7 @@ export function useGodPanelState(activeTabId: string) {
   )
   const activeTabConfig = tabs[activeTab] ?? tabs[0]
 
-  useGodPanelRedirect(routeTenantId, auth.user?.tenantId, auth.isLoading)
-
-  const tenantForPaths = normalizeTenantId(
-    routeTenantId ?? auth.user?.tenantId
-  )
+  const tenantForPaths = normalizeTenantId(routeTenantId)
 
   const tabHref = useCallback(
     (tabId: string) => tenantGodPanelPath(tenantForPaths, tabId),

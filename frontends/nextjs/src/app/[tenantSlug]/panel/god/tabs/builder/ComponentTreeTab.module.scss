@@ -251,19 +251,55 @@
 
 /* Expand / collapse twisty. Always occupies its slot so rows with and
    without children keep the same text alignment. */
+/* Expand/collapse control. Sized as a real button rather than a bare
+   character: at 14px wide with a 10px glyph this was a sub-14px hit target
+   on the primary interaction of the whole tree. The 22px box gives it a
+   clickable area and a hover surface, and .row's 17px icon rule is
+   overridden below so the chevron reads as a control, not a label icon. */
 .twisty {
-  width: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
   flex-shrink: 0;
   padding: 0;
   border: 0;
+  border-radius: 6px;
   background: none;
   cursor: pointer;
-  font-size: 10px;
-  line-height: 1;
   color: var(--mat-sys-on-surface-variant, #8b949e);
 
   &:hover {
     color: var(--mat-sys-on-surface, #e6edf3);
+    background: color-mix(in srgb, var(--mat-sys-on-surface) 10%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary, #4493f8);
+    outline-offset: 1px;
+  }
+}
+
+/* Its own class rather than a descendant rule on .material-symbols-rounded:
+   that class is global, so inside a CSS module the selector gets hashed and
+   silently matches nothing. Qualified by .twisty to out-specify the global
+   .material-symbols-rounded font-size, which otherwise ties and wins on
+   source order. */
+.twisty .twistyIcon {
+  font-size: 20px;
+  color: inherit;
+  transition: transform 0.12s ease;
+}
+
+/* Expanded: the same chevron, turned to point at the children below it. */
+.twistyOpen .twistyIcon {
+  transform: rotate(90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .twistyIcon {
+    transition: none;
   }
 }
 
