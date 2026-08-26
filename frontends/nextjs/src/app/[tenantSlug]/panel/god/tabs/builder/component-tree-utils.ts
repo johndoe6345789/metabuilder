@@ -79,6 +79,25 @@ export function insertAfter(
   }
 }
 
+export function insertBefore(
+  node: TreeNode,
+  siblingId: string,
+  child: TreeNode
+): TreeNode {
+  const index = node.children.findIndex(current => current.id === siblingId)
+  if (index >= 0) {
+    const next = [...node.children]
+    next.splice(index, 0, child)
+    return { ...node, children: next }
+  }
+  return {
+    ...node,
+    children: node.children.map(current =>
+      insertBefore(current, siblingId, child)
+    ),
+  }
+}
+
 /** The node whose children contain `id`, or null for the root / a missing id. */
 export function parentOf(node: TreeNode, id: string): TreeNode | null {
   for (const child of node.children) {

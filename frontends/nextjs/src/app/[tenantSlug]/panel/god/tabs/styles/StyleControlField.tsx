@@ -7,8 +7,9 @@
  * entirely, which is what "leave it as it was" means in CSS.
  */
 
+import { useState } from 'react'
 import { ColorPicker, Slider, Typography } from '@/m3'
-import type { StyleControl } from './style-controls'
+import { THEME_COLORS, themeColorValue, type StyleControl } from './style-controls'
 import s from './CssClassesTab.module.scss'
 
 type Props = {
@@ -81,16 +82,13 @@ export function StyleControlField({ control, value, onSet, onClear }: Props) {
 
   if (control.kind === 'color') {
     return (
-      <div className={s.ctrl}>
-        {header}
-        <ColorPicker
-          value={isSet ? value : '#000000'}
-          onChange={next => {
-            onSet(control.prop, next)
-          }}
-        />
-        {hint}
-      </div>
+      <ThemeColorField
+        control={control}
+        value={value}
+        header={header}
+        hint={hint}
+        onSet={onSet}
+      />
     )
   }
 
@@ -144,6 +142,83 @@ export function StyleControlField({ control, value, onSet, onClear }: Props) {
           onSet(control.prop, `${next}${control.unit}`)
         }}
       />
+      {hint}
+    </div>
+  )
+}
+
+
+/**
+ * Theme colours first, a hex picker only if none of them fit. Someone styling
+ * a page usually wants "the brand colour", not a specific hex -- and naming
+ * one keeps the style in step with the theme.
+ */
+function ThemeColorField({
+  control,
+  value,
+  header,
+  hint,
+  onSet,
+}: {
+  control: Extract<StyleControl, { kind: 'color' }>
+  value: string | undefined
+  header: React.ReactNode
+  hint: React.ReactNode
+  onSet: (prop: string, value: string) => void
+}) {
+  const isThemed = value?.startsWith('var(') === true
+  const [custom, setCustom] = useState(
+    value !== undefined && value !== '' && !isThemed
+  )
+
+  return (
+    <div className={s.ctrl}>
+      {header}
+      <div className={s.swatches}>
+        {THEME_COLORS.map(color => {
+          const token = themeColorValue(color.token)
+          return (
+            <button
+              key={color.token}
+              type="button"
+              title={color.label}
+              aria-label={color.label}
+              aria-pressed={value === token}
+              className={`${s.swatch} ${value === token ? s.swatchOn : ''}`}
+              style={{ background: token }}
+              onClick={() => {
+                setCustom(false)
+                onSet(control.prop, token)
+              }}
+            />
+          )
+        })}
+        <button
+          type="button"
+          className={`${s.swatchCustom} ${custom ? s.ctrlChoiceOn : ''}`}
+          aria-pressed={custom}
+          onClick={() => {
+            setCustom(open => !open)
+          }}
+        >
+          Custom…
+        </button>
+      </div>
+      <div className={s.swatchNames}>
+        {THEME_COLORS.map(color => (
+          <span key={color.token} className={s.swatchName}>
+            {color.label}
+          </span>
+        ))}
+      </div>
+      {custom && (
+        <ColorPicker
+          value={isThemed || value === undefined || value === '' ? '#000000' : value}
+          onChange={next => {
+            onSet(control.prop, next)
+          }}
+        />
+      )}
       {hint}
     </div>
   )

@@ -1,6 +1,13 @@
 'use client'
 
+import { useEffect, useRef, useState } from 'react'
 import { Button, TextField, Typography } from '@/m3'
+import {
+  AA_LARGE,
+  AA_NORMAL,
+  contrastRatio,
+  effectiveBackground,
+} from './contrast'
 import { useCssClasses } from './use-css-classes'
 import { useCssUi } from './use-css-ui'
 import { StyleVisualEditor } from './StyleVisualEditor'
@@ -18,11 +25,47 @@ import s from './CssClassesTab.module.scss'
  */
 function StylePreview({ id, css }: { id: string; css: Record<string, string> }) {
   const scope = `sp-${id.replace(/[^a-zA-Z0-9_-]/g, '')}`
+  const sample = useRef<HTMLDivElement>(null)
+  const [ratio, setRatio] = useState<number | null>(null)
+  const [large, setLarge] = useState(false)
+
+  // Measured after paint, from the sample itself: the declarations alone
+  // cannot say what colour a var() resolves to or what the text is sitting on.
+  useEffect(() => {
+    const el = sample.current
+    if (el === null) return
+    const style = getComputedStyle(el)
+    setRatio(contrastRatio(style.color, effectiveBackground(el)))
+    const size = Number.parseFloat(style.fontSize)
+    const bold = Number.parseInt(style.fontWeight, 10) >= 700
+    // WCAG's "large text": 24px, or 18.66px when bold.
+    setLarge(size >= 24 || (bold && size >= 18.66))
+  }, [css])
+
+  const floor = large ? AA_LARGE : AA_NORMAL
+  const fails = ratio !== null && ratio < floor
+
   return (
-    <div className={s.preview}>
-      <style>{`.${scope} {\n${toCssText(css)}\n}`}</style>
-      <div className={scope}>The quick brown fox jumps over the lazy dog.</div>
-    </div>
+    <>
+      <div className={s.preview}>
+        <style>{`.${scope} {\n${toCssText(css)}\n}`}</style>
+        <div ref={sample} className={scope}>
+          The quick brown fox jumps over the lazy dog.
+        </div>
+      </div>
+      {fails && (
+        <div className={s.contrast} role="status">
+          <span className="material-symbols-rounded" aria-hidden="true">
+            visibility_off
+          </span>
+          <span>
+            Hard to read — this text is {ratio.toFixed(1)}:1 against its
+            background, below the {floor}:1 needed to be legible. Try a
+            different text or background colour.
+          </span>
+        </div>
+      )}
+    </>
   )
 }
 

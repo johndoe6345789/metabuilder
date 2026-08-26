@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import type { TreeNode } from './builder-registry'
 import { paletteItem } from './builder-registry'
+import { dropWhere, type DropWhere } from './component-tree-drop'
 import s from './ComponentTreeTab.module.scss'
 
 /** Drag payloads. A row carries a node id; a palette entry carries a type. */
@@ -17,7 +18,7 @@ type Props = {
   onToggleCollapse: (id: string) => void
   onSelect: (id: string) => void
   onDelete: (id: string) => void
-  onMove: (dragId: string, targetId: string) => void
+  onMove: (dragId: string, targetId: string, where: DropWhere) => void
   onAdd: (type: string, parentId: string) => void
 }
 
@@ -32,7 +33,7 @@ export function ComponentTreeOutline({
   onMove,
   onAdd,
 }: Props) {
-  const [dropping, setDropping] = useState(false)
+  const [dropping, setDropping] = useState<DropWhere | null>(null)
   const item = paletteItem(node.type)
   const hasChildren = node.children.length > 0
   const isCollapsed = collapsed.has(node.id)
@@ -40,9 +41,15 @@ export function ComponentTreeOutline({
   return (
     <>
       <div
-        className={`${s.row} ${node.id === selectedId ? s.rowActive : ''} ${
-          dropping ? s.rowDropping : ''
-        }`}
+        className={[
+          s.row,
+          node.id === selectedId ? s.rowActive : '',
+          dropping === 'into' ? s.rowDropping : '',
+          dropping === 'before' ? s.rowDropBefore : '',
+          dropping === 'after' ? s.rowDropAfter : '',
+        ]
+          .filter(Boolean)
+          .join(' ')}
         style={{ paddingLeft: 8 + depth * 16 }}
         draggable={node.id !== 'root'}
         onClick={() => {
@@ -55,21 +62,24 @@ export function ComponentTreeOutline({
         onDragOver={event => {
           // Without preventDefault the browser refuses the drop outright.
           event.preventDefault()
-          setDropping(true)
+          // The root has no siblings to sit between, so it is only ever a
+          // container to drop into.
+          setDropping(node.id === 'root' ? 'into' : dropWhere(event))
         }}
         onDragLeave={() => {
-          setDropping(false)
+          setDropping(null)
         }}
         onDrop={event => {
           event.preventDefault()
-          setDropping(false)
+          const where = dropping ?? 'into'
+          setDropping(null)
           const paletteType = event.dataTransfer.getData(PALETTE_MIME)
           if (paletteType) {
             onAdd(paletteType, node.id)
             return
           }
           const dragId = event.dataTransfer.getData(NODE_MIME)
-          if (dragId) onMove(dragId, node.id)
+          if (dragId) onMove(dragId, node.id, where)
         }}
       >
         <button
@@ -104,6 +114,11 @@ export function ComponentTreeOutline({
           {item?.icon ?? 'widgets'}
         </span>
         <span className={s.rowName}>{item?.name ?? node.type}</span>
+        {typeof node.props.id === 'string' && node.props.id !== '' && (
+          // Six identical "Div" rows are indistinguishable; the id the author
+          // gave a node is how they actually think of it.
+          <span className={s.rowId}>#{node.props.id}</span>
+        )}
         {hasChildren && isCollapsed && (
           <span className={s.childCount}>{node.children.length}</span>
         )}

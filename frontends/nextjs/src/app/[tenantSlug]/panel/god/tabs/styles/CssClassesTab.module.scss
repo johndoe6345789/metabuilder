@@ -331,3 +331,74 @@
     transition: none;
   }
 }
+
+
+/* A style whose text cannot be read is a bug the preview should name, not
+   quietly render. Shown only when it actually fails, so it stays meaningful. */
+.contrast {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--mat-sys-error, #f85149);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--mat-sys-error) 12%, transparent);
+  color: var(--mat-sys-on-surface, #e6edf3);
+  font-size: 12px;
+  line-height: 1.45;
+
+  :global(.material-symbols-rounded) {
+    flex-shrink: 0;
+    font-size: 18px;
+    color: var(--mat-sys-error, #f85149);
+  }
+}
+
+/* theme colour swatches */
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.swatch {
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--mat-sys-outline-variant, #30363d);
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary, #4493f8);
+    outline-offset: 2px;
+  }
+}
+.swatchOn {
+  outline: 2px solid var(--mat-sys-primary, #4493f8);
+  outline-offset: 2px;
+}
+.swatchCustom {
+  min-height: 30px;
+  padding: 4px 10px;
+  border: 1px solid var(--mat-sys-outline-variant, #30363d);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+  font-size: 12px;
+  cursor: pointer;
+}
+.swatchNames {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.swatchName {
+  width: 30px;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+  font-size: 9px;
+  text-align: center;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

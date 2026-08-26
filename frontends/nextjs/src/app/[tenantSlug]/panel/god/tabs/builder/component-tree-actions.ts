@@ -1,11 +1,13 @@
 'use client'
 
+import type { DropWhere } from './component-tree-drop'
 import { useCallback } from 'react'
 import type { TreeNode } from './builder-registry'
 import { paletteItem } from './builder-registry'
 import {
   findNode,
   insertAfter,
+  insertBefore,
   insertChild,
   isDescendant,
   mapTree,
@@ -70,16 +72,33 @@ export function useComponentTreeActions(
     [tree, commit, setSelectedId]
   )
   const moveNode = useCallback(
-    (dragId: string, targetId: string) => {
+    /**
+     * `where` says what the drop meant: onto the row (nest inside it) or
+     * against its top/bottom edge (sit before or after it as a sibling).
+     * Without that distinction a drop could only ever nest, so two children
+     * of the same parent could not be put in a different order.
+     */
+    (dragId: string, targetId: string, where: DropWhere = 'into') => {
       if (dragId === 'root' || dragId === targetId) return
       if (isDescendant(tree, dragId, targetId)) return
       const dragged = findNode(tree, dragId)
       if (!dragged) return
       const without = removeNode(tree, dragId)
       const target = findNode(without, targetId)
-      const asContainer = target && paletteItem(target.type)?.container
+      if (target === null) return
+
+      if (where === 'before') {
+        commit(insertBefore(without, targetId, dragged))
+        return
+      }
+      if (where === 'after') {
+        commit(insertAfter(without, targetId, dragged))
+        return
+      }
+      // Dropped on the row itself: nest it if that can hold children, and
+      // otherwise land beside it, which is what dropping "on" a leaf implies.
       commit(
-        asContainer
+        paletteItem(target.type)?.container === true
           ? insertChild(without, targetId, dragged)
           : insertAfter(without, targetId, dragged)
       )
