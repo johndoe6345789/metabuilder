@@ -50,7 +50,7 @@
   align-items: center;
   gap: 10px;
 
-  .material-symbols-rounded {
+  :global(.material-symbols-rounded) {
     font-size: 26px;
     color: var(--mat-sys-primary, #4493f8);
   }

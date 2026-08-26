@@ -122,7 +122,7 @@
     background 0.12s,
     border-color 0.12s;
 
-  .material-symbols-rounded {
+  :global(.material-symbols-rounded) {
     font-size: 18px;
     color: var(--mat-sys-on-surface-variant, #8b949e);
   }
@@ -146,7 +146,7 @@
   color: var(--mat-sys-on-surface, #e6edf3);
   border-left: 2px solid transparent;
 
-  .material-symbols-rounded {
+  :global(.material-symbols-rounded) {
     font-size: 17px;
     color: var(--mat-sys-on-surface-variant, #8b949e);
   }
