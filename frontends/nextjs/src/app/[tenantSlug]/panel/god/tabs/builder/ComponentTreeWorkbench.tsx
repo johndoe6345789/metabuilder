@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { FormControl, FormLabel, Select } from '@/m3'
 import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
 import { normalizeTenantId } from '@/lib/tenant/workspace-paths'
@@ -16,9 +16,19 @@ import { ComponentTreePublishBar } from './ComponentTreePublishBar'
 import { ComponentTreeTargetPicker } from './ComponentTreeTargetPicker'
 import { DEFAULT_PUBLISH_TARGET, type PublishTarget } from './component-tree-publish'
 import { usePageConfigs } from './use-page-configs'
+import { collectDomIds } from './component-tree-utils'
 import s from './ComponentTreeTab.module.scss'
 
 const BLANK = '__blank__'
+
+type PaneView = 'palette' | 'tree' | 'props' | 'preview'
+
+const PANES: { id: PaneView; label: string; icon: string }[] = [
+  { id: 'palette', label: 'Add', icon: 'widgets' },
+  { id: 'tree', label: 'Tree', icon: 'account_tree' },
+  { id: 'props', label: 'Properties', icon: 'tune' },
+  { id: 'preview', label: 'Preview', icon: 'visibility' },
+]
 
 export function ComponentTreeWorkbench() {
   const t = useComponentTree()
@@ -49,6 +59,21 @@ export function ComponentTreeWorkbench() {
     })
   }, [])
 
+  // Which pane the narrow layout shows. Ignored above the breakpoint, where
+  // all four are on screen at once -- the CSS decides, so there is no width
+  // measuring here.
+  const [view, setView] = useState<PaneView>('tree')
+  // Narrow screens only -- above the breakpoint the setup is always shown.
+  const [setupOpen, setSetupOpen] = useState(false)
+
+  // A duplicate DOM id is invalid HTML and breaks aria references, but it is
+  // invisible in the tree, so the editor has to say so.
+  const idCounts = useMemo(() => collectDomIds(t.tree), [t.tree])
+  const selectedDomId =
+    typeof t.selected.props.id === 'string' ? t.selected.props.id : ''
+  const duplicateId =
+    selectedDomId !== '' && (idCounts.get(selectedDomId) ?? 0) > 1
+
   const trees = pages.filter(p => p.hasTree)
   const currentTree = trees.some(x => x.path === target.path)
     ? target.path
@@ -56,6 +81,21 @@ export function ComponentTreeWorkbench() {
 
   return (
     <div className={s.root}>
+      <button
+        type="button"
+        className={`${s.setupToggle} ${setupOpen ? s.setupToggleOpen : ''}`}
+        aria-expanded={setupOpen}
+        onClick={() => {
+          setSetupOpen(open => !open)
+        }}
+      >
+        <span className="material-symbols-rounded" aria-hidden="true">
+          chevron_right
+        </span>
+        Page setup — {target.path === '' ? 'no route' : target.path}
+      </button>
+
+      <div className={s.setup} data-open={setupOpen}>
       <div className={s.treeBar}>
         <FormControl>
           <FormLabel htmlFor="builder-tree">Component tree</FormLabel>
@@ -116,6 +156,8 @@ export function ComponentTreeWorkbench() {
           })
         }}
       />
+      </div>
+
       {t.conflict !== null && (
 
         <div className={s.conflict} role="alert">{t.conflict}</div>
@@ -132,7 +174,27 @@ export function ComponentTreeWorkbench() {
         }}
       />
 
-      <div className={s.grid}>
+      <div className={s.paneTabs} role="tablist" aria-label="Builder panes">
+        {PANES.map(pane => (
+          <button
+            key={pane.id}
+            type="button"
+            role="tab"
+            aria-selected={view === pane.id}
+            className={`${s.paneTab} ${view === pane.id ? s.paneTabOn : ''}`}
+            onClick={() => {
+              setView(pane.id)
+            }}
+          >
+            <span className="material-symbols-rounded" aria-hidden="true">
+              {pane.icon}
+            </span>
+            {pane.label}
+          </button>
+        ))}
+      </div>
+
+      <div className={s.grid} data-view={view}>
         <aside className={s.palette}>
           {CATEGORIES.map(cat => (
             <div key={cat} className={s.palGroup}>
@@ -159,6 +221,7 @@ export function ComponentTreeWorkbench() {
         </aside>
 
         <section className={s.middle}>
+          <div className={s.treePane}>
           <div className={s.paneTitle}>Tree</div>
           <div className={s.outline}>
             <ComponentTreeOutline
@@ -173,14 +236,19 @@ export function ComponentTreeWorkbench() {
               onMove={t.moveNode}
             />
           </div>
+          </div>
+          <div className={s.propsPane}>
           <div className={s.paneTitle}>Properties</div>
           <div className={s.props}>
             <ComponentTreePropsEditor
               node={t.selected}
+              tenant={tenant}
+              duplicateId={duplicateId}
               onChange={patch => {
                 t.updateProps(t.selectedId, patch)
               }}
             />
+          </div>
           </div>
         </section>
 

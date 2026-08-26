@@ -232,20 +232,35 @@
   }
 }
 
-@container (max-width: 520px) {
+/* Phone-width: four panes stacked into a 340px-tall scroller each meant a
+   builder you could only use by scrolling past three things you were not
+   looking at. Below this width the panes become one view at a time, chosen
+   from .paneTabs -- which is why the tabs only appear here. */
+@container (max-width: 620px) {
   .grid {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto;
+    grid-template-rows: minmax(0, 1fr);
+    height: 60vh;
+    min-height: 380px;
   }
 
   .previewWrap {
     grid-column: auto;
   }
 
-  .palette,
-  .middle,
-  .previewWrap {
-    max-height: 340px;
+  /* Only the selected pane is in the grid; the rest are not rendered at all,
+     so they cannot steal scroll or tab order. */
+  .grid[data-view='palette'] .middle,
+  .grid[data-view='palette'] .previewWrap,
+  .grid[data-view='tree'] .palette,
+  .grid[data-view='tree'] .previewWrap,
+  .grid[data-view='tree'] .propsPane,
+  .grid[data-view='props'] .palette,
+  .grid[data-view='props'] .previewWrap,
+  .grid[data-view='props'] .treePane,
+  .grid[data-view='preview'] .palette,
+  .grid[data-view='preview'] .middle {
+    display: none;
   }
 }
 
@@ -358,4 +373,219 @@
   border-radius: 10px;
   background: var(--mat-sys-surface-container-low, #161b22);
   border: 1px solid var(--mat-sys-outline-variant, #30363d);
+}
+
+
+/* ── pane switcher (narrow layouts only) ─────────────────────────────── */
+.paneTabs {
+  display: none;
+  gap: 4px;
+  margin-bottom: 10px;
+  padding: 4px;
+  border-radius: 12px;
+  background: var(--mat-sys-surface-container-low, #161b22);
+  border: 1px solid var(--mat-sys-outline-variant, #30363d);
+}
+.setupToggle {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 44px;
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  border: 1px solid var(--mat-sys-outline-variant, #30363d);
+  border-radius: 10px;
+  background: var(--mat-sys-surface-container-low, #161b22);
+  color: var(--mat-sys-on-surface, #e6edf3);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+
+  :global(.material-symbols-rounded) {
+    font-size: 18px;
+    color: var(--mat-sys-on-surface-variant, #8b949e);
+    transition: transform 0.12s ease;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary, #4493f8);
+    outline-offset: 1px;
+  }
+}
+.setupToggleOpen :global(.material-symbols-rounded) {
+  transform: rotate(90deg);
+}
+
+.paneTab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  /* A thumb target, not a text link: this is the phone layout's main control. */
+  min-height: 48px;
+  padding: 6px 4px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+
+  :global(.material-symbols-rounded) {
+    font-size: 20px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary, #4493f8);
+    outline-offset: -2px;
+  }
+}
+.paneTabOn {
+  background: var(--mat-sys-surface-container-high, #21262d);
+  color: var(--mat-sys-primary, #4493f8);
+}
+
+/* ── property sheet ──────────────────────────────────────────────────── */
+.propSections {
+  display: flex;
+  flex-direction: column;
+}
+.propSection {
+  border-bottom: 1px solid var(--mat-sys-outline-variant, #30363d);
+}
+.propSectionHead {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 2px;
+  border: 0;
+  background: transparent;
+  color: var(--mat-sys-on-surface, #e6edf3);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary, #4493f8);
+    outline-offset: 1px;
+  }
+}
+.propTwist {
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+  transition: transform 0.12s ease;
+}
+.propTwistOpen {
+  transform: rotate(90deg);
+}
+.propSection .propCol {
+  padding: 4px 2px 14px;
+}
+.propHint {
+  display: block;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+}
+.propCheck {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--mat-sys-on-surface, #e6edf3);
+  cursor: pointer;
+}
+.propLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  color: var(--mat-sys-primary, #4493f8);
+  font-size: 13px;
+  text-decoration: none;
+
+  :global(.material-symbols-rounded) {
+    font-size: 18px;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+.propTypeGroup {
+  padding-top: 12px;
+}
+.propTypeTitle {
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--mat-sys-primary, #4493f8);
+}
+
+/* class chips */
+.classChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.classChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 32px;
+  padding: 4px 10px;
+  border: 1px solid var(--mat-sys-outline-variant, #30363d);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+  font-size: 12px;
+  cursor: pointer;
+
+  :global(.material-symbols-rounded) {
+    font-size: 14px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary, #4493f8);
+    outline-offset: 1px;
+  }
+}
+.classChipOn {
+  border-color: var(--mat-sys-primary, #4493f8);
+  color: var(--mat-sys-primary, #4493f8);
+  background: color-mix(in srgb, var(--mat-sys-primary) 14%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .propTwist {
+    transition: none;
+  }
+}
+
+
+/* These overrides are deliberately last in the file: .paneTabs and .setup are
+   defined above with their narrow-screen state as the exception, and a
+   container query does not raise specificity -- put earlier, a later
+   `display: none` simply wins and the tabs never appear. */
+@container (max-width: 620px) {
+  .paneTabs {
+    display: flex;
+  }
+
+  .setupToggle {
+    display: flex;
+  }
+
+  /* The stage/route/publish setup is a few-times-a-session job; the builder is
+     the whole-session one. On a phone the setup filled the first screen and
+     more, so it collapses behind a disclosure and the tree starts at the top. */
+  .setup[data-open='false'] {
+    display: none;
+  }
 }

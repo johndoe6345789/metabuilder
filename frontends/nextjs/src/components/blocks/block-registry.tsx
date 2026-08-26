@@ -13,7 +13,8 @@
  */
 
 import dynamic from 'next/dynamic'
-import type { ReactNode } from 'react'
+import { cloneElement, isValidElement } from 'react'
+import type { ReactElement, ReactNode } from 'react'
 import {
   Accordion, AccordionDetails, AccordionSummary, Alert, Avatar, Badge, Button,
   Card, Checkbox, Chip, CircularProgress, LinearProgress, Paper, Skeleton,
@@ -346,6 +347,42 @@ export function paletteItem(type: string): PaletteItem | undefined {
   return BLOCK_REGISTRY[type]?.meta
 }
 
+/**
+ * Attributes every block accepts, whatever it renders: identity, styling and
+ * accessibility. They are applied centrally in renderNode rather than by each
+ * block, because a block's render() only reads the props it knows about -- so
+ * without this, setting an id or aria-label in the builder would silently do
+ * nothing on 37 different block types.
+ */
+export const COMMON_PROP_KEYS = [
+  'id', 'name', 'className', 'role', 'tabIndex',
+  'ariaLabel', 'ariaDescribedby', 'ariaHidden', 'testId',
+] as const
+
+// Deliberately NOT here: `title`. Three blocks (list item, accordion,
+// tooltip) already use props.title as their visible content, so injecting it
+// as the DOM title attribute would hang a duplicate native tooltip off every
+// existing one. aria-label covers the accessible-name case properly anyway.
+
+/** Builder prop name -> real DOM attribute, where the two differ. */
+const DOM_ATTR: Record<string, string> = {
+  ariaLabel: 'aria-label',
+  ariaDescribedby: 'aria-describedby',
+  ariaHidden: 'aria-hidden',
+  testId: 'data-testid',
+}
+
+function commonAttrs(props: Record<string, unknown>): Record<string, unknown> {
+  const out: Record<string, unknown> = {}
+  for (const key of COMMON_PROP_KEYS) {
+    const raw = props[key]
+    if (raw === undefined || raw === null || raw === '') continue
+    const attr = DOM_ATTR[key] ?? key
+    out[attr] = key === 'tabIndex' ? Number(raw) : raw
+  }
+  return out
+}
+
 /** Render a component-tree node (and its children) to React. Canonical. */
 export function renderNode(node: TreeNode): ReactNode {
   const def = BLOCK_REGISTRY[node.type]
@@ -353,5 +390,16 @@ export function renderNode(node: TreeNode): ReactNode {
     <span key={c.id} style={{ display: 'contents' }}>{renderNode(c)}</span>
   ))
   if (def === undefined) return <em>Unknown block: {node.type}</em>
-  return def.render(node.props, kids)
+  const el = def.render(node.props, kids)
+  const attrs = commonAttrs(node.props)
+  // Nothing set, or the block returned a fragment/string that cannot carry
+  // attributes -- render it exactly as before.
+  if (Object.keys(attrs).length === 0 || !isValidElement(el)) return el
+  const existing = (el.props as { className?: unknown }).className
+  const added = attrs.className
+  if (typeof existing === 'string' && existing !== '' && typeof added === 'string') {
+    // The block set its own class; the author's is additional, not a override.
+    attrs.className = `${existing} ${added}`
+  }
+  return cloneElement(el as ReactElement<Record<string, unknown>>, attrs)
 }

@@ -2,6 +2,7 @@
 
 import { TextField, Typography } from '@/m3'
 import type { TreeNode } from './builder-registry'
+import { ComponentTreeCommonProps } from './ComponentTreeCommonProps'
 import { ComponentTreeButtonProps } from './ComponentTreeButtonProps'
 import { ComponentTreeContainerProps } from './ComponentTreeContainerProps'
 import { ComponentTreeTextProps } from './ComponentTreeTextProps'
@@ -10,6 +11,7 @@ import { ComponentTreeAvatarProps } from './ComponentTreeAvatarProps'
 import { ComponentTreeStatProps } from './ComponentTreeStatProps'
 import { ComponentTreeListItemProps } from './ComponentTreeListItemProps'
 import { ComponentTreeGridProps } from './ComponentTreeGridProps'
+import s from './ComponentTreeTab.module.scss'
 
 const propText = (value: unknown, fallback = ''): string =>
   typeof value === 'string' ||
@@ -20,10 +22,40 @@ const propText = (value: unknown, fallback = ''): string =>
 
 type Props = {
   node: TreeNode
+  tenant: string
+  duplicateId: boolean
   onChange: (patch: Record<string, unknown>) => void
 }
 
-export function ComponentTreePropsEditor({ node, onChange }: Props) {
+export function ComponentTreePropsEditor({
+  node,
+  tenant,
+  duplicateId,
+  onChange,
+}: Props) {
+  return (
+    <>
+      <ComponentTreeCommonProps
+        node={node}
+        tenant={tenant}
+        duplicateId={duplicateId}
+        onChange={onChange}
+      />
+      <div className={s.propTypeGroup}>
+        <div className={s.propTypeTitle}>{node.type}</div>
+        <TypeProps node={node} onChange={onChange} />
+      </div>
+    </>
+  )
+}
+
+function TypeProps({
+  node,
+  onChange,
+}: {
+  node: TreeNode
+  onChange: (patch: Record<string, unknown>) => void
+}) {
   const p = node.props
   if (node.type === 'heading' || node.type === 'text') {
     return (

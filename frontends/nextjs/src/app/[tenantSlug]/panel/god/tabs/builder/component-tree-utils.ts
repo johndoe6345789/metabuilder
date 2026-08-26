@@ -88,3 +88,21 @@ export function parentOf(node: TreeNode, id: string): TreeNode | null {
   }
   return null
 }
+
+/**
+ * How many nodes use each DOM id, so the editor can flag a duplicate. Ids must
+ * be unique in a document: a repeat silently breaks anchors and every aria
+ * reference pointing at it, and nothing in the tree view would show it.
+ */
+export function collectDomIds(root: TreeNode): Map<string, number> {
+  const counts = new Map<string, number>()
+  const walk = (node: TreeNode): void => {
+    const id = node.props.id
+    if (typeof id === 'string' && id !== '') {
+      counts.set(id, (counts.get(id) ?? 0) + 1)
+    }
+    node.children.forEach(walk)
+  }
+  walk(root)
+  return counts
+}

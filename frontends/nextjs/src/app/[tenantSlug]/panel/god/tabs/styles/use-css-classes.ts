@@ -1,8 +1,9 @@
 'use client'
 
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { setCss, clearDirty } from '@/store/slices/god-slice'
+import { loadStyleClasses, saveStyleClasses } from '@/lib/tenant/style-classes'
 
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
@@ -74,21 +75,34 @@ export function useCssClasses() {
     [classes, persist]
   )
 
+  /**
+   * Load the tenant's saved classes once, so the Styles tab and the builder's
+   * class picker both start from what is actually published rather than an
+   * empty list.
+   */
+  const loadedFor = useRef<string | null>(null)
+  const hydrate = useCallback(
+    (tenant: string) => {
+      if (loadedFor.current === tenant) return
+      loadedFor.current = tenant
+      void loadStyleClasses(DBAL, tenant)
+        .then(rows => {
+          if (rows.length > 0) dispatch(setCss(rows))
+        })
+        .catch(() => null)
+    },
+    [dispatch]
+  )
+
   const publish = useCallback(
     async (tenant = 'system'): Promise<boolean> => {
       setPublishing(true)
       try {
-        const res = await fetch(`${DBAL}/${tenant}/core/StyleClass`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            id: `styles_${tenant}`,
-            tenantId: tenant,
-            classes: JSON.stringify(classes),
-          }),
-          signal: AbortSignal.timeout(6000),
-        })
-        if (!res.ok) return false
+        // Rows, not a JSON blob: StyleClass.classes was dropped when the
+        // schema went relational, so the old POST wrote a column that is no
+        // longer there.
+        const ok = await saveStyleClasses(DBAL, tenant, classes)
+        if (!ok) return false
         dispatch(clearDirty('css'))
         return true
       } catch {
@@ -102,6 +116,7 @@ export function useCssClasses() {
 
   return {
     classes,
+    hydrate,
     create,
     rename,
     setProp,
