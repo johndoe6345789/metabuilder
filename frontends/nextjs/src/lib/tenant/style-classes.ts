@@ -129,3 +129,38 @@ export async function saveStyleClasses(
   }
   return true
 }
+
+/**
+ * A CSS property name from whatever is stored. Older classes were saved with
+ * React casing ("borderRadius"), which is not valid CSS and would be emitted
+ * verbatim into the published stylesheet, so normalise on the way out.
+ */
+export function toCssProp(name: string): string {
+  return name.startsWith('--')
+    ? name
+    : name.replace(/[A-Z]/g, ch => `-${ch.toLowerCase()}`)
+}
+
+/**
+ * Declarations as CSS text. Values are stripped of the characters that could
+ * end the rule early, so a stray "}" in a value cannot leak styles out of the
+ * preview into the panel around it.
+ */
+export function toCssText(props: Record<string, string>): string {
+  return Object.entries(props)
+    .map(([k, v]) => `  ${toCssProp(k)}: ${v.replace(/[{}<>;]/g, '')};`)
+    .join('\n')
+}
+
+/**
+ * The tenant's classes as a stylesheet, for a published page to actually use.
+ * Class names are restricted to what a CSS selector can safely contain, so a
+ * name cannot close the selector and inject rules of its own.
+ */
+export function styleSheetText(classes: StyleClassShape[]): string {
+  return classes
+    .filter(css => /^[a-zA-Z_][a-zA-Z0-9_-]*$/.test(css.name))
+    .filter(css => Object.keys(css.props).length > 0)
+    .map(css => `.${css.name} {\n${toCssText(css.props)}\n}`)
+    .join('\n')
+}

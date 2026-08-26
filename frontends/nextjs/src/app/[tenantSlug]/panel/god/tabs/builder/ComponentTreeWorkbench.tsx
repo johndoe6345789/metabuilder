@@ -74,6 +74,26 @@ export function ComponentTreeWorkbench() {
   const duplicateId =
     selectedDomId !== '' && (idCounts.get(selectedDomId) ?? 0) > 1
 
+  // ⌘Z / ⇧⌘Z, but not while someone is typing into a property field -- there
+  // the browser's own undo is what they mean.
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (!(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== 'z') {
+        return
+      }
+      const el = document.activeElement
+      const tag = el?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return
+      event.preventDefault()
+      if (event.shiftKey) t.redo()
+      else t.undo()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [t])
+
   const trees = pages.filter(p => p.hasTree)
   const currentTree = trees.some(x => x.path === target.path)
     ? target.path
@@ -173,6 +193,35 @@ export function ComponentTreeWorkbench() {
           void t.publish(target)
         }}
       />
+
+      <div className={s.history}>
+        <button
+          type="button"
+          className={s.historyBtn}
+          disabled={!t.canUndo}
+          aria-label="Undo"
+          title="Undo (⌘Z)"
+          onClick={t.undo}
+        >
+          <span className="material-symbols-rounded" aria-hidden="true">
+            undo
+          </span>
+          Undo
+        </button>
+        <button
+          type="button"
+          className={s.historyBtn}
+          disabled={!t.canRedo}
+          aria-label="Redo"
+          title="Redo (⇧⌘Z)"
+          onClick={t.redo}
+        >
+          <span className="material-symbols-rounded" aria-hidden="true">
+            redo
+          </span>
+          Redo
+        </button>
+      </div>
 
       <div className={s.paneTabs} role="tablist" aria-label="Builder panes">
         {PANES.map(pane => (

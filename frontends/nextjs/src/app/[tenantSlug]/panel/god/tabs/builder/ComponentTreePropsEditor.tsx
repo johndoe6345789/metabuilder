@@ -1,8 +1,9 @@
 'use client'
 
-import { TextField, Typography } from '@/m3'
+import { TextField } from '@/m3'
 import type { TreeNode } from './builder-registry'
 import { ComponentTreeCommonProps } from './ComponentTreeCommonProps'
+import { ComponentTreeAutoProps } from './ComponentTreeAutoProps'
 import { ComponentTreeButtonProps } from './ComponentTreeButtonProps'
 import { ComponentTreeContainerProps } from './ComponentTreeContainerProps'
 import { ComponentTreeTextProps } from './ComponentTreeTextProps'
@@ -145,9 +146,5 @@ function TypeProps({
       />
     )
   }
-  return (
-    <Typography variant="body2" color="text.secondary">
-      No editable properties.
-    </Typography>
-  )
+  return <ComponentTreeAutoProps node={node} onChange={onChange} />
 }

@@ -8,14 +8,21 @@
  */
 import type { ReactNode } from 'react'
 import { AuthProvider } from '@/app/_components/auth-provider'
+import { TenantStyleSheet } from '@/components/workspace/TenantStyleSheet'
+import { normalizeTenantId } from '@/lib/tenant/workspace-paths'
 
-export default function TenantRootLayout({
+export default async function TenantRootLayout({
   children,
+  params,
 }: {
   children: ReactNode
+  params: Promise<{ tenantSlug?: string }>
 }) {
+  const { tenantSlug } = await params
+  const tenant = normalizeTenantId(tenantSlug)
   return (
     <div className="tenant-root">
+      <TenantStyleSheet tenant={tenant} />
       <AuthProvider>{children}</AuthProvider>
     </div>
   )

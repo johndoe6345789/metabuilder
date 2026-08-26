@@ -439,6 +439,39 @@
   transform: rotate(90deg);
 }
 
+.history {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.historyBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 6px 12px;
+  border: 1px solid var(--mat-sys-outline-variant, #30363d);
+  border-radius: 999px;
+  background: var(--mat-sys-surface-container-low, #161b22);
+  color: var(--mat-sys-on-surface, #e6edf3);
+  font-size: 12px;
+  cursor: pointer;
+
+  :global(.material-symbols-rounded) {
+    font-size: 17px;
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary, #4493f8);
+    outline-offset: 1px;
+  }
+}
+
 .paneTab {
   flex: 1;
   display: flex;
