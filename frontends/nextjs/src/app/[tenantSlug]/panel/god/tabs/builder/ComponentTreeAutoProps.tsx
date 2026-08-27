@@ -134,7 +134,16 @@ export function ComponentTreeAutoProps({ node, onChange }: Props) {
               helperText={field.hint}
               value={typeof current === 'number' ? String(current) : ''}
               onChange={event => {
-                onChange({ [field.name]: Number(event.target.value) || 0 })
+                // An emptied field means "no value", not zero. `Number('') || 0`
+                // turned every clear into a 0 that could not be undone, so a
+                // badge's count could never be returned to its default.
+                const raw = event.target.value
+                if (raw === '') {
+                  onChange({ [field.name]: undefined })
+                  return
+                }
+                const parsed = Number(raw)
+                onChange({ [field.name]: Number.isNaN(parsed) ? undefined : parsed })
               }}
             />
           )

@@ -11,7 +11,7 @@
  * say) can still be typed in the field and is preserved.
  */
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { TextField, Typography } from '@/m3'
 import { tenantGodPanelPath } from '@/lib/tenant/workspace-paths'
@@ -30,6 +30,7 @@ type Props = {
 export function ComponentTreeClassPicker({ value, tenant, onChange }: Props) {
   const { classes, hydrate } = useCssClasses()
   const applied = split(value)
+  const [query, setQuery] = useState('')
 
   // Pull the tenant's published classes in, so the picker offers what the
   // Styles tab actually defines rather than only what this session created.
@@ -59,8 +60,29 @@ export function ComponentTreeClassPicker({ value, tenant, onChange }: Props) {
       />
 
       {classes.length > 0 ? (
+        <>
+          {/* Worth a filter once the list is longer than a glance. Applied
+              classes are never filtered out, so searching cannot hide what is
+              already on the node. */}
+          {classes.length > 8 && (
+            <TextField
+              size="small"
+              fullWidth
+              label="Find a style"
+              value={query}
+              onChange={event => {
+                setQuery(event.target.value)
+              }}
+            />
+          )}
         <div className={s.classChips}>
-          {classes.map(css => {
+          {classes
+            .filter(
+              css =>
+                applied.includes(css.name) ||
+                css.name.toLowerCase().includes(query.trim().toLowerCase())
+            )
+            .map(css => {
             const on = applied.includes(css.name)
             return (
               <button
@@ -89,6 +111,7 @@ export function ComponentTreeClassPicker({ value, tenant, onChange }: Props) {
             )
           })}
         </div>
+        </>
       ) : (
         <Typography variant="caption" className={s.propHint}>
           No classes defined yet.

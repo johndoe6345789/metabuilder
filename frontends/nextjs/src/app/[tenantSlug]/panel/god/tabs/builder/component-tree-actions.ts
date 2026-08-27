@@ -54,11 +54,17 @@ export function useComponentTreeActions(
   const updateProps = useCallback(
     (id: string, patch: Record<string, unknown>) => {
       commit(
-        mapTree(tree, node =>
-          node.id === id
-            ? { ...node, props: { ...node.props, ...patch } }
-            : node
-        )
+        mapTree(tree, node => {
+          if (node.id !== id) return node
+          const props = { ...node.props, ...patch }
+          // An undefined value in the patch means "unset this", not "store
+          // undefined": left in, it would be written out as an empty string
+          // and the property could never go back to its default.
+          for (const [key, value] of Object.entries(patch)) {
+            if (value === undefined) delete props[key]
+          }
+          return { ...node, props }
+        })
       )
     },
     [tree, commit]
