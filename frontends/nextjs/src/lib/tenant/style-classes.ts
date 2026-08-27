@@ -33,6 +33,9 @@ function rowsOf(payload: unknown): Record<string, unknown>[] {
 
 const sheetId = (tenant: string): string => `styles_${tenant}`
 
+/** Keep generated ids to characters an id column will not argue with. */
+const safe = (value: string): string => value.replace(/[^a-zA-Z0-9_-]/g, '_')
+
 /** Every class defined for `tenant`, in author order. */
 export async function loadStyleClasses(
   dbal: string,
@@ -96,10 +99,17 @@ export async function saveStyleClasses(
   if (!sheet.ok) return false
 
   for (const [index, css] of classes.entries()) {
+    // Ids are built here rather than read back from the response. The layer
+    // generates one if you omit it, but nothing verifies what shape the
+    // create response takes, and saveTree -- the one write path proven in
+    // production -- supplies its own ids for the same reason. A deterministic
+    // id also makes a republish idempotent.
+    const ruleId = `${id}__${safe(css.id)}`
     const ruleRes = await fetch(`${base}/StyleRule`, {
       method: 'POST',
       headers: json,
       body: JSON.stringify({
+        id: ruleId,
         tenantId: tenant,
         styleClassId: id,
         ruleKey: css.id,
@@ -108,15 +118,13 @@ export async function saveStyleClasses(
       }),
     })
     if (!ruleRes.ok) return false
-    const created = (await ruleRes.json()) as { data?: { id?: string } }
-    const ruleId = created.data?.id
-    if (typeof ruleId !== 'string') return false
 
     for (const [name, value] of Object.entries(css.props)) {
       const propRes = await fetch(`${base}/StyleRuleProp`, {
         method: 'POST',
         headers: json,
         body: JSON.stringify({
+          id: `${ruleId}__${safe(name)}`,
           tenantId: tenant,
           ruleId,
           styleClassId: id,
