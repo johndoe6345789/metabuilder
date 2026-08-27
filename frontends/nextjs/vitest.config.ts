@@ -24,6 +24,9 @@ export default defineConfig({
   resolve: {
     dedupe: ['react', 'react-dom'],
     alias: [
+      // server-only throws on import outside a server component, so a server
+      // module could not be unit tested at all without this.
+      { find: /^server-only$/, replacement: resolve(__dirname, './src/test/server-only-stub.ts') },
       // m3 aliases must be first (more specific matches first)
       { find: /^@\/m3\/(.+)$/, replacement: resolve(__dirname, '../../libraries/components/m3/$1') },
       { find: /^@\/m3$/, replacement: resolve(__dirname, '../../libraries/components/m3/index.ts') },

@@ -15,6 +15,7 @@ import { ConfigTab } from './config/ConfigTab'
 import { TestRunnerTab } from './test/TestRunnerTab'
 import { PlanTab } from './plan/PlanTab'
 import { DeployTab } from './deploy/DeployTab'
+import { AssetsTab } from './assets/AssetsTab'
 
 export const TAB_COMPONENTS = {
   overview: OverviewTab,
@@ -31,5 +32,6 @@ export const TAB_COMPONENTS = {
   config: ConfigTab,
   test: TestRunnerTab,
   plan: PlanTab,
+  files: AssetsTab,
   deploy: DeployTab,
 } as const

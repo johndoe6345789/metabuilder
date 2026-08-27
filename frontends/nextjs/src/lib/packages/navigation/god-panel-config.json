@@ -73,6 +73,12 @@
       "description": "Reusable CSS class manager"
     },
     {
+      "id": "files",
+      "label": "Files",
+      "icon": "perm_media",
+      "description": "Logos and images your pages can use"
+    },
+    {
       "id": "config",
       "label": "Config",
       "icon": "tune",
