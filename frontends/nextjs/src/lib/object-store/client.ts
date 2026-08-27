@@ -100,7 +100,7 @@ export interface StoredObject {
 }
 
 /**
- * GET /list/{bucket} -- the objects in a bucket, newest listing first.
+ * GET /{bucket} -- the objects in a bucket, the way S3 lists one.
  *
  * The service answers S3's XML rather than JSON, so this parses the handful
  * of elements it actually emits (Key, Size, ETag, LastModified) instead of
@@ -114,7 +114,7 @@ export async function listObjects(
 ): Promise<StoredObject[]> {
   const query = prefix === '' ? '' : `?prefix=${encodeURIComponent(prefix)}`
   const res = await fetch(
-    `${OBJECT_STORE_URL}/list/${encodeURIComponent(bucket)}${query}`,
+    `${OBJECT_STORE_URL}/${encodeURIComponent(bucket)}${query}`,
     { headers: authHeader(), signal: AbortSignal.timeout(15000) },
   )
   if (res.status === 404) return []
