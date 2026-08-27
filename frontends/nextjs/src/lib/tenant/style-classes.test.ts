@@ -64,7 +64,9 @@ describe('style class CSS', () => {
       { id: 'b', name: 'empty', props: {} },
       { id: 'c', name: 'bad name', props: { color: 'red' } },
     ])
-    expect(sheet).toContain('.lede {')
+    // Doubled on purpose: a single class ties with the component libraries'
+    // own styles and loses on order.
+    expect(sheet).toContain('.lede.lede {')
     expect(sheet).not.toContain('empty')
     expect(sheet).not.toContain('bad name')
   })
@@ -98,7 +100,7 @@ describe('loadStyleClasses', () => {
 })
 
 describe('saveStyleClasses', () => {
-  it('replaces the sheet and writes a row per rule and declaration', async () => {
+  it('writes rules and declarations in batches, not one request each', async () => {
     // Deliberately empty bodies: publishing must not depend on anything in
     // the create response, because nothing verifies its shape.
     const calls = stubDbal(() => new Response('', { status: 200 }))
@@ -116,16 +118,21 @@ describe('saveStyleClasses', () => {
 
     const posted = calls.filter(c => c.method === 'POST')
     expect(posted[0]?.url).toBe(`${DBAL}/system/core/StyleClass`)
-    expect(posted[1]).toMatchObject({
-      url: `${DBAL}/system/core/StyleRule`,
-      body: { styleClassId: 'styles_system', name: 'lede', sortOrder: 0 },
-    })
-    // One row per declaration, each tied to the rule by an id built here.
-    const props = posted.filter(c => c.url.endsWith('/StyleRuleProp'))
+
+    // The data layer allows 50 mutations a minute, and a sheet is naturally
+    // many small rows, so these go in one batch each rather than per row.
+    const ruleBatch = posted.find(c => c.url.endsWith('/StyleRule/_bulk/create'))
+    const propBatch = posted.find(c => c.url.endsWith('/StyleRuleProp/_bulk/create'))
+    expect(ruleBatch).toBeDefined()
+    expect(propBatch).toBeDefined()
+    expect(posted).toHaveLength(3)
+
+    const rules = ruleBatch?.body as { id: string; name: string }[]
+    const props = propBatch?.body as { ruleId: string }[]
+    expect(rules).toHaveLength(1)
+    expect(rules[0]?.id).toBe('styles_system__k1')
     expect(props).toHaveLength(2)
-    const ruleId = (posted[1]?.body as { id: string }).id
-    expect(ruleId).toBe('styles_system__k1')
-    expect(props.every(c => (c.body as { ruleId: string }).ruleId === ruleId)).toBe(true)
+    expect(props.every(p => p.ruleId === 'styles_system__k1')).toBe(true)
   })
 
   it('reports failure when the layer rejects a write', async () => {
@@ -137,5 +144,44 @@ describe('saveStyleClasses', () => {
     await expect(
       saveStyleClasses(DBAL, 'system', [{ id: 'k', name: 'x', props: {} }])
     ).resolves.toBe(false)
+  })
+})
+
+describe('rate limiting', () => {
+  it('retries a batch the limiter rejected rather than losing the sheet', async () => {
+    vi.useFakeTimers()
+    let attempts = 0
+    stubDbal(url => {
+      if (!url.includes('_bulk/create')) return new Response('', { status: 200 })
+      attempts += 1
+      // 50 mutations a minute; a real sheet exceeds it, and a publish that
+      // gives up here loses two thirds of the styles with nothing to show.
+      return attempts === 1
+        ? new Response('rate limited', { status: 429 })
+        : new Response('', { status: 200 })
+    })
+
+    const saved = saveStyleClasses(DBAL, 'system', [
+      { id: 'k', name: 'lede', props: { color: 'red' } },
+    ])
+    await vi.advanceTimersByTimeAsync(25_000)
+    await expect(saved).resolves.toBe(true)
+    expect(attempts).toBeGreaterThan(1)
+    vi.useRealTimers()
+  })
+
+  it('gives up rather than retrying forever', async () => {
+    vi.useFakeTimers()
+    stubDbal(url =>
+      url.includes('_bulk/create')
+        ? new Response('rate limited', { status: 429 })
+        : new Response('', { status: 200 })
+    )
+    const saved = saveStyleClasses(DBAL, 'system', [
+      { id: 'k', name: 'lede', props: { color: 'red' } },
+    ])
+    await vi.advanceTimersByTimeAsync(200_000)
+    await expect(saved).resolves.toBe(false)
+    vi.useRealTimers()
   })
 })

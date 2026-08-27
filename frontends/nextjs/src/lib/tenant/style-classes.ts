@@ -75,6 +75,36 @@ export async function loadStyleClasses(
 }
 
 /**
+ * POST a batch, retrying once the rate limiter lets go.
+ *
+ * The data layer allows 50 mutations a minute per caller. A stylesheet is
+ * naturally many small rows -- eighteen classes came to 148 of them -- so
+ * writing one row per request meant a real sheet could not be published at
+ * all: two thirds of it came back 429 and the tab reported nothing useful.
+ * These go through _bulk/create, which makes a whole sheet three requests.
+ */
+async function postBatch(
+  url: string,
+  rows: unknown[],
+  attempt = 0
+): Promise<boolean> {
+  if (rows.length === 0) return true
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(rows),
+  })
+  if (res.ok) return true
+  // 429 carries no Retry-After here, and the window is a minute; back off
+  // rather than fail a publish the user cannot otherwise complete.
+  if (res.status === 429 && attempt < 3) {
+    await new Promise(resolve => setTimeout(resolve, (attempt + 1) * 20_000))
+    return postBatch(url, rows, attempt + 1)
+  }
+  return false
+}
+
+/**
  * Write the class set, replacing whatever the tenant had.
  *
  * Deleting the StyleClass cascades its rules and their declarations away, so
@@ -86,56 +116,41 @@ export async function saveStyleClasses(
   classes: StyleClassShape[]
 ): Promise<boolean> {
   const base = `${dbal}/${tenant}/core`
-  const json = { 'Content-Type': 'application/json' }
   const id = sheetId(tenant)
 
   await fetch(`${base}/StyleClass/${id}`, { method: 'DELETE' }).catch(() => null)
 
   const sheet = await fetch(`${base}/StyleClass`, {
     method: 'POST',
-    headers: json,
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ id, tenantId: tenant }),
   })
   if (!sheet.ok) return false
 
-  for (const [index, css] of classes.entries()) {
-    // Ids are built here rather than read back from the response. The layer
-    // generates one if you omit it, but nothing verifies what shape the
-    // create response takes, and saveTree -- the one write path proven in
-    // production -- supplies its own ids for the same reason. A deterministic
-    // id also makes a republish idempotent.
-    const ruleId = `${id}__${safe(css.id)}`
-    const ruleRes = await fetch(`${base}/StyleRule`, {
-      method: 'POST',
-      headers: json,
-      body: JSON.stringify({
-        id: ruleId,
-        tenantId: tenant,
-        styleClassId: id,
-        ruleKey: css.id,
-        name: css.name,
-        sortOrder: index,
-      }),
-    })
-    if (!ruleRes.ok) return false
+  // Ids are built here rather than read back from the response, the way
+  // saveTree supplies its own for PageTreeNode. A deterministic id also makes
+  // a republish idempotent.
+  const rules = classes.map((css, index) => ({
+    id: `${id}__${safe(css.id)}`,
+    tenantId: tenant,
+    styleClassId: id,
+    ruleKey: css.id,
+    name: css.name,
+    sortOrder: index,
+  }))
+  const props = classes.flatMap((css, index) =>
+    Object.entries(css.props).map(([name, value]) => ({
+      id: `${rules[index]?.id ?? id}__${safe(name)}`,
+      tenantId: tenant,
+      ruleId: rules[index]?.id ?? id,
+      styleClassId: id,
+      name,
+      value,
+    }))
+  )
 
-    for (const [name, value] of Object.entries(css.props)) {
-      const propRes = await fetch(`${base}/StyleRuleProp`, {
-        method: 'POST',
-        headers: json,
-        body: JSON.stringify({
-          id: `${ruleId}__${safe(name)}`,
-          tenantId: tenant,
-          ruleId,
-          styleClassId: id,
-          name,
-          value,
-        }),
-      })
-      if (!propRes.ok) return false
-    }
-  }
-  return true
+  if (!(await postBatch(`${base}/StyleRule/_bulk/create`, rules))) return false
+  return postBatch(`${base}/StyleRuleProp/_bulk/create`, props)
 }
 
 /**
@@ -169,6 +184,12 @@ export function styleSheetText(classes: StyleClassShape[]): string {
   return classes
     .filter(css => /^[a-zA-Z_][a-zA-Z0-9_-]*$/.test(css.name))
     .filter(css => Object.keys(css.props).length > 0)
-    .map(css => `.${css.name} {\n${toCssText(css.props)}\n}`)
+    // The selector names the class twice on purpose. Many blocks render
+    // components that style their own root, and those styles are also a
+    // single class -- so a plain `.name` lost every tie and a style simply did
+    // not apply to a button or a chip. Repeating the class doubles
+    // specificity, which wins without `!important`: the author keeps the
+    // ability to override this again, and nobody has to know the word.
+    .map(css => `.${css.name}.${css.name} {\n${toCssText(css.props)}\n}`)
     .join('\n')
 }
