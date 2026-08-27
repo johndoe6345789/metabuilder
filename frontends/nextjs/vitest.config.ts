@@ -11,6 +11,16 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
+      // Without this, coverage only counts files a test happens to import,
+      // so the number describes the tested corner rather than the codebase.
+      all: true,
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: [
+        'src/**/*.test.{ts,tsx}',
+        'src/test/**',
+        // Type-only and generated files have nothing to execute.
+        'src/**/*.d.ts',
+      ],
     },
     deps: {
       // Use inline to avoid duplicate React instances in tests
