@@ -25,6 +25,29 @@ interface SessionApiResponse {
   user: User | null
 }
 
+/**
+ * Mirror the in-memory token into an httpOnly cookie.
+ *
+ * The DBAL proxy needs to know whether a request comes from a signed-in user,
+ * and it only sees what the browser sends automatically -- the ~40 call sites
+ * that write through it attach nothing themselves. Every place the token
+ * changes calls this, so the cookie cannot drift from the session.
+ *
+ * Failure is deliberately silent: not being able to set the cookie must not
+ * stop a login from completing. The consequence is writes being refused
+ * until the next page load calls refresh(), not a broken session.
+ */
+async function syncSessionCookie(token: string | null): Promise<void> {
+  try {
+    await fetch(`${BASE_PATH}/api/auth/session`, {
+      method: token === null ? 'DELETE' : 'POST',
+      headers: token === null ? {} : { Authorization: `Bearer ${token}` },
+    })
+  } catch {
+    // See above.
+  }
+}
+
 export class AuthStore {
   private state: AuthState = {
     user: null,
@@ -82,6 +105,7 @@ export class AuthStore {
     } finally {
       this.refreshToken = null
       setAuthToken(null)
+      void syncSessionCookie(null)
       savePersistedSession(null)
       this.setState({
         user: null,
@@ -118,10 +142,12 @@ export class AuthStore {
 
       this.refreshToken = refreshToken
       setAuthToken(token)
+      void syncSessionCookie(token)
       await this.loadProfile(token)
     } catch (error) {
       this.refreshToken = null
       setAuthToken(null)
+      void syncSessionCookie(null)
       savePersistedSession(null)
       this.setState({ user: null, isAuthenticated: false, isLoading: false })
       console.error('Failed to refresh session', error)
@@ -133,6 +159,7 @@ export class AuthStore {
   async applySession(token: string, refreshToken: string | null): Promise<void> {
     this.refreshToken = refreshToken
     setAuthToken(token)
+    void syncSessionCookie(token)
     savePersistedSession({ token, refreshToken })
     this.setState({ ...this.state, isLoading: true })
     try {
