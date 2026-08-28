@@ -7,7 +7,10 @@ import { useEffect, useMemo, useState } from 'react'
 import { CssBaseline } from '@/m3'
 import { store, persistor } from '@/store/store'
 import { RetryableErrorBoundary } from '@/components/RetryableErrorBoundary'
-import { resolveTenantTheme, applyTenantTheme } from '@/components/theme-editor/apply-tenant-theme'
+import {
+  resolveTenantTheme,
+  applyTenantTheme,
+} from '@/components/theme-editor/apply-tenant-theme'
 
 import { ThemeContext, type ThemeMode } from './theme-context'
 
@@ -51,11 +54,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
   // published content (WorkspacePageSlot) behaves.
   useEffect(() => {
     let cancelled = false
-    resolveTenantTheme().then(theme => {
-      if (!cancelled) applyTenantTheme(theme, resolvedMode)
-    }).catch(() => {
-      // resolveTenantTheme already falls back internally; nothing left to do
-    })
+    resolveTenantTheme()
+      .then(theme => {
+        if (!cancelled) applyTenantTheme(theme, resolvedMode)
+      })
+      .catch(() => {
+        // resolveTenantTheme already falls back internally; nothing left to do
+      })
     return () => {
       cancelled = true
     }

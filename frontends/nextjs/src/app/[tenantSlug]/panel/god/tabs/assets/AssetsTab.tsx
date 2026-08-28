@@ -146,7 +146,8 @@ export function AssetsTab() {
                   className={`${s.action} ${s.danger}`}
                   disabled={busy}
                   onClick={() => {
-                    if (window.confirm(`Delete ${asset.key}?`)) void remove(asset.key)
+                    if (window.confirm(`Delete ${asset.key}?`))
+                      void remove(asset.key)
                   }}
                 >
                   <span className="material-symbols-rounded" aria-hidden="true">

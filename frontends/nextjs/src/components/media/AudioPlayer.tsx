@@ -20,7 +20,11 @@ function fmt(sec: number): string {
 }
 
 export function AudioPlayer({
-  src, title, artist, artwork, isLive,
+  src,
+  title,
+  artist,
+  artwork,
+  isLive,
 }: AudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null)
   const [playing, setPlaying] = useState(false)
@@ -55,8 +59,12 @@ export function AudioPlayer({
       <audio
         ref={audioRef}
         src={isSafeMediaSrc(src) ? src : undefined}
-        onPlay={() => { setPlaying(true) }}
-        onPause={() => { setPlaying(false) }}
+        onPlay={() => {
+          setPlaying(true)
+        }}
+        onPause={() => {
+          setPlaying(false)
+        }}
         onTimeUpdate={() => {
           setCurrent(audioRef.current?.currentTime ?? 0)
         }}

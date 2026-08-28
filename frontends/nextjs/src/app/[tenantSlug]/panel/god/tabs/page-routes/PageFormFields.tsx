@@ -129,7 +129,6 @@ export function PageFormFields({ form, onChange }: PageFormFieldsProps) {
           />
         </div>
       </div>
-
     </div>
   )
 }

@@ -395,7 +395,10 @@ describe('MultiTenantContextBuilder', () => {
       const workflowNoLimits = createTestWorkflow('tenant-1')
       workflowNoLimits.executionLimits = undefined as any
 
-      const builder = new MultiTenantContextBuilder(workflowNoLimits, requestContext)
+      const builder = new MultiTenantContextBuilder(
+        workflowNoLimits,
+        requestContext
+      )
       const context = await builder.build()
 
       expect(context.executionLimits.maxExecutionTime).toBe(3600000)

@@ -16,20 +16,23 @@ export interface RunResult {
  */
 export function runWorkflow(
   wf: Workflow,
-  input: Record<string, unknown> = {},
+  input: Record<string, unknown> = {}
 ): RunResult {
   const logs: string[] = []
   const order: string[] = []
   const outputs = new Map<string, Record<string, unknown>>()
 
   const incoming = new Map<string, number>()
-  wf.nodes.forEach((n) => incoming.set(n.id, 0))
-  wf.connections.forEach((c) =>
-    incoming.set(c.targetNodeId, (incoming.get(c.targetNodeId) ?? 0) + 1))
+  wf.nodes.forEach(n => incoming.set(n.id, 0))
+  wf.connections.forEach(c =>
+    incoming.set(c.targetNodeId, (incoming.get(c.targetNodeId) ?? 0) + 1)
+  )
 
-  const byId = new Map(wf.nodes.map((n) => [n.id, n]))
+  const byId = new Map(wf.nodes.map(n => [n.id, n]))
   const indegree = new Map(incoming)
-  const queue: WorkflowNode[] = wf.nodes.filter((n) => (incoming.get(n.id) ?? 0) === 0)
+  const queue: WorkflowNode[] = wf.nodes.filter(
+    n => (incoming.get(n.id) ?? 0) === 0
+  )
   const first = wf.nodes[0]
   if (queue.length === 0 && first) queue.push(first)
 
@@ -42,14 +45,14 @@ export function runWorkflow(
 
     // Merge outputs of every node feeding this one, plus the run input.
     const feed = wf.connections
-      .filter((c) => c.targetNodeId === node.id)
-      .map((c) => outputs.get(c.sourceNodeId) ?? {})
+      .filter(c => c.targetNodeId === node.id)
+      .map(c => outputs.get(c.sourceNodeId) ?? {})
     const inData = Object.assign({}, input, ...feed)
     const out = { ...inData, ...node.config }
     outputs.set(node.id, out)
     logs.push(`▶ ${node.name} (${node.type})`)
 
-    for (const c of wf.connections.filter((c) => c.sourceNodeId === node.id)) {
+    for (const c of wf.connections.filter(c => c.sourceNodeId === node.id)) {
       const d = (indegree.get(c.targetNodeId) ?? 1) - 1
       indegree.set(c.targetNodeId, d)
       const target = byId.get(c.targetNodeId)
@@ -58,10 +61,12 @@ export function runWorkflow(
   }
 
   // Result = merged outputs of leaf nodes (no outgoing connections).
-  const hasOut = new Set(wf.connections.map((c) => c.sourceNodeId))
-  const leaves = wf.nodes.filter((n) => !hasOut.has(n.id) && outputs.has(n.id))
-  const output = Object.assign({}, ...(leaves.length > 0 ? leaves : wf.nodes)
-    .map((n) => outputs.get(n.id) ?? {}))
+  const hasOut = new Set(wf.connections.map(c => c.sourceNodeId))
+  const leaves = wf.nodes.filter(n => !hasOut.has(n.id) && outputs.has(n.id))
+  const output = Object.assign(
+    {},
+    ...(leaves.length > 0 ? leaves : wf.nodes).map(n => outputs.get(n.id) ?? {})
+  )
 
   return { logs, output, order }
 }

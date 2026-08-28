@@ -15,12 +15,20 @@ export function WelcomePage() {
             <span className={s.brandName}>MetaBuilder</span>
           </Link>
           <div className={s.navLinks}>
-            <a className={s.navLink} href="#packages">Features</a>
-            <a className={s.navLink} href="#pricing">Pricing</a>
+            <a className={s.navLink} href="#packages">
+              Features
+            </a>
+            <a className={s.navLink} href="#pricing">
+              Pricing
+            </a>
           </div>
           <div className={s.navCtas}>
-            <Link className={s.btnOutline} href="/login">Sign In</Link>
-            <Link className={s.btnFilled} href="/ui/signup">Start free</Link>
+            <Link className={s.btnOutline} href="/login">
+              Sign In
+            </Link>
+            <Link className={s.btnFilled} href="/ui/signup">
+              Start free
+            </Link>
           </div>
         </div>
       </nav>

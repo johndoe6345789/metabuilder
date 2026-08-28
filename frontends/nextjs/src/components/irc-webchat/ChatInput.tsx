@@ -35,7 +35,11 @@ export function ChatInput({
     setValue('')
 
     const wasCommand = handleCommand(
-      trimmed, username, memberCount, onSystemMessage, onClear,
+      trimmed,
+      username,
+      memberCount,
+      onSystemMessage,
+      onClear
     )
     if (!wasCommand) onSend(trimmed)
   }
@@ -54,7 +58,9 @@ export function ChatInput({
         size="small"
         placeholder="Type a message... (/help for commands)"
         value={value}
-        onChange={e => { setValue(e.target.value) }}
+        onChange={e => {
+          setValue(e.target.value)
+        }}
         onKeyDown={handleKey}
         className={styles.inputField}
       />

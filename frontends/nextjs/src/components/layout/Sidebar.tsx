@@ -64,7 +64,9 @@ export function Sidebar({
   const levelColor = getLevelColor(userLevel)
   // Every workspace route has a tenant-scoped twin; link there directly.
   const itemHref = (path: string) =>
-    path === '/god-panel' ? tenantGodPanelPath(tenantId) : tenantPath(tenantId, path)
+    path === '/god-panel'
+      ? tenantGodPanelPath(tenantId)
+      : tenantPath(tenantId, path)
 
   return (
     <aside

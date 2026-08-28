@@ -6,41 +6,44 @@ import { NextResponse } from 'next/server'
 
 export function parseRoute(path: string): Record<string, string> {
   const params: Record<string, string> = {}
-  
+
   // Extract query parameters from path
   const [pathname = '', queryString] = path.split('?')
-  
+
   if (queryString !== undefined && queryString.length > 0) {
     const searchParams = new URLSearchParams(queryString)
     searchParams.forEach((value, key) => {
       params[key] = value
     })
   }
-  
+
   // Extract path segments
   const segments = pathname.split('/').filter(s => s.length > 0)
   segments.forEach((segment, index) => {
     params[`segment${index}`] = segment
   })
-  
+
   return params
 }
 
-export function buildRoute(template: string, params: Record<string, string>): string {
+export function buildRoute(
+  template: string,
+  params: Record<string, string>
+): string {
   let route = template
-  
+
   // Replace named parameters in the template
   Object.entries(params).forEach(([key, value]) => {
     const placeholder = `{${key}}`
     const colonPlaceholder = `:${key}`
-    
+
     if (route.includes(placeholder)) {
       route = route.replace(placeholder, value)
     } else if (route.includes(colonPlaceholder)) {
       route = route.replace(colonPlaceholder, value)
     }
   })
-  
+
   return route
 }
 
@@ -74,21 +77,21 @@ export async function getSessionUser(req?: Request): Promise<SessionUser> {
     const authHeader = req?.headers.get('authorization') ?? ''
     const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null
     const user = await fetchSession(token)
-    
+
     if (user === null) {
       return { user: null }
     }
-    
+
     // Convert User to Record<string, unknown> for compatibility
     // Use spread operator for maintainability
-    return { 
+    return {
       user: {
         ...user,
         tenantId: user.tenantId ?? null,
         profilePicture: user.profilePicture ?? null,
         bio: user.bio ?? null,
         isInstanceOwner: user.isInstanceOwner ?? false,
-      }
+      },
     }
   } catch (error) {
     console.error('Error getting session user:', error)
@@ -119,32 +122,33 @@ export function parseRestfulRequest(
 ): RestfulContext | { error: string; status: number } {
   const { slug } = params
   const method = req.method
-  
+
   // Validate minimum path segments: tenant, package, entity
   if (slug.length < 3) {
-    return { 
-      error: 'Invalid route: expected /api/v1/{tenant}/{package}/{entity}[/{id}[/{action}]]', 
-      status: STATUS.BAD_REQUEST 
+    return {
+      error:
+        'Invalid route: expected /api/v1/{tenant}/{package}/{entity}[/{id}[/{action}]]',
+      status: STATUS.BAD_REQUEST,
     }
   }
-  
+
   const [tenant, packageId, entity, id, action] = slug
-  
+
   if (tenant === undefined || tenant.length === 0) {
     return { error: 'Tenant is required', status: STATUS.BAD_REQUEST }
   }
-  
+
   if (packageId === undefined || packageId.length === 0) {
     return { error: 'Package is required', status: STATUS.BAD_REQUEST }
   }
-  
+
   if (entity === undefined || entity.length === 0) {
     return { error: 'Entity is required', status: STATUS.BAD_REQUEST }
   }
-  
+
   // Determine operation from HTTP method and path structure
   let operation = 'unknown'
-  
+
   if (action !== undefined && action.length > 0) {
     // Custom action like POST /posts/123/like
     operation = 'action'
@@ -158,7 +162,7 @@ export function parseRestfulRequest(
     if (method === 'GET') operation = 'list'
     else if (method === 'POST') operation = 'create'
   }
-  
+
   // Build DBAL operation object
   const dbalOp = {
     entity,
@@ -166,7 +170,7 @@ export function parseRestfulRequest(
     id,
     action,
   }
-  
+
   return {
     route: {
       tenant,
@@ -209,7 +213,12 @@ export async function executeDbalOperation(
     user?: { id?: string | null }
     body?: unknown
   }
-): Promise<{ success: boolean; data?: unknown; error?: string; meta?: unknown }> {
+): Promise<{
+  success: boolean
+  data?: unknown
+  error?: string
+  meta?: unknown
+}> {
   const { db } = await import('@/lib/db-client')
 
   try {
@@ -221,38 +230,56 @@ export async function executeDbalOperation(
     switch (operation) {
       case 'list': {
         const result = await ops.list({ filter })
-        return { success: true, data: result.data, meta: { count: result.data.length } }
+        return {
+          success: true,
+          data: result.data,
+          meta: { count: result.data.length },
+        }
       }
       case 'read': {
-        if (id === undefined || id.length === 0) return { success: false, error: 'ID required for read operation' }
+        if (id === undefined || id.length === 0)
+          return { success: false, error: 'ID required for read operation' }
         const record = await ops.read(id)
-        if (record === null) return { success: false, error: 'Record not found' }
+        if (record === null)
+          return { success: false, error: 'Record not found' }
         return { success: true, data: record }
       }
       case 'create': {
         const body = context?.body
-        if (!isPlainObject(body)) return { success: false, error: 'Body required for create operation' }
-        const data = { ...body, ...(tenantId !== undefined ? { tenantId } : {}) }
+        if (!isPlainObject(body))
+          return { success: false, error: 'Body required for create operation' }
+        const data = {
+          ...body,
+          ...(tenantId !== undefined ? { tenantId } : {}),
+        }
         const created = await ops.create(data)
         return { success: true, data: created }
       }
       case 'update': {
-        if (id === undefined || id.length === 0) return { success: false, error: 'ID required for update operation' }
+        if (id === undefined || id.length === 0)
+          return { success: false, error: 'ID required for update operation' }
         const body = context?.body
-        if (!isPlainObject(body)) return { success: false, error: 'Body required for update operation' }
+        if (!isPlainObject(body))
+          return { success: false, error: 'Body required for update operation' }
         if (tenantId !== undefined) {
           const existing = await ops.read(id)
-          if (existing === null) return { success: false, error: 'Record not found' }
+          if (existing === null)
+            return { success: false, error: 'Record not found' }
         }
-        const data = { ...body, ...(tenantId !== undefined ? { tenantId } : {}) }
+        const data = {
+          ...body,
+          ...(tenantId !== undefined ? { tenantId } : {}),
+        }
         const updated = await ops.update(id, data)
         return { success: true, data: updated }
       }
       case 'delete': {
-        if (id === undefined || id.length === 0) return { success: false, error: 'ID required for delete operation' }
+        if (id === undefined || id.length === 0)
+          return { success: false, error: 'ID required for delete operation' }
         if (tenantId !== undefined) {
           const existing = await ops.read(id)
-          if (existing === null) return { success: false, error: 'Record not found' }
+          if (existing === null)
+            return { success: false, error: 'Record not found' }
         }
         const deleted = await ops.remove(id)
         if (!deleted) return { success: false, error: 'Record not found' }
@@ -262,7 +289,10 @@ export async function executeDbalOperation(
         return { success: false, error: `Unknown operation: ${operation}` }
     }
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : 'Operation failed' }
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Operation failed',
+    }
   }
 }
 
@@ -279,22 +309,33 @@ export async function executePackageAction(
     body?: unknown
   },
   options?: { allowFallback?: boolean }
-): Promise<{ success: boolean; data?: unknown; error?: string; code?: 'NOT_FOUND' | 'INVALID_CONFIG' }> {
+): Promise<{
+  success: boolean
+  data?: unknown
+  error?: string
+  code?: 'NOT_FOUND' | 'INVALID_CONFIG'
+}> {
   // Package actions are custom operations defined by packages
   // Load package config and execute the registered action handler
   try {
     const { db } = await import('@/lib/db-client')
 
     // Get package configuration
-    const pkgResult = await db.installedPackages.list({ filter: { packageId, enabled: true } })
+    const pkgResult = await db.installedPackages.list({
+      filter: { packageId, enabled: true },
+    })
     const pkg = pkgResult.data[0] ?? null
-    
+
     if (pkg == null) {
       return options?.allowFallback === true
         ? { success: false, code: 'NOT_FOUND' }
-        : { success: false, error: `Package not found or disabled: ${packageId}`, code: 'NOT_FOUND' }
+        : {
+            success: false,
+            error: `Package not found or disabled: ${packageId}`,
+            code: 'NOT_FOUND',
+          }
     }
-    
+
     // Parse package config for custom actions
     let config: { actions?: Record<string, { handler?: string }> } = {}
     try {
@@ -302,30 +343,42 @@ export async function executePackageAction(
         actions?: Record<string, { handler?: string }>
       }
     } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : 'Invalid package config', code: 'INVALID_CONFIG' }
+      return {
+        success: false,
+        error:
+          error instanceof Error ? error.message : 'Invalid package config',
+        code: 'INVALID_CONFIG',
+      }
     }
-    
+
     const actionConfig = config.actions?.[`${entity}.${action}`]
-    
+
     if (actionConfig === undefined) {
       return options?.allowFallback === true
         ? { success: false, code: 'NOT_FOUND' }
-        : { success: false, error: `Action not found: ${entity}.${action}`, code: 'NOT_FOUND' }
+        : {
+            success: false,
+            error: `Action not found: ${entity}.${action}`,
+            code: 'NOT_FOUND',
+          }
     }
-    
+
     // For now, return success with action metadata
     // Full implementation would dynamically load and execute the handler
-    return { 
-      success: true, 
-      data: { 
+    return {
+      success: true,
+      data: {
         action: `${entity}.${action}`,
         entityId: id,
         packageId,
         tenantId: resolveTenantId(context),
-      } 
+      },
     }
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : 'Action failed' }
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Action failed',
+    }
   }
 }
 
@@ -342,7 +395,7 @@ export async function validateTenantAccess(
 ): Promise<TenantValidationResult> {
   // Import centralized role levels
   const { getRoleLevel, ROLE_LEVELS } = await import('@/lib/constants')
-  
+
   // No user means public access only
   if (user === null) {
     if (minLevel <= 0) {
@@ -350,14 +403,17 @@ export async function validateTenantAccess(
     }
     return { allowed: false, reason: 'Authentication required' }
   }
-  
+
   const userLevel = getRoleLevel(user.role)
-  
+
   // Check permission level
   if (userLevel < minLevel) {
-    return { allowed: false, reason: `Insufficient permissions. Required level: ${minLevel}, your level: ${userLevel}` }
+    return {
+      allowed: false,
+      reason: `Insufficient permissions. Required level: ${minLevel}, your level: ${userLevel}`,
+    }
   }
-  
+
   // God and supergod can access any tenant. There's no "Tenant" entity in
   // DBAL to look up (no schema for it — tenantId is just a scoping field on
   // other entities), so build the tenant reference straight from the route's
@@ -365,31 +421,40 @@ export async function validateTenantAccess(
   if (userLevel >= ROLE_LEVELS.god) {
     return { allowed: true, tenant: { id: tenantSlug } }
   }
-  
+
   // For lower levels, verify tenant membership
   try {
     const { db } = await import('@/lib/db-client')
 
-    const tenantResult = await db.entity('Tenant').list({ filter: { slug: tenantSlug } })
+    const tenantResult = await db
+      .entity('Tenant')
+      .list({ filter: { slug: tenantSlug } })
     const tenant = tenantResult.data[0] ?? null
-    
+
     if (tenant == null) {
       return { allowed: false, reason: `Tenant not found: ${tenantSlug}` }
     }
-    
+
     const tenantId = (tenant as { id: string }).id
-    
+
     // Check if user belongs to this tenant
     if (user.tenantId !== tenantId) {
       return { allowed: false, reason: 'Not a member of this tenant' }
     }
-    
+
     return { allowed: true, tenant }
   } catch (error) {
-    return { allowed: false, reason: error instanceof Error ? error.message : 'Validation failed' }
+    return {
+      allowed: false,
+      reason: error instanceof Error ? error.message : 'Validation failed',
+    }
   }
 }
 
 // Re-export auth functions
-export { validatePackageRoute, canBePrimaryPackage, loadPackageMetadata } from './auth/validate-package-route'
+export {
+  validatePackageRoute,
+  canBePrimaryPackage,
+  loadPackageMetadata,
+} from './auth/validate-package-route'
 export type { RouteValidationResult } from './auth/validate-package-route'

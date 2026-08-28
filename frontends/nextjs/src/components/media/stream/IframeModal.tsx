@@ -19,28 +19,48 @@ export function IframeModal({ name, url, onClose }: Props) {
   const [showFallbackHint, setShowFallbackHint] = useState(false)
 
   useEffect(() => {
-    const t = setTimeout(() => { setShowFallbackHint(true) }, 3500)
-    return () => { clearTimeout(t) }
+    const t = setTimeout(() => {
+      setShowFallbackHint(true)
+    }, 3500)
+    return () => {
+      clearTimeout(t)
+    }
   }, [])
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
     window.addEventListener('keydown', onKey)
-    return () => { window.removeEventListener('keydown', onKey) }
+    return () => {
+      window.removeEventListener('keydown', onKey)
+    }
   }, [onClose])
 
   return (
     <div className={s.overlay} onClick={onClose}>
-      <div className={s.panel} onClick={(e) => { e.stopPropagation() }}>
+      <div
+        className={s.panel}
+        onClick={e => {
+          e.stopPropagation()
+        }}
+      >
         <div className={s.header}>
           <span className={s.title}>{name}</span>
           <div className={s.headerActions}>
             {showFallbackHint && (
-              <a href={url} target="_blank" rel="noopener noreferrer" className={s.fallbackLink}>
+              <a
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={s.fallbackLink}
+              >
                 Not loading? Open in new tab ↗
               </a>
             )}
-            <button className={s.closeBtn} onClick={onClose} aria-label="Close">✕</button>
+            <button className={s.closeBtn} onClick={onClose} aria-label="Close">
+              ✕
+            </button>
           </div>
         </div>
         <iframe src={url} className={s.frame} title={name} />

@@ -25,7 +25,7 @@ export function useNerdMode() {
   }, [])
 
   const toggle = useCallback(() => {
-    setIsOpen((prev) => {
+    setIsOpen(prev => {
       const next = !prev
       if (typeof window !== 'undefined') {
         window.localStorage.setItem('nerd-mode-enabled', String(next))

@@ -18,9 +18,10 @@ export function WorkflowJsonEditor() {
     save,
   } = useWorkflowJsonAssets()
 
-  const openFile: OpenFile | null = selected != null
-    ? { path: selected.id, language: 'json', content: selected.code }
-    : null
+  const openFile: OpenFile | null =
+    selected != null
+      ? { path: selected.id, language: 'json', content: selected.code }
+      : null
 
   return (
     <div className={s.wrap}>
@@ -37,7 +38,7 @@ export function WorkflowJsonEditor() {
               <input
                 className={s.nameInput}
                 value={selected.name}
-                onChange={(e) => {
+                onChange={e => {
                   updateName(e.target.value, selectedId)
                 }}
               />

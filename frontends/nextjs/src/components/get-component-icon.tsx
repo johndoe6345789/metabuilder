@@ -56,7 +56,10 @@ const iconMap: Record<string, ComponentIcon> = {
   Warning: asComponentIcon(WarningAmber),
 }
 
-export function getComponentIcon(iconName: string, props?: ComponentIconProps): ReactElement | null {
+export function getComponentIcon(
+  iconName: string,
+  props?: ComponentIconProps
+): ReactElement | null {
   const Icon = iconMap[iconName]
   return Icon !== undefined ? <Icon {...props} /> : null
 }

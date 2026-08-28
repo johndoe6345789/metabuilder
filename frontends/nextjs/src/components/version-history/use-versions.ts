@@ -12,16 +12,28 @@ export function useVersions<T>(key: string) {
     void listVersions<T>(key).then(setVersions)
   }, [key])
 
-  useEffect(() => { refresh() }, [refresh])
+  useEffect(() => {
+    refresh()
+  }, [refresh])
 
   const toggle = useCallback(() => {
-    setOpen((o) => { if (!o) refresh(); return !o })
+    setOpen(o => {
+      if (!o) refresh()
+      return !o
+    })
   }, [refresh])
 
   const restore = useCallback(
     (id: string): Promise<T | null> => getVersion<T>(key, id),
-    [key],
+    [key]
   )
 
-  return { versions, open, toggle, close: () => setOpen(false), refresh, restore }
+  return {
+    versions,
+    open,
+    toggle,
+    close: () => setOpen(false),
+    refresh,
+    restore,
+  }
 }

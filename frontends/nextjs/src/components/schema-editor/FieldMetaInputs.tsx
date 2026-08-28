@@ -19,7 +19,9 @@ export function FieldMetaInputs({ field, patch }: FieldMetaInputsProps) {
           <TextField
             size="small"
             value={field.name}
-            onChange={e => { patch({ name: e.target.value }) }}
+            onChange={e => {
+              patch({ name: e.target.value })
+            }}
             placeholder="e.g. email"
           />
         </div>
@@ -34,7 +36,9 @@ export function FieldMetaInputs({ field, patch }: FieldMetaInputsProps) {
             }}
           >
             {FIELD_TYPES.map(t => (
-              <option key={t} value={t}>{FIELD_TYPE_LABELS[t]}</option>
+              <option key={t} value={t}>
+                {FIELD_TYPE_LABELS[t]}
+              </option>
             ))}
           </Select>
         </div>
@@ -45,7 +49,9 @@ export function FieldMetaInputs({ field, patch }: FieldMetaInputsProps) {
           <TextField
             size="small"
             value={field.label ?? ''}
-            onChange={e => { patch({ label: e.target.value }) }}
+            onChange={e => {
+              patch({ label: e.target.value })
+            }}
             placeholder="Display label"
           />
         </div>
@@ -54,7 +60,9 @@ export function FieldMetaInputs({ field, patch }: FieldMetaInputsProps) {
           <TextField
             size="small"
             value={field.default ?? ''}
-            onChange={e => { patch({ default: e.target.value }) }}
+            onChange={e => {
+              patch({ default: e.target.value })
+            }}
             placeholder="Default"
           />
         </div>
@@ -63,14 +71,18 @@ export function FieldMetaInputs({ field, patch }: FieldMetaInputsProps) {
         <label className={styles.toggleItem}>
           <Switch
             checked={field.required ?? false}
-            onChange={e => { patch({ required: e.target.checked }) }}
+            onChange={e => {
+              patch({ required: e.target.checked })
+            }}
           />
           Required
         </label>
         <label className={styles.toggleItem}>
           <Switch
             checked={field.unique ?? false}
-            onChange={e => { patch({ unique: e.target.checked }) }}
+            onChange={e => {
+              patch({ unique: e.target.checked })
+            }}
           />
           Unique
         </label>

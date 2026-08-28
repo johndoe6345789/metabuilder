@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 
-const DBAL =
-  process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
+const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
 export interface PageRoute {
   id: string
@@ -68,9 +67,7 @@ export function usePageRoutes(tenant = 'system') {
         setLoading(false)
       })
       .catch((e: unknown) => {
-        setError(
-          e instanceof Error ? e.message : 'Failed to load pages',
-        )
+        setError(e instanceof Error ? e.message : 'Failed to load pages')
         setLoading(false)
       })
   }, [base, refreshKey])
@@ -88,7 +85,7 @@ export function usePageRoutes(tenant = 'system') {
       }
       setRefreshKey(k => k + 1)
     },
-    [base],
+    [base]
   )
 
   const update = useCallback(
@@ -101,7 +98,7 @@ export function usePageRoutes(tenant = 'system') {
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       setRefreshKey(k => k + 1)
     },
-    [base],
+    [base]
   )
 
   const remove = useCallback(
@@ -110,7 +107,7 @@ export function usePageRoutes(tenant = 'system') {
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       setRefreshKey(k => k + 1)
     },
-    [base],
+    [base]
   )
 
   return { pages, loading, error, reload, create, update, remove }

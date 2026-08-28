@@ -1,9 +1,6 @@
 'use client'
 
-import type {
-  PackageInfo,
-  PackageError,
-} from '@/lib/types/package-admin-types'
+import type { PackageInfo, PackageError } from '@/lib/types/package-admin-types'
 import { PackageErrorCode } from '@/lib/types/package-admin-types'
 
 /**
@@ -70,7 +67,8 @@ export function getErrorMessage(error: PackageError | Error | null): string {
       NETWORK_ERROR: 'Network error. Please check your connection.',
       ALREADY_INSTALLED: 'This package is already installed.',
       ALREADY_UNINSTALLED: 'This package is not installed.',
-      MISSING_DEPENDENCIES: 'Missing required dependencies. Please install them first.',
+      MISSING_DEPENDENCIES:
+        'Missing required dependencies. Please install them first.',
       PACKAGE_NOT_FOUND: 'Package not found.',
       PERMISSION_DENIED: "You don't have permission to perform this action.",
       DEPENDENCY_ERROR: 'Other packages depend on this package.',
@@ -124,7 +122,7 @@ export function formatPackageStatus(status: string): string {
 export function formatPackageCategory(category: string): string {
   return category
     .split('_')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ')
 }
 
@@ -214,11 +212,11 @@ export function filterPackagesBySearch(
 
   const term = searchTerm.toLowerCase()
   return packages.filter(
-    (pkg) =>
+    pkg =>
       pkg.name.toLowerCase().includes(term) ||
       pkg.description.toLowerCase().includes(term) ||
       pkg.author.toLowerCase().includes(term) ||
-      pkg.tags.some((tag) => tag.toLowerCase().includes(term))
+      pkg.tags.some(tag => tag.toLowerCase().includes(term))
   )
 }
 
@@ -300,7 +298,9 @@ export function canDisablePackage(pkg: PackageInfo): boolean {
 /**
  * Get available actions for a package
  */
-export function getAvailableActions(pkg: PackageInfo): Array<'install' | 'uninstall' | 'enable' | 'disable'> {
+export function getAvailableActions(
+  pkg: PackageInfo
+): Array<'install' | 'uninstall' | 'enable' | 'disable'> {
   const actions: Array<'install' | 'uninstall' | 'enable' | 'disable'> = []
 
   if (canInstallPackage(pkg)) {
@@ -348,7 +348,7 @@ export function mergePackageUpdate(
   packages: PackageInfo[],
   updated: PackageInfo
 ): PackageInfo[] {
-  return packages.map((pkg) => (pkg.id === updated.id ? updated : pkg))
+  return packages.map(pkg => (pkg.id === updated.id ? updated : pkg))
 }
 
 /**
@@ -368,7 +368,7 @@ export function areDependenciesMet(
   dependencies: string[],
   installedPackageIds: Set<string>
 ): boolean {
-  return dependencies.every((dep) => installedPackageIds.has(dep))
+  return dependencies.every(dep => installedPackageIds.has(dep))
 }
 
 /**
@@ -378,5 +378,5 @@ export function getMissingDependencies(
   dependencies: string[],
   installedPackageIds: Set<string>
 ): string[] {
-  return dependencies.filter((dep) => !installedPackageIds.has(dep))
+  return dependencies.filter(dep => !installedPackageIds.has(dep))
 }

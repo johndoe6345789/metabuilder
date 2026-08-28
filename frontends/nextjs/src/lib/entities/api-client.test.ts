@@ -98,19 +98,36 @@ describe('API Client', () => {
         expectedData: [],
         expectedStatus: 200,
       },
-    ])('should handle $name', async ({ tenant, pkg, entity, params, mockResponse, mockStatus, expectedData, expectedStatus }) => {
-      vi.mocked(fetch).mockResolvedValueOnce({
-        ok: true,
-        status: mockStatus,
-        json: () => mockResponse,
-      } as unknown as Response)
+    ])(
+      'should handle $name',
+      async ({
+        tenant,
+        pkg,
+        entity,
+        params,
+        mockResponse,
+        mockStatus,
+        expectedData,
+        expectedStatus,
+      }) => {
+        vi.mocked(fetch).mockResolvedValueOnce({
+          ok: true,
+          status: mockStatus,
+          json: () => mockResponse,
+        } as unknown as Response)
 
-      const result = await fetchEntityList(tenant, pkg, entity, params as ListQueryParams)
+        const result = await fetchEntityList(
+          tenant,
+          pkg,
+          entity,
+          params as ListQueryParams
+        )
 
-      expect(result.status).toBe(expectedStatus)
-      expect(result.data).toEqual(expectedData)
-      expect(result.error).toBeUndefined()
-    })
+        expect(result.status).toBe(expectedStatus)
+        expect(result.data).toEqual(expectedData)
+        expect(result.error).toBeUndefined()
+      }
+    )
 
     it.each([
       {
@@ -137,19 +154,22 @@ describe('API Client', () => {
         mockError: 'Internal server error',
         expectedError: 'Internal server error',
       },
-    ])('should handle $name error', async ({ mockStatus, mockError, expectedError }) => {
-      vi.mocked(fetch).mockResolvedValueOnce({
-        ok: false,
-        status: mockStatus,
-        json: () => ({ error: mockError }),
-      } as unknown as Response)
+    ])(
+      'should handle $name error',
+      async ({ mockStatus, mockError, expectedError }) => {
+        vi.mocked(fetch).mockResolvedValueOnce({
+          ok: false,
+          status: mockStatus,
+          json: () => ({ error: mockError }),
+        } as unknown as Response)
 
-      const result = await fetchEntityList('acme', 'forum', 'posts')
+        const result = await fetchEntityList('acme', 'forum', 'posts')
 
-      expect(result.status).toBe(mockStatus)
-      expect(result.error).toBe(expectedError)
-      expect(result.data).toBeUndefined()
-    })
+        expect(result.status).toBe(mockStatus)
+        expect(result.error).toBe(expectedError)
+        expect(result.data).toBeUndefined()
+      }
+    )
 
     it('should handle network errors', async () => {
       vi.mocked(fetch).mockRejectedValueOnce(new Error('Network error'))
@@ -173,19 +193,30 @@ describe('API Client', () => {
         mockStatus: 200,
         expectedData: { id: '123', title: 'Test Post' },
       },
-    ])('should handle $name', async ({ tenant, pkg, entity, id, mockResponse, mockStatus, expectedData }) => {
-      vi.mocked(fetch).mockResolvedValueOnce({
-        ok: true,
-        status: mockStatus,
-        json: () => mockResponse,
-      } as unknown as Response)
+    ])(
+      'should handle $name',
+      async ({
+        tenant,
+        pkg,
+        entity,
+        id,
+        mockResponse,
+        mockStatus,
+        expectedData,
+      }) => {
+        vi.mocked(fetch).mockResolvedValueOnce({
+          ok: true,
+          status: mockStatus,
+          json: () => mockResponse,
+        } as unknown as Response)
 
-      const result = await fetchEntity(tenant, pkg, entity, id)
+        const result = await fetchEntity(tenant, pkg, entity, id)
 
-      expect(result.status).toBe(mockStatus)
-      expect(result.data).toEqual(expectedData)
-      expect(result.error).toBeUndefined()
-    })
+        expect(result.status).toBe(mockStatus)
+        expect(result.data).toEqual(expectedData)
+        expect(result.error).toBeUndefined()
+      }
+    )
 
     it.each([
       {
@@ -224,19 +255,30 @@ describe('API Client', () => {
         mockStatus: 201,
         expectedStatus: 201,
       },
-    ])('should handle $name', async ({ tenant, pkg, entity, data, mockResponse, mockStatus, expectedStatus }) => {
-      vi.mocked(fetch).mockResolvedValueOnce({
-        ok: true,
-        status: mockStatus,
-        json: () => mockResponse,
-      } as unknown as Response)
+    ])(
+      'should handle $name',
+      async ({
+        tenant,
+        pkg,
+        entity,
+        data,
+        mockResponse,
+        mockStatus,
+        expectedStatus,
+      }) => {
+        vi.mocked(fetch).mockResolvedValueOnce({
+          ok: true,
+          status: mockStatus,
+          json: () => mockResponse,
+        } as unknown as Response)
 
-      const result = await createEntity(tenant, pkg, entity, data)
+        const result = await createEntity(tenant, pkg, entity, data)
 
-      expect(result.status).toBe(expectedStatus)
-      expect(result.data).toEqual(mockResponse)
-      expect(result.error).toBeUndefined()
-    })
+        expect(result.status).toBe(expectedStatus)
+        expect(result.data).toEqual(mockResponse)
+        expect(result.error).toBeUndefined()
+      }
+    )
 
     it.each([
       {
@@ -290,19 +332,22 @@ describe('API Client', () => {
         mockResponse: { id: '123', title: 'Old Title', content: 'New content' },
         mockStatus: 200,
       },
-    ])('should handle $name', async ({ tenant, pkg, entity, id, data, mockResponse, mockStatus }) => {
-      vi.mocked(fetch).mockResolvedValueOnce({
-        ok: true,
-        status: mockStatus,
-        json: () => mockResponse,
-      } as unknown as Response)
+    ])(
+      'should handle $name',
+      async ({ tenant, pkg, entity, id, data, mockResponse, mockStatus }) => {
+        vi.mocked(fetch).mockResolvedValueOnce({
+          ok: true,
+          status: mockStatus,
+          json: () => mockResponse,
+        } as unknown as Response)
 
-      const result = await updateEntity(tenant, pkg, entity, id, data)
+        const result = await updateEntity(tenant, pkg, entity, id, data)
 
-      expect(result.status).toBe(mockStatus)
-      expect(result.data).toEqual(mockResponse)
-      expect(result.error).toBeUndefined()
-    })
+        expect(result.status).toBe(mockStatus)
+        expect(result.data).toEqual(mockResponse)
+        expect(result.error).toBeUndefined()
+      }
+    )
 
     it.each([
       {
@@ -401,7 +446,9 @@ describe('API Client', () => {
       })
 
       const call = vi.mocked(fetch).mock.calls[0]
-      expect(call?.[0]).toContain(`${INTERNAL_APP_URL}/api/v1/acme/forum/posts?`)
+      expect(call?.[0]).toContain(
+        `${INTERNAL_APP_URL}/api/v1/acme/forum/posts?`
+      )
       expect(call?.[0]).toContain('filter=')
     })
 

@@ -62,31 +62,35 @@ export function SearchSelect({
 
   useDebouncedSave(query, setDebouncedQuery, 300)
 
-  const fetchResults = useCallback(async (q: string) => {
-    setLoading(true)
-    try {
-      const base = `${DBAL}/${tenant}/${packageName}/${entity}`
-      const url = q.trim().length > 0
-        ? `${base}/_search?${new URLSearchParams({ q, limit: '10' }).toString()}`
-        : `${base}?${new URLSearchParams({ limit: '10' }).toString()}`
-      const res = await fetch(url, { signal: AbortSignal.timeout(6000) })
-      if (!res.ok) {
+  const fetchResults = useCallback(
+    async (q: string) => {
+      setLoading(true)
+      try {
+        const base = `${DBAL}/${tenant}/${packageName}/${entity}`
+        const url =
+          q.trim().length > 0
+            ? `${base}/_search?${new URLSearchParams({ q, limit: '10' }).toString()}`
+            : `${base}?${new URLSearchParams({ limit: '10' }).toString()}`
+        const res = await fetch(url, { signal: AbortSignal.timeout(6000) })
+        if (!res.ok) {
+          setResults([])
+          return
+        }
+        const rows = unwrapList(await res.json())
+        setResults(
+          rows
+            .filter(r => typeof r.id === 'string')
+            .map(r => ({ id: r.id as string, label: getLabel(r) }))
+        )
+        setHighlighted(0)
+      } catch {
         setResults([])
-        return
+      } finally {
+        setLoading(false)
       }
-      const rows = unwrapList(await res.json())
-      setResults(
-        rows
-          .filter(r => typeof r.id === 'string')
-          .map(r => ({ id: r.id as string, label: getLabel(r) }))
-      )
-      setHighlighted(0)
-    } catch {
-      setResults([])
-    } finally {
-      setLoading(false)
-    }
-  }, [tenant, packageName, entity, getLabel])
+    },
+    [tenant, packageName, entity, getLabel]
+  )
 
   useEffect(() => {
     if (!isOpen) return
@@ -138,30 +142,39 @@ export function SearchSelect({
       {isOpen && (
         <div className={s.panel}>
           {loading && (
-            <Typography variant="body2" color="text.secondary" className={s.status}>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              className={s.status}
+            >
               Searching…
             </Typography>
           )}
           {!loading && results.length === 0 && (
-            <Typography variant="body2" color="text.secondary" className={s.status}>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              className={s.status}
+            >
               No matches
             </Typography>
           )}
-          {!loading && results.map((item, index) => (
-            <button
-              key={item.id}
-              type="button"
-              className={`${s.item} ${index === highlighted ? s.itemHighlighted : ''}`}
-              onMouseEnter={() => {
-                setHighlighted(index)
-              }}
-              onClick={() => {
-                choose(item)
-              }}
-            >
-              {item.label}
-            </button>
-          ))}
+          {!loading &&
+            results.map((item, index) => (
+              <button
+                key={item.id}
+                type="button"
+                className={`${s.item} ${index === highlighted ? s.itemHighlighted : ''}`}
+                onMouseEnter={() => {
+                  setHighlighted(index)
+                }}
+                onClick={() => {
+                  choose(item)
+                }}
+              >
+                {item.label}
+              </button>
+            ))}
         </div>
       )}
     </div>

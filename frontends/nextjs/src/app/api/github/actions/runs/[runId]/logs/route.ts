@@ -17,14 +17,14 @@ export const GET = async (
   const resolvedParams = await params
   // Require authentication - logs may contain sensitive info
   const session = await getSessionUser(request)
-  
+
   if (session.user === null) {
     return NextResponse.json(
       { error: 'Authentication required', requiresAuth: true },
       { status: STATUS.UNAUTHORIZED }
     )
   }
-  
+
   // Require at least user level (1)
   const userRole = (session.user as { role?: string }).role ?? 'public'
   if (getRoleLevel(userRole) < 1) {
@@ -57,7 +57,10 @@ export const GET = async (
     })
 
     if (result === null) {
-      return NextResponse.json({ error: 'Failed to fetch workflow logs' }, { status: 500 })
+      return NextResponse.json(
+        { error: 'Failed to fetch workflow logs' },
+        { status: 500 }
+      )
     }
 
     return NextResponse.json({
@@ -74,6 +77,9 @@ export const GET = async (
     const requiresAuth = status === 401 || status === 403
     const safeStatus = Number.isFinite(status) && status >= 400 ? status : 500
 
-    return NextResponse.json({ error: message, requiresAuth }, { status: safeStatus })
+    return NextResponse.json(
+      { error: message, requiresAuth },
+      { status: safeStatus }
+    )
   }
 }

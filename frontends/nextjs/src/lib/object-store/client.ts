@@ -42,7 +42,7 @@ export async function putObject(
   bucket: string,
   key: string,
   body: BodyInit,
-  contentType = 'application/octet-stream',
+  contentType = 'application/octet-stream'
 ): Promise<{ etag: string }> {
   const res = await fetch(
     `${OBJECT_STORE_URL}/${encodeURIComponent(bucket)}/${encodeURI(key)}`,
@@ -51,7 +51,7 @@ export async function putObject(
       headers: { ...authHeader(), 'Content-Type': contentType },
       body,
       signal: AbortSignal.timeout(30000),
-    },
+    }
   )
   if (!res.ok) {
     throw new Error(`putObject(${bucket}/${key}) failed: HTTP ${res.status}`)
@@ -65,11 +65,11 @@ export async function putObject(
  * real failure. */
 export async function getObject(
   bucket: string,
-  key: string,
+  key: string
 ): Promise<{ body: ArrayBuffer; contentType: string; etag: string } | null> {
   const res = await fetch(
     `${OBJECT_STORE_URL}/${encodeURIComponent(bucket)}/${encodeURI(key)}`,
-    { headers: authHeader(), signal: AbortSignal.timeout(30000) },
+    { headers: authHeader(), signal: AbortSignal.timeout(30000) }
   )
   if (res.status === 404) return null
   if (!res.ok) {
@@ -85,7 +85,11 @@ export async function getObject(
 export async function deleteObject(bucket: string, key: string): Promise<void> {
   const res = await fetch(
     `${OBJECT_STORE_URL}/${encodeURIComponent(bucket)}/${encodeURI(key)}`,
-    { method: 'DELETE', headers: authHeader(), signal: AbortSignal.timeout(10000) },
+    {
+      method: 'DELETE',
+      headers: authHeader(),
+      signal: AbortSignal.timeout(10000),
+    }
   )
   if (!res.ok && res.status !== 404) {
     throw new Error(`deleteObject(${bucket}/${key}) failed: HTTP ${res.status}`)
@@ -110,12 +114,12 @@ export interface StoredObject {
  */
 export async function listObjects(
   bucket: string,
-  prefix = '',
+  prefix = ''
 ): Promise<StoredObject[]> {
   const query = prefix === '' ? '' : `?prefix=${encodeURIComponent(prefix)}`
   const res = await fetch(
     `${OBJECT_STORE_URL}/${encodeURIComponent(bucket)}${query}`,
-    { headers: authHeader(), signal: AbortSignal.timeout(15000) },
+    { headers: authHeader(), signal: AbortSignal.timeout(15000) }
   )
   if (res.status === 404) return []
   if (!res.ok) {

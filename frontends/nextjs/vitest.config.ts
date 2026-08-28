@@ -11,9 +11,10 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
-      // Without this, coverage only counts files a test happens to import,
-      // so the number describes the tested corner rather than the codebase.
-      all: true,
+      // `include` is what widens this beyond the files a test happens to
+      // import; without it the number describes the tested corner rather
+      // than the codebase. (Vitest 4 dropped the old `all` flag, which this
+      // originally used -- it typechecked as an error while still working.)
       include: ['src/**/*.{ts,tsx}'],
       exclude: [
         'src/**/*.test.{ts,tsx}',

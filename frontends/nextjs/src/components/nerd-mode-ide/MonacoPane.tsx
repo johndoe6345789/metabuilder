@@ -4,10 +4,9 @@ import dynamic from 'next/dynamic'
 import type { OpenFile } from './ide-types'
 import s from './MonacoPane.module.scss'
 
-const MonacoEditor = dynamic(
-  () => import('@monaco-editor/react'),
-  { ssr: false }
-)
+const MonacoEditor = dynamic(() => import('@monaco-editor/react'), {
+  ssr: false,
+})
 
 const EDITOR_OPTIONS = {
   fontSize: 13,

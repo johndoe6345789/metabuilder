@@ -41,7 +41,10 @@ export interface EntityOps {
   list(options?: ListOptions): Promise<ListResult>
   read(id: string): Promise<Record<string, unknown> | null>
   create(data: Record<string, unknown>): Promise<Record<string, unknown>>
-  update(id: string, data: Record<string, unknown>): Promise<Record<string, unknown>>
+  update(
+    id: string,
+    data: Record<string, unknown>
+  ): Promise<Record<string, unknown>>
   remove(id: string): Promise<boolean>
 }
 
@@ -85,7 +88,11 @@ async function dbalFetch<T>(url: string, init?: RequestInit): Promise<T> {
  * Unwrap C++ DBAL envelope: { data: ..., success: bool }
  */
 function unwrap<T>(raw: unknown): T {
-  if (raw !== null && typeof raw === 'object' && 'success' in (raw as Record<string, unknown>)) {
+  if (
+    raw !== null &&
+    typeof raw === 'object' &&
+    'success' in (raw as Record<string, unknown>)
+  ) {
     return (raw as Record<string, unknown>).data as T
   }
   return raw as T
@@ -116,8 +123,10 @@ function createOps(entityName: string): EntityOps {
           }
         }
       }
-      if (options?.limit !== undefined) params.set('_limit', String(options.limit))
-      if (options?.offset !== undefined) params.set('_offset', String(options.offset))
+      if (options?.limit !== undefined)
+        params.set('_limit', String(options.limit))
+      if (options?.offset !== undefined)
+        params.set('_offset', String(options.offset))
 
       const qs = params.toString()
       const url = qs.length > 0 ? `${base}?${qs}` : base
@@ -130,7 +139,10 @@ function createOps(entityName: string): EntityOps {
           return { data: payload, total: payload.length }
         }
         if (Array.isArray(payload.data)) {
-          return { data: payload.data as Record<string, unknown>[], total: payload.total as number | undefined }
+          return {
+            data: payload.data as Record<string, unknown>[],
+            total: payload.total as number | undefined,
+          }
         }
         return { data: [] }
       } catch {
@@ -147,7 +159,9 @@ function createOps(entityName: string): EntityOps {
       }
     },
 
-    async create(data: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async create(
+      data: Record<string, unknown>
+    ): Promise<Record<string, unknown>> {
       const raw = await dbalFetch<unknown>(base, {
         method: 'POST',
         body: JSON.stringify(data),
@@ -155,7 +169,10 @@ function createOps(entityName: string): EntityOps {
       return unwrap<Record<string, unknown>>(raw)
     },
 
-    async update(id: string, data: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async update(
+      id: string,
+      data: Record<string, unknown>
+    ): Promise<Record<string, unknown>> {
       const raw = await dbalFetch<unknown>(`${base}/${id}`, {
         method: 'PUT',
         body: JSON.stringify(data),
@@ -201,4 +218,3 @@ export const db: DBALClient = new Proxy({} as DBALClient, {
 export function getDB(): DBALClient {
   return db
 }
-

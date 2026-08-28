@@ -59,23 +59,26 @@ describe('compile', () => {
       expectedCode: 'const x=1;',
       expectedMap: '{"version":3}',
     },
-  ])('should compile $scenario', async ({ source, options, mockResult, expectedCode, expectedMap }) => {
-    mockTransform.mockResolvedValue(mockResult as never)
+  ])(
+    'should compile $scenario',
+    async ({ source, options, mockResult, expectedCode, expectedMap }) => {
+      mockTransform.mockResolvedValue(mockResult as never)
 
-    const result = await compile(source, options)
+      const result = await compile(source, options)
 
-    expect(result.code).toBe(expectedCode)
-    expect(result.map).toBe(expectedMap)
-    
-    // Verify transform was called with correct options
-    expect(mockTransform).toHaveBeenCalledWith(source, {
-      loader: 'ts',
-      minify: options?.minify ?? false,
-      sourcemap: options?.sourceMaps ?? false,
-      target: 'es2020',
-      format: 'esm',
-    })
-  })
+      expect(result.code).toBe(expectedCode)
+      expect(result.map).toBe(expectedMap)
+
+      // Verify transform was called with correct options
+      expect(mockTransform).toHaveBeenCalledWith(source, {
+        loader: 'ts',
+        minify: options?.minify ?? false,
+        sourcemap: options?.sourceMaps ?? false,
+        target: 'es2020',
+        format: 'esm',
+      })
+    }
+  )
 
   it.each([
     {
@@ -88,17 +91,20 @@ describe('compile', () => {
       source: 'const x: invalid = 1;',
       error: new Error('Type error'),
     },
-  ])('should handle compilation error for $scenario', async ({ source, error }) => {
-    mockTransform.mockRejectedValue(error)
+  ])(
+    'should handle compilation error for $scenario',
+    async ({ source, error }) => {
+      mockTransform.mockRejectedValue(error)
 
-    const result = await compile(source)
+      const result = await compile(source)
 
-    // Should return source with error comment
-    expect(result.code).toContain('// Compilation Error:')
-    expect(result.code).toContain(error.message)
-    expect(result.code).toContain(source)
-    expect(result.map).toBeUndefined()
-  })
+      // Should return source with error comment
+      expect(result.code).toContain('// Compilation Error:')
+      expect(result.code).toContain(error.message)
+      expect(result.code).toContain(source)
+      expect(result.map).toBeUndefined()
+    }
+  )
 
   it('should handle non-Error exceptions', async () => {
     mockTransform.mockRejectedValue('String error')

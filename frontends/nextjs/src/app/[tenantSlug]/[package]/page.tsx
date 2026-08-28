@@ -71,7 +71,7 @@ export async function generateMetadata({ params }: PackagePageProps) {
   // Try to load package metadata
   try {
     const packageData = await loadJSONPackage(join(getPackagesDir(), pkg))
-      return {
+    return {
       title: `${packageData.metadata.name} - ${tenantSlug} | MetaBuilder`,
       description:
         packageData.metadata.description.length > 0

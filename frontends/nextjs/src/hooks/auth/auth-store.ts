@@ -19,7 +19,11 @@ import type { User } from '@/lib/types/level-types'
 import type { AuthState } from './auth-types'
 import { mapUserToAuthUser } from './utils/map-user'
 import { BASE_PATH } from '@/lib/app-config'
-import { dbalSsoConfig, loadPersistedSession, savePersistedSession } from '@/lib/dbalSsoConfig'
+import {
+  dbalSsoConfig,
+  loadPersistedSession,
+  savePersistedSession,
+} from '@/lib/dbalSsoConfig'
 
 interface SessionApiResponse {
   user: User | null
@@ -72,14 +76,16 @@ export class AuthStore {
 
   private setState(newState: AuthState): void {
     this.state = newState
-    this.listeners.forEach(listener => { listener(); })
+    this.listeners.forEach(listener => {
+      listener()
+    })
   }
 
   private async loadProfile(token: string): Promise<void> {
     const response = await fetch(`${BASE_PATH}/api/auth/session`, {
       headers: { Authorization: `Bearer ${token}` },
     })
-    const result = await response.json() as SessionApiResponse
+    const result = (await response.json()) as SessionApiResponse
 
     if (result.user === null) {
       throw new Error('Session token rejected')
@@ -156,7 +162,10 @@ export class AuthStore {
 
   /** Applies a token pair obtained directly from the OIDC callback page
    * (already exchanged there), persisting and loading the profile. */
-  async applySession(token: string, refreshToken: string | null): Promise<void> {
+  async applySession(
+    token: string,
+    refreshToken: string | null
+  ): Promise<void> {
     this.refreshToken = refreshToken
     setAuthToken(token)
     void syncSessionCookie(token)

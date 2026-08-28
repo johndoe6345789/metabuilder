@@ -1,6 +1,9 @@
 import type { PackageContent, PackageManifest } from '../../package-types'
 
-export const forumClassicPackage = (): { manifest: PackageManifest; content: PackageContent } => ({
+export const forumClassicPackage = (): {
+  manifest: PackageManifest
+  content: PackageContent
+} => ({
   manifest: {
     id: 'forum-classic',
     name: 'Classic Forum',
@@ -25,9 +28,25 @@ export const forumClassicPackage = (): { manifest: PackageManifest; content: Pac
         name: 'ForumCategory',
         displayName: 'Forum Category',
         fields: [
-          { name: 'id', type: 'string', label: 'ID', required: true, primaryKey: true },
-          { name: 'name', type: 'string', label: 'Category Name', required: true },
-          { name: 'description', type: 'text', label: 'Description', required: false },
+          {
+            name: 'id',
+            type: 'string',
+            label: 'ID',
+            required: true,
+            primaryKey: true,
+          },
+          {
+            name: 'name',
+            type: 'string',
+            label: 'Category Name',
+            required: true,
+          },
+          {
+            name: 'description',
+            type: 'text',
+            label: 'Description',
+            required: false,
+          },
           {
             name: 'order',
             type: 'number',
@@ -36,17 +55,43 @@ export const forumClassicPackage = (): { manifest: PackageManifest; content: Pac
             defaultValue: 0,
           },
           { name: 'icon', type: 'string', label: 'Icon', required: false },
-          { name: 'createdAt', type: 'number', label: 'Created At', required: true },
+          {
+            name: 'createdAt',
+            type: 'number',
+            label: 'Created At',
+            required: true,
+          },
         ],
       },
       {
         name: 'ForumThread',
         displayName: 'Forum Thread',
         fields: [
-          { name: 'id', type: 'string', label: 'ID', required: true, primaryKey: true },
-          { name: 'categoryId', type: 'string', label: 'Category ID', required: true },
-          { name: 'title', type: 'string', label: 'Thread Title', required: true },
-          { name: 'authorId', type: 'string', label: 'Author ID', required: true },
+          {
+            name: 'id',
+            type: 'string',
+            label: 'ID',
+            required: true,
+            primaryKey: true,
+          },
+          {
+            name: 'categoryId',
+            type: 'string',
+            label: 'Category ID',
+            required: true,
+          },
+          {
+            name: 'title',
+            type: 'string',
+            label: 'Thread Title',
+            required: true,
+          },
+          {
+            name: 'authorId',
+            type: 'string',
+            label: 'Author ID',
+            required: true,
+          },
           { name: 'content', type: 'text', label: 'Content', required: true },
           {
             name: 'isPinned',
@@ -62,7 +107,13 @@ export const forumClassicPackage = (): { manifest: PackageManifest; content: Pac
             required: false,
             defaultValue: false,
           },
-          { name: 'views', type: 'number', label: 'View Count', required: true, defaultValue: 0 },
+          {
+            name: 'views',
+            type: 'number',
+            label: 'View Count',
+            required: true,
+            defaultValue: 0,
+          },
           {
             name: 'replyCount',
             type: 'number',
@@ -70,20 +121,57 @@ export const forumClassicPackage = (): { manifest: PackageManifest; content: Pac
             required: true,
             defaultValue: 0,
           },
-          { name: 'lastReplyAt', type: 'number', label: 'Last Reply At', required: false },
-          { name: 'createdAt', type: 'number', label: 'Created At', required: true },
-          { name: 'updatedAt', type: 'number', label: 'Updated At', required: false },
+          {
+            name: 'lastReplyAt',
+            type: 'number',
+            label: 'Last Reply At',
+            required: false,
+          },
+          {
+            name: 'createdAt',
+            type: 'number',
+            label: 'Created At',
+            required: true,
+          },
+          {
+            name: 'updatedAt',
+            type: 'number',
+            label: 'Updated At',
+            required: false,
+          },
         ],
       },
       {
         name: 'ForumPost',
         displayName: 'Forum Post',
         fields: [
-          { name: 'id', type: 'string', label: 'ID', required: true, primaryKey: true },
-          { name: 'threadId', type: 'string', label: 'Thread ID', required: true },
-          { name: 'authorId', type: 'string', label: 'Author ID', required: true },
+          {
+            name: 'id',
+            type: 'string',
+            label: 'ID',
+            required: true,
+            primaryKey: true,
+          },
+          {
+            name: 'threadId',
+            type: 'string',
+            label: 'Thread ID',
+            required: true,
+          },
+          {
+            name: 'authorId',
+            type: 'string',
+            label: 'Author ID',
+            required: true,
+          },
           { name: 'content', type: 'text', label: 'Content', required: true },
-          { name: 'likes', type: 'number', label: 'Like Count', required: true, defaultValue: 0 },
+          {
+            name: 'likes',
+            type: 'number',
+            label: 'Like Count',
+            required: true,
+            defaultValue: 0,
+          },
           {
             name: 'isEdited',
             type: 'boolean',
@@ -91,8 +179,18 @@ export const forumClassicPackage = (): { manifest: PackageManifest; content: Pac
             required: false,
             defaultValue: false,
           },
-          { name: 'createdAt', type: 'number', label: 'Created At', required: true },
-          { name: 'updatedAt', type: 'number', label: 'Updated At', required: false },
+          {
+            name: 'createdAt',
+            type: 'number',
+            label: 'Created At',
+            required: true,
+          },
+          {
+            name: 'updatedAt',
+            type: 'number',
+            label: 'Updated At',
+            required: false,
+          },
         ],
       },
     ],

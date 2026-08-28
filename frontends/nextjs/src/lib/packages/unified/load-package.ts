@@ -4,7 +4,9 @@ import { loadJSONPackage } from '../json'
 import { getPackagesDir } from './get-packages-dir'
 import type { UnifiedPackage } from './types'
 
-export async function loadPackage(packageId: string): Promise<UnifiedPackage | null> {
+export async function loadPackage(
+  packageId: string
+): Promise<UnifiedPackage | null> {
   try {
     const packagePath = join(getPackagesDir(), packageId)
     const jsonPkg = await loadJSONPackage(packagePath)

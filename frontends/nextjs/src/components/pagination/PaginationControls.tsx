@@ -13,7 +13,7 @@ export interface PaginationControlsProps {
 
 /**
  * Material-UI based pagination controls
- * 
+ *
  * Displays page navigation with previous/next buttons and page numbers
  * following MetaBuilder's design system using Material-UI components
  */

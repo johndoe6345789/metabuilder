@@ -37,9 +37,8 @@ export function LevelGate({
   const auth = useAuthContext()
   const router = useRouter()
 
-  const userLevel = auth.user != null
-    ? getRoleLevel(auth.user.role ?? 'user')
-    : 0
+  const userLevel =
+    auth.user != null ? getRoleLevel(auth.user.role ?? 'user') : 0
 
   // User has sufficient level
   if (userLevel >= minLevel) {
@@ -54,12 +53,18 @@ export function LevelGate({
         <Typography variant="h5" gutterBottom>
           Authentication Required
         </Typography>
-        <Typography variant="body1" color="text.secondary" className={s.copyLarge}>
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          className={s.copyLarge}
+        >
           You need to sign in to access this area.
         </Typography>
         <Button
           variant="contained"
-          onClick={() => { router.push('/login') }}
+          onClick={() => {
+            router.push('/login')
+          }}
         >
           Sign In
         </Button>

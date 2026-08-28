@@ -18,7 +18,9 @@ interface Props {
 }
 
 async function joinChannel(
-  channelId: string, userId: string, tenantId: string,
+  channelId: string,
+  userId: string,
+  tenantId: string
 ): Promise<void> {
   try {
     await fetch(`${DBAL}/v1/${tenantId}/irc/irc_membership`, {
@@ -27,11 +29,17 @@ async function joinChannel(
       body: JSON.stringify({ channelId, userId, tenantId }),
       signal: AbortSignal.timeout(4000),
     })
-  } catch { /* offline */ }
+  } catch {
+    /* offline */
+  }
 }
 
 export function ChannelList({
-  channels, activeChannelId, onSelect, userId, tenantId = 'default',
+  channels,
+  activeChannelId,
+  onSelect,
+  userId,
+  tenantId = 'default',
 }: Props) {
   function pick(ch: IrcChannel) {
     onSelect(ch.id)
@@ -52,7 +60,9 @@ export function ChannelList({
             <li
               key={ch.id}
               className={`${styles.item} ${active ? styles.active : ''}`}
-              onClick={() => { pick(ch) }}
+              onClick={() => {
+                pick(ch)
+              }}
               role="button"
               tabIndex={0}
               onKeyDown={e => {

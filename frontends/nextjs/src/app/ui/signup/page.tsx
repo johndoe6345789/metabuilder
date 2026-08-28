@@ -12,9 +12,12 @@ import s from './page.module.scss'
 
 // basePath ('/app') is applied to Link/router but NOT to fetch(), so the
 // API base must be prefixed explicitly to reach /app/api/* endpoints.
-const BASE = typeof window !== 'undefined'
-  ? (window.location.pathname.startsWith('/app') ? '/app' : '')
-  : '/app'
+const BASE =
+  typeof window !== 'undefined'
+    ? window.location.pathname.startsWith('/app')
+      ? '/app'
+      : ''
+    : '/app'
 
 type TierId = 'starter' | 'creator' | 'studio'
 
@@ -49,16 +52,17 @@ export default function SignupPage() {
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({
-          username: slugify(community).length > 0
-            ? slugify(community)
-            : name.toLowerCase(),
+          username:
+            slugify(community).length > 0
+              ? slugify(community)
+              : name.toLowerCase(),
           email,
           password,
           tenantName: slugify(community),
           plan: tier,
         }),
       })
-      const json = await res.json() as { success: boolean; error?: string }
+      const json = (await res.json()) as { success: boolean; error?: string }
       if (!json.success) {
         setError(json.error ?? 'Registration failed. Please try again.')
         return
@@ -80,7 +84,12 @@ export default function SignupPage() {
         <h1 className={s.title}>Create your community</h1>
         <p className={s.sub}>Free 14-day trial · No card needed</p>
 
-        <form onSubmit={e => { void handleSubmit(e) }} className={s.form}>
+        <form
+          onSubmit={e => {
+            void handleSubmit(e)
+          }}
+          className={s.form}
+        >
           <label className={s.label}>
             Community name
             <input
@@ -88,7 +97,9 @@ export default function SignupPage() {
               type="text"
               placeholder="Acme Running Club"
               value={community}
-              onChange={e => { setCommunity(e.target.value) }}
+              onChange={e => {
+                setCommunity(e.target.value)
+              }}
               required
               autoFocus
             />
@@ -107,7 +118,9 @@ export default function SignupPage() {
               type="text"
               placeholder="Alex Smith"
               value={name}
-              onChange={e => { setName(e.target.value) }}
+              onChange={e => {
+                setName(e.target.value)
+              }}
               required
             />
           </label>
@@ -119,7 +132,9 @@ export default function SignupPage() {
               type="email"
               placeholder="alex@example.com"
               value={email}
-              onChange={e => { setEmail(e.target.value) }}
+              onChange={e => {
+                setEmail(e.target.value)
+              }}
               required
             />
           </label>
@@ -131,7 +146,9 @@ export default function SignupPage() {
               type="password"
               placeholder="At least 8 characters"
               value={password}
-              onChange={e => { setPassword(e.target.value) }}
+              onChange={e => {
+                setPassword(e.target.value)
+              }}
               required
               minLength={8}
             />
@@ -145,28 +162,26 @@ export default function SignupPage() {
                   key={t.id}
                   type="button"
                   className={`${s.tier} ${tier === t.id ? s.tierSelected : ''}`}
-                  onClick={() => { setTier(t.id) }}
+                  onClick={() => {
+                    setTier(t.id)
+                  }}
                 >
-                  {t.highlight && (
-                    <span className={s.tierBadge}>Popular</span>
-                  )}
+                  {t.highlight && <span className={s.tierBadge}>Popular</span>}
                   <span className={s.tierName}>{t.name}</span>
                   <span className={s.tierPrice}>£{t.price}/mo</span>
                   <span className={s.tierPkgs}>
                     {t.packageIds.map(pid => {
                       const pkg = PRODUCT_PACKAGES.find(p => p.id === pid)
-                      return pkg !== undefined
-                        ? (
-                          <span
-                            key={pid}
-                            className="material-symbols-rounded"
-                            title={pkg.name}
-                            style={{ color: pkg.color }}
-                          >
-                            {pkg.icon}
-                          </span>
-                        )
-                        : null
+                      return pkg !== undefined ? (
+                        <span
+                          key={pid}
+                          className="material-symbols-rounded"
+                          title={pkg.name}
+                          style={{ color: pkg.color }}
+                        >
+                          {pkg.icon}
+                        </span>
+                      ) : null
                     })}
                   </span>
                 </button>
@@ -174,9 +189,7 @@ export default function SignupPage() {
             </div>
           </div>
 
-          {error.length > 0 && (
-            <p className={s.error}>{error}</p>
-          )}
+          {error.length > 0 && <p className={s.error}>{error}</p>}
 
           <button
             type="submit"
@@ -195,7 +208,9 @@ export default function SignupPage() {
 
         <p className={s.signin}>
           Already have an account?{' '}
-          <Link href="/login" className={s.link}>Sign in</Link>
+          <Link href="/login" className={s.link}>
+            Sign in
+          </Link>
         </p>
       </div>
     </div>

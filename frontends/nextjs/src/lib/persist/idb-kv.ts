@@ -15,8 +15,11 @@ let dbPromise: Promise<IDBDatabase | null> | null = null
 
 function openDb(): Promise<IDBDatabase | null> {
   if (dbPromise) return dbPromise
-  dbPromise = new Promise((resolve) => {
-    if (typeof indexedDB === 'undefined') { resolve(null); return }
+  dbPromise = new Promise(resolve => {
+    if (typeof indexedDB === 'undefined') {
+      resolve(null)
+      return
+    }
     const req = indexedDB.open(DB_NAME, VERSION)
     req.onupgradeneeded = () => {
       if (!req.result.objectStoreNames.contains(STORE)) {
@@ -33,20 +36,27 @@ function lsGet<T>(key: string): T | null {
   try {
     const raw = localStorage.getItem(key)
     return raw ? (JSON.parse(raw) as T) : null
-  } catch { return null }
+  } catch {
+    return null
+  }
 }
 
 function lsSet<T>(key: string, value: T): void {
-  try { localStorage.setItem(key, JSON.stringify(value)) } catch { /* ignore */ }
+  try {
+    localStorage.setItem(key, JSON.stringify(value))
+  } catch {
+    /* ignore */
+  }
 }
 
 export async function idbGet<T>(key: string): Promise<T | null> {
   const db = await openDb()
   if (!db) return lsGet<T>(key)
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     const tx = db.transaction(STORE, 'readonly')
     const req = tx.objectStore(STORE).get(key)
-    req.onsuccess = () => resolve((req.result as T | undefined) ?? lsGet<T>(key))
+    req.onsuccess = () =>
+      resolve((req.result as T | undefined) ?? lsGet<T>(key))
     req.onerror = () => resolve(lsGet<T>(key))
   })
 }
@@ -55,7 +65,7 @@ export async function idbSet<T>(key: string, value: T): Promise<void> {
   lsSet(key, value) // mirror to localStorage as a belt-and-braces fallback
   const db = await openDb()
   if (!db) return
-  await new Promise<void>((resolve) => {
+  await new Promise<void>(resolve => {
     const tx = db.transaction(STORE, 'readwrite')
     tx.objectStore(STORE).put(value, key)
     tx.oncomplete = () => resolve()
@@ -67,7 +77,7 @@ export async function idbSet<T>(key: string, value: T): Promise<void> {
 export async function idbDump(): Promise<Record<string, unknown>> {
   const db = await openDb()
   if (!db) return {}
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     const out: Record<string, unknown> = {}
     const tx = db.transaction(STORE, 'readonly')
     const store = tx.objectStore(STORE)
@@ -78,11 +88,12 @@ export async function idbDump(): Promise<Record<string, unknown>> {
         const keys = keysReq.result as IDBValidKey[]
         const vals = valsReq.result as unknown[]
         keys.forEach((k, i) => {
-          const key = typeof k === 'string' || typeof k === 'number'
-            ? String(k)
-            : k instanceof Date
-              ? k.toISOString()
-              : JSON.stringify(k)
+          const key =
+            typeof k === 'string' || typeof k === 'number'
+              ? String(k)
+              : k instanceof Date
+                ? k.toISOString()
+                : JSON.stringify(k)
           out[key] = vals[i]
         })
         resolve(out)

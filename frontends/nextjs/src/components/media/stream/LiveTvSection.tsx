@@ -10,12 +10,16 @@ interface Props {
   // Set by the hero's "Watch now" button to jump straight into a channel
   // without the user having to find it in the guide first. `nonce` changes
   // on every click so the same channel can be re-triggered.
-  externalWatchTrigger?: { channelId: string, nonce: number } | null
+  externalWatchTrigger?: { channelId: string; nonce: number } | null
 }
 
 export function LiveTvSection({ externalWatchTrigger }: Props) {
   const { channels, loading, error, watch, stop } = useTvChannels()
-  const [nowWatching, setNowWatching] = useState<{ id: string, url: string, title: string } | null>(null)
+  const [nowWatching, setNowWatching] = useState<{
+    id: string
+    url: string
+    title: string
+  } | null>(null)
   const [busyId, setBusyId] = useState<string | null>(null)
   const lastTriggerNonce = useRef<number | null>(null)
 
@@ -30,7 +34,8 @@ export function LiveTvSection({ externalWatchTrigger }: Props) {
   }
 
   useEffect(() => {
-    if (externalWatchTrigger === null || externalWatchTrigger === undefined) return
+    if (externalWatchTrigger === null || externalWatchTrigger === undefined)
+      return
     if (externalWatchTrigger.nonce === lastTriggerNonce.current) return
     lastTriggerNonce.current = externalWatchTrigger.nonce
     const ch = channels.find(c => c.id === externalWatchTrigger.channelId)
@@ -53,10 +58,18 @@ export function LiveTvSection({ externalWatchTrigger }: Props) {
       <div className={s.player}>
         <div className={s.playerHeader}>
           <div className={s.playerTitleGroup}>
-            <span className={s.playerLive}><span className={s.playerLiveDot} />LIVE</span>
+            <span className={s.playerLive}>
+              <span className={s.playerLiveDot} />
+              LIVE
+            </span>
             <h2 className={s.playerTitle}>{nowWatching.title}</h2>
           </div>
-          <button className={s.backBtn} onClick={() => { void handleStopWatching() }}>
+          <button
+            className={s.backBtn}
+            onClick={() => {
+              void handleStopWatching()
+            }}
+          >
             ← Back to guide
           </button>
         </div>
@@ -80,7 +93,9 @@ export function LiveTvSection({ externalWatchTrigger }: Props) {
     <EpgGrid
       channels={channels}
       busyId={busyId}
-      onWatch={(id, title) => { void handleWatch(id, title) }}
+      onWatch={(id, title) => {
+        void handleWatch(id, title)
+      }}
     />
   )
 }

@@ -37,7 +37,10 @@ interface RouteParams {
 
 const WRITE_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE'])
 
-async function proxy(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
+async function proxy(
+  request: NextRequest,
+  { params }: RouteParams
+): Promise<NextResponse> {
   const resolvedParams = await params
   const path = resolvedParams.slug.join('/')
   const search = request.nextUrl.search
@@ -59,7 +62,7 @@ async function proxy(request: NextRequest, { params }: RouteParams): Promise<Nex
 
   try {
     const headers: Record<string, string> = {
-      'Accept': 'application/json',
+      Accept: 'application/json',
     }
     // Passed on so the data layer can apply its own rules once it enforces
     // them; today it ignores this.
@@ -89,7 +92,10 @@ async function proxy(request: NextRequest, { params }: RouteParams): Promise<Nex
     })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'DBAL proxy error'
-    return NextResponse.json({ success: false, error: message }, { status: 502 })
+    return NextResponse.json(
+      { success: false, error: message },
+      { status: 502 }
+    )
   }
 }
 

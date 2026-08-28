@@ -22,7 +22,7 @@ export function getPackageRepoConfig(): PackageRepoConfig {
   }
 
   if (enableRemote) {
-    config.sources = config.sources.map((source) => ({
+    config.sources = config.sources.map(source => ({
       ...source,
       enabled: source.type === 'remote' ? true : source.enabled,
     }))
@@ -30,7 +30,7 @@ export function getPackageRepoConfig(): PackageRepoConfig {
 
   const authToken = process.env.PACKAGE_REGISTRY_AUTH_TOKEN
   if (authToken !== undefined && authToken.length > 0) {
-    config.sources = config.sources.map((source) => ({
+    config.sources = config.sources.map(source => ({
       ...source,
       authToken: source.type === 'remote' ? authToken : undefined,
     }))

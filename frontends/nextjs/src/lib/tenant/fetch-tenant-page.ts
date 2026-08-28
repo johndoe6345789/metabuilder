@@ -27,17 +27,16 @@ export interface TenantPage {
 
 export async function fetchTenantPage(
   tenant: string,
-  path: string,
+  path: string
 ): Promise<TenantPage | null> {
   try {
     const params = new URLSearchParams({
       'filter.path': path,
     })
-    const url =
-      `${DBAL}/${tenant}/core/PageConfig?${params.toString()}`
+    const url = `${DBAL}/${tenant}/core/PageConfig?${params.toString()}`
     const res = await fetch(url, { cache: 'no-store' })
     if (!res.ok) return null
-    const raw = await res.json() as unknown
+    const raw = (await res.json()) as unknown
     const arr = extractArray(unwrap(raw))
     const first = arr.find(page => {
       const active =
@@ -57,14 +56,12 @@ export async function fetchTenantPage(
   }
 }
 
-export async function fetchTenantPages(
-  tenant: string,
-): Promise<TenantPage[]> {
+export async function fetchTenantPages(tenant: string): Promise<TenantPage[]> {
   try {
     const url = `${DBAL}/${tenant}/core/PageConfig`
     const res = await fetch(url, { cache: 'no-store' })
     if (!res.ok) return []
-    const raw = await res.json() as unknown
+    const raw = (await res.json()) as unknown
     return extractArray(unwrap(raw)).map(normalize)
   } catch {
     return []
@@ -98,10 +95,8 @@ function normalize(p: Record<string, unknown>): TenantPage {
     path: p.path as string,
     title: p.title as string,
     level: (p.level as number | undefined) ?? 1,
-    requiresAuth:
-      (p.requiresAuth as boolean | undefined) ?? false,
-    requiredRole:
-      (p.requiredRole as string | null | undefined) ?? null,
+    requiresAuth: (p.requiresAuth as boolean | undefined) ?? false,
+    requiredRole: (p.requiredRole as string | null | undefined) ?? null,
     pageTreeId: (p.pageTreeId as string | null | undefined) ?? null,
     componentTree: null,
     isActive:

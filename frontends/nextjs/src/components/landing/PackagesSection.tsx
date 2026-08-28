@@ -8,9 +8,9 @@ export function PackagesSection() {
         <div className={s.header}>
           <h2 className={s.title}>Everything your community needs</h2>
           <p className={s.sub}>
-            Install the features you want. Skip what you don&apos;t.
-            Each package adds pages, navigation and functionality
-            to your platform instantly.
+            Install the features you want. Skip what you don&apos;t. Each
+            package adds pages, navigation and functionality to your platform
+            instantly.
           </p>
         </div>
         <div className={s.grid}>

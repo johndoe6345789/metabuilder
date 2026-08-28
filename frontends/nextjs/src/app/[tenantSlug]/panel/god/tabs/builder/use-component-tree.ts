@@ -74,8 +74,13 @@ export function useComponentTree() {
     commit({ id: 'root', type: 'container', props: {}, children: [] })
     setSelectedId('root')
   }, [commit])
-  const { publish, publishing, conflict, load: loadTree, loading } =
-    useComponentTreePublish(tree)
+  const {
+    publish,
+    publishing,
+    conflict,
+    load: loadTree,
+    loading,
+  } = useComponentTreePublish(tree)
   const load = useCallback(
     async (tenant: string, path: string) => {
       const result = await loadTree(tenant, path)

@@ -27,7 +27,9 @@ export function MessageItem({ message }: Props) {
     return (
       <div className={styles.row}>
         <span className={styles.ts}>{time}</span>
-        <span className={`${styles.system} ${type === 'join' ? styles.join : styles.leave}`}>
+        <span
+          className={`${styles.system} ${type === 'join' ? styles.join : styles.leave}`}
+        >
           --&gt; {content}
         </span>
       </div>
@@ -53,11 +55,7 @@ export function MessageItem({ message }: Props) {
     return (
       <div className={styles.row}>
         <span className={styles.ts}>{time}</span>
-        <Typography
-          variant="body2"
-          component="span"
-          className={styles.meText}
-        >
+        <Typography variant="body2" component="span" className={styles.meText}>
           * {createdBy} {content}
         </Typography>
       </div>

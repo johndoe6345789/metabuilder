@@ -7,14 +7,14 @@ import { normalizeTenantId } from '@/lib/tenant/workspace-paths'
 import { useComponentTree } from './use-component-tree'
 import { PALETTE, renderNode, type PaletteItem } from './builder-registry'
 import { CATEGORIES } from './component-tree-categories'
-import {
-  ComponentTreeOutline,
-  PALETTE_MIME,
-} from './ComponentTreeOutline'
+import { ComponentTreeOutline, PALETTE_MIME } from './ComponentTreeOutline'
 import { ComponentTreePropsEditor } from './ComponentTreePropsEditor'
 import { ComponentTreePublishBar } from './ComponentTreePublishBar'
 import { ComponentTreeTargetPicker } from './ComponentTreeTargetPicker'
-import { DEFAULT_PUBLISH_TARGET, type PublishTarget } from './component-tree-publish'
+import {
+  DEFAULT_PUBLISH_TARGET,
+  type PublishTarget,
+} from './component-tree-publish'
 import { usePageConfigs } from './use-page-configs'
 import { collectDomIds } from './component-tree-utils'
 import s from './ComponentTreeTab.module.scss'
@@ -78,7 +78,10 @@ export function ComponentTreeWorkbench() {
   // the browser's own undo is what they mean.
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
-      if (!(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== 'z') {
+      if (
+        !(event.metaKey || event.ctrlKey) ||
+        event.key.toLowerCase() !== 'z'
+      ) {
         return
       }
       const el = document.activeElement
@@ -116,72 +119,74 @@ export function ComponentTreeWorkbench() {
       </button>
 
       <div className={s.setup} data-open={setupOpen}>
-      <div className={s.treeBar}>
-        <FormControl>
-          <FormLabel htmlFor="builder-tree">Component tree</FormLabel>
-          <Select
-            native
-            value={currentTree}
-            inputProps={{ id: 'builder-tree' }}
-            onChange={
-              ((event: React.ChangeEvent<HTMLSelectElement>) => {
-                const value = event.target.value
-                if (value === BLANK) {
-                  t.resetTree()
-                  return
-                }
-                const row = pages.find(p => p.path === value)
-                setTarget(prev => ({
-                  ...prev,
-                  path: value,
-                  title: row?.title ?? prev.title,
-                }))
-                void t.load(tenant, value)
-              }) as never
-            }
-          >
-            <option value={BLANK}>
-              {trees.length > 0 ? 'Blank tree' : 'Blank tree — none saved yet'}
-            </option>
-            {trees.map(x => (
-              <option key={x.id} value={x.path}>
-                {x.title} — {x.path}
+        <div className={s.treeBar}>
+          <FormControl>
+            <FormLabel htmlFor="builder-tree">Component tree</FormLabel>
+            <Select
+              native
+              value={currentTree}
+              inputProps={{ id: 'builder-tree' }}
+              onChange={
+                ((event: React.ChangeEvent<HTMLSelectElement>) => {
+                  const value = event.target.value
+                  if (value === BLANK) {
+                    t.resetTree()
+                    return
+                  }
+                  const row = pages.find(p => p.path === value)
+                  setTarget(prev => ({
+                    ...prev,
+                    path: value,
+                    title: row?.title ?? prev.title,
+                  }))
+                  void t.load(tenant, value)
+                }) as never
+              }
+            >
+              <option value={BLANK}>
+                {trees.length > 0
+                  ? 'Blank tree'
+                  : 'Blank tree — none saved yet'}
               </option>
-            ))}
-          </Select>
-        </FormControl>
-      </div>
+              {trees.map(x => (
+                <option key={x.id} value={x.path}>
+                  {x.title} — {x.path}
+                </option>
+              ))}
+            </Select>
+          </FormControl>
+        </div>
 
-      <ComponentTreeTargetPicker
-        pages={pages}
-        onPickRoute={path => {
-          const row = pages.find(p => p.path === path)
-          setTarget(prev => ({
-            ...prev,
-            path,
-            title: row?.title ?? prev.title,
-          }))
-          void t.load(tenant, path)
-        }}
-        target={target}
-        onChange={patch => {
-          setTarget(prev => ({ ...prev, ...patch }))
-        }}
-        loading={t.loading}
-        onLoad={() => {
-          void t.load(target.tenant, target.path).then(loaded => {
-            if (loaded !== null) {
-              setTarget(prev => ({ ...prev, ...loaded }))
-            }
-          })
-        }}
-      />
+        <ComponentTreeTargetPicker
+          pages={pages}
+          onPickRoute={path => {
+            const row = pages.find(p => p.path === path)
+            setTarget(prev => ({
+              ...prev,
+              path,
+              title: row?.title ?? prev.title,
+            }))
+            void t.load(tenant, path)
+          }}
+          target={target}
+          onChange={patch => {
+            setTarget(prev => ({ ...prev, ...patch }))
+          }}
+          loading={t.loading}
+          onLoad={() => {
+            void t.load(target.tenant, target.path).then(loaded => {
+              if (loaded !== null) {
+                setTarget(prev => ({ ...prev, ...loaded }))
+              }
+            })
+          }}
+        />
       </div>
 
       {t.conflict !== null && (
-
-        <div className={s.conflict} role="alert">{t.conflict}</div>
-
+        <div className={s.conflict} role="alert">
+          {t.conflict}
+        </div>
       )}
 
       <ComponentTreePublishBar
@@ -271,33 +276,33 @@ export function ComponentTreeWorkbench() {
 
         <section className={s.middle}>
           <div className={s.treePane}>
-          <div className={s.paneTitle}>Tree</div>
-          <div className={s.outline}>
-            <ComponentTreeOutline
-              node={t.tree}
-              depth={0}
-              selectedId={t.selectedId}
-              collapsed={collapsed}
-              onToggleCollapse={toggleCollapse}
-              onAdd={t.addNode}
-              onSelect={t.setSelectedId}
-              onDelete={t.deleteNode}
-              onMove={t.moveNode}
-            />
-          </div>
+            <div className={s.paneTitle}>Tree</div>
+            <div className={s.outline}>
+              <ComponentTreeOutline
+                node={t.tree}
+                depth={0}
+                selectedId={t.selectedId}
+                collapsed={collapsed}
+                onToggleCollapse={toggleCollapse}
+                onAdd={t.addNode}
+                onSelect={t.setSelectedId}
+                onDelete={t.deleteNode}
+                onMove={t.moveNode}
+              />
+            </div>
           </div>
           <div className={s.propsPane}>
-          <div className={s.paneTitle}>Properties</div>
-          <div className={s.props}>
-            <ComponentTreePropsEditor
-              node={t.selected}
-              tenant={tenant}
-              duplicateId={duplicateId}
-              onChange={patch => {
-                t.updateProps(t.selectedId, patch)
-              }}
-            />
-          </div>
+            <div className={s.paneTitle}>Properties</div>
+            <div className={s.props}>
+              <ComponentTreePropsEditor
+                node={t.selected}
+                tenant={tenant}
+                duplicateId={duplicateId}
+                onChange={patch => {
+                  t.updateProps(t.selectedId, patch)
+                }}
+              />
+            </div>
           </div>
         </section>
 

@@ -25,7 +25,11 @@ function isValidPackageId(packageId: string): boolean {
     return false
   }
   // Extra safety: reject any path-like characters
-  if (packageId.includes('..') || packageId.includes('/') || packageId.includes('\\')) {
+  if (
+    packageId.includes('..') ||
+    packageId.includes('/') ||
+    packageId.includes('\\')
+  ) {
     return false
   }
   // Length limit to prevent buffer issues
@@ -42,9 +46,13 @@ export function validatePackageRoute(
 ): RouteValidationResult {
   // Validate packageId before any file operations
   if (!isValidPackageId(packageId)) {
-    return { allowed: false, error: 'Invalid package ID format', reason: 'Invalid package ID' }
+    return {
+      allowed: false,
+      error: 'Invalid package ID format',
+      reason: 'Invalid package ID',
+    }
   }
-  
+
   const metadata = loadPackageMetadataSync(packageId)
 
   if (metadata === null) {
@@ -52,8 +60,10 @@ export function validatePackageRoute(
     return { allowed: true }
   }
 
-  const packageName = typeof metadata.name === 'string' ? metadata.name : undefined
-  const minLevel = typeof metadata.minLevel === 'number' ? metadata.minLevel : undefined
+  const packageName =
+    typeof metadata.name === 'string' ? metadata.name : undefined
+  const minLevel =
+    typeof metadata.minLevel === 'number' ? metadata.minLevel : undefined
   const entities = normalizeSchemaEntities(metadata.schema)
 
   if (entities.length > 0 && !entities.includes(entity)) {
@@ -108,7 +118,9 @@ function normalizeSchemaEntities(schema: unknown): string[] {
   const record = schema as Record<string, unknown>
   const entities = record.entities
   if (!Array.isArray(entities)) return []
-  return entities.filter((entry): entry is string => typeof entry === 'string' && entry.length > 0)
+  return entities.filter(
+    (entry): entry is string => typeof entry === 'string' && entry.length > 0
+  )
 }
 
 function getPackageJsonPath(packageId: string): string {
@@ -125,7 +137,12 @@ function getPackageJsonPath(packageId: string): string {
 function getSeedMetadataPath(packageId: string): string {
   // Path is safe because packageId is validated by isValidPackageId before use
   const packagesBase = path.resolve(process.cwd(), 'packages')
-  const resolved = path.resolve(packagesBase, packageId, 'seed', 'metadata.json')
+  const resolved = path.resolve(
+    packagesBase,
+    packageId,
+    'seed',
+    'metadata.json'
+  )
   // Double-check the resolved path is within packages directory
   if (!resolved.startsWith(packagesBase + path.sep)) {
     throw new Error('Invalid package path')

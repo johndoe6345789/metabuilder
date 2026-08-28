@@ -87,7 +87,6 @@ function generateSwaggerHTML(specUrl: string): string {
 `
 }
 
-
 /**
  * GET /api/docs - Swagger UI
  *

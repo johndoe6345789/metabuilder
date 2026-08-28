@@ -16,7 +16,13 @@
 'use client'
 
 import React, { useState, useCallback, useMemo } from 'react'
-import type { WorkflowDefinition, WorkflowNode, ConnectionTarget, ExecutionRecord, NodeResult } from '@metabuilder/workflow'
+import type {
+  WorkflowDefinition,
+  WorkflowNode,
+  ConnectionTarget,
+  ExecutionRecord,
+  NodeResult,
+} from '@metabuilder/workflow'
 import { useWorkflow } from '@metabuilder/hooks'
 import styles from './WorkflowBuilder.module.css'
 
@@ -53,28 +59,30 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
   const [showAdvanced, setShowAdvanced] = useState(false)
 
   const { execute, loading, state, error } = useWorkflow({
-    onSuccess: (record) => {
+    onSuccess: record => {
       // Update node UI states based on execution results
       const newStates = new Map(nodeUIStates)
-      Object.entries(record.state).forEach(([nodeId, result]: [string, NodeResult]) => {
-        newStates.set(nodeId, {
-          nodeId,
-          isSelected: selectedNodeId === nodeId,
-          status:
-            result.status === 'success'
-              ? 'success'
-              : result.status === 'error'
-                ? 'error'
-                : 'pending',
-        })
-      })
+      Object.entries(record.state).forEach(
+        ([nodeId, result]: [string, NodeResult]) => {
+          newStates.set(nodeId, {
+            nodeId,
+            isSelected: selectedNodeId === nodeId,
+            status:
+              result.status === 'success'
+                ? 'success'
+                : result.status === 'error'
+                  ? 'error'
+                  : 'pending',
+          })
+        }
+      )
       setNodeUIStates(newStates)
 
       if (onExecute != null) {
         onExecute(record)
       }
     },
-    onError: (err) => {
+    onError: err => {
       if (onError != null) {
         onError(err)
       }
@@ -82,16 +90,13 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
   })
 
   const selectedNode = useMemo(
-    () => workflow.nodes.find((n) => n.id === selectedNodeId),
+    () => workflow.nodes.find(n => n.id === selectedNodeId),
     [workflow.nodes, selectedNodeId]
   )
 
-  const handleNodeClick = useCallback(
-    (nodeId: string) => {
-      setSelectedNodeId(nodeId)
-    },
-    []
-  )
+  const handleNodeClick = useCallback((nodeId: string) => {
+    setSelectedNodeId(nodeId)
+  }, [])
 
   const handleExecute = useCallback(async () => {
     await execute({
@@ -101,21 +106,20 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
     })
   }, [execute, tenant, workflow.id, triggerData])
 
-  const handleTriggerDataChange = useCallback(
-    (key: string, value: unknown) => {
-      setTriggerData((prev) => ({
-        ...prev,
-        [key]: value,
-      }))
-    },
-    []
-  )
+  const handleTriggerDataChange = useCallback((key: string, value: unknown) => {
+    setTriggerData(prev => ({
+      ...prev,
+      [key]: value,
+    }))
+  }, [])
 
   const handleNodeParameterChange = useCallback(
     (nodeId: string, paramKey: string, value: unknown) => {
       // This would update the workflow definition
       // Implementation depends on workflow editing capability
-      console.warn(`Update node ${nodeId} parameter ${paramKey} = ${String(value)}`)
+      console.warn(
+        `Update node ${nodeId} parameter ${paramKey} = ${String(value)}`
+      )
     },
     []
   )
@@ -131,19 +135,19 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
           viewBox="0 0 1000 600"
         >
           {/* Render connections */}
-          <g className={styles.connections}>
-            {renderConnections(workflow)}
-          </g>
+          <g className={styles.connections}>{renderConnections(workflow)}</g>
 
           {/* Render nodes */}
           <g className={styles.nodes}>
-            {workflow.nodes.map((node) => (
+            {workflow.nodes.map(node => (
               <NodeComponent
                 key={node.id}
                 node={node}
                 isSelected={selectedNodeId === node.id}
                 uiState={nodeUIStates.get(node.id)}
-                onClick={() => { handleNodeClick(node.id) }}
+                onClick={() => {
+                  handleNodeClick(node.id)
+                }}
               />
             ))}
           </g>
@@ -167,8 +171,8 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
                 <input
                   type="text"
                   placeholder={variable.description ?? name}
-                  value={(triggerData[name] as string)}
-                  onChange={(e) => {
+                  value={triggerData[name] as string}
+                  onChange={e => {
                     handleTriggerDataChange(name, e.target.value)
                   }}
                 />
@@ -185,31 +189,36 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
               <p className={styles.nodeType}>
                 Type: <code>{selectedNode.nodeType}</code>
               </p>
-              {selectedNode.description != null && selectedNode.description !== '' && (
-                <p className={styles.nodeDescription}>
-                  {selectedNode.description}
-                </p>
-              )}
+              {selectedNode.description != null &&
+                selectedNode.description !== '' && (
+                  <p className={styles.nodeDescription}>
+                    {selectedNode.description}
+                  </p>
+                )}
 
               {/* Node Parameters */}
               {Object.keys(selectedNode.parameters).length > 0 && (
                 <div className={styles.parameters}>
                   <h4>Parameters</h4>
-                  {Object.entries(selectedNode.parameters as Record<string, unknown>).map(
-                    ([key, value]: [string, unknown]) => (
-                      <div key={key} className={styles.paramField}>
-                        <label>{key}</label>
-                        <input
-                          type="text"
-                          value={JSON.stringify(value)}
-                          onChange={(e) => {
-                            handleNodeParameterChange(selectedNode.id, key, e.target.value)
-                          }}
-                          disabled={readOnly}
-                        />
-                      </div>
-                    )
-                  )}
+                  {Object.entries(
+                    selectedNode.parameters as Record<string, unknown>
+                  ).map(([key, value]: [string, unknown]) => (
+                    <div key={key} className={styles.paramField}>
+                      <label>{key}</label>
+                      <input
+                        type="text"
+                        value={JSON.stringify(value)}
+                        onChange={e => {
+                          handleNodeParameterChange(
+                            selectedNode.id,
+                            key,
+                            e.target.value
+                          )
+                        }}
+                        disabled={readOnly}
+                      />
+                    </div>
+                  ))}
                 </div>
               )}
 
@@ -230,7 +239,9 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
         <div className={styles.section}>
           <button
             className={styles.executeButton}
-            onClick={() => { void handleExecute() }}
+            onClick={() => {
+              void handleExecute()
+            }}
             disabled={loading || readOnly}
           >
             {loading ? 'Executing...' : 'Execute Workflow'}
@@ -248,8 +259,8 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
               {state.metrics != null && (
                 <div className={styles.metrics}>
                   <p>
-                    Duration: {state.duration}ms |
-                    Nodes: {state.metrics.nodesExecuted}
+                    Duration: {state.duration}ms | Nodes:{' '}
+                    {state.metrics.nodesExecuted}
                   </p>
                 </div>
               )}
@@ -261,7 +272,9 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
         <div className={styles.section}>
           <button
             className={styles.advancedToggle}
-            onClick={() => { setShowAdvanced(!showAdvanced) }}
+            onClick={() => {
+              setShowAdvanced(!showAdvanced)
+            }}
           >
             {showAdvanced ? '▼' : '▶'} Advanced Options
           </button>
@@ -278,9 +291,7 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
               <label>
                 Max Concurrent: {workflow.settings.maxConcurrentExecutions}
               </label>
-              <label>
-                Timeout: {workflow.settings.executionTimeout}ms
-              </label>
+              <label>Timeout: {workflow.settings.executionTimeout}ms</label>
             </div>
           )}
         </div>
@@ -308,7 +319,8 @@ const NodeComponent: React.FC<NodeComponentProps> = ({
   const [x, y] = node.position
   const [width, height] = node.size ?? [120, 60]
 
-  const statusClass = uiState?.status != null ? styles[`status-${uiState.status}`] : ''
+  const statusClass =
+    uiState?.status != null ? styles[`status-${uiState.status}`] : ''
 
   return (
     <g>
@@ -342,41 +354,55 @@ const NodeComponent: React.FC<NodeComponentProps> = ({
 function renderConnections(workflow: WorkflowDefinition) {
   const paths: React.ReactNode[] = []
 
-  Object.entries(workflow.connections).forEach(([fromNodeId, portMap]: [string, Record<string, Record<string, ConnectionTarget[]>>]) => {
-    const fromNode = workflow.nodes.find((n) => n.id === fromNodeId)
-    if (fromNode == null) return
+  Object.entries(workflow.connections).forEach(
+    ([fromNodeId, portMap]: [
+      string,
+      Record<string, Record<string, ConnectionTarget[]>>,
+    ]) => {
+      const fromNode = workflow.nodes.find(n => n.id === fromNodeId)
+      if (fromNode == null) return
 
-    Object.entries(portMap).forEach(([_portName, indexMap]: [string, Record<string, ConnectionTarget[]>]) => {
-      Object.entries(indexMap).forEach(([_, targets]: [string, ConnectionTarget[]]) => {
-        targets.forEach((target: ConnectionTarget) => {
-          const toNode = workflow.nodes.find((n) => n.id === target.node)
-          if (toNode == null) return
+      Object.entries(portMap).forEach(
+        ([_portName, indexMap]: [
+          string,
+          Record<string, ConnectionTarget[]>,
+        ]) => {
+          Object.entries(indexMap).forEach(
+            ([_, targets]: [string, ConnectionTarget[]]) => {
+              targets.forEach((target: ConnectionTarget) => {
+                const toNode = workflow.nodes.find(n => n.id === target.node)
+                if (toNode == null) return
 
-          const [x1, y1] = fromNode.position
-          const [x2, y2] = toNode.position
-          const [w1, h1] = fromNode.size ?? [120, 60]
-          const [_w2, h2] = toNode.size ?? [120, 60]
+                const [x1, y1] = fromNode.position
+                const [x2, y2] = toNode.position
+                const [w1, h1] = fromNode.size ?? [120, 60]
+                const [_w2, h2] = toNode.size ?? [120, 60]
 
-          const startX = x1 + w1
-          const startY = y1 + h1 / 2
-          const endX = x2
-          const endY = y2 + h2 / 2
+                const startX = x1 + w1
+                const startY = y1 + h1 / 2
+                const endX = x2
+                const endY = y2 + h2 / 2
 
-          paths.push(
-            <line
-              key={`${fromNodeId}-${target.node}`}
-              x1={startX}
-              y1={startY}
-              x2={endX}
-              y2={endY}
-              className={styles.connection}
-              strokeDasharray={target.conditional === true ? '5,5' : undefined}
-            />
+                paths.push(
+                  <line
+                    key={`${fromNodeId}-${target.node}`}
+                    x1={startX}
+                    y1={startY}
+                    x2={endX}
+                    y2={endY}
+                    className={styles.connection}
+                    strokeDasharray={
+                      target.conditional === true ? '5,5' : undefined
+                    }
+                  />
+                )
+              })
+            }
           )
-        })
-      })
-    })
-  })
+        }
+      )
+    }
+  )
 
   return paths
 }

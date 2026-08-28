@@ -5,13 +5,19 @@
 
 import sidebarConfigData from './sidebar-config.json'
 import godPanelConfigData from './god-panel-config.json'
-import type { SidebarConfig, GodPanelConfig, PackageNavItem, SidebarNavItem } from './types'
+import type {
+  SidebarConfig,
+  GodPanelConfig,
+  PackageNavItem,
+  SidebarNavItem,
+} from './types'
 
 export type { SidebarConfig, GodPanelConfig, PackageNavItem, SidebarNavItem }
 export type { GodPanelTab, GodPanelTool } from './types'
 
 export const sidebarConfig: SidebarConfig = sidebarConfigData as SidebarConfig
-export const godPanelConfig: GodPanelConfig = godPanelConfigData as GodPanelConfig
+export const godPanelConfig: GodPanelConfig =
+  godPanelConfigData as GodPanelConfig
 
 /**
  * Get sidebar items filtered by user level

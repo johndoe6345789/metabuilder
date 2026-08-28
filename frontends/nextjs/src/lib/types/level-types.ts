@@ -3,7 +3,8 @@
  * These types match the DBAL schema models
  */
 
-export type UserRole = 'public' | 'user' | 'moderator' | 'admin' | 'god' | 'supergod'
+export type UserRole =
+  'public' | 'user' | 'moderator' | 'admin' | 'god' | 'supergod'
 
 export interface User {
   id?: string

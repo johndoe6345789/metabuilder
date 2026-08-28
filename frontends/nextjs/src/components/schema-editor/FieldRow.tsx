@@ -46,14 +46,18 @@ export function FieldRow({ field, onEdit, onDelete }: FieldRowProps) {
         <IconButton
           size="small"
           aria-label={`Edit field ${field.name}`}
-          onClick={() => { onEdit(field) }}
+          onClick={() => {
+            onEdit(field)
+          }}
         >
           ✎
         </IconButton>
         <IconButton
           size="small"
           aria-label={`Delete field ${field.name}`}
-          onClick={() => { onDelete(field.name) }}
+          onClick={() => {
+            onDelete(field.name)
+          }}
         >
           ×
         </IconButton>

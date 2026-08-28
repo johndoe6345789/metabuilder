@@ -28,16 +28,25 @@ export default function LoginPage() {
 
         {error.length > 0 && <p className={s.error}>{error}</p>}
 
-        <button className={s.submit} type="button" disabled={loading} onClick={handleSignIn}>
+        <button
+          className={s.submit}
+          type="button"
+          disabled={loading}
+          onClick={handleSignIn}
+        >
           {loading ? 'Redirecting…' : 'Sign In'}
         </button>
 
         <p className={s.signin}>
           New here?{' '}
-          <Link className={s.link} href="/ui/signup">Create your community</Link>
+          <Link className={s.link} href="/ui/signup">
+            Create your community
+          </Link>
         </p>
 
-        <Link className={s.back} href="/">← Back to home</Link>
+        <Link className={s.back} href="/">
+          ← Back to home
+        </Link>
       </div>
     </div>
   )

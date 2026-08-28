@@ -15,7 +15,9 @@ export interface ThemeEditorState {
 
 export function applyColorsToRoot(colors: ThemeColors): void {
   const root = document.documentElement
-  Object.entries(colors).forEach(([k, v]) => { root.style.setProperty(k, v) })
+  Object.entries(colors).forEach(([k, v]) => {
+    root.style.setProperty(k, v)
+  })
 }
 
 export const LIGHT_DEFAULTS: ThemeColors = {

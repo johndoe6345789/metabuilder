@@ -4,9 +4,7 @@
  */
 import type { IrcMessage } from './types'
 
-type SystemFn = (
-  msg: Omit<IrcMessage, 'id' | 'channelId' | 'tenantId'>
-) => void
+type SystemFn = (msg: Omit<IrcMessage, 'id' | 'channelId' | 'tenantId'>) => void
 
 const HELP_TEXT =
   'Commands: /help | /clear — clear messages' +
@@ -17,25 +15,43 @@ export function handleCommand(
   username: string,
   memberCount: number,
   onSystem: SystemFn,
-  onClear: () => void,
+  onClear: () => void
 ): boolean {
   if (!text.startsWith('/')) return false
 
   const parts = text.split(' ')
-  const cmd   = (parts[0] ?? '').toLowerCase()
-  const now   = new Date().toISOString()
+  const cmd = (parts[0] ?? '').toLowerCase()
+  const now = new Date().toISOString()
 
-  const sys = (content: string) => onSystem({
-    content, createdBy: 'System', createdAt: now, type: 'system',
-  })
+  const sys = (content: string) =>
+    onSystem({
+      content,
+      createdBy: 'System',
+      createdAt: now,
+      type: 'system',
+    })
 
-  if (cmd === '/help')  { sys(HELP_TEXT); return true }
-  if (cmd === '/clear') { onClear(); return true }
-  if (cmd === '/users') { sys(`Members: ${memberCount}`); return true }
+  if (cmd === '/help') {
+    sys(HELP_TEXT)
+    return true
+  }
+  if (cmd === '/clear') {
+    onClear()
+    return true
+  }
+  if (cmd === '/users') {
+    sys(`Members: ${memberCount}`)
+    return true
+  }
   if (cmd === '/me') {
     const action = parts.slice(1).join(' ').trim()
     if (action !== '') {
-      onSystem({ content: action, createdBy: username, createdAt: now, type: 'me' })
+      onSystem({
+        content: action,
+        createdBy: username,
+        createdAt: now,
+        type: 'me',
+      })
     }
     return true
   }

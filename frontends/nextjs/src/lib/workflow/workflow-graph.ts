@@ -19,7 +19,10 @@ export interface GraphNode {
 /** n8n-style adjacency: source -> handle -> outputIndex -> connections. */
 export type GraphEdges = Record<
   string,
-  Record<string, Record<string, { node: string; index: number; type: string }[]>>
+  Record<
+    string,
+    Record<string, { node: string; index: number; type: string }[]>
+  >
 >
 
 interface NodeRow {
@@ -73,7 +76,10 @@ function writeValue(value: unknown): {
     return { valueType: 'number', value: String(value) }
   }
   if (typeof value === 'string') return { valueType: 'string', value }
-  return { valueType: 'string', value: value == null ? '' : JSON.stringify(value) }
+  return {
+    valueType: 'string',
+    value: value == null ? '' : JSON.stringify(value),
+  }
 }
 
 /** Reassemble a workflow's nodes and connections from its rows. */
@@ -144,7 +150,9 @@ export async function saveGraph(
   if (existing.ok) {
     for (const row of rowsOf(await existing.json())) {
       // Params cascade with their node.
-      await fetch(`${base}/WorkflowNode/${String(row.id)}`, { method: 'DELETE' })
+      await fetch(`${base}/WorkflowNode/${String(row.id)}`, {
+        method: 'DELETE',
+      })
     }
   }
   const oldEdges = await fetch(
@@ -153,7 +161,9 @@ export async function saveGraph(
   )
   if (oldEdges.ok) {
     for (const row of rowsOf(await oldEdges.json())) {
-      await fetch(`${base}/WorkflowEdge/${String(row.id)}`, { method: 'DELETE' })
+      await fetch(`${base}/WorkflowEdge/${String(row.id)}`, {
+        method: 'DELETE',
+      })
     }
   }
 

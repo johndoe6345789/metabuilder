@@ -18,17 +18,45 @@ import {
 describe('validation utilities', () => {
   describe('generateFieldSchema', () => {
     it.each([
-      { field: { name: 'name', type: 'string' as const }, value: 'John', shouldPass: true, description: 'string field' },
-      { field: { name: 'age', type: 'number' as const }, value: 25, shouldPass: true, description: 'number field' },
-      { field: { name: 'active', type: 'boolean' as const }, value: true, shouldPass: true, description: 'boolean field' },
-      { field: { name: 'createdAt', type: 'date' as const }, value: new Date(), shouldPass: true, description: 'date field' },
-      { field: { name: 'createdAt', type: 'date' as const }, value: '2024-01-01', shouldPass: true, description: 'date from string' },
-    ])('should generate schema for $description', ({ field, value, shouldPass }) => {
-      const schema = generateFieldSchema(field)
-      const result = schema.safeParse(value)
-      
-      expect(result.success).toBe(shouldPass)
-    })
+      {
+        field: { name: 'name', type: 'string' as const },
+        value: 'John',
+        shouldPass: true,
+        description: 'string field',
+      },
+      {
+        field: { name: 'age', type: 'number' as const },
+        value: 25,
+        shouldPass: true,
+        description: 'number field',
+      },
+      {
+        field: { name: 'active', type: 'boolean' as const },
+        value: true,
+        shouldPass: true,
+        description: 'boolean field',
+      },
+      {
+        field: { name: 'createdAt', type: 'date' as const },
+        value: new Date(),
+        shouldPass: true,
+        description: 'date field',
+      },
+      {
+        field: { name: 'createdAt', type: 'date' as const },
+        value: '2024-01-01',
+        shouldPass: true,
+        description: 'date from string',
+      },
+    ])(
+      'should generate schema for $description',
+      ({ field, value, shouldPass }) => {
+        const schema = generateFieldSchema(field)
+        const result = schema.safeParse(value)
+
+        expect(result.success).toBe(shouldPass)
+      }
+    )
 
     it('should generate enum schema', () => {
       const field: FieldDefinition = {
@@ -69,7 +97,9 @@ describe('validation utilities', () => {
 
       const schema = generateFieldSchema(field)
 
-      expect(schema.safeParse({ firstName: 'John', lastName: 'Doe' }).success).toBe(true)
+      expect(
+        schema.safeParse({ firstName: 'John', lastName: 'Doe' }).success
+      ).toBe(true)
       expect(schema.safeParse({ firstName: 'John' }).success).toBe(false) // missing lastName
       expect(schema.safeParse('not-object').success).toBe(false)
     })
@@ -196,7 +226,12 @@ describe('validation utilities', () => {
         fields: [
           { name: 'id', type: 'string', required: true },
           { name: 'name', type: 'string', required: true },
-          { name: 'email', type: 'string', required: true, validation: [{ type: 'email' }] },
+          {
+            name: 'email',
+            type: 'string',
+            required: true,
+            validation: [{ type: 'email' }],
+          },
           { name: 'age', type: 'number', required: false },
           { name: 'active', type: 'boolean', required: true },
         ],
@@ -264,7 +299,12 @@ describe('validation utilities', () => {
       name: 'User',
       fields: [
         { name: 'name', type: 'string', required: true },
-        { name: 'email', type: 'string', required: true, validation: [{ type: 'email' }] },
+        {
+          name: 'email',
+          type: 'string',
+          required: true,
+          validation: [{ type: 'email' }],
+        },
         { name: 'age', type: 'number', required: false },
       ],
     }
@@ -327,7 +367,9 @@ describe('validation utilities', () => {
         }),
       })
 
-      const result = schema.safeParse({ profile: { firstName: '', lastName: '' } })
+      const result = schema.safeParse({
+        profile: { firstName: '', lastName: '' },
+      })
 
       if (!result.success) {
         const formatted = formatValidationErrors(result.error)
@@ -344,7 +386,12 @@ describe('validation utilities', () => {
         name: 'User',
         fields: [
           { name: 'name', type: 'string', required: true },
-          { name: 'email', type: 'string', required: true, validation: [{ type: 'email' }] },
+          {
+            name: 'email',
+            type: 'string',
+            required: true,
+            validation: [{ type: 'email' }],
+          },
         ],
       }
 
@@ -370,21 +417,87 @@ describe('validation utilities', () => {
 
   describe('commonSchemas', () => {
     it.each([
-      { schema: 'email', value: 'user@example.com', shouldPass: true, description: 'valid email' },
-      { schema: 'email', value: 'invalid', shouldPass: false, description: 'invalid email' },
-      { schema: 'url', value: 'https://example.com', shouldPass: true, description: 'valid URL' },
-      { schema: 'url', value: 'not-a-url', shouldPass: false, description: 'invalid URL' },
-      { schema: 'uuid', value: '123e4567-e89b-12d3-a456-426614174000', shouldPass: true, description: 'valid UUID' },
-      { schema: 'uuid', value: 'not-a-uuid', shouldPass: false, description: 'invalid UUID' },
-      { schema: 'phoneNumber', value: '+1234567890', shouldPass: true, description: 'valid phone' },
-      { schema: 'phoneNumber', value: 'not-a-phone', shouldPass: false, description: 'invalid phone' },
-      { schema: 'password', value: 'password123', shouldPass: true, description: 'valid password' },
-      { schema: 'password', value: 'short', shouldPass: false, description: 'short password' },
-      { schema: 'username', value: 'john_doe', shouldPass: true, description: 'valid username' },
-      { schema: 'username', value: 'a', shouldPass: false, description: 'short username' },
-      { schema: 'username', value: 'invalid username!', shouldPass: false, description: 'invalid username chars' },
+      {
+        schema: 'email',
+        value: 'user@example.com',
+        shouldPass: true,
+        description: 'valid email',
+      },
+      {
+        schema: 'email',
+        value: 'invalid',
+        shouldPass: false,
+        description: 'invalid email',
+      },
+      {
+        schema: 'url',
+        value: 'https://example.com',
+        shouldPass: true,
+        description: 'valid URL',
+      },
+      {
+        schema: 'url',
+        value: 'not-a-url',
+        shouldPass: false,
+        description: 'invalid URL',
+      },
+      {
+        schema: 'uuid',
+        value: '123e4567-e89b-12d3-a456-426614174000',
+        shouldPass: true,
+        description: 'valid UUID',
+      },
+      {
+        schema: 'uuid',
+        value: 'not-a-uuid',
+        shouldPass: false,
+        description: 'invalid UUID',
+      },
+      {
+        schema: 'phoneNumber',
+        value: '+1234567890',
+        shouldPass: true,
+        description: 'valid phone',
+      },
+      {
+        schema: 'phoneNumber',
+        value: 'not-a-phone',
+        shouldPass: false,
+        description: 'invalid phone',
+      },
+      {
+        schema: 'password',
+        value: 'password123',
+        shouldPass: true,
+        description: 'valid password',
+      },
+      {
+        schema: 'password',
+        value: 'short',
+        shouldPass: false,
+        description: 'short password',
+      },
+      {
+        schema: 'username',
+        value: 'john_doe',
+        shouldPass: true,
+        description: 'valid username',
+      },
+      {
+        schema: 'username',
+        value: 'a',
+        shouldPass: false,
+        description: 'short username',
+      },
+      {
+        schema: 'username',
+        value: 'invalid username!',
+        shouldPass: false,
+        description: 'invalid username chars',
+      },
     ])('should validate $description', ({ schema, value, shouldPass }) => {
-      const result = commonSchemas[schema as keyof typeof commonSchemas].safeParse(value)
+      const result =
+        commonSchemas[schema as keyof typeof commonSchemas].safeParse(value)
       expect(result.success).toBe(shouldPass)
     })
 

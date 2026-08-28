@@ -1,6 +1,6 @@
 /**
  * Shared constants for the application
- * 
+ *
  * Centralizes magic strings and values used across the codebase.
  */
 
@@ -18,7 +18,7 @@ export const ROLE_LEVELS = {
 } as const
 
 export type UserRole = keyof typeof ROLE_LEVELS
-export type UserLevel = typeof ROLE_LEVELS[UserRole]
+export type UserLevel = (typeof ROLE_LEVELS)[UserRole]
 
 /**
  * Get numeric level for a role string

@@ -30,12 +30,21 @@ export interface PropField {
   placeholder?: string
 }
 
-const text = (name: string, label: string, rest: Partial<PropField> = {}): PropField =>
-  ({ name, label, type: 'text', ...rest })
-const num = (name: string, label: string, rest: Partial<PropField> = {}): PropField =>
-  ({ name, label, type: 'number', ...rest })
-const bool = (name: string, label: string, rest: Partial<PropField> = {}): PropField =>
-  ({ name, label, type: 'boolean', ...rest })
+const text = (
+  name: string,
+  label: string,
+  rest: Partial<PropField> = {}
+): PropField => ({ name, label, type: 'text', ...rest })
+const num = (
+  name: string,
+  label: string,
+  rest: Partial<PropField> = {}
+): PropField => ({ name, label, type: 'number', ...rest })
+const bool = (
+  name: string,
+  label: string,
+  rest: Partial<PropField> = {}
+): PropField => ({ name, label, type: 'boolean', ...rest })
 const pick = (
   name: string,
   label: string,
@@ -46,10 +55,15 @@ const pick = (
 export const PROP_SCHEMAS: Record<string, PropField[]> = {
   // ---- layout ----------------------------------------------------------
   container: [
-    pick('direction', 'Stack items', [
-      { label: 'Down the page', value: 'column' },
-      { label: 'Across the page', value: 'row' },
-    ], { source: 'container-direction' }),
+    pick(
+      'direction',
+      'Stack items',
+      [
+        { label: 'Down the page', value: 'column' },
+        { label: 'Across the page', value: 'row' },
+      ],
+      { source: 'container-direction' }
+    ),
     num('gap', 'Space between items', { hint: 'Pixels' }),
   ],
   grid: [
@@ -59,7 +73,9 @@ export const PROP_SCHEMAS: Record<string, PropField[]> = {
   divider: [num('margin', 'Space above and below', { hint: 'Pixels' })],
   'html.div': [num('padding', 'Space inside', { hint: 'Pixels' })],
   'm3.paper': [num('padding', 'Space inside', { hint: 'Pixels' })],
-  'm3.accordion': [text('title', 'Summary', { hint: 'The line shown when it is closed' })],
+  'm3.accordion': [
+    text('title', 'Summary', { hint: 'The line shown when it is closed' }),
+  ],
 
   // ---- content ---------------------------------------------------------
   heading: [text('text', 'Heading text')],
@@ -72,7 +88,10 @@ export const PROP_SCHEMAS: Record<string, PropField[]> = {
   'html.li': [text('text', 'Text')],
   'html.a': [
     text('text', 'Link text'),
-    text('href', 'Goes to', { placeholder: '/contact', hint: 'A page path or full web address' }),
+    text('href', 'Goes to', {
+      placeholder: '/contact',
+      hint: 'A page path or full web address',
+    }),
   ],
   image: [
     text('src', 'Image address', { placeholder: 'https://…/photo.jpg' }),
@@ -84,11 +103,16 @@ export const PROP_SCHEMAS: Record<string, PropField[]> = {
   avatar: [
     text('initials', 'Initials', { hint: 'Shown when there is no picture' }),
     text('src', 'Picture address', { placeholder: 'https://…/face.jpg' }),
-    pick('size', 'Size', [
-      { label: 'Small', value: 'sm' },
-      { label: 'Medium', value: 'md' },
-      { label: 'Large', value: 'lg' },
-    ], { source: 'avatar-size' }),
+    pick(
+      'size',
+      'Size',
+      [
+        { label: 'Small', value: 'sm' },
+        { label: 'Medium', value: 'md' },
+        { label: 'Large', value: 'lg' },
+      ],
+      { source: 'avatar-size' }
+    ),
   ],
   stat: [text('label', 'Caption'), text('value', 'Figure')],
   'list-item': [
@@ -110,11 +134,16 @@ export const PROP_SCHEMAS: Record<string, PropField[]> = {
       placeholder: '/contact',
       hint: 'Leave empty for a button that does not navigate',
     }),
-    pick('variant', 'Style', [
-      { label: 'Solid', value: 'contained' },
-      { label: 'Outlined', value: 'outlined' },
-      { label: 'Plain', value: 'text' },
-    ], { source: 'button-variant' }),
+    pick(
+      'variant',
+      'Style',
+      [
+        { label: 'Solid', value: 'contained' },
+        { label: 'Outlined', value: 'outlined' },
+        { label: 'Plain', value: 'text' },
+      ],
+      { source: 'button-variant' }
+    ),
     bool('runWorkflow', 'Run the workflow when clicked'),
   ],
   'm3.textfield': [text('label', 'Label'), text('placeholder', 'Placeholder')],
@@ -123,23 +152,33 @@ export const PROP_SCHEMAS: Record<string, PropField[]> = {
 
   // ---- feedback --------------------------------------------------------
   'm3.alert': [
-    pick('severity', 'Kind', [
-      { label: 'Information', value: 'info' },
-      { label: 'Success', value: 'success' },
-      { label: 'Warning', value: 'warning' },
-      { label: 'Error', value: 'error' },
-    ], { source: 'alert-severity' }),
+    pick(
+      'severity',
+      'Kind',
+      [
+        { label: 'Information', value: 'info' },
+        { label: 'Success', value: 'success' },
+        { label: 'Warning', value: 'warning' },
+        { label: 'Error', value: 'error' },
+      ],
+      { source: 'alert-severity' }
+    ),
     text('text', 'Message'),
   ],
   'm3.progress': [num('value', 'Percent complete', { hint: '0 to 100' })],
   'm3.skeleton': [num('height', 'Height', { hint: 'Pixels' })],
   'm3.tooltip': [
-    text('title', 'Tooltip text', { hint: 'Shown when someone hovers the contents' }),
+    text('title', 'Tooltip text', {
+      hint: 'Shown when someone hovers the contents',
+    }),
   ],
 
   // ---- community -------------------------------------------------------
   'pkg.webchat': [
-    text('channel', 'Channel', { placeholder: '#general', source: 'chat-channels' }),
+    text('channel', 'Channel', {
+      placeholder: '#general',
+      source: 'chat-channels',
+    }),
   ],
 }
 

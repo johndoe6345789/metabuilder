@@ -25,33 +25,30 @@ export function EditorArea({ openFile }: EditorAreaProps) {
   return (
     <div className={s.wrap}>
       <div className={s.tabBar}>
-        {TABS.map((tab) => (
+        {TABS.map(tab => (
           <button
             key={tab.id}
             type="button"
             className={
-              tab.id === activeTab
-                ? `${s.tabBtn} ${s.tabBtnActive}`
-                : s.tabBtn
+              tab.id === activeTab ? `${s.tabBtn} ${s.tabBtnActive}` : s.tabBtn
             }
-            onClick={() => { setActiveTab(tab.id) }}
+            onClick={() => {
+              setActiveTab(tab.id)
+            }}
           >
             {tab.label}
           </button>
         ))}
       </div>
       <div className={s.content}>
-        {activeTab === 'editor' && (
-          openFile != null
-            ? <MonacoPane file={openFile} />
-            : <div className={s.empty}>Select a file to edit</div>
-        )}
-        {activeTab === 'console' && (
-          <ConsoleOutput lines={[]} />
-        )}
-        {activeTab === 'workflowJson' && (
-          <WorkflowJsonEditor />
-        )}
+        {activeTab === 'editor' &&
+          (openFile != null ? (
+            <MonacoPane file={openFile} />
+          ) : (
+            <div className={s.empty}>Select a file to edit</div>
+          ))}
+        {activeTab === 'console' && <ConsoleOutput lines={[]} />}
+        {activeTab === 'workflowJson' && <WorkflowJsonEditor />}
       </div>
     </div>
   )

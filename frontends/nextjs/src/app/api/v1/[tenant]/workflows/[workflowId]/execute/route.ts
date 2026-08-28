@@ -8,7 +8,7 @@ import type { NextRequest } from 'next/server'
 
 export async function POST(
   _req: NextRequest,
-  { params }: { params: Promise<{ tenant: string; workflowId: string }> },
+  { params }: { params: Promise<{ tenant: string; workflowId: string }> }
 ) {
   try {
     const { tenant: _tenant, workflowId: _workflowId } = await params
@@ -16,28 +16,32 @@ export async function POST(
     return NextResponse.json(
       {
         error: 'Workflow execution not yet implemented',
-        message: 'Phase 5: Workflow execution requires @metabuilder/workflow integration',
+        message:
+          'Phase 5: Workflow execution requires @metabuilder/workflow integration',
         hint: 'This endpoint will be available in Phase 5',
       },
-      { status: 501 },
+      { status: 501 }
     )
   } catch (_error) {
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
 
 export function GET(
   _req: NextRequest,
-  { params: _params }: { params: Promise<{ tenant: string; workflowId: string }> },
+  {
+    params: _params,
+  }: { params: Promise<{ tenant: string; workflowId: string }> }
 ) {
   return NextResponse.json(
     {
       error: 'Workflow execution not yet implemented',
-      message: 'Phase 5: Workflow execution requires @metabuilder/workflow integration',
+      message:
+        'Phase 5: Workflow execution requires @metabuilder/workflow integration',
     },
-    { status: 501 },
+    { status: 501 }
   )
 }

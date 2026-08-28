@@ -22,4 +22,4 @@ export const levelsData = {
 export const PERMISSION_LEVELS = levelsData
 
 export type LevelName = keyof typeof levelsData
-export type LevelNumber = typeof levelsData[LevelName]
+export type LevelNumber = (typeof levelsData)[LevelName]

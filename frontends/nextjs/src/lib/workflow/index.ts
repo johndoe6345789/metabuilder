@@ -77,7 +77,4 @@ export type {
   ValidationError,
 } from '@metabuilder/workflow'
 
-export type {
-  BuiltInNodeType,
-  INodeExecutor,
-} from '@metabuilder/workflow'
+export type { BuiltInNodeType, INodeExecutor } from '@metabuilder/workflow'

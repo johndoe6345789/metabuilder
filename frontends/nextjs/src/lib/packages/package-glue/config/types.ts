@@ -1,4 +1,5 @@
-export type ConflictResolution = 'priority' | 'latest-version' | 'local-first' | 'remote-first'
+export type ConflictResolution =
+  'priority' | 'latest-version' | 'local-first' | 'remote-first'
 
 export interface PackageSourceConfig {
   id: string

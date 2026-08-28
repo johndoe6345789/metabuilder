@@ -8,7 +8,11 @@ import s from './RadioSection.module.scss'
 
 export function RadioSection() {
   const { channels, loading, error, listen, stop } = useRadioChannels()
-  const [nowPlaying, setNowPlaying] = useState<{ id: string, url: string, title: string } | null>(null)
+  const [nowPlaying, setNowPlaying] = useState<{
+    id: string
+    url: string
+    title: string
+  } | null>(null)
   const [busyId, setBusyId] = useState<string | null>(null)
 
   const handleListen = async (channelId: string, title: string) => {
@@ -34,8 +38,8 @@ export function RadioSection() {
   if (channels.length === 0) {
     return (
       <div className={s.status}>
-        No stations yet — create one via <code>POST /api/radio/channels</code> and
-        set a playlist via <code>PUT .../playlist</code>.
+        No stations yet — create one via <code>POST /api/radio/channels</code>{' '}
+        and set a playlist via <code>PUT .../playlist</code>.
       </div>
     )
   }
@@ -43,16 +47,29 @@ export function RadioSection() {
   return (
     <div className={s.root}>
       {nowPlaying !== null && (
-        <div className={s.nowPlayingBar} style={{ '--hue': hueFor(nowPlaying.id) } as React.CSSProperties}>
+        <div
+          className={s.nowPlayingBar}
+          style={{ '--hue': hueFor(nowPlaying.id) } as React.CSSProperties}
+        >
           <div className={s.eq}>
-            <span /><span /><span /><span />
+            <span />
+            <span />
+            <span />
+            <span />
           </div>
           <div className={s.nowPlayingInfo}>
             <span className={s.nowPlayingLabel}>Listening live</span>
             <span className={s.nowPlayingTitle}>{nowPlaying.title}</span>
           </div>
           <AudioPlayer src={nowPlaying.url} title={nowPlaying.title} isLive />
-          <button className={s.stopBtn} onClick={() => { void handleStop() }}>Stop</button>
+          <button
+            className={s.stopBtn}
+            onClick={() => {
+              void handleStop()
+            }}
+          >
+            Stop
+          </button>
         </div>
       )}
 
@@ -66,12 +83,22 @@ export function RadioSection() {
             <div className={s.cardGlow} aria-hidden />
             <div className={s.cardTop}>
               <span className={s.stationName}>{ch.name}</span>
-              {ch.is_live && <span className={s.liveBadge}><span className={s.liveDot} />{ch.listeners} listening</span>}
+              {ch.is_live && (
+                <span className={s.liveBadge}>
+                  <span className={s.liveDot} />
+                  {ch.listeners} listening
+                </span>
+              )}
             </div>
             {ch.now_playing !== undefined ? (
               <span className={s.trackTitle}>
                 {ch.now_playing.title}
-                {ch.now_playing.artist !== '' && <span className={s.trackArtist}> — {ch.now_playing.artist}</span>}
+                {ch.now_playing.artist !== '' && (
+                  <span className={s.trackArtist}>
+                    {' '}
+                    — {ch.now_playing.artist}
+                  </span>
+                )}
               </span>
             ) : (
               <span className={s.noTrack}>Nothing queued</span>
@@ -79,7 +106,9 @@ export function RadioSection() {
             <button
               className={s.listenBtn}
               disabled={busyId === ch.id}
-              onClick={() => { void handleListen(ch.id, ch.name) }}
+              onClick={() => {
+                void handleListen(ch.id, ch.name)
+              }}
             >
               {busyId === ch.id ? 'Tuning in…' : '▶ Listen'}
             </button>

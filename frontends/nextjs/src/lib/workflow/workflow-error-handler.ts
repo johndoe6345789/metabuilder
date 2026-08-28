@@ -197,12 +197,15 @@ const ERROR_STATUS_MAP: Record<WorkflowErrorCode, number> = {
 const ERROR_MESSAGES: Record<WorkflowErrorCode, string> = {
   // Validation
   [WorkflowErrorCode.VALIDATION_ERROR]: 'Workflow validation failed',
-  [WorkflowErrorCode.MISSING_REQUIRED_FIELD]: 'Missing required field in workflow definition',
+  [WorkflowErrorCode.MISSING_REQUIRED_FIELD]:
+    'Missing required field in workflow definition',
   [WorkflowErrorCode.INVALID_NODE_TYPE]: 'Invalid node type specified',
   [WorkflowErrorCode.INVALID_CONNECTION]: 'Invalid connection between nodes',
-  [WorkflowErrorCode.INVALID_WORKFLOW_STRUCTURE]: 'Workflow structure is invalid',
+  [WorkflowErrorCode.INVALID_WORKFLOW_STRUCTURE]:
+    'Workflow structure is invalid',
   [WorkflowErrorCode.DUPLICATE_NODE_NAME]: 'Duplicate node name detected',
-  [WorkflowErrorCode.CIRCULAR_DEPENDENCY]: 'Circular dependency detected in workflow',
+  [WorkflowErrorCode.CIRCULAR_DEPENDENCY]:
+    'Circular dependency detected in workflow',
   [WorkflowErrorCode.TYPE_MISMATCH]: 'Type mismatch in node parameters',
   [WorkflowErrorCode.INVALID_TENANT_ID]: 'Invalid tenant ID format',
   [WorkflowErrorCode.MISSING_TENANT_ID]: 'Tenant ID is required',
@@ -214,13 +217,18 @@ const ERROR_MESSAGES: Record<WorkflowErrorCode, string> = {
   [WorkflowErrorCode.EXECUTION_TIMEOUT]: 'Workflow execution timed out',
   [WorkflowErrorCode.NODE_NOT_FOUND]: 'Node not found in workflow',
   [WorkflowErrorCode.EXECUTOR_NOT_REGISTERED]: 'Node executor not registered',
-  [WorkflowErrorCode.WORKFLOW_EXECUTION_ABORTED]: 'Workflow execution was aborted',
-  [WorkflowErrorCode.INSUFFICIENT_RESOURCES]: 'Insufficient resources to execute workflow',
-  [WorkflowErrorCode.MEMORY_LIMIT_EXCEEDED]: 'Memory limit exceeded during execution',
-  [WorkflowErrorCode.EXECUTION_QUEUE_FULL]: 'Execution queue is full, please try again later',
+  [WorkflowErrorCode.WORKFLOW_EXECUTION_ABORTED]:
+    'Workflow execution was aborted',
+  [WorkflowErrorCode.INSUFFICIENT_RESOURCES]:
+    'Insufficient resources to execute workflow',
+  [WorkflowErrorCode.MEMORY_LIMIT_EXCEEDED]:
+    'Memory limit exceeded during execution',
+  [WorkflowErrorCode.EXECUTION_QUEUE_FULL]:
+    'Execution queue is full, please try again later',
 
   // Data/Configuration
-  [WorkflowErrorCode.MISSING_WORKFLOW_DEFINITION]: 'Workflow definition is required',
+  [WorkflowErrorCode.MISSING_WORKFLOW_DEFINITION]:
+    'Workflow definition is required',
   [WorkflowErrorCode.INVALID_WORKFLOW_FORMAT]: 'Workflow format is invalid',
   [WorkflowErrorCode.INVALID_CONTEXT]: 'Invalid execution context',
   [WorkflowErrorCode.INVALID_PARAMETER]: 'Invalid parameter value',
@@ -229,7 +237,8 @@ const ERROR_MESSAGES: Record<WorkflowErrorCode, string> = {
 
   // Access control
   [WorkflowErrorCode.FORBIDDEN]: 'Access to workflow is forbidden',
-  [WorkflowErrorCode.TENANT_MISMATCH]: 'Tenant mismatch - cannot access workflow',
+  [WorkflowErrorCode.TENANT_MISMATCH]:
+    'Tenant mismatch - cannot access workflow',
   [WorkflowErrorCode.UNAUTHORIZED]: 'Unauthorized - authentication required',
   [WorkflowErrorCode.PERMISSION_DENIED]: 'Permission denied for this action',
 
@@ -241,7 +250,8 @@ const ERROR_MESSAGES: Record<WorkflowErrorCode, string> = {
 
   // Rate limiting
   [WorkflowErrorCode.RATE_LIMITED]: 'Too many requests, please try again later',
-  [WorkflowErrorCode.CONCURRENT_EXECUTION_LIMIT]: 'Concurrent execution limit reached',
+  [WorkflowErrorCode.CONCURRENT_EXECUTION_LIMIT]:
+    'Concurrent execution limit reached',
 
   // Generic
   [WorkflowErrorCode.UNKNOWN_ERROR]: 'An unknown error occurred',
@@ -254,7 +264,8 @@ const ERROR_MESSAGES: Record<WorkflowErrorCode, string> = {
 const ERROR_HINTS: Record<WorkflowErrorCode, string> = {
   [WorkflowErrorCode.VALIDATION_ERROR]:
     'Verify workflow structure, check nodes, connections, and parameters.',
-  [WorkflowErrorCode.MISSING_REQUIRED_FIELD]: 'Ensure all required fields are populated.',
+  [WorkflowErrorCode.MISSING_REQUIRED_FIELD]:
+    'Ensure all required fields are populated.',
   [WorkflowErrorCode.INVALID_NODE_TYPE]:
     'Use a node type from the available registry. Check the workflow editor.',
   [WorkflowErrorCode.INVALID_CONNECTION]:
@@ -287,10 +298,12 @@ const ERROR_HINTS: Record<WorkflowErrorCode, string> = {
     'System does not have sufficient resources. Try again later.',
   [WorkflowErrorCode.MEMORY_LIMIT_EXCEEDED]:
     'Reduce workflow complexity or data size.',
-  [WorkflowErrorCode.EXECUTION_QUEUE_FULL]: 'Wait a moment and retry the execution.',
+  [WorkflowErrorCode.EXECUTION_QUEUE_FULL]:
+    'Wait a moment and retry the execution.',
   [WorkflowErrorCode.MISSING_WORKFLOW_DEFINITION]:
     'Provide a valid workflow definition.',
-  [WorkflowErrorCode.INVALID_WORKFLOW_FORMAT]: 'Ensure workflow format is correct.',
+  [WorkflowErrorCode.INVALID_WORKFLOW_FORMAT]:
+    'Ensure workflow format is correct.',
   [WorkflowErrorCode.INVALID_CONTEXT]:
     'Verify execution context (user, tenant, variables).',
   [WorkflowErrorCode.INVALID_PARAMETER]:
@@ -305,8 +318,10 @@ const ERROR_HINTS: Record<WorkflowErrorCode, string> = {
   [WorkflowErrorCode.UNAUTHORIZED]: 'Log in again or refresh your credentials.',
   [WorkflowErrorCode.PERMISSION_DENIED]:
     'Contact your administrator for required permissions.',
-  [WorkflowErrorCode.NOT_FOUND]: 'Verify the resource exists and is accessible.',
-  [WorkflowErrorCode.WORKFLOW_NOT_FOUND]: 'Workflow has been deleted or is inaccessible.',
+  [WorkflowErrorCode.NOT_FOUND]:
+    'Verify the resource exists and is accessible.',
+  [WorkflowErrorCode.WORKFLOW_NOT_FOUND]:
+    'Workflow has been deleted or is inaccessible.',
   [WorkflowErrorCode.EXECUTION_NOT_FOUND]:
     'Execution record not found. Check the execution ID.',
   [WorkflowErrorCode.RESOURCE_NOT_FOUND]:
@@ -363,7 +378,7 @@ export class WorkflowErrorHandler {
         tenantId: context.tenantId,
       },
       diagnostics: {
-        errors: errors.slice(0, 10).map((e) => ({
+        errors: errors.slice(0, 10).map(e => ({
           ...e,
           suggestion: this.getSuggestionForError(e),
         })),
@@ -527,7 +542,11 @@ export class WorkflowErrorHandler {
       },
     }
 
-    return { status: 429, json: response, headers: new Map([['Retry-After', String(retryAfter)]]) }
+    return {
+      status: 429,
+      json: response,
+      headers: new Map([['Retry-After', String(retryAfter)]]),
+    }
   }
 
   /**
@@ -603,17 +622,23 @@ export class WorkflowErrorHandler {
     if (error instanceof Error) {
       const message = error.message.toLowerCase()
 
-      if (message.includes('validation')) return WorkflowErrorCode.VALIDATION_ERROR
-      if (message.includes('timeout')) return WorkflowErrorCode.EXECUTION_TIMEOUT
+      if (message.includes('validation'))
+        return WorkflowErrorCode.VALIDATION_ERROR
+      if (message.includes('timeout'))
+        return WorkflowErrorCode.EXECUTION_TIMEOUT
       if (message.includes('not found')) return WorkflowErrorCode.NOT_FOUND
       if (message.includes('forbidden')) return WorkflowErrorCode.FORBIDDEN
-      if (message.includes('unauthorized')) return WorkflowErrorCode.UNAUTHORIZED
+      if (message.includes('unauthorized'))
+        return WorkflowErrorCode.UNAUTHORIZED
       if (message.includes('node not found'))
         return WorkflowErrorCode.NODE_NOT_FOUND
-      if (message.includes('circular')) return WorkflowErrorCode.CIRCULAR_DEPENDENCY
-      if (message.includes('duplicate')) return WorkflowErrorCode.DUPLICATE_NODE_NAME
+      if (message.includes('circular'))
+        return WorkflowErrorCode.CIRCULAR_DEPENDENCY
+      if (message.includes('duplicate'))
+        return WorkflowErrorCode.DUPLICATE_NODE_NAME
       if (message.includes('tenant')) return WorkflowErrorCode.TENANT_MISMATCH
-      if (message.includes('memory')) return WorkflowErrorCode.MEMORY_LIMIT_EXCEEDED
+      if (message.includes('memory'))
+        return WorkflowErrorCode.MEMORY_LIMIT_EXCEEDED
     }
 
     return WorkflowErrorCode.UNKNOWN_ERROR
@@ -679,7 +704,7 @@ let globalHandler: WorkflowErrorHandler | null = null
 export function getWorkflowErrorHandler(
   isDevelopment?: boolean
 ): WorkflowErrorHandler {
-  globalHandler ??= new WorkflowErrorHandler(isDevelopment);
+  globalHandler ??= new WorkflowErrorHandler(isDevelopment)
   return globalHandler
 }
 

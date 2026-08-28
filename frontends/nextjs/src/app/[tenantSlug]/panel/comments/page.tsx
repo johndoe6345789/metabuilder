@@ -96,7 +96,13 @@ export function CommentsContent() {
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         setComments(prev => [
           ...prev,
-          { id, userId: authorId, username: authorUsername, content: newComment, createdAt: Date.now() },
+          {
+            id,
+            userId: authorId,
+            username: authorUsername,
+            content: newComment,
+            createdAt: Date.now(),
+          },
         ])
         setNewComment('')
       })

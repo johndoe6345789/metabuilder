@@ -24,8 +24,7 @@ export function SchemaEditor({ tenantId = 'system' }: SchemaEditorProps) {
   const { models, loading, offline, saveModels } = useSchemaEditor(tenantId)
   const [selectedName, setSelectedName] = useState<string | null>(null)
 
-  const selectedModel =
-    models.find(m => m.name === selectedName) ?? null
+  const selectedModel = models.find(m => m.name === selectedName) ?? null
 
   function handleAdd() {
     const m = makeNewModel()
@@ -44,9 +43,7 @@ export function SchemaEditor({ tenantId = 'system' }: SchemaEditorProps) {
   }
 
   function handleSaveModel(updated: ModelSchema) {
-    const next = models.map(m =>
-      m.name === selectedName ? updated : m,
-    )
+    const next = models.map(m => (m.name === selectedName ? updated : m))
     void saveModels(next)
     setSelectedName(updated.name)
   }

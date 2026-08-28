@@ -18,13 +18,41 @@ describe('filtering and sorting utilities', () => {
   describe('parseFilterString', () => {
     it.each([
       { input: '', expected: [], description: 'empty string' },
-      { input: 'name:John', expected: [{ field: 'name', operator: 'eq', value: 'John' }], description: 'simple equality' },
-      { input: 'age:gt:18', expected: [{ field: 'age', operator: 'gt', value: 18 }], description: 'greater than' },
-      { input: 'active:eq:true', expected: [{ field: 'active', operator: 'eq', value: true }], description: 'boolean true' },
-      { input: 'deleted:eq:false', expected: [{ field: 'deleted', operator: 'eq', value: false }], description: 'boolean false' },
-      { input: 'role:in:admin,user', expected: [{ field: 'role', operator: 'in', value: 'admin' }], description: 'in operator (first value)' },
-      { input: 'name:contains:john', expected: [{ field: 'name', operator: 'contains', value: 'john' }], description: 'contains operator' },
-      { input: 'email:startsWith:admin', expected: [{ field: 'email', operator: 'startsWith', value: 'admin' }], description: 'startsWith operator' },
+      {
+        input: 'name:John',
+        expected: [{ field: 'name', operator: 'eq', value: 'John' }],
+        description: 'simple equality',
+      },
+      {
+        input: 'age:gt:18',
+        expected: [{ field: 'age', operator: 'gt', value: 18 }],
+        description: 'greater than',
+      },
+      {
+        input: 'active:eq:true',
+        expected: [{ field: 'active', operator: 'eq', value: true }],
+        description: 'boolean true',
+      },
+      {
+        input: 'deleted:eq:false',
+        expected: [{ field: 'deleted', operator: 'eq', value: false }],
+        description: 'boolean false',
+      },
+      {
+        input: 'role:in:admin,user',
+        expected: [{ field: 'role', operator: 'in', value: 'admin' }],
+        description: 'in operator (first value)',
+      },
+      {
+        input: 'name:contains:john',
+        expected: [{ field: 'name', operator: 'contains', value: 'john' }],
+        description: 'contains operator',
+      },
+      {
+        input: 'email:startsWith:admin',
+        expected: [{ field: 'email', operator: 'startsWith', value: 'admin' }],
+        description: 'startsWith operator',
+      },
     ])('should parse $description', ({ input, expected }) => {
       const result = parseFilterString(input)
       if (expected.length === 0) {
@@ -36,21 +64,45 @@ describe('filtering and sorting utilities', () => {
 
     it('should parse multiple filters', () => {
       const result = parseFilterString('name:John,age:gt:18,active:true')
-      
+
       expect(result).toHaveLength(3)
-      expect(result[0]).toEqual({ field: 'name', operator: 'eq', value: 'John' })
+      expect(result[0]).toEqual({
+        field: 'name',
+        operator: 'eq',
+        value: 'John',
+      })
       expect(result[1]).toEqual({ field: 'age', operator: 'gt', value: 18 })
-      expect(result[2]).toEqual({ field: 'active', operator: 'eq', value: true })
+      expect(result[2]).toEqual({
+        field: 'active',
+        operator: 'eq',
+        value: true,
+      })
     })
   })
 
   describe('parseFilterObject', () => {
     it.each([
       { input: {}, expected: [], description: 'empty object' },
-      { input: { name: 'John' }, expected: [{ field: 'name', operator: 'eq', value: 'John' }], description: 'simple equality' },
-      { input: { age: 18 }, expected: [{ field: 'age', operator: 'eq', value: 18 }], description: 'numeric value' },
-      { input: { active: true }, expected: [{ field: 'active', operator: 'eq', value: true }], description: 'boolean value' },
-      { input: { name: null }, expected: [{ field: 'name', operator: 'eq', value: null }], description: 'null value' },
+      {
+        input: { name: 'John' },
+        expected: [{ field: 'name', operator: 'eq', value: 'John' }],
+        description: 'simple equality',
+      },
+      {
+        input: { age: 18 },
+        expected: [{ field: 'age', operator: 'eq', value: 18 }],
+        description: 'numeric value',
+      },
+      {
+        input: { active: true },
+        expected: [{ field: 'active', operator: 'eq', value: true }],
+        description: 'boolean value',
+      },
+      {
+        input: { name: null },
+        expected: [{ field: 'name', operator: 'eq', value: null }],
+        description: 'null value',
+      },
     ])('should parse $description', ({ input, expected }) => {
       const result = parseFilterObject(input)
       expect(result).toEqual(expected)
@@ -58,7 +110,7 @@ describe('filtering and sorting utilities', () => {
 
     it('should parse operator objects', () => {
       const result = parseFilterObject({ age: { $gt: 18, $lt: 65 } })
-      
+
       expect(result).toHaveLength(2)
       expect(result[0]).toEqual({ field: 'age', operator: 'gt', value: 18 })
       expect(result[1]).toEqual({ field: 'age', operator: 'lt', value: 65 })
@@ -66,11 +118,19 @@ describe('filtering and sorting utilities', () => {
 
     it('should parse multiple fields', () => {
       const result = parseFilterObject({ name: 'John', age: 30, active: true })
-      
+
       expect(result).toHaveLength(3)
-      expect(result).toContainEqual({ field: 'name', operator: 'eq', value: 'John' })
+      expect(result).toContainEqual({
+        field: 'name',
+        operator: 'eq',
+        value: 'John',
+      })
       expect(result).toContainEqual({ field: 'age', operator: 'eq', value: 30 })
-      expect(result).toContainEqual({ field: 'active', operator: 'eq', value: true })
+      expect(result).toContainEqual({
+        field: 'active',
+        operator: 'eq',
+        value: true,
+      })
     })
   })
 
@@ -102,22 +162,30 @@ describe('filtering and sorting utilities', () => {
         description: 'less than or equal',
       },
       {
-        input: [{ field: 'role', operator: 'in' as const, value: ['admin', 'user'] }],
+        input: [
+          { field: 'role', operator: 'in' as const, value: ['admin', 'user'] },
+        ],
         expected: { role: { in: ['admin', 'user'] } },
         description: 'in array',
       },
       {
-        input: [{ field: 'role', operator: 'notIn' as const, value: ['guest'] }],
+        input: [
+          { field: 'role', operator: 'notIn' as const, value: ['guest'] },
+        ],
         expected: { role: { notIn: ['guest'] } },
         description: 'not in array',
       },
       {
-        input: [{ field: 'name', operator: 'contains' as const, value: 'john' }],
+        input: [
+          { field: 'name', operator: 'contains' as const, value: 'john' },
+        ],
         expected: { name: { contains: 'john', mode: 'insensitive' } },
         description: 'contains',
       },
       {
-        input: [{ field: 'email', operator: 'startsWith' as const, value: 'admin' }],
+        input: [
+          { field: 'email', operator: 'startsWith' as const, value: 'admin' },
+        ],
         expected: { email: { startsWith: 'admin', mode: 'insensitive' } },
         description: 'startsWith',
       },
@@ -160,9 +228,24 @@ describe('filtering and sorting utilities', () => {
   describe('parseSortString', () => {
     it.each([
       { input: '', expected: [], description: 'empty string' },
-      { input: 'name', expected: [{ field: 'name', direction: 'asc' }], description: 'ascending' },
-      { input: '-name', expected: [{ field: 'name', direction: 'desc' }], description: 'descending' },
-      { input: 'name,-age', expected: [{ field: 'name', direction: 'asc' }, { field: 'age', direction: 'desc' }], description: 'multiple fields' },
+      {
+        input: 'name',
+        expected: [{ field: 'name', direction: 'asc' }],
+        description: 'ascending',
+      },
+      {
+        input: '-name',
+        expected: [{ field: 'name', direction: 'desc' }],
+        description: 'descending',
+      },
+      {
+        input: 'name,-age',
+        expected: [
+          { field: 'name', direction: 'asc' },
+          { field: 'age', direction: 'desc' },
+        ],
+        description: 'multiple fields',
+      },
     ])('should parse $description', ({ input, expected }) => {
       expect(parseSortString(input)).toEqual(expected)
     })
@@ -198,12 +281,24 @@ describe('filtering and sorting utilities', () => {
       { input: 'name', expected: true, description: 'simple field' },
       { input: 'user_name', expected: true, description: 'with underscore' },
       { input: 'user.name', expected: true, description: 'nested field' },
-      { input: 'user.profile.name', expected: true, description: 'deeply nested' },
+      {
+        input: 'user.profile.name',
+        expected: true,
+        description: 'deeply nested',
+      },
       { input: 'name123', expected: true, description: 'with numbers' },
       { input: 'name-field', expected: false, description: 'with hyphen' },
       { input: 'name field', expected: false, description: 'with space' },
-      { input: 'name;DROP TABLE', expected: false, description: 'SQL injection attempt' },
-      { input: '../../../etc/passwd', expected: false, description: 'path traversal' },
+      {
+        input: 'name;DROP TABLE',
+        expected: false,
+        description: 'SQL injection attempt',
+      },
+      {
+        input: '../../../etc/passwd',
+        expected: false,
+        description: 'path traversal',
+      },
     ])('should validate $description', ({ input, expected }) => {
       expect(isValidFieldName(input)).toBe(expected)
     })
@@ -270,9 +365,7 @@ describe('filtering and sorting utilities', () => {
     })
 
     it('should reject invalid field names', () => {
-      const sorts = [
-        { field: 'name;DROP TABLE', direction: 'asc' as const },
-      ]
+      const sorts = [{ field: 'name;DROP TABLE', direction: 'asc' as const }]
 
       const result = validateSort(sorts)
 
@@ -281,9 +374,7 @@ describe('filtering and sorting utilities', () => {
     })
 
     it('should reject invalid directions', () => {
-      const sorts = [
-        { field: 'name', direction: 'invalid' as any },
-      ]
+      const sorts = [{ field: 'name', direction: 'invalid' as any }]
 
       const result = validateSort(sorts)
 

@@ -5,7 +5,10 @@ import { readJson } from './read-json'
 describe('readJson', () => {
   it.each([
     { body: { name: 'test' }, expected: { name: 'test' } },
-    { body: { count: 42, active: true }, expected: { count: 42, active: true } },
+    {
+      body: { count: 42, active: true },
+      expected: { count: 42, active: true },
+    },
     { body: [1, 2, 3], expected: [1, 2, 3] },
   ])('parses JSON body: $body', async ({ body, expected }) => {
     const request = new Request('http://localhost', {

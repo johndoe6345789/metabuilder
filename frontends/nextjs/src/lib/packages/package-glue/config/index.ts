@@ -1,4 +1,8 @@
-export type { ConflictResolution, PackageRepoConfig, PackageSourceConfig } from './types'
+export type {
+  ConflictResolution,
+  PackageRepoConfig,
+  PackageSourceConfig,
+} from './types'
 export { DEFAULT_PACKAGE_REPO_CONFIG } from './default-config'
 export { DEVELOPMENT_PACKAGE_REPO_CONFIG } from './development-config'
 export { PRODUCTION_PACKAGE_REPO_CONFIG } from './production-config'

@@ -37,7 +37,9 @@ export const COMPONENT_REGISTRY: Record<string, ComponentType> = {
   vault_shell: VaultShell,
 }
 
-export function resolveComponent(name: string | null | undefined): ComponentType | null {
+export function resolveComponent(
+  name: string | null | undefined
+): ComponentType | null {
   if (name == null) return null
   return COMPONENT_REGISTRY[name] ?? null
 }

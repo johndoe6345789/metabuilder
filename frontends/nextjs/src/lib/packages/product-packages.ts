@@ -105,9 +105,7 @@ export const PRODUCT_PACKAGES: ProductPackage[] = [
       'Customisable notification templates',
       'SMTP or managed delivery',
     ],
-    defaultRoutes: [
-      { path: '/newsletters', title: 'Newsletters' },
-    ],
+    defaultRoutes: [{ path: '/newsletters', title: 'Newsletters' }],
     category: 'comms',
   },
   {
@@ -122,9 +120,7 @@ export const PRODUCT_PACKAGES: ProductPackage[] = [
       'Top content and engagement metrics',
       'CSV data export',
     ],
-    defaultRoutes: [
-      { path: '/analytics', title: 'Analytics' },
-    ],
+    defaultRoutes: [{ path: '/analytics', title: 'Analytics' }],
     category: 'analytics',
   },
 ]
@@ -152,7 +148,14 @@ export const PRODUCT_TIERS: ProductTier[] = [
     id: 'studio',
     name: 'Studio',
     price: 129,
-    packageIds: ['pages', 'community', 'members', 'content', 'email', 'analytics'],
+    packageIds: [
+      'pages',
+      'community',
+      'members',
+      'content',
+      'email',
+      'analytics',
+    ],
     memberLimit: null,
     highlight: false,
     cta: 'Start free trial',
@@ -183,10 +186,12 @@ export function defaultComponentTree(title: string): Record<string, unknown> {
       {
         type: 'Typography',
         props: { variant: 'body1' },
-        children: [{
-          type: 'text',
-          props: { content: 'Customise this page in the God Panel → Pages.' },
-        }],
+        children: [
+          {
+            type: 'text',
+            props: { content: 'Customise this page in the God Panel → Pages.' },
+          },
+        ],
       },
     ],
   }

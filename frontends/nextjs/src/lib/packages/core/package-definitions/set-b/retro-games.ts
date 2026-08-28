@@ -1,6 +1,9 @@
 import type { PackageContent, PackageManifest } from '../../package-types'
 
-export const retroGamesPackage = (): { manifest: PackageManifest; content: PackageContent } => ({
+export const retroGamesPackage = (): {
+  manifest: PackageManifest
+  content: PackageContent
+} => ({
   manifest: {
     id: 'retro-games',
     name: 'Retro Games Arcade',
@@ -25,12 +28,38 @@ export const retroGamesPackage = (): { manifest: PackageManifest; content: Packa
         name: 'Game',
         displayName: 'Game',
         fields: [
-          { name: 'id', type: 'string', label: 'ID', required: true, primaryKey: true },
+          {
+            name: 'id',
+            type: 'string',
+            label: 'ID',
+            required: true,
+            primaryKey: true,
+          },
           { name: 'name', type: 'string', label: 'Name', required: true },
-          { name: 'description', type: 'text', label: 'Description', required: false },
-          { name: 'thumbnailUrl', type: 'string', label: 'Thumbnail URL', required: false },
-          { name: 'gameType', type: 'string', label: 'Game Type', required: true },
-          { name: 'difficulty', type: 'string', label: 'Difficulty', required: false },
+          {
+            name: 'description',
+            type: 'text',
+            label: 'Description',
+            required: false,
+          },
+          {
+            name: 'thumbnailUrl',
+            type: 'string',
+            label: 'Thumbnail URL',
+            required: false,
+          },
+          {
+            name: 'gameType',
+            type: 'string',
+            label: 'Game Type',
+            required: true,
+          },
+          {
+            name: 'difficulty',
+            type: 'string',
+            label: 'Difficulty',
+            required: false,
+          },
           {
             name: 'playCount',
             type: 'number',
@@ -38,44 +67,118 @@ export const retroGamesPackage = (): { manifest: PackageManifest; content: Packa
             required: true,
             defaultValue: 0,
           },
-          { name: 'createdAt', type: 'number', label: 'Created At', required: true },
+          {
+            name: 'createdAt',
+            type: 'number',
+            label: 'Created At',
+            required: true,
+          },
         ],
       },
       {
         name: 'HighScore',
         displayName: 'High Score',
         fields: [
-          { name: 'id', type: 'string', label: 'ID', required: true, primaryKey: true },
+          {
+            name: 'id',
+            type: 'string',
+            label: 'ID',
+            required: true,
+            primaryKey: true,
+          },
           { name: 'gameId', type: 'string', label: 'Game ID', required: true },
           { name: 'userId', type: 'string', label: 'User ID', required: true },
-          { name: 'playerName', type: 'string', label: 'Player Name', required: true },
+          {
+            name: 'playerName',
+            type: 'string',
+            label: 'Player Name',
+            required: true,
+          },
           { name: 'score', type: 'number', label: 'Score', required: true },
-          { name: 'level', type: 'number', label: 'Level Reached', required: false },
-          { name: 'createdAt', type: 'number', label: 'Created At', required: true },
+          {
+            name: 'level',
+            type: 'number',
+            label: 'Level Reached',
+            required: false,
+          },
+          {
+            name: 'createdAt',
+            type: 'number',
+            label: 'Created At',
+            required: true,
+          },
         ],
       },
       {
         name: 'Achievement',
         displayName: 'Achievement',
         fields: [
-          { name: 'id', type: 'string', label: 'ID', required: true, primaryKey: true },
+          {
+            name: 'id',
+            type: 'string',
+            label: 'ID',
+            required: true,
+            primaryKey: true,
+          },
           { name: 'name', type: 'string', label: 'Name', required: true },
-          { name: 'description', type: 'text', label: 'Description', required: false },
+          {
+            name: 'description',
+            type: 'text',
+            label: 'Description',
+            required: false,
+          },
           { name: 'gameId', type: 'string', label: 'Game ID', required: true },
-          { name: 'iconUrl', type: 'string', label: 'Icon URL', required: false },
-          { name: 'requirement', type: 'string', label: 'Requirement', required: true },
-          { name: 'points', type: 'number', label: 'Points', required: true, defaultValue: 10 },
-          { name: 'createdAt', type: 'number', label: 'Created At', required: true },
+          {
+            name: 'iconUrl',
+            type: 'string',
+            label: 'Icon URL',
+            required: false,
+          },
+          {
+            name: 'requirement',
+            type: 'string',
+            label: 'Requirement',
+            required: true,
+          },
+          {
+            name: 'points',
+            type: 'number',
+            label: 'Points',
+            required: true,
+            defaultValue: 10,
+          },
+          {
+            name: 'createdAt',
+            type: 'number',
+            label: 'Created At',
+            required: true,
+          },
         ],
       },
       {
         name: 'UserAchievement',
         displayName: 'User Achievement',
         fields: [
-          { name: 'id', type: 'string', label: 'ID', required: true, primaryKey: true },
+          {
+            name: 'id',
+            type: 'string',
+            label: 'ID',
+            required: true,
+            primaryKey: true,
+          },
           { name: 'userId', type: 'string', label: 'User ID', required: true },
-          { name: 'achievementId', type: 'string', label: 'Achievement ID', required: true },
-          { name: 'unlockedAt', type: 'number', label: 'Unlocked At', required: true },
+          {
+            name: 'achievementId',
+            type: 'string',
+            label: 'Achievement ID',
+            required: true,
+          },
+          {
+            name: 'unlockedAt',
+            type: 'number',
+            label: 'Unlocked At',
+            required: true,
+          },
         ],
       },
     ],

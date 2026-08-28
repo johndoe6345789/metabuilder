@@ -1,6 +1,6 @@
 /**
  * Auth provider component
- * 
+ *
  * Provides authentication context to the application.
  * Wraps children with auth state from useAuth hook.
  */
@@ -25,7 +25,7 @@ export interface AuthProviderProps {
 
 export function AuthProviderComponent({ children }: AuthProviderProps) {
   const authState = useAuth()
-  
+
   const hasLevel = (minLevel: number): boolean => {
     if (authState.user === null) {
       return minLevel <= 0
@@ -33,25 +33,21 @@ export function AuthProviderComponent({ children }: AuthProviderProps) {
     const userLevel = getRoleLevel(authState.user.role ?? 'user')
     return userLevel >= minLevel
   }
-  
+
   const hasRole = (role: string): boolean => {
     if (authState.user === null) {
       return role === 'public'
     }
     return authState.user.role === role
   }
-  
+
   const value: AuthContextValue = {
     ...authState,
     hasLevel,
     hasRole,
   }
-  
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  )
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
 /**

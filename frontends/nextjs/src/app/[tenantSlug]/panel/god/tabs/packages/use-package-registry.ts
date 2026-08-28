@@ -118,8 +118,15 @@ export function usePackageRegistry() {
   /** Patches the reference fields a package composes -- separate from
    * update() above, which only touches PackageManifest. */
   const updateContents = useCallback(
-    (id: string, patch: Partial<Pick<RegistryPackage, 'workflows' | 'pageConfigs' | 'themeId'>>) => {
-      persist(packages.map(p => (p.manifest.id === id ? { ...p, ...patch } : p)))
+    (
+      id: string,
+      patch: Partial<
+        Pick<RegistryPackage, 'workflows' | 'pageConfigs' | 'themeId'>
+      >
+    ) => {
+      persist(
+        packages.map(p => (p.manifest.id === id ? { ...p, ...patch } : p))
+      )
     },
     [packages, persist]
   )
@@ -181,7 +188,10 @@ export function usePackageRegistry() {
       try {
         const payload = {
           name: pkg.manifest.name,
-          description: pkg.manifest.description.length > 0 ? pkg.manifest.description : null,
+          description:
+            pkg.manifest.description.length > 0
+              ? pkg.manifest.description
+              : null,
           category: pkg.manifest.category,
           icon: pkg.manifest.icon,
           workflowIds: JSON.stringify(pkg.workflows.map(w => w.id)),
@@ -193,25 +203,33 @@ export function usePackageRegistry() {
           isPublished: true,
           updatedAt: Date.now(),
         }
-        const res = pkg.publishedId != null
-          ? await fetch(`${DBAL}/${tenant}/core/GodPackage/${pkg.publishedId}`, {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(payload),
-              signal: AbortSignal.timeout(8000),
-            })
-          : await fetch(`${DBAL}/${tenant}/core/GodPackage`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ ...payload, createdAt: Date.now() }),
-              signal: AbortSignal.timeout(8000),
-            })
+        const res =
+          pkg.publishedId != null
+            ? await fetch(
+                `${DBAL}/${tenant}/core/GodPackage/${pkg.publishedId}`,
+                {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(payload),
+                  signal: AbortSignal.timeout(8000),
+                }
+              )
+            : await fetch(`${DBAL}/${tenant}/core/GodPackage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ...payload, createdAt: Date.now() }),
+                signal: AbortSignal.timeout(8000),
+              })
         if (!res.ok) return false
         if (pkg.publishedId == null) {
-          const json = await res.json() as { data?: { id?: string } }
+          const json = (await res.json()) as { data?: { id?: string } }
           const newId = json.data?.id
           if (newId != null) {
-            persist(packages.map(p => (p.manifest.id === id ? { ...p, publishedId: newId } : p)))
+            persist(
+              packages.map(p =>
+                p.manifest.id === id ? { ...p, publishedId: newId } : p
+              )
+            )
           }
         }
         return true

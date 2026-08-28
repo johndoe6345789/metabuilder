@@ -14,8 +14,8 @@ const POLL_MS = 3000
 
 const DEFAULT_CHANNELS: IrcChannel[] = [
   { id: 'ch_general', name: 'general', tenantId: TENANT },
-  { id: 'ch_dev',     name: 'dev',     tenantId: TENANT },
-  { id: 'ch_random',  name: 'random',  tenantId: TENANT },
+  { id: 'ch_dev', name: 'dev', tenantId: TENANT },
+  { id: 'ch_random', name: 'random', tenantId: TENANT },
 ]
 
 export interface UseIrcChatReturn extends IrcChatState {
@@ -26,11 +26,14 @@ export interface UseIrcChatReturn extends IrcChatState {
 
 export function useIrcChat(tenantId = TENANT): UseIrcChatReturn {
   const [state, setState] = useState<IrcChatState>({
-    channels: [], messages: [], activeChannelId: null,
-    loading: true, error: null,
+    channels: [],
+    messages: [],
+    activeChannelId: null,
+    loading: true,
+    error: null,
   })
   const offline = useRef(false)
-  const timer   = useRef<ReturnType<typeof setInterval> | null>(null)
+  const timer = useRef<ReturnType<typeof setInterval> | null>(null)
 
   // Load channels once on mount
   useEffect(() => {
@@ -40,17 +43,20 @@ export function useIrcChat(tenantId = TENANT): UseIrcChatReturn {
         const channels = list.length > 0 ? list : DEFAULT_CHANNELS
         lsSet('irc_channels', channels)
         setState(s => ({
-          ...s, channels,
-          activeChannelId: s.activeChannelId ?? (channels[0]?.id ?? null),
+          ...s,
+          channels,
+          activeChannelId: s.activeChannelId ?? channels[0]?.id ?? null,
           loading: false,
         }))
       } catch {
         offline.current = true
         const channels = lsGet<IrcChannel[]>('irc_channels', DEFAULT_CHANNELS)
         setState(s => ({
-          ...s, channels,
-          activeChannelId: s.activeChannelId ?? (channels[0]?.id ?? null),
-          loading: false, error: 'DBAL offline — using local data',
+          ...s,
+          channels,
+          activeChannelId: s.activeChannelId ?? channels[0]?.id ?? null,
+          loading: false,
+          error: 'DBAL offline — using local data',
         }))
       }
     })()
@@ -65,7 +71,8 @@ export function useIrcChat(tenantId = TENANT): UseIrcChatReturn {
     const load = async () => {
       if (offline.current) {
         setState(s => ({
-          ...s, messages: lsGet<IrcMessage[]>(`irc_msgs_${chId}`, []),
+          ...s,
+          messages: lsGet<IrcMessage[]>(`irc_msgs_${chId}`, []),
         }))
         return
       }
@@ -76,41 +83,55 @@ export function useIrcChat(tenantId = TENANT): UseIrcChatReturn {
       } catch {
         offline.current = true
         setState(s => ({
-          ...s, messages: lsGet<IrcMessage[]>(`irc_msgs_${chId}`, []),
+          ...s,
+          messages: lsGet<IrcMessage[]>(`irc_msgs_${chId}`, []),
           error: 'DBAL offline — using local data',
         }))
       }
     }
 
     void load()
-    timer.current = setInterval(() => { void load() }, POLL_MS)
-    return () => { if (timer.current != null) clearInterval(timer.current) }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    timer.current = setInterval(() => {
+      void load()
+    }, POLL_MS)
+    return () => {
+      if (timer.current != null) clearInterval(timer.current)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.activeChannelId])
 
   const setActiveChannelId = useCallback((id: string) => {
     setState(s => ({ ...s, activeChannelId: id, messages: [] }))
   }, [])
 
-  const sendMessage = useCallback(async (
-    content: string, username: string,
-  ) => {
-    const chId = state.activeChannelId
-    if (chId == null) return
-    if (!offline.current) {
-      try { await postMessage(chId, content, username, tenantId); return }
-      catch { offline.current = true }
-    }
-    // offline — persist locally
-    const msg: IrcMessage = {
-      id: `msg_${Date.now()}_${Math.random()}`,
-      channelId: chId, content, createdBy: username,
-      tenantId, createdAt: new Date().toISOString(), type: 'message',
-    }
-    const msgs = [...lsGet<IrcMessage[]>(`irc_msgs_${chId}`, []), msg]
-    lsSet(`irc_msgs_${chId}`, msgs)
-    setState(s => ({ ...s, messages: msgs }))
-  }, [state.activeChannelId, tenantId])
+  const sendMessage = useCallback(
+    async (content: string, username: string) => {
+      const chId = state.activeChannelId
+      if (chId == null) return
+      if (!offline.current) {
+        try {
+          await postMessage(chId, content, username, tenantId)
+          return
+        } catch {
+          offline.current = true
+        }
+      }
+      // offline — persist locally
+      const msg: IrcMessage = {
+        id: `msg_${Date.now()}_${Math.random()}`,
+        channelId: chId,
+        content,
+        createdBy: username,
+        tenantId,
+        createdAt: new Date().toISOString(),
+        type: 'message',
+      }
+      const msgs = [...lsGet<IrcMessage[]>(`irc_msgs_${chId}`, []), msg]
+      lsSet(`irc_msgs_${chId}`, msgs)
+      setState(s => ({ ...s, messages: msgs }))
+    },
+    [state.activeChannelId, tenantId]
+  )
 
   const clearLocalMessages = useCallback(() => {
     const chId = state.activeChannelId

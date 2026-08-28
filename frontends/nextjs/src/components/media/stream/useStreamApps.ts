@@ -57,9 +57,12 @@ export function useStreamApps() {
 
   const refresh = useCallback(async (): Promise<void> => {
     try {
-      const res = await fetch(ENTITY_PATH, { cache: 'no-store', headers: authHeaders() })
+      const res = await fetch(ENTITY_PATH, {
+        cache: 'no-store',
+        headers: authHeaders(),
+      })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      const body = await res.json() as ListResponse | StreamApp[]
+      const body = (await res.json()) as ListResponse | StreamApp[]
       const list = Array.isArray(body) ? body : (body.data ?? [])
       list.sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
       setApps(list)
@@ -71,33 +74,47 @@ export function useStreamApps() {
     }
   }, [])
 
-  useEffect(() => { void refresh() }, [refresh])
-
-  const createApp = useCallback(async (app: StreamApp): Promise<void> => {
-    const res = await fetch(ENTITY_PATH, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...authHeaders() },
-      body: JSON.stringify(app),
-    })
-    if (!res.ok) throw new Error(`HTTP ${res.status}`)
-    await refresh()
+  useEffect(() => {
+    void refresh()
   }, [refresh])
 
-  const updateApp = useCallback(async (id: string, patch: Partial<StreamApp>): Promise<void> => {
-    const res = await fetch(`${ENTITY_PATH}/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', ...authHeaders() },
-      body: JSON.stringify(patch),
-    })
-    if (!res.ok) throw new Error(`HTTP ${res.status}`)
-    await refresh()
-  }, [refresh])
+  const createApp = useCallback(
+    async (app: StreamApp): Promise<void> => {
+      const res = await fetch(ENTITY_PATH, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...authHeaders() },
+        body: JSON.stringify(app),
+      })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      await refresh()
+    },
+    [refresh]
+  )
 
-  const deleteApp = useCallback(async (id: string): Promise<void> => {
-    const res = await fetch(`${ENTITY_PATH}/${id}`, { method: 'DELETE', headers: authHeaders() })
-    if (!res.ok) throw new Error(`HTTP ${res.status}`)
-    await refresh()
-  }, [refresh])
+  const updateApp = useCallback(
+    async (id: string, patch: Partial<StreamApp>): Promise<void> => {
+      const res = await fetch(`${ENTITY_PATH}/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', ...authHeaders() },
+        body: JSON.stringify(patch),
+      })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      await refresh()
+    },
+    [refresh]
+  )
+
+  const deleteApp = useCallback(
+    async (id: string): Promise<void> => {
+      const res = await fetch(`${ENTITY_PATH}/${id}`, {
+        method: 'DELETE',
+        headers: authHeaders(),
+      })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      await refresh()
+    },
+    [refresh]
+  )
 
   return { apps, loading, error, refresh, createApp, updateApp, deleteApp }
 }

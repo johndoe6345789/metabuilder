@@ -46,7 +46,9 @@ export function ModelList({
             className={`${styles.item} ${
               selectedName === model.name ? styles.itemActive : ''
             }`}
-            onClick={() => { onSelect(model.name) }}
+            onClick={() => {
+              onSelect(model.name)
+            }}
             role="button"
             tabIndex={0}
             onKeyDown={e => {
@@ -54,9 +56,7 @@ export function ModelList({
             }}
           >
             <div className={styles.itemText}>
-              <div className={styles.itemName}>
-                {model.label ?? model.name}
-              </div>
+              <div className={styles.itemName}>{model.label ?? model.name}</div>
               <div className={styles.itemMeta}>
                 {model.fields.length} field
                 {model.fields.length !== 1 ? 's' : ''}

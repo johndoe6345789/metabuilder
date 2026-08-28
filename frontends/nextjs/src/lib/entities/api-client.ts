@@ -1,6 +1,6 @@
 /**
  * API client utilities for entity CRUD operations
- * 
+ *
  * Provides functions to interact with entity APIs.
  */
 
@@ -17,7 +17,10 @@ const INTERNAL_APP_URL =
  * Node's fetch does not accept relative URLs, and it does not forward the
  * incoming session cookie automatically.
  */
-async function entityApiFetch(path: string, init: RequestInit): Promise<Response> {
+async function entityApiFetch(
+  path: string,
+  init: RequestInit
+): Promise<Response> {
   const requestHeaders = await headers()
   const cookie = requestHeaders.get('cookie')
   const outgoingHeaders = new Headers(init.headers)
@@ -49,7 +52,7 @@ export interface ListQueryParams {
  */
 function buildQueryString(params: ListQueryParams): string {
   const searchParams = new URLSearchParams()
-  
+
   if (params.page !== undefined) {
     searchParams.append('page', params.page.toString())
   }
@@ -62,14 +65,14 @@ function buildQueryString(params: ListQueryParams): string {
   if (params.sort !== undefined) {
     searchParams.append('sort', params.sort)
   }
-  
+
   const queryString = searchParams.toString()
-  return (queryString.length > 0) ? `?${queryString}` : ''
+  return queryString.length > 0 ? `?${queryString}` : ''
 }
 
 /**
  * Fetch entity list from API
- * 
+ *
  * @param tenant - Tenant identifier
  * @param pkg - Package identifier
  * @param entity - Entity name
@@ -85,7 +88,7 @@ export async function fetchEntityList(
   try {
     const queryString = buildQueryString(params)
     const url = `/api/v1/${tenant}/${pkg}/${entity}${queryString}`
-    
+
     const response = await entityApiFetch(url, {
       method: 'GET',
       headers: {
@@ -93,28 +96,30 @@ export async function fetchEntityList(
       },
       cache: 'no-store',
     })
-    
+
     if (!response.ok) {
       let errorData: { error?: string } = { error: 'Unknown error' }
       try {
-        errorData = await response.json() as { error?: string }
+        errorData = (await response.json()) as { error?: string }
       } catch {
         // If JSON parsing fails, use default error
       }
       return {
-         
         error: errorData.error ?? `HTTP ${response.status}`,
         status: response.status,
       }
     }
-    
+
     const data = await response.json()
     return {
       data: Array.isArray(data) ? data : (data.data ?? []),
       status: response.status,
     }
   } catch (error) {
-    console.error(`Failed to fetch entity list for ${tenant}/${pkg}/${entity}:`, error)
+    console.error(
+      `Failed to fetch entity list for ${tenant}/${pkg}/${entity}:`,
+      error
+    )
     return {
       error: error instanceof Error ? error.message : 'Unknown error',
       status: 500,
@@ -124,7 +129,7 @@ export async function fetchEntityList(
 
 /**
  * Fetch single entity by ID from API
- * 
+ *
  * @param tenant - Tenant identifier
  * @param pkg - Package identifier
  * @param entity - Entity name
@@ -139,7 +144,7 @@ export async function fetchEntity(
 ): Promise<ApiResponse> {
   try {
     const url = `/api/v1/${tenant}/${pkg}/${entity}/${id}`
-    
+
     const response = await entityApiFetch(url, {
       method: 'GET',
       headers: {
@@ -147,29 +152,30 @@ export async function fetchEntity(
       },
       cache: 'no-store',
     })
-    
+
     if (!response.ok) {
       let errorData: { error?: string } = { error: 'Unknown error' }
       try {
-        errorData = await response.json() as { error?: string }
+        errorData = (await response.json()) as { error?: string }
       } catch {
         // If JSON parsing fails, use default error
       }
       return {
-         
         error: errorData.error ?? `HTTP ${response.status}`,
         status: response.status,
       }
     }
-    
+
     const data = await response.json()
     return {
-       
       data,
       status: response.status,
     }
   } catch (error) {
-    console.error(`Failed to fetch entity ${tenant}/${pkg}/${entity}/${id}:`, error)
+    console.error(
+      `Failed to fetch entity ${tenant}/${pkg}/${entity}/${id}:`,
+      error
+    )
     return {
       error: error instanceof Error ? error.message : 'Unknown error',
       status: 500,
@@ -179,7 +185,7 @@ export async function fetchEntity(
 
 /**
  * Create new entity via API
- * 
+ *
  * @param tenant - Tenant identifier
  * @param pkg - Package identifier
  * @param entity - Entity name
@@ -194,7 +200,7 @@ export async function createEntity(
 ): Promise<ApiResponse> {
   try {
     const url = `/api/v1/${tenant}/${pkg}/${entity}`
-    
+
     const response = await entityApiFetch(url, {
       method: 'POST',
       headers: {
@@ -203,24 +209,22 @@ export async function createEntity(
       body: JSON.stringify(data),
       cache: 'no-store',
     })
-    
+
     if (!response.ok) {
       let errorData: { error?: string } = { error: 'Unknown error' }
       try {
-        errorData = await response.json() as { error?: string }
+        errorData = (await response.json()) as { error?: string }
       } catch {
         // If JSON parsing fails, use default error
       }
       return {
-         
         error: errorData.error ?? `HTTP ${response.status}`,
         status: response.status,
       }
     }
-    
+
     const responseData = await response.json()
     return {
-       
       data: responseData,
       status: response.status,
     }
@@ -235,7 +239,7 @@ export async function createEntity(
 
 /**
  * Update entity via API
- * 
+ *
  * @param tenant - Tenant identifier
  * @param pkg - Package identifier
  * @param entity - Entity name
@@ -252,7 +256,7 @@ export async function updateEntity(
 ): Promise<ApiResponse> {
   try {
     const url = `/api/v1/${tenant}/${pkg}/${entity}/${id}`
-    
+
     const response = await entityApiFetch(url, {
       method: 'PUT',
       headers: {
@@ -261,29 +265,30 @@ export async function updateEntity(
       body: JSON.stringify(data),
       cache: 'no-store',
     })
-    
+
     if (!response.ok) {
       let errorData: { error?: string } = { error: 'Unknown error' }
       try {
-        errorData = await response.json() as { error?: string }
+        errorData = (await response.json()) as { error?: string }
       } catch {
         // If JSON parsing fails, use default error
       }
       return {
-         
         error: errorData.error ?? `HTTP ${response.status}`,
         status: response.status,
       }
     }
-    
+
     const responseData = await response.json()
     return {
-       
       data: responseData,
       status: response.status,
     }
   } catch (error) {
-    console.error(`Failed to update entity ${tenant}/${pkg}/${entity}/${id}:`, error)
+    console.error(
+      `Failed to update entity ${tenant}/${pkg}/${entity}/${id}:`,
+      error
+    )
     return {
       error: error instanceof Error ? error.message : 'Unknown error',
       status: 500,
@@ -293,7 +298,7 @@ export async function updateEntity(
 
 /**
  * Delete entity via API
- * 
+ *
  * @param tenant - Tenant identifier
  * @param pkg - Package identifier
  * @param entity - Entity name
@@ -308,7 +313,7 @@ export async function deleteEntity(
 ): Promise<ApiResponse> {
   try {
     const url = `/api/v1/${tenant}/${pkg}/${entity}/${id}`
-    
+
     const response = await entityApiFetch(url, {
       method: 'DELETE',
       headers: {
@@ -316,26 +321,28 @@ export async function deleteEntity(
       },
       cache: 'no-store',
     })
-    
+
     if (!response.ok) {
       let errorData: { error?: string } = { error: 'Unknown error' }
       try {
-        errorData = await response.json() as { error?: string }
+        errorData = (await response.json()) as { error?: string }
       } catch {
         // If JSON parsing fails, use default error
       }
       return {
-         
         error: errorData.error ?? `HTTP ${response.status}`,
         status: response.status,
       }
     }
-    
+
     return {
       status: response.status,
     }
   } catch (error) {
-    console.error(`Failed to delete entity ${tenant}/${pkg}/${entity}/${id}:`, error)
+    console.error(
+      `Failed to delete entity ${tenant}/${pkg}/${entity}/${id}:`,
+      error
+    )
     return {
       error: error instanceof Error ? error.message : 'Unknown error',
       status: 500,

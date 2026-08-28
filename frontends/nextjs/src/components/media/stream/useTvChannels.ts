@@ -69,21 +69,30 @@ export function useTvChannels() {
         fetch(`${MEDIA_API}/api/tv/epg?hours=6`),
       ])
       if (!channelsRes.ok) throw new Error(`HTTP ${channelsRes.status}`)
-      const channelsData = await channelsRes.json() as { channels: TvChannel[] }
+      const channelsData = (await channelsRes.json()) as {
+        channels: TvChannel[]
+      }
       const epgData = epgRes.ok
-        ? await epgRes.json() as { epg: EpgEntry[] }
+        ? ((await epgRes.json()) as { epg: EpgEntry[] })
         : { epg: [] }
 
       const now = Date.now()
       const merged: ScheduledChannel[] = channelsData.channels.map(ch => {
         const forChannel = epgData.epg
           .filter(e => e.channel_id === ch.id)
-          .sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime())
+          .sort(
+            (a, b) =>
+              new Date(a.start_time).getTime() -
+              new Date(b.start_time).getTime()
+          )
         const epgNow = forChannel.find(
-          e => new Date(e.start_time).getTime() <= now &&
-               new Date(e.end_time).getTime() > now,
+          e =>
+            new Date(e.start_time).getTime() <= now &&
+            new Date(e.end_time).getTime() > now
         )
-        const epgNext = forChannel.find(e => new Date(e.start_time).getTime() > now)
+        const epgNext = forChannel.find(
+          e => new Date(e.start_time).getTime() > now
+        )
         return { ...ch, epgNow, epgNext, epgEntries: forChannel }
       })
 
@@ -98,22 +107,37 @@ export function useTvChannels() {
 
   useEffect(() => {
     void refresh()
-    const interval = setInterval(() => { void refresh() }, 15000)
-    return () => { clearInterval(interval) }
+    const interval = setInterval(() => {
+      void refresh()
+    }, 15000)
+    return () => {
+      clearInterval(interval)
+    }
   }, [refresh])
 
-  const watch = useCallback(async (channelId: string): Promise<string> => {
-    const res = await fetch(`${MEDIA_API}/api/tv/channels/${channelId}/start`, { method: 'POST' })
-    if (!res.ok) throw new Error(`HTTP ${res.status}`)
-    const data = await res.json() as { hls_url: string }
-    await refresh()
-    return `${MEDIA_HLS_HOST}${data.hls_url}`
-  }, [refresh])
+  const watch = useCallback(
+    async (channelId: string): Promise<string> => {
+      const res = await fetch(
+        `${MEDIA_API}/api/tv/channels/${channelId}/start`,
+        { method: 'POST' }
+      )
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const data = (await res.json()) as { hls_url: string }
+      await refresh()
+      return `${MEDIA_HLS_HOST}${data.hls_url}`
+    },
+    [refresh]
+  )
 
-  const stop = useCallback(async (channelId: string): Promise<void> => {
-    await fetch(`${MEDIA_API}/api/tv/channels/${channelId}/stop`, { method: 'POST' })
-    await refresh()
-  }, [refresh])
+  const stop = useCallback(
+    async (channelId: string): Promise<void> => {
+      await fetch(`${MEDIA_API}/api/tv/channels/${channelId}/stop`, {
+        method: 'POST',
+      })
+      await refresh()
+    },
+    [refresh]
+  )
 
   return { channels, loading, error, refresh, watch, stop }
 }

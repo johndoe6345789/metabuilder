@@ -18,7 +18,9 @@ export function SwatchList({ colors, tab, onChange }: SwatchListProps) {
           key={k}
           varName={k}
           value={v}
-          onChange={(key, val) => { onChange(tab, key, val) }}
+          onChange={(key, val) => {
+            onChange(tab, key, val)
+          }}
         />
       ))}
     </div>

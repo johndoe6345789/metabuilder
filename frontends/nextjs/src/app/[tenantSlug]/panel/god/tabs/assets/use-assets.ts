@@ -35,7 +35,7 @@ export function useAssets(tenant: string) {
       )
       const body = (await res.json()) as { objects?: Asset[]; error?: string }
       setAssets(body.objects ?? [])
-      setError(res.ok ? null : body.error ?? 'Could not list files')
+      setError(res.ok ? null : (body.error ?? 'Could not list files'))
     } catch {
       setError('Could not reach the file store')
     } finally {

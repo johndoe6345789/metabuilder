@@ -24,7 +24,9 @@ function loadAssets(): WorkflowJsonAsset[] {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY)
     if (raw != null) return JSON.parse(raw) as WorkflowJsonAsset[]
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
   return []
 }
 
@@ -36,7 +38,9 @@ export function saveWorkflowJsonAssets(assets: WorkflowJsonAsset[]) {
 
 export function useWorkflowJsonAssets() {
   const [assets, setAssets] = useState<WorkflowJsonAsset[]>(loadAssets)
-  const [selectedId, setSelectedId] = useState<string | null>(() => loadAssets()[0]?.id ?? null)
+  const [selectedId, setSelectedId] = useState<string | null>(
+    () => loadAssets()[0]?.id ?? null
+  )
 
   const addAsset = useCallback(() => {
     const entry: WorkflowJsonAsset = {
@@ -44,7 +48,7 @@ export function useWorkflowJsonAssets() {
       name: 'new-workflow.json',
       code: DEFAULT_CODE,
     }
-    setAssets((prev) => {
+    setAssets(prev => {
       const next = [...prev, entry]
       saveWorkflowJsonAssets(next)
       return next
@@ -52,17 +56,12 @@ export function useWorkflowJsonAssets() {
     setSelectedId(entry.id)
   }, [])
 
-  const updateName = useCallback(
-    (name: string, id: string | null) => {
-      if (id == null) return
-      setAssets((prev) =>
-        prev.map((sc) => (sc.id === id ? { ...sc, name } : sc))
-      )
-    },
-    []
-  )
+  const updateName = useCallback((name: string, id: string | null) => {
+    if (id == null) return
+    setAssets(prev => prev.map(sc => (sc.id === id ? { ...sc, name } : sc)))
+  }, [])
 
-  const selected = assets.find((sc) => sc.id === selectedId) ?? null
+  const selected = assets.find(sc => sc.id === selectedId) ?? null
 
   return {
     assets,
@@ -71,6 +70,8 @@ export function useWorkflowJsonAssets() {
     setSelectedId,
     addAsset,
     updateName,
-    save: () => { saveWorkflowJsonAssets(assets) },
+    save: () => {
+      saveWorkflowJsonAssets(assets)
+    },
   }
 }

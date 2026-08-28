@@ -1,7 +1,12 @@
 'use client'
 
 import React from 'react'
-import { Skeleton, TableSkeleton, CardSkeleton, ListSkeleton } from '@metabuilder/components'
+import {
+  Skeleton,
+  TableSkeleton,
+  CardSkeleton,
+  ListSkeleton,
+} from '@metabuilder/components'
 
 /**
  * LoadingSkeleton Component - Unified loading state wrapper
@@ -138,7 +143,8 @@ export function LoadingSkeleton({
             ...style,
           }}
         >
-          <strong>Error:</strong> {typeof error === 'string' ? error : error.message}
+          <strong>Error:</strong>{' '}
+          {typeof error === 'string' ? error : error.message}
         </div>
       )
     )
@@ -148,7 +154,9 @@ export function LoadingSkeleton({
   if (isLoading) {
     switch (variant) {
       case 'table':
-        return <TableSkeleton rows={rows} columns={columns} className={className} />
+        return (
+          <TableSkeleton rows={rows} columns={columns} className={className} />
+        )
 
       case 'card':
         return <CardSkeleton count={count} className={className} />
@@ -158,23 +166,40 @@ export function LoadingSkeleton({
 
       case 'inline':
         return (
-          <div className={`loading-skeleton-inline ${className ?? ''}`} style={{ display: 'inline-block', ...style }}>
+          <div
+            className={`loading-skeleton-inline ${className ?? ''}`}
+            style={{ display: 'inline-block', ...style }}
+          >
             <Skeleton
               width={width === '100%' ? '120px' : width}
               height={height}
               animate={animate}
               className={className}
             />
-            {loadingMessage != null && loadingMessage !== '' && <span style={{ marginLeft: '8px' }}>{loadingMessage}</span>}
+            {loadingMessage != null && loadingMessage !== '' && (
+              <span style={{ marginLeft: '8px' }}>{loadingMessage}</span>
+            )}
           </div>
         )
 
       case 'block':
       default:
         return (
-          <div className={`loading-skeleton-block ${className ?? ''}`} style={style}>
-            <Skeleton width={width} height={height} animate={animate} className={className} />
-            {loadingMessage != null && loadingMessage !== '' && <p style={{ marginTop: '12px', color: '#666', fontSize: '14px' }}>{loadingMessage}</p>}
+          <div
+            className={`loading-skeleton-block ${className ?? ''}`}
+            style={style}
+          >
+            <Skeleton
+              width={width}
+              height={height}
+              animate={animate}
+              className={className}
+            />
+            {loadingMessage != null && loadingMessage !== '' && (
+              <p style={{ marginTop: '12px', color: '#666', fontSize: '14px' }}>
+                {loadingMessage}
+              </p>
+            )}
           </div>
         )
     }
@@ -188,7 +213,10 @@ export function LoadingSkeleton({
  * Specialized variants for common use cases
  */
 
-export interface TableLoadingProps extends Omit<LoadingSkeletonProps, 'variant'> {
+export interface TableLoadingProps extends Omit<
+  LoadingSkeletonProps,
+  'variant'
+> {
   rows?: number
   columns?: number
 }
@@ -196,9 +224,20 @@ export interface TableLoadingProps extends Omit<LoadingSkeletonProps, 'variant'>
 /**
  * Table Loading Skeleton
  */
-export function TableLoading({ rows = 5, columns = 4, isLoading = true, ...props }: TableLoadingProps) {
+export function TableLoading({
+  rows = 5,
+  columns = 4,
+  isLoading = true,
+  ...props
+}: TableLoadingProps) {
   return (
-    <LoadingSkeleton variant="table" rows={rows} columns={columns} isLoading={isLoading} {...props}>
+    <LoadingSkeleton
+      variant="table"
+      rows={rows}
+      columns={columns}
+      isLoading={isLoading}
+      {...props}
+    >
       {props.children}
     </LoadingSkeleton>
   )
@@ -207,9 +246,18 @@ export function TableLoading({ rows = 5, columns = 4, isLoading = true, ...props
 /**
  * Card Grid Loading Skeleton
  */
-export function CardLoading({ count = 3, isLoading = true, ...props }: Omit<LoadingSkeletonProps, 'variant'>) {
+export function CardLoading({
+  count = 3,
+  isLoading = true,
+  ...props
+}: Omit<LoadingSkeletonProps, 'variant'>) {
   return (
-    <LoadingSkeleton variant="card" count={count} isLoading={isLoading} {...props}>
+    <LoadingSkeleton
+      variant="card"
+      count={count}
+      isLoading={isLoading}
+      {...props}
+    >
       {props.children}
     </LoadingSkeleton>
   )
@@ -218,9 +266,18 @@ export function CardLoading({ count = 3, isLoading = true, ...props }: Omit<Load
 /**
  * List Loading Skeleton
  */
-export function ListLoading({ rows = 8, isLoading = true, ...props }: Omit<LoadingSkeletonProps, 'variant'>) {
+export function ListLoading({
+  rows = 8,
+  isLoading = true,
+  ...props
+}: Omit<LoadingSkeletonProps, 'variant'>) {
   return (
-    <LoadingSkeleton variant="list" rows={rows} isLoading={isLoading} {...props}>
+    <LoadingSkeleton
+      variant="list"
+      rows={rows}
+      isLoading={isLoading}
+      {...props}
+    >
       {props.children}
     </LoadingSkeleton>
   )
@@ -229,9 +286,20 @@ export function ListLoading({ rows = 8, isLoading = true, ...props }: Omit<Loadi
 /**
  * Inline Loading Skeleton (for buttons, small sections)
  */
-export function InlineLoading({ width = '100px', height = '20px', isLoading = true, ...props }: Omit<LoadingSkeletonProps, 'variant'>) {
+export function InlineLoading({
+  width = '100px',
+  height = '20px',
+  isLoading = true,
+  ...props
+}: Omit<LoadingSkeletonProps, 'variant'>) {
   return (
-    <LoadingSkeleton variant="inline" width={width} height={height} isLoading={isLoading} {...props}>
+    <LoadingSkeleton
+      variant="inline"
+      width={width}
+      height={height}
+      isLoading={isLoading}
+      {...props}
+    >
       {props.children}
     </LoadingSkeleton>
   )
@@ -240,21 +308,40 @@ export function InlineLoading({ width = '100px', height = '20px', isLoading = tr
 /**
  * Form Loading Skeleton (multiple fields)
  */
-export interface FormLoadingProps extends Omit<LoadingSkeletonProps, 'variant'> {
+export interface FormLoadingProps extends Omit<
+  LoadingSkeletonProps,
+  'variant'
+> {
   fields?: number
 }
 
-export function FormLoading({ fields = 3, isLoading = true, ...props }: FormLoadingProps) {
+export function FormLoading({
+  fields = 3,
+  isLoading = true,
+  ...props
+}: FormLoadingProps) {
   if (!isLoading) {
     return <>{props.children}</>
   }
 
   return (
-    <div className={`form-loading-skeleton ${props.className ?? ''}`} style={props.style}>
+    <div
+      className={`form-loading-skeleton ${props.className ?? ''}`}
+      style={props.style}
+    >
       {Array.from({ length: fields }).map((_, i) => (
         <div key={i} style={{ marginBottom: '24px' }}>
-          <Skeleton width="100px" height="16px" animate={props.animate !== false} style={{ marginBottom: '8px' }} />
-          <Skeleton width="100%" height="40px" animate={props.animate !== false} />
+          <Skeleton
+            width="100px"
+            height="16px"
+            animate={props.animate !== false}
+            style={{ marginBottom: '8px' }}
+          />
+          <Skeleton
+            width="100%"
+            height="40px"
+            animate={props.animate !== false}
+          />
         </div>
       ))}
     </div>

@@ -28,14 +28,18 @@ export function FieldEditor({
           size="small"
           label="Model name"
           value={ed.name}
-          onChange={e => { ed.setName(e.target.value) }}
+          onChange={e => {
+            ed.setName(e.target.value)
+          }}
           className={styles.nameInput}
         />
         <TextField
           size="small"
           label="Display label"
           value={ed.label}
-          onChange={e => { ed.setLabel(e.target.value) }}
+          onChange={e => {
+            ed.setLabel(e.target.value)
+          }}
           className={styles.nameInput}
         />
         <div className={styles.spacer} />

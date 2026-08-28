@@ -38,7 +38,12 @@ export {
 } from './package-glue'
 
 // JSON package types
-export type { JSONComponent, JSONPackage, JSONPackageMetadata, JSONPermission } from './json'
+export type {
+  JSONComponent,
+  JSONPackage,
+  JSONPackageMetadata,
+  JSONPermission,
+} from './json'
 
 // Core catalog (legacy)
 export { PACKAGE_CATALOG } from './core'

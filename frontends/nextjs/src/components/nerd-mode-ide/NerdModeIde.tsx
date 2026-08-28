@@ -17,11 +17,7 @@ export function NerdModeIde({ onClose }: NerdModeIdeProps) {
     <div className={s.panel}>
       <div className={s.header}>
         <span className={s.title}>Nerd Mode IDE</span>
-        <Button
-          variant="outlined"
-          size="small"
-          onClick={onClose}
-        >
+        <Button variant="outlined" size="small" onClick={onClose}>
           Close
         </Button>
       </div>

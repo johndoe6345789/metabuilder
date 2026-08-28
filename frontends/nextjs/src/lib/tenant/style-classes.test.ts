@@ -121,8 +121,12 @@ describe('saveStyleClasses', () => {
 
     // The data layer allows 50 mutations a minute, and a sheet is naturally
     // many small rows, so these go in one batch each rather than per row.
-    const ruleBatch = posted.find(c => c.url.endsWith('/StyleRule/_bulk/create'))
-    const propBatch = posted.find(c => c.url.endsWith('/StyleRuleProp/_bulk/create'))
+    const ruleBatch = posted.find(c =>
+      c.url.endsWith('/StyleRule/_bulk/create')
+    )
+    const propBatch = posted.find(c =>
+      c.url.endsWith('/StyleRuleProp/_bulk/create')
+    )
     expect(ruleBatch).toBeDefined()
     expect(propBatch).toBeDefined()
     expect(posted).toHaveLength(3)
@@ -152,7 +156,8 @@ describe('rate limiting', () => {
     vi.useFakeTimers()
     let attempts = 0
     stubDbal(url => {
-      if (!url.includes('_bulk/create')) return new Response('', { status: 200 })
+      if (!url.includes('_bulk/create'))
+        return new Response('', { status: 200 })
       attempts += 1
       // 50 mutations a minute; a real sheet exceeds it, and a publish that
       // gives up here loses two thirds of the styles with nothing to show.

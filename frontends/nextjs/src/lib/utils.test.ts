@@ -50,15 +50,18 @@ describe('utils', () => {
       },
     ]
 
-    it.each(cases)('should $description', ({ input, shouldContain, shouldNotContain }) => {
-      const result = cn(...input)
-      shouldContain.forEach(cls => {
-        expect(result).toContain(cls)
-      })
-      shouldNotContain.forEach(cls => {
-        expect(result).not.toContain(cls)
-      })
-    })
+    it.each(cases)(
+      'should $description',
+      ({ input, shouldContain, shouldNotContain }) => {
+        const result = cn(...input)
+        shouldContain.forEach(cls => {
+          expect(result).toContain(cls)
+        })
+        shouldNotContain.forEach(cls => {
+          expect(result).not.toContain(cls)
+        })
+      }
+    )
 
     it('should handle empty input', () => {
       const result = cn('')

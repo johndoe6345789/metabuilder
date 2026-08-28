@@ -9,7 +9,11 @@
 
 import { useState } from 'react'
 import { ColorPicker, Slider, Typography } from '@/m3'
-import { THEME_COLORS, themeColorValue, type StyleControl } from './style-controls'
+import {
+  THEME_COLORS,
+  themeColorValue,
+  type StyleControl,
+} from './style-controls'
 import s from './CssClassesTab.module.scss'
 
 type Props = {
@@ -147,7 +151,6 @@ export function StyleControlField({ control, value, onSet, onClear }: Props) {
   )
 }
 
-
 /**
  * Theme colours first, a hex picker only if none of them fit. Someone styling
  * a page usually wants "the brand colour", not a specific hex -- and naming
@@ -213,7 +216,9 @@ function ThemeColorField({
       </div>
       {custom && (
         <ColorPicker
-          value={isThemed || value === undefined || value === '' ? '#000000' : value}
+          value={
+            isThemed || value === undefined || value === '' ? '#000000' : value
+          }
           onChange={next => {
             onSet(control.prop, next)
           }}

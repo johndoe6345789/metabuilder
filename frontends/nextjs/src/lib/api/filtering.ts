@@ -1,6 +1,6 @@
 /**
  * Filtering and sorting utilities for API requests
- * 
+ *
  * Provides utilities to build filter and sort queries
  */
 
@@ -46,15 +46,29 @@ export function parseFilterString(filterStr: string): FilterCondition[] {
 
   for (const part of parts) {
     const segments = part.trim().split(':')
-    
-    if (segments.length === 2 && segments[0] !== undefined && segments[0] !== '' && segments[1] !== undefined && segments[1] !== '') {
+
+    if (
+      segments.length === 2 &&
+      segments[0] !== undefined &&
+      segments[0] !== '' &&
+      segments[1] !== undefined &&
+      segments[1] !== ''
+    ) {
       // field:value (default to eq)
       filters.push({
         field: segments[0],
         operator: 'eq',
         value: parseValue(segments[1]),
       })
-    } else if (segments.length === 3 && segments[0] !== undefined && segments[0] !== '' && segments[1] !== undefined && segments[1] !== '' && segments[2] !== undefined && segments[2] !== '') {
+    } else if (
+      segments.length === 3 &&
+      segments[0] !== undefined &&
+      segments[0] !== '' &&
+      segments[1] !== undefined &&
+      segments[1] !== '' &&
+      segments[2] !== undefined &&
+      segments[2] !== ''
+    ) {
       // field:operator:value
       filters.push({
         field: segments[0],
@@ -70,7 +84,9 @@ export function parseFilterString(filterStr: string): FilterCondition[] {
 /**
  * Parse filter object to filter conditions
  */
-export function parseFilterObject(filter: Record<string, unknown>): FilterCondition[] {
+export function parseFilterObject(
+  filter: Record<string, unknown>
+): FilterCondition[] {
   const conditions: FilterCondition[] = []
 
   for (const [field, value] of Object.entries(filter)) {
@@ -104,17 +120,19 @@ function parseValue(value: string): unknown {
   if (value === 'null') return null
   if (value === 'true') return true
   if (value === 'false') return false
-  
+
   const num = Number(value)
   if (!isNaN(num)) return num
-  
+
   return value
 }
 
 /**
  * Build query where clause from filter conditions
  */
-export function buildQueryWhere(conditions: FilterCondition[]): Record<string, unknown> {
+export function buildQueryWhere(
+  conditions: FilterCondition[]
+): Record<string, unknown> {
   const where: Record<string, unknown> = {}
 
   for (const condition of conditions) {
@@ -199,7 +217,9 @@ export function parseSortString(sortStr: string): SortCondition[] {
 /**
  * Build query orderBy from sort conditions
  */
-export function buildQueryOrderBy(conditions: SortCondition[]): Record<string, SortDirection>[] {
+export function buildQueryOrderBy(
+  conditions: SortCondition[]
+): Record<string, SortDirection>[] {
   return conditions.map(condition => ({
     [condition.field]: condition.direction,
   }))
@@ -216,7 +236,10 @@ export function isValidFieldName(field: string): boolean {
 /**
  * Validate filter conditions
  */
-export function validateFilters(conditions: FilterCondition[]): { valid: boolean; errors: string[] } {
+export function validateFilters(conditions: FilterCondition[]): {
+  valid: boolean
+  errors: string[]
+} {
   const errors: string[] = []
 
   for (const condition of conditions) {
@@ -225,9 +248,19 @@ export function validateFilters(conditions: FilterCondition[]): { valid: boolean
     }
 
     const validOperators: FilterOperator[] = [
-      'eq', 'ne', 'gt', 'gte', 'lt', 'lte',
-      'in', 'notIn', 'contains', 'startsWith', 'endsWith',
-      'isNull', 'isNotNull',
+      'eq',
+      'ne',
+      'gt',
+      'gte',
+      'lt',
+      'lte',
+      'in',
+      'notIn',
+      'contains',
+      'startsWith',
+      'endsWith',
+      'isNull',
+      'isNotNull',
     ]
 
     if (!validOperators.includes(condition.operator)) {
@@ -235,8 +268,23 @@ export function validateFilters(conditions: FilterCondition[]): { valid: boolean
     }
 
     // Validate value is provided for operators that need it
-    const operatorsNeedingValue = ['eq', 'ne', 'gt', 'gte', 'lt', 'lte', 'in', 'notIn', 'contains', 'startsWith', 'endsWith']
-    if (operatorsNeedingValue.includes(condition.operator) && condition.value === undefined) {
+    const operatorsNeedingValue = [
+      'eq',
+      'ne',
+      'gt',
+      'gte',
+      'lt',
+      'lte',
+      'in',
+      'notIn',
+      'contains',
+      'startsWith',
+      'endsWith',
+    ]
+    if (
+      operatorsNeedingValue.includes(condition.operator) &&
+      condition.value === undefined
+    ) {
       errors.push(`Operator ${condition.operator} requires a value`)
     }
   }
@@ -247,7 +295,10 @@ export function validateFilters(conditions: FilterCondition[]): { valid: boolean
 /**
  * Validate sort conditions
  */
-export function validateSort(conditions: SortCondition[]): { valid: boolean; errors: string[] } {
+export function validateSort(conditions: SortCondition[]): {
+  valid: boolean
+  errors: string[]
+} {
   const errors: string[] = []
 
   for (const condition of conditions) {

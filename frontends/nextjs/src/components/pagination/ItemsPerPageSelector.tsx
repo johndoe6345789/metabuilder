@@ -15,7 +15,7 @@ const DEFAULT_OPTIONS = [10, 20, 50, 100]
 
 /**
  * Material-UI based items-per-page selector
- * 
+ *
  * Allows users to select how many items to display per page
  * following MetaBuilder's design system using Material-UI components
  */
@@ -42,7 +42,7 @@ export function ItemsPerPageSelector({
           inputProps={{ id: 'items-per-page-select' }}
           className={s.pageSizeSelect}
         >
-          {options.map((option) => (
+          {options.map(option => (
             <option key={option} value={option}>
               {option}
             </option>

@@ -35,14 +35,22 @@ interface SlotConfig {
   componentTree: TreeNode | null
 }
 
-async function fetchSlot(tenant: string, path: string): Promise<SlotConfig | null> {
+async function fetchSlot(
+  tenant: string,
+  path: string
+): Promise<SlotConfig | null> {
   try {
     const params = new URLSearchParams({ 'filter.path': path })
-    const res = await fetch(`${DBAL}/${tenant}/core/PageConfig?${params.toString()}`, {
-      signal: AbortSignal.timeout(6000),
-    })
+    const res = await fetch(
+      `${DBAL}/${tenant}/core/PageConfig?${params.toString()}`,
+      {
+        signal: AbortSignal.timeout(6000),
+      }
+    )
     if (!res.ok) return null
-    const json = await res.json() as { data?: { data?: Record<string, unknown>[] } }
+    const json = (await res.json()) as {
+      data?: { data?: Record<string, unknown>[] }
+    }
     const row = (json.data?.data ?? []).find(r => r.isPublished !== false)
     if (row === undefined) return null
 
@@ -104,7 +112,10 @@ export function WorkspacePageSlot({
   // lose state every render) -- createElement is the same thing JSX compiles
   // to, so this is not a behavior change, just a way to select a component
   // dynamically without tripping a rule aimed at a different mistake.
-  const Resolved = useMemo(() => resolveComponent(slot?.component ?? null), [slot?.component])
+  const Resolved = useMemo(
+    () => resolveComponent(slot?.component ?? null),
+    [slot?.component]
+  )
 
   // Still loading. Renders nothing rather than `children`: children are the
   // fallback for "nothing is published at this path", and showing them before

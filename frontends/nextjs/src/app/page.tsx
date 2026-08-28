@@ -32,10 +32,10 @@ export default function RootPage() {
     fetch(`${dbalUrl()}/system/access/PageConfig`, {
       headers: { 'Content-Type': 'application/json' },
     })
-      .then((res) => (res.ok ? res.json() : null))
+      .then(res => (res.ok ? res.json() : null))
       .then((json: { data?: PageConfig[] } | null) => {
         const homeRoute = json?.data?.find(
-          (r) => r.path === '/' && r.isPublished === true
+          r => r.path === '/' && r.isPublished === true
         )
         if (homeRoute?.requiresAuth === true) {
           router.replace('/login')

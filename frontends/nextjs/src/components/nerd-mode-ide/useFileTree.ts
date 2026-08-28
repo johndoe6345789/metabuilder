@@ -20,7 +20,9 @@ function loadTree(): FileNode[] {
   try {
     const raw = window.localStorage.getItem('ide-file-tree')
     if (raw != null) return JSON.parse(raw) as FileNode[]
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
   return DEFAULT_TREE
 }
 
@@ -31,15 +33,12 @@ export function useFileTree() {
     () => new Set(['src'])
   )
 
-  const openFileNode = useCallback(
-    (path: string, language: string) => {
-      setOpenFile({ path, language, content: '' })
-    },
-    []
-  )
+  const openFileNode = useCallback((path: string, language: string) => {
+    setOpenFile({ path, language, content: '' })
+  }, [])
 
   const toggleExpand = useCallback((path: string) => {
-    setExpandedPaths((prev) => {
+    setExpandedPaths(prev => {
       const next = new Set(prev)
       if (next.has(path)) {
         next.delete(path)

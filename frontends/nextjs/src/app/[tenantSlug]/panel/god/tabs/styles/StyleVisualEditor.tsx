@@ -96,7 +96,9 @@ export function StyleVisualEditor({ props, onSet, onClear }: Props) {
             code
           </span>
           Advanced CSS
-          {extra.length > 0 && <span className={s.groupCount}>{extra.length}</span>}
+          {extra.length > 0 && (
+            <span className={s.groupCount}>{extra.length}</span>
+          )}
         </button>
         {advanced && (
           <div className={s.groupBody}>

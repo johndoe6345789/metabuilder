@@ -1,6 +1,6 @@
 /**
  * Dark Theme - CSS Custom Properties
- * 
+ *
  * This theme exports CSS variable definitions for the dark color scheme.
  * Apply these variables to your root element or use with data-theme="dark".
  */

@@ -60,7 +60,7 @@ export function loadSchemaRegistry(path?: string): SchemaRegistry {
   const schemaPath = path ?? join(process.cwd(), 'schemas', 'registry.json')
 
   schemaRegistry.clear()
-  
+
   if (!existsSync(schemaPath)) {
     return schemaRegistry
   }
@@ -68,23 +68,32 @@ export function loadSchemaRegistry(path?: string): SchemaRegistry {
   try {
     const data = readFileSync(schemaPath, 'utf-8')
     const parsed: unknown = JSON.parse(data)
-    
-    if (parsed !== null && typeof parsed === 'object' && !Array.isArray(parsed)) {
+
+    if (
+      parsed !== null &&
+      typeof parsed === 'object' &&
+      !Array.isArray(parsed)
+    ) {
       const { schemas, packages, entities, migrationQueue } = parsed as {
         schemas?: unknown
         packages?: unknown
         entities?: unknown
         migrationQueue?: unknown
       }
-      
+
       if (Array.isArray(schemas)) {
-        schemas.forEach((schema) => {
+        schemas.forEach(schema => {
           const normalized = normalizeSchema(schema as JsonRecord)
           if (normalized !== null) schemaRegistry.register(normalized)
         })
       }
 
-      if (entities !== null && entities !== undefined && typeof entities === 'object' && !Array.isArray(entities)) {
+      if (
+        entities !== null &&
+        entities !== undefined &&
+        typeof entities === 'object' &&
+        !Array.isArray(entities)
+      ) {
         Object.entries(entities as JsonRecord).forEach(([name, value]) => {
           if (value === null || value === undefined) return
           const raw = value as JsonRecord
@@ -96,8 +105,12 @@ export function loadSchemaRegistry(path?: string): SchemaRegistry {
           if (normalized !== null) schemaRegistry.register(normalized)
         })
       }
-      
-      if (packages !== null && packages !== undefined && typeof packages === 'object') {
+
+      if (
+        packages !== null &&
+        packages !== undefined &&
+        typeof packages === 'object'
+      ) {
         schemaRegistry.packages = packages as Record<string, unknown>
       }
 
@@ -106,15 +119,21 @@ export function loadSchemaRegistry(path?: string): SchemaRegistry {
       }
     }
   } catch (error) {
-    console.warn(`Failed to load schema registry from ${schemaPath}:`, error instanceof Error ? error.message : String(error))
+    console.warn(
+      `Failed to load schema registry from ${schemaPath}:`,
+      error instanceof Error ? error.message : String(error)
+    )
   }
 
   return schemaRegistry
 }
 
-export function saveSchemaRegistry(registry: SchemaRegistry, path?: string): void {
+export function saveSchemaRegistry(
+  registry: SchemaRegistry,
+  path?: string
+): void {
   const schemaPath = path ?? join(process.cwd(), 'schemas', 'registry.json')
-  
+
   try {
     const entities = buildEntitiesIndex(registry.getAll())
     const data = {
@@ -126,7 +145,10 @@ export function saveSchemaRegistry(registry: SchemaRegistry, path?: string): voi
     }
     writeFileSync(schemaPath, JSON.stringify(data, null, 2))
   } catch (error) {
-    console.error(`Failed to save schema registry to ${schemaPath}:`, error instanceof Error ? error.message : String(error))
+    console.error(
+      `Failed to save schema registry to ${schemaPath}:`,
+      error instanceof Error ? error.message : String(error)
+    )
   }
 }
 
@@ -138,7 +160,9 @@ export interface PendingMigration {
   entities: Array<{ name: string }>
 }
 
-export function getPendingMigrations(registry: SchemaRegistry): PendingMigration[] {
+export function getPendingMigrations(
+  registry: SchemaRegistry
+): PendingMigration[] {
   return registry.migrationQueue
     .filter(isMigrationEntry)
     .filter(entry => entry.status === 'pending')
@@ -151,7 +175,10 @@ export function getPendingMigrations(registry: SchemaRegistry): PendingMigration
     }))
 }
 
-export function generateSchemaFragment(registry: SchemaRegistry, _path?: string): string {
+export function generateSchemaFragment(
+  registry: SchemaRegistry,
+  _path?: string
+): string {
   // Generate schema fragments from registered schemas
   const schemas = registry.getAll()
   const fragments: string[] = []
@@ -185,7 +212,10 @@ export function generateSchemaFragment(registry: SchemaRegistry, _path?: string)
   return fragments.join('\n')
 }
 
-export function approveMigration(_migrationId: string, _registry: SchemaRegistry): boolean {
+export function approveMigration(
+  _migrationId: string,
+  _registry: SchemaRegistry
+): boolean {
   const entry = findMigration(_registry, _migrationId)
   if (entry === null) return false
 
@@ -194,7 +224,10 @@ export function approveMigration(_migrationId: string, _registry: SchemaRegistry
   return true
 }
 
-export function rejectMigration(_migrationId: string, _registry: SchemaRegistry): boolean {
+export function rejectMigration(
+  _migrationId: string,
+  _registry: SchemaRegistry
+): boolean {
   const entry = findMigration(_registry, _migrationId)
   if (entry === null) return false
 
@@ -222,9 +255,14 @@ function isMigrationEntry(value: unknown): value is MigrationEntry {
   )
 }
 
-function findMigration(registry: SchemaRegistry, migrationId: string): MigrationEntry | null {
+function findMigration(
+  registry: SchemaRegistry,
+  migrationId: string
+): MigrationEntry | null {
   const entries = registry.migrationQueue.filter(isMigrationEntry)
-  const entry = entries.find(item => item.id === migrationId && item.status === 'pending')
+  const entry = entries.find(
+    item => item.id === migrationId && item.status === 'pending'
+  )
   return entry ?? null
 }
 
@@ -232,7 +270,7 @@ function coerceEntities(value: unknown): Array<{ name: string }> {
   if (!Array.isArray(value)) return []
 
   return value
-    .map((entry) => {
+    .map(entry => {
       if (typeof entry === 'string') return { name: entry }
       if (entry !== null && typeof entry === 'object') {
         const name = (entry as Record<string, unknown>).name
@@ -244,7 +282,8 @@ function coerceEntities(value: unknown): Array<{ name: string }> {
 }
 
 function normalizeSchema(raw: JsonRecord): ModelSchema | null {
-  const name = typeof raw.name === 'string' && raw.name.length > 0 ? raw.name : null
+  const name =
+    typeof raw.name === 'string' && raw.name.length > 0 ? raw.name : null
   if (name === null) return null
 
   const id = typeof raw.id === 'string' && raw.id.length > 0 ? raw.id : name
@@ -335,7 +374,11 @@ function normalizeFields(raw: unknown): FieldSpec[] {
       return nested.filter(isFieldSpec).map(field => ({ ...field }))
     }
 
-    if (nested !== null && typeof nested === 'object' && !Array.isArray(nested)) {
+    if (
+      nested !== null &&
+      typeof nested === 'object' &&
+      !Array.isArray(nested)
+    ) {
       return Object.entries(nested as JsonRecord)
         .map(([name, value]) => toFieldSpec(name, value))
         .filter((field): field is FieldSpec => field !== null)
@@ -350,7 +393,11 @@ function normalizeFields(raw: unknown): FieldSpec[] {
 }
 
 function isFieldSpec(value: unknown): value is FieldSpec {
-  return value !== null && typeof value === 'object' && typeof (value as FieldSpec).name === 'string'
+  return (
+    value !== null &&
+    typeof value === 'object' &&
+    typeof (value as FieldSpec).name === 'string'
+  )
 }
 
 function toFieldSpec(name: string, value: unknown): FieldSpec | null {
@@ -368,8 +415,15 @@ function renderSchemaField(field: FieldSpec): string | null {
   if (!isValidIdentifier(field.name)) return null
 
   const { baseType, isList } = normalizeFieldType(field.type)
-  const isOptional = field.nullable === true || field.required === false || field.optional === true
-  const isId = field.id === true || field.primary === true || field.isId === true || field.name === 'id'
+  const isOptional =
+    field.nullable === true ||
+    field.required === false ||
+    field.optional === true
+  const isId =
+    field.id === true ||
+    field.primary === true ||
+    field.isId === true ||
+    field.name === 'id'
 
   const attributes: string[] = []
   if (isId) attributes.push('@id')
@@ -377,21 +431,34 @@ function renderSchemaField(field: FieldSpec): string | null {
   const defaultAttr = resolveDefaultAttribute(field.default)
   if (!isList && defaultAttr !== null) attributes.push(defaultAttr)
 
-  if (field.generated === true && !attributes.some(attr => attr.startsWith('@default('))) {
+  if (
+    field.generated === true &&
+    !attributes.some(attr => attr.startsWith('@default('))
+  ) {
     if (baseType === 'String') attributes.push('@default(cuid())')
-    if (baseType === 'Int' || baseType === 'BigInt') attributes.push('@default(autoincrement())')
+    if (baseType === 'Int' || baseType === 'BigInt')
+      attributes.push('@default(autoincrement())')
   }
 
   if (isId && !attributes.some(attr => attr.startsWith('@default('))) {
     if (baseType === 'String') attributes.push('@default(cuid())')
-    if (baseType === 'Int' || baseType === 'BigInt') attributes.push('@default(autoincrement())')
+    if (baseType === 'Int' || baseType === 'BigInt')
+      attributes.push('@default(autoincrement())')
   }
 
-  if (field.name === 'createdAt' && baseType === 'DateTime' && !attributes.some(attr => attr.startsWith('@default('))) {
+  if (
+    field.name === 'createdAt' &&
+    baseType === 'DateTime' &&
+    !attributes.some(attr => attr.startsWith('@default('))
+  ) {
     attributes.push('@default(now())')
   }
 
-  if (field.name === 'updatedAt' && baseType === 'DateTime' && !attributes.includes('@updatedAt')) {
+  if (
+    field.name === 'updatedAt' &&
+    baseType === 'DateTime' &&
+    !attributes.includes('@updatedAt')
+  ) {
     attributes.push('@updatedAt')
   }
 
@@ -403,7 +470,10 @@ function renderSchemaField(field: FieldSpec): string | null {
   return `${field.name} ${baseType}${typeSuffix}${attrSuffix}`
 }
 
-function normalizeFieldType(rawType: string | undefined): { baseType: string; isList: boolean } {
+function normalizeFieldType(rawType: string | undefined): {
+  baseType: string
+  isList: boolean
+} {
   const trimmed = typeof rawType === 'string' ? rawType.trim() : ''
   const listDetected = trimmed.endsWith('[]')
   const base = listDetected ? trimmed.slice(0, -2) : trimmed
@@ -449,7 +519,10 @@ function normalizeFieldType(rawType: string | undefined): { baseType: string; is
     case 'int[]':
       return { baseType: 'Int', isList: true }
     default:
-      return { baseType: base.length > 0 ? base : 'String', isList: listDetected }
+      return {
+        baseType: base.length > 0 ? base : 'String',
+        isList: listDetected,
+      }
   }
 }
 

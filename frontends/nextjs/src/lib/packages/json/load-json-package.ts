@@ -11,15 +11,17 @@ export interface JSONPackage {
   metadata: unknown
 }
 
-export async function loadJSONPackage(packageId: string): Promise<JSONPackage | null> {
+export async function loadJSONPackage(
+  packageId: string
+): Promise<JSONPackage | null> {
   try {
     const packagePath = path.join(process.cwd(), 'packages', packageId, 'seed')
-    
+
     // Load metadata
     const metadataPath = path.join(packagePath, 'metadata.json')
     const metadataContent = await fs.readFile(metadataPath, 'utf-8')
     const metadata = JSON.parse(metadataContent) as Record<string, unknown>
-    
+
     // Load components if they exist
     let components: unknown[] = []
     const componentsPath = path.join(packagePath, 'components.json')
@@ -29,7 +31,7 @@ export async function loadJSONPackage(packageId: string): Promise<JSONPackage | 
     } catch {
       // Components file may not exist
     }
-    
+
     return {
       id: packageId,
       components,

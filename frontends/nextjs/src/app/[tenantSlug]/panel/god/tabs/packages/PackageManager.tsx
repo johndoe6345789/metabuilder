@@ -12,15 +12,31 @@ import { PackageContentsList } from './PackageContentsList'
 import s from './PackageManager.module.scss'
 
 const CATEGORIES: RegistryPackage['manifest']['category'][] = [
-  'social', 'entertainment', 'productivity', 'gaming', 'ecommerce', 'content', 'other',
+  'social',
+  'entertainment',
+  'productivity',
+  'gaming',
+  'ecommerce',
+  'content',
+  'other',
 ]
 
 // A curated set rather than the full 421-icon library (@metabuilder/icons)
 // -- enough variety for a package badge without building a searchable icon
 // browser just for this.
 const ICONS = [
-  'deployed_code', 'widgets', 'web', 'chat', 'forum', 'groups',
-  'shield', 'bolt', 'star', 'extension', 'dashboard', 'palette',
+  'deployed_code',
+  'widgets',
+  'web',
+  'chat',
+  'forum',
+  'groups',
+  'shield',
+  'bolt',
+  'star',
+  'extension',
+  'dashboard',
+  'palette',
 ]
 
 export function PackageManager({ tenant }: { tenant: string }) {
@@ -119,15 +135,21 @@ export function PackageManager({ tenant }: { tenant: string }) {
                     }}
                   />
 
-                  <Typography variant="caption" color="text.secondary">Category</Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    Category
+                  </Typography>
                   <div className={s.chips}>
                     {CATEGORIES.map(cat => (
                       <Chip
                         key={cat}
                         label={cat}
                         size="small"
-                        color={ui.draft.category === cat ? 'primary' : 'default'}
-                        variant={ui.draft.category === cat ? 'filled' : 'outlined'}
+                        color={
+                          ui.draft.category === cat ? 'primary' : 'default'
+                        }
+                        variant={
+                          ui.draft.category === cat ? 'filled' : 'outlined'
+                        }
                         onClick={() => {
                           ui.patchDraft({ category: cat })
                         }}
@@ -135,7 +157,9 @@ export function PackageManager({ tenant }: { tenant: string }) {
                     ))}
                   </div>
 
-                  <Typography variant="caption" color="text.secondary">Icon</Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    Icon
+                  </Typography>
                   <div className={s.chips}>
                     {ICONS.map(icon => (
                       <button
@@ -196,7 +220,9 @@ export function PackageManager({ tenant }: { tenant: string }) {
                     packageName="core"
                     entity="Workflow"
                     placeholder="Search workflows to add…"
-                    getLabel={r => (typeof r.name === 'string' ? r.name : String(r.id))}
+                    getLabel={r =>
+                      typeof r.name === 'string' ? r.name : String(r.id)
+                    }
                     onSelect={item => {
                       addWorkflow(p.manifest.id, item)
                     }}
@@ -221,7 +247,9 @@ export function PackageManager({ tenant }: { tenant: string }) {
                     packageName="access"
                     entity="PageConfig"
                     placeholder="Search pages to add…"
-                    getLabel={r => (typeof r.title === 'string' ? r.title : String(r.id))}
+                    getLabel={r =>
+                      typeof r.title === 'string' ? r.title : String(r.id)
+                    }
                     onSelect={item => {
                       addPageConfig(p.manifest.id, item)
                     }}
@@ -242,7 +270,11 @@ export function PackageManager({ tenant }: { tenant: string }) {
                   />
 
                   <Chip
-                    label={p.themeId != null ? '✓ Includes current theme' : 'Include current theme'}
+                    label={
+                      p.themeId != null
+                        ? '✓ Includes current theme'
+                        : 'Include current theme'
+                    }
                     size="small"
                     color={p.themeId != null ? 'primary' : 'default'}
                     variant={p.themeId != null ? 'filled' : 'outlined'}
@@ -262,7 +294,9 @@ export function PackageManager({ tenant }: { tenant: string }) {
                         void doPublish(p)
                       }}
                     >
-                      {reg.publishing === p.manifest.id ? 'Publishing…' : '⇧ Publish'}
+                      {reg.publishing === p.manifest.id
+                        ? 'Publishing…'
+                        : '⇧ Publish'}
                     </Button>
                     <Button
                       size="small"

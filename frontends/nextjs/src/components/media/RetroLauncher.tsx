@@ -7,20 +7,40 @@ import { SystemPicker } from './SystemPicker'
 import { VideoPlayer } from './VideoPlayer'
 import s from './RetroLauncher.module.scss'
 
-const BUTTONS = ['up', 'down', 'left', 'right', 'a', 'b', 'x', 'y',
-  'start', 'select', 'l', 'r']
+const BUTTONS = [
+  'up',
+  'down',
+  'left',
+  'right',
+  'a',
+  'b',
+  'x',
+  'y',
+  'start',
+  'select',
+  'l',
+  'r',
+]
 
 const KEY_MAP: Record<string, string> = {
-  ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right',
-  z: 'a', x: 'b', a: 'x', s: 'y', Enter: 'start', Shift: 'select',
-  q: 'l', w: 'r',
+  ArrowUp: 'up',
+  ArrowDown: 'down',
+  ArrowLeft: 'left',
+  ArrowRight: 'right',
+  z: 'a',
+  x: 'b',
+  a: 'x',
+  s: 'y',
+  Enter: 'start',
+  Shift: 'select',
+  q: 'l',
+  w: 'r',
 }
 
 export function RetroLauncher() {
   const [system, setSystem] = useState<RetroSystem | null>(null)
   const [romUrl, setRomUrl] = useState('')
-  const { session, loading, error, start, stop, sendInput } =
-    useRetroSession()
+  const { session, loading, error, start, stop, sendInput } = useRetroSession()
 
   const handleLaunch = async () => {
     if (system === null || romUrl.trim().length === 0) return
@@ -34,13 +54,17 @@ export function RetroLauncher() {
       e.preventDefault()
       void sendInput(btn, pressed)
     },
-    [sendInput],
+    [sendInput]
   )
 
   useEffect(() => {
     if (session === null) return undefined
-    const down = (e: KeyboardEvent) => { handleKey(e, true) }
-    const up = (e: KeyboardEvent) => { handleKey(e, false) }
+    const down = (e: KeyboardEvent) => {
+      handleKey(e, true)
+    }
+    const up = (e: KeyboardEvent) => {
+      handleKey(e, false)
+    }
     window.addEventListener('keydown', down)
     window.addEventListener('keyup', up)
     return () => {
@@ -63,20 +87,20 @@ export function RetroLauncher() {
               type="url"
               placeholder="http://localhost:9000/games/mario.nes"
               value={romUrl}
-              onChange={e => { setRomUrl(e.target.value) }}
+              onChange={e => {
+                setRomUrl(e.target.value)
+              }}
             />
           </label>
 
-          {error !== null && (
-            <p className={s.error}>{error}</p>
-          )}
+          {error !== null && <p className={s.error}>{error}</p>}
 
           <button
             className={s.launch}
-            disabled={system === null
-              || romUrl.trim().length === 0
-              || loading}
-            onClick={() => { void handleLaunch() }}
+            disabled={system === null || romUrl.trim().length === 0 || loading}
+            onClick={() => {
+              void handleLaunch()
+            }}
           >
             {loading
               ? 'Launching…'
@@ -98,14 +122,23 @@ export function RetroLauncher() {
               <button
                 key={btn}
                 className={s.padBtn}
-                onPointerDown={() => { void sendInput(btn, true) }}
-                onPointerUp={() => { void sendInput(btn, false) }}
+                onPointerDown={() => {
+                  void sendInput(btn, true)
+                }}
+                onPointerUp={() => {
+                  void sendInput(btn, false)
+                }}
               >
                 {btn}
               </button>
             ))}
           </div>
-          <button className={s.stopBtn} onClick={() => { void stop() }}>
+          <button
+            className={s.stopBtn}
+            onClick={() => {
+              void stop()
+            }}
+          >
             Stop session
           </button>
         </>

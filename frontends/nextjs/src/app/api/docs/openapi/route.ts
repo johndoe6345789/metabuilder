@@ -22,7 +22,10 @@ export function GET() {
       'frontends/nextjs/src/app/api/docs/openapi.json'
     )
     const specContent = readFileSync(specPath, 'utf-8')
-    const spec: Record<string, unknown> = JSON.parse(specContent) as Record<string, unknown>
+    const spec: Record<string, unknown> = JSON.parse(specContent) as Record<
+      string,
+      unknown
+    >
 
     return NextResponse.json(spec, {
       headers: {
@@ -32,7 +35,8 @@ export function GET() {
       },
     })
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error'
     console.error('Failed to load OpenAPI specification:', errorMessage)
 
     return NextResponse.json(

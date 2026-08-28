@@ -1,4 +1,8 @@
-export default function StreamLayout({ children }: { children: React.ReactNode }) {
+export default function StreamLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
     <>
       {/* Scoped to this route only — the rest of the app keeps its existing

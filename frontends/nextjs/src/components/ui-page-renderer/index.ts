@@ -1,1 +1,1 @@
-export { UIPageRenderer, useAction,useUIPageActions } from './UIPageRenderer'
+export { UIPageRenderer, useAction, useUIPageActions } from './UIPageRenderer'

@@ -75,42 +75,45 @@ export function ComponentTreeClassPicker({ value, tenant, onChange }: Props) {
               }}
             />
           )}
-        <div className={s.classChips}>
-          {classes
-            .filter(
-              css =>
-                applied.includes(css.name) ||
-                css.name.toLowerCase().includes(query.trim().toLowerCase())
-            )
-            .map(css => {
-            const on = applied.includes(css.name)
-            return (
-              <button
-                key={css.id}
-                type="button"
-                className={`${s.classChip} ${on ? s.classChipOn : ''}`}
-                aria-pressed={on}
-                title={
-                  Object.keys(css.props).length > 0
-                    ? Object.entries(css.props)
-                        .map(([k, v]) => `${k}: ${v}`)
-                        .join('\n')
-                    : 'No declarations yet'
-                }
-                onClick={() => {
-                  toggle(css.name)
-                }}
-              >
-                {on && (
-                  <span className="material-symbols-rounded" aria-hidden="true">
-                    check
-                  </span>
-                )}
-                {css.name}
-              </button>
-            )
-          })}
-        </div>
+          <div className={s.classChips}>
+            {classes
+              .filter(
+                css =>
+                  applied.includes(css.name) ||
+                  css.name.toLowerCase().includes(query.trim().toLowerCase())
+              )
+              .map(css => {
+                const on = applied.includes(css.name)
+                return (
+                  <button
+                    key={css.id}
+                    type="button"
+                    className={`${s.classChip} ${on ? s.classChipOn : ''}`}
+                    aria-pressed={on}
+                    title={
+                      Object.keys(css.props).length > 0
+                        ? Object.entries(css.props)
+                            .map(([k, v]) => `${k}: ${v}`)
+                            .join('\n')
+                        : 'No declarations yet'
+                    }
+                    onClick={() => {
+                      toggle(css.name)
+                    }}
+                  >
+                    {on && (
+                      <span
+                        className="material-symbols-rounded"
+                        aria-hidden="true"
+                      >
+                        check
+                      </span>
+                    )}
+                    {css.name}
+                  </button>
+                )
+              })}
+          </div>
         </>
       ) : (
         <Typography variant="caption" className={s.propHint}>
@@ -118,14 +121,13 @@ export function ComponentTreeClassPicker({ value, tenant, onChange }: Props) {
         </Typography>
       )}
 
-      <Link
-        className={s.propLink}
-        href={tenantGodPanelPath(tenant, 'styles')}
-      >
+      <Link className={s.propLink} href={tenantGodPanelPath(tenant, 'styles')}>
         <span className="material-symbols-rounded" aria-hidden="true">
           palette
         </span>
-        {classes.length > 0 ? 'Edit classes in Styles' : 'Define classes in Styles'}
+        {classes.length > 0
+          ? 'Edit classes in Styles'
+          : 'Define classes in Styles'}
       </Link>
     </>
   )

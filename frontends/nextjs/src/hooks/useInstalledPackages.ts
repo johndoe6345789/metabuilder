@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 
-const DBAL =
-  process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
+const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
 export interface InstalledPackage {
   id: string
@@ -64,7 +63,7 @@ export function useInstalledPackages(tenant: string) {
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       setTick(n => n + 1)
     },
-    [base, tenant],
+    [base, tenant]
   )
 
   const uninstall = useCallback(
@@ -73,19 +72,19 @@ export function useInstalledPackages(tenant: string) {
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       setTick(n => n + 1)
     },
-    [base],
+    [base]
   )
 
   const isInstalled = useCallback(
     (packageId: string): boolean =>
       installed.some(p => p.packageId === packageId && p.enabled),
-    [installed],
+    [installed]
   )
 
   const installedRecord = useCallback(
     (packageId: string): InstalledPackage | undefined =>
       installed.find(p => p.packageId === packageId && p.enabled),
-    [installed],
+    [installed]
   )
 
   return {

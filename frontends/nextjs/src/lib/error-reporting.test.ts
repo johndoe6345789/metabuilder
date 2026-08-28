@@ -129,13 +129,18 @@ describe('ErrorReporting Service', () => {
       const report = errorReporting.reportError(new Error('Test error'))
       const after = new Date()
 
-      expect(report.timestamp.getTime()).toBeGreaterThanOrEqual(before.getTime())
+      expect(report.timestamp.getTime()).toBeGreaterThanOrEqual(
+        before.getTime()
+      )
       expect(report.timestamp.getTime()).toBeLessThanOrEqual(after.getTime())
     })
 
     test('stores error context', () => {
       const context = { userId: 'user123', action: 'save' }
-      const report = errorReporting.reportError(new Error('Test error'), context)
+      const report = errorReporting.reportError(
+        new Error('Test error'),
+        context
+      )
 
       expect(report.context.userId).toBe('user123')
       expect(report.context.action).toBe('save')
@@ -206,7 +211,9 @@ describe('ErrorReporting Service', () => {
 
   describe('HTTP Status Code Detection', () => {
     test('extracts status codes from error messages', () => {
-      const report = errorReporting.reportError(new Error('Error: 429 Too Many Requests'))
+      const report = errorReporting.reportError(
+        new Error('Error: 429 Too Many Requests')
+      )
       expect(report.statusCode).toBe(429)
       expect(report.category).toBe('rate-limit')
     })

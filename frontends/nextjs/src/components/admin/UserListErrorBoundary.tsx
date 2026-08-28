@@ -67,16 +67,17 @@ export class UserListErrorBoundary extends React.Component<Props, State> {
             {this.state.error?.message ?? 'An unexpected error occurred'}
           </p>
 
-          {process.env.NODE_ENV === 'development' && this.state.errorInfo != null && (
-            <details className="mt-4">
-              <summary className="cursor-pointer text-xs text-red-600">
-                Error details (development only)
-              </summary>
-              <pre className="mt-2 overflow-auto rounded bg-red-100 p-2 text-xs text-red-800">
-                {this.state.errorInfo.componentStack}
-              </pre>
-            </details>
-          )}
+          {process.env.NODE_ENV === 'development' &&
+            this.state.errorInfo != null && (
+              <details className="mt-4">
+                <summary className="cursor-pointer text-xs text-red-600">
+                  Error details (development only)
+                </summary>
+                <pre className="mt-2 overflow-auto rounded bg-red-100 p-2 text-xs text-red-800">
+                  {this.state.errorInfo.componentStack}
+                </pre>
+              </details>
+            )}
 
           <button
             onClick={this.handleReset}

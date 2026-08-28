@@ -12,13 +12,13 @@ export function ThemePreview() {
       </Typography>
 
       <div className={s.buttonRow}>
-        <Button variant="contained" size="small">Primary</Button>
-        <Button variant="outlined" size="small">Outlined</Button>
-        <Button
-          variant="contained"
-          size="small"
-          className={s.secondaryBtn}
-        >
+        <Button variant="contained" size="small">
+          Primary
+        </Button>
+        <Button variant="outlined" size="small">
+          Outlined
+        </Button>
+        <Button variant="contained" size="small" className={s.secondaryBtn}>
           Secondary
         </Button>
       </div>

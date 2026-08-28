@@ -242,7 +242,11 @@ export class ValidationCache {
    * const stats = cache.getStats()
    * console.log(`Cache hit rate: ${stats.hitRate.toFixed(2)}%`)
    */
-  getStats(): CacheStatistics & { hitRate: number; entries: number; memoryUsedMb: number } {
+  getStats(): CacheStatistics & {
+    hitRate: number
+    entries: number
+    memoryUsedMb: number
+  } {
     const total = this.stats.hits + this.stats.misses
     const hitRate = total > 0 ? (this.stats.hits / total) * 100 : 0
 
@@ -270,21 +274,24 @@ export class ValidationCache {
    * @private
    */
   private startCleanupInterval(): void {
-    this.cleanupInterval = setInterval(() => {
-      let cleaned = 0
+    this.cleanupInterval = setInterval(
+      () => {
+        let cleaned = 0
 
-      for (const [key, entry] of this.memoryCache.entries()) {
-        const age = Date.now() - entry.timestamp
-        if (age >= entry.ttl) {
-          this.memoryCache.delete(key)
-          cleaned++
+        for (const [key, entry] of this.memoryCache.entries()) {
+          const age = Date.now() - entry.timestamp
+          if (age >= entry.ttl) {
+            this.memoryCache.delete(key)
+            cleaned++
+          }
         }
-      }
 
-      if (cleaned > 0) {
-        console.warn(`[CACHE CLEANUP] Removed ${cleaned} expired entries`)
-      }
-    }, 5 * 60 * 1000) // Every 5 minutes
+        if (cleaned > 0) {
+          console.warn(`[CACHE CLEANUP] Removed ${cleaned} expired entries`)
+        }
+      },
+      5 * 60 * 1000
+    ) // Every 5 minutes
   }
 
   /**
@@ -353,7 +360,10 @@ interface CacheStatistics {
 export class WorkflowLoaderV2 {
   private readonly cache: ValidationCache
   private readonly maxConcurrent: number
-  private readonly activeValidations: Map<string, Promise<ExtendedValidationResult>>
+  private readonly activeValidations: Map<
+    string,
+    Promise<ExtendedValidationResult>
+  >
   private readonly enableLogging: boolean
 
   /**
@@ -472,21 +482,24 @@ export class WorkflowLoaderV2 {
     workflows: WorkflowDefinition[]
   ): Promise<ExtendedValidationResult[]> {
     if (this.enableLogging) {
-      console.warn(`Starting batch validation for ${workflows.length} workflows`)
+      console.warn(
+        `Starting batch validation for ${workflows.length} workflows`
+      )
     }
 
     const results = await Promise.allSettled(
-      workflows.map((wf) => this.validateWorkflow(wf))
+      workflows.map(wf => this.validateWorkflow(wf))
     )
 
-    return results.map((result) => {
+    return results.map(result => {
       if (result.status === 'fulfilled') {
         return result.value
       } else {
         // Create error result for failed validation
-        const reason = result.reason instanceof Error
-          ? result.reason.message
-          : String(result.reason)
+        const reason =
+          result.reason instanceof Error
+            ? result.reason.message
+            : String(result.reason)
         return {
           valid: false,
           errors: [
@@ -555,7 +568,9 @@ export class WorkflowLoaderV2 {
    * console.log(`Workflow has ${diags.nodeCount} nodes`)
    * console.log(`Validation took ${diags.metrics.validationTimeMs}ms`)
    */
-  async getDiagnostics(workflow: WorkflowDefinition): Promise<WorkflowDiagnostics> {
+  async getDiagnostics(
+    workflow: WorkflowDefinition
+  ): Promise<WorkflowDiagnostics> {
     const validation = await this.validateWorkflow(workflow)
 
     return {
@@ -656,10 +671,13 @@ export class WorkflowLoaderV2 {
       const duration = Date.now() - startTime
 
       if (this.enableLogging) {
-        console.warn(`[VALIDATION] Workflow ${workflow.id} validated in ${duration}ms`, {
-          nodeCount: workflow.nodes.length,
-          connectionCount: Object.keys(workflow.connections).length,
-        })
+        console.warn(
+          `[VALIDATION] Workflow ${workflow.id} validated in ${duration}ms`,
+          {
+            nodeCount: workflow.nodes.length,
+            connectionCount: Object.keys(workflow.connections).length,
+          }
+        )
       }
 
       return Promise.resolve({
@@ -754,9 +772,11 @@ export class WorkflowLoaderV2 {
    * @private
    */
   private _validateConnections(workflow: WorkflowDefinition): void {
-    const nodeIds = new Set(workflow.nodes.map((n) => n.id))
+    const nodeIds = new Set(workflow.nodes.map(n => n.id))
 
-    for (const [sourceId, outputTypes] of Object.entries(workflow.connections)) {
+    for (const [sourceId, outputTypes] of Object.entries(
+      workflow.connections
+    )) {
       // Source node must exist
       if (!nodeIds.has(sourceId)) {
         throw new Error(`Connection source node not found: ${sourceId}`)
@@ -767,7 +787,9 @@ export class WorkflowLoaderV2 {
         for (const [, targetList] of Object.entries(outputIndices)) {
           for (const target of targetList) {
             if (target.node.length > 0 && !nodeIds.has(target.node)) {
-              throw new Error(`Connection target node not found: ${target.node}`)
+              throw new Error(
+                `Connection target node not found: ${target.node}`
+              )
             }
           }
         }

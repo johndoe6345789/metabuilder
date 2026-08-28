@@ -1,9 +1,9 @@
 /**
  * Validates an email address
- * 
+ *
  * @param email - Email address to validate
  * @returns true if valid, false otherwise
- * 
+ *
  * @example
  * validateEmail('user@example.com') // true
  * validateEmail('invalid-email') // false
@@ -29,7 +29,8 @@ export function validateEmail(email: unknown): boolean {
 
   // Basic email regex pattern
   // Matches: local-part@domain.tld
-  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+  const emailRegex =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
 
   // Test against pattern
   if (!emailRegex.test(trimmed)) {
@@ -41,11 +42,16 @@ export function validateEmail(email: unknown): boolean {
   if (parts.length !== 2) {
     return false
   }
-  
+
   const localPart = parts[0]
   const domain = parts[1]
-  
-  if (localPart === undefined || localPart === '' || domain === undefined || domain === '') {
+
+  if (
+    localPart === undefined ||
+    localPart === '' ||
+    domain === undefined ||
+    domain === ''
+  ) {
     return false
   }
 

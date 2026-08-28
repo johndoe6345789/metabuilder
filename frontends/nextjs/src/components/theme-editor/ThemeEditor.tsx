@@ -8,8 +8,14 @@ import s from './ThemeEditor.module.scss'
 
 export function ThemeEditor() {
   const {
-    lightColors, darkColors, activeTab, setActiveTab,
-    updateColor, applyColors, resetColors, saveColors,
+    lightColors,
+    darkColors,
+    activeTab,
+    setActiveTab,
+    updateColor,
+    applyColors,
+    resetColors,
+    saveColors,
   } = useThemeEditor()
 
   const currentColors = activeTab === 'light' ? lightColors : darkColors

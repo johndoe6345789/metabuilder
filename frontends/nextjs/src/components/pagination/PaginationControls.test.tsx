@@ -4,7 +4,9 @@ import { PaginationControls } from './PaginationControls'
 import type { PaginationMetadata } from '@/lib/api/pagination'
 
 describe('PaginationControls', () => {
-  const createMetadata = (overrides?: Partial<PaginationMetadata>): PaginationMetadata => ({
+  const createMetadata = (
+    overrides?: Partial<PaginationMetadata>
+  ): PaginationMetadata => ({
     page: 1,
     limit: 20,
     total: 100,
@@ -22,7 +24,11 @@ describe('PaginationControls', () => {
     },
     {
       name: 'middle page',
-      metadata: createMetadata({ page: 3, hasPreviousPage: true, hasNextPage: true }),
+      metadata: createMetadata({
+        page: 3,
+        hasPreviousPage: true,
+        hasNextPage: true,
+      }),
       expectedPage: 3,
     },
     {
@@ -32,16 +38,16 @@ describe('PaginationControls', () => {
     },
   ])('should render pagination for $name', ({ metadata, expectedPage }) => {
     const onPageChange = vi.fn()
-    
+
     render(
-      <PaginationControls
-        metadata={metadata}
-        onPageChange={onPageChange}
-      />
+      <PaginationControls metadata={metadata} onPageChange={onPageChange} />
     )
 
     // Check that the current page button exists (m3 uses "Go to page X" aria-label)
-    const currentPageButton = screen.getByRole('button', { name: `Go to page ${expectedPage}`, current: 'page' })
+    const currentPageButton = screen.getByRole('button', {
+      name: `Go to page ${expectedPage}`,
+      current: 'page',
+    })
     expect(currentPageButton).toBeDefined()
   })
 
@@ -50,10 +56,7 @@ describe('PaginationControls', () => {
     const metadata = createMetadata()
 
     render(
-      <PaginationControls
-        metadata={metadata}
-        onPageChange={onPageChange}
-      />
+      <PaginationControls metadata={metadata} onPageChange={onPageChange} />
     )
 
     // Click page 2 (m3 uses "Go to page X" aria-label)
@@ -107,10 +110,7 @@ describe('PaginationControls', () => {
     const metadata = createMetadata({ page: 3, totalPages: 5 })
 
     render(
-      <PaginationControls
-        metadata={metadata}
-        onPageChange={onPageChange}
-      />
+      <PaginationControls metadata={metadata} onPageChange={onPageChange} />
     )
 
     // Should have first and last navigation buttons

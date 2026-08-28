@@ -29,13 +29,23 @@ export interface RenderContext {
 export function renderJSONComponent(
   component: JSONComponent,
   props: Record<string, JsonValue> = {},
-  ComponentRegistry: Record<string, React.ComponentType<Record<string, unknown>>> = M3_REGISTRY,
+  ComponentRegistry: Record<
+    string,
+    React.ComponentType<Record<string, unknown>>
+  > = M3_REGISTRY,
   allComponents?: JSONComponent[]
 ): React.ReactElement {
   if (component.render === undefined) {
     return (
-      <div style={{ padding: '1rem', border: '1px solid red', borderRadius: SOFT_RADIUS }}>
-        <strong>Error:</strong> Component {component.name} has no render definition
+      <div
+        style={{
+          padding: '1rem',
+          border: '1px solid red',
+          borderRadius: SOFT_RADIUS,
+        }}
+      >
+        <strong>Error:</strong> Component {component.name} has no render
+        definition
       </div>
     )
   }
@@ -54,15 +64,32 @@ export function renderJSONComponent(
     const template = component.render.template
     if (template === undefined) {
       return (
-        <div style={{ padding: '1rem', border: '1px solid yellow', borderRadius: SOFT_RADIUS }}>
+        <div
+          style={{
+            padding: '1rem',
+            border: '1px solid yellow',
+            borderRadius: SOFT_RADIUS,
+          }}
+        >
           <strong>Warning:</strong> Component {component.name} has no template
         </div>
       )
     }
-    return renderTemplate(template, context, ComponentRegistry, componentRegistry)
+    return renderTemplate(
+      template,
+      context,
+      ComponentRegistry,
+      componentRegistry
+    )
   } catch (error) {
     return (
-      <div style={{ padding: '1rem', border: '1px solid red', borderRadius: SOFT_RADIUS }}>
+      <div
+        style={{
+          padding: '1rem',
+          border: '1px solid red',
+          borderRadius: SOFT_RADIUS,
+        }}
+      >
         <strong>Error rendering {component.name}:</strong>{' '}
         {error instanceof Error ? error.message : String(error)}
       </div>
@@ -76,7 +103,10 @@ export function renderJSONComponent(
 function renderTemplate(
   node: JsonValue,
   context: RenderContext,
-  ComponentRegistry: Record<string, React.ComponentType<Record<string, unknown>>>,
+  ComponentRegistry: Record<
+    string,
+    React.ComponentType<Record<string, unknown>>
+  >,
   componentRegistry?: Map<string, JSONComponent>
 ): React.ReactElement {
   if (node === null || typeof node !== 'object') {
@@ -95,11 +125,23 @@ function renderTemplate(
   if (typeof nodeObj.$ref === 'string' && componentRegistry !== undefined) {
     const referencedComponent = componentRegistry.get(nodeObj.$ref)
     if (referencedComponent?.render?.template !== undefined) {
-      return renderTemplate(referencedComponent.render.template, context, ComponentRegistry, componentRegistry)
+      return renderTemplate(
+        referencedComponent.render.template,
+        context,
+        ComponentRegistry,
+        componentRegistry
+      )
     } else {
       return (
-        <div style={{ padding: '0.5rem', border: '1px dashed orange', borderRadius: SOFT_RADIUS }}>
-          <strong>Warning:</strong> Component reference "${nodeObj.$ref}" not found
+        <div
+          style={{
+            padding: '0.5rem',
+            border: '1px dashed orange',
+            borderRadius: SOFT_RADIUS,
+          }}
+        >
+          <strong>Warning:</strong> Component reference "${nodeObj.$ref}" not
+          found
         </div>
       )
     }
@@ -112,25 +154,56 @@ function renderTemplate(
       return <></>
     }
     const condition = evaluateExpression(conditionValue, context)
-    const conditionIsTrue = condition !== null && condition !== undefined && condition !== false && condition !== 0 && condition !== ''
-    if (conditionIsTrue && nodeObj.then !== null && nodeObj.then !== undefined) {
-      return renderTemplate(nodeObj.then, context, ComponentRegistry, componentRegistry)
-    } else if (!conditionIsTrue && nodeObj.else !== null && nodeObj.else !== undefined) {
-      return renderTemplate(nodeObj.else, context, ComponentRegistry, componentRegistry)
+    const conditionIsTrue =
+      condition !== null &&
+      condition !== undefined &&
+      condition !== false &&
+      condition !== 0 &&
+      condition !== ''
+    if (
+      conditionIsTrue &&
+      nodeObj.then !== null &&
+      nodeObj.then !== undefined
+    ) {
+      return renderTemplate(
+        nodeObj.then,
+        context,
+        ComponentRegistry,
+        componentRegistry
+      )
+    } else if (
+      !conditionIsTrue &&
+      nodeObj.else !== null &&
+      nodeObj.else !== undefined
+    ) {
+      return renderTemplate(
+        nodeObj.else,
+        context,
+        ComponentRegistry,
+        componentRegistry
+      )
     }
     return <></>
   }
 
   // Handle component references from registry
   const nodeType = nodeObj.type
-  if (typeof nodeType === 'string' && (nodeType === 'component' || (ComponentRegistry[nodeType] !== undefined))) {
+  if (
+    typeof nodeType === 'string' &&
+    (nodeType === 'component' || ComponentRegistry[nodeType] !== undefined)
+  ) {
     const Component = ComponentRegistry[nodeType]
     if (Component !== undefined) {
       const componentProps: Record<string, JsonValue> = {}
 
       // Process props
       const props = nodeObj.props
-      if (props !== null && props !== undefined && typeof props === 'object' && !Array.isArray(props)) {
+      if (
+        props !== null &&
+        props !== undefined &&
+        typeof props === 'object' &&
+        !Array.isArray(props)
+      ) {
         for (const [key, value] of Object.entries(props)) {
           const evaluated = evaluateExpression(value, context)
           if (evaluated !== undefined) {
@@ -144,7 +217,10 @@ function renderTemplate(
       const nodeChildren = nodeObj.children
       if (nodeChildren !== null && nodeChildren !== undefined) {
         if (typeof nodeChildren === 'string') {
-          children = evaluateExpression(nodeChildren, context) as React.ReactNode
+          children = evaluateExpression(
+            nodeChildren,
+            context
+          ) as React.ReactNode
         } else if (Array.isArray(nodeChildren)) {
           children = nodeChildren.map((child: JsonValue, index: number) => {
             if (typeof child === 'string') {
@@ -152,21 +228,37 @@ function renderTemplate(
             }
             return (
               <React.Fragment key={index}>
-                {renderTemplate(child, context, ComponentRegistry, componentRegistry)}
+                {renderTemplate(
+                  child,
+                  context,
+                  ComponentRegistry,
+                  componentRegistry
+                )}
               </React.Fragment>
             )
           })
         } else {
-          children = renderTemplate(nodeChildren, context, ComponentRegistry, componentRegistry)
+          children = renderTemplate(
+            nodeChildren,
+            context,
+            ComponentRegistry,
+            componentRegistry
+          )
         }
       }
 
-      return <Component {...(componentProps as Record<string, unknown>)}>{children}</Component>
+      return (
+        <Component {...(componentProps as Record<string, unknown>)}>
+          {children}
+        </Component>
+      )
     }
   }
 
   // Map JSON element types to HTML elements
-  const ElementType = getElementType(typeof nodeType === 'string' ? nodeType : 'div')
+  const ElementType = getElementType(
+    typeof nodeType === 'string' ? nodeType : 'div'
+  )
 
   // Build props
   const elementProps: Record<string, JsonValue> = {}
@@ -213,12 +305,22 @@ function renderTemplate(
         }
         return (
           <React.Fragment key={index}>
-            {renderTemplate(child, context, ComponentRegistry, componentRegistry)}
+            {renderTemplate(
+              child,
+              context,
+              ComponentRegistry,
+              componentRegistry
+            )}
           </React.Fragment>
         )
       })
     } else {
-      children = renderTemplate(nodeChildren, context, ComponentRegistry, componentRegistry)
+      children = renderTemplate(
+        nodeChildren,
+        context,
+        ComponentRegistry,
+        componentRegistry
+      )
     }
   }
 
@@ -250,7 +352,10 @@ function getElementType(type: string): string {
 /**
  * Evaluate template expressions like {{variable}}
  */
-function evaluateExpression(expr: JsonValue, context: RenderContext): JsonValue | undefined {
+function evaluateExpression(
+  expr: JsonValue,
+  context: RenderContext
+): JsonValue | undefined {
   if (typeof expr !== 'string') {
     return expr
   }
@@ -279,7 +384,10 @@ function evaluateExpression(expr: JsonValue, context: RenderContext): JsonValue 
 /**
  * Evaluate simple expressions (no arbitrary code execution)
  */
-function evaluateSimpleExpression(expr: string, context: RenderContext): JsonValue | undefined {
+function evaluateSimpleExpression(
+  expr: string,
+  context: RenderContext
+): JsonValue | undefined {
   // Handle property access like "props.title"
   const parts = expr.split('.')
   let value: JsonValue | undefined = context
@@ -288,15 +396,30 @@ function evaluateSimpleExpression(expr: string, context: RenderContext): JsonVal
     // Handle ternary operator
     if (part.includes('?')) {
       const [condition, branches] = part.split('?')
-      if (condition === undefined || condition.length === 0 || branches === undefined || branches.length === 0) {
+      if (
+        condition === undefined ||
+        condition.length === 0 ||
+        branches === undefined ||
+        branches.length === 0
+      ) {
         return value
       }
       const [trueBranch, falseBranch] = branches.split(':')
-      if (trueBranch === undefined || trueBranch.length === 0 || falseBranch === undefined || falseBranch.length === 0) {
+      if (
+        trueBranch === undefined ||
+        trueBranch.length === 0 ||
+        falseBranch === undefined ||
+        falseBranch.length === 0
+      ) {
         return value
       }
       const conditionValue = evaluateSimpleExpression(condition.trim(), context)
-      const isTrue = conditionValue !== null && conditionValue !== undefined && conditionValue !== false && conditionValue !== 0 && conditionValue !== ''
+      const isTrue =
+        conditionValue !== null &&
+        conditionValue !== undefined &&
+        conditionValue !== false &&
+        conditionValue !== 0 &&
+        conditionValue !== ''
       return isTrue
         ? evaluateSimpleExpression(trueBranch.trim(), context)
         : evaluateSimpleExpression(falseBranch.trim(), context)
@@ -305,14 +428,30 @@ function evaluateSimpleExpression(expr: string, context: RenderContext): JsonVal
     // Handle negation
     if (part.startsWith('!')) {
       const innerPart = part.substring(1)
-      if (value !== null && value !== undefined && typeof value === 'object' && !Array.isArray(value)) {
+      if (
+        value !== null &&
+        value !== undefined &&
+        typeof value === 'object' &&
+        !Array.isArray(value)
+      ) {
         value = (value as Record<string, JsonValue>)[innerPart]
       }
-      return value === null || value === undefined || value === false || value === 0 || value === '' ? true : false
+      return value === null ||
+        value === undefined ||
+        value === false ||
+        value === 0 ||
+        value === ''
+        ? true
+        : false
     }
 
     // Handle array access or simple property
-    if (value !== null && value !== undefined && typeof value === 'object' && !Array.isArray(value)) {
+    if (
+      value !== null &&
+      value !== undefined &&
+      typeof value === 'object' &&
+      !Array.isArray(value)
+    ) {
       value = (value as Record<string, JsonValue>)[part]
     } else {
       return undefined

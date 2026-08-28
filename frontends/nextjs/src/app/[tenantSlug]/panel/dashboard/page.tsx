@@ -157,7 +157,8 @@ export function DashboardContent() {
                       unlocked
                         ? {
                             background:
-                              LEVEL_COLORS[level as keyof typeof LEVEL_COLORS].from,
+                              LEVEL_COLORS[level as keyof typeof LEVEL_COLORS]
+                                .from,
                           }
                         : {}
                     }

@@ -4,7 +4,9 @@ import { PaginationInfo } from './PaginationInfo'
 import type { PaginationMetadata } from '@/lib/api/pagination'
 
 describe('PaginationInfo', () => {
-  const createMetadata = (overrides?: Partial<PaginationMetadata>): PaginationMetadata => ({
+  const createMetadata = (
+    overrides?: Partial<PaginationMetadata>
+  ): PaginationMetadata => ({
     page: 1,
     limit: 20,
     total: 100,
@@ -42,15 +44,20 @@ describe('PaginationInfo', () => {
     },
   ])('should display correct text for $name', ({ metadata, expectedText }) => {
     render(<PaginationInfo metadata={metadata} />)
-    
+
     expect(screen.getByText(expectedText)).toBeDefined()
   })
 
   it('should display "No items found" when total is 0', () => {
-    const metadata = createMetadata({ page: 1, limit: 20, total: 0, totalPages: 0 })
-    
+    const metadata = createMetadata({
+      page: 1,
+      limit: 20,
+      total: 0,
+      totalPages: 0,
+    })
+
     render(<PaginationInfo metadata={metadata} />)
-    
+
     expect(screen.getByText('No items found')).toBeDefined()
   })
 
@@ -59,15 +66,20 @@ describe('PaginationInfo', () => {
       { page: 1, limit: 10, total: 50, expected: 'Showing 1-10 of 50 items' },
       { page: 2, limit: 10, total: 50, expected: 'Showing 11-20 of 50 items' },
       { page: 1, limit: 50, total: 100, expected: 'Showing 1-50 of 100 items' },
-      { page: 3, limit: 50, total: 125, expected: 'Showing 101-125 of 125 items' },
+      {
+        page: 3,
+        limit: 50,
+        total: 125,
+        expected: 'Showing 101-125 of 125 items',
+      },
     ]
 
     testCases.forEach(({ page, limit, total, expected }) => {
       const metadata = createMetadata({ page, limit, total })
       const { unmount } = render(<PaginationInfo metadata={metadata} />)
-      
+
       expect(screen.getByText(expected)).toBeDefined()
-      
+
       unmount()
     })
   })

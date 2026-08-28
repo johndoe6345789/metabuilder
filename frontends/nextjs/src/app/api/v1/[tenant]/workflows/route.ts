@@ -87,9 +87,12 @@ export async function GET(
     // 2. Authenticate user
     const authResult = await authenticate(request, { minLevel: 1 })
     if (!authResult.success || authResult.error != null) {
-      return authResult.error ?? NextResponse.json(
-        { error: 'Unauthorized', message: 'Authentication failed' },
-        { status: 401 }
+      return (
+        authResult.error ??
+        NextResponse.json(
+          { error: 'Unauthorized', message: 'Authentication failed' },
+          { status: 401 }
+        )
       )
     }
     const user = authResult.user
@@ -117,7 +120,10 @@ export async function GET(
     const limit = Math.min(parseInt(searchParams.get('limit') ?? '50'), 100)
     const offset = parseInt(searchParams.get('offset') ?? '0')
     const category = searchParams.get('category')
-    const tags = searchParams.get('tags')?.split(',').map((t) => t.trim())
+    const tags = searchParams
+      .get('tags')
+      ?.split(',')
+      .map(t => t.trim())
     const activeParam = searchParams.get('active')
     const active = activeParam != null ? activeParam === 'true' : undefined
 
@@ -194,9 +200,12 @@ export async function POST(
     // 2. Authenticate user (require level 2+)
     const authResult = await authenticate(request, { minLevel: 2 })
     if (!authResult.success || authResult.error != null) {
-      return authResult.error ?? NextResponse.json(
-        { error: 'Unauthorized', message: 'Authentication failed' },
-        { status: 401 }
+      return (
+        authResult.error ??
+        NextResponse.json(
+          { error: 'Unauthorized', message: 'Authentication failed' },
+          { status: 401 }
+        )
       )
     }
     const user = authResult.user
@@ -248,7 +257,9 @@ export async function POST(
       typeof body.category !== 'string' ||
       !validCategories.includes(body.category)
     ) {
-      errors.push('category must be one of: automation, integration, business-logic, etc')
+      errors.push(
+        'category must be one of: automation, integration, business-logic, etc'
+      )
     }
 
     if (errors.length > 0) {
@@ -286,9 +297,11 @@ export async function POST(
         notificationChannels: [],
       },
       nodes: Array.isArray(body.nodes) ? (body.nodes as unknown[]) : [],
-      connections: (body.connections as Record<string, unknown>),
-      triggers: Array.isArray(body.triggers) ? (body.triggers as unknown[]) : [],
-      variables: (body.variables as Record<string, unknown>),
+      connections: body.connections as Record<string, unknown>,
+      triggers: Array.isArray(body.triggers)
+        ? (body.triggers as unknown[])
+        : [],
+      variables: body.variables as Record<string, unknown>,
       errorHandling: {
         default: 'stopWorkflow' as const,
         errorNotification: false,
@@ -309,7 +322,7 @@ export async function POST(
         onLimitExceeded: 'reject' as const,
       },
       credentials: [],
-      metadata: (body.metadata as Record<string, unknown>),
+      metadata: body.metadata as Record<string, unknown>,
       executionLimits: {
         maxExecutionTime: 300000,
         maxMemoryMb: 512,

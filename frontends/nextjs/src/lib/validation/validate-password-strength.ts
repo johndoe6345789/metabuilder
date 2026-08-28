@@ -10,17 +10,17 @@ export interface PasswordStrengthResult {
 
 /**
  * Validates password strength and returns detailed results
- * 
+ *
  * Requirements:
  * - Minimum 8 characters
  * - At least one uppercase letter
  * - At least one lowercase letter
  * - At least one number
  * - At least one special character
- * 
+ *
  * @param password - Password to validate
  * @returns PasswordStrengthResult with validation details
- * 
+ *
  * @example
  * const result = validatePasswordStrength('MyPassword123!')
  * if (result.valid) {
@@ -29,7 +29,9 @@ export interface PasswordStrengthResult {
  *   console.log(`Errors: ${result.errors.join(', ')}`)
  * }
  */
-export function validatePasswordStrength(password: unknown): PasswordStrengthResult {
+export function validatePasswordStrength(
+  password: unknown
+): PasswordStrengthResult {
   const errors: string[] = []
   let score = 0
 
@@ -39,7 +41,7 @@ export function validatePasswordStrength(password: unknown): PasswordStrengthRes
       valid: false,
       errors: ['Password is required'],
       score: 0,
-      strength: 'weak'
+      strength: 'weak',
     }
   }
 
@@ -81,7 +83,7 @@ export function validatePasswordStrength(password: unknown): PasswordStrengthRes
   }
 
   // Additional scoring factors
-  
+
   // Variety of character types
   const types = [
     /[A-Z]/.test(password),
@@ -89,24 +91,34 @@ export function validatePasswordStrength(password: unknown): PasswordStrengthRes
     /\d/.test(password),
     /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password),
   ].filter(Boolean).length
-  
+
   score += types * 3
 
   // Penalize common patterns
   const commonPasswords = [
-    'password', 'admin', 'welcome', 'qwerty', '123456',
-    'letmein', 'monkey', 'dragon'
+    'password',
+    'admin',
+    'welcome',
+    'qwerty',
+    '123456',
+    'letmein',
+    'monkey',
+    'dragon',
   ]
-  
+
   if (commonPasswords.some(common => password.toLowerCase().includes(common))) {
     score -= 20
   }
 
   // Penalize sequential characters (abc, 123)
-  if (/abc|bcd|cde|def|efg|fgh|ghi|hij|ijk|jkl|klm|lmn|mno|nop|opq|pqr|qrs|rst|stu|tuv|uvw|vwx|wxy|xyz/i.test(password)) {
+  if (
+    /abc|bcd|cde|def|efg|fgh|ghi|hij|ijk|jkl|klm|lmn|mno|nop|opq|pqr|qrs|rst|stu|tuv|uvw|vwx|wxy|xyz/i.test(
+      password
+    )
+  ) {
     score -= 10
   }
-  
+
   if (/012|123|234|345|456|567|678|789/.test(password)) {
     score -= 10
   }
@@ -135,6 +147,6 @@ export function validatePasswordStrength(password: unknown): PasswordStrengthRes
     valid: errors.length === 0,
     errors,
     score,
-    strength
+    strength,
   }
 }

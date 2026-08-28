@@ -21,9 +21,7 @@ export function ChoicesEditor({ choices, onChange }: ChoicesEditorProps) {
   }
 
   function handleUpdate(index: number, label: string) {
-    onChange(
-      choices.map((c, i) => (i === index ? { value: label, label } : c)),
-    )
+    onChange(choices.map((c, i) => (i === index ? { value: label, label } : c)))
   }
 
   function handleRemove(index: number) {
@@ -38,12 +36,16 @@ export function ChoicesEditor({ choices, onChange }: ChoicesEditorProps) {
           <TextField
             size="small"
             value={c.label}
-            onChange={e => { handleUpdate(i, e.target.value) }}
+            onChange={e => {
+              handleUpdate(i, e.target.value)
+            }}
           />
           <IconButton
             size="small"
             aria-label="Remove choice"
-            onClick={() => { handleRemove(i) }}
+            onClick={() => {
+              handleRemove(i)
+            }}
           >
             ×
           </IconButton>
@@ -53,9 +55,13 @@ export function ChoicesEditor({ choices, onChange }: ChoicesEditorProps) {
         <TextField
           size="small"
           value={newChoice}
-          onChange={e => { setNewChoice(e.target.value) }}
+          onChange={e => {
+            setNewChoice(e.target.value)
+          }}
           placeholder="Add choice…"
-          onKeyDown={e => { if (e.key === 'Enter') handleAdd() }}
+          onKeyDown={e => {
+            if (e.key === 'Enter') handleAdd()
+          }}
         />
         <Button size="small" variant="outlined" onClick={handleAdd}>
           Add

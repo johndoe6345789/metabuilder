@@ -96,7 +96,11 @@ export function AppBarComponent({
     isAuthenticated ? item.level <= userLevel : item.level <= 1
   )
 
-  const dbalState = checkingDbal ? 'checking' : dbalStatus ? 'online' : 'offline'
+  const dbalState = checkingDbal
+    ? 'checking'
+    : dbalStatus
+      ? 'online'
+      : 'offline'
   const dbalTitle = `DBAL ${dbalState}`
   const initial = (username ?? '?').charAt(0).toUpperCase()
 

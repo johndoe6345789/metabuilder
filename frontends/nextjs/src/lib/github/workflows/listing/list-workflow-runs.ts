@@ -17,7 +17,9 @@ export interface ListWorkflowRunsOptions {
   perPage?: number
 }
 
-export async function listWorkflowRuns(options: ListWorkflowRunsOptions): Promise<WorkflowRun[]> {
+export async function listWorkflowRuns(
+  options: ListWorkflowRunsOptions
+): Promise<WorkflowRun[]> {
   const { client, owner, repo, perPage } = options
 
   if (client === null || typeof client !== 'object') {

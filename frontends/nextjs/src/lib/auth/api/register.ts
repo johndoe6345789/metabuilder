@@ -31,7 +31,10 @@ export interface RegisterResult {
   error?: string
 }
 
-async function createDbalCredential(username: string, password: string): Promise<void> {
+async function createDbalCredential(
+  username: string,
+  password: string
+): Promise<void> {
   const res = await fetch(`${DBAL_URL}/admin/credentials`, {
     method: 'POST',
     headers: {
@@ -46,7 +49,11 @@ async function createDbalCredential(username: string, password: string): Promise
   }
 }
 
-export async function register(username: string, email: string, password: string): Promise<RegisterResult> {
+export async function register(
+  username: string,
+  email: string,
+  password: string
+): Promise<RegisterResult> {
   try {
     // Validate input
     if (username.length === 0 || email.length === 0 || password.length === 0) {
@@ -59,7 +66,7 @@ export async function register(username: string, email: string, password: string
 
     // Check if username already exists
     const existingByUsername = await db.users.list({
-      filter: { username }
+      filter: { username },
     })
 
     if (existingByUsername.data.length > 0) {
@@ -72,7 +79,7 @@ export async function register(username: string, email: string, password: string
 
     // Check if email already exists
     const existingByEmail = await db.users.list({
-      filter: { email }
+      filter: { email },
     })
 
     if (existingByEmail.data.length > 0) {
@@ -86,7 +93,7 @@ export async function register(username: string, email: string, password: string
     // Create user
     const userId = crypto.randomUUID()
 
-    const newUser = await db.users.create({
+    const newUser = (await db.users.create({
       id: userId,
       username,
       email,
@@ -104,7 +111,7 @@ export async function register(username: string, email: string, password: string
       tenantId: DEFAULT_TENANT_ID,
       profilePicture: null,
       bio: null,
-    }) as unknown as DbalUserRecord
+    })) as unknown as DbalUserRecord
 
     // Provision the Credential through DBAL's own admin endpoint so the
     // password is Argon2id-hashed the same way DBAL's OIDC login verifies it.

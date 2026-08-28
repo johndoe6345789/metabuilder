@@ -14,7 +14,6 @@ function pageId(tenant: string, path: string): string {
   return `page_${tenant}_${slug.length > 0 ? slug : 'home'}`
 }
 
-
 interface PathOwner {
   id: string
   packageId?: string
@@ -28,9 +27,12 @@ async function findRowForPath(
 ): Promise<PathOwner | null> {
   try {
     const params = new URLSearchParams({ 'filter.path': path })
-    const res = await fetch(`${DBAL}/${tenant}/core/PageConfig?${params.toString()}`, {
-      signal: AbortSignal.timeout(6000),
-    })
+    const res = await fetch(
+      `${DBAL}/${tenant}/core/PageConfig?${params.toString()}`,
+      {
+        signal: AbortSignal.timeout(6000),
+      }
+    )
     if (!res.ok) return null
     const json = (await res.json()) as {
       data?: { data?: Record<string, unknown>[] }
@@ -73,7 +75,9 @@ export function useComponentTreePublish(tree: TreeNode) {
   const [loading, setLoading] = useState(false)
 
   const publish = useCallback(
-    async (target: PublishTarget = DEFAULT_PUBLISH_TARGET): Promise<boolean> => {
+    async (
+      target: PublishTarget = DEFAULT_PUBLISH_TARGET
+    ): Promise<boolean> => {
       const { tenant, path, title, level, requiresAuth } = target
       setPublishing(true)
       try {
@@ -89,8 +93,8 @@ export function useComponentTreePublish(tree: TreeNode) {
           owner === null || owner.component === 'component_tree'
             ? null
             : `Taking over "${path}" from ${owner.packageId ?? 'a package'} ` +
-              `(was rendering "${owner.component ?? '?'}"). Restore it by ` +
-              'setting that component back and clearing the tree.'
+                `(was rendering "${owner.component ?? '?'}"). Restore it by ` +
+                'setting that component back and clearing the tree.'
         )
 
         const treeId = `tree_${id}`
@@ -153,15 +157,23 @@ export function useComponentTreePublish(tree: TreeNode) {
    * DEFAULT_PUBLISH_TARGET's public/no-auth values. Null if no row exists
    * for this tenant+path yet, or the row has no parseable componentTree. */
   const load = useCallback(
-    async (tenant: string, path: string): Promise<Omit<PublishTarget, 'tenant' | 'path'> | null> => {
+    async (
+      tenant: string,
+      path: string
+    ): Promise<Omit<PublishTarget, 'tenant' | 'path'> | null> => {
       setLoading(true)
       try {
         const params = new URLSearchParams({ 'filter.path': path })
-        const res = await fetch(`${DBAL}/${tenant}/core/PageConfig?${params.toString()}`, {
-          signal: AbortSignal.timeout(6000),
-        })
+        const res = await fetch(
+          `${DBAL}/${tenant}/core/PageConfig?${params.toString()}`,
+          {
+            signal: AbortSignal.timeout(6000),
+          }
+        )
         if (!res.ok) return null
-        const json = await res.json() as { data?: { data?: Record<string, unknown>[] } }
+        const json = (await res.json()) as {
+          data?: { data?: Record<string, unknown>[] }
+        }
         const row = json.data?.data?.[0]
         if (row === undefined) return null
         const treeId = row.pageTreeId
@@ -173,7 +185,8 @@ export function useComponentTreePublish(tree: TreeNode) {
         return {
           title: typeof row.title === 'string' ? row.title : path,
           level: typeof row.level === 'number' ? row.level : 0,
-          requiresAuth: typeof row.requiresAuth === 'boolean' ? row.requiresAuth : false,
+          requiresAuth:
+            typeof row.requiresAuth === 'boolean' ? row.requiresAuth : false,
         }
       } catch {
         return null

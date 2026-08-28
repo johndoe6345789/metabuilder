@@ -129,7 +129,9 @@ describe('WorkflowErrorHandler', () => {
       const response = handler.handleValidationError(validationErrors)
       const body = response.json as any
 
-      expect(body.diagnostics.errors[0].suggestion).toContain(expectedSuggestion)
+      expect(body.diagnostics.errors[0].suggestion).toContain(
+        expectedSuggestion
+      )
     })
   })
 
@@ -205,7 +207,8 @@ describe('WorkflowErrorHandler', () => {
       const response = handler.handleAccessError({
         workflowId: 'wf-123',
         tenantId: 'tenant-2',
-        reason: 'User tenant (tenant-1) does not match workflow tenant (tenant-2)',
+        reason:
+          'User tenant (tenant-1) does not match workflow tenant (tenant-2)',
       })
 
       expect(response.status).toBe(403)
@@ -230,9 +233,12 @@ describe('WorkflowErrorHandler', () => {
     })
 
     it('should handle PERMISSION_DENIED', () => {
-      const response = handler.handleAuthError(WorkflowErrorCode.PERMISSION_DENIED, {
-        action: 'execute_workflow',
-      })
+      const response = handler.handleAuthError(
+        WorkflowErrorCode.PERMISSION_DENIED,
+        {
+          action: 'execute_workflow',
+        }
+      )
 
       expect(response.status).toBe(403)
       const body = response.json as any
@@ -292,7 +298,9 @@ describe('WorkflowErrorHandler', () => {
     })
 
     it('should handle CONCURRENT_EXECUTION_LIMIT', () => {
-      const response = handler.handleResourceExhaustedError('Execution queue is full')
+      const response = handler.handleResourceExhaustedError(
+        'Execution queue is full'
+      )
 
       expect(response.status).toBe(429)
       const body = response.json as any
@@ -440,7 +448,9 @@ describe('WorkflowErrorHandler', () => {
 
   describe('error message formatting', () => {
     it('should have user-friendly messages', () => {
-      const response = handler.handleAuthError(WorkflowErrorCode.VALIDATION_ERROR)
+      const response = handler.handleAuthError(
+        WorkflowErrorCode.VALIDATION_ERROR
+      )
       const body = response.json as any
       expect(body.error.message).toBeDefined()
       expect(body.error.message.length).toBeGreaterThan(0)

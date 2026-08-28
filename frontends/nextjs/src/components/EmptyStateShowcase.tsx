@@ -29,13 +29,21 @@ interface ShowcaseItem {
 }
 
 export function EmptyStateShowcase() {
-  const [selectedSize, setSelectedSize] = useState<'compact' | 'normal' | 'large'>('normal')
+  const [selectedSize, setSelectedSize] = useState<
+    'compact' | 'normal' | 'large'
+  >('normal')
   const [animationsEnabled, setAnimationsEnabled] = useState(true)
 
   // Example handlers
-  const handleCreate = () => { alert('Create button clicked') }
-  const handleRetry = () => { alert('Retry button clicked') }
-  const handleAction = () => { alert('Action button clicked') }
+  const handleCreate = () => {
+    alert('Create button clicked')
+  }
+  const handleRetry = () => {
+    alert('Retry button clicked')
+  }
+  const handleAction = () => {
+    alert('Action button clicked')
+  }
 
   const items: ShowcaseItem[] = [
     {
@@ -56,30 +64,21 @@ export function EmptyStateShowcase() {
       id: 'no-data-found',
       name: 'No Data Found',
       component: (
-        <NoDataFound
-          size={selectedSize}
-          animated={animationsEnabled}
-        />
+        <NoDataFound size={selectedSize} animated={animationsEnabled} />
       ),
     },
     {
       id: 'no-results-found',
       name: 'No Results Found',
       component: (
-        <NoResultsFound
-          size={selectedSize}
-          animated={animationsEnabled}
-        />
+        <NoResultsFound size={selectedSize} animated={animationsEnabled} />
       ),
     },
     {
       id: 'access-denied',
       name: 'Access Denied',
       component: (
-        <AccessDeniedState
-          size={selectedSize}
-          animated={animationsEnabled}
-        />
+        <AccessDeniedState size={selectedSize} animated={animationsEnabled} />
       ),
     },
     {
@@ -177,7 +176,8 @@ export function EmptyStateShowcase() {
             marginBottom: '20px',
           }}
         >
-          Browse all available empty state variants and customize their appearance below.
+          Browse all available empty state variants and customize their
+          appearance below.
         </p>
       </div>
 
@@ -225,8 +225,10 @@ export function EmptyStateShowcase() {
             </label>
             <select
               value={selectedSize}
-              onChange={(e) => {
-                setSelectedSize(e.target.value as 'compact' | 'normal' | 'large')
+              onChange={e => {
+                setSelectedSize(
+                  e.target.value as 'compact' | 'normal' | 'large'
+                )
               }}
               style={{
                 width: '100%',
@@ -260,7 +262,9 @@ export function EmptyStateShowcase() {
               <input
                 type="checkbox"
                 checked={animationsEnabled}
-                onChange={(e) => { setAnimationsEnabled(e.target.checked) }}
+                onChange={e => {
+                  setAnimationsEnabled(e.target.checked)
+                }}
                 style={{
                   marginRight: '8px',
                   cursor: 'pointer',
@@ -290,7 +294,7 @@ export function EmptyStateShowcase() {
           marginBottom: '40px',
         }}
       >
-        {items.map((item) => (
+        {items.map(item => (
           <div
             key={item.id}
             style={{
@@ -301,11 +305,11 @@ export function EmptyStateShowcase() {
               boxShadow: '0 1px 3px rgba(0, 0, 0, 0.08)',
               transition: 'box-shadow 0.2s ease',
             }}
-            onMouseEnter={(e) => {
+            onMouseEnter={e => {
               const el = e.currentTarget as HTMLElement
               el.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.12)'
             }}
-            onMouseLeave={(e) => {
+            onMouseLeave={e => {
               const el = e.currentTarget as HTMLElement
               el.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.08)'
             }}
@@ -334,7 +338,12 @@ export function EmptyStateShowcase() {
             <div
               style={{
                 padding: '16px',
-                minHeight: selectedSize === 'compact' ? '200px' : selectedSize === 'large' ? '400px' : '300px',
+                minHeight:
+                  selectedSize === 'compact'
+                    ? '200px'
+                    : selectedSize === 'large'
+                      ? '400px'
+                      : '300px',
               }}
             >
               {item.component}
@@ -381,10 +390,12 @@ export function EmptyStateShowcase() {
             <strong>Large size</strong> works well for full-page empty states
           </li>
           <li style={{ marginBottom: '6px' }}>
-            All components support <strong>custom styling</strong> via className or style props
+            All components support <strong>custom styling</strong> via className
+            or style props
           </li>
           <li>
-            Animations respect <strong>prefers-reduced-motion</strong> for accessibility
+            Animations respect <strong>prefers-reduced-motion</strong> for
+            accessibility
           </li>
         </ul>
       </div>

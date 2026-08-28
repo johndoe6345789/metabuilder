@@ -148,10 +148,7 @@ export async function fetchWithErrorBoundary(
   fetchOptions: RequestInit = {},
   boundaryOptions: AsyncErrorBoundaryOptions = {}
 ): Promise<Response> {
-  return withAsyncErrorBoundary(
-    () => fetch(url, fetchOptions),
-    boundaryOptions
-  )
+  return withAsyncErrorBoundary(() => fetch(url, fetchOptions), boundaryOptions)
 }
 
 /**
@@ -165,7 +162,9 @@ export async function fetchWithErrorBoundary(
 export async function tryAsyncOperation<T>(
   operation: () => Promise<T>,
   options: AsyncErrorBoundaryOptions = {}
-): Promise<{ success: true; data: T } | { success: false; error: Error; attempt: number }> {
+): Promise<
+  { success: true; data: T } | { success: false; error: Error; attempt: number }
+> {
   const { maxRetries = 3, ...restOptions } = options
   const lastAttempt = 0
 

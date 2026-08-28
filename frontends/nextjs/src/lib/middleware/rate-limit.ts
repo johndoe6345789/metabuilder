@@ -138,7 +138,8 @@ function getClientIp(request: NextRequest): string {
  */
 export function createRateLimiter(config: RateLimitConfig) {
   const store = getGlobalStore()
-  const keyGenerator = config.keyGenerator ?? ((req: NextRequest) => getClientIp(req))
+  const keyGenerator =
+    config.keyGenerator ?? ((req: NextRequest) => getClientIp(req))
 
   return function checkRateLimit(request: NextRequest): Response | null {
     const key = keyGenerator(request)

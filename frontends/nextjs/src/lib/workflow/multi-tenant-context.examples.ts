@@ -57,9 +57,11 @@ async function findOneEntity(
  * Extract client IP from NextRequest headers
  */
 function getClientIp(req: NextRequest): string | undefined {
-  return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
-    ?? req.headers.get('x-real-ip')
-    ?? undefined
+  return (
+    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
+    req.headers.get('x-real-ip') ??
+    undefined
+  )
 }
 
 /**
@@ -78,10 +80,7 @@ export async function manualWorkflowExecution(req: NextRequest) {
     // 1. Extract user from JWT or session
     const user = await verifyUserAuth(req)
     if (user === null) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     // 2. Parse request body
@@ -98,16 +97,13 @@ export async function manualWorkflowExecution(req: NextRequest) {
     }
 
     // 3. Load workflow (DBAL ensures tenant filtering)
-    const workflow = await findOneEntity(db.workflows, {
+    const workflow = (await findOneEntity(db.workflows, {
       id: workflowId,
       tenantId: user.tenantId,
-    }) as (Record<string, unknown> & WorkflowDefinition) | null
+    })) as (Record<string, unknown> & WorkflowDefinition) | null
 
     if (workflow === null) {
-      return NextResponse.json(
-        { error: 'Workflow not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: 'Workflow not found' }, { status: 404 })
     }
 
     console.warn(`[${executionId}] Workflow loaded: ${workflow.name}`)
@@ -142,7 +138,9 @@ export async function manualWorkflowExecution(req: NextRequest) {
     // 5. Execute workflow
     const engine = getWorkflowExecutionEngine()
     const record = await engine.executeWorkflow(
-      workflow.id, user.tenantId, context as unknown as Record<string, unknown>
+      workflow.id,
+      user.tenantId,
+      context as unknown as Record<string, unknown>
     )
 
     console.warn(`[${executionId}] Execution completed: ${record.status}`)
@@ -165,10 +163,7 @@ export async function manualWorkflowExecution(req: NextRequest) {
       )
     }
 
-    return NextResponse.json(
-      { error: message },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }
 
@@ -197,13 +192,16 @@ export async function handleWebhookTrigger(req: NextRequest) {
       )
     }
 
-    const isValid = await verifyWebhookSignature(webhookId, signature, await req.text())
+    const isValid = await verifyWebhookSignature(
+      webhookId,
+      signature,
+      await req.text()
+    )
     if (!isValid) {
-      console.warn(`[${executionId}] Invalid webhook signature for ${webhookId}`)
-      return NextResponse.json(
-        { error: 'Invalid signature' },
-        { status: 401 }
+      console.warn(
+        `[${executionId}] Invalid webhook signature for ${webhookId}`
       )
+      return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
     }
 
     console.warn(`[${executionId}] Valid webhook signature: ${webhookId}`)
@@ -216,22 +214,16 @@ export async function handleWebhookTrigger(req: NextRequest) {
     })
 
     if (webhook === null) {
-      return NextResponse.json(
-        { error: 'Webhook not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: 'Webhook not found' }, { status: 404 })
     }
 
-    const workflow = await findOneEntity(db.workflows, {
+    const workflow = (await findOneEntity(db.workflows, {
       id: webhook.workflowId as string,
       tenantId,
-    }) as (Record<string, unknown> & WorkflowDefinition) | null
+    })) as (Record<string, unknown> & WorkflowDefinition) | null
 
     if (workflow === null) {
-      return NextResponse.json(
-        { error: 'Workflow not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: 'Workflow not found' }, { status: 404 })
     }
 
     // 3. Build context with webhook metadata
@@ -281,11 +273,15 @@ export async function handleWebhookTrigger(req: NextRequest) {
 
     // 4. Execute asynchronously (don't wait for response)
     const engine = getWorkflowExecutionEngine()
-    engine.executeWorkflow(
-      workflow.id, tenantId, context as unknown as Record<string, unknown>
-    ).catch((err: unknown) => {
-      console.error(`[${executionId}] Webhook execution failed:`, err)
-    })
+    engine
+      .executeWorkflow(
+        workflow.id,
+        tenantId,
+        context as unknown as Record<string, unknown>
+      )
+      .catch((err: unknown) => {
+        console.error(`[${executionId}] Webhook execution failed:`, err)
+      })
 
     // 5. Return immediately
     return NextResponse.json({
@@ -332,7 +328,7 @@ export async function executeScheduledWorkflow(
     })
 
     // 2. Get schedule configuration
-    const trigger = workflow.triggers.find((t) => t.kind === 'schedule')
+    const trigger = workflow.triggers.find(t => t.kind === 'schedule')
     const cronExpression = trigger?.schedule ?? '0 */6 * * *'
 
     const context = await builder.build(
@@ -358,10 +354,14 @@ export async function executeScheduledWorkflow(
     // 3. Execute workflow
     const engine = getWorkflowExecutionEngine()
     const record = await engine.executeWorkflow(
-      workflow.id, tenantId, context as unknown as Record<string, unknown>
+      workflow.id,
+      tenantId,
+      context as unknown as Record<string, unknown>
     )
 
-    console.warn(`[${executionId}] Scheduled execution completed: ${record.status}`)
+    console.warn(
+      `[${executionId}] Scheduled execution completed: ${record.status}`
+    )
 
     // 4. Log to database
     const executionLogOps = db.entity('ExecutionLog')
@@ -412,10 +412,10 @@ export async function validateWorkflowExecution(req: NextRequest) {
 
     const body = (await req.json()) as Record<string, unknown>
     const workflowId = body.workflowId as string | undefined
-    const workflow = await findOneEntity(db.workflows, {
+    const workflow = (await findOneEntity(db.workflows, {
       id: workflowId,
       tenantId: user.tenantId,
-    }) as (Record<string, unknown> & WorkflowDefinition) | null
+    })) as (Record<string, unknown> & WorkflowDefinition) | null
 
     if (workflow === null) {
       return NextResponse.json({ error: 'Workflow not found' }, { status: 404 })
@@ -435,23 +435,24 @@ export async function validateWorkflowExecution(req: NextRequest) {
     // Return validation result for UI
     return NextResponse.json({
       valid: result.valid,
-      errors: result.errors.map((e: { code: string; message: string; path: string }) => ({
-        code: e.code,
-        message: e.message,
-        path: e.path,
-      })),
-      warnings: result.warnings.map((w: { severity: string; message: string; path: string }) => ({
-        severity: w.severity,
-        message: w.message,
-        path: w.path,
-      })),
+      errors: result.errors.map(
+        (e: { code: string; message: string; path: string }) => ({
+          code: e.code,
+          message: e.message,
+          path: e.path,
+        })
+      ),
+      warnings: result.warnings.map(
+        (w: { severity: string; message: string; path: string }) => ({
+          severity: w.severity,
+          message: w.message,
+          path: w.path,
+        })
+      ),
     })
   } catch (error) {
     console.error('Validation error:', error)
-    return NextResponse.json(
-      { error: 'Validation failed' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Validation failed' }, { status: 500 })
   }
 }
 
@@ -475,7 +476,9 @@ export async function adminExecuteWorkflow(req: NextRequest) {
 
     // Only super-admin
     if (user.level !== 4) {
-      console.warn(`[${executionId}] Non-admin ${user.id} attempted cross-tenant execution`)
+      console.warn(
+        `[${executionId}] Non-admin ${user.id} attempted cross-tenant execution`
+      )
       return NextResponse.json(
         { error: 'Only super-admins can execute cross-tenant' },
         { status: 403 }
@@ -487,10 +490,10 @@ export async function adminExecuteWorkflow(req: NextRequest) {
     const targetTenantId = body.targetTenantId as string | undefined
 
     // Load workflow from target tenant
-    const workflow = await findOneEntity(db.workflows, {
+    const workflow = (await findOneEntity(db.workflows, {
       id: workflowId,
       tenantId: targetTenantId,
-    }) as (Record<string, unknown> & WorkflowDefinition) | null
+    })) as (Record<string, unknown> & WorkflowDefinition) | null
 
     if (workflow === null) {
       return NextResponse.json({ error: 'Workflow not found' }, { status: 404 })
@@ -523,7 +526,9 @@ export async function adminExecuteWorkflow(req: NextRequest) {
 
     const engine = getWorkflowExecutionEngine()
     const record = await engine.executeWorkflow(
-      workflow.id, targetTenantId as string, context as unknown as Record<string, unknown>
+      workflow.id,
+      targetTenantId as string,
+      context as unknown as Record<string, unknown>
     )
 
     return NextResponse.json({
@@ -534,10 +539,7 @@ export async function adminExecuteWorkflow(req: NextRequest) {
     })
   } catch (error) {
     console.error(`[${executionId}] Admin execution failed:`, error)
-    return NextResponse.json(
-      { error: 'Execution failed' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Execution failed' }, { status: 500 })
   }
 }
 
@@ -632,7 +634,9 @@ export async function retryFailedWorkflowExecution(
     // Execute with new context
     const engine = getWorkflowExecutionEngine()
     const record = await engine.executeWorkflow(
-      workflow.id, originalContext.tenantId, newContext as unknown as Record<string, unknown>
+      workflow.id,
+      originalContext.tenantId,
+      newContext as unknown as Record<string, unknown>
     )
 
     console.warn(`[${retryId}] Retry execution completed: ${record.status}`)
@@ -654,7 +658,9 @@ export async function retryFailedWorkflowExecution(
  * Mock implementation - replace with actual auth service
  */
 // eslint-disable-next-line @typescript-eslint/require-await
-async function verifyUserAuth(req: NextRequest): Promise<AuthenticatedUser | null> {
+async function verifyUserAuth(
+  req: NextRequest
+): Promise<AuthenticatedUser | null> {
   // In production, parse JWT and get user details
   const authHeader = req.headers.get('authorization')
   if (authHeader?.startsWith('Bearer ') !== true) {

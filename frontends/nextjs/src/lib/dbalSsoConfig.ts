@@ -18,7 +18,7 @@ export function loadPersistedSession(): PersistedSession | null {
   if (typeof window === 'undefined') return null
   try {
     const raw = sessionStorage.getItem(STORAGE_KEY)
-    return raw ? JSON.parse(raw) as PersistedSession : null
+    return raw ? (JSON.parse(raw) as PersistedSession) : null
   } catch {
     return null
   }

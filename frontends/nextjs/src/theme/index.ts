@@ -1,6 +1,6 @@
 /**
  * Theme Module - Central export for all theme functionality
- * 
+ *
  * This module provides CSS custom property-based theming for m3 compatibility.
  * Themes are exported as objects containing CSS variable definitions.
  */
@@ -27,7 +27,9 @@ export type ThemeVars = Record<ThemeVarKey, string>
  */
 export const applyTheme = (
   theme: Record<string, string>,
-  element: HTMLElement | null = typeof document !== 'undefined' ? document.documentElement : null
+  element: HTMLElement | null = typeof document !== 'undefined'
+    ? document.documentElement
+    : null
 ): void => {
   if (element === null) return
   Object.entries(theme).forEach(([key, value]) => {
@@ -59,7 +61,9 @@ export const themeToCSS = (
  */
 export const cssVar = (varName: string, fallback?: string): string => {
   const name = varName.startsWith('--') ? varName : `--${varName}`
-  return fallback !== undefined && fallback.length > 0 ? `var(${name}, ${fallback})` : `var(${name})`
+  return fallback !== undefined && fallback.length > 0
+    ? `var(${name}, ${fallback})`
+    : `var(${name})`
 }
 
 /**

@@ -12,7 +12,7 @@ import s from './page.module.scss'
 
 type SectionId = 'tv' | 'radio' | 'retro'
 
-const SECTIONS: { id: SectionId, label: string, glyph: string }[] = [
+const SECTIONS: { id: SectionId; label: string; glyph: string }[] = [
   { id: 'tv', label: 'Live TV', glyph: '▶' },
   { id: 'radio', label: 'Radio', glyph: '~' },
   { id: 'retro', label: 'Retro Games', glyph: '◆' },
@@ -28,7 +28,10 @@ function progressPercent(start: string, end: string): number {
 
 function Hero({ onWatch }: { onWatch: (channelId: string) => void }) {
   const { channels } = useTvChannels()
-  const onAir = useMemo(() => channels.find(c => c.epgNow !== undefined), [channels])
+  const onAir = useMemo(
+    () => channels.find(c => c.epgNow !== undefined),
+    [channels]
+  )
 
   if (onAir?.epgNow === undefined) {
     return (
@@ -36,7 +39,11 @@ function Hero({ onWatch }: { onWatch: (channelId: string) => void }) {
         <div className={s.heroGlow} aria-hidden />
         <div className={s.heroContent}>
           <span className={s.heroEyebrow}>MetaBuilder Stream</span>
-          <h1 className={s.heroTitle}>Your own broadcast,<br />running live.</h1>
+          <h1 className={s.heroTitle}>
+            Your own broadcast,
+            <br />
+            running live.
+          </h1>
           <p className={s.heroSub}>
             Schedule a program and it shows up here — live TV, radio, and retro
             gaming, unified in one signal.
@@ -49,7 +56,10 @@ function Hero({ onWatch }: { onWatch: (channelId: string) => void }) {
   const pct = progressPercent(onAir.epgNow.start_time, onAir.epgNow.end_time)
 
   return (
-    <div className={s.hero} style={{ '--hue': hueFor(onAir.id) } as React.CSSProperties}>
+    <div
+      className={s.hero}
+      style={{ '--hue': hueFor(onAir.id) } as React.CSSProperties}
+    >
       <div className={s.heroGlow} aria-hidden />
       <div className={s.heroNoise} aria-hidden />
       <div className={s.heroContent}>
@@ -63,13 +73,23 @@ function Hero({ onWatch }: { onWatch: (channelId: string) => void }) {
         )}
         <div className={s.heroMeta}>
           <div className={s.heroProgress}>
-            <div className={s.heroProgressFill} style={{ width: `${pct.toString()}%` }} />
+            <div
+              className={s.heroProgressFill}
+              style={{ width: `${pct.toString()}%` }}
+            />
           </div>
           {onAir.epgNext !== undefined && (
-            <span className={s.heroNext}>Next: {onAir.epgNext.program.title}</span>
+            <span className={s.heroNext}>
+              Next: {onAir.epgNext.program.title}
+            </span>
           )}
         </div>
-        <button className={s.heroCta} onClick={() => { onWatch(onAir.id) }}>
+        <button
+          className={s.heroCta}
+          onClick={() => {
+            onWatch(onAir.id)
+          }}
+        >
           <span className={s.heroCtaIcon}>▶</span> Watch now
         </button>
       </div>
@@ -79,7 +99,10 @@ function Hero({ onWatch }: { onWatch: (channelId: string) => void }) {
 
 function StreamHubContent() {
   const [active, setActive] = useState<SectionId>('tv')
-  const [watchTrigger, setWatchTrigger] = useState<{ channelId: string, nonce: number } | null>(null)
+  const [watchTrigger, setWatchTrigger] = useState<{
+    channelId: string
+    nonce: number
+  } | null>(null)
 
   const handleHeroWatch = (channelId: string) => {
     setActive('tv')
@@ -101,7 +124,9 @@ function StreamHubContent() {
             className={s.pill}
             data-active={active === section.id}
             style={{ '--i': i } as React.CSSProperties}
-            onClick={() => { setActive(section.id) }}
+            onClick={() => {
+              setActive(section.id)
+            }}
           >
             <span className={s.pillGlyph}>{section.glyph}</span>
             {section.label}
@@ -109,13 +134,19 @@ function StreamHubContent() {
         ))}
         <div
           className={s.pillIndicator}
-          style={{ '--pos': SECTIONS.findIndex(sec => sec.id === active) } as React.CSSProperties}
+          style={
+            {
+              '--pos': SECTIONS.findIndex(sec => sec.id === active),
+            } as React.CSSProperties
+          }
         />
       </nav>
 
       <div className={s.panelStage}>
         <div key={active} className={s.panel}>
-          {active === 'tv' && <LiveTvSection externalWatchTrigger={watchTrigger} />}
+          {active === 'tv' && (
+            <LiveTvSection externalWatchTrigger={watchTrigger} />
+          )}
           {active === 'radio' && <RadioSection />}
           {active === 'retro' && (
             <div className={s.retroShell}>

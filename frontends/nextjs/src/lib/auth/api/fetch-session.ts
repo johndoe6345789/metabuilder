@@ -38,7 +38,7 @@ export async function fetchSession(token: string | null): Promise<User | null> {
     if (!userinfoRes.ok) {
       return null
     }
-    const claims = await userinfoRes.json() as UserinfoResponse
+    const claims = (await userinfoRes.json()) as UserinfoResponse
     if (claims.sub === undefined || claims.sub.length === 0) {
       return null
     }

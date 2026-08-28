@@ -44,7 +44,9 @@ export function DbalStatusCard({
         </h3>
         <p className={s.detail}>
           {copy.detail}
-          {state !== 'checking' && <code className={s.endpoint}>{endpoint}</code>}
+          {state !== 'checking' && (
+            <code className={s.endpoint}>{endpoint}</code>
+          )}
         </p>
       </div>
 

@@ -44,23 +44,21 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
   executionId: initialExecutionId,
   onExecutionSelect,
 }) => {
-  const [selectedExecutionId, setSelectedExecutionId] = useState(
-    initialExecutionId
-  )
+  const [selectedExecutionId, setSelectedExecutionId] =
+    useState(initialExecutionId)
   const [expandedNodeId, setExpandedNodeId] = useState<string | null>(null)
-  const [currentExecution, setCurrentExecution] = useState<ExecutionRecord | null>(
-    null
-  )
+  const [currentExecution, setCurrentExecution] =
+    useState<ExecutionRecord | null>(null)
   const [loading, setLoading] = useState(false)
 
-  const { executions, refresh, error: listError } = useWorkflowExecutions(
-    tenant,
-    workflowId,
-    {
-      limit: 20,
-      autoRefresh: true,
-    }
-  )
+  const {
+    executions,
+    refresh,
+    error: listError,
+  } = useWorkflowExecutions(tenant, workflowId, {
+    limit: 20,
+    autoRefresh: true,
+  })
 
   // Load selected execution details
   useEffect(() => {
@@ -102,7 +100,9 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
           <h3>Execution History</h3>
           <button
             className={styles.refreshButton}
-            onClick={() => { void refresh() }}
+            onClick={() => {
+              void refresh()
+            }}
             disabled={loading}
           >
             ⟳ Refresh
@@ -116,12 +116,14 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
         )}
 
         <div className={styles.listItems}>
-          {executions.map((execution) => (
+          {executions.map(execution => (
             <ExecutionListItem
               key={execution.id}
               execution={execution}
               isSelected={selectedExecutionId === execution.id}
-              onClick={() => { handleExecutionSelect(execution.id) }}
+              onClick={() => {
+                handleExecutionSelect(execution.id)
+              }}
             />
           ))}
 
@@ -140,19 +142,21 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
           <div className={styles.section}>
             <h4>Node Execution Status</h4>
             <div className={styles.nodeTimeline}>
-              {Object.entries(currentExecution.state).map(([nodeId, result]) => (
-                <NodeExecutionItem
-                  key={nodeId}
-                  nodeId={nodeId}
-                  result={result}
-                  isExpanded={expandedNodeId === nodeId}
-                  onToggle={() => {
-                    setExpandedNodeId(
-                      expandedNodeId === nodeId ? null : nodeId
-                    )
-                  }}
-                />
-              ))}
+              {Object.entries(currentExecution.state).map(
+                ([nodeId, result]) => (
+                  <NodeExecutionItem
+                    key={nodeId}
+                    nodeId={nodeId}
+                    result={result}
+                    isExpanded={expandedNodeId === nodeId}
+                    onToggle={() => {
+                      setExpandedNodeId(
+                        expandedNodeId === nodeId ? null : nodeId
+                      )
+                    }}
+                  />
+                )
+              )}
             </div>
           </div>
 
@@ -180,11 +184,13 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
         </div>
       )}
 
-      {currentExecution === null && !loading && selectedExecutionId !== undefined && (
-        <div className={styles.noSelection}>
-          <p>No execution data available</p>
-        </div>
-      )}
+      {currentExecution === null &&
+        !loading &&
+        selectedExecutionId !== undefined && (
+          <div className={styles.noSelection}>
+            <p>No execution data available</p>
+          </div>
+        )}
 
       {selectedExecutionId === undefined && (
         <div className={styles.noSelection}>
@@ -219,12 +225,12 @@ const ExecutionListItem: React.FC<ExecutionListItemProps> = ({
       onClick={onClick}
     >
       <div className={styles.listItemHeader}>
-        <span className={`${styles.status} ${styles[`status-${execution.status}`]}`}>
+        <span
+          className={`${styles.status} ${styles[`status-${execution.status}`]}`}
+        >
           {execution.status.toUpperCase()}
         </span>
-        <span className={styles.time}>
-          {formatTime(execution.startTime)}
-        </span>
+        <span className={styles.time}>{formatTime(execution.startTime)}</span>
       </div>
       <div className={styles.listItemDetails}>
         <p>Duration: {execution.duration}ms</p>
@@ -267,7 +273,9 @@ const ExecutionHeader: React.FC<ExecutionHeaderProps> = ({
           style={{ backgroundColor: getStatusColor(execution.status) }}
         />
         <div>
-          <h3>{execution.status === 'running' ? 'Executing...' : execution.status}</h3>
+          <h3>
+            {execution.status === 'running' ? 'Executing...' : execution.status}
+          </h3>
           <p>ID: {execution.id}</p>
         </div>
       </div>
@@ -279,7 +287,9 @@ const ExecutionHeader: React.FC<ExecutionHeaderProps> = ({
         </div>
         <div className={styles.metric}>
           <span className={styles.label}>Nodes</span>
-          <span className={styles.value}>{execution.metrics.nodesExecuted}</span>
+          <span className={styles.value}>
+            {execution.metrics.nodesExecuted}
+          </span>
         </div>
         <div className={styles.metric}>
           <span className={styles.label}>Success</span>
@@ -322,16 +332,12 @@ const NodeExecutionItem: React.FC<NodeExecutionItemProps> = ({
         className={`${styles.nodeItemHeader} ${styles[`status-${result.status}`]}`}
         onClick={onToggle}
       >
-        <span className={styles.nodeItemToggle}>
-          {isExpanded ? '▼' : '▶'}
-        </span>
+        <span className={styles.nodeItemToggle}>{isExpanded ? '▼' : '▶'}</span>
         <span className={styles.nodeId}>{nodeId}</span>
         <span className={styles.status}>{result.status}</span>
         <span className={styles.duration}>{getDurationMs()}ms</span>
         {result.retries !== undefined && result.retries > 0 && (
-          <span className={styles.retries}>
-            Retries: {result.retries}
-          </span>
+          <span className={styles.retries}>Retries: {result.retries}</span>
         )}
       </div>
 
@@ -348,7 +354,9 @@ const NodeExecutionItem: React.FC<NodeExecutionItemProps> = ({
             <div className={styles.errorDetail}>
               <h5>Error</h5>
               <p>{result.error}</p>
-              {result.errorCode !== undefined && <code>{result.errorCode}</code>}
+              {result.errorCode !== undefined && (
+                <code>{result.errorCode}</code>
+              )}
             </div>
           )}
 
@@ -380,9 +388,15 @@ const MetricsGrid: React.FC<MetricsGridProps> = ({ metrics }) => {
       <MetricCard label="Retried" value={metrics.retriedNodes} />
       <MetricCard label="Total Retries" value={metrics.totalRetries} />
       <MetricCard label="Peak Memory" value={`${metrics.peakMemory} MB`} />
-      <MetricCard label="Validation Failures" value={metrics.validationFailures} />
+      <MetricCard
+        label="Validation Failures"
+        value={metrics.validationFailures}
+      />
       <MetricCard label="Recovery Attempts" value={metrics.recoveryAttempts} />
-      <MetricCard label="Recovery Successes" value={metrics.recoverySuccesses} />
+      <MetricCard
+        label="Recovery Successes"
+        value={metrics.recoverySuccesses}
+      />
     </div>
   )
 }
@@ -410,17 +424,19 @@ const LogViewer: React.FC<LogViewerProps> = ({ logs }) => {
   const [filter, setFilter] = useState<'all' | 'error' | 'warn' | 'info'>('all')
 
   const filteredLogs = logs.filter(
-    (log) => filter === 'all' || log.level === filter
+    log => filter === 'all' || log.level === filter
   )
 
   return (
     <div className={styles.logViewer}>
       <div className={styles.logFilter}>
-        {(['all', 'error', 'warn', 'info'] as const).map((level) => (
+        {(['all', 'error', 'warn', 'info'] as const).map(level => (
           <button
             key={level}
             className={`${styles.filterButton} ${filter === level ? styles.active : ''}`}
-            onClick={() => { setFilter(level) }}
+            onClick={() => {
+              setFilter(level)
+            }}
           >
             {level}
           </button>
@@ -429,7 +445,10 @@ const LogViewer: React.FC<LogViewerProps> = ({ logs }) => {
 
       <div className={styles.logEntries}>
         {filteredLogs.map((log, index) => (
-          <div key={index} className={`${styles.logEntry} ${styles[`level-${log.level}`]}`}>
+          <div
+            key={index}
+            className={`${styles.logEntry} ${styles[`level-${log.level}`]}`}
+          >
             <span className={styles.timestamp}>
               {new Date(log.timestamp).toLocaleTimeString()}
             </span>

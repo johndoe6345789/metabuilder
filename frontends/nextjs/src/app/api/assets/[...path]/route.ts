@@ -34,7 +34,8 @@ export async function GET(
       'Cache-Control': 'public, max-age=300',
       ETag: object.etag,
       // An uploaded SVG is a script vector; never let one run as a document.
-      'Content-Security-Policy': "default-src 'none'; style-src 'unsafe-inline'",
+      'Content-Security-Policy':
+        "default-src 'none'; style-src 'unsafe-inline'",
       'X-Content-Type-Options': 'nosniff',
     },
   })

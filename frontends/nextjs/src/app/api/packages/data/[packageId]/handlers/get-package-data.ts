@@ -12,33 +12,38 @@ export async function GET(
   try {
     const resolvedParams = await params
     // Validate packageId format
-    const packageIdResult = PackageSchemas.packageId.safeParse(resolvedParams.packageId)
+    const packageIdResult = PackageSchemas.packageId.safeParse(
+      resolvedParams.packageId
+    )
     if (!packageIdResult.success) {
       return NextResponse.json(
         { error: 'Invalid package ID format' },
         { status: 400 }
       )
     }
-    
+
     // Require authentication for package data access
     const session = await getSessionUser(request)
-    
+
     if (session.user === null) {
       return NextResponse.json(
         { error: 'Authentication required' },
         { status: STATUS.UNAUTHORIZED }
       )
     }
-    
+
     // Get package data using DBAL
-    const packageData = await db.entity('packageData').read(resolvedParams.packageId)
-    
+    const packageData = await db
+      .entity('packageData')
+      .read(resolvedParams.packageId)
+
     if (packageData == null) {
       return NextResponse.json({ data: null })
     }
 
     // Parse the JSON data field
-    const data: unknown = packageData.data != null ? JSON.parse(packageData.data as string) : null
+    const data: unknown =
+      packageData.data != null ? JSON.parse(packageData.data as string) : null
 
     return NextResponse.json({ data })
   } catch (error) {

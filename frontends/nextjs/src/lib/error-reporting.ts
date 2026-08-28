@@ -50,7 +50,10 @@ class ErrorReportingService {
   /**
    * Categorize error based on message and type
    */
-  private categorizeError(error: Error | string, statusCode?: number): ErrorCategory {
+  private categorizeError(
+    error: Error | string,
+    statusCode?: number
+  ): ErrorCategory {
     const message = typeof error === 'string' ? error : error.message
     const messageStr = message.toLowerCase()
 
@@ -66,28 +69,56 @@ class ErrorReportingService {
     }
 
     // Pattern matching for common error types
-    if (messageStr.includes('network') || messageStr.includes('fetch') || messageStr.includes('offline')) {
+    if (
+      messageStr.includes('network') ||
+      messageStr.includes('fetch') ||
+      messageStr.includes('offline')
+    ) {
       return 'network'
     }
-    if (messageStr.includes('unauthorized') || messageStr.includes('auth') || messageStr.includes('401')) {
+    if (
+      messageStr.includes('unauthorized') ||
+      messageStr.includes('auth') ||
+      messageStr.includes('401')
+    ) {
       return 'authentication'
     }
-    if (messageStr.includes('permission') || messageStr.includes('forbidden') || messageStr.includes('403')) {
+    if (
+      messageStr.includes('permission') ||
+      messageStr.includes('forbidden') ||
+      messageStr.includes('403')
+    ) {
       return 'permission'
     }
     if (messageStr.includes('not found') || messageStr.includes('404')) {
       return 'not-found'
     }
-    if (messageStr.includes('conflict') || messageStr.includes('duplicate') || messageStr.includes('409')) {
+    if (
+      messageStr.includes('conflict') ||
+      messageStr.includes('duplicate') ||
+      messageStr.includes('409')
+    ) {
       return 'conflict'
     }
-    if (messageStr.includes('rate') || messageStr.includes('too many') || messageStr.includes('429')) {
+    if (
+      messageStr.includes('rate') ||
+      messageStr.includes('too many') ||
+      messageStr.includes('429')
+    ) {
       return 'rate-limit'
     }
-    if (messageStr.includes('timeout') || messageStr.includes('408') || messageStr.includes('timed out')) {
+    if (
+      messageStr.includes('timeout') ||
+      messageStr.includes('408') ||
+      messageStr.includes('timed out')
+    ) {
       return 'timeout'
     }
-    if (messageStr.includes('validation') || messageStr.includes('invalid') || messageStr.includes('400')) {
+    if (
+      messageStr.includes('validation') ||
+      messageStr.includes('invalid') ||
+      messageStr.includes('400')
+    ) {
       return 'validation'
     }
     if (messageStr.includes('server') || messageStr.includes('500')) {
@@ -100,14 +131,25 @@ class ErrorReportingService {
   /**
    * Determine if error is retryable
    */
-  private isErrorRetryable(category: ErrorCategory, statusCode?: number): boolean {
-    const retryableCategories: ErrorCategory[] = ['network', 'timeout', 'rate-limit', 'server']
+  private isErrorRetryable(
+    category: ErrorCategory,
+    statusCode?: number
+  ): boolean {
+    const retryableCategories: ErrorCategory[] = [
+      'network',
+      'timeout',
+      'rate-limit',
+      'server',
+    ]
     if (retryableCategories.includes(category)) {
       return true
     }
 
     // Retryable HTTP status codes
-    if (statusCode != null && [408, 429, 500, 502, 503, 504].includes(statusCode)) {
+    if (
+      statusCode != null &&
+      [408, 429, 500, 502, 503, 504].includes(statusCode)
+    ) {
       return true
     }
 
@@ -137,8 +179,12 @@ class ErrorReportingService {
   /**
    * Report an error with context
    */
-  reportError(error: Error | string, context: ErrorReportContext = {}): ErrorReport {
-    const contextStatusCode = typeof context.statusCode === 'number' ? context.statusCode : undefined
+  reportError(
+    error: Error | string,
+    context: ErrorReportContext = {}
+  ): ErrorReport {
+    const contextStatusCode =
+      typeof context.statusCode === 'number' ? context.statusCode : undefined
     const statusCode = contextStatusCode ?? this.extractStatusCode(error)
     const category = this.categorizeError(error, statusCode)
     const isRetryable = this.isErrorRetryable(category, statusCode)
@@ -161,7 +207,9 @@ class ErrorReportingService {
 
     // suggestedAction reflects the current category, even if mutated after creation
     Object.defineProperty(report, 'suggestedAction', {
-      get(this: ErrorReport) { return getSuggestedAction(this.category) },
+      get(this: ErrorReport) {
+        return getSuggestedAction(this.category)
+      },
       enumerable: true,
       configurable: true,
     })
@@ -222,16 +270,20 @@ class ErrorReportingService {
 
     // Use category-specific messages for production
     const categoryMessages: Record<ErrorCategory, string> = {
-      network: 'Network error. Please check your internet connection and try again.',
+      network:
+        'Network error. Please check your internet connection and try again.',
       authentication: 'Your session has expired. Please log in again.',
       permission: 'You do not have permission to perform this action.',
-      validation: 'The information you provided is invalid. Please check and try again.',
+      validation:
+        'The information you provided is invalid. Please check and try again.',
       'not-found': 'The requested resource was not found.',
       conflict: 'This resource already exists. Please use a different name.',
       'rate-limit': 'Too many requests. Please wait a moment and try again.',
-      server: 'A server error occurred. Our team has been notified. Please try again later.',
+      server:
+        'A server error occurred. Our team has been notified. Please try again later.',
       timeout: 'The request took too long to complete. Please try again.',
-      unknown: 'An error occurred. Please try again or contact support if the problem persists.',
+      unknown:
+        'An error occurred. Please try again or contact support if the problem persists.',
     }
 
     return categoryMessages[errorCategory]

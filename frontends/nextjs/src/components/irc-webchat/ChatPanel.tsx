@@ -20,12 +20,18 @@ interface Props {
 }
 
 export function ChatPanel({
-  channel, messages, username,
-  onSendMessage, onAddLocalMessage, onClear,
+  channel,
+  messages,
+  username,
+  onSendMessage,
+  onAddLocalMessage,
+  onClear,
 }: Props) {
   const handleSend = useCallback(
-    async (content: string) => { await onSendMessage(content, username) },
-    [onSendMessage, username],
+    async (content: string) => {
+      await onSendMessage(content, username)
+    },
+    [onSendMessage, username]
   )
 
   const handleSystem = useCallback(
@@ -37,7 +43,7 @@ export function ChatPanel({
         tenantId: channel?.tenantId ?? 'default',
       })
     },
-    [onAddLocalMessage, channel],
+    [onAddLocalMessage, channel]
   )
 
   if (channel == null) {
@@ -54,7 +60,8 @@ export function ChatPanel({
     <div className={styles.root}>
       <div className={styles.channelHeader}>
         <Typography variant="subtitle1" className={styles.channelName}>
-          <span className={styles.hash}>#</span>{channel.name}
+          <span className={styles.hash}>#</span>
+          {channel.name}
         </Typography>
         {(channel.memberCount ?? 0) > 0 && (
           <Chip
@@ -66,7 +73,9 @@ export function ChatPanel({
       </div>
       <MessageList messages={messages} channelName={channel.name} />
       <ChatInput
-        onSend={content => { void handleSend(content) }}
+        onSend={content => {
+          void handleSend(content)
+        }}
         onSystemMessage={handleSystem}
         onClear={onClear}
         username={username}

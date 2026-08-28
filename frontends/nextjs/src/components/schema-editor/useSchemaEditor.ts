@@ -69,7 +69,9 @@ export function useSchemaEditor(tenantId: string): UseSchemaEditorResult {
         setLoading(false)
       })
 
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+    }
   }, [tenantId])
 
   const saveModels = useCallback(
@@ -90,7 +92,7 @@ export function useSchemaEditor(tenantId: string): UseSchemaEditorResult {
         }
       }
     },
-    [tenantId, offline],
+    [tenantId, offline]
   )
 
   return { models, loading, offline, saveModels }

@@ -1,6 +1,6 @@
 /**
  * Tests for RESTful API route
- * 
+ *
  * Tests basic parsing and error handling for /api/v1/{tenant}/{package}/{entity} endpoints
  * Integration tests verify full DBAL execution
  */

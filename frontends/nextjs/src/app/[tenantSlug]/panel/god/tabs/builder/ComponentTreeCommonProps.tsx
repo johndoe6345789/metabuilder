@@ -17,9 +17,7 @@ import { ComponentTreeClassPicker } from './ComponentTreeClassPicker'
 import s from './ComponentTreeTab.module.scss'
 
 const text = (value: unknown): string =>
-  typeof value === 'string' || typeof value === 'number'
-    ? String(value)
-    : ''
+  typeof value === 'string' || typeof value === 'number' ? String(value) : ''
 
 /** A DOM id must be non-empty and contain no whitespace. */
 function idError(value: string): string | null {
@@ -46,7 +44,8 @@ export function ComponentTreeCommonProps({
   const [open, setOpen] = useState<Section | null>('identity')
   const p = node.props
   const domId = text(p.id)
-  const idProblem = idError(domId) ?? (duplicateId ? 'Already used in this tree' : null)
+  const idProblem =
+    idError(domId) ?? (duplicateId ? 'Already used in this tree' : null)
   const uid = useId()
 
   const section = (key: Section, label: string, body: React.ReactNode) => {
@@ -183,7 +182,11 @@ export function ComponentTreeCommonProps({
             />
             <span>
               Hide from screen readers
-              <Typography variant="caption" component="span" className={s.propHint}>
+              <Typography
+                variant="caption"
+                component="span"
+                className={s.propHint}
+              >
                 aria-hidden — for purely decorative elements
               </Typography>
             </span>

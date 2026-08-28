@@ -3,7 +3,9 @@ import { join } from 'path'
 import type { JSONPackage } from '../types'
 import { loadJSONPackage } from './load-json-package'
 
-export async function loadAllJSONPackages(packagesDir: string): Promise<JSONPackage[]> {
+export async function loadAllJSONPackages(
+  packagesDir: string
+): Promise<JSONPackage[]> {
   try {
     const packageDirs = await readdir(packagesDir, { withFileTypes: true })
     const packages: JSONPackage[] = []

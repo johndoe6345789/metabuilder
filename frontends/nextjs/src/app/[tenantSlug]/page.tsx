@@ -3,7 +3,10 @@
 import { useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { WorkspacePageSlot } from '@/components/workspace/WorkspacePageSlot'
-import { normalizeTenantId, tenantPanelPath } from '@/lib/tenant/workspace-paths'
+import {
+  normalizeTenantId,
+  tenantPanelPath,
+} from '@/lib/tenant/workspace-paths'
 
 /**
  * /{tenant} — the tenant's published home page.

@@ -61,7 +61,9 @@ export class WorkflowService {
    */
   static initializeWorkflowEngine(): void {
     // Phase 5: Workflow initialization deferred
-    console.warn('WorkflowService: Phase 5 - Workflow engine initialization deferred')
+    console.warn(
+      'WorkflowService: Phase 5 - Workflow engine initialization deferred'
+    )
   }
 
   /**
@@ -71,9 +73,11 @@ export class WorkflowService {
   static executeWorkflow(
     _workflowId: string,
     _tenantId: string,
-    _input: Record<string, unknown> = {},
+    _input: Record<string, unknown> = {}
   ): Promise<ExecutionResult> {
-    throw new Error('WorkflowService: Phase 5 - Workflow execution not yet implemented')
+    throw new Error(
+      'WorkflowService: Phase 5 - Workflow execution not yet implemented'
+    )
   }
 
   /**
@@ -84,9 +88,11 @@ export class WorkflowService {
     executionId: string,
     _workflowId: string,
     _tenantId: string,
-    _result: Record<string, unknown>,
+    _result: Record<string, unknown>
   ): void {
-    console.warn(`WorkflowService: Phase 5 - Execution record deferred (${executionId})`)
+    console.warn(
+      `WorkflowService: Phase 5 - Execution record deferred (${executionId})`
+    )
   }
 
   /**
@@ -95,9 +101,11 @@ export class WorkflowService {
    */
   static loadWorkflow(
     _workflowId: string,
-    _tenantId: string,
+    _tenantId: string
   ): Promise<WorkflowDefinition> {
-    throw new Error('WorkflowService: Phase 5 - Workflow loading not yet implemented')
+    throw new Error(
+      'WorkflowService: Phase 5 - Workflow loading not yet implemented'
+    )
   }
 
   /**
@@ -106,9 +114,11 @@ export class WorkflowService {
    */
   static getExecutionStatus(
     _executionId: string,
-    _tenantId: string,
+    _tenantId: string
   ): Promise<ExecutionStatus> {
-    throw new Error('WorkflowService: Phase 5 - Execution status not yet implemented')
+    throw new Error(
+      'WorkflowService: Phase 5 - Execution status not yet implemented'
+    )
   }
 
   /**
@@ -119,9 +129,11 @@ export class WorkflowService {
     _workflowId: string,
     _tenantId: string,
     _limit: number = 50,
-    _offset: number = 0,
+    _offset: number = 0
   ): Promise<ExecutionListEntry[]> {
-    throw new Error('WorkflowService: Phase 5 - Execution listing not yet implemented')
+    throw new Error(
+      'WorkflowService: Phase 5 - Execution listing not yet implemented'
+    )
   }
 
   /**
@@ -130,9 +142,11 @@ export class WorkflowService {
    */
   static abortExecution(
     _executionId: string,
-    _tenantId: string,
+    _tenantId: string
   ): Promise<void> {
-    throw new Error('WorkflowService: Phase 5 - Execution abort not yet implemented')
+    throw new Error(
+      'WorkflowService: Phase 5 - Execution abort not yet implemented'
+    )
   }
 }
 

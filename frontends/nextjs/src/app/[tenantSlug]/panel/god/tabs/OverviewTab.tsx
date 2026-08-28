@@ -30,7 +30,10 @@ export function OverviewTab() {
     fetch(`${DBAL_URL}/health`, { signal: AbortSignal.timeout(3000) })
       .then(res => (res.ok ? res.json() : null))
       .then((json: Record<string, string> | null) => {
-        setDbalStatus(s => ({ ...s, state: json != null ? 'online' : 'offline' }))
+        setDbalStatus(s => ({
+          ...s,
+          state: json != null ? 'online' : 'offline',
+        }))
       })
       .catch(() => {
         setDbalStatus(s => ({ ...s, state: 'offline' }))

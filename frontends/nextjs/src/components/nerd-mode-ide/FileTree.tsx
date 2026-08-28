@@ -24,7 +24,7 @@ export function FileTree({
 }: FileTreeProps) {
   const wrap = depth > 0
 
-  const inner = nodes.map((node) => {
+  const inner = nodes.map(node => {
     const path = parentPath !== '' ? `${parentPath}/${node.name}` : node.name
     const expanded = expandedPaths.has(path)
     const isActive = node.type === 'file' && activePath === path
@@ -34,7 +34,9 @@ export function FileTree({
         <div key={path}>
           <div
             className={s.node}
-            onClick={() => { onToggleExpand(path) }}
+            onClick={() => {
+              onToggleExpand(path)
+            }}
           >
             <span className={s.icon}>{expanded ? '▾' : '▸'}</span>
             {node.name}

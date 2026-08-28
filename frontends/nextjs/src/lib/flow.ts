@@ -25,10 +25,14 @@ function getControlOffset(distance: number, curvature: number): number {
 
 function getDirection(position: Position): { x: number; y: number } {
   switch (position) {
-    case Position.Top: return { x: 0, y: -1 }
-    case Position.Bottom: return { x: 0, y: 1 }
-    case Position.Left: return { x: -1, y: 0 }
-    case Position.Right: return { x: 1, y: 0 }
+    case Position.Top:
+      return { x: 0, y: -1 }
+    case Position.Bottom:
+      return { x: 0, y: 1 }
+    case Position.Left:
+      return { x: -1, y: 0 }
+    case Position.Right:
+      return { x: 1, y: 0 }
   }
 }
 

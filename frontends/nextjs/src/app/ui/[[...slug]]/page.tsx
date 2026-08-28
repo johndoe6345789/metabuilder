@@ -54,7 +54,9 @@ export default async function DynamicUIPage({ params }: PageProps) {
 /**
  * Generate metadata for the page
  */
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const resolvedParams = await params
   const slug = resolvedParams.slug ?? []
   const path = '/' + slug.join('/')

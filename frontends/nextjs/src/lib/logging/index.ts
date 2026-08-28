@@ -1,6 +1,6 @@
 /**
  * Structured logging utility
- * 
+ *
  * Provides safe logging that doesn't expose stack traces in production.
  * Use this instead of direct console.log/error calls.
  */
@@ -29,7 +29,11 @@ function safeErrorMessage(error: unknown): string {
 /**
  * Format log entry for output
  */
-function formatLog(level: LogLevel, message: string, context?: LogContext): string {
+function formatLog(
+  level: LogLevel,
+  message: string,
+  context?: LogContext
+): string {
   const timestamp = new Date().toISOString()
   const contextStr = context !== undefined ? ` ${JSON.stringify(context)}` : ''
   return `[${timestamp}] ${level.toUpperCase()}: ${message}${contextStr}`
@@ -59,10 +63,10 @@ export const logger = {
    * Log error safely - exposes stack trace only in development
    */
   error(message: string, error?: unknown, context?: LogContext): void {
-    const errorMessage = error !== undefined ? safeErrorMessage(error) : undefined
-    const logContext = errorMessage !== undefined 
-      ? { ...context, error: errorMessage }
-      : context
+    const errorMessage =
+      error !== undefined ? safeErrorMessage(error) : undefined
+    const logContext =
+      errorMessage !== undefined ? { ...context, error: errorMessage } : context
 
     console.error(formatLog('error', message, logContext))
 

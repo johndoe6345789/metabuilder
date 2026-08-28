@@ -6,8 +6,16 @@ const MEDIA_API =
   process.env.NEXT_PUBLIC_MEDIA_API_URL ?? 'http://localhost:8090'
 
 export type RetroSystem =
-  | 'nes' | 'snes' | 'n64' | 'gb' | 'gbc' | 'gba'
-  | 'genesis' | 'ps1' | 'arcade' | 'dos'
+  | 'nes'
+  | 'snes'
+  | 'n64'
+  | 'gb'
+  | 'gbc'
+  | 'gba'
+  | 'genesis'
+  | 'ps1'
+  | 'arcade'
+  | 'dos'
 
 export interface RetroSession {
   id: string
@@ -40,19 +48,17 @@ export function useRetroSession() {
           body: JSON.stringify({ system, rom_path: romPath }),
         })
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        const data = await res.json() as RetroSession
+        const data = (await res.json()) as RetroSession
         setState({ session: data, loading: false, error: null })
       } catch (e) {
         setState({
           session: null,
           loading: false,
-          error: e instanceof Error
-            ? e.message
-            : 'Failed to start session',
+          error: e instanceof Error ? e.message : 'Failed to start session',
         })
       }
     },
-    [],
+    []
   )
 
   const stop = useCallback(async (): Promise<void> => {
@@ -78,7 +84,7 @@ export function useRetroSession() {
         body: JSON.stringify({ button, pressed }),
       })
     },
-    [state.session?.id],
+    [state.session?.id]
   )
 
   return { ...state, start, stop, sendInput }

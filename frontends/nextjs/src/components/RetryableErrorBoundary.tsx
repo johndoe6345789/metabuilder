@@ -86,7 +86,9 @@ export class RetryableErrorBoundary extends Component<
     }
   }
 
-  static getDerivedStateFromError(error: Error): Partial<RetryableErrorBoundaryState> {
+  static getDerivedStateFromError(
+    error: Error
+  ): Partial<RetryableErrorBoundaryState> {
     return {
       hasError: true,
       error,
@@ -96,7 +98,8 @@ export class RetryableErrorBoundary extends Component<
   override componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     const errorCount = this.state.errorCount + 1
     const report = errorReporting.reportError(error, {
-      component: this.props.componentName ?? errorInfo.componentStack ?? undefined,
+      component:
+        this.props.componentName ?? errorInfo.componentStack ?? undefined,
       ...this.props.context,
     })
 
@@ -114,7 +117,10 @@ export class RetryableErrorBoundary extends Component<
     this.props.onError?.(error, errorInfo)
 
     // Schedule automatic retry for retryable errors
-    if (report.isRetryable && this.state.retryCount < (this.props.maxAutoRetries ?? 3)) {
+    if (
+      report.isRetryable &&
+      this.state.retryCount < (this.props.maxAutoRetries ?? 3)
+    ) {
       this.scheduleAutoRetry()
     }
   }
@@ -139,7 +145,10 @@ export class RetryableErrorBoundary extends Component<
     let remainingMs = delay
 
     // Start countdown display
-    this.setState({ autoRetryScheduled: true, nextRetryIn: Math.ceil(remainingMs / 1000) })
+    this.setState({
+      autoRetryScheduled: true,
+      nextRetryIn: Math.ceil(remainingMs / 1000),
+    })
 
     // Update countdown every 100ms
     this.countdownIntervalId = setInterval(() => {
@@ -255,15 +264,19 @@ export class RetryableErrorBoundary extends Component<
       const category = this.getErrorCategory()
       const icon = this.getErrorIcon(category)
 
-      const userMessage = this.state.error !== null
-        ? errorReporting.getUserMessage(this.state.error, category)
-        : 'An error occurred while rendering this component.'
+      const userMessage =
+        this.state.error !== null
+          ? errorReporting.getUserMessage(this.state.error, category)
+          : 'An error occurred while rendering this component.'
 
       const showSupportInfo = this.props.showSupportInfo ?? true
       const supportEmail = this.props.supportEmail ?? 'support@metabuilder.dev'
 
       // Color scheme based on error category
-      const colorSchemes: Record<ErrorCategory, { border: string; bg: string; text: string }> = {
+      const colorSchemes: Record<
+        ErrorCategory,
+        { border: string; bg: string; text: string }
+      > = {
         network: {
           border: '#ffa94d',
           bg: '#fffbf0',
@@ -329,7 +342,9 @@ export class RetryableErrorBoundary extends Component<
             boxShadow: `0 2px 4px rgba(0, 0, 0, 0.05)`,
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+          <div
+            style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}
+          >
             <div
               style={{
                 fontSize: '28px',
@@ -340,8 +355,17 @@ export class RetryableErrorBoundary extends Component<
               {icon}
             </div>
             <div style={{ flex: 1 }}>
-              <h2 style={{ color: colors.text, margin: '0 0 8px 0', fontSize: '18px', fontWeight: 600 }}>
-                {category === 'not-found' ? 'Not Found' : 'Something went wrong'}
+              <h2
+                style={{
+                  color: colors.text,
+                  margin: '0 0 8px 0',
+                  fontSize: '18px',
+                  fontWeight: 600,
+                }}
+              >
+                {category === 'not-found'
+                  ? 'Not Found'
+                  : 'Something went wrong'}
               </h2>
               <p
                 style={{
@@ -355,38 +379,41 @@ export class RetryableErrorBoundary extends Component<
               </p>
 
               {/* Development-only error details */}
-              {process.env.NODE_ENV === 'development' && this.state.error !== null && (
-                <details style={{ marginTop: '12px', marginBottom: '12px' }}>
-                  <summary
-                    style={{
-                      cursor: 'pointer',
-                      color: '#868e96',
-                      fontSize: '12px',
-                      fontWeight: 500,
-                      userSelect: 'none',
-                      padding: '4px 0',
-                    }}
-                  >
-                    Error details ({category})
-                  </summary>
-                  <pre
-                    style={{
-                      marginTop: '8px',
-                      padding: '10px',
-                      backgroundColor: '#f8f9fa',
-                      borderRadius: '1rem',
-                      overflow: 'auto',
-                      fontSize: '12px',
-                      lineHeight: '1.4',
-                      maxHeight: '200px',
-                      color: '#666',
-                    }}
-                  >
-                    {this.state.error.message}
-                    {this.state.error.stack !== undefined && this.state.error.stack !== '' && `\n\n${this.state.error.stack}`}
-                  </pre>
-                </details>
-              )}
+              {process.env.NODE_ENV === 'development' &&
+                this.state.error !== null && (
+                  <details style={{ marginTop: '12px', marginBottom: '12px' }}>
+                    <summary
+                      style={{
+                        cursor: 'pointer',
+                        color: '#868e96',
+                        fontSize: '12px',
+                        fontWeight: 500,
+                        userSelect: 'none',
+                        padding: '4px 0',
+                      }}
+                    >
+                      Error details ({category})
+                    </summary>
+                    <pre
+                      style={{
+                        marginTop: '8px',
+                        padding: '10px',
+                        backgroundColor: '#f8f9fa',
+                        borderRadius: '1rem',
+                        overflow: 'auto',
+                        fontSize: '12px',
+                        lineHeight: '1.4',
+                        maxHeight: '200px',
+                        color: '#666',
+                      }}
+                    >
+                      {this.state.error.message}
+                      {this.state.error.stack !== undefined &&
+                        this.state.error.stack !== '' &&
+                        `\n\n${this.state.error.stack}`}
+                    </pre>
+                  </details>
+                )}
 
               {/* Error count indicator */}
               {this.state.errorCount > 1 && (
@@ -411,7 +438,8 @@ export class RetryableErrorBoundary extends Component<
                     margin: '4px 0',
                   }}
                 >
-                  Retry attempt: {this.state.retryCount} of {this.props.maxAutoRetries ?? 3}
+                  Retry attempt: {this.state.retryCount} of{' '}
+                  {this.props.maxAutoRetries ?? 3}
                 </p>
               )}
 
@@ -433,7 +461,14 @@ export class RetryableErrorBoundary extends Component<
               )}
 
               {/* Action buttons */}
-              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '16px' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  gap: '8px',
+                  flexWrap: 'wrap',
+                  marginTop: '16px',
+                }}
+              >
                 <button
                   onClick={this.handleManualRetry}
                   style={{
@@ -447,11 +482,11 @@ export class RetryableErrorBoundary extends Component<
                     fontWeight: 500,
                     transition: 'all 0.2s',
                   }}
-                  onMouseEnter={(e) => {
-                    (e.target as HTMLButtonElement).style.opacity = '0.9'
+                  onMouseEnter={e => {
+                    ;(e.target as HTMLButtonElement).style.opacity = '0.9'
                   }}
-                  onMouseLeave={(e) => {
-                    (e.target as HTMLButtonElement).style.opacity = '1'
+                  onMouseLeave={e => {
+                    ;(e.target as HTMLButtonElement).style.opacity = '1'
                   }}
                 >
                   Try Again
@@ -469,11 +504,13 @@ export class RetryableErrorBoundary extends Component<
                     fontWeight: 500,
                     transition: 'all 0.2s',
                   }}
-                  onMouseEnter={(e) => {
-                    (e.target as HTMLButtonElement).style.backgroundColor = '#e9ecef'
+                  onMouseEnter={e => {
+                    ;(e.target as HTMLButtonElement).style.backgroundColor =
+                      '#e9ecef'
                   }}
-                  onMouseLeave={(e) => {
-                    (e.target as HTMLButtonElement).style.backgroundColor = '#f1f3f5'
+                  onMouseLeave={e => {
+                    ;(e.target as HTMLButtonElement).style.backgroundColor =
+                      '#f1f3f5'
                   }}
                 >
                   Reload Page

@@ -84,7 +84,11 @@ export {
   InlineLoading,
   FormLoading,
 } from './LoadingSkeleton'
-export type { LoadingSkeletonProps, FormLoadingProps, TableLoadingProps } from './LoadingSkeleton'
+export type {
+  LoadingSkeletonProps,
+  FormLoadingProps,
+  TableLoadingProps,
+} from './LoadingSkeleton'
 
 // Empty State Showcase (demo component)
 export { EmptyStateShowcase } from './EmptyStateShowcase'
@@ -112,5 +116,8 @@ export { getComponentIcon } from './get-component-icon'
 export { PackageStyleLoader } from './PackageStyleLoader'
 
 // Retryable Error Boundary (depends on @/lib/error-reporting)
-export { RetryableErrorBoundary, withRetryableErrorBoundary } from './RetryableErrorBoundary'
+export {
+  RetryableErrorBoundary,
+  withRetryableErrorBoundary,
+} from './RetryableErrorBoundary'
 export type { RetryableErrorBoundaryProps } from './RetryableErrorBoundary'

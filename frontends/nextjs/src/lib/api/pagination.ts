@@ -1,6 +1,6 @@
 /**
  * Pagination utilities for API requests and UI components
- * 
+ *
  * Provides utilities for both offset-based and cursor-based pagination
  */
 
@@ -39,10 +39,12 @@ const MAX_LIMIT = 100
 /**
  * Normalize pagination parameters
  */
-export function normalizePaginationParams(params: PaginationParams): Required<PaginationParams> {
+export function normalizePaginationParams(
+  params: PaginationParams
+): Required<PaginationParams> {
   const page = Math.max(1, params.page ?? DEFAULT_PAGE)
   const limit = Math.min(MAX_LIMIT, Math.max(1, params.limit ?? DEFAULT_LIMIT))
-  
+
   return { page, limit }
 }
 
@@ -55,7 +57,7 @@ export function calculatePaginationMetadata(
 ): PaginationMetadata {
   const { page, limit } = params
   const totalPages = Math.ceil(total / limit)
-  
+
   return {
     page,
     limit,
@@ -83,7 +85,7 @@ export function createPaginationResponse<T>(
 ): { data: T[]; meta: PaginationMetadata } {
   const normalizedParams = normalizePaginationParams(params)
   const meta = calculatePaginationMetadata(normalizedParams, total)
-  
+
   return { data, meta }
 }
 
@@ -92,9 +94,10 @@ export function createPaginationResponse<T>(
  */
 export function normalizeCursorPaginationParams(
   params: CursorPaginationParams
-): Required<Omit<CursorPaginationParams, 'after' | 'before'>> & Pick<CursorPaginationParams, 'after' | 'before'> {
+): Required<Omit<CursorPaginationParams, 'after' | 'before'>> &
+  Pick<CursorPaginationParams, 'after' | 'before'> {
   const limit = Math.min(MAX_LIMIT, Math.max(1, params.limit ?? DEFAULT_LIMIT))
-  
+
   return {
     limit,
     after: params.after,
@@ -114,12 +117,12 @@ export function calculateCursorPaginationMetadata<T extends { id: string }>(
   const lastItem = items.length > 0 ? items[items.length - 1] : undefined
   const startCursor = firstItem?.id
   const endCursor = lastItem?.id
-  
+
   return {
     limit,
     hasNextPage: hasMore,
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    hasPreviousPage: (startCursor !== null && startCursor !== undefined),
+    hasPreviousPage: startCursor !== null && startCursor !== undefined,
     startCursor,
     endCursor,
   }
@@ -134,7 +137,7 @@ export function createCursorPaginationResponse<T extends { id: string }>(
   hasMore: boolean
 ): { data: T[]; meta: CursorPaginationMetadata } {
   const meta = calculateCursorPaginationMetadata(data, limit, hasMore)
-  
+
   return { data, meta }
 }
 
@@ -155,21 +158,28 @@ export function decodeCursor(cursor: string): string {
 /**
  * Get page numbers for pagination UI
  */
-export function getPageNumbers(currentPage: number, totalPages: number, maxVisible: number = 7): number[] {
+export function getPageNumbers(
+  currentPage: number,
+  totalPages: number,
+  maxVisible: number = 7
+): number[] {
   if (totalPages <= maxVisible) {
     return Array.from({ length: totalPages }, (_, i) => i + 1)
   }
-  
+
   const halfVisible = Math.floor(maxVisible / 2)
   let startPage = Math.max(1, currentPage - halfVisible)
   let endPage = Math.min(totalPages, currentPage + halfVisible)
-  
+
   // Adjust if we're near the start or end
   if (currentPage <= halfVisible) {
     endPage = maxVisible
   } else if (currentPage >= totalPages - halfVisible) {
     startPage = totalPages - maxVisible + 1
   }
-  
-  return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i)
+
+  return Array.from(
+    { length: endPage - startPage + 1 },
+    (_, i) => startPage + i
+  )
 }

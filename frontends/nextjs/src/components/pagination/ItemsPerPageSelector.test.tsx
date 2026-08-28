@@ -3,34 +3,26 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { ItemsPerPageSelector } from './ItemsPerPageSelector'
 
 describe('ItemsPerPageSelector', () => {
-  it.each([
-    { value: 10 },
-    { value: 20 },
-    { value: 50 },
-    { value: 100 },
-  ])('should display selected value $value', ({ value }) => {
-    const onChange = vi.fn()
+  it.each([{ value: 10 }, { value: 20 }, { value: 50 }, { value: 100 }])(
+    'should display selected value $value',
+    ({ value }) => {
+      const onChange = vi.fn()
 
-    const { container } = render(
-      <ItemsPerPageSelector
-        value={value}
-        onChange={onChange}
-      />
-    )
+      const { container } = render(
+        <ItemsPerPageSelector value={value} onChange={onChange} />
+      )
 
-    // The select component should render without error
-    const select = container.querySelector('select')
-    expect(select).toBeDefined()
-  })
+      // The select component should render without error
+      const select = container.querySelector('select')
+      expect(select).toBeDefined()
+    }
+  )
 
   it('should call onChange when value is changed', () => {
     const onChange = vi.fn()
 
     const { container } = render(
-      <ItemsPerPageSelector
-        value={20}
-        onChange={onChange}
-      />
+      <ItemsPerPageSelector value={20} onChange={onChange} />
     )
 
     const select = container.querySelector('select')
@@ -39,7 +31,7 @@ describe('ItemsPerPageSelector', () => {
       // Create a proper change event with a select element
       Object.defineProperty(select, 'value', {
         writable: true,
-        value: '50'
+        value: '50',
       })
       fireEvent.change(select, { target: { value: '50' } })
       expect(onChange).toHaveBeenCalledWith(50)
@@ -60,7 +52,7 @@ describe('ItemsPerPageSelector', () => {
 
     const select = container.querySelector('select')
     expect(select).toBeDefined()
-    
+
     // Check all custom options are rendered as MenuItem children
     const menuItems = container.querySelectorAll('option')
     expect(menuItems.length).toBe(customOptions.length)
@@ -85,11 +77,7 @@ describe('ItemsPerPageSelector', () => {
     const onChange = vi.fn()
 
     const { container } = render(
-      <ItemsPerPageSelector
-        value={20}
-        onChange={onChange}
-        disabled={true}
-      />
+      <ItemsPerPageSelector value={20} onChange={onChange} disabled={true} />
     )
 
     const select = container.querySelector('select')
@@ -102,15 +90,12 @@ describe('ItemsPerPageSelector', () => {
     const defaultOptions = [10, 20, 50, 100]
 
     const { container } = render(
-      <ItemsPerPageSelector
-        value={20}
-        onChange={onChange}
-      />
+      <ItemsPerPageSelector value={20} onChange={onChange} />
     )
 
     const select = container.querySelector('select')
     expect(select).toBeDefined()
-    
+
     // Check all default options are rendered as MenuItem children
     const menuItems = container.querySelectorAll('option')
     expect(menuItems.length).toBe(defaultOptions.length)

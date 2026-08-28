@@ -43,16 +43,20 @@ export function makeVaultEntry(
     }
   }
 
-  const createdAt = typeof config.createdAt === 'number'
-    ? config.createdAt
-    : Number(record.installedAt ?? 0)
-  const updatedAt = typeof config.updatedAt === 'number'
-    ? config.updatedAt
-    : Number(record.installedAt ?? 0)
+  const createdAt =
+    typeof config.createdAt === 'number'
+      ? config.createdAt
+      : Number(record.installedAt ?? 0)
+  const updatedAt =
+    typeof config.updatedAt === 'number'
+      ? config.updatedAt
+      : Number(record.installedAt ?? 0)
 
   return {
     id: record.packageId,
-    slug: String(config.slug ?? fallback?.slug ?? record.packageId.replace(/^vault_/, '')),
+    slug: String(
+      config.slug ?? fallback?.slug ?? record.packageId.replace(/^vault_/, '')
+    ),
     title: String(config.title ?? fallback?.title ?? record.packageId),
     username: String(config.username ?? fallback?.username ?? ''),
     password: String(config.password ?? fallback?.password ?? ''),
@@ -66,7 +70,11 @@ export function makeVaultEntry(
   }
 }
 
-export function encodeConfig(entry: VaultDraft, createdAt: number, updatedAt: number): string {
+export function encodeConfig(
+  entry: VaultDraft,
+  createdAt: number,
+  updatedAt: number
+): string {
   return JSON.stringify({
     slug: entry.slug,
     title: entry.title,

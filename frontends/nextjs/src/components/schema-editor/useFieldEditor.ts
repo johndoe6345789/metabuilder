@@ -21,7 +21,7 @@ interface UseFieldEditorResult {
 
 export function useFieldEditor(
   model: ModelSchema,
-  onSave: (m: ModelSchema) => void,
+  onSave: (m: ModelSchema) => void
 ): UseFieldEditorResult {
   const [name, setName] = useState(model.name)
   const [label, setLabel] = useState(model.label ?? '')
@@ -62,9 +62,18 @@ export function useFieldEditor(
   }
 
   return {
-    name, setName, label, setLabel,
-    fields, dialogOpen, editingField,
-    openAdd, openEdit, closeDialog,
-    saveField, deleteField, save,
+    name,
+    setName,
+    label,
+    setLabel,
+    fields,
+    dialogOpen,
+    editingField,
+    openAdd,
+    openEdit,
+    closeDialog,
+    saveField,
+    deleteField,
+    save,
   }
 }

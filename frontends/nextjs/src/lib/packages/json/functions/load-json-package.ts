@@ -1,8 +1,15 @@
 import { readFile } from 'fs/promises'
 import { join } from 'path'
-import type { JSONComponent, JSONPackage, JSONPackageMetadata, JSONPermission } from '../types'
+import type {
+  JSONComponent,
+  JSONPackage,
+  JSONPackageMetadata,
+  JSONPermission,
+} from '../types'
 
-export async function loadJSONPackage(packagePath: string): Promise<JSONPackage> {
+export async function loadJSONPackage(
+  packagePath: string
+): Promise<JSONPackage> {
   const metadataPath = join(packagePath, 'package.json')
   const metadataContent = await readFile(metadataPath, 'utf-8')
   const metadata = JSON.parse(metadataContent) as JSONPackageMetadata
@@ -12,7 +19,9 @@ export async function loadJSONPackage(packagePath: string): Promise<JSONPackage>
   try {
     const componentsPath = join(packagePath, 'components', 'ui.json')
     const componentsContent = await readFile(componentsPath, 'utf-8')
-    const componentsData = JSON.parse(componentsContent) as { components?: JSONComponent[] }
+    const componentsData = JSON.parse(componentsContent) as {
+      components?: JSONComponent[]
+    }
     components = componentsData.components ?? []
     hasComponents = Array.isArray(components) && components.length > 0
   } catch {
@@ -24,7 +33,9 @@ export async function loadJSONPackage(packagePath: string): Promise<JSONPackage>
   try {
     const permissionsPath = join(packagePath, 'permissions', 'roles.json')
     const permissionsContent = await readFile(permissionsPath, 'utf-8')
-    const permissionsData = JSON.parse(permissionsContent) as { permissions?: JSONPermission[] }
+    const permissionsData = JSON.parse(permissionsContent) as {
+      permissions?: JSONPermission[]
+    }
     permissions = permissionsData.permissions ?? []
     hasPermissions = Array.isArray(permissions) && permissions.length > 0
   } catch {

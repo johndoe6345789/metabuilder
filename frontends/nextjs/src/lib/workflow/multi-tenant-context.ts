@@ -189,7 +189,9 @@ export class MultiTenantContextBuilder {
       triggerData: requestData?.triggerData ?? {},
       variables: this.buildVariables(requestData?.variables),
       secrets: requestData?.secrets ?? {},
-      request: this.options.captureRequestData ? requestData?.request as WorkflowContext['request'] : undefined,
+      request: this.options.captureRequestData
+        ? (requestData?.request as WorkflowContext['request'])
+        : undefined,
       multiTenant: multiTenantMeta,
       requestMetadata: {
         ipAddress: this.requestContext.ipAddress,
@@ -197,7 +199,8 @@ export class MultiTenantContextBuilder {
         originUrl: this.requestContext.originUrl,
         sessionId: this.requestContext.sessionId,
       },
-      executionLimits: this.workflow.executionLimits ?? this.getDefaultExecutionLimits(),
+      executionLimits:
+        this.workflow.executionLimits ?? this.getDefaultExecutionLimits(),
       credentialBindings: new Map(),
     }
 
@@ -234,12 +237,12 @@ export class MultiTenantContextBuilder {
       if (!this.options.allowCrossTenantAccess) {
         throw new Error(
           `Cross-tenant access disabled: User ${this.requestContext.userId} ` +
-          `cannot access workflow in tenant ${this.workflow.tenantId}`
+            `cannot access workflow in tenant ${this.workflow.tenantId}`
         )
       }
       console.warn(
         `[SECURITY] Super-admin ${this.requestContext.userId} accessing ` +
-        `cross-tenant workflow ${this.workflow.id}`
+          `cross-tenant workflow ${this.workflow.id}`
       )
       return
     }
@@ -247,14 +250,16 @@ export class MultiTenantContextBuilder {
     // Access denied
     throw new Error(
       `Forbidden: Workflow ${this.workflow.id} belongs to tenant ` +
-      `${this.workflow.tenantId}, user is in tenant ${this.requestContext.tenantId}`
+        `${this.workflow.tenantId}, user is in tenant ${this.requestContext.tenantId}`
     )
   }
 
   /**
    * Build multi-tenant metadata
    */
-  private buildMultiTenantMetadata(trigger?: WorkflowTrigger): MultiTenantMetadata {
+  private buildMultiTenantMetadata(
+    trigger?: WorkflowTrigger
+  ): MultiTenantMetadata {
     const executionMode = this.determineExecutionMode(trigger)
 
     return {
@@ -320,16 +325,16 @@ export class MultiTenantContextBuilder {
    * Build and scope variables
    * Merges workflow defaults with request overrides
    */
-  private buildVariables(
-    requestVariables?: DataRecord
-  ): DataRecord {
+  private buildVariables(requestVariables?: DataRecord): DataRecord {
     const variables: DataRecord = {}
 
     // 1. Add workflow defaults
     for (const [varName, varDef] of Object.entries(this.workflow.variables)) {
       // Only allow workflow and execution scopes (not global)
       if (varDef.scope === 'global') {
-        console.warn(`[SECURITY] Skipping global-scope variable ${varName} - not allowed`)
+        console.warn(
+          `[SECURITY] Skipping global-scope variable ${varName} - not allowed`
+        )
         continue
       }
 
@@ -366,15 +371,22 @@ export class MultiTenantContextBuilder {
     const errors: string[] = []
 
     // 1. Tenant ID must match (unless cross-tenant access is explicitly allowed)
-    if (context.tenantId !== this.workflow.tenantId && !this.options.allowCrossTenantAccess) {
+    if (
+      context.tenantId !== this.workflow.tenantId &&
+      !this.options.allowCrossTenantAccess
+    ) {
       errors.push(
         `Context tenant ${context.tenantId} does not match ` +
-        `workflow tenant ${this.workflow.tenantId}`
+          `workflow tenant ${this.workflow.tenantId}`
       )
     }
 
     // 2. User level consistency
-    if (!Number.isFinite(context.user.level) || context.user.level < 1 || context.user.level > 4) {
+    if (
+      !Number.isFinite(context.user.level) ||
+      context.user.level < 1 ||
+      context.user.level > 4
+    ) {
       errors.push(`Invalid user level: ${String(context.user.level)}`)
     }
 
@@ -384,17 +396,20 @@ export class MultiTenantContextBuilder {
     }
 
     // 4. Check execution limits
-    const workflowLimit = this.workflow.executionLimits ?? this.getDefaultExecutionLimits()
-    if (context.executionLimits.maxExecutionTime > workflowLimit.maxExecutionTime) {
+    const workflowLimit =
+      this.workflow.executionLimits ?? this.getDefaultExecutionLimits()
+    if (
+      context.executionLimits.maxExecutionTime > workflowLimit.maxExecutionTime
+    ) {
       errors.push(
         `Requested execution time (${String(context.executionLimits.maxExecutionTime)}ms) ` +
-        `exceeds workflow limit (${String(workflowLimit.maxExecutionTime)}ms)`
+          `exceeds workflow limit (${String(workflowLimit.maxExecutionTime)}ms)`
       )
     }
 
     if (errors.length > 0) {
       throw new Error(
-        `Context validation failed:\n${errors.map((e) => `  - ${e}`).join('\n')}`
+        `Context validation failed:\n${errors.map(e => `  - ${e}`).join('\n')}`
       )
     }
   }
@@ -402,7 +417,9 @@ export class MultiTenantContextBuilder {
   /**
    * Validate variables don't cross tenant boundaries
    */
-  private validateVariableTenantIsolation(context: ExtendedWorkflowContext): void {
+  private validateVariableTenantIsolation(
+    context: ExtendedWorkflowContext
+  ): void {
     for (const [varName, varValue] of Object.entries(context.variables)) {
       if (varValue != null && typeof varValue === 'object') {
         const record = varValue as Record<string, unknown>
@@ -443,7 +460,10 @@ export class MultiTenantContextBuilder {
           name: binding.credentialName,
         })
       } catch (error: unknown) {
-        console.error(`Failed to bind credential for node ${binding.nodeId}:`, error)
+        console.error(
+          `Failed to bind credential for node ${binding.nodeId}:`,
+          error
+        )
         throw error
       }
     }
@@ -511,7 +531,10 @@ export class MultiTenantContextBuilder {
     }
 
     // 3. Check required fields
-    if (this.requestContext.userId === '' || this.requestContext.userId.trim() === '') {
+    if (
+      this.requestContext.userId === '' ||
+      this.requestContext.userId.trim() === ''
+    ) {
       errors.push({
         path: 'user.id',
         message: 'User ID is required',
@@ -566,7 +589,11 @@ export async function createContextFromRequest(
   requestData?: ContextRequestData,
   options?: ContextBuilderOptions
 ): Promise<ExtendedWorkflowContext> {
-  const builder = new MultiTenantContextBuilder(workflow, requestContext, options)
+  const builder = new MultiTenantContextBuilder(
+    workflow,
+    requestContext,
+    options
+  )
   return builder.build(requestData)
 }
 
@@ -596,7 +623,9 @@ export function canUserAccessWorkflow(
  * Extract request context from Next.js request headers
  * Assumes JWT token in Authorization header
  */
-export function extractRequestContext(headers?: Record<string, string>): RequestContext | null {
+export function extractRequestContext(
+  headers?: Record<string, string>
+): RequestContext | null {
   if (headers == null) {
     return null
   }
@@ -611,7 +640,9 @@ export function extractRequestContext(headers?: Record<string, string>): Request
 /**
  * Sanitize context for logging (remove secrets)
  */
-export function sanitizeContextForLogging(context: ExtendedWorkflowContext): Record<string, unknown> {
+export function sanitizeContextForLogging(
+  context: ExtendedWorkflowContext
+): Record<string, unknown> {
   return {
     executionId: context.executionId,
     tenantId: context.tenantId,
@@ -620,12 +651,14 @@ export function sanitizeContextForLogging(context: ExtendedWorkflowContext): Rec
     multiTenant: {
       ...context.multiTenant,
       // Don't log sensitive request data
-      ipAddress: context.multiTenant.ipAddress != null
-        ? context.multiTenant.ipAddress.substring(0, 10) + '...'
-        : undefined,
-      userAgent: context.multiTenant.userAgent != null
-        ? context.multiTenant.userAgent.substring(0, 20) + '...'
-        : undefined,
+      ipAddress:
+        context.multiTenant.ipAddress != null
+          ? context.multiTenant.ipAddress.substring(0, 10) + '...'
+          : undefined,
+      userAgent:
+        context.multiTenant.userAgent != null
+          ? context.multiTenant.userAgent.substring(0, 20) + '...'
+          : undefined,
     },
     executionLimits: context.executionLimits,
     // Don't log secrets, credentials, or request body

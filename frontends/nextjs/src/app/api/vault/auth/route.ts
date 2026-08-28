@@ -13,7 +13,10 @@ function buildAuthResponse(authenticated: boolean): NextResponse {
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const expected = getExpectedVaultSessionToken()
   if (expected === null) {
-    return NextResponse.json({ error: 'Vault master password is not configured' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Vault master password is not configured' },
+      { status: 500 }
+    )
   }
   const current = request.cookies.get(VAULT_COOKIE_NAME)?.value ?? ''
   return buildAuthResponse(safeTokenEqual(current, expected))
@@ -22,17 +25,28 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const expected = getExpectedVaultSessionToken()
   if (expected === null) {
-    return NextResponse.json({ error: 'Vault master password is not configured' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Vault master password is not configured' },
+      { status: 500 }
+    )
   }
 
-  const body = await request.json().catch(() => null) as { password?: string } | null
+  const body = (await request.json().catch(() => null)) as {
+    password?: string
+  } | null
   const password = body?.password ?? ''
   if (password.length === 0) {
-    return NextResponse.json({ authenticated: false, error: 'Password is required' }, { status: 400 })
+    return NextResponse.json(
+      { authenticated: false, error: 'Password is required' },
+      { status: 400 }
+    )
   }
 
   if (!safeTokenEqual(createVaultSessionToken(password), expected)) {
-    return NextResponse.json({ authenticated: false, error: 'Invalid master password' }, { status: 401 })
+    return NextResponse.json(
+      { authenticated: false, error: 'Invalid master password' },
+      { status: 401 }
+    )
   }
 
   const response = buildAuthResponse(true)

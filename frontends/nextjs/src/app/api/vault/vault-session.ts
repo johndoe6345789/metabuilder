@@ -38,5 +38,9 @@ export function hasValidVaultSession(request: Request): boolean {
   return cookieHeader
     .split(';')
     .map(part => part.trim())
-    .some(part => part.startsWith(prefix) && safeTokenEqual(part.slice(prefix.length), expected))
+    .some(
+      part =>
+        part.startsWith(prefix) &&
+        safeTokenEqual(part.slice(prefix.length), expected)
+    )
 }

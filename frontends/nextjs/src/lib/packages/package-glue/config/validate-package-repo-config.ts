@@ -26,7 +26,7 @@ export function validatePackageRepoConfig(config: PackageRepoConfig): string[] {
     }
   }
 
-  const enabledSources = config.sources.filter((s) => s.enabled)
+  const enabledSources = config.sources.filter(s => s.enabled)
   if (enabledSources.length === 0) {
     errors.push('At least one source must be enabled')
   }

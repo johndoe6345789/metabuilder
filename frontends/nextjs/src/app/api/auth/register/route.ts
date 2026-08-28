@@ -12,17 +12,25 @@ import { register } from '@/lib/auth/api/register'
 
 export async function POST(request: Request): Promise<NextResponse> {
   try {
-    const body = await request.json() as {
+    const body = (await request.json()) as {
       username?: string
       email?: string
       password?: string
     }
     const { username, email, password } = body
 
-    if (username === undefined || email === undefined || password === undefined) {
+    if (
+      username === undefined ||
+      email === undefined ||
+      password === undefined
+    ) {
       return NextResponse.json(
-        { success: false, user: null, error: 'Username, email, and password are required' },
-        { status: 400 },
+        {
+          success: false,
+          user: null,
+          error: 'Username, email, and password are required',
+        },
+        { status: 400 }
       )
     }
 
@@ -37,7 +45,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     console.error('Register route error:', error)
     return NextResponse.json(
       { success: false, user: null, error: 'Internal server error' },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

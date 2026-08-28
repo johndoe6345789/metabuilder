@@ -1,6 +1,9 @@
 import type { PackageContent, PackageManifest } from '../../package-types'
 
-export const spotifyClonePackage = (): { manifest: PackageManifest; content: PackageContent } => ({
+export const spotifyClonePackage = (): {
+  manifest: PackageManifest
+  content: PackageContent
+} => ({
   manifest: {
     id: 'spotify-clone',
     name: 'Music Streaming Platform',
@@ -25,10 +28,21 @@ export const spotifyClonePackage = (): { manifest: PackageManifest; content: Pac
         name: 'Artist',
         displayName: 'Artist',
         fields: [
-          { name: 'id', type: 'string', label: 'ID', required: true, primaryKey: true },
+          {
+            name: 'id',
+            type: 'string',
+            label: 'ID',
+            required: true,
+            primaryKey: true,
+          },
           { name: 'name', type: 'string', label: 'Name', required: true },
           { name: 'bio', type: 'text', label: 'Biography', required: false },
-          { name: 'imageUrl', type: 'string', label: 'Image URL', required: false },
+          {
+            name: 'imageUrl',
+            type: 'string',
+            label: 'Image URL',
+            required: false,
+          },
           { name: 'genre', type: 'string', label: 'Genre', required: false },
           {
             name: 'verified',
@@ -44,48 +58,153 @@ export const spotifyClonePackage = (): { manifest: PackageManifest; content: Pac
             required: true,
             defaultValue: 0,
           },
-          { name: 'createdAt', type: 'number', label: 'Created At', required: true },
+          {
+            name: 'createdAt',
+            type: 'number',
+            label: 'Created At',
+            required: true,
+          },
         ],
       },
       {
         name: 'Album',
         displayName: 'Album',
         fields: [
-          { name: 'id', type: 'string', label: 'ID', required: true, primaryKey: true },
+          {
+            name: 'id',
+            type: 'string',
+            label: 'ID',
+            required: true,
+            primaryKey: true,
+          },
           { name: 'title', type: 'string', label: 'Title', required: true },
-          { name: 'artistId', type: 'string', label: 'Artist ID', required: true },
-          { name: 'coverUrl', type: 'string', label: 'Cover URL', required: false },
-          { name: 'releaseDate', type: 'number', label: 'Release Date', required: false },
+          {
+            name: 'artistId',
+            type: 'string',
+            label: 'Artist ID',
+            required: true,
+          },
+          {
+            name: 'coverUrl',
+            type: 'string',
+            label: 'Cover URL',
+            required: false,
+          },
+          {
+            name: 'releaseDate',
+            type: 'number',
+            label: 'Release Date',
+            required: false,
+          },
           { name: 'genre', type: 'string', label: 'Genre', required: false },
-          { name: 'createdAt', type: 'number', label: 'Created At', required: true },
+          {
+            name: 'createdAt',
+            type: 'number',
+            label: 'Created At',
+            required: true,
+          },
         ],
       },
       {
         name: 'Track',
         displayName: 'Track',
         fields: [
-          { name: 'id', type: 'string', label: 'ID', required: true, primaryKey: true },
+          {
+            name: 'id',
+            type: 'string',
+            label: 'ID',
+            required: true,
+            primaryKey: true,
+          },
           { name: 'title', type: 'string', label: 'Title', required: true },
-          { name: 'artistId', type: 'string', label: 'Artist ID', required: true },
-          { name: 'albumId', type: 'string', label: 'Album ID', required: false },
-          { name: 'audioUrl', type: 'string', label: 'Audio URL', required: true },
-          { name: 'duration', type: 'number', label: 'Duration (seconds)', required: true },
-          { name: 'trackNumber', type: 'number', label: 'Track Number', required: false },
-          { name: 'plays', type: 'number', label: 'Play Count', required: true, defaultValue: 0 },
-          { name: 'likes', type: 'number', label: 'Likes', required: true, defaultValue: 0 },
-          { name: 'createdAt', type: 'number', label: 'Created At', required: true },
+          {
+            name: 'artistId',
+            type: 'string',
+            label: 'Artist ID',
+            required: true,
+          },
+          {
+            name: 'albumId',
+            type: 'string',
+            label: 'Album ID',
+            required: false,
+          },
+          {
+            name: 'audioUrl',
+            type: 'string',
+            label: 'Audio URL',
+            required: true,
+          },
+          {
+            name: 'duration',
+            type: 'number',
+            label: 'Duration (seconds)',
+            required: true,
+          },
+          {
+            name: 'trackNumber',
+            type: 'number',
+            label: 'Track Number',
+            required: false,
+          },
+          {
+            name: 'plays',
+            type: 'number',
+            label: 'Play Count',
+            required: true,
+            defaultValue: 0,
+          },
+          {
+            name: 'likes',
+            type: 'number',
+            label: 'Likes',
+            required: true,
+            defaultValue: 0,
+          },
+          {
+            name: 'createdAt',
+            type: 'number',
+            label: 'Created At',
+            required: true,
+          },
         ],
       },
       {
         name: 'MusicPlaylist',
         displayName: 'Playlist',
         fields: [
-          { name: 'id', type: 'string', label: 'ID', required: true, primaryKey: true },
+          {
+            name: 'id',
+            type: 'string',
+            label: 'ID',
+            required: true,
+            primaryKey: true,
+          },
           { name: 'name', type: 'string', label: 'Name', required: true },
-          { name: 'description', type: 'text', label: 'Description', required: false },
-          { name: 'ownerId', type: 'string', label: 'Owner ID', required: true },
-          { name: 'coverUrl', type: 'string', label: 'Cover URL', required: false },
-          { name: 'trackIds', type: 'json', label: 'Track IDs', required: true },
+          {
+            name: 'description',
+            type: 'text',
+            label: 'Description',
+            required: false,
+          },
+          {
+            name: 'ownerId',
+            type: 'string',
+            label: 'Owner ID',
+            required: true,
+          },
+          {
+            name: 'coverUrl',
+            type: 'string',
+            label: 'Cover URL',
+            required: false,
+          },
+          {
+            name: 'trackIds',
+            type: 'json',
+            label: 'Track IDs',
+            required: true,
+          },
           {
             name: 'isPublic',
             type: 'boolean',
@@ -100,7 +219,12 @@ export const spotifyClonePackage = (): { manifest: PackageManifest; content: Pac
             required: true,
             defaultValue: 0,
           },
-          { name: 'createdAt', type: 'number', label: 'Created At', required: true },
+          {
+            name: 'createdAt',
+            type: 'number',
+            label: 'Created At',
+            required: true,
+          },
         ],
       },
     ],

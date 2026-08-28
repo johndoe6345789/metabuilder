@@ -1,7 +1,7 @@
 /**
  * @file role-levels.ts
  * @description Role level mappings for authorization
- * 
+ *
  * Re-exports from centralized constants for backward compatibility.
  * Prefer importing directly from @/lib/constants in new code.
  */

@@ -32,7 +32,8 @@ function normalizeInstalledPackage(record: Record<string, unknown>) {
         ? record.tenantId
         : null,
     installedAt:
-      typeof record.installedAt === 'number' || typeof record.installedAt === 'bigint'
+      typeof record.installedAt === 'number' ||
+      typeof record.installedAt === 'bigint'
         ? record.installedAt
         : null,
   } satisfies VaultRecord
@@ -40,7 +41,10 @@ function normalizeInstalledPackage(record: Record<string, unknown>) {
 
 function requireVaultMasterAccess(request: Request): NextResponse | null {
   if (!hasValidVaultSession(request)) {
-    return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
+    return NextResponse.json(
+      { error: 'Authentication required' },
+      { status: 401 }
+    )
   }
   return null
 }
@@ -65,11 +69,7 @@ async function ensureSeeded(): Promise<void> {
       packageId,
       version: '1.0.0',
       enabled: true,
-      config: encodeConfig(
-        entry,
-        now,
-        now
-      ),
+      config: encodeConfig(entry, now, now),
       tenantId: 'system',
       installedAt: now,
     })
@@ -129,8 +129,16 @@ export async function POST(request: Request) {
     updatedAt: now,
   }
 
-  if (entry.slug.length === 0 || entry.title.length === 0 || entry.username.length === 0 || entry.password.length === 0) {
-    return NextResponse.json({ error: 'Slug, title, username, and password are required' }, { status: 400 })
+  if (
+    entry.slug.length === 0 ||
+    entry.title.length === 0 ||
+    entry.username.length === 0 ||
+    entry.password.length === 0
+  ) {
+    return NextResponse.json(
+      { error: 'Slug, title, username, and password are required' },
+      { status: 400 }
+    )
   }
 
   try {
@@ -146,8 +154,11 @@ export async function POST(request: Request) {
     const normalized = makeVaultEntry(normalizeInstalledPackage(created))
     return NextResponse.json({ entry: normalized }, { status: 201 })
   } catch {
-    return NextResponse.json({
-      entry: upsertFallbackVaultEntry(entry, now, now),
-    }, { status: 201 })
+    return NextResponse.json(
+      {
+        entry: upsertFallbackVaultEntry(entry, now, now),
+      },
+      { status: 201 }
+    )
   }
 }

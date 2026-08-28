@@ -34,7 +34,9 @@ export function ColorSwatch({ varName, value, onChange }: ColorSwatchProps) {
         size="small"
         value={value}
         aria-label={formatLabel(varName)}
-        onChange={e => { onChange(varName, e.target.value) }}
+        onChange={e => {
+          onChange(varName, e.target.value)
+        }}
       />
     </div>
   )

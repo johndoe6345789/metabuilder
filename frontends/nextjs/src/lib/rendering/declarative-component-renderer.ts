@@ -11,7 +11,10 @@ import type { JsonValue, JsonObject } from '@/types/utility-types'
 
 type ComponentDef = JsonObject
 
-const PACKAGE_COMPONENT_REGISTRY: Record<string, Record<string, ComponentDef>> = {}
+const PACKAGE_COMPONENT_REGISTRY: Record<
+  string,
+  Record<string, ComponentDef>
+> = {}
 
 /**
  * Load components from a package seed/content object into the registry.
@@ -24,19 +27,27 @@ export function loadPackageComponents(packageContent: JsonValue): void {
   const pkg = packageContent as JsonObject
   const metadata = pkg.metadata
   const packageId =
-    (metadata !== null && metadata !== undefined && typeof metadata === 'object' && !Array.isArray(metadata)
+    (metadata !== null &&
+    metadata !== undefined &&
+    typeof metadata === 'object' &&
+    !Array.isArray(metadata)
       ? (metadata as JsonObject)['packageId']
-      : undefined) ?? 
-    pkg['package'] ?? 
+      : undefined) ??
+    pkg['package'] ??
     pkg['packageId']
-  if (packageId === null || packageId === undefined || typeof packageId !== 'string') return
+  if (
+    packageId === null ||
+    packageId === undefined ||
+    typeof packageId !== 'string'
+  )
+    return
 
   const compsArray: JsonValue[] =
     Array.isArray(pkg.components) && pkg.components.length > 0
       ? pkg.components
       : Array.isArray((pkg.ui as JsonObject | undefined)?.components)
-      ? ((pkg.ui as JsonObject).components as JsonValue[])
-      : []
+        ? ((pkg.ui as JsonObject).components as JsonValue[])
+        : []
 
   const compMap: Record<string, ComponentDef> = {}
 
@@ -53,7 +64,10 @@ export function loadPackageComponents(packageContent: JsonValue): void {
   }
 }
 
-export function getRegisteredComponent(packageId: string, componentId: string): ComponentDef | null {
+export function getRegisteredComponent(
+  packageId: string,
+  componentId: string
+): ComponentDef | null {
   return PACKAGE_COMPONENT_REGISTRY[packageId]?.[componentId] ?? null
 }
 
@@ -62,7 +76,9 @@ export function listRegisteredPackages(): string[] {
 }
 
 export function clearRegistry(): void {
-  Object.keys(PACKAGE_COMPONENT_REGISTRY).forEach(k => delete PACKAGE_COMPONENT_REGISTRY[k])
+  Object.keys(PACKAGE_COMPONENT_REGISTRY).forEach(
+    k => delete PACKAGE_COMPONENT_REGISTRY[k]
+  )
 }
 
 export type { ComponentDef }

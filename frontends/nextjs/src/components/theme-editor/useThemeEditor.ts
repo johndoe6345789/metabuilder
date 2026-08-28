@@ -2,7 +2,9 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import {
-  LIGHT_DEFAULTS, DARK_DEFAULTS, applyColorsToRoot,
+  LIGHT_DEFAULTS,
+  DARK_DEFAULTS,
+  applyColorsToRoot,
 } from './theme-defaults'
 import type { ThemeColors, ThemeEditorState } from './theme-defaults'
 import { resolveTenantTheme, applyTenantTheme } from './apply-tenant-theme'
@@ -26,16 +28,18 @@ export function useThemeEditor(): ThemeEditorState {
   // built-in defaults.
   useEffect(() => {
     let cancelled = false
-    resolveTenantTheme().then(theme => {
-      if (cancelled) return
-      setLightColors(theme.light)
-      setDarkColors(theme.dark)
-      const isDark =
-        document.documentElement.getAttribute('data-theme') === 'dark'
-      applyTenantTheme(theme, isDark ? 'dark' : 'light')
-    }).catch(() => {
-      // resolveTenantTheme already falls back internally; nothing left to do
-    })
+    resolveTenantTheme()
+      .then(theme => {
+        if (cancelled) return
+        setLightColors(theme.light)
+        setDarkColors(theme.dark)
+        const isDark =
+          document.documentElement.getAttribute('data-theme') === 'dark'
+        applyTenantTheme(theme, isDark ? 'dark' : 'light')
+      })
+      .catch(() => {
+        // resolveTenantTheme already falls back internally; nothing left to do
+      })
     return () => {
       cancelled = true
     }
@@ -55,42 +59,39 @@ export function useThemeEditor(): ThemeEditorState {
     setDarkColors(DARK_DEFAULTS)
   }, [])
 
-  const saveColors = useCallback(
-    (light: ThemeColors, dark: ThemeColors) => {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ light, dark }))
+  const saveColors = useCallback((light: ThemeColors, dark: ThemeColors) => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ light, dark }))
 
-      // Best-effort: a failed DBAL write still leaves the instant-apply
-      // localStorage copy above intact for this browser.
-      const payload = {
-        id: TENANT,
-        tenantId: TENANT,
-        lightColors: JSON.stringify(light),
-        darkColors: JSON.stringify(dark),
-        updatedAt: Date.now(),
-      }
-      fetch(`${DBAL}/${TENANT}/core/TenantTheme`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-        signal: AbortSignal.timeout(6000),
+    // Best-effort: a failed DBAL write still leaves the instant-apply
+    // localStorage copy above intact for this browser.
+    const payload = {
+      id: TENANT,
+      tenantId: TENANT,
+      lightColors: JSON.stringify(light),
+      darkColors: JSON.stringify(dark),
+      updatedAt: Date.now(),
+    }
+    fetch(`${DBAL}/${TENANT}/core/TenantTheme`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(6000),
+    })
+      .then(res => {
+        if (res.status === 409) {
+          return fetch(`${DBAL}/${TENANT}/core/TenantTheme/${TENANT}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+            signal: AbortSignal.timeout(6000),
+          })
+        }
+        return res
       })
-        .then(res => {
-          if (res.status === 409) {
-            return fetch(`${DBAL}/${TENANT}/core/TenantTheme/${TENANT}`, {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(payload),
-              signal: AbortSignal.timeout(6000),
-            })
-          }
-          return res
-        })
-        .catch(() => {
-          // Non-fatal — see comment above.
-        })
-    },
-    [],
-  )
+      .catch(() => {
+        // Non-fatal — see comment above.
+      })
+  }, [])
 
   const updateColor = useCallback(
     (tab: 'light' | 'dark', key: string, val: string) => {
@@ -100,12 +101,18 @@ export function useThemeEditor(): ThemeEditorState {
         setDarkColors(prev => ({ ...prev, [key]: val }))
       }
     },
-    [],
+    []
   )
 
   return {
-    lightColors, darkColors, activeTab, setActiveTab,
-    updateColor, applyColors, resetColors, saveColors,
+    lightColors,
+    darkColors,
+    activeTab,
+    setActiveTab,
+    updateColor,
+    applyColors,
+    resetColors,
+    saveColors,
     lightDefaults: LIGHT_DEFAULTS,
     darkDefaults: DARK_DEFAULTS,
   }

@@ -30,7 +30,7 @@ export function useRadioChannels() {
     try {
       const res = await fetch(`${MEDIA_API}/api/radio/channels`)
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      const data = await res.json() as { channels: RadioChannel[] }
+      const data = (await res.json()) as { channels: RadioChannel[] }
       setChannels(data.channels)
       setError(null)
     } catch (e) {
@@ -42,22 +42,37 @@ export function useRadioChannels() {
 
   useEffect(() => {
     void refresh()
-    const interval = setInterval(() => { void refresh() }, 15000)
-    return () => { clearInterval(interval) }
+    const interval = setInterval(() => {
+      void refresh()
+    }, 15000)
+    return () => {
+      clearInterval(interval)
+    }
   }, [refresh])
 
-  const listen = useCallback(async (channelId: string): Promise<string> => {
-    const res = await fetch(`${MEDIA_API}/api/radio/channels/${channelId}/start`, { method: 'POST' })
-    if (!res.ok) throw new Error(`HTTP ${res.status}`)
-    const data = await res.json() as { stream_url: string }
-    await refresh()
-    return `${MEDIA_API}${data.stream_url}`
-  }, [refresh])
+  const listen = useCallback(
+    async (channelId: string): Promise<string> => {
+      const res = await fetch(
+        `${MEDIA_API}/api/radio/channels/${channelId}/start`,
+        { method: 'POST' }
+      )
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const data = (await res.json()) as { stream_url: string }
+      await refresh()
+      return `${MEDIA_API}${data.stream_url}`
+    },
+    [refresh]
+  )
 
-  const stop = useCallback(async (channelId: string): Promise<void> => {
-    await fetch(`${MEDIA_API}/api/radio/channels/${channelId}/stop`, { method: 'POST' })
-    await refresh()
-  }, [refresh])
+  const stop = useCallback(
+    async (channelId: string): Promise<void> => {
+      await fetch(`${MEDIA_API}/api/radio/channels/${channelId}/stop`, {
+        method: 'POST',
+      })
+      await refresh()
+    },
+    [refresh]
+  )
 
   return { channels, loading, error, refresh, listen, stop }
 }

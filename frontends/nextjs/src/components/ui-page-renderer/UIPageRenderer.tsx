@@ -6,7 +6,10 @@ import { renderJSONComponent } from '@/lib/packages/json/render-json-component'
 import type { JSONComponent } from '@/lib/packages/json/types'
 import { renderNode, type TreeNode } from '@/components/blocks/block-registry'
 
-type PageActionHandler = (action: string, data: Record<string, unknown>) => void | Promise<void>
+type PageActionHandler = (
+  action: string,
+  data: Record<string, unknown>
+) => void | Promise<void>
 
 interface UIPageRendererProps {
   layout: JSONComponent | TreeNode
@@ -17,8 +20,13 @@ interface UIPageRendererProps {
  * JSON component ({render:{template}}). */
 function isComponentTree(layout: JSONComponent | TreeNode): layout is TreeNode {
   const l = layout as unknown as Record<string, unknown>
-  return typeof l === 'object' && l !== null &&
-    'type' in l && 'children' in l && !('render' in l)
+  return (
+    typeof l === 'object' &&
+    l !== null &&
+    'type' in l &&
+    'children' in l &&
+    !('render' in l)
+  )
 }
 
 /**
@@ -28,10 +36,12 @@ function isComponentTree(layout: JSONComponent | TreeNode): layout is TreeNode {
  */
 export function UIPageRenderer({ layout, actions = {} }: UIPageRendererProps) {
   const elements = React.useMemo(
-    () => (isComponentTree(layout)
-      ? renderNode(layout)
-      : renderJSONComponent(layout)),
-    [layout])
+    () =>
+      isComponentTree(layout)
+        ? renderNode(layout)
+        : renderJSONComponent(layout),
+    [layout]
+  )
 
   return (
     <UIPageActionsContext.Provider value={actions}>
@@ -44,7 +54,9 @@ export function UIPageRenderer({ layout, actions = {} }: UIPageRendererProps) {
  * Context for action handlers
  * Components can access these via useUIPageActions hook
  */
-const UIPageActionsContext = React.createContext<Record<string, PageActionHandler>>({})
+const UIPageActionsContext = React.createContext<
+  Record<string, PageActionHandler>
+>({})
 
 /**
  * Hook to access page action handlers

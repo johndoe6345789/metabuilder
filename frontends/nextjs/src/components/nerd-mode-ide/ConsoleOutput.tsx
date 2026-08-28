@@ -27,7 +27,9 @@ export function ConsoleOutput({ lines }: ConsoleOutputProps) {
         <Button
           size="small"
           variant="outlined"
-          onClick={() => { setLocalLines([]) }}
+          onClick={() => {
+            setLocalLines([])
+          }}
         >
           Clear
         </Button>
@@ -37,7 +39,9 @@ export function ConsoleOutput({ lines }: ConsoleOutputProps) {
           <span className={s.empty}>No output</span>
         ) : (
           localLines.map((line, i) => (
-            <div key={i} className={s.line}>{line}</div>
+            <div key={i} className={s.line}>
+              {line}
+            </div>
           ))
         )}
         <div ref={bottomRef} />

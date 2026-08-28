@@ -1,8 +1,8 @@
 /**
  * RESTful Multi-Tenant API Route
- * 
+ *
  * Pattern: /api/v1/{tenant}/{package}/{entity}[/{id}[/{action}]]
- * 
+ *
  * Examples:
  *   GET  /api/v1/acme/forum_forge/posts           -> list posts
  *   GET  /api/v1/acme/forum_forge/posts/123       -> read post 123
@@ -10,7 +10,7 @@
  *   PUT  /api/v1/acme/forum_forge/posts/123       -> update post 123
  *   DELETE /api/v1/acme/forum_forge/posts/123     -> delete post 123
  *   POST /api/v1/acme/forum_forge/posts/123/like  -> custom action
- * 
+ *
  * Authentication & Authorization:
  *   - Session validated from the caller's DBAL OIDC bearer token
  *   - Tenant access validated (user must belong to tenant or be God+)
@@ -49,11 +49,14 @@ async function handleRequest(
   // 0. Apply rate limiting based on endpoint type
   // Determine endpoint type for appropriate rate limit
   const pathMatch = request.url.match(/\/api\/v1\/[^/]+\/([^/]+)\/([^/]+)/)
-  const isLogin = pathMatch !== null && pathMatch[1] === 'auth' && pathMatch[2] === 'login'
-  const isRegister = pathMatch !== null && pathMatch[1] === 'auth' && pathMatch[2] === 'register'
+  const isLogin =
+    pathMatch !== null && pathMatch[1] === 'auth' && pathMatch[2] === 'login'
+  const isRegister =
+    pathMatch !== null && pathMatch[1] === 'auth' && pathMatch[2] === 'register'
 
   // Determine which rate limiter to apply
-  let rateLimitType: 'login' | 'register' | 'list' | 'mutation' | 'public' = 'public'
+  let rateLimitType: 'login' | 'register' | 'list' | 'mutation' | 'public' =
+    'public'
   if (isLogin) {
     rateLimitType = 'login'
   } else if (isRegister) {
@@ -80,14 +83,18 @@ async function handleRequest(
 
   // 2. Get current user session (may be null for public routes)
   const { user: rawUser } = await getSessionUser(request)
-  
+
   // Type-safe user with required fields
-  const user = rawUser !== null ? {
-    id: typeof rawUser.id === 'string' ? rawUser.id : '',
-    role: typeof rawUser.role === 'string' ? rawUser.role : 'public',
-    tenantId: typeof rawUser.tenantId === 'string' ? rawUser.tenantId : null,
-  } : null
-  
+  const user =
+    rawUser !== null
+      ? {
+          id: typeof rawUser.id === 'string' ? rawUser.id : '',
+          role: typeof rawUser.role === 'string' ? rawUser.role : 'public',
+          tenantId:
+            typeof rawUser.tenantId === 'string' ? rawUser.tenantId : null,
+        }
+      : null
+
   // 3. Validate package exists and user has required level
   const packageResult = validatePackageRoute(route.package, route.entity, user)
   if (packageResult.allowed === false) {
@@ -134,14 +141,20 @@ async function handleRequest(
         route.id,
         { user: user ?? undefined, tenant: tenantResult.tenant, body }
       )
-      
+
       if (actionResult.success === false) {
         if (actionResult.code === 'NOT_FOUND') {
-          return errorResponse(actionResult.error ?? 'Action not found', STATUS.NOT_FOUND)
+          return errorResponse(
+            actionResult.error ?? 'Action not found',
+            STATUS.NOT_FOUND
+          )
         }
-        return errorResponse(actionResult.error ?? 'Action failed', STATUS.BAD_REQUEST)
+        return errorResponse(
+          actionResult.error ?? 'Action failed',
+          STATUS.BAD_REQUEST
+        )
       }
-      
+
       return successResponse(actionResult.data, STATUS.OK)
     }
 
@@ -166,7 +179,10 @@ async function handleRequest(
       }
 
       if (overrideResult.code === 'INVALID_CONFIG') {
-        return errorResponse(overrideResult.error ?? 'Invalid package config', STATUS.BAD_REQUEST)
+        return errorResponse(
+          overrideResult.error ?? 'Invalid package config',
+          STATUS.BAD_REQUEST
+        )
       }
     }
 
@@ -190,9 +206,10 @@ async function handleRequest(
     }
 
     // Build response with metadata
-    const responseData = result.meta !== null && result.meta !== undefined
-      ? { data: result.data, ...(result.meta as Record<string, unknown>) }
-      : result.data
+    const responseData =
+      result.meta !== null && result.meta !== undefined
+        ? { data: result.data, ...(result.meta as Record<string, unknown>) }
+        : result.data
 
     // Map operation to appropriate status code
     switch (operation) {

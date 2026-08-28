@@ -106,7 +106,8 @@ function getErrorMessage(code: string, defaultMessage: string): string {
     NETWORK_ERROR: 'Network error. Please check your connection and try again.',
     ALREADY_INSTALLED: 'This package is already installed.',
     ALREADY_UNINSTALLED: 'This package is not installed.',
-    MISSING_DEPENDENCIES: 'This package has missing dependencies. Please install them first.',
+    MISSING_DEPENDENCIES:
+      'This package has missing dependencies. Please install them first.',
     PACKAGE_NOT_FOUND: 'Package not found. It may have been removed.',
     PERMISSION_DENIED: "You don't have permission to manage packages.",
     DEPENDENCY_ERROR:
@@ -188,7 +189,10 @@ export function createPackagePageHandlers(
     try {
       await usePackageDetails.handlers.openDetails(packageId)
     } catch (err: unknown) {
-      const message = getErrorMessage(getErrorCode(err), 'Failed to load package details')
+      const message = getErrorMessage(
+        getErrorCode(err),
+        'Failed to load package details'
+      )
       showToast({
         type: 'error',
         message,
@@ -209,7 +213,9 @@ export function createPackagePageHandlers(
   const handleInstall = async (packageId: string): Promise<void> => {
     try {
       // Find package in list for display info
-      const pkg = usePackages.state.packages.find((p: PackageInfo) => p.id === packageId)
+      const pkg = usePackages.state.packages.find(
+        (p: PackageInfo) => p.id === packageId
+      )
       if (pkg == null) {
         showToast({
           type: 'error',
@@ -243,7 +249,10 @@ export function createPackagePageHandlers(
         message: `${pkg.name} installed successfully`,
       })
     } catch (err: unknown) {
-      const message = getErrorMessage(getErrorCode(err), 'Failed to install package')
+      const message = getErrorMessage(
+        getErrorCode(err),
+        'Failed to install package'
+      )
       showToast({
         type: 'error',
         message,
@@ -256,7 +265,9 @@ export function createPackagePageHandlers(
    */
   const handleUninstall = async (packageId: string): Promise<void> => {
     try {
-      const pkg = usePackages.state.packages.find((p: PackageInfo) => p.id === packageId)
+      const pkg = usePackages.state.packages.find(
+        (p: PackageInfo) => p.id === packageId
+      )
       if (pkg == null) {
         showToast({
           type: 'error',
@@ -289,7 +300,10 @@ export function createPackagePageHandlers(
         message: `${pkg.name} uninstalled successfully`,
       })
     } catch (err: unknown) {
-      const message = getErrorMessage(getErrorCode(err), 'Failed to uninstall package')
+      const message = getErrorMessage(
+        getErrorCode(err),
+        'Failed to uninstall package'
+      )
       showToast({
         type: 'error',
         message,
@@ -302,7 +316,9 @@ export function createPackagePageHandlers(
    */
   const handleEnable = async (packageId: string): Promise<void> => {
     try {
-      const pkg = usePackages.state.packages.find((p: PackageInfo) => p.id === packageId)
+      const pkg = usePackages.state.packages.find(
+        (p: PackageInfo) => p.id === packageId
+      )
       if (pkg == null) {
         showToast({
           type: 'error',
@@ -335,7 +351,10 @@ export function createPackagePageHandlers(
         message: `${pkg.name} enabled`,
       })
     } catch (err: unknown) {
-      const message = getErrorMessage(getErrorCode(err), 'Failed to enable package')
+      const message = getErrorMessage(
+        getErrorCode(err),
+        'Failed to enable package'
+      )
       showToast({
         type: 'error',
         message,
@@ -348,7 +367,9 @@ export function createPackagePageHandlers(
    */
   const handleDisable = async (packageId: string): Promise<void> => {
     try {
-      const pkg = usePackages.state.packages.find((p: PackageInfo) => p.id === packageId)
+      const pkg = usePackages.state.packages.find(
+        (p: PackageInfo) => p.id === packageId
+      )
       if (pkg == null) {
         showToast({
           type: 'error',
@@ -381,7 +402,10 @@ export function createPackagePageHandlers(
         message: `${pkg.name} disabled`,
       })
     } catch (err: unknown) {
-      const message = getErrorMessage(getErrorCode(err), 'Failed to disable package')
+      const message = getErrorMessage(
+        getErrorCode(err),
+        'Failed to disable package'
+      )
       showToast({
         type: 'error',
         message,
@@ -428,7 +452,10 @@ export function createPackagePageHandlers(
         message: 'Package installed successfully',
       })
     } catch (err: unknown) {
-      const message = getErrorMessage(getErrorCode(err), 'Failed to install package')
+      const message = getErrorMessage(
+        getErrorCode(err),
+        'Failed to install package'
+      )
       showToast({
         type: 'error',
         message,
@@ -475,7 +502,10 @@ export function createPackagePageHandlers(
         message: 'Package uninstalled successfully',
       })
     } catch (err: unknown) {
-      const message = getErrorMessage(getErrorCode(err), 'Failed to uninstall package')
+      const message = getErrorMessage(
+        getErrorCode(err),
+        'Failed to uninstall package'
+      )
       showToast({
         type: 'error',
         message,
@@ -514,7 +544,10 @@ export function createPackagePageHandlers(
         message: 'Package enabled',
       })
     } catch (err: unknown) {
-      const message = getErrorMessage(getErrorCode(err), 'Failed to enable package')
+      const message = getErrorMessage(
+        getErrorCode(err),
+        'Failed to enable package'
+      )
       showToast({
         type: 'error',
         message,
@@ -553,7 +586,10 @@ export function createPackagePageHandlers(
         message: 'Package disabled',
       })
     } catch (err: unknown) {
-      const message = getErrorMessage(getErrorCode(err), 'Failed to disable package')
+      const message = getErrorMessage(
+        getErrorCode(err),
+        'Failed to disable package'
+      )
       showToast({
         type: 'error',
         message,

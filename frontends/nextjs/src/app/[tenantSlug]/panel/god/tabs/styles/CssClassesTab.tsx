@@ -23,7 +23,13 @@ import s from './CssClassesTab.module.scss'
  * style nobody would get. A rule in a <style> tag is also exactly what the
  * published page will use.
  */
-function StylePreview({ id, css }: { id: string; css: Record<string, string> }) {
+function StylePreview({
+  id,
+  css,
+}: {
+  id: string
+  css: Record<string, string>
+}) {
   const scope = `sp-${id.replace(/[^a-zA-Z0-9_-]/g, '')}`
   const sample = useRef<HTMLDivElement>(null)
   const [ratio, setRatio] = useState<number | null>(null)

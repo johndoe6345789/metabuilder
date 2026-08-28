@@ -10,7 +10,10 @@ export function normalizeTenantId(value?: string | null): string {
 export const DEFAULT_GOD_PANEL_TAB = 'overview'
 
 /** /{tenant}/panel — where the app bar and sidebar live. */
-export function tenantPanelPath(value?: string | null, section?: string): string {
+export function tenantPanelPath(
+  value?: string | null,
+  section?: string
+): string {
   const base = `/${encodeURIComponent(normalizeTenantId(value))}/panel`
   return section == null ? base : `${base}/${section.replace(/^\/+/, '')}`
 }
@@ -29,7 +32,10 @@ export function tenantGodPanelPath(
  * These are the pages with chrome, so they sit under the panel. A published
  * page keeps the bare /{tenant}/{route} shape and does not go through here.
  */
-export function tenantPath(value: string | null | undefined, path: string): string {
+export function tenantPath(
+  value: string | null | undefined,
+  path: string
+): string {
   const tenant = encodeURIComponent(normalizeTenantId(value))
   const clean = path.startsWith('/') ? path : `/${path}`
   if (clean === '/') return `/${tenant}/panel`

@@ -13,38 +13,40 @@ export async function DELETE(
   try {
     const resolvedParams = await params
     // Validate packageId format
-    const packageIdResult = PackageSchemas.packageId.safeParse(resolvedParams.packageId)
+    const packageIdResult = PackageSchemas.packageId.safeParse(
+      resolvedParams.packageId
+    )
     if (!packageIdResult.success) {
       return NextResponse.json(
         { error: 'Invalid package ID format' },
         { status: 400 }
       )
     }
-    
+
     // Require authentication for package data deletion
     const session = await getSessionUser(request)
-    
+
     if (session.user === null) {
       return NextResponse.json(
         { error: 'Authentication required' },
         { status: STATUS.UNAUTHORIZED }
       )
     }
-    
+
     // Require admin level or higher for package data deletion
     const userRole = (session.user as { role?: string }).role ?? 'public'
     const userLevel = getRoleLevel(userRole)
-    
+
     if (userLevel < ROLE_LEVELS.admin) {
       return NextResponse.json(
         { error: 'Admin access required' },
         { status: STATUS.FORBIDDEN }
       )
     }
-    
+
     // Delete package data using DBAL
     await db.entity('packageData').remove(resolvedParams.packageId)
-    
+
     return NextResponse.json({ deleted: true })
   } catch (error) {
     console.error('Error deleting package data:', error)

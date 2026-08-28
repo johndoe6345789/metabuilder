@@ -1,4 +1,8 @@
-import { LIGHT_DEFAULTS, DARK_DEFAULTS, applyColorsToRoot } from './theme-defaults'
+import {
+  LIGHT_DEFAULTS,
+  DARK_DEFAULTS,
+  applyColorsToRoot,
+} from './theme-defaults'
 import type { ThemeColors } from './theme-defaults'
 
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
@@ -16,7 +20,10 @@ function fromLocalStorage(): ResolvedTenantTheme | null {
   try {
     const stored = localStorage.getItem(STORAGE_KEY)
     if (stored == null) return null
-    const parsed = JSON.parse(stored) as { light?: ThemeColors; dark?: ThemeColors }
+    const parsed = JSON.parse(stored) as {
+      light?: ThemeColors
+      dark?: ThemeColors
+    }
     return {
       light: { ...LIGHT_DEFAULTS, ...(parsed.light ?? {}) },
       dark: { ...DARK_DEFAULTS, ...(parsed.dark ?? {}) },
@@ -43,13 +50,16 @@ export async function resolveTenantTheme(): Promise<ResolvedTenantTheme> {
       signal: AbortSignal.timeout(6000),
     })
     if (res.ok) {
-      const json = await res.json() as { data?: Record<string, unknown> }
+      const json = (await res.json()) as { data?: Record<string, unknown> }
       const row = json.data
       const rawLight = row?.lightColors
       const rawDark = row?.darkColors
       if (typeof rawLight === 'string' && typeof rawDark === 'string') {
         return {
-          light: { ...LIGHT_DEFAULTS, ...(JSON.parse(rawLight) as ThemeColors) },
+          light: {
+            ...LIGHT_DEFAULTS,
+            ...(JSON.parse(rawLight) as ThemeColors),
+          },
           dark: { ...DARK_DEFAULTS, ...(JSON.parse(rawDark) as ThemeColors) },
         }
       }
@@ -61,6 +71,9 @@ export async function resolveTenantTheme(): Promise<ResolvedTenantTheme> {
 }
 
 /** Applies the given mode's half of a resolved theme to :root. */
-export function applyTenantTheme(theme: ResolvedTenantTheme, mode: 'light' | 'dark'): void {
+export function applyTenantTheme(
+  theme: ResolvedTenantTheme,
+  mode: 'light' | 'dark'
+): void {
   applyColorsToRoot(mode === 'dark' ? theme.dark : theme.light)
 }

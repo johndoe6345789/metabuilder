@@ -17,13 +17,19 @@ const toMs = (t: string | number) =>
   typeof t === 'number' ? t : new Date(t).getTime()
 
 export function IrcChatShell() {
-  const auth     = useAuthContext()
+  const auth = useAuthContext()
   const username = auth.user?.username ?? auth.user?.name ?? 'guest'
-  const userId   = auth.user?.id ?? 'anonymous'
+  const userId = auth.user?.id ?? 'anonymous'
 
   const {
-    channels, messages, activeChannelId, loading, error,
-    setActiveChannelId, sendMessage, clearLocalMessages,
+    channels,
+    messages,
+    activeChannelId,
+    loading,
+    error,
+    setActiveChannelId,
+    sendMessage,
+    clearLocalMessages,
   } = useIrcChat()
 
   const [localMsgs, setLocalMsgs] = useState<IrcMessage[]>([])
@@ -33,18 +39,21 @@ export function IrcChatShell() {
   }, [])
 
   const handleClear = useCallback(() => {
-    clearLocalMessages(); setLocalMsgs([])
+    clearLocalMessages()
+    setLocalMsgs([])
   }, [clearLocalMessages])
 
   const activeChannel = channels.find(c => c.id === activeChannelId) ?? null
   const allMessages = [...messages, ...localMsgs].sort(
-    (a, b) => toMs(a.createdAt) - toMs(b.createdAt),
+    (a, b) => toMs(a.createdAt) - toMs(b.createdAt)
   )
 
   return (
     <div className={styles.shell}>
       <div className={styles.titleBar}>
-        <Typography variant="h6" className={styles.title}>IRC Chat</Typography>
+        <Typography variant="h6" className={styles.title}>
+          IRC Chat
+        </Typography>
         {error != null && (
           <Typography variant="caption" className={styles.offlineBadge}>
             offline mode
@@ -62,7 +71,10 @@ export function IrcChatShell() {
           <ChannelList
             channels={channels}
             activeChannelId={activeChannelId}
-            onSelect={id => { setActiveChannelId(id); setLocalMsgs([]) }}
+            onSelect={id => {
+              setActiveChannelId(id)
+              setLocalMsgs([])
+            }}
             userId={userId}
           />
           <ChatPanel

@@ -1,6 +1,6 @@
 /**
  * Load entity schema from package
- * 
+ *
  * Retrieves the schema definition for an entity from a package's metadata.
  */
 
@@ -28,7 +28,7 @@ export interface EntitySchema {
 
 /**
  * Load entity schema from a package
- * 
+ *
  * @param packageId - Package identifier
  * @param entityName - Entity name
  * @returns Entity schema or null if not found
@@ -39,19 +39,20 @@ export async function loadEntitySchema(
 ): Promise<EntitySchema | null> {
   try {
     const pkg = await loadJSONPackage(join(getPackagesDir(), packageId))
-    
+
     // Look for entity schema in package metadata
     // This assumes packages have an entities field in their metadata
     // The actual structure may vary based on your package format
     const packageMetadata = pkg.metadata as unknown
-    const entities = (packageMetadata as Record<string, unknown>).entities as Record<string, unknown>[] | undefined
-    
+    const entities = (packageMetadata as Record<string, unknown>).entities as
+      Record<string, unknown>[] | undefined
+
     if (entities === undefined || !Array.isArray(entities)) {
       return null
     }
 
     const entity = entities.find(e => e.name === entityName)
-    
+
     if (entity === undefined) {
       return null
     }
@@ -64,7 +65,10 @@ export async function loadEntitySchema(
       description: entity.description as string | undefined,
     }
   } catch (error) {
-    console.error(`Failed to load entity schema for ${packageId}/${entityName}:`, error)
+    console.error(
+      `Failed to load entity schema for ${packageId}/${entityName}:`,
+      error
+    )
     return null
   }
 }

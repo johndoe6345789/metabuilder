@@ -14,7 +14,12 @@ export interface ChatMessage {
 
 function seed(): ChatMessage[] {
   return [
-    { id: 'm1', sender: 'system', text: 'Welcome to the channel 👋', at: Date.now() - 60000 },
+    {
+      id: 'm1',
+      sender: 'system',
+      text: 'Welcome to the channel 👋',
+      at: Date.now() - 60000,
+    },
   ]
 }
 
@@ -24,14 +29,19 @@ export function useWebchat(sender: string) {
   const [draft, setDraft] = useState('')
 
   useEffect(() => {
-    void idbGet<ChatMessage[]>(KEY).then((m) => { if (m?.length) setMessages(m) })
+    void idbGet<ChatMessage[]>(KEY).then(m => {
+      if (m?.length) setMessages(m)
+    })
   }, [])
 
   const send = useCallback(() => {
     const text = draft.trim()
     if (!text) return
-    setMessages((prev) => {
-      const next = [...prev, { id: `m_${Date.now()}`, sender, text, at: Date.now() }]
+    setMessages(prev => {
+      const next = [
+        ...prev,
+        { id: `m_${Date.now()}`, sender, text, at: Date.now() },
+      ]
       void idbSet(KEY, next)
       return next
     })

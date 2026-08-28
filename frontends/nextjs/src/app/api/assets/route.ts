@@ -13,19 +13,20 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { cookies } from 'next/headers'
 import { fetchSession } from '@/lib/auth/api/fetch-session'
 import { SESSION_COOKIE } from '@/app/api/auth/session/route'
-import {
-  ensureBucket,
-  listObjects,
-  putObject,
-} from '@/lib/object-store/client'
+import { ensureBucket, listObjects, putObject } from '@/lib/object-store/client'
 
 /** One bucket per tenant, so a tenant's assets cannot name-collide. */
 const bucketFor = (tenant: string): string => `tenant-${tenant}`
 
 /** What a browser may be handed, and nothing executable. */
 const ALLOWED = new Set([
-  'image/png', 'image/jpeg', 'image/gif', 'image/webp', 'image/svg+xml',
-  'image/x-icon', 'application/pdf',
+  'image/png',
+  'image/jpeg',
+  'image/gif',
+  'image/webp',
+  'image/svg+xml',
+  'image/x-icon',
+  'application/pdf',
 ])
 const MAX_BYTES = 8 * 1024 * 1024
 
@@ -82,7 +83,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     await ensureBucket(bucket)
     await putObject(bucket, name, await file.arrayBuffer(), file.type)
-    return NextResponse.json({ key: name, url: `/app/api/assets/${name}?tenant=${tenant}` })
+    return NextResponse.json({
+      key: name,
+      url: `/app/api/assets/${name}?tenant=${tenant}`,
+    })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'upload failed'
     return NextResponse.json({ error: message }, { status: 502 })

@@ -21,7 +21,7 @@ export function WorkflowJsonList({
     <aside className={s.sidebar}>
       <div className={s.sidebarHeader}>Workflow JSON</div>
       <div className={s.assetList}>
-        {assets.map((entry) => (
+        {assets.map(entry => (
           <div
             key={entry.id}
             className={
@@ -29,7 +29,9 @@ export function WorkflowJsonList({
                 ? `${s.assetItem} ${s.assetItemActive}`
                 : s.assetItem
             }
-            onClick={() => { onSelect(entry.id) }}
+            onClick={() => {
+              onSelect(entry.id)
+            }}
           >
             {entry.name}
           </div>

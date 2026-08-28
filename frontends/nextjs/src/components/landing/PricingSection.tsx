@@ -11,8 +11,8 @@ export function PricingSection() {
         <div className={s.header}>
           <h2 className={s.title}>Simple, honest pricing</h2>
           <p className={s.sub}>
-            Start free. Upgrade when you&apos;re ready.
-            No hidden fees, no per-seat charges.
+            Start free. Upgrade when you&apos;re ready. No hidden fees, no
+            per-seat charges.
           </p>
         </div>
         <div className={s.grid}>
@@ -21,9 +21,7 @@ export function PricingSection() {
               key={tier.id}
               className={`${s.card} ${tier.highlight ? s.featured : ''}`}
             >
-              {tier.highlight && (
-                <div className={s.pill}>Most popular</div>
-              )}
+              {tier.highlight && <div className={s.pill}>Most popular</div>}
               <p className={s.tierName}>{tier.name}</p>
               <div className={s.price}>
                 <span className={s.currency}>£</span>

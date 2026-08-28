@@ -16,13 +16,17 @@ function AuthCallbackContent() {
     const code = searchParams.get('code')
     const state = searchParams.get('state')
     if (!code || !state) {
-      setError('Your sign-in link looks incomplete or was already used — please try signing in again.')
+      setError(
+        'Your sign-in link looks incomplete or was already used — please try signing in again.'
+      )
       return
     }
 
     completeLogin(dbalSsoConfig, code, state)
       .then(tokens => authStore.applySession(tokens.token, tokens.refreshToken))
-      .then(() => { router.replace('/dashboard') })
+      .then(() => {
+        router.replace('/dashboard')
+      })
       .catch(e => {
         setError(friendlySignInError(e))
       })
@@ -35,7 +39,9 @@ function AuthCallbackContent() {
         {error !== null ? (
           <>
             <p className={s.error}>{error}</p>
-            <a className={s.back} href="/login">Back to sign in</a>
+            <a className={s.back} href="/login">
+              Back to sign in
+            </a>
           </>
         ) : (
           <p className={s.subtitle}>Signing in…</p>

@@ -1,6 +1,6 @@
 /**
  * Pagination components for MetaBuilder
- * 
+ *
  * Material-UI based pagination controls following MetaBuilder's design system
  */
 

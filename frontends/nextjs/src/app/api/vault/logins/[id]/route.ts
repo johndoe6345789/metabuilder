@@ -32,7 +32,8 @@ function normalizeInstalledPackage(record: Record<string, unknown>) {
         ? record.tenantId
         : null,
     installedAt:
-      typeof record.installedAt === 'number' || typeof record.installedAt === 'bigint'
+      typeof record.installedAt === 'number' ||
+      typeof record.installedAt === 'bigint'
         ? record.installedAt
         : null,
   } satisfies VaultRecord
@@ -40,12 +41,18 @@ function normalizeInstalledPackage(record: Record<string, unknown>) {
 
 function requireVaultMasterAccess(request: Request): NextResponse | null {
   if (!hasValidVaultSession(request)) {
-    return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
+    return NextResponse.json(
+      { error: 'Authentication required' },
+      { status: 401 }
+    )
   }
   return null
 }
 
-export async function PUT(request: Request, context: { params: Promise<{ id: string }> }) {
+export async function PUT(
+  request: Request,
+  context: { params: Promise<{ id: string }> }
+) {
   const denied = requireVaultMasterAccess(request)
   if (denied !== null) return denied
 
@@ -60,9 +67,10 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
   }
 
   const current = await db.entity('InstalledPackage').read(id)
-  const currentVault = current !== null && isObject(current)
-    ? makeVaultEntry(normalizeInstalledPackage(current))
-    : readFallbackVaultEntry(id)
+  const currentVault =
+    current !== null && isObject(current)
+      ? makeVaultEntry(normalizeInstalledPackage(current))
+      : readFallbackVaultEntry(id)
 
   if (currentVault === null) {
     return NextResponse.json({ error: 'Login not found' }, { status: 404 })
@@ -74,7 +82,9 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
     title: asString(body.title ?? currentVault.title ?? '').trim(),
     username: asString(body.username ?? currentVault.username ?? '').trim(),
     password: asString(body.password ?? currentVault.password ?? ''),
-    group: asString(body.group ?? currentVault.group ?? 'General').trim() || 'General',
+    group:
+      asString(body.group ?? currentVault.group ?? 'General').trim() ||
+      'General',
     notes: asString(body.notes ?? currentVault.notes ?? '').trim(),
     loginUrl: asString(body.loginUrl ?? currentVault.loginUrl ?? '').trim(),
     appUrl: asString(body.appUrl ?? currentVault.appUrl ?? '').trim(),
@@ -83,8 +93,16 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
     updatedAt,
   }
 
-  if (nextEntry.slug.length === 0 || nextEntry.title.length === 0 || nextEntry.username.length === 0 || nextEntry.password.length === 0) {
-    return NextResponse.json({ error: 'Slug, title, username, and password are required' }, { status: 400 })
+  if (
+    nextEntry.slug.length === 0 ||
+    nextEntry.title.length === 0 ||
+    nextEntry.username.length === 0 ||
+    nextEntry.password.length === 0
+  ) {
+    return NextResponse.json(
+      { error: 'Slug, title, username, and password are required' },
+      { status: 400 }
+    )
   }
 
   let normalized: VaultEntry | null
@@ -133,7 +151,8 @@ export async function DELETE(
   }
 
   const removed =
-    await db.entity('InstalledPackage').remove(id) || deleteFallbackVaultEntry(id)
+    (await db.entity('InstalledPackage').remove(id)) ||
+    deleteFallbackVaultEntry(id)
 
   if (!removed) {
     return NextResponse.json({ error: 'Login not found' }, { status: 404 })

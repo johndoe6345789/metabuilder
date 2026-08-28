@@ -4,5 +4,5 @@ export function getPackagesByCategory(
   registry: PackageRegistry,
   category: string
 ): PackageDefinition[] {
-  return Object.values(registry).filter((pkg) => pkg.category === category)
+  return Object.values(registry).filter(pkg => pkg.category === category)
 }

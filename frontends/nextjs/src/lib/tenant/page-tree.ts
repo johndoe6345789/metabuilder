@@ -57,7 +57,10 @@ export function propValueType(value: unknown): {
   if (typeof value === 'string') return { valueType: 'string', value }
   // Anything else (object, array, null) has no relational representation --
   // store it empty rather than the string "[object Object]".
-  return { valueType: 'string', value: value == null ? '' : JSON.stringify(value) }
+  return {
+    valueType: 'string',
+    value: value == null ? '' : JSON.stringify(value),
+  }
 }
 
 /** Rebuild the tree for `treeId`, or null if it has no root. */

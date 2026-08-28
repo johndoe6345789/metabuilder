@@ -1,6 +1,14 @@
 'use client'
 
-import { Button, Chip, FormControl, FormLabel, Select, TextField, Typography } from '@/m3'
+import {
+  Button,
+  Chip,
+  FormControl,
+  FormLabel,
+  Select,
+  TextField,
+  Typography,
+} from '@/m3'
 import type { PublishTarget } from './component-tree-publish'
 import type { PageConfigRow } from './use-page-configs'
 import s from './ComponentTreeTab.module.scss'

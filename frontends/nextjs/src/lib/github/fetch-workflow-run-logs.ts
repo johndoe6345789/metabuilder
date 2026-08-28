@@ -50,7 +50,9 @@ export async function fetchWorkflowRunLogs(
   let opts: FetchWorkflowRunLogsOptions
   if (typeof ownerOrOptions === 'string') {
     if (!repo || !runId) {
-      throw new Error('repo and runId are required when using positional arguments')
+      throw new Error(
+        'repo and runId are required when using positional arguments'
+      )
     }
     opts = {
       owner: ownerOrOptions,
@@ -63,7 +65,15 @@ export async function fetchWorkflowRunLogs(
     opts = ownerOrOptions
   }
 
-  const { client, owner, repo: repoName, runId: workflowRunId, includeLogs = true, jobLimit, failedOnly = false } = opts
+  const {
+    client,
+    owner,
+    repo: repoName,
+    runId: workflowRunId,
+    includeLogs = true,
+    jobLimit,
+    failedOnly = false,
+  } = opts
 
   if (!client) {
     // Return stub data when no client is provided
@@ -78,16 +88,18 @@ export async function fetchWorkflowRunLogs(
 
   try {
     // Fetch workflow jobs
-    const { data: jobsData } = await client.rest.actions.listJobsForWorkflowRun({
-      owner,
-      repo: repoName,
-      run_id: workflowRunId,
-      per_page: jobLimit ?? 100,
-    })
+    const { data: jobsData } = await client.rest.actions.listJobsForWorkflowRun(
+      {
+        owner,
+        repo: repoName,
+        run_id: workflowRunId,
+        per_page: jobLimit ?? 100,
+      }
+    )
 
     const jobs = jobsData.jobs
-      .filter((job) => !failedOnly || job.conclusion === 'failure')
-      .map((job) => ({
+      .filter(job => !failedOnly || job.conclusion === 'failure')
+      .map(job => ({
         id: job.id,
         name: job.name,
         status: job.status,
@@ -100,15 +112,19 @@ export async function fetchWorkflowRunLogs(
     if (includeLogs) {
       // Download logs for the workflow run
       try {
-        const { data: logsData } = await client.rest.actions.downloadWorkflowRunLogs({
-          owner,
-          repo: repoName,
-          run_id: workflowRunId,
-        })
-        
+        const { data: logsData } =
+          await client.rest.actions.downloadWorkflowRunLogs({
+            owner,
+            repo: repoName,
+            run_id: workflowRunId,
+          })
+
         // The logs are returned as a zip file URL or buffer
         // For simplicity, we'll just note that logs are available
-        logsText = typeof logsData === 'string' ? logsData : '[Binary log data available]'
+        logsText =
+          typeof logsData === 'string'
+            ? logsData
+            : '[Binary log data available]'
       } catch (error) {
         console.warn('Failed to download logs:', error)
         logsText = '[Logs not available]'

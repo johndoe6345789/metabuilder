@@ -1,6 +1,6 @@
 /**
  * Standardized API response utilities
- * 
+ *
  * Provides consistent error and success response formats across all API routes.
  */
 import { NextResponse } from 'next/server'
@@ -18,7 +18,7 @@ export const HTTP_STATUS = {
   INTERNAL_ERROR: 500,
 } as const
 
-export type HttpStatus = typeof HTTP_STATUS[keyof typeof HTTP_STATUS]
+export type HttpStatus = (typeof HTTP_STATUS)[keyof typeof HTTP_STATUS]
 
 export interface ApiError {
   code: string
@@ -74,22 +74,27 @@ export function errorResponse(
 export const Errors = {
   unauthorized: (message = 'Authentication required') =>
     errorResponse('UNAUTHORIZED', message, HTTP_STATUS.UNAUTHORIZED),
-  
+
   forbidden: (message = 'Access denied') =>
     errorResponse('FORBIDDEN', message, HTTP_STATUS.FORBIDDEN),
-  
+
   notFound: (resource = 'Resource') =>
     errorResponse('NOT_FOUND', `${resource} not found`, HTTP_STATUS.NOT_FOUND),
-  
+
   badRequest: (message: string, details?: unknown) =>
     errorResponse('BAD_REQUEST', message, HTTP_STATUS.BAD_REQUEST, details),
-  
+
   validationError: (details: unknown) =>
-    errorResponse('VALIDATION_ERROR', 'Invalid request data', HTTP_STATUS.UNPROCESSABLE_ENTITY, details),
-  
+    errorResponse(
+      'VALIDATION_ERROR',
+      'Invalid request data',
+      HTTP_STATUS.UNPROCESSABLE_ENTITY,
+      details
+    ),
+
   conflict: (message: string) =>
     errorResponse('CONFLICT', message, HTTP_STATUS.CONFLICT),
-  
+
   internal: (message = 'Internal server error') =>
     errorResponse('INTERNAL_ERROR', message, HTTP_STATUS.INTERNAL_ERROR),
 }

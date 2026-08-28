@@ -12,7 +12,11 @@ export type {
 } from './types'
 
 // Config
-export type { ConflictResolution, PackageRepoConfig, PackageSourceConfig } from './config'
+export type {
+  ConflictResolution,
+  PackageRepoConfig,
+  PackageSourceConfig,
+} from './config'
 export {
   DEFAULT_PACKAGE_REPO_CONFIG,
   DEVELOPMENT_PACKAGE_REPO_CONFIG,

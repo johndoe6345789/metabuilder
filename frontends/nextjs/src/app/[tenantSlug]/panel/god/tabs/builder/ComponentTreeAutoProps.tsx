@@ -78,7 +78,11 @@ export function ComponentTreeAutoProps({ node, onChange }: Props) {
               <span>
                 {field.label}
                 {field.hint !== undefined && (
-                  <Typography variant="caption" component="span" className={s.propHint}>
+                  <Typography
+                    variant="caption"
+                    component="span"
+                    className={s.propHint}
+                  >
                     {field.hint}
                   </Typography>
                 )}
@@ -143,7 +147,9 @@ export function ComponentTreeAutoProps({ node, onChange }: Props) {
                   return
                 }
                 const parsed = Number(raw)
-                onChange({ [field.name]: Number.isNaN(parsed) ? undefined : parsed })
+                onChange({
+                  [field.name]: Number.isNaN(parsed) ? undefined : parsed,
+                })
               }}
             />
           )

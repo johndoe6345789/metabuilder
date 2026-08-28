@@ -10,7 +10,7 @@ export interface PaginationInfoProps {
 
 /**
  * Display pagination information text
- * 
+ *
  * Shows "Showing X-Y of Z items" information
  * following MetaBuilder's design system using Material-UI components
  */
@@ -20,22 +20,14 @@ export function PaginationInfo({ metadata }: PaginationInfoProps) {
 
   if (metadata.total === 0) {
     return (
-      <Typography 
-        variant="body2" 
-        color="text.secondary"
-        className={s.infoText}
-      >
+      <Typography variant="body2" color="text.secondary" className={s.infoText}>
         No items found
       </Typography>
     )
   }
 
   return (
-    <Typography 
-      variant="body2" 
-      color="text.secondary"
-      className={s.infoText}
-    >
+    <Typography variant="body2" color="text.secondary" className={s.infoText}>
       Showing {start}-{end} of {metadata.total} items
     </Typography>
   )

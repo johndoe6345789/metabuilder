@@ -14,7 +14,11 @@ export interface VideoPlayerProps {
 }
 
 export function VideoPlayer({
-  src, poster, title, autoPlay, className,
+  src,
+  poster,
+  title,
+  autoPlay,
+  className,
 }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const hlsRef = useRef<HlsType | null>(null)

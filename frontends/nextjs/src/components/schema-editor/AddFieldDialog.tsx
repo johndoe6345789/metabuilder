@@ -23,12 +23,20 @@ interface AddFieldDialogProps {
 }
 
 const BLANK: FieldSchema = {
-  name: '', type: 'string', label: '',
-  required: false, unique: false, default: '',
+  name: '',
+  type: 'string',
+  label: '',
+  required: false,
+  unique: false,
+  default: '',
 }
 
 export function AddFieldDialog({
-  open, initial, modelNames, onSave, onClose,
+  open,
+  initial,
+  modelNames,
+  onSave,
+  onClose,
 }: AddFieldDialogProps) {
   const [field, setField] = useState<FieldSchema>(BLANK)
   const [choices, setChoices] = useState<SelectChoice[]>([])
@@ -48,10 +56,10 @@ export function AddFieldDialog({
     const name = field.name.trim()
     if (name === '') return
     onSave({
-      ...field, name,
+      ...field,
+      name,
       choices: field.type === 'select' ? choices : undefined,
-      relatedModel:
-        field.type === 'relation' ? field.relatedModel : undefined,
+      relatedModel: field.type === 'relation' ? field.relatedModel : undefined,
     })
   }
 
@@ -81,7 +89,9 @@ export function AddFieldDialog({
               >
                 <option value="">-- select model --</option>
                 {modelNames.map(m => (
-                  <option key={m} value={m}>{m}</option>
+                  <option key={m} value={m}>
+                    {m}
+                  </option>
                 ))}
               </Select>
             </div>
@@ -89,7 +99,9 @@ export function AddFieldDialog({
         </div>
       </DialogContent>
       <DialogActions>
-        <Button variant="text" onClick={onClose}>Cancel</Button>
+        <Button variant="text" onClick={onClose}>
+          Cancel
+        </Button>
         <Button
           variant="filled"
           onClick={handleSave}

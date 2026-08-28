@@ -13,60 +13,104 @@ describe('retry utilities', () => {
 
   describe('retryFetch', () => {
     it.each([
-      { statusCode: 200, shouldRetry: false, description: 'successful request' },
-      { statusCode: 404, shouldRetry: false, description: 'client error (not retryable)' },
-      { statusCode: 500, shouldRetry: true, description: 'server error (retryable)' },
-      { statusCode: 502, shouldRetry: true, description: 'bad gateway (retryable)' },
-      { statusCode: 503, shouldRetry: true, description: 'service unavailable (retryable)' },
-      { statusCode: 429, shouldRetry: true, description: 'rate limited (retryable)' },
-    ])('should handle $description correctly', async ({ statusCode, shouldRetry }) => {
-      let callCount = 0
-      const mockFetch = vi.fn(async () => {
-        const currentCall = callCount++
-        return new Response(JSON.stringify({ test: 'data' }), {
-          status: shouldRetry ? (currentCall === 0 ? statusCode : 200) : statusCode,
+      {
+        statusCode: 200,
+        shouldRetry: false,
+        description: 'successful request',
+      },
+      {
+        statusCode: 404,
+        shouldRetry: false,
+        description: 'client error (not retryable)',
+      },
+      {
+        statusCode: 500,
+        shouldRetry: true,
+        description: 'server error (retryable)',
+      },
+      {
+        statusCode: 502,
+        shouldRetry: true,
+        description: 'bad gateway (retryable)',
+      },
+      {
+        statusCode: 503,
+        shouldRetry: true,
+        description: 'service unavailable (retryable)',
+      },
+      {
+        statusCode: 429,
+        shouldRetry: true,
+        description: 'rate limited (retryable)',
+      },
+    ])(
+      'should handle $description correctly',
+      async ({ statusCode, shouldRetry }) => {
+        let callCount = 0
+        const mockFetch = vi.fn(async () => {
+          const currentCall = callCount++
+          return new Response(JSON.stringify({ test: 'data' }), {
+            status: shouldRetry
+              ? currentCall === 0
+                ? statusCode
+                : 200
+              : statusCode,
+          })
         })
-      })
 
-      let responsePromise: Promise<Response>
-      if (shouldRetry) {
-        responsePromise = retryFetch(mockFetch, { maxRetries: 2, initialDelayMs: 10 })
-        // Fast-forward through retry delays
-        await vi.advanceTimersByTimeAsync(100)
-      } else {
-        responsePromise = retryFetch(mockFetch, { maxRetries: 2, initialDelayMs: 10 })
+        let responsePromise: Promise<Response>
+        if (shouldRetry) {
+          responsePromise = retryFetch(mockFetch, {
+            maxRetries: 2,
+            initialDelayMs: 10,
+          })
+          // Fast-forward through retry delays
+          await vi.advanceTimersByTimeAsync(100)
+        } else {
+          responsePromise = retryFetch(mockFetch, {
+            maxRetries: 2,
+            initialDelayMs: 10,
+          })
+        }
+
+        const response = await responsePromise
+
+        if (shouldRetry) {
+          expect(mockFetch).toHaveBeenCalledTimes(2)
+          expect(response.status).toBe(200)
+        } else {
+          expect(mockFetch).toHaveBeenCalledTimes(1)
+          expect(response.status).toBe(statusCode)
+        }
       }
-      
-      const response = await responsePromise
-      
-      if (shouldRetry) {
-        expect(mockFetch).toHaveBeenCalledTimes(2)
-        expect(response.status).toBe(200)
-      } else {
-        expect(mockFetch).toHaveBeenCalledTimes(1)
-        expect(response.status).toBe(statusCode)
-      }
-    })
+    )
 
     it('should retry up to maxRetries times', async () => {
       const mockFetch = vi.fn(async () => {
-        return new Response(JSON.stringify({ error: 'Server error' }), { status: 500 })
+        return new Response(JSON.stringify({ error: 'Server error' }), {
+          status: 500,
+        })
       })
 
-      const promise = retryFetch(mockFetch, { maxRetries: 3, initialDelayMs: 10 })
-      
+      const promise = retryFetch(mockFetch, {
+        maxRetries: 3,
+        initialDelayMs: 10,
+      })
+
       // Fast-forward through all retry delays
       await vi.advanceTimersByTimeAsync(1000)
-      
+
       const response = await promise
-      
+
       expect(mockFetch).toHaveBeenCalledTimes(4) // initial + 3 retries
       expect(response.status).toBe(500)
     })
 
     it('should use exponential backoff', async () => {
       const mockFetch = vi.fn(async () => {
-        return new Response(JSON.stringify({ error: 'Server error' }), { status: 500 })
+        return new Response(JSON.stringify({ error: 'Server error' }), {
+          status: 500,
+        })
       })
 
       const promise = retryFetch(mockFetch, {
@@ -81,7 +125,7 @@ describe('retry utilities', () => {
         const delay = 100 * Math.pow(2, i)
         await vi.advanceTimersByTimeAsync(delay)
       }
-      
+
       await promise
 
       // Verify exponential backoff: 100ms, 200ms, 400ms
@@ -98,13 +142,16 @@ describe('retry utilities', () => {
         return new Response(JSON.stringify({ success: true }), { status: 200 })
       })
 
-      const promise = retryFetch(mockFetch, { maxRetries: 3, initialDelayMs: 10 })
-      
+      const promise = retryFetch(mockFetch, {
+        maxRetries: 3,
+        initialDelayMs: 10,
+      })
+
       // Fast-forward through retry delays
       await vi.advanceTimersByTimeAsync(500)
-      
+
       const response = await promise
-      
+
       expect(mockFetch).toHaveBeenCalledTimes(3)
       expect(response.status).toBe(200)
     })
@@ -115,18 +162,23 @@ describe('retry utilities', () => {
       })
 
       // Fast-forward through all retry delays
-      const promise = retryFetch(mockFetch, { maxRetries: 2, initialDelayMs: 10 })
+      const promise = retryFetch(mockFetch, {
+        maxRetries: 2,
+        initialDelayMs: 10,
+      })
       // Attach a catch handler to prevent unhandled rejection warning
       promise.catch(() => {})
       await vi.advanceTimersByTimeAsync(500)
-      
+
       await expect(promise).rejects.toThrow('Network error')
       expect(mockFetch).toHaveBeenCalledTimes(3) // initial + 2 retries
     })
 
     it('should respect maxDelayMs', async () => {
       const mockFetch = vi.fn(async () => {
-        return new Response(JSON.stringify({ error: 'Server error' }), { status: 500 })
+        return new Response(JSON.stringify({ error: 'Server error' }), {
+          status: 500,
+        })
       })
 
       const promise = retryFetch(mockFetch, {
@@ -138,7 +190,7 @@ describe('retry utilities', () => {
 
       // The delays would be: 1000, 2000, 2000 (capped), 2000 (capped), 2000 (capped)
       await vi.advanceTimersByTimeAsync(10000)
-      
+
       await promise
 
       expect(mockFetch).toHaveBeenCalledTimes(6)
@@ -157,11 +209,11 @@ describe('retry utilities', () => {
       })
 
       const promise = retry(mockFn, { maxRetries: 2, initialDelayMs: 10 })
-      
+
       await vi.advanceTimersByTimeAsync(500)
-      
+
       const result = await promise
-      
+
       expect(mockFn).toHaveBeenCalledTimes(2)
       expect(result).toBe('success')
     })
@@ -170,7 +222,7 @@ describe('retry utilities', () => {
       const mockFn = vi.fn(async () => 'success')
 
       const result = await retry(mockFn, { maxRetries: 3, initialDelayMs: 10 })
-      
+
       expect(mockFn).toHaveBeenCalledTimes(1)
       expect(result).toBe('success')
     })
@@ -185,7 +237,7 @@ describe('retry utilities', () => {
       // Attach a catch handler to prevent unhandled rejection warning
       promise.catch(() => {})
       await vi.advanceTimersByTimeAsync(500)
-      
+
       await expect(promise).rejects.toThrow('Persistent error')
       expect(mockFn).toHaveBeenCalledTimes(3)
     })
@@ -208,9 +260,9 @@ describe('retry utilities', () => {
 
       // Advance through all delays: 100ms, 200ms, 400ms
       await vi.advanceTimersByTimeAsync(800)
-      
+
       const result = await promise
-      
+
       expect(mockFn).toHaveBeenCalledTimes(4)
       expect(result).toBe('success')
     })
