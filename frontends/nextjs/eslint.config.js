@@ -251,4 +251,46 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'warn',
     },
   },
+
+  // ============================================================================
+  // Line Limits - Enforced Where Already Met
+  // ============================================================================
+  //
+  // These are warnings everywhere else because 150-odd files predate the rule,
+  // and making them errors today would just make `lint` red and therefore
+  // ignored. Where the code already complies they are errors, so the compliant
+  // part cannot slip back: two files drifted past eighty after a formatting
+  // pass and had to be fixed by hand. Move a path in here as its files split.
+  {
+    files: [
+      'src/lib/workflow/cache/**/*.ts',
+      'src/lib/workflow/context/**/*.ts',
+      'src/lib/workflow/errors/**/*.ts',
+      'src/lib/routing/restful/**/*.ts',
+      'src/lib/schema/**/*.test.ts',
+      'src/lib/schema/test-support/**/*.ts',
+      'src/lib/object-store/**/*.test.ts',
+    ],
+    // Still to split, and deliberately not listed above rather than quietly
+    // globbed around: schema-registry.ts (483), schema-scanner.ts (112),
+    // object-store/client.ts (110).
+    rules: {
+      'max-lines': [
+        'error',
+        { max: 80, skipBlankLines: true, skipComments: true },
+      ],
+      'max-len': [
+        'error',
+        {
+          code: 80,
+          tabWidth: 2,
+          ignoreUrls: true,
+          ignoreStrings: true,
+          ignoreTemplateLiterals: true,
+          ignoreRegExpLiterals: true,
+        },
+      ],
+    },
+  },
+
 )

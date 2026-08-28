@@ -1,11 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import {
-  buildReport,
-  estimateMegabytes,
-  evictOldest,
-  sweepExpired,
-} from './cache-maintenance'
+import { evictOldest, sweepExpired } from './cache-maintenance'
 import type { CacheEntry } from './cache-types'
 
 const entry = (timestamp: number, ttl = 1000): CacheEntry =>

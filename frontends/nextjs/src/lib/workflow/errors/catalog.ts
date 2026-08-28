@@ -8,7 +8,7 @@
  * stops being true in production.
  */
 
-import { WorkflowErrorCode } from './error-codes'
+import type { WorkflowErrorCode } from './error-codes'
 import { ERROR_HINTS } from './error-hints'
 import { ERROR_MESSAGES } from './error-messages'
 import { ERROR_STATUS_MAP } from './error-status'

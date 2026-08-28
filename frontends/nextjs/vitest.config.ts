@@ -31,6 +31,11 @@ export default defineConfig({
         'src/test/**',
         // Type-only and generated files have nothing to execute.
         'src/**/*.d.ts',
+        // Documentation that happens to compile. Nothing imports these and
+        // nothing ships them; testing example code would be theatre, and
+        // leaving them in the denominator makes the figure describe the
+        // codebase less accurately, not more.
+        'src/**/*.examples.{ts,tsx}',
       ],
     },
     deps: {

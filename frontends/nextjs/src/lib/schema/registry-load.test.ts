@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { rmSync, writeFileSync } from 'fs'
+import { rmSync } from 'fs'
 import { join } from 'path'
 
 import {
