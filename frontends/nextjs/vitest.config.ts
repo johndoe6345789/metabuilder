@@ -21,10 +21,10 @@ export default defineConfig({
       // each batch lands rather than setting an aspirational figure that is
       // red every day and therefore ignored.
       thresholds: {
-        statements: 15,
-        branches: 15,
-        functions: 11,
-        lines: 15,
+        statements: 16,
+        branches: 16,
+        functions: 12,
+        lines: 16,
       },
       exclude: [
         'src/**/*.test.{ts,tsx}',
@@ -56,6 +56,16 @@ export default defineConfig({
       // m3 aliases must be first (more specific matches first)
       { find: /^@\/m3\/(.+)$/, replacement: resolve(__dirname, '../../libraries/components/m3/$1') },
       { find: /^@\/m3$/, replacement: resolve(__dirname, '../../libraries/components/m3/index.ts') },
+      // The workflow editor lives outside src, like m3 -- without this the
+      // general @/ rule below sends it to src/workflow-editor, which does not
+      // exist, and its three consumers cannot be imported by a test at all.
+      {
+        find: /^@\/workflow-editor$/,
+        replacement: resolve(
+          __dirname,
+          '../../libraries/components/workflow-editor'
+        ),
+      },
       // dbal-ui alias for shared UI components
       { find: /^@dbal-ui\/(.+)$/, replacement: resolve(__dirname, '../../dbal/shared/ui/$1') },
       { find: /^@dbal-ui$/, replacement: resolve(__dirname, '../../dbal/shared/ui') },

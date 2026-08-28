@@ -13,6 +13,14 @@
  */
 
 import dynamic from 'next/dynamic'
+import {
+  isRecord,
+  propDirection,
+  propGap,
+  propNumber,
+  propText,
+} from './block-coerce'
+import { commonAttrs } from './common-attrs'
 import { cloneElement, isValidElement } from 'react'
 import type { ReactElement, ReactNode } from 'react'
 import {
@@ -120,29 +128,6 @@ const m = (
   container: boolean,
   defaults: Record<string, unknown> = {}
 ): PaletteItem => ({ type, name, icon, category, container, defaults })
-
-const propText = (value: unknown, fallback = ''): string =>
-  typeof value === 'string' ||
-  typeof value === 'number' ||
-  typeof value === 'boolean'
-    ? String(value)
-    : fallback
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return value !== null && typeof value === 'object' && !Array.isArray(value)
-}
-
-function propDirection(value: unknown): 'row' | 'column' {
-  return value === 'row' ? 'row' : 'column'
-}
-
-function propGap(value: unknown): number {
-  return typeof value === 'number' ? value : 12
-}
-
-function propNumber(value: unknown, fallback: number): number {
-  return typeof value === 'number' ? value : fallback
-}
 
 function renderButton(p: Record<string, unknown>): ReactNode {
   const href = propText(p.href)
@@ -534,42 +519,6 @@ export function paletteItem(type: string): PaletteItem | undefined {
  * without this, setting an id or aria-label in the builder would silently do
  * nothing on 37 different block types.
  */
-export const COMMON_PROP_KEYS = [
-  'id',
-  'name',
-  'className',
-  'role',
-  'tabIndex',
-  'ariaLabel',
-  'ariaDescribedby',
-  'ariaHidden',
-  'testId',
-] as const
-
-// Deliberately NOT here: `title`. Three blocks (list item, accordion,
-// tooltip) already use props.title as their visible content, so injecting it
-// as the DOM title attribute would hang a duplicate native tooltip off every
-// existing one. aria-label covers the accessible-name case properly anyway.
-
-/** Builder prop name -> real DOM attribute, where the two differ. */
-const DOM_ATTR: Record<string, string> = {
-  ariaLabel: 'aria-label',
-  ariaDescribedby: 'aria-describedby',
-  ariaHidden: 'aria-hidden',
-  testId: 'data-testid',
-}
-
-function commonAttrs(props: Record<string, unknown>): Record<string, unknown> {
-  const out: Record<string, unknown> = {}
-  for (const key of COMMON_PROP_KEYS) {
-    const raw = props[key]
-    if (raw === undefined || raw === null || raw === '') continue
-    const attr = DOM_ATTR[key] ?? key
-    out[attr] = key === 'tabIndex' ? Number(raw) : raw
-  }
-  return out
-}
-
 /** Render a component-tree node (and its children) to React. Canonical. */
 export function renderNode(node: TreeNode): ReactNode {
   const def = BLOCK_REGISTRY[node.type]

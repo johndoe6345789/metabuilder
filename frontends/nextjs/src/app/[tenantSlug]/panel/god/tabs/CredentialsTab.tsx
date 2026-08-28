@@ -8,63 +8,18 @@ import s from './CredentialsTab.module.scss'
 
 const DBAL_URL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
-type CredentialRecord = {
-  username: string
-  tenantId?: string | null
-  salt?: string
-}
-
-type TenantRecord = {
-  id: string
-  name?: string
-  slug?: string
-}
-
-type UserRecord = {
-  username?: string
-  role?: string
-  tenantId?: string | null
-}
-
-type Notice = {
-  kind: 'success' | 'error' | 'info'
-  message: string
-}
-
-function unwrapList<T>(raw: unknown): T[] {
-  if (Array.isArray(raw)) return raw as T[]
-  if (raw !== null && typeof raw === 'object') {
-    const obj = raw as Record<string, unknown>
-    if (Array.isArray(obj.data)) return obj.data as T[]
-    if (obj.data !== null && typeof obj.data === 'object') {
-      const nested = obj.data as Record<string, unknown>
-      if (Array.isArray(nested.data)) return nested.data as T[]
-    }
-  }
-  return []
-}
-
-function tenantLabel(tenantId: string): string {
-  return tenantId === 'all' ? 'All tenants' : tenantId
-}
-
-function normalizeTenant(value: string | null | undefined): string {
-  return value != null && value.trim().length > 0 ? value.trim() : 'system'
-}
-
-async function sha512(value: string): Promise<string> {
-  const encoded = new TextEncoder().encode(value)
-  const buffer = await crypto.subtle.digest('SHA-512', encoded)
-  return [...new Uint8Array(buffer)]
-    .map(byte => byte.toString(16).padStart(2, '0'))
-    .join('')
-}
-
-function randomSalt(): string {
-  const bytes = new Uint8Array(16)
-  crypto.getRandomValues(bytes)
-  return [...bytes].map(byte => byte.toString(16).padStart(2, '0')).join('')
-}
+import type {
+  CredentialRecord,
+  Notice,
+  TenantRecord,
+  UserRecord,
+} from './credentials-types'
+import {
+  normalizeTenant,
+  tenantLabel,
+  unwrapList,
+} from './credentials-data'
+import { randomSalt, sha512 } from './credentials-crypto'
 
 export function CredentialsTab() {
   const auth = useAuthContext()
