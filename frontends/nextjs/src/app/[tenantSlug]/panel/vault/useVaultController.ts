@@ -19,29 +19,10 @@ export type VaultNotice = {
   message: string
 }
 
-function draftFromEntry(entry: VaultEntry | null): VaultDraft {
-  return (
-    entry ?? {
-      slug: '',
-      title: '',
-      username: '',
-      password: '',
-      group: 'General',
-      notes: '',
-      loginUrl: '/app/login',
-      appUrl: '/app',
-    }
-  )
-}
-
-function normalizeSlug(value: string): string {
-  return value
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .replace(/-{2,}/g, '-')
-}
+import {
+  draftFromEntry,
+  normalizeSlug,
+} from './vault-normalize'
 
 export function useVaultController() {
   const router = useRouter()
