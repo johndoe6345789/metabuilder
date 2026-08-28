@@ -3,6 +3,12 @@ import { Alert, Button, Chip, Paper, TextField, Typography } from '@/m3'
 import { useVaultController } from './useVaultController'
 import { vaultView, type VaultBinding, type VaultTreeNode } from './vault-view'
 import { resolveEvent } from './vault-events'
+import {
+  fillTemplate,
+  isTruthy,
+  readPath,
+  templateValue,
+} from './vault-template'
 import s from './page.module.scss'
 
 type Controller = ReturnType<typeof useVaultController>
@@ -20,44 +26,13 @@ const primitives: Record<string, ComponentType<Record<string, unknown>>> = {
   Typography: Typography as ComponentType<Record<string, unknown>>,
 }
 
-function readPath(context: Context, path: string): unknown {
-  return path.split('.').reduce<unknown>((value, key) => {
-    if (typeof value !== 'object' || value === null) return undefined
-    return (value as Record<string, unknown>)[key]
-  }, context)
-}
-
-function templateValue(value: unknown): string {
-  if (
-    typeof value === 'string' ||
-    typeof value === 'number' ||
-    typeof value === 'boolean'
-  )
-    return String(value)
-  return ''
-}
-
-function isTruthy(value: unknown): boolean {
-  return (
-    value !== undefined &&
-    value !== null &&
-    value !== false &&
-    value !== 0 &&
-    value !== ''
-  )
-}
-
 function evaluate(
   binding: string | boolean | VaultBinding,
   context: Context
 ): unknown {
   if (typeof binding !== 'object') return binding
   if ('$path' in binding) return readPath(context, binding.$path)
-  if ('$template' in binding) {
-    return binding.$template.replace(/\{\{([^}]+)\}\}/g, (_, path: string) =>
-      templateValue(readPath(context, path.trim()))
-    )
-  }
+  if ('$template' in binding) return fillTemplate(binding.$template, context)
   if ('$eq' in binding) {
     return (
       evaluate(binding.$eq[0], context) === evaluate(binding.$eq[1], context)
