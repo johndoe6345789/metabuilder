@@ -13,11 +13,22 @@ export interface InstalledPackage {
   enabled: boolean
 }
 
+/**
+ * DBAL answers `{ success, data: { data: [...], total } }` -- two levels,
+ * not one. This unwrapped a single level, so against a real DBAL it always
+ * returned an empty list and the Packages tab showed every package as
+ * uninstalled. Both shapes are accepted now, plus a bare array.
+ */
 function extractList(raw: unknown): InstalledPackage[] {
-  if (raw !== null && typeof raw === 'object') {
-    const r = raw as Record<string, unknown>
-    const data = 'data' in r ? r.data : raw
-    if (Array.isArray(data)) return data as InstalledPackage[]
+  if (raw === null || typeof raw !== 'object') return []
+  if (Array.isArray(raw)) return raw as InstalledPackage[]
+
+  const outer = raw as Record<string, unknown>
+  if (Array.isArray(outer.data)) return outer.data as InstalledPackage[]
+
+  if (outer.data !== null && typeof outer.data === 'object') {
+    const inner = outer.data as Record<string, unknown>
+    if (Array.isArray(inner.data)) return inner.data as InstalledPackage[]
   }
   return []
 }
