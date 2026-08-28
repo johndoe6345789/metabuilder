@@ -62,12 +62,9 @@ describe('isTruthy', () => {
     expect(isTruthy(value)).toBe(true)
   })
 
-  it.each([[undefined], [null], [false], [0], ['']])(
-    'rejects %p',
-    value => {
-      expect(isTruthy(value)).toBe(false)
-    }
-  )
+  it.each([[undefined], [null], [false], [0], ['']])('rejects %p', value => {
+    expect(isTruthy(value)).toBe(false)
+  })
 
   it('accepts an empty object, unlike plain JS falsiness on some values', () => {
     expect(isTruthy({})).toBe(true)

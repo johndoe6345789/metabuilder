@@ -2,7 +2,8 @@
  * Server-Side DBAL Client (plain fetch)
  *
  * Minimal fetch wrapper for API routes and server-side code ONLY.
- * Client components must use the Redux useDBAL hook from @metabuilder/api-clients,
+ * Client components must use the Redux useDBAL hook from
+ * @metabuilder/api-clients,
  * which calls the C++ daemon directly via NEXT_PUBLIC_DBAL_API_URL.
  *
  * Usage:

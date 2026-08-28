@@ -117,9 +117,7 @@ describe('vault-api', () => {
       // Silently returning undefined would show a blank editor as "saved".
       mockFetch({})
 
-      await expect(createVaultEntry(draft as never)).rejects.toThrow(
-        'no entry'
-      )
+      await expect(createVaultEntry(draft as never)).rejects.toThrow('no entry')
     })
 
     it('throws the server message on failure', async () => {

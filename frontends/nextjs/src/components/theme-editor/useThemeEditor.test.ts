@@ -129,7 +129,9 @@ describe('useThemeEditor', () => {
 
       act(() => result.current.saveColors(light, dark))
 
-      const stored = JSON.parse(localStorage.getItem('pg-theme-overrides') ?? '{}')
+      const stored = JSON.parse(
+        localStorage.getItem('pg-theme-overrides') ?? '{}'
+      )
       expect(stored.light).toEqual(light)
     })
 

@@ -139,7 +139,8 @@ interface ContextRequestData {
 /**
  * MultiTenantContextBuilder
  *
- * Builds and validates workflow execution contexts with strict tenant isolation.
+ * Builds and validates workflow execution contexts with strict tenant
+ * isolation.
  * Ensures all execution contexts are safe and properly scoped to their tenant.
  */
 export class MultiTenantContextBuilder {
@@ -376,7 +377,8 @@ export class MultiTenantContextBuilder {
   private validateContextSafety(context: ExtendedWorkflowContext): void {
     const errors: string[] = []
 
-    // 1. Tenant ID must match (unless cross-tenant access is explicitly allowed)
+    // 1. Tenant ID must match (unless cross-tenant access is explicitly
+    // allowed)
     if (
       context.tenantId !== this.workflow.tenantId &&
       !this.options.allowCrossTenantAccess
@@ -431,7 +433,8 @@ export class MultiTenantContextBuilder {
         const record = varValue as Record<string, unknown>
         if (record._tenantId != null) {
           if (record._tenantId !== context.tenantId) {
-            // Filter out cross-tenant variable rather than failing the entire build
+            // Filter out cross-tenant variable rather than failing the entire
+            // build
             context.variables[varName] = null
           }
         }

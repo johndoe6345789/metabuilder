@@ -111,7 +111,9 @@ export function insertBefore(
   }
 }
 
-/** The node whose children contain `id`, or null for the root / a missing id. */
+/**
+ * The node whose children contain `id`, or null for the root / a missing id.
+ */
 export function parentOf(node: TreeNode, id: string): TreeNode | null {
   for (const child of node.children) {
     if (child.id === id) return node

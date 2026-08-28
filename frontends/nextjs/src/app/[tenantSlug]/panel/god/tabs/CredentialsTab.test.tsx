@@ -143,7 +143,9 @@ describe('CredentialsTab', () => {
 
       await fillAndSubmit('alice', 'longenough123')
 
-      await waitFor(() => expect(calls.some(c => c.method === 'POST')).toBe(true))
+      await waitFor(() =>
+        expect(calls.some(c => c.method === 'POST')).toBe(true)
+      )
       const post = calls.find(c => c.method === 'POST')
       expect(post?.url).toContain('/api/admin/credentials')
       expect(post?.url).not.toContain('access/Credential')
@@ -160,7 +162,9 @@ describe('CredentialsTab', () => {
 
       await fillAndSubmit('alice', 'longenough123')
 
-      await waitFor(() => expect(calls.some(c => c.method === 'POST')).toBe(true))
+      await waitFor(() =>
+        expect(calls.some(c => c.method === 'POST')).toBe(true)
+      )
       const body = JSON.parse(
         calls.find(c => c.method === 'POST')?.body ?? '{}'
       )
@@ -174,7 +178,9 @@ describe('CredentialsTab', () => {
 
       await fillAndSubmit('alice', 'longenough123')
 
-      await waitFor(() => expect(calls.some(c => c.method === 'POST')).toBe(true))
+      await waitFor(() =>
+        expect(calls.some(c => c.method === 'POST')).toBe(true)
+      )
       const body = JSON.parse(
         calls.find(c => c.method === 'POST')?.body ?? '{}'
       )
@@ -188,7 +194,9 @@ describe('CredentialsTab', () => {
 
       await fillAndSubmit('alice', 'longenough123')
 
-      await waitFor(() => expect(calls.some(c => c.method === 'POST')).toBe(true))
+      await waitFor(() =>
+        expect(calls.some(c => c.method === 'POST')).toBe(true)
+      )
       const body = JSON.parse(
         calls.find(c => c.method === 'POST')?.body ?? '{}'
       )
@@ -220,9 +228,7 @@ describe('CredentialsTab', () => {
       await fillAndSubmit('alice', 'longenough123')
 
       await waitFor(() => {
-        expect(
-          screen.getByText(/only manage their own tenant/)
-        ).toBeTruthy()
+        expect(screen.getByText(/only manage their own tenant/)).toBeTruthy()
       })
     })
   })

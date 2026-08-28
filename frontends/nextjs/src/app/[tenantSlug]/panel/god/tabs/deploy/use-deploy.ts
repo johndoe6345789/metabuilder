@@ -5,7 +5,9 @@ import { idbDump, idbRestore } from '@/lib/persist/idb-kv'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { rehydrate, type GodState } from '@/store/slices/god-slice'
 
-/** Project-level export/import ("deploy" = ship the whole declarative bundle). */
+/**
+ * Project-level export/import ("deploy" = ship the whole declarative bundle).
+ */
 export function useDeploy() {
   const dispatch = useAppDispatch()
   const god: GodState = useAppSelector(s => s.god)

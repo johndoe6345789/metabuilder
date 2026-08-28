@@ -7,9 +7,9 @@ const rows = [{ id: 'a' }, { id: 'b' }]
 describe('readList', () => {
   describe('the shapes DBAL actually produces', () => {
     it('reads the full envelope', () => {
-      expect(readList({ success: true, data: { data: rows, total: 2 } })).toEqual(
-        rows
-      )
+      expect(
+        readList({ success: true, data: { data: rows, total: 2 } })
+      ).toEqual(rows)
     })
 
     it('reads a once-unwrapped envelope', () => {

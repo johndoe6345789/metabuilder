@@ -36,7 +36,9 @@ export interface BlockEntry {
   component: ComponentType
 }
 
-/** The self-hosting catalog: MetaBuilder's own tools as tree-placeable blocks. */
+/**
+ * The self-hosting catalog: MetaBuilder's own tools as tree-placeable blocks.
+ */
 export const METABUILDER_BLOCKS: BlockEntry[] = [
   {
     type: 'mb.WorkflowEditor',

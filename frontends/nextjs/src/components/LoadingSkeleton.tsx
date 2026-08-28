@@ -11,8 +11,10 @@ import {
 /**
  * LoadingSkeleton Component - Unified loading state wrapper
  *
- * Combines multiple skeleton variants with a unified API for different content types.
- * Automatically adapts to content type and provides a smooth loading experience.
+ * Combines multiple skeleton variants with a unified API for different content
+ * types.
+ * Automatically adapts to content type and provides a smooth loading
+ * experience.
  *
  * @example
  * ```tsx

@@ -35,12 +35,9 @@ describe('isRecord', () => {
     expect(isRecord({ a: 1 })).toBe(true)
   })
 
-  it.each([[null], [undefined], [[]], ['s'], [1]])(
-    'rejects %p',
-    value => {
-      expect(isRecord(value)).toBe(false)
-    }
-  )
+  it.each([[null], [undefined], [[]], ['s'], [1]])('rejects %p', value => {
+    expect(isRecord(value)).toBe(false)
+  })
 
   it('rejects an array, which would spread into numeric keys', () => {
     expect(isRecord([1, 2])).toBe(false)

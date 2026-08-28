@@ -1,0 +1,14 @@
+{
+  // Stricter typecheck for this repo's own code.
+  //
+  // noUncheckedIndexedAccess cannot go in tsconfig.json: the sibling library
+  // repos resolved through `paths` produce ~354 errors under it, and they are
+  // not this repo's to change. src/ is clean under it, so this config keeps
+  // that true. `npm run typecheck:strict` reports only src/ diagnostics.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  }
+}

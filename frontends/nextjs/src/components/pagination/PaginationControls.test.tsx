@@ -43,7 +43,8 @@ describe('PaginationControls', () => {
       <PaginationControls metadata={metadata} onPageChange={onPageChange} />
     )
 
-    // Check that the current page button exists (m3 uses "Go to page X" aria-label)
+    // Check that the current page button exists (m3 uses "Go to page X"
+    // aria-label)
     const currentPageButton = screen.getByRole('button', {
       name: `Go to page ${expectedPage}`,
       current: 'page',

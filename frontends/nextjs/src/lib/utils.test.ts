@@ -5,7 +5,8 @@ import { cn } from '@/lib/utils'
 
 describe('utils', () => {
   describe('cn', () => {
-    // Note: cn() uses clsx, which concatenates classes without smart Tailwind merging
+    // Note: cn() uses clsx, which concatenates classes without smart Tailwind
+    // merging
     const cases: Array<{
       input: ClassValue[]
       shouldContain: string[]

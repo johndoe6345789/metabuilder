@@ -10,11 +10,7 @@ import s from './CredentialsTab.module.scss'
 const DBAL_URL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
 import type { Notice, TenantRecord, UserRecord } from './credentials-types'
-import {
-  normalizeTenant,
-  tenantLabel,
-  unwrapList,
-} from './credentials-data'
+import { normalizeTenant, tenantLabel, unwrapList } from './credentials-data'
 
 export function CredentialsTab() {
   const auth = useAuthContext()
@@ -338,8 +334,8 @@ export function CredentialsTab() {
             <div>
               <Typography variant="subtitle2">Set a password</Typography>
               <p>
-                The password is hashed by DBAL with Argon2id and is never
-                shown again. Setting one for an existing username replaces it.
+                The password is hashed by DBAL with Argon2id and is never shown
+                again. Setting one for an existing username replaces it.
               </p>
             </div>
           </div>

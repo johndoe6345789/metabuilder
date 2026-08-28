@@ -3,8 +3,11 @@ import { render } from '@testing-library/react'
 
 import { renderNode, type TreeNode } from './block-registry'
 
-const node = (type: string, props = {}, children: TreeNode[] = []): TreeNode =>
-  ({ id: type, type, props, children })
+const node = (
+  type: string,
+  props = {},
+  children: TreeNode[] = []
+): TreeNode => ({ id: type, type, props, children })
 
 const html = (n: TreeNode): string =>
   render(<>{renderNode(n)}</>).container.innerHTML

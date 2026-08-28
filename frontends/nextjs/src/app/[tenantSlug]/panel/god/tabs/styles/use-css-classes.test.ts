@@ -166,9 +166,7 @@ describe('useCssClasses', () => {
 
       act(() => result.current.hydrate('acme'))
 
-      await waitFor(() =>
-        expect(styleApi.loadStyleClasses).toHaveBeenCalled()
-      )
+      await waitFor(() => expect(styleApi.loadStyleClasses).toHaveBeenCalled())
       expect(persisted()).toBeUndefined()
     })
 
@@ -178,9 +176,7 @@ describe('useCssClasses', () => {
 
       act(() => result.current.hydrate('acme'))
 
-      await waitFor(() =>
-        expect(styleApi.loadStyleClasses).toHaveBeenCalled()
-      )
+      await waitFor(() => expect(styleApi.loadStyleClasses).toHaveBeenCalled())
     })
   })
 

@@ -1,9 +1,11 @@
 /**
  * M3 Component Registry
  *
- * Names the declarative JSON renderer (render-json-component) resolves component
+ * Names the declarative JSON renderer (render-json-component) resolves
+ * component
  * `type` strings against. Previously stubbed empty ("Phase 4/5"); now populated
- * with the common M3 primitives so JSON component trees actually render. Cast to
+ * with the common M3 primitives so JSON component trees actually render. Cast
+ * to
  * the generic registry signature to sidestep per-component prop typing.
  */
 

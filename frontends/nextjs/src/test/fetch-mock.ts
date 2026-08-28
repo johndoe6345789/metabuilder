@@ -16,7 +16,13 @@ export function installFetch(routes: Route[]) {
   const calls: string[] = []
 
   const impl = vi.fn(async (input: RequestInfo | URL) => {
-    const url = typeof input === 'string' ? input : String(input)
+    // A Request stringifies to [object Request]; take its url instead.
+    const url =
+      typeof input === 'string'
+        ? input
+        : input instanceof URL
+          ? input.href
+          : input.url
     calls.push(url)
 
     const route = routes.find(r => url.includes(r.match))

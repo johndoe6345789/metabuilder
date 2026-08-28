@@ -6,7 +6,8 @@
  * the tree, edit its attributes here.
  *
  * These map to real DOM attributes and are applied centrally by renderNode
- * (see COMMON_PROP_KEYS in blocks/common-attrs), so they work on every block type
+ * (see COMMON_PROP_KEYS in blocks/common-attrs), so they work on every block
+ * type
  * rather than only the handful with bespoke editors.
  */
 

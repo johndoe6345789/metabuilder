@@ -85,3 +85,46 @@ describe('resetRateLimit', () => {
     expect(check(request('g'))).toBeNull()
   })
 })
+
+describe('getRateLimitStatus', () => {
+  it('reports the documented limit for each endpoint type', () => {
+    // These mirror the limits in CLAUDE.md; a change here is a policy change.
+    const req = request('status-a')
+
+    expect(getRateLimitStatus(req, 'login').limit).toBe(5)
+    expect(getRateLimitStatus(req, 'register').limit).toBe(3)
+    expect(getRateLimitStatus(req, 'list').limit).toBe(100)
+    expect(getRateLimitStatus(req, 'mutation').limit).toBe(50)
+    expect(getRateLimitStatus(req, 'public').limit).toBe(1000)
+    expect(getRateLimitStatus(req, 'bootstrap').limit).toBe(1)
+  })
+
+  it('starts a fresh caller at zero used, all remaining', () => {
+    const status = getRateLimitStatus(request('status-b'), 'mutation')
+
+    expect(status.current).toBe(0)
+    expect(status.remaining).toBe(50)
+  })
+
+  it('counts requests already made against the remaining allowance', () => {
+    const check = limiter(10)
+    const req = request('status-c')
+    check(req)
+    check(req)
+
+    const status = getRateLimitStatus(req, 'mutation')
+
+    expect(status.current).toBe(2)
+    expect(status.remaining).toBe(48)
+  })
+
+  it('never reports a negative remaining', () => {
+    // bootstrap allows 1; two requests must floor at zero, not go to -1.
+    const check = limiter(5)
+    const req = request('status-d')
+    check(req)
+    check(req)
+
+    expect(getRateLimitStatus(req, 'bootstrap').remaining).toBe(0)
+  })
+})

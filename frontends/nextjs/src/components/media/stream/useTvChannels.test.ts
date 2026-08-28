@@ -132,9 +132,10 @@ describe('useTvChannels', () => {
       })
       const { result } = await ready()
 
-      expect(
-        result.current.channels[0].epgEntries.map(e => e.title)
-      ).toEqual(['Sooner', 'Later'])
+      expect(result.current.channels[0].epgEntries.map(e => e.title)).toEqual([
+        'Sooner',
+        'Later',
+      ])
     })
 
     it('does not attach another channel guide entries', async () => {
@@ -188,7 +189,9 @@ describe('useTvChannels', () => {
       })
 
       expect(
-        calls.some(c => c.url.includes('/channels/a/start') && c.method === 'POST')
+        calls.some(
+          c => c.url.includes('/channels/a/start') && c.method === 'POST'
+        )
       ).toBe(true)
     })
 

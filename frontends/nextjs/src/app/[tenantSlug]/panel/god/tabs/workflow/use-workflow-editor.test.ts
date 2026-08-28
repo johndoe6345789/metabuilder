@@ -200,9 +200,7 @@ describe('useWorkflowEditor', () => {
     it('records the pending connection on start', () => {
       const { result } = setup()
 
-      act(() =>
-        result.current.onConnectionStart('a', 'main', { x: 10, y: 20 })
-      )
+      act(() => result.current.onConnectionStart('a', 'main', { x: 10, y: 20 }))
 
       expect(result.current.drawing).toEqual({
         sourceNodeId: 'a',

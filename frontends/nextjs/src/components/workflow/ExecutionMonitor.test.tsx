@@ -27,9 +27,7 @@ const execution = (id: string, status = 'success') => ({
 
 const refresh = vi.fn()
 
-function setHook(
-  over: { executions?: unknown[]; error?: Error | null } = {}
-) {
+function setHook(over: { executions?: unknown[]; error?: Error | null } = {}) {
   hook.useWorkflowExecutions.mockReturnValue({
     executions: over.executions ?? [execution('e1')],
     refresh,

@@ -1,7 +1,8 @@
 /**
  * M3 Component Type Extensions
  * 
- * This file defines additional component variants and props for the m3 component library.
+ * This file defines additional component variants and props for the m3
+ * component library.
  * These types extend the base component interfaces to support custom variants.
  */
 

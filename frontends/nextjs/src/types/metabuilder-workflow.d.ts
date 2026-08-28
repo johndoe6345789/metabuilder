@@ -129,7 +129,10 @@ declare module '@metabuilder/workflow' {
     category?: string
     settings: WorkflowSettings
     nodes: WorkflowNode[]
-    connections: Record<string, Record<string, Record<string, ConnectionTarget[]>>>
+    connections: Record<
+      string,
+      Record<string, Record<string, ConnectionTarget[]>>
+    >
     triggers: WorkflowTrigger[]
     variables: Record<string, WorkflowVariable>
     errorHandling?: ErrorHandlingPolicy
@@ -212,7 +215,13 @@ declare module '@metabuilder/workflow' {
     triggerData?: LooseRecord
     variables: LooseRecord
     secrets: Record<string, string>
-    user: { id: string; email: string; level: number; role?: string; [key: string]: any }
+    user: {
+      id: string
+      email: string
+      level: number
+      role?: string
+      [key: string]: any
+    }
     request?: LooseRecord
     metadata?: LooseRecord
     [key: string]: any
@@ -220,6 +229,9 @@ declare module '@metabuilder/workflow' {
 
   export type BuiltInNodeType = string
   export interface INodeExecutor {
-    execute: (context: WorkflowContext, node: WorkflowNode) => Promise<NodeResult>
+    execute: (
+      context: WorkflowContext,
+      node: WorkflowNode
+    ) => Promise<NodeResult>
   }
 }

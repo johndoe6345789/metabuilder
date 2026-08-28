@@ -3,7 +3,9 @@
 import { Typography, Button, Paper } from '@/m3'
 import s from './ThemePreview.module.scss'
 
-/** Live preview panel — all colours come from CSS vars so they update instantly */
+/**
+ * Live preview panel — all colours come from CSS vars so they update instantly
+ */
 export function ThemePreview() {
   return (
     <Paper className={s.panel} variant="outlined">

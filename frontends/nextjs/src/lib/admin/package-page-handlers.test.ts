@@ -84,9 +84,9 @@ describe('createPackagePageHandlers', () => {
       await d.handlers[handler](1)
 
       expect(
-        (d.packageHandlers as never as Record<string, ReturnType<typeof vi.fn>>)[
-          fn
-        ]
+        (
+          d.packageHandlers as never as Record<string, ReturnType<typeof vi.fn>>
+        )[fn]
       ).toHaveBeenCalled()
       expect(errorToast(d.showToast)).toHaveLength(0)
     })

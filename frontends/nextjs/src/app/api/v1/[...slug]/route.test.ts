@@ -75,10 +75,7 @@ describe('/api/v1/[...slug]', () => {
       const body = method === 'GET' ? undefined : {}
       await handler(req(method, path, body), params(slug))
 
-      expect(mw.applyRateLimit).toHaveBeenCalledWith(
-        expect.anything(),
-        kind
-      )
+      expect(mw.applyRateLimit).toHaveBeenCalledWith(expect.anything(), kind)
     })
   })
 

@@ -4,8 +4,9 @@ import { COMMON_PROP_KEYS, commonAttrs } from './common-attrs'
 
 describe('commonAttrs', () => {
   it('passes through the props that are already DOM attributes', () => {
-    expect(commonAttrs({ id: 'a', name: 'n', className: 'c', role: 'main' }))
-      .toEqual({ id: 'a', name: 'n', className: 'c', role: 'main' })
+    expect(
+      commonAttrs({ id: 'a', name: 'n', className: 'c', role: 'main' })
+    ).toEqual({ id: 'a', name: 'n', className: 'c', role: 'main' })
   })
 
   it('renames the props whose DOM attribute differs', () => {

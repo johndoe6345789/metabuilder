@@ -1,6 +1,8 @@
 /**
  * GET /api/v1/{tenant}/workflows
- * GET /api/v1/{tenant}/workflows?category=automation&limit=10&includeValidation=true
+ * GET
+ * /api/v1/{tenant}/workflows
+ *   ?category=automation&limit=10&includeValidation=true
  *
  * List workflows for tenant with optional filtering and validation metadata
  *
@@ -10,7 +12,8 @@
  * - category: 'automation' | 'integration' | 'business-logic' | etc
  * - tags: comma-separated string
  * - active: boolean
- * - includeValidation: boolean (default: false) - Include validation state for each workflow
+ * - includeValidation: boolean (default: false) - Include validation state for
+ * each workflow
  * - includeMetrics: boolean (default: false) - Include execution metrics
  *
  * Response includes optional validation metadata when requested:

@@ -122,6 +122,9 @@ export default tseslint.config(
         ignoreStrings: true,
         ignoreTemplateLiterals: true,
         ignoreRegExpLiterals: true,
+        // An eslint directive cannot be wrapped -- splitting the line stops
+        // it applying -- so its length is not a readability choice.
+        ignorePattern: '^\\s*(?://|\\{?/\\*)\\s*eslint-disable',
       }],
     },
   },

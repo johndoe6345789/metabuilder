@@ -27,7 +27,10 @@ function layout(packages: Record<string, unknown>, hasJson = true) {
   })
 }
 
-const withSchema = (entities: unknown, extra: Record<string, unknown> = {}) => ({
+const withSchema = (
+  entities: unknown,
+  extra: Record<string, unknown> = {}
+) => ({
   packageId: 'forum',
   name: 'Forum',
   version: '1.0.0',
@@ -91,9 +94,7 @@ describe('scanAllPackages', () => {
 
       scanAllPackages(registry, '/packages')
 
-      expect(
-        (registry.packages.forum as { name: string }).name
-      ).toBe('forum')
+      expect((registry.packages.forum as { name: string }).name).toBe('forum')
     })
 
     it('does not count an entity it already knows as queued', () => {

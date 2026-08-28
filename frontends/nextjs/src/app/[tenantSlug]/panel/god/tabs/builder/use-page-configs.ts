@@ -9,7 +9,9 @@ export interface PageConfigRow {
   id: string
   path: string
   title: string
-  /** Registered component name, or 'component_tree' for builder-authored pages. */
+  /**
+   * Registered component name, or 'component_tree' for builder-authored pages.
+   */
   component: string | null
   /** True when this route points at a PageTree the builder can load. */
   hasTree: boolean

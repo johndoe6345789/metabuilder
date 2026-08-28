@@ -110,7 +110,8 @@ describe('saveStyleClasses', () => {
     ])
     expect(ok).toBe(true)
 
-    // The old sheet is deleted first, so a republish replaces rather than merges.
+    // The old sheet is deleted first, so a republish replaces rather than
+    // merges.
     expect(calls[0]).toMatchObject({
       method: 'DELETE',
       url: `${DBAL}/system/core/StyleClass/styles_system`,

@@ -155,9 +155,7 @@ describe('useAssets', () => {
     })
 
     it('names the status when the server gives no reason', async () => {
-      mockFetch([
-        { match: '/api/assets', ok: false, status: 500, body: {} },
-      ])
+      mockFetch([{ match: '/api/assets', ok: false, status: 500, body: {} }])
       const { result } = await ready()
 
       await act(async () => {

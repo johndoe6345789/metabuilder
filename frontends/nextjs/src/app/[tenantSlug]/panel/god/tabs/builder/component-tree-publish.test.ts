@@ -64,7 +64,9 @@ describe('useComponentTreePublish', () => {
   describe('publishing a fresh path', () => {
     it('creates the page row', async () => {
       const calls = mockFetch(null)
-      const { result } = renderHook(() => useComponentTreePublish(tree as never))
+      const { result } = renderHook(() =>
+        useComponentTreePublish(tree as never)
+      )
 
       expect(await publish(result)).toBe(true)
       expect(calls.some(c => c.method === 'POST')).toBe(true)
@@ -72,7 +74,9 @@ describe('useComponentTreePublish', () => {
 
     it('reports no conflict', async () => {
       mockFetch(null)
-      const { result } = renderHook(() => useComponentTreePublish(tree as never))
+      const { result } = renderHook(() =>
+        useComponentTreePublish(tree as never)
+      )
 
       await publish(result)
 
@@ -81,7 +85,9 @@ describe('useComponentTreePublish', () => {
 
     it('saves the tree before writing the page row', async () => {
       mockFetch(null)
-      const { result } = renderHook(() => useComponentTreePublish(tree as never))
+      const { result } = renderHook(() =>
+        useComponentTreePublish(tree as never)
+      )
 
       await publish(result)
 
@@ -93,7 +99,9 @@ describe('useComponentTreePublish', () => {
       // would render an empty page rather than fail visibly.
       pageTree.saveTree.mockResolvedValue(false)
       const calls = mockFetch(null)
-      const { result } = renderHook(() => useComponentTreePublish(tree as never))
+      const { result } = renderHook(() =>
+        useComponentTreePublish(tree as never)
+      )
 
       expect(await publish(result)).toBe(false)
       expect(calls.some(c => c.method === 'POST')).toBe(false)
@@ -104,7 +112,9 @@ describe('useComponentTreePublish', () => {
     it('updates the existing row rather than creating a second one', async () => {
       // `path` is UNIQUE, so a second POST would just 409.
       const calls = mockFetch({ id: 'page_1', component: 'component_tree' })
-      const { result } = renderHook(() => useComponentTreePublish(tree as never))
+      const { result } = renderHook(() =>
+        useComponentTreePublish(tree as never)
+      )
 
       await publish(result)
 
@@ -114,7 +124,9 @@ describe('useComponentTreePublish', () => {
 
     it('does not warn about a takeover', async () => {
       mockFetch({ id: 'page_1', component: 'component_tree' })
-      const { result } = renderHook(() => useComponentTreePublish(tree as never))
+      const { result } = renderHook(() =>
+        useComponentTreePublish(tree as never)
+      )
 
       await publish(result)
 
@@ -129,7 +141,9 @@ describe('useComponentTreePublish', () => {
         packageId: 'ui_home',
         component: 'HomePage',
       })
-      const { result } = renderHook(() => useComponentTreePublish(tree as never))
+      const { result } = renderHook(() =>
+        useComponentTreePublish(tree as never)
+      )
 
       await publish(result)
 
@@ -143,7 +157,9 @@ describe('useComponentTreePublish', () => {
         packageId: 'ui_home',
         component: 'HomePage',
       })
-      const { result } = renderHook(() => useComponentTreePublish(tree as never))
+      const { result } = renderHook(() =>
+        useComponentTreePublish(tree as never)
+      )
 
       await publish(result)
 
@@ -154,7 +170,9 @@ describe('useComponentTreePublish', () => {
   describe('when the lookup fails', () => {
     it('creates rather than blocking the publish', async () => {
       const calls = mockFetch(null, false)
-      const { result } = renderHook(() => useComponentTreePublish(tree as never))
+      const { result } = renderHook(() =>
+        useComponentTreePublish(tree as never)
+      )
 
       await publish(result)
 

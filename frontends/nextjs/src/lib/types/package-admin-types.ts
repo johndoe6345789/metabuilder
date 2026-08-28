@@ -3,7 +3,8 @@
 /**
  * Package Admin State Management Types
  *
- * Defines types for package list management, filtering, pagination, and operations.
+ * Defines types for package list management, filtering, pagination, and
+ * operations.
  * Used by usePackages, usePackageActions, and usePackageDetails hooks.
  */
 
@@ -136,7 +137,8 @@ export interface UsePackagesReturn {
  */
 export interface PackageActionsState {
   isLoading: boolean
-  operationInProgress: Set<string> // Set of package IDs with operations in progress
+  // Set of package IDs with operations in progress
+  operationInProgress: Set<string>
   error: PackageError | null
 }
 

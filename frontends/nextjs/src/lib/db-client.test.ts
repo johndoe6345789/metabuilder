@@ -46,8 +46,9 @@ describe('db client', () => {
       // "address" must not become "addres".
       const calls = mockFetch({ data: [] })
 
-      await (db as unknown as Record<string, { list: () => Promise<unknown> }>)
-        .address.list()
+      await (
+        db as unknown as Record<string, { list: () => Promise<unknown> }>
+      ).address.list()
 
       expect(calls[0].url).toContain('/Address')
     })

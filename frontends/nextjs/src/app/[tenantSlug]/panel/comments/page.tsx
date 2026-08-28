@@ -8,8 +8,10 @@ import { Typography, Paper, Button, TextField, Avatar } from '@/m3'
 import s from './page.module.scss'
 
 const DBAL_URL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
-// ProfileComment lives under the pastebin package (entities/pastebin/profile_comment.json),
-// not core -- the route is /{tenant}/{package}/{Entity}, Entity from the schema's own
+// ProfileComment lives under the pastebin package
+// (entities/pastebin/profile_comment.json),
+// not core -- the route is /{tenant}/{package}/{Entity}, Entity from the
+// schema's own
 // "entity" field (PascalCase), not the filename. This page previously called
 // /v1/default/core/profile_comment, which matches no real route at all.
 const COMMENTS_URL = `${DBAL_URL}/system/pastebin/ProfileComment`

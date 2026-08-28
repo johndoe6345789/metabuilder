@@ -101,14 +101,11 @@ describe('renderJSONComponent', () => {
       )
     })
 
-    it.each([[0], [''], [false], [null]])(
-      'treats %p as false',
-      value => {
-        expect(html(conditional('{{props.flag}}'), { flag: value })).toContain(
-          'NO'
-        )
-      }
-    )
+    it.each([[0], [''], [false], [null]])('treats %p as false', value => {
+      expect(html(conditional('{{props.flag}}'), { flag: value })).toContain(
+        'NO'
+      )
+    })
 
     it('renders nothing when the condition is absent', () => {
       const out = html(
@@ -138,9 +135,12 @@ describe('renderJSONComponent', () => {
     })
 
     it('passes evaluated props to it', () => {
-      const out = html(component({ type: 'Box', props: { id: '{{props.k}}' } }), {
-        k: 'from-props',
-      })
+      const out = html(
+        component({ type: 'Box', props: { id: '{{props.k}}' } }),
+        {
+          k: 'from-props',
+        }
+      )
       expect(out).toContain('from-props')
     })
 

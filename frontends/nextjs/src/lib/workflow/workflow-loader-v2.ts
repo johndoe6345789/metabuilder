@@ -17,7 +17,8 @@
  * - Manages resource constraints
  * - Provides comprehensive diagnostics
  *
- * Part of the 95% data pattern: Workflow structure is JSON, validation is TypeScript
+ * Part of the 95% data pattern: Workflow structure is JSON, validation is
+ * TypeScript
  *
  * @module workflow-loader-v2
  * @version 2.0.0

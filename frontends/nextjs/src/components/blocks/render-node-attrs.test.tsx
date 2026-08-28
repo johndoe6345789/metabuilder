@@ -19,7 +19,11 @@ const node = (over: Partial<TreeNode> = {}): TreeNode => ({
 describe('renderNode common attributes', () => {
   it('applies id and class to a block that reads neither', () => {
     const { container } = render(
-      <>{renderNode(node({ props: { text: 'hi', id: 'intro', className: 'lede' } }))}</>
+      <>
+        {renderNode(
+          node({ props: { text: 'hi', id: 'intro', className: 'lede' } })
+        )}
+      </>
     )
     const p = container.querySelector('p')
 

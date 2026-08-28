@@ -87,7 +87,11 @@ describe('WorkflowLoaderV2', () => {
         [{ ...node('n1'), nodeType: '' }],
         'must have nodeType',
       ],
-      ['a duplicate id', [node('n1'), node('n1', 'other')], 'Duplicate node id'],
+      [
+        'a duplicate id',
+        [node('n1'), node('n1', 'other')],
+        'Duplicate node id',
+      ],
       [
         'a duplicate name',
         [node('n1'), node('n2', 'n1')],

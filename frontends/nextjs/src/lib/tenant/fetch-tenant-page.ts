@@ -69,8 +69,6 @@ export async function fetchTenantPages(tenant: string): Promise<TenantPage[]> {
   }
 }
 
-
-
 function normalize(p: Record<string, unknown>): TenantPage {
   return {
     id: p.id as string,

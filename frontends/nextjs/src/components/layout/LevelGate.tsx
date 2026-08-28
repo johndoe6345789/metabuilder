@@ -20,7 +20,10 @@ import s from './LevelGate.module.scss'
 
 export interface LevelGateProps {
   children: React.ReactNode
-  /** Minimum ROLE_LEVELS value required (0=public, 1=user, 2=mod, 3=admin, 4=god, 5=supergod) */
+  /**
+   * Minimum ROLE_LEVELS value required (0=public, 1=user, 2=mod, 3=admin,
+   * 4=god, 5=supergod)
+   */
   minLevel: number
   /** Human-readable level name for the access denied message */
   levelName?: string

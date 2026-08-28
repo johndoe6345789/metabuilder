@@ -189,7 +189,8 @@ export function styleSheetText(classes: StyleClassShape[]): string {
       .filter(css => Object.keys(css.props).length > 0)
       // The selector names the class twice on purpose. Many blocks render
       // components that style their own root, and those styles are also a
-      // single class -- so a plain `.name` lost every tie and a style simply did
+      // single class -- so a plain `.name` lost every tie and a style simply
+      // did
       // not apply to a button or a chip. Repeating the class doubles
       // specificity, which wins without `!important`: the author keeps the
       // ability to override this again, and nobody has to know the word.
