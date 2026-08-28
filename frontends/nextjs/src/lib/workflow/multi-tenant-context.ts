@@ -16,6 +16,12 @@
  */
 
 import { v4 as uuidv4 } from 'uuid'
+// The tenant-access rule and the log sanitiser now live in ./context, small
+// enough to read and test on their own. Re-exported so callers are
+// unaffected.
+export { canUserAccessWorkflow } from './context/context-access'
+export { sanitizeContextForLogging } from './context/context-logging'
+
 import type {
   WorkflowContext,
   WorkflowDefinition,
@@ -601,28 +607,6 @@ export async function createContextFromRequest(
  * Verify user can access workflow
  * Simple access check without full context building
  */
-export function canUserAccessWorkflow(
-  userTenantId: string,
-  userLevel: number,
-  workflowTenantId: string
-): boolean {
-  // User's own tenant
-  if (userTenantId === workflowTenantId) {
-    return true
-  }
-
-  // Super-admin can access any tenant
-  if (userLevel >= 4) {
-    return true
-  }
-
-  return false
-}
-
-/**
- * Extract request context from Next.js request headers
- * Assumes JWT token in Authorization header
- */
 export function extractRequestContext(
   headers?: Record<string, string>
 ): RequestContext | null {
@@ -639,35 +623,6 @@ export function extractRequestContext(
 
 /**
  * Sanitize context for logging (remove secrets)
- */
-export function sanitizeContextForLogging(
-  context: ExtendedWorkflowContext
-): Record<string, unknown> {
-  return {
-    executionId: context.executionId,
-    tenantId: context.tenantId,
-    userId: context.userId,
-    trigger: context.trigger.kind,
-    multiTenant: {
-      ...context.multiTenant,
-      // Don't log sensitive request data
-      ipAddress:
-        context.multiTenant.ipAddress != null
-          ? context.multiTenant.ipAddress.substring(0, 10) + '...'
-          : undefined,
-      userAgent:
-        context.multiTenant.userAgent != null
-          ? context.multiTenant.userAgent.substring(0, 20) + '...'
-          : undefined,
-    },
-    executionLimits: context.executionLimits,
-    // Don't log secrets, credentials, or request body
-    variables: Object.keys(context.variables),
-  }
-}
-
-/**
- * Create a mock context for testing
  */
 export function createMockContext(
   workflow: WorkflowDefinition,
