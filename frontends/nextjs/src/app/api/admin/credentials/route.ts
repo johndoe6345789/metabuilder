@@ -17,9 +17,8 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 import { STATUS } from '@/lib/routing'
-import { fetchSession } from '@/lib/auth/api/fetch-session'
-import { SESSION_COOKIE } from '@/app/api/auth/session/route'
-import { getRoleLevel, ROLE_LEVELS } from '@/lib/constants'
+import { requireRole } from '@/lib/routing/require-role'
+import { ROLE_LEVELS } from '@/lib/constants'
 import { applyRateLimit } from '@/lib/middleware/rate-limit'
 
 const DBAL_URL =
@@ -71,20 +70,9 @@ export async function POST(request: NextRequest): Promise<Response> {
   const limited = applyRateLimit(request, 'mutation')
   if (limited != null) return limited
 
-  // The browser sends the httpOnly session cookie, not an Authorization
-  // header, so the token comes from the cookie the way the DBAL proxy takes
-  // it. getSessionUser() reads only the header and would always see nobody.
-  const token = request.cookies.get(SESSION_COOKIE)?.value ?? null
-  const user = token === null ? null : await fetchSession(token)
-  if (user === null) {
-    return reject('Authentication required', STATUS.UNAUTHORIZED)
-  }
-
-  const role = typeof user.role === 'string' ? user.role : 'public'
-  const level = getRoleLevel(role)
-  if (level < ROLE_LEVELS.god) {
-    return reject('God level access required', STATUS.FORBIDDEN)
-  }
+  const check = await requireRole(request, 'god')
+  if (!check.ok) return check.response
+  const { actor } = check
 
   let parsed: unknown
   try {
@@ -102,13 +90,10 @@ export async function POST(request: NextRequest): Promise<Response> {
   if (invalid !== null) return reject(invalid, STATUS.BAD_REQUEST)
 
   // A god may only provision inside its own tenant; a supergod anywhere.
-  const ownTenant =
-    typeof user.tenantId === 'string' && user.tenantId.length > 0
-      ? user.tenantId
-      : 'system'
   const requested = (parsed as SetCredentialBody).tenantId
-  const wanted = typeof requested === 'string' ? requested : ownTenant
-  if (level < ROLE_LEVELS.supergod && wanted !== ownTenant) {
+  const wanted =
+    typeof requested === 'string' ? requested : actor.tenantId
+  if (actor.level < ROLE_LEVELS.supergod && wanted !== actor.tenantId) {
     return reject(
       'God users can only manage credentials inside their own tenant.',
       STATUS.FORBIDDEN

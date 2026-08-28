@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useMediaChannels } from './use-media-channels'
 
 const MEDIA_API =
   process.env.NEXT_PUBLIC_MEDIA_API_URL ?? 'http://localhost:8090'
@@ -57,87 +57,47 @@ export interface ScheduledChannel extends TvChannel {
   epgEntries: EpgEntry[]
 }
 
+/** Attaches the now/next programme to each channel from the guide. */
+async function withGuide(raw: unknown[]): Promise<ScheduledChannel[]> {
+  const channels = raw as TvChannel[]
+  const res = await fetch(`${MEDIA_API}/api/tv/epg?hours=6`)
+  const epg: EpgEntry[] = res.ok
+    ? (((await res.json()) as { epg?: EpgEntry[] }).epg ?? [])
+    : []
+
+  const now = Date.now()
+  const at = (value: string) => new Date(value).getTime()
+
+  return channels.map(channel => {
+    const forChannel = epg
+      .filter(entry => entry.channel_id === channel.id)
+      .sort((a, b) => at(a.start_time) - at(b.start_time))
+
+    return {
+      ...channel,
+      epgNow: forChannel.find(
+        entry => at(entry.start_time) <= now && at(entry.end_time) > now
+      ),
+      epgNext: forChannel.find(entry => at(entry.start_time) > now),
+      epgEntries: forChannel,
+    }
+  })
+}
+
 export function useTvChannels() {
-  const [channels, setChannels] = useState<ScheduledChannel[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  // withGuide is a module-level function, so it is already stable -- no
+  // useCallback needed, and useMediaChannels does not depend on it.
+  const { channels, loading, error, refresh, start, stop } =
+    useMediaChannels<ScheduledChannel>(
+      {
+        api: MEDIA_API,
+        service: 'tv',
+        urlField: 'hls_url',
+        streamHost: MEDIA_HLS_HOST,
+        loadError: 'Failed to load channels',
+      },
+      withGuide
+    )
 
-  const refresh = useCallback(async (): Promise<void> => {
-    try {
-      const [channelsRes, epgRes] = await Promise.all([
-        fetch(`${MEDIA_API}/api/tv/channels`),
-        fetch(`${MEDIA_API}/api/tv/epg?hours=6`),
-      ])
-      if (!channelsRes.ok) throw new Error(`HTTP ${channelsRes.status}`)
-      const channelsData = (await channelsRes.json()) as {
-        channels: TvChannel[]
-      }
-      const epgData = epgRes.ok
-        ? ((await epgRes.json()) as { epg: EpgEntry[] })
-        : { epg: [] }
-
-      const now = Date.now()
-      const merged: ScheduledChannel[] = channelsData.channels.map(ch => {
-        const forChannel = epgData.epg
-          .filter(e => e.channel_id === ch.id)
-          .sort(
-            (a, b) =>
-              new Date(a.start_time).getTime() -
-              new Date(b.start_time).getTime()
-          )
-        const epgNow = forChannel.find(
-          e =>
-            new Date(e.start_time).getTime() <= now &&
-            new Date(e.end_time).getTime() > now
-        )
-        const epgNext = forChannel.find(
-          e => new Date(e.start_time).getTime() > now
-        )
-        return { ...ch, epgNow, epgNext, epgEntries: forChannel }
-      })
-
-      setChannels(merged)
-      setError(null)
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to load channels')
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    void refresh()
-    const interval = setInterval(() => {
-      void refresh()
-    }, 15000)
-    return () => {
-      clearInterval(interval)
-    }
-  }, [refresh])
-
-  const watch = useCallback(
-    async (channelId: string): Promise<string> => {
-      const res = await fetch(
-        `${MEDIA_API}/api/tv/channels/${channelId}/start`,
-        { method: 'POST' }
-      )
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      const data = (await res.json()) as { hls_url: string }
-      await refresh()
-      return `${MEDIA_HLS_HOST}${data.hls_url}`
-    },
-    [refresh]
-  )
-
-  const stop = useCallback(
-    async (channelId: string): Promise<void> => {
-      await fetch(`${MEDIA_API}/api/tv/channels/${channelId}/stop`, {
-        method: 'POST',
-      })
-      await refresh()
-    },
-    [refresh]
-  )
-
-  return { channels, loading, error, refresh, watch, stop }
+  return { channels, loading, error, refresh, watch: start, stop }
 }

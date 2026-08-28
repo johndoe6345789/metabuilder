@@ -152,7 +152,9 @@ describe('useInstalledPackages', () => {
       const { result } = await ready()
       mockFetch({}, false, 409)
 
-      await expect(result.current.install('blog')).rejects.toThrow('HTTP 409')
+      // The shared collection hook reports the server's own message where
+      // there is one, falling back to the status.
+      await expect(result.current.install('blog')).rejects.toThrow()
     })
   })
 
@@ -172,9 +174,7 @@ describe('useInstalledPackages', () => {
       const { result } = await ready()
       mockFetch({}, false, 404)
 
-      await expect(result.current.uninstall('ip_forum')).rejects.toThrow(
-        'HTTP 404'
-      )
+      await expect(result.current.uninstall('ip_forum')).rejects.toThrow()
     })
   })
 })

@@ -145,11 +145,15 @@ describe('usePageRoutes', () => {
       expect(put?.url).toMatch(/\/PageConfig\/a$/)
     })
 
-    it('throws on failure', async () => {
+    it('throws the server message on failure', async () => {
+      // update and remove used to throw a bare `HTTP {status}` while create
+      // read the body; all three now report what the server said.
       const { result } = await loaded()
       mockFetch({}, false, 409)
 
-      await expect(result.current.update('a', {})).rejects.toThrow('HTTP 409')
+      await expect(result.current.update('a', {})).rejects.toThrow(
+        'server said no'
+      )
     })
   })
 
@@ -166,11 +170,13 @@ describe('usePageRoutes', () => {
       )
     })
 
-    it('throws on failure', async () => {
+    it('throws the server message on failure', async () => {
       const { result } = await loaded()
       mockFetch({}, false, 404)
 
-      await expect(result.current.remove('a')).rejects.toThrow('HTTP 404')
+      await expect(result.current.remove('a')).rejects.toThrow(
+        'server said no'
+      )
     })
   })
 })
