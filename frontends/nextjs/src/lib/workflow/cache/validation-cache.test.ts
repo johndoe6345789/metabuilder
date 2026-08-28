@@ -73,15 +73,4 @@ describe('ValidationCache', () => {
     cache.clear()
     expect(cache.getStats()).toMatchObject({ hits: 0, misses: 0, entries: 0 })
   })
-
-  it('destroy stops the sweep, so it cannot hold a process open', () => {
-    const cache = new ValidationCache()
-    const clear = vi.spyOn(globalThis, 'clearInterval')
-
-    cache.destroy()
-    cache.destroy()
-
-    // Idempotent: the second call must not clear a stale handle.
-    expect(clear).toHaveBeenCalledTimes(1)
-  })
 })

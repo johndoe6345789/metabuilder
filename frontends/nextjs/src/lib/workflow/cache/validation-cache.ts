@@ -30,7 +30,9 @@ export class ValidationCache {
   ) {
     this.ttlMs = ttlMs
     this.maxEntries = maxEntries
-    this.startCleanupInterval()
+    this.cleanupInterval = setInterval(() => {
+      sweepExpired(this.memoryCache, Date.now())
+    }, CLEANUP_INTERVAL_MS)
   }
 
   /** The cached result, or null if absent or too old to trust. */
@@ -54,9 +56,7 @@ export class ValidationCache {
     evictOldest(this.memoryCache, this.maxEntries)
   }
 
-  delete(key: string): void {
-    this.memoryCache.delete(key)
-  }
+  delete = (key: string): void => void this.memoryCache.delete(key)
 
   /** Empties the cache and resets the counters with it. */
   clear(): void {
@@ -67,12 +67,6 @@ export class ValidationCache {
 
   getStats(): CacheReport {
     return buildReport(this.stats, this.memoryCache)
-  }
-
-  private startCleanupInterval(): void {
-    this.cleanupInterval = setInterval(() => {
-      sweepExpired(this.memoryCache, Date.now())
-    }, CLEANUP_INTERVAL_MS)
   }
 
   /** Stops the sweep. Without this the timer keeps a process alive. */

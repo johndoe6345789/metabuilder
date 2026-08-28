@@ -22,6 +22,15 @@ import type { ValidationError } from '@metabuilder/workflow'
  * Plain API response returned by error handlers.
  * Use NextResponse.json(r.json, { status: r.status }) in actual route handlers.
  */
+// The codes and the three tables keyed by them live in ./errors, where a
+// test checks they stay in step. Re-exported so callers are unaffected.
+import { WorkflowErrorCode } from './errors/error-codes'
+import { ERROR_HINTS } from './errors/error-hints'
+import { ERROR_MESSAGES } from './errors/error-messages'
+import { ERROR_STATUS_MAP } from './errors/error-status'
+
+export { WorkflowErrorCode }
+
 export interface WorkflowApiResponse {
   status: number
   json: FormattedError
@@ -80,260 +89,15 @@ export interface FormattedError {
 /**
  * Error code definitions covering all 30+ workflow error scenarios
  */
-export enum WorkflowErrorCode {
-  // Validation errors (400)
-  VALIDATION_ERROR = 'VALIDATION_ERROR',
-  MISSING_REQUIRED_FIELD = 'MISSING_REQUIRED_FIELD',
-  INVALID_NODE_TYPE = 'INVALID_NODE_TYPE',
-  INVALID_CONNECTION = 'INVALID_CONNECTION',
-  INVALID_WORKFLOW_STRUCTURE = 'INVALID_WORKFLOW_STRUCTURE',
-  DUPLICATE_NODE_NAME = 'DUPLICATE_NODE_NAME',
-  CIRCULAR_DEPENDENCY = 'CIRCULAR_DEPENDENCY',
-  TYPE_MISMATCH = 'TYPE_MISMATCH',
-  INVALID_TENANT_ID = 'INVALID_TENANT_ID',
-  MISSING_TENANT_ID = 'MISSING_TENANT_ID',
-
-  // Execution errors (500)
-  EXECUTION_ERROR = 'EXECUTION_ERROR',
-  EXECUTION_FAILED = 'EXECUTION_FAILED',
-  NODE_EXECUTION_FAILED = 'NODE_EXECUTION_FAILED',
-  EXECUTION_TIMEOUT = 'EXECUTION_TIMEOUT',
-  NODE_NOT_FOUND = 'NODE_NOT_FOUND',
-  EXECUTOR_NOT_REGISTERED = 'EXECUTOR_NOT_REGISTERED',
-  WORKFLOW_EXECUTION_ABORTED = 'WORKFLOW_EXECUTION_ABORTED',
-  INSUFFICIENT_RESOURCES = 'INSUFFICIENT_RESOURCES',
-  MEMORY_LIMIT_EXCEEDED = 'MEMORY_LIMIT_EXCEEDED',
-  EXECUTION_QUEUE_FULL = 'EXECUTION_QUEUE_FULL',
-
-  // Data/Configuration errors (422)
-  MISSING_WORKFLOW_DEFINITION = 'MISSING_WORKFLOW_DEFINITION',
-  INVALID_WORKFLOW_FORMAT = 'INVALID_WORKFLOW_FORMAT',
-  INVALID_CONTEXT = 'INVALID_CONTEXT',
-  INVALID_PARAMETER = 'INVALID_PARAMETER',
-  MISSING_VARIABLE = 'MISSING_VARIABLE',
-  INVALID_EXPRESSION = 'INVALID_EXPRESSION',
-
-  // Access control errors (403)
-  FORBIDDEN = 'FORBIDDEN',
-  TENANT_MISMATCH = 'TENANT_MISMATCH',
-  UNAUTHORIZED = 'UNAUTHORIZED',
-  PERMISSION_DENIED = 'PERMISSION_DENIED',
-
-  // Not found errors (404)
-  NOT_FOUND = 'NOT_FOUND',
-  WORKFLOW_NOT_FOUND = 'WORKFLOW_NOT_FOUND',
-  EXECUTION_NOT_FOUND = 'EXECUTION_NOT_FOUND',
-  RESOURCE_NOT_FOUND = 'RESOURCE_NOT_FOUND',
-
-  // Rate limiting (429)
-  RATE_LIMITED = 'RATE_LIMITED',
-  CONCURRENT_EXECUTION_LIMIT = 'CONCURRENT_EXECUTION_LIMIT',
-
-  // Unknown/Generic errors (500)
-  UNKNOWN_ERROR = 'UNKNOWN_ERROR',
-  INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',
-}
-
 /**
  * HTTP status code mapping for error codes
  */
-const ERROR_STATUS_MAP: Record<WorkflowErrorCode, number> = {
-  // Validation errors (400)
-  [WorkflowErrorCode.VALIDATION_ERROR]: 400,
-  [WorkflowErrorCode.MISSING_REQUIRED_FIELD]: 400,
-  [WorkflowErrorCode.INVALID_NODE_TYPE]: 400,
-  [WorkflowErrorCode.INVALID_CONNECTION]: 400,
-  [WorkflowErrorCode.INVALID_WORKFLOW_STRUCTURE]: 400,
-  [WorkflowErrorCode.DUPLICATE_NODE_NAME]: 400,
-  [WorkflowErrorCode.CIRCULAR_DEPENDENCY]: 400,
-  [WorkflowErrorCode.TYPE_MISMATCH]: 400,
-  [WorkflowErrorCode.INVALID_TENANT_ID]: 400,
-  [WorkflowErrorCode.MISSING_TENANT_ID]: 400,
-
-  // Execution errors (500)
-  [WorkflowErrorCode.EXECUTION_ERROR]: 500,
-  [WorkflowErrorCode.EXECUTION_FAILED]: 500,
-  [WorkflowErrorCode.NODE_EXECUTION_FAILED]: 500,
-  [WorkflowErrorCode.EXECUTION_TIMEOUT]: 504,
-  [WorkflowErrorCode.NODE_NOT_FOUND]: 500,
-  [WorkflowErrorCode.EXECUTOR_NOT_REGISTERED]: 500,
-  [WorkflowErrorCode.WORKFLOW_EXECUTION_ABORTED]: 500,
-  [WorkflowErrorCode.INSUFFICIENT_RESOURCES]: 503,
-  [WorkflowErrorCode.MEMORY_LIMIT_EXCEEDED]: 503,
-  [WorkflowErrorCode.EXECUTION_QUEUE_FULL]: 429,
-
-  // Data/Configuration errors (422)
-  [WorkflowErrorCode.MISSING_WORKFLOW_DEFINITION]: 422,
-  [WorkflowErrorCode.INVALID_WORKFLOW_FORMAT]: 422,
-  [WorkflowErrorCode.INVALID_CONTEXT]: 422,
-  [WorkflowErrorCode.INVALID_PARAMETER]: 422,
-  [WorkflowErrorCode.MISSING_VARIABLE]: 422,
-  [WorkflowErrorCode.INVALID_EXPRESSION]: 422,
-
-  // Access control errors (403)
-  [WorkflowErrorCode.FORBIDDEN]: 403,
-  [WorkflowErrorCode.TENANT_MISMATCH]: 403,
-  [WorkflowErrorCode.UNAUTHORIZED]: 401,
-  [WorkflowErrorCode.PERMISSION_DENIED]: 403,
-
-  // Not found errors (404)
-  [WorkflowErrorCode.NOT_FOUND]: 404,
-  [WorkflowErrorCode.WORKFLOW_NOT_FOUND]: 404,
-  [WorkflowErrorCode.EXECUTION_NOT_FOUND]: 404,
-  [WorkflowErrorCode.RESOURCE_NOT_FOUND]: 404,
-
-  // Rate limiting (429)
-  [WorkflowErrorCode.RATE_LIMITED]: 429,
-  [WorkflowErrorCode.CONCURRENT_EXECUTION_LIMIT]: 429,
-
-  // Unknown/Generic errors (500)
-  [WorkflowErrorCode.UNKNOWN_ERROR]: 500,
-  [WorkflowErrorCode.INTERNAL_SERVER_ERROR]: 500,
-}
-
 /**
  * User-friendly error messages
  */
-const ERROR_MESSAGES: Record<WorkflowErrorCode, string> = {
-  // Validation
-  [WorkflowErrorCode.VALIDATION_ERROR]: 'Workflow validation failed',
-  [WorkflowErrorCode.MISSING_REQUIRED_FIELD]:
-    'Missing required field in workflow definition',
-  [WorkflowErrorCode.INVALID_NODE_TYPE]: 'Invalid node type specified',
-  [WorkflowErrorCode.INVALID_CONNECTION]: 'Invalid connection between nodes',
-  [WorkflowErrorCode.INVALID_WORKFLOW_STRUCTURE]:
-    'Workflow structure is invalid',
-  [WorkflowErrorCode.DUPLICATE_NODE_NAME]: 'Duplicate node name detected',
-  [WorkflowErrorCode.CIRCULAR_DEPENDENCY]:
-    'Circular dependency detected in workflow',
-  [WorkflowErrorCode.TYPE_MISMATCH]: 'Type mismatch in node parameters',
-  [WorkflowErrorCode.INVALID_TENANT_ID]: 'Invalid tenant ID format',
-  [WorkflowErrorCode.MISSING_TENANT_ID]: 'Tenant ID is required',
-
-  // Execution
-  [WorkflowErrorCode.EXECUTION_ERROR]: 'Workflow execution failed',
-  [WorkflowErrorCode.EXECUTION_FAILED]: 'Workflow execution failed',
-  [WorkflowErrorCode.NODE_EXECUTION_FAILED]: 'Node execution failed',
-  [WorkflowErrorCode.EXECUTION_TIMEOUT]: 'Workflow execution timed out',
-  [WorkflowErrorCode.NODE_NOT_FOUND]: 'Node not found in workflow',
-  [WorkflowErrorCode.EXECUTOR_NOT_REGISTERED]: 'Node executor not registered',
-  [WorkflowErrorCode.WORKFLOW_EXECUTION_ABORTED]:
-    'Workflow execution was aborted',
-  [WorkflowErrorCode.INSUFFICIENT_RESOURCES]:
-    'Insufficient resources to execute workflow',
-  [WorkflowErrorCode.MEMORY_LIMIT_EXCEEDED]:
-    'Memory limit exceeded during execution',
-  [WorkflowErrorCode.EXECUTION_QUEUE_FULL]:
-    'Execution queue is full, please try again later',
-
-  // Data/Configuration
-  [WorkflowErrorCode.MISSING_WORKFLOW_DEFINITION]:
-    'Workflow definition is required',
-  [WorkflowErrorCode.INVALID_WORKFLOW_FORMAT]: 'Workflow format is invalid',
-  [WorkflowErrorCode.INVALID_CONTEXT]: 'Invalid execution context',
-  [WorkflowErrorCode.INVALID_PARAMETER]: 'Invalid parameter value',
-  [WorkflowErrorCode.MISSING_VARIABLE]: 'Required variable is missing',
-  [WorkflowErrorCode.INVALID_EXPRESSION]: 'Invalid expression syntax',
-
-  // Access control
-  [WorkflowErrorCode.FORBIDDEN]: 'Access to workflow is forbidden',
-  [WorkflowErrorCode.TENANT_MISMATCH]:
-    'Tenant mismatch - cannot access workflow',
-  [WorkflowErrorCode.UNAUTHORIZED]: 'Unauthorized - authentication required',
-  [WorkflowErrorCode.PERMISSION_DENIED]: 'Permission denied for this action',
-
-  // Not found
-  [WorkflowErrorCode.NOT_FOUND]: 'Resource not found',
-  [WorkflowErrorCode.WORKFLOW_NOT_FOUND]: 'Workflow not found',
-  [WorkflowErrorCode.EXECUTION_NOT_FOUND]: 'Execution not found',
-  [WorkflowErrorCode.RESOURCE_NOT_FOUND]: 'Requested resource not found',
-
-  // Rate limiting
-  [WorkflowErrorCode.RATE_LIMITED]: 'Too many requests, please try again later',
-  [WorkflowErrorCode.CONCURRENT_EXECUTION_LIMIT]:
-    'Concurrent execution limit reached',
-
-  // Generic
-  [WorkflowErrorCode.UNKNOWN_ERROR]: 'An unknown error occurred',
-  [WorkflowErrorCode.INTERNAL_SERVER_ERROR]: 'Internal server error',
-}
-
 /**
  * Recovery hints and suggestions for each error code
  */
-const ERROR_HINTS: Record<WorkflowErrorCode, string> = {
-  [WorkflowErrorCode.VALIDATION_ERROR]:
-    'Verify workflow structure, check nodes, connections, and parameters.',
-  [WorkflowErrorCode.MISSING_REQUIRED_FIELD]:
-    'Ensure all required fields are populated.',
-  [WorkflowErrorCode.INVALID_NODE_TYPE]:
-    'Use a node type from the available registry. Check the workflow editor.',
-  [WorkflowErrorCode.INVALID_CONNECTION]:
-    'Ensure target node exists and input/output types are compatible.',
-  [WorkflowErrorCode.INVALID_WORKFLOW_STRUCTURE]:
-    'Review workflow layout and ensure proper node organization.',
-  [WorkflowErrorCode.DUPLICATE_NODE_NAME]: 'Rename nodes to have unique names.',
-  [WorkflowErrorCode.CIRCULAR_DEPENDENCY]:
-    'Reorganize workflow to eliminate circular references.',
-  [WorkflowErrorCode.TYPE_MISMATCH]:
-    'Verify parameter types match node input requirements.',
-  [WorkflowErrorCode.INVALID_TENANT_ID]: 'Use a valid tenant ID format.',
-  [WorkflowErrorCode.MISSING_TENANT_ID]:
-    'Workflow must be associated with a tenant.',
-  [WorkflowErrorCode.EXECUTION_ERROR]:
-    'Check node parameters and verify target resources are available.',
-  [WorkflowErrorCode.EXECUTION_FAILED]:
-    'Review execution logs for more details about the failure.',
-  [WorkflowErrorCode.NODE_EXECUTION_FAILED]:
-    'Check the node configuration and input data.',
-  [WorkflowErrorCode.EXECUTION_TIMEOUT]:
-    'Increase timeout settings or optimize the workflow for performance.',
-  [WorkflowErrorCode.NODE_NOT_FOUND]:
-    'Verify the node exists in the workflow definition.',
-  [WorkflowErrorCode.EXECUTOR_NOT_REGISTERED]:
-    'The required node executor is not available.',
-  [WorkflowErrorCode.WORKFLOW_EXECUTION_ABORTED]:
-    'Execution was aborted. Review the abort reason and retry.',
-  [WorkflowErrorCode.INSUFFICIENT_RESOURCES]:
-    'System does not have sufficient resources. Try again later.',
-  [WorkflowErrorCode.MEMORY_LIMIT_EXCEEDED]:
-    'Reduce workflow complexity or data size.',
-  [WorkflowErrorCode.EXECUTION_QUEUE_FULL]:
-    'Wait a moment and retry the execution.',
-  [WorkflowErrorCode.MISSING_WORKFLOW_DEFINITION]:
-    'Provide a valid workflow definition.',
-  [WorkflowErrorCode.INVALID_WORKFLOW_FORMAT]:
-    'Ensure workflow format is correct.',
-  [WorkflowErrorCode.INVALID_CONTEXT]:
-    'Verify execution context (user, tenant, variables).',
-  [WorkflowErrorCode.INVALID_PARAMETER]:
-    'Check parameter values and types in node configuration.',
-  [WorkflowErrorCode.MISSING_VARIABLE]:
-    'Ensure all referenced variables are defined.',
-  [WorkflowErrorCode.INVALID_EXPRESSION]:
-    'Review expression syntax and variable references.',
-  [WorkflowErrorCode.FORBIDDEN]: 'Contact your administrator for access.',
-  [WorkflowErrorCode.TENANT_MISMATCH]:
-    'Workflow belongs to a different tenant. Check access permissions.',
-  [WorkflowErrorCode.UNAUTHORIZED]: 'Log in again or refresh your credentials.',
-  [WorkflowErrorCode.PERMISSION_DENIED]:
-    'Contact your administrator for required permissions.',
-  [WorkflowErrorCode.NOT_FOUND]:
-    'Verify the resource exists and is accessible.',
-  [WorkflowErrorCode.WORKFLOW_NOT_FOUND]:
-    'Workflow has been deleted or is inaccessible.',
-  [WorkflowErrorCode.EXECUTION_NOT_FOUND]:
-    'Execution record not found. Check the execution ID.',
-  [WorkflowErrorCode.RESOURCE_NOT_FOUND]:
-    'The requested resource no longer exists.',
-  [WorkflowErrorCode.RATE_LIMITED]: 'Wait a moment and retry the request.',
-  [WorkflowErrorCode.CONCURRENT_EXECUTION_LIMIT]:
-    'Too many workflows running simultaneously. Try again later.',
-  [WorkflowErrorCode.UNKNOWN_ERROR]: 'Check logs for more information.',
-  [WorkflowErrorCode.INTERNAL_SERVER_ERROR]:
-    'The server encountered an error. Our team has been notified.',
-}
-
 /**
  * WorkflowErrorHandler
  *
