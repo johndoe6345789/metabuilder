@@ -2,8 +2,21 @@
 
 import type { TreeNode } from './builder-registry'
 
+/**
+ * A fresh node id.
+ *
+ * Date.now() plus four random base36 characters is only ~1.7M combinations
+ * inside a single millisecond, which is a real collision risk when nodes are
+ * created in a burst (paste, import, undo-redo replay). Two nodes sharing an
+ * id silently breaks selection, deletion and the duplicate-DOM-id check, so
+ * a per-session counter makes it exact rather than merely unlikely.
+ */
+let nidCounter = 0
+
 export function nid(): string {
-  return `n_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`
+  nidCounter += 1
+  const random = Math.random().toString(36).slice(2, 8)
+  return `n_${Date.now()}_${nidCounter.toString(36)}_${random}`
 }
 
 export function walk(node: TreeNode, fn: (n: TreeNode) => void): void {

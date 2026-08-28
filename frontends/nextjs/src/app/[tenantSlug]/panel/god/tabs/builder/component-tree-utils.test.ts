@@ -37,13 +37,18 @@ const ids = (node: TreeNode): string[] => {
 }
 
 describe('nid', () => {
-  it('produces distinct ids', () => {
-    const seen = new Set(Array.from({ length: 200 }, nid))
-    expect(seen.size).toBe(200)
+  it('produces distinct ids even in a tight burst', () => {
+    // All within one millisecond, so only the counter separates them.
+    const seen = new Set(Array.from({ length: 5000 }, nid))
+    expect(seen.size).toBe(5000)
   })
 
   it('is usable as an identifier', () => {
-    expect(nid()).toMatch(/^n_\d+_[a-z0-9]+$/)
+    expect(nid()).toMatch(/^n_\d+_[a-z0-9]+_[a-z0-9]+$/)
+  })
+
+  it('never repeats across separate calls', () => {
+    expect(nid()).not.toBe(nid())
   })
 })
 
