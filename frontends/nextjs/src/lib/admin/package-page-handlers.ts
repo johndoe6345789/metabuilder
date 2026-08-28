@@ -1,5 +1,10 @@
 'use client'
 
+import {
+  errorCodeOf as getErrorCode,
+  messageForCode as getErrorMessage,
+} from './package-error-text'
+
 import type {
   PackagePageHandlers,
   PackageStatus,
@@ -81,42 +86,6 @@ interface PageHandlersDependencies {
    * Toast notification function
    */
   showToast: (options: ToastOptions) => void
-}
-
-/**
- * Extract error code from an unknown caught error
- */
-function getErrorCode(err: unknown): string {
-  if (
-    err != null &&
-    typeof err === 'object' &&
-    'code' in err &&
-    typeof (err as { code: unknown }).code === 'string'
-  ) {
-    return (err as { code: string }).code
-  }
-  return ''
-}
-
-/**
- * Error message generator based on error code
- */
-function getErrorMessage(code: string, defaultMessage: string): string {
-  const messages: Record<string, string> = {
-    NETWORK_ERROR: 'Network error. Please check your connection and try again.',
-    ALREADY_INSTALLED: 'This package is already installed.',
-    ALREADY_UNINSTALLED: 'This package is not installed.',
-    MISSING_DEPENDENCIES:
-      'This package has missing dependencies. Please install them first.',
-    PACKAGE_NOT_FOUND: 'Package not found. It may have been removed.',
-    PERMISSION_DENIED: "You don't have permission to manage packages.",
-    DEPENDENCY_ERROR:
-      'This package cannot be uninstalled because other packages depend on it.',
-    INVALID_PACKAGE_ID: 'Invalid package ID.',
-    SERVER_ERROR: 'Server error. Please try again later.',
-  }
-
-  return messages[code] ?? defaultMessage
 }
 
 /**

@@ -44,8 +44,10 @@ describe('parseErrorCode', () => {
 
 describe('getErrorMessage', () => {
   it('gives a readable line for a known code', () => {
+    // The wording comes from the shared table now. Two tables covered these
+    // codes with different words; the more specific one won.
     expect(getErrorMessage(coded(PackageErrorCode.NETWORK_ERROR))).toBe(
-      'Network error. Please check your connection.'
+      'Network error. Please check your connection and try again.'
     )
   })
 

@@ -1,6 +1,7 @@
 'use client'
 
 import type { PackageInfo, PackageError } from '@/lib/types/package-admin-types'
+import { PACKAGE_ERROR_MESSAGES } from './package-error-text'
 import { PackageErrorCode } from '@/lib/types/package-admin-types'
 
 /**
@@ -63,21 +64,7 @@ export function getErrorMessage(error: PackageError | Error | null): string {
   }
 
   if (isPackageError(error)) {
-    const messages: Record<string, string> = {
-      NETWORK_ERROR: 'Network error. Please check your connection.',
-      ALREADY_INSTALLED: 'This package is already installed.',
-      ALREADY_UNINSTALLED: 'This package is not installed.',
-      MISSING_DEPENDENCIES:
-        'Missing required dependencies. Please install them first.',
-      PACKAGE_NOT_FOUND: 'Package not found.',
-      PERMISSION_DENIED: "You don't have permission to perform this action.",
-      DEPENDENCY_ERROR: 'Other packages depend on this package.',
-      INVALID_PACKAGE_ID: 'Invalid package ID.',
-      SERVER_ERROR: 'Server error. Please try again later.',
-      UNKNOWN_ERROR: 'An unknown error occurred.',
-    }
-
-    return messages[error.code] ?? error.message
+    return PACKAGE_ERROR_MESSAGES[error.code] ?? error.message
   }
 
   return error.message
