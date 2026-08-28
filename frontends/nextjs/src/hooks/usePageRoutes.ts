@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { readList } from '@/lib/dbal/read-list'
 
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
@@ -25,24 +26,6 @@ export interface PageRoute {
 
 export type PageRouteInput = Omit<PageRoute, 'id'>
 
-function unwrap(raw: unknown): unknown {
-  if (raw !== null && typeof raw === 'object') {
-    const r = raw as Record<string, unknown>
-    if ('success' in r && 'data' in r) return r.data
-  }
-  return raw
-}
-
-function extractPages(raw: unknown): PageRoute[] {
-  const data = unwrap(raw)
-  if (Array.isArray(data)) return data as PageRoute[]
-  if (data !== null && typeof data === 'object') {
-    const d = data as Record<string, unknown>
-    if (Array.isArray(d.data)) return d.data as PageRoute[]
-  }
-  return []
-}
-
 export function usePageRoutes(tenant = 'system') {
   const [pages, setPages] = useState<PageRoute[]>([])
   const [loading, setLoading] = useState(true)
@@ -62,7 +45,7 @@ export function usePageRoutes(tenant = 'system') {
         return res.json() as Promise<unknown>
       })
       .then(raw => {
-        setPages(extractPages(raw))
+        setPages(readList<PageRoute>(raw))
         setError(null)
         setLoading(false)
       })

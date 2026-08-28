@@ -1,5 +1,6 @@
 'use client'
 
+import { readList } from '@/lib/dbal/read-list'
 import { useEffect, useState } from 'react'
 import { FormControl, FormLabel, Select } from '@/m3'
 import { DEFAULT_TENANT_ID } from '@/lib/tenant/workspace-paths'
@@ -23,7 +24,7 @@ async function fetchTenants(): Promise<string[]> {
   })
   if (!res.ok) return []
   const json = (await res.json()) as { data?: { data?: UserRow[] } }
-  const rows = json.data?.data ?? []
+  const rows = readList<Record<string, unknown>>(json)
   const ids = rows
     .map(row => (typeof row.tenantId === 'string' ? row.tenantId.trim() : ''))
     .filter(id => id.length > 0)

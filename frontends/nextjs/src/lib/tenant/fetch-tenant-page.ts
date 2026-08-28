@@ -1,4 +1,5 @@
 import 'server-only'
+import { readList } from '@/lib/dbal/read-list'
 
 import { loadTree } from '@/lib/tenant/page-tree'
 
@@ -37,7 +38,7 @@ export async function fetchTenantPage(
     const res = await fetch(url, { cache: 'no-store' })
     if (!res.ok) return null
     const raw = (await res.json()) as unknown
-    const arr = extractArray(unwrap(raw))
+    const arr = readList<Record<string, unknown>>(raw)
     const first = arr.find(page => {
       const active =
         (page.isActive as boolean | undefined) ??
@@ -62,32 +63,13 @@ export async function fetchTenantPages(tenant: string): Promise<TenantPage[]> {
     const res = await fetch(url, { cache: 'no-store' })
     if (!res.ok) return []
     const raw = (await res.json()) as unknown
-    return extractArray(unwrap(raw)).map(normalize)
+    return readList<Record<string, unknown>>(raw).map(normalize)
   } catch {
     return []
   }
 }
 
-function unwrap(raw: unknown): unknown {
-  if (raw !== null && typeof raw === 'object') {
-    const envelope = raw as Record<string, unknown>
-    if ('success' in envelope && 'data' in envelope) {
-      return envelope.data
-    }
-  }
-  return raw
-}
 
-function extractArray(raw: unknown): Record<string, unknown>[] {
-  if (Array.isArray(raw)) return raw as Record<string, unknown>[]
-  if (raw !== null && typeof raw === 'object') {
-    const r = raw as Record<string, unknown>
-    if (Array.isArray(r.data)) {
-      return r.data as Record<string, unknown>[]
-    }
-  }
-  return []
-}
 
 function normalize(p: Record<string, unknown>): TenantPage {
   return {

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { readList } from '@/lib/dbal/read-list'
 
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
@@ -11,26 +12,6 @@ export interface InstalledPackage {
   installedAt: number
   version: string
   enabled: boolean
-}
-
-/**
- * DBAL answers `{ success, data: { data: [...], total } }` -- two levels,
- * not one. This unwrapped a single level, so against a real DBAL it always
- * returned an empty list and the Packages tab showed every package as
- * uninstalled. Both shapes are accepted now, plus a bare array.
- */
-function extractList(raw: unknown): InstalledPackage[] {
-  if (raw === null || typeof raw !== 'object') return []
-  if (Array.isArray(raw)) return raw as InstalledPackage[]
-
-  const outer = raw as Record<string, unknown>
-  if (Array.isArray(outer.data)) return outer.data as InstalledPackage[]
-
-  if (outer.data !== null && typeof outer.data === 'object') {
-    const inner = outer.data as Record<string, unknown>
-    if (Array.isArray(inner.data)) return inner.data as InstalledPackage[]
-  }
-  return []
 }
 
 export function useInstalledPackages(tenant: string) {
@@ -48,7 +29,7 @@ export function useInstalledPackages(tenant: string) {
         return res.json() as Promise<unknown>
       })
       .then(raw => {
-        setInstalled(extractList(raw))
+        setInstalled(readList<InstalledPackage>(raw))
         setError(null)
         setLoading(false)
       })

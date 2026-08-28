@@ -47,12 +47,12 @@ describe('usePageRoutes', () => {
       expect(result.current.error).toBeNull()
     })
 
-    it('needs success alongside data to unwrap the envelope', async () => {
-      // unwrap() here requires both keys, unlike the unwrappers elsewhere
-      // in the codebase which key off `success` alone.
+    it('reads a two-level payload with no success key', async () => {
+      // This used to answer [] -- the local unwrap required both `success`
+      // and `data`, unlike every other reader. Now shared with them.
       const { result } = await loaded({ data: { data: [page('a')] } })
 
-      expect(result.current.pages).toEqual([])
+      expect(result.current.pages).toEqual([page('a')])
     })
 
     it('accepts a bare array', async () => {

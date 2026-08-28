@@ -1,5 +1,6 @@
 'use client'
 
+import { readList } from '@/lib/dbal/read-list'
 import { useCallback, useEffect, useState } from 'react'
 
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
@@ -56,7 +57,7 @@ export function usePageConfigs(tenant: string) {
       const json = (await res.json()) as {
         data?: { data?: Record<string, unknown>[] }
       }
-      const parsed = (json.data?.data ?? [])
+      const parsed = readList<Record<string, unknown>>(json)
         .map(toRow)
         .filter((r): r is PageConfigRow => r !== null)
         .sort((a, b) => a.path.localeCompare(b.path))

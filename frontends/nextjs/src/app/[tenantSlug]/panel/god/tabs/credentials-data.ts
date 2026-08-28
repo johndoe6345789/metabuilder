@@ -1,23 +1,7 @@
-/** Reading DBAL list responses, which are not consistently shaped. */
+/** Tenant-name handling for the credentials tab. */
 
-/**
- * A list endpoint answers a bare array, `{data: [...]}` or `{data:{data:
- * [...]}}` depending on which layer handled it. Callers that guessed wrong
- * silently rendered an empty table, so the unwrapping lives in one place.
- */
-export function unwrapList<T>(raw: unknown): T[] {
-  if (Array.isArray(raw)) return raw as T[]
-  if (raw === null || typeof raw !== 'object') return []
-
-  const obj = raw as Record<string, unknown>
-  if (Array.isArray(obj.data)) return obj.data as T[]
-
-  if (obj.data !== null && typeof obj.data === 'object') {
-    const nested = obj.data as Record<string, unknown>
-    if (Array.isArray(nested.data)) return nested.data as T[]
-  }
-  return []
-}
+/** Re-exported so callers in this tab keep one import. */
+export { readList as unwrapList } from '@/lib/dbal/read-list'
 
 export function tenantLabel(tenantId: string): string {
   return tenantId === 'all' ? 'All tenants' : tenantId
