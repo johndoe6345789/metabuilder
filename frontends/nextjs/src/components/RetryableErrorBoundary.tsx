@@ -18,6 +18,8 @@
 
 import { Component, type ReactNode, type ErrorInfo } from 'react'
 import { errorReporting, type ErrorCategory } from '@/lib/error-reporting'
+import { colorsFor, iconFor } from './error-boundary-presentation'
+import { ErrorBoundaryFallback } from './ErrorBoundaryFallback'
 
 export interface RetryableErrorBoundaryProps {
   children: ReactNode
@@ -235,316 +237,37 @@ export class RetryableErrorBoundary extends Component<
     return report.category
   }
 
-  /**
-   * Get visual indicator for error type
-   */
-  private getErrorIcon(category: ErrorCategory): string {
-    const icons: Record<ErrorCategory, string> = {
-      network: '🌐',
-      authentication: '🔐',
-      permission: '🚫',
-      validation: '⚠️',
-      'not-found': '🔍',
-      conflict: '⚡',
-      'rate-limit': '⏱️',
-      server: '🖥️',
-      timeout: '⏳',
-      unknown: '⚠️',
-    }
-    return icons[category]
-  }
-
   override render(): ReactNode {
     if (this.state.hasError) {
-      // Return custom fallback if provided
       if (this.props.fallback !== undefined) {
         return this.props.fallback
       }
 
       const category = this.getErrorCategory()
-      const icon = this.getErrorIcon(category)
-
-      const userMessage =
-        this.state.error !== null
-          ? errorReporting.getUserMessage(this.state.error, category)
-          : 'An error occurred while rendering this component.'
-
-      const showSupportInfo = this.props.showSupportInfo ?? true
-      const supportEmail = this.props.supportEmail ?? 'support@metabuilder.dev'
-
-      // Color scheme based on error category
-      const colorSchemes: Record<
-        ErrorCategory,
-        { border: string; bg: string; text: string }
-      > = {
-        network: {
-          border: '#ffa94d',
-          bg: '#fffbf0',
-          text: '#d9480f',
-        },
-        authentication: {
-          border: '#f06595',
-          bg: '#fff0f6',
-          text: '#c2255c',
-        },
-        permission: {
-          border: '#ff6b6b',
-          bg: '#fff5f5',
-          text: '#c92a2a',
-        },
-        validation: {
-          border: '#ffd43b',
-          bg: '#fffef0',
-          text: '#b5940b',
-        },
-        'not-found': {
-          border: '#748ffc',
-          bg: '#f0f4ff',
-          text: '#3b47cc',
-        },
-        conflict: {
-          border: '#ff8a65',
-          bg: '#fff3e0',
-          text: '#e64a19',
-        },
-        'rate-limit': {
-          border: '#74c0fc',
-          bg: '#e7f5ff',
-          text: '#1971c2',
-        },
-        server: {
-          border: '#ff6b6b',
-          bg: '#fff5f5',
-          text: '#c92a2a',
-        },
-        timeout: {
-          border: '#ffa94d',
-          bg: '#fffbf0',
-          text: '#d9480f',
-        },
-        unknown: {
-          border: '#ff6b6b',
-          bg: '#fff5f5',
-          text: '#c92a2a',
-        },
-      }
-
-      const colors = colorSchemes[category]
 
       return (
-        <div
-          style={{
-            padding: '24px',
-            margin: '16px',
-            border: `1px solid ${colors.border}`,
-            borderRadius: '1.25rem',
-            backgroundColor: colors.bg,
-            boxShadow: `0 2px 4px rgba(0, 0, 0, 0.05)`,
+        <ErrorBoundaryFallback
+          view={{
+            error: this.state.error,
+            category,
+            icon: iconFor(category),
+            colors: colorsFor(category),
+            userMessage:
+              this.state.error !== null
+                ? errorReporting.getUserMessage(this.state.error, category)
+                : 'An error occurred while rendering this component.',
+            errorCount: this.state.errorCount,
+            retryCount: this.state.retryCount,
+            nextRetryIn: this.state.nextRetryIn,
+            autoRetryScheduled: this.state.autoRetryScheduled,
+            maxAutoRetries: this.props.maxAutoRetries,
+            showSupportInfo: this.props.showSupportInfo ?? true,
+            supportEmail:
+              this.props.supportEmail ?? 'support@metabuilder.dev',
           }}
-        >
-          <div
-            style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}
-          >
-            <div
-              style={{
-                fontSize: '28px',
-                flexShrink: 0,
-                marginTop: '4px',
-              }}
-            >
-              {icon}
-            </div>
-            <div style={{ flex: 1 }}>
-              <h2
-                style={{
-                  color: colors.text,
-                  margin: '0 0 8px 0',
-                  fontSize: '18px',
-                  fontWeight: 600,
-                }}
-              >
-                {category === 'not-found'
-                  ? 'Not Found'
-                  : 'Something went wrong'}
-              </h2>
-              <p
-                style={{
-                  color: '#495057',
-                  margin: '0 0 12px 0',
-                  fontSize: '14px',
-                  lineHeight: '1.5',
-                }}
-              >
-                {userMessage}
-              </p>
-
-              {/* Development-only error details */}
-              {process.env.NODE_ENV === 'development' &&
-                this.state.error !== null && (
-                  <details style={{ marginTop: '12px', marginBottom: '12px' }}>
-                    <summary
-                      style={{
-                        cursor: 'pointer',
-                        color: '#868e96',
-                        fontSize: '12px',
-                        fontWeight: 500,
-                        userSelect: 'none',
-                        padding: '4px 0',
-                      }}
-                    >
-                      Error details ({category})
-                    </summary>
-                    <pre
-                      style={{
-                        marginTop: '8px',
-                        padding: '10px',
-                        backgroundColor: '#f8f9fa',
-                        borderRadius: '1rem',
-                        overflow: 'auto',
-                        fontSize: '12px',
-                        lineHeight: '1.4',
-                        maxHeight: '200px',
-                        color: '#666',
-                      }}
-                    >
-                      {this.state.error.message}
-                      {this.state.error.stack !== undefined &&
-                        this.state.error.stack !== '' &&
-                        `\n\n${this.state.error.stack}`}
-                    </pre>
-                  </details>
-                )}
-
-              {/* Error count indicator */}
-              {this.state.errorCount > 1 && (
-                <p
-                  style={{
-                    color: colors.text,
-                    fontSize: '12px',
-                    margin: '8px 0',
-                    fontWeight: 500,
-                  }}
-                >
-                  Error occurred {this.state.errorCount} times
-                </p>
-              )}
-
-              {/* Retry count and auto-retry status */}
-              {this.state.retryCount > 0 && (
-                <p
-                  style={{
-                    color: '#666',
-                    fontSize: '12px',
-                    margin: '4px 0',
-                  }}
-                >
-                  Retry attempt: {this.state.retryCount} of{' '}
-                  {this.props.maxAutoRetries ?? 3}
-                </p>
-              )}
-
-              {/* Auto-retry countdown */}
-              {this.state.autoRetryScheduled && (
-                <div
-                  style={{
-                    padding: '8px',
-                    margin: '8px 0',
-                    backgroundColor: 'rgba(74, 144, 226, 0.1)',
-                    borderLeft: '3px solid #4a90e2',
-                    borderRadius: '1rem',
-                    fontSize: '13px',
-                    color: '#1971c2',
-                  }}
-                >
-                  Retrying in {this.state.nextRetryIn}s... (automatic)
-                </div>
-              )}
-
-              {/* Action buttons */}
-              <div
-                style={{
-                  display: 'flex',
-                  gap: '8px',
-                  flexWrap: 'wrap',
-                  marginTop: '16px',
-                }}
-              >
-                <button
-                  onClick={this.handleManualRetry}
-                  style={{
-                    padding: '8px 16px',
-                    backgroundColor: colors.border,
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '999px',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    fontWeight: 500,
-                    transition: 'all 0.2s',
-                  }}
-                  onMouseEnter={e => {
-                    ;(e.target as HTMLButtonElement).style.opacity = '0.9'
-                  }}
-                  onMouseLeave={e => {
-                    ;(e.target as HTMLButtonElement).style.opacity = '1'
-                  }}
-                >
-                  Try Again
-                </button>
-                <button
-                  onClick={this.handleReload}
-                  style={{
-                    padding: '8px 16px',
-                    backgroundColor: '#f1f3f5',
-                    color: '#495057',
-                    border: '1px solid #dee2e6',
-                    borderRadius: '999px',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    fontWeight: 500,
-                    transition: 'all 0.2s',
-                  }}
-                  onMouseEnter={e => {
-                    ;(e.target as HTMLButtonElement).style.backgroundColor =
-                      '#e9ecef'
-                  }}
-                  onMouseLeave={e => {
-                    ;(e.target as HTMLButtonElement).style.backgroundColor =
-                      '#f1f3f5'
-                  }}
-                >
-                  Reload Page
-                </button>
-              </div>
-
-              {/* Support information */}
-              {showSupportInfo && category !== 'not-found' && (
-                <p
-                  style={{
-                    marginTop: '16px',
-                    fontSize: '12px',
-                    color: '#666',
-                    borderTop: '1px solid rgba(0, 0, 0, 0.1)',
-                    paddingTop: '12px',
-                  }}
-                >
-                  If the problem persists, please{' '}
-                  <a
-                    href={`mailto:${supportEmail}`}
-                    style={{
-                      color: colors.text,
-                      textDecoration: 'none',
-                      fontWeight: 500,
-                    }}
-                  >
-                    contact support
-                  </a>
-                  .
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
+          onRetry={this.handleManualRetry}
+          onReload={this.handleReload}
+        />
       )
     }
 
