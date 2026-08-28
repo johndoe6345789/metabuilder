@@ -4,22 +4,17 @@ import { useEffect, useMemo, useState } from 'react'
 import { Alert, Button, Chip, TextField, Typography } from '@/m3'
 import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
 import { getRoleLevel } from '@/lib/constants'
+import { BASE_PATH } from '@/lib/app-config'
 import s from './CredentialsTab.module.scss'
 
 const DBAL_URL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
-import type {
-  CredentialRecord,
-  Notice,
-  TenantRecord,
-  UserRecord,
-} from './credentials-types'
+import type { Notice, TenantRecord, UserRecord } from './credentials-types'
 import {
   normalizeTenant,
   tenantLabel,
   unwrapList,
 } from './credentials-data'
-import { randomSalt, sha512 } from './credentials-crypto'
 
 export function CredentialsTab() {
   const auth = useAuthContext()
@@ -29,11 +24,11 @@ export function CredentialsTab() {
   const isSupergod = userLevel >= 5
   const ownTenant = normalizeTenant(user?.tenantId)
 
-  const [credentials, setCredentials] = useState<CredentialRecord[]>([])
+  // Accounts, not credentials. Credential is schema.acl.system, so its rows
+  // can never be listed through the entity API -- only User can, and a
+  // credential is set for a username, so User is the right thing to show.
+  const [accounts, setAccounts] = useState<UserRecord[]>([])
   const [tenants, setTenants] = useState<TenantRecord[]>([])
-  const [usersByUsername, setUsersByUsername] = useState<
-    Record<string, UserRecord>
-  >({})
   const [tenantScope, setTenantScope] = useState(isSupergod ? 'all' : ownTenant)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -52,14 +47,14 @@ export function CredentialsTab() {
     return [...ids].sort((a, b) => a.localeCompare(b))
   }, [ownTenant, tenants])
 
-  const visibleCredentials = useMemo(
+  const visibleAccounts = useMemo(
     () =>
-      credentials.filter(credential =>
+      accounts.filter(account =>
         effectiveTenantScope === 'all'
           ? true
-          : normalizeTenant(credential.tenantId) === effectiveTenantScope
+          : normalizeTenant(account.tenantId) === effectiveTenantScope
       ),
-    [credentials, effectiveTenantScope]
+    [accounts, effectiveTenantScope]
   )
 
   useEffect(() => {
@@ -81,22 +76,13 @@ export function CredentialsTab() {
         if (effectiveTenantScope !== 'all') {
           params.set('filter.tenantId', effectiveTenantScope)
         }
-        const credentialUrl = `${DBAL_URL}/system/access/Credential${params.size > 0 ? `?${params.toString()}` : ''}`
-        const userParams = new URLSearchParams()
-        if (effectiveTenantScope !== 'all') {
-          userParams.set('filter.tenantId', effectiveTenantScope)
-        }
-        const userUrl = `${DBAL_URL}/system/core/User${userParams.size > 0 ? `?${userParams.toString()}` : ''}`
+        const query = params.size > 0 ? `?${params.toString()}` : ''
 
-        const [credentialRes, userRes, tenantRes] = await Promise.all([
-          fetch(credentialUrl, {
+        const [userRes, tenantRes] = await Promise.all([
+          fetch(`${DBAL_URL}/system/core/User${query}`, {
             cache: 'no-store',
             signal: AbortSignal.timeout(8000),
           }),
-          fetch(userUrl, {
-            cache: 'no-store',
-            signal: AbortSignal.timeout(8000),
-          }).catch(() => null),
           isSupergod
             ? fetch(`${DBAL_URL}/system/core/Tenant`, {
                 cache: 'no-store',
@@ -105,41 +91,29 @@ export function CredentialsTab() {
             : Promise.resolve(null),
         ])
 
-        if (!credentialRes.ok) {
-          throw new Error(
-            `Credential list failed with ${String(credentialRes.status)}`
-          )
+        if (!userRes.ok) {
+          throw new Error(`User list failed with ${String(userRes.status)}`)
         }
 
-        const credentialRaw = (await credentialRes.json()) as unknown
-        const userRaw =
-          userRes?.ok === true ? ((await userRes.json()) as unknown) : null
+        const userRaw = (await userRes.json()) as unknown
         const tenantRaw =
           tenantRes?.ok === true ? ((await tenantRes.json()) as unknown) : null
-        const loadedUsers = unwrapList<UserRecord>(userRaw)
 
         if (!cancelled) {
-          setCredentials(unwrapList<CredentialRecord>(credentialRaw))
-          setUsersByUsername(
-            Object.fromEntries(
-              loadedUsers
-                .filter(
-                  loadedUser =>
-                    loadedUser.username != null &&
-                    loadedUser.username.length > 0
-                )
-                .map(loadedUser => [loadedUser.username as string, loadedUser])
+          setAccounts(
+            unwrapList<UserRecord>(userRaw).filter(
+              account => account.username != null && account.username.length > 0
             )
           )
           setTenants(unwrapList<TenantRecord>(tenantRaw))
         }
       } catch {
         if (!cancelled) {
-          setCredentials([])
+          setAccounts([])
           setNotice({
             kind: 'error',
             message:
-              'Credential records could not be loaded. Check DBAL access for system/access/Credential.',
+              'Accounts could not be loaded. Check DBAL access for system/core/User.',
           })
         }
       } finally {
@@ -154,16 +128,18 @@ export function CredentialsTab() {
     }
   }, [effectiveTenantScope, isSupergod])
 
-  const refreshCredentials = async () => {
+  const refreshUsers = async () => {
     const params = new URLSearchParams()
     if (effectiveTenantScope !== 'all') {
       params.set('filter.tenantId', effectiveTenantScope)
     }
-    const url = `${DBAL_URL}/system/access/Credential${params.size > 0 ? `?${params.toString()}` : ''}`
-    const res = await fetch(url, { cache: 'no-store' })
-    if (!res.ok) throw new Error('Credential reload failed')
+    const query = params.size > 0 ? `?${params.toString()}` : ''
+    const res = await fetch(`${DBAL_URL}/system/core/User${query}`, {
+      cache: 'no-store',
+    })
+    if (!res.ok) throw new Error('Account reload failed')
     const raw = (await res.json()) as unknown
-    setCredentials(unwrapList<CredentialRecord>(raw))
+    setAccounts(unwrapList<UserRecord>(raw))
   }
 
   const handleCreate = async () => {
@@ -183,94 +159,44 @@ export function CredentialsTab() {
     setSaving(true)
     setNotice(null)
     try {
-      const salt = randomSalt()
-      const passwordHash = await sha512(cleanPassword)
-      const res = await fetch(`${DBAL_URL}/system/access/Credential`, {
+      // The plaintext goes to our own origin, which attaches the admin token
+      // server-side and lets DBAL hash it with Argon2id. Hashing here would
+      // produce a digest verify_password cannot check -- see the route.
+      const res = await fetch(`${BASE_PATH}/api/admin/credentials`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           username: cleanUsername,
-          passwordHash,
-          salt,
+          password: cleanPassword,
           tenantId: targetTenant,
-          createdBy: user?.id ?? user?.username ?? 'unknown',
-          createdAt: Date.now(),
         }),
       })
 
-      if (!res.ok)
-        throw new Error(await res.text().catch(() => 'Create failed'))
+      const payload = (await res.json().catch(() => ({}))) as {
+        error?: string
+      }
+      if (!res.ok) {
+        throw new Error(payload.error ?? 'Credential write refused')
+      }
 
       setUsername('')
       setPassword('')
       setNotice({
         kind: 'success',
-        message: `${cleanUsername} credential created for ${targetTenant}.`,
+        message: `Password set for ${cleanUsername} in ${targetTenant}.`,
       })
-      await refreshCredentials()
-    } catch {
+      await refreshUsers()
+    } catch (error) {
       setNotice({
         kind: 'error',
         message:
-          'Credential could not be created. It may already exist or DBAL rejected the request.',
-      })
-    } finally {
-      setSaving(false)
-    }
-  }
-
-  const handleDelete = async (credential: CredentialRecord) => {
-    const credentialTenant = normalizeTenant(credential.tenantId)
-    if (!isSupergod && credentialTenant !== ownTenant) {
-      setNotice({
-        kind: 'error',
-        message:
-          'God users can only delete credentials inside their own tenant.',
-      })
-      return
-    }
-    if (credential.username === user?.username) {
-      setNotice({
-        kind: 'error',
-        message:
-          'You cannot delete the credential for the account you are currently using.',
-      })
-      return
-    }
-    const targetUser = usersByUsername[credential.username]
-    const targetLevel = getRoleLevel(targetUser?.role ?? 'user')
-    if (!isSupergod && targetLevel > userLevel) {
-      setNotice({
-        kind: 'error',
-        message: 'God users cannot delete credentials for supergod accounts.',
-      })
-      return
-    }
-
-    setSaving(true)
-    setNotice(null)
-    try {
-      const res = await fetch(
-        `${DBAL_URL}/system/access/Credential/${encodeURIComponent(credential.username)}`,
-        {
-          method: 'DELETE',
-          headers: { Accept: 'application/json' },
-        }
-      )
-      if (!res.ok) throw new Error('Delete failed')
-      setNotice({
-        kind: 'success',
-        message: `${credential.username} credential deleted.`,
-      })
-      await refreshCredentials()
-    } catch {
-      setNotice({
-        kind: 'error',
-        message:
-          'Credential could not be deleted. DBAL may not allow this operation yet.',
+          error instanceof Error
+            ? error.message
+            : 'Credential could not be saved.',
       })
     } finally {
       setSaving(false)
@@ -299,11 +225,11 @@ export function CredentialsTab() {
         <section className={s.panel}>
           <div className={s.panelHeader}>
             <div>
-              <Typography variant="subtitle2">Credential scope</Typography>
+              <Typography variant="subtitle2">Account scope</Typography>
               <p>Current view: {tenantLabel(effectiveTenantScope)}</p>
             </div>
             <Chip
-              label={`${visibleCredentials.length} visible`}
+              label={`${visibleAccounts.length} visible`}
               size="small"
               variant="outlined"
             />
@@ -345,39 +271,35 @@ export function CredentialsTab() {
 
           <div className={s.credentialList}>
             {loading ? (
-              <div className={s.empty}>Loading credentials...</div>
-            ) : visibleCredentials.length === 0 ? (
-              <div className={s.empty}>
-                No credentials found for this scope.
-              </div>
+              <div className={s.empty}>Loading accounts...</div>
+            ) : visibleAccounts.length === 0 ? (
+              <div className={s.empty}>No accounts found for this scope.</div>
             ) : (
-              visibleCredentials.map(credential => {
-                const credentialTenant = normalizeTenant(credential.tenantId)
-                const targetUser = usersByUsername[credential.username]
-                const targetLevel = getRoleLevel(targetUser?.role ?? 'user')
-                const locked = credential.username === user?.username
+              visibleAccounts.map(account => {
+                const accountTenant = normalizeTenant(account.tenantId)
+                const targetLevel = getRoleLevel(account.role ?? 'user')
+                const isSelf = account.username === user?.username
                 const aboveRole = !isSupergod && targetLevel > userLevel
-                const canDelete = isSupergod || credentialTenant === ownTenant
+                const canManage =
+                  (isSupergod || accountTenant === ownTenant) && !aboveRole
 
                 return (
                   <article
-                    key={`${credentialTenant}:${credential.username}`}
+                    key={`${accountTenant}:${account.username ?? ''}`}
                     className={s.credentialRow}
                   >
                     <div className={s.credentialIcon}>
                       <span className="material-symbols-rounded">key</span>
                     </div>
                     <div className={s.credentialMain}>
-                      <strong>{credential.username}</strong>
+                      <strong>{account.username}</strong>
                       <span>
-                        {credentialTenant}
-                        {targetUser?.role != null
-                          ? ` · ${targetUser.role}`
-                          : ''}
+                        {accountTenant}
+                        {account.role != null ? ` \u00b7 ${account.role}` : ''}
                       </span>
                     </div>
                     <div className={s.rowActions}>
-                      {locked && (
+                      {isSelf && (
                         <Chip
                           label="current login"
                           size="small"
@@ -394,12 +316,14 @@ export function CredentialsTab() {
                       <Button
                         variant="outlined"
                         size="small"
-                        disabled={!canDelete || locked || aboveRole || saving}
+                        disabled={!canManage || saving}
                         onClick={() => {
-                          void handleDelete(credential)
+                          setUsername(account.username ?? '')
+                          setCreateTenant(accountTenant)
+                          setPassword('')
                         }}
                       >
-                        Delete
+                        Set password
                       </Button>
                     </div>
                   </article>
@@ -412,9 +336,10 @@ export function CredentialsTab() {
         <aside className={s.panel}>
           <div className={s.panelHeader}>
             <div>
-              <Typography variant="subtitle2">Create credential</Typography>
+              <Typography variant="subtitle2">Set a password</Typography>
               <p>
-                Hashes are stored; passwords are never displayed after creation.
+                The password is hashed by DBAL with Argon2id and is never
+                shown again. Setting one for an existing username replaces it.
               </p>
             </div>
           </div>
@@ -440,7 +365,7 @@ export function CredentialsTab() {
             ) : (
               <div className={s.tenantLock}>
                 <span className="material-symbols-rounded">lock</span>
-                Creating in <strong>{ownTenant}</strong>
+                Setting in <strong>{ownTenant}</strong>
               </div>
             )}
 
@@ -473,7 +398,7 @@ export function CredentialsTab() {
                 void handleCreate()
               }}
             >
-              {saving ? 'Saving...' : 'Create credential'}
+              {saving ? 'Saving...' : 'Set password'}
             </Button>
           </div>
         </aside>
