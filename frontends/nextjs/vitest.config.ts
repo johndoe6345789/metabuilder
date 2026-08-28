@@ -16,6 +16,16 @@ export default defineConfig({
       // than the codebase. (Vitest 4 dropped the old `all` flag, which this
       // originally used -- it typechecked as an error while still working.)
       include: ['src/**/*.{ts,tsx}'],
+      // A floor, not a target: it fails the run if coverage drops below what
+      // has already been earned, so the number can only go up. Raise it as
+      // each batch lands rather than setting an aspirational figure that is
+      // red every day and therefore ignored.
+      thresholds: {
+        statements: 13,
+        branches: 13,
+        functions: 10,
+        lines: 13,
+      },
       exclude: [
         'src/**/*.test.{ts,tsx}',
         'src/test/**',

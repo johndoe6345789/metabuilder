@@ -99,90 +99,10 @@ export async function getSessionUser(req?: Request): Promise<SessionUser> {
   }
 }
 
-export interface RestfulContext {
-  route: {
-    tenant: string
-    package: string
-    entity: string
-    id?: string
-    action?: string
-  }
-  operation: string
-  dbalOp: {
-    entity: string
-    operation: string
-    id?: string
-    action?: string
-  }
-}
-
-export function parseRestfulRequest(
-  req: Request,
-  params: { slug: string[] }
-): RestfulContext | { error: string; status: number } {
-  const { slug } = params
-  const method = req.method
-
-  // Validate minimum path segments: tenant, package, entity
-  if (slug.length < 3) {
-    return {
-      error:
-        'Invalid route: expected /api/v1/{tenant}/{package}/{entity}[/{id}[/{action}]]',
-      status: STATUS.BAD_REQUEST,
-    }
-  }
-
-  const [tenant, packageId, entity, id, action] = slug
-
-  if (tenant === undefined || tenant.length === 0) {
-    return { error: 'Tenant is required', status: STATUS.BAD_REQUEST }
-  }
-
-  if (packageId === undefined || packageId.length === 0) {
-    return { error: 'Package is required', status: STATUS.BAD_REQUEST }
-  }
-
-  if (entity === undefined || entity.length === 0) {
-    return { error: 'Entity is required', status: STATUS.BAD_REQUEST }
-  }
-
-  // Determine operation from HTTP method and path structure
-  let operation = 'unknown'
-
-  if (action !== undefined && action.length > 0) {
-    // Custom action like POST /posts/123/like
-    operation = 'action'
-  } else if (id !== undefined && id.length > 0) {
-    // Operation on specific record
-    if (method === 'GET') operation = 'read'
-    else if (method === 'PUT' || method === 'PATCH') operation = 'update'
-    else if (method === 'DELETE') operation = 'delete'
-  } else {
-    // Collection operation
-    if (method === 'GET') operation = 'list'
-    else if (method === 'POST') operation = 'create'
-  }
-
-  // Build DBAL operation object
-  const dbalOp = {
-    entity,
-    operation,
-    id,
-    action,
-  }
-
-  return {
-    route: {
-      tenant,
-      package: packageId,
-      entity,
-      id,
-      action,
-    },
-    operation,
-    dbalOp,
-  }
-}
+// The versioned-API parser moved to ./restful, where the method-to-operation
+// mapping is a function that can be read on its own. Re-exported unchanged.
+export { parseRestfulRequest } from './restful/parse-request'
+export type { RestfulContext, RestfulRoute } from './restful/parse-request'
 
 function resolveTenantId(context?: {
   tenantId?: string
