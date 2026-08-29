@@ -188,6 +188,17 @@ def print_report(results: list[dict]) -> None:
         print(f"  {'TOTAL':20s}  {c}{overall_pct:.1f}%{RESET}  "
               f"{overall_compliant}/{overall_total} files")
 
+        # The ratio is a poor scoreboard for splitting work: dividing one
+        # oversized file into fifteen compliant ones adds fifteen to the
+        # denominator, so the percentage barely moves even though the codebase
+        # improved. These absolute counts fall by one per file actually fixed.
+        allf = [f for r in results if "error" not in r for f in r["files"]]
+        over = sum(1 for f in allf if f["violation_loc"])
+        wide = sum(1 for f in allf if f["violation_wide"])
+        state = sum(1 for f in allf if f["violation_state"])
+        print(f"  {'':20s}  over {LOC_WARN} LOC: {over}   "
+              f"wide lines: {wide}   state-in-component: {state}")
+
     print()
 
     for r in results:
