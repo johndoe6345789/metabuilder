@@ -1,5 +1,8 @@
 /**
- * Route parser (stub)
+ * Reading a URL as tenant, package and the rest.
+ *
+ * The first segment is a tenant unless it names an application route --
+ * `/api/...` is the API, not a tenant called "api".
  */
 
 export interface ParsedRoute {
