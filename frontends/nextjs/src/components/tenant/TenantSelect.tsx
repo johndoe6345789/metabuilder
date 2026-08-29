@@ -1,6 +1,6 @@
 'use client'
 
-import { readList } from '@/lib/dbal/read-list'
+import { readList } from '@/lib/db/read-list'
 import { useEffect, useState } from 'react'
 import { FormControl, FormLabel, Select } from '@/m3'
 import { DEFAULT_TENANT_ID } from '@/lib/tenant/workspace-paths'

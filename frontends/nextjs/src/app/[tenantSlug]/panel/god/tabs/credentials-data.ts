@@ -1,7 +1,7 @@
 /** Tenant-name handling for the credentials tab. */
 
 /** Re-exported so callers in this tab keep one import. */
-export { readList as unwrapList } from '@/lib/dbal/read-list'
+export { readList as unwrapList } from '@/lib/db/read-list'
 
 export function tenantLabel(tenantId: string): string {
   return tenantId === 'all' ? 'All tenants' : tenantId

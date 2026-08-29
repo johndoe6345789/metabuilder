@@ -2,8 +2,8 @@
 
 /** Skeletons for inline text and for a form. */
 
-import { LoadingSkeleton } from './LoadingSkeleton'
-import type { LoadingSkeletonProps } from './LoadingSkeleton'
+import { LoadingSkeleton } from '../LoadingSkeleton'
+import type { LoadingSkeletonProps } from '../LoadingSkeleton'
 import {
   Skeleton,
 } from '@metabuilder/components'

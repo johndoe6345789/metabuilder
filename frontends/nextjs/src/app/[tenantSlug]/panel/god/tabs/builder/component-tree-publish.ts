@@ -1,6 +1,6 @@
 'use client'
 
-import { readOne } from '@/lib/dbal/read-list'
+import { readOne } from '@/lib/db/read-list'
 import { useCallback, useState } from 'react'
 import { useAppDispatch } from '@/store/hooks'
 import { loadTree, saveTree, type TreeNodeShape } from '@/lib/tenant/page-tree'

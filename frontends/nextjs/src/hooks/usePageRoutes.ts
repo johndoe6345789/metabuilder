@@ -7,7 +7,7 @@
  * say `pages` rather than `items` and do not have to know the entity name.
  */
 
-import { useDbalCollection } from '@/lib/dbal/use-dbal-collection'
+import { useDbalCollection } from '@/lib/db/use-dbal-collection'
 import type { PageRoute, PageRouteInput } from './page-route-types'
 
 export type { PageRoute, PageRouteInput } from './page-route-types'

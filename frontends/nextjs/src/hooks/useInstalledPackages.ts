@@ -10,7 +10,7 @@
 
 import { useCallback } from 'react'
 
-import { useDbalCollection } from '@/lib/dbal/use-dbal-collection'
+import { useDbalCollection } from '@/lib/db/use-dbal-collection'
 import type { InstalledPackage } from './installed-package-types'
 
 export type { InstalledPackage } from './installed-package-types'

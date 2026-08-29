@@ -1,5 +1,5 @@
 import 'server-only'
-import { readList } from '@/lib/dbal/read-list'
+import { readList } from '@/lib/db/read-list'
 
 import { loadTree } from '@/lib/tenant/page-tree'
 

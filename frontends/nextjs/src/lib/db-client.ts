@@ -12,7 +12,7 @@
  *   const user = await db.users.read('user-123')
  */
 
-import { readList } from '@/lib/dbal/read-list'
+import { readList } from '@/lib/db/read-list'
 import 'server-only'
 
 const DBAL_URL =

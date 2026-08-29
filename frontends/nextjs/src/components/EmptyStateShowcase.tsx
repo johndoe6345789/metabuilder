@@ -1,10 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { showcaseItems } from './empty-state-showcase-items'
-import { ShowcaseControls } from './empty-state-showcase-controls'
-import { ShowcaseGrid } from './showcase-grid'
-import { ShowcaseInfoBox } from './showcase-info-box'
+import { showcaseItems } from './empty-state-showcase/empty-state-showcase-items'
+import { ShowcaseControls } from './empty-state-showcase/empty-state-showcase-controls'
+import { ShowcaseGrid } from './empty-state-showcase/showcase-grid'
+import { ShowcaseInfoBox } from './empty-state-showcase/showcase-info-box'
 
 /**
  * EmptyStateShowcase - Demonstrates all empty state variants

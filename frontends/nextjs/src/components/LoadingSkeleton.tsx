@@ -6,15 +6,15 @@ export {
   InlineLoading,
   ListLoading,
   TableLoading,
-} from './loading-variants'
+} from './loading/loading-variants'
 export type {
   FormLoadingProps,
   TableLoadingProps,
-} from './loading-variants'
-import type { LoadingSkeletonProps } from './loading-skeleton-types'
-import { LoadingSkeletonError } from './loading-skeleton-error'
-import { LoadingSkeletonVariant } from './loading-skeleton-variant'
-export type { LoadingSkeletonProps } from './loading-skeleton-types'
+} from './loading/loading-variants'
+import type { LoadingSkeletonProps } from './loading/loading-skeleton-types'
+import { LoadingSkeletonError } from './loading/loading-skeleton-error'
+import { LoadingSkeletonVariant } from './loading/loading-skeleton-variant'
+export type { LoadingSkeletonProps } from './loading/loading-skeleton-types'
 
 /**
  * LoadingSkeleton Component - Unified loading state wrapper

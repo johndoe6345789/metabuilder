@@ -19,7 +19,7 @@
  * (that only controls whether the JSON is fetchable, not whether it's shown).
  */
 
-import { readList } from '@/lib/dbal/read-list'
+import { readList } from '@/lib/db/read-list'
 import { createElement, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import { LevelGate } from '@/components/layout/LevelGate'

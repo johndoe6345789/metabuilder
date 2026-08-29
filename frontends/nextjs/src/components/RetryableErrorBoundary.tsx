@@ -18,8 +18,8 @@
 
 import { Component, type ReactNode, type ErrorInfo } from 'react'
 import { errorReporting, type ErrorCategory } from '@/lib/error-reporting'
-import { colorsFor, iconFor } from './error-boundary-presentation'
-import { ErrorBoundaryFallback } from './ErrorBoundaryFallback'
+import { colorsFor, iconFor } from './error-boundary/error-boundary-presentation'
+import { ErrorBoundaryFallback } from './error-boundary/ErrorBoundaryFallback'
 
 export interface RetryableErrorBoundaryProps {
   children: ReactNode

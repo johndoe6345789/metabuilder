@@ -18,7 +18,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useClickOutside, useDebouncedSave } from '@metabuilder/hooks'
 import { TextField, Typography } from '@/m3'
 import s from './SearchSelect.module.scss'
-import { readList } from '@/lib/dbal/read-list'
+import { readList } from '@/lib/db/read-list'
 
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 

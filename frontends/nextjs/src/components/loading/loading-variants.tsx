@@ -4,8 +4,8 @@
 
 export { FormLoading, InlineLoading } from './loading-inline-variants'
 export type { FormLoadingProps } from './loading-inline-variants'
-import { LoadingSkeleton } from './LoadingSkeleton'
-import type { LoadingSkeletonProps } from './LoadingSkeleton'
+import { LoadingSkeleton } from '../LoadingSkeleton'
+import type { LoadingSkeletonProps } from '../LoadingSkeleton'
 
 export interface TableLoadingProps extends Omit<
   LoadingSkeletonProps,

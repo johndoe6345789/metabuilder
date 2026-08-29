@@ -1,6 +1,6 @@
 'use client'
 
-import { readList } from '@/lib/dbal/read-list'
+import { readList } from '@/lib/db/read-list'
 import { useCallback, useEffect, useState } from 'react'
 
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
