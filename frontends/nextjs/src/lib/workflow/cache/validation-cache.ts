@@ -59,6 +59,32 @@ export class ValidationCache {
   delete = (key: string): void => void this.memoryCache.delete(key)
 
   /**
+   * The newest live result under `prefix`, or null.
+   *
+   * The same reason `deleteByPrefix` exists: a caller holding a tenant and
+   * a workflow id cannot name the key, because the key ends in a hash of
+   * the definition. Newest wins -- an older entry under the same prefix is
+   * a previous version of the same workflow.
+   */
+  getByPrefix(prefix: string): WorkflowValidationResult | null {
+    const now = Date.now()
+    let newest: CacheEntry | null = null
+    for (const [key, entry] of this.memoryCache) {
+      if (!key.startsWith(prefix)) continue
+      if (now - entry.timestamp >= entry.ttl) continue
+      if (newest === null || entry.timestamp > newest.timestamp) {
+        newest = entry
+      }
+    }
+    if (newest === null) {
+      this.stats.misses++
+      return null
+    }
+    this.stats.hits++
+    return newest.value
+  }
+
+  /**
    * Drops every entry whose key starts with `prefix`.
    *
    * Cache keys carry a content hash as their last segment, so a caller that

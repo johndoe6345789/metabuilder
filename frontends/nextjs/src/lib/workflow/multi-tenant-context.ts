@@ -1,147 +1,59 @@
 /**
  * Multi-Tenant Workflow Context Builder
  *
- * Constructs safe execution contexts with:
- * - Tenant isolation validation
- * - User access verification
- * - Request-derived context initialization
- * - Credential binding and secret management
- * - Comprehensive error reporting
+ * Constructs safe execution contexts with tenant isolation, user access
+ * verification, request-derived initialisation, credential binding and
+ * error reporting.
  *
- * Follows MetaBuilder multi-tenant patterns:
- * - Every context must have tenantId
- * - User level determines cross-tenant access
- * - Variables are tenant-scoped by default
- * - Secrets are never exposed in logs or state
+ * The rules themselves live in ./context, one module each, so every one
+ * of them can be read and tested without standing up a builder. This file
+ * is the order they run in.
  */
 
 import { v4 as uuidv4 } from 'uuid'
-// The tenant-access rule and the log sanitiser now live in ./context, small
-// enough to read and test on their own. Re-exported so callers are
-// unaffected.
+import type { WorkflowDefinition, WorkflowTrigger } from '@metabuilder/workflow'
+import type {
+  ContextBuilderOptions,
+  ContextRequestData,
+  ContextValidationResult,
+  ExtendedWorkflowContext,
+  RequestContext,
+} from './context/context-types'
+import { logContextCreation } from './context/context-audit'
+import { assertContextSafe } from './context/context-safety'
+import {
+  buildVariables,
+  stripCrossTenantVariables,
+} from './context/context-variables'
+import { validateContext } from './context/context-validation'
+import { bindCredentials } from './context/credential-binding'
+import { buildDefaultTrigger } from './context/default-trigger'
+import { buildMultiTenantMetadata } from './context/context-metadata'
+import { defaultExecutionLimits } from './context/execution-limits'
+import { checkTenantAccess } from './context/tenant-access'
+
 export { canUserAccessWorkflow } from './context/context-access'
 export { sanitizeContextForLogging } from './context/context-logging'
+export {
+  bearerToken,
+  extractRequestContext,
+  toWorkflowLevel,
+} from './context/request-context'
+export { createMockContext } from './context/mock-context'
+export { determineExecutionMode } from './context/execution-mode'
+export * from './context/context-types'
 
-import type {
-  WorkflowContext,
-  WorkflowDefinition,
-  WorkflowTrigger,
-  CredentialRef,
-  ExecutionLimits,
-} from '@metabuilder/workflow'
-
-/**
- * Request context with user and tenant information
- * Extracted from JWT, session, or API headers
- */
-export interface RequestContext {
-  tenantId: string
-  userId: string
-  userEmail: string
-  userLevel: number // 1=viewer, 2=editor, 3=admin, 4=super-admin
-  ipAddress?: string
-  userAgent?: string
-  originUrl?: string
-  apiKey?: string
-  sessionId?: string
+const DEFAULT_OPTIONS: ContextBuilderOptions = {
+  allowCrossTenantAccess: false,
+  enforceCredentialValidation: true,
+  enforceSecretEncryption: true,
+  captureRequestData: true,
+  enableAuditLogging: true,
 }
 
 /**
- * Multi-tenant metadata attached to context
- * Tracks safety enforcement and audit information
- */
-export interface MultiTenantMetadata {
-  enforced: boolean
-  tenantId: string
-  userId: string
-  userLevel: number
-  userEmail: string
-  requestedAt: string
-  ipAddress?: string
-  userAgent?: string
-  sessionId?: string
-  executionMode: 'manual' | 'scheduled' | 'webhook' | 'api' | 'embedded'
-}
-
-/**
- * Context builder options
- */
-export interface ContextBuilderOptions {
-  allowCrossTenantAccess?: boolean
-  enforceCredentialValidation?: boolean
-  enforceSecretEncryption?: boolean
-  captureRequestData?: boolean
-  enableAuditLogging?: boolean
-}
-
-/**
- * Extended workflow context with multi-tenant support
- */
-export interface ExtendedWorkflowContext extends WorkflowContext {
-  multiTenant: MultiTenantMetadata
-  requestMetadata?: {
-    ipAddress?: string
-    userAgent?: string
-    originUrl?: string
-    sessionId?: string
-  }
-  executionLimits: ExecutionLimits
-  credentialBindings: Map<string, CredentialRef>
-}
-
-/**
- * Context validation result
- */
-export interface ContextValidationResult {
-  valid: boolean
-  errors: ContextValidationError[]
-  warnings: ContextValidationWarning[]
-}
-
-/**
- * Validation error with path and code
- */
-export interface ContextValidationError {
-  path: string
-  message: string
-  code:
-    | 'TENANT_MISMATCH'
-    | 'UNAUTHORIZED_ACCESS'
-    | 'MISSING_REQUIRED_FIELD'
-    | 'INVALID_CREDENTIALS'
-    | 'SCOPE_VIOLATION'
-    | 'EXECUTION_LIMIT_EXCEEDED'
-    | 'SECRET_EXPOSURE'
-}
-
-/**
- * Validation warning
- */
-export interface ContextValidationWarning {
-  path: string
-  message: string
-  severity: 'low' | 'medium' | 'high'
-}
-
-/** Typed record for trigger/variable data passed to context builder */
-type DataRecord = Record<string, unknown>
-
-/**
- * Request data payload for building context
- */
-interface ContextRequestData {
-  triggerData?: DataRecord
-  variables?: DataRecord
-  request?: unknown
-  secrets?: Record<string, string>
-}
-
-/**
- * MultiTenantContextBuilder
- *
  * Builds and validates workflow execution contexts with strict tenant
  * isolation.
- * Ensures all execution contexts are safe and properly scoped to their tenant.
  */
 export class MultiTenantContextBuilder {
   private readonly workflow: WorkflowDefinition
@@ -155,530 +67,94 @@ export class MultiTenantContextBuilder {
   ) {
     this.workflow = workflow
     this.requestContext = requestContext
-    this.options = {
-      allowCrossTenantAccess: false,
-      enforceCredentialValidation: true,
-      enforceSecretEncryption: true,
-      captureRequestData: true,
-      enableAuditLogging: true,
-      ...options,
-    }
+    this.options = { ...DEFAULT_OPTIONS, ...options }
   }
 
-  /**
-   * Build execution context with comprehensive validation
-   *
-   * @param requestData - Trigger data, variables, and secrets from request
-   * @param trigger - Trigger configuration that initiated execution
-   * @returns Extended workflow context or throws ValidationError
-   */
+  /** The context this request may run under, or a throw explaining why not. */
   async build(
     requestData?: ContextRequestData,
     trigger?: WorkflowTrigger
   ): Promise<ExtendedWorkflowContext> {
-    // 1. Validate tenant access
-    this.validateTenantAccess()
+    this.assertTenantAccess()
+    const context = this.assemble(requestData, trigger)
 
-    // 2. Build multi-tenant metadata
-    const multiTenantMeta = this.buildMultiTenantMetadata(trigger)
-
-    // 3. Build context base
-    const context: ExtendedWorkflowContext = {
-      executionId: uuidv4(),
-      tenantId: this.requestContext.tenantId,
-      userId: this.requestContext.userId,
-      user: {
-        id: this.requestContext.userId,
-        email: this.requestContext.userEmail,
-        level: this.requestContext.userLevel,
-      },
-      trigger: trigger ?? this.buildDefaultTrigger(),
-      triggerData: requestData?.triggerData ?? {},
-      variables: this.buildVariables(requestData?.variables),
-      secrets: requestData?.secrets ?? {},
-      request: this.options.captureRequestData
-        ? (requestData?.request as WorkflowContext['request'])
-        : undefined,
-      multiTenant: multiTenantMeta,
-      requestMetadata: {
-        ipAddress: this.requestContext.ipAddress,
-        userAgent: this.requestContext.userAgent,
-        originUrl: this.requestContext.originUrl,
-        sessionId: this.requestContext.sessionId,
-      },
-      executionLimits:
-        this.workflow.executionLimits ?? this.getDefaultExecutionLimits(),
-      credentialBindings: new Map(),
+    assertContextSafe(context, this.workflow, this.options)
+    if (this.options.enforceCredentialValidation === true) {
+      context.credentialBindings = bindCredentials(this.workflow)
     }
-
-    // 4. Validate context safety
-    this.validateContextSafety(context)
-
-    // 5. Load and bind credentials
-    if (this.options.enforceCredentialValidation) {
-      this.bindCredentials(context)
+    stripCrossTenantVariables(context.variables, context.tenantId)
+    if (this.options.enableAuditLogging === true) {
+      logContextCreation(context, this.workflow.id)
     }
-
-    // 6. Validate variables don't cross tenants
-    this.validateVariableTenantIsolation(context)
-
-    // 7. Log context creation (audit)
-    if (this.options.enableAuditLogging) {
-      this.logContextCreation(context)
-    }
-
     return context
   }
 
-  /**
-   * Validate user has access to workflow
-   */
-  private validateTenantAccess(): void {
-    // Own tenant access - always allowed
-    if (this.requestContext.tenantId === this.workflow.tenantId) {
-      return
-    }
+  /** Every problem with this request, without building anything. */
+  validate(): ContextValidationResult {
+    return validateContext(this.workflow, this.requestContext, this.options)
+  }
 
-    // Super-admin (level 4) can access any tenant
-    if (this.requestContext.userLevel >= 4) {
-      if (!this.options.allowCrossTenantAccess) {
-        throw new Error(
-          `Cross-tenant access disabled: User ${this.requestContext.userId} ` +
-            `cannot access workflow in tenant ${this.workflow.tenantId}`
-        )
-      }
+  private assertTenantAccess(): void {
+    const outcome = checkTenantAccess(
+      this.workflow,
+      this.requestContext,
+      this.options
+    )
+    if (!outcome.allowed) throw new Error(outcome.reason)
+    if (outcome.crossTenant) {
       console.warn(
         `[SECURITY] Super-admin ${this.requestContext.userId} accessing ` +
           `cross-tenant workflow ${this.workflow.id}`
       )
-      return
     }
-
-    // Access denied
-    throw new Error(
-      `Forbidden: Workflow ${this.workflow.id} belongs to tenant ` +
-        `${this.workflow.tenantId}, user is in tenant ${this.requestContext.tenantId}`
-    )
   }
 
-  /**
-   * Build multi-tenant metadata
-   */
-  private buildMultiTenantMetadata(
+  private assemble(
+    requestData?: ContextRequestData,
     trigger?: WorkflowTrigger
-  ): MultiTenantMetadata {
-    const executionMode = this.determineExecutionMode(trigger)
-
+  ): ExtendedWorkflowContext {
+    const request = this.requestContext
     return {
-      enforced: true,
-      tenantId: this.requestContext.tenantId,
-      userId: this.requestContext.userId,
-      userLevel: this.requestContext.userLevel,
-      userEmail: this.requestContext.userEmail,
-      requestedAt: new Date().toISOString(),
-      ipAddress: this.requestContext.ipAddress,
-      userAgent: this.requestContext.userAgent,
-      sessionId: this.requestContext.sessionId,
-      executionMode,
-    }
-  }
-
-  /**
-   * Determine execution mode from trigger configuration
-   */
-  private determineExecutionMode(
-    trigger?: WorkflowTrigger
-  ): 'manual' | 'scheduled' | 'webhook' | 'api' | 'embedded' {
-    if (trigger == null) {
-      return 'manual'
-    }
-
-    switch (trigger.kind) {
-      case 'schedule':
-        return 'scheduled'
-      case 'webhook':
-      case 'webhook-listen':
-        return 'webhook'
-      case 'manual':
-      case 'event':
-      case 'email':
-      case 'message-queue':
-      case 'polling':
-      case 'custom':
-        return 'api'
-      default:
-        return 'manual'
-    }
-  }
-
-  /**
-   * Build default trigger for manual execution
-   */
-  private buildDefaultTrigger(): WorkflowTrigger {
-    return {
-      nodeId: this.workflow.nodes[0]?.id ?? 'trigger-0',
-      kind: 'manual',
-      enabled: true,
-      metadata: {
-        startTime: Date.now(),
-        triggeredBy: 'api',
-        userId: this.requestContext.userId,
-        tenantId: this.requestContext.tenantId,
+      executionId: uuidv4(),
+      tenantId: request.tenantId,
+      userId: request.userId,
+      user: {
+        id: request.userId,
+        email: request.userEmail,
+        level: request.userLevel,
       },
-    }
-  }
-
-  /**
-   * Build and scope variables
-   * Merges workflow defaults with request overrides
-   */
-  private buildVariables(requestVariables?: DataRecord): DataRecord {
-    const variables: DataRecord = {}
-
-    // 1. Add workflow defaults
-    for (const [varName, varDef] of Object.entries(this.workflow.variables)) {
-      // Only allow workflow and execution scopes (not global)
-      if (varDef.scope === 'global') {
-        console.warn(
-          `[SECURITY] Skipping global-scope variable ${varName} - not allowed`
-        )
-        continue
-      }
-
-      variables[varName] = varDef.defaultValue ?? null
-    }
-
-    // 2. Merge request overrides
-    if (requestVariables != null) {
-      for (const [varName, varValue] of Object.entries(requestVariables)) {
-        // Validate variable is allowed by workflow
-        const varDef = this.workflow.variables[varName]
-        if (varDef != null) {
-          variables[varName] = varValue
-        } else {
-          console.warn(
-            `[SECURITY] Rejecting unknown variable ${varName} - not in workflow definition`
-          )
-        }
-      }
-    }
-
-    // 3. Inject tenant and user context as read-only
-    variables._tenantId = this.requestContext.tenantId
-    variables._userId = this.requestContext.userId
-    variables._userLevel = this.requestContext.userLevel
-
-    return variables
-  }
-
-  /**
-   * Validate context doesn't violate safety constraints
-   */
-  private validateContextSafety(context: ExtendedWorkflowContext): void {
-    const errors: string[] = []
-
-    // 1. Tenant ID must match (unless cross-tenant access is explicitly
-    // allowed)
-    if (
-      context.tenantId !== this.workflow.tenantId &&
-      !this.options.allowCrossTenantAccess
-    ) {
-      errors.push(
-        `Context tenant ${context.tenantId} does not match ` +
-          `workflow tenant ${this.workflow.tenantId}`
-      )
-    }
-
-    // 2. User level consistency
-    if (
-      !Number.isFinite(context.user.level) ||
-      context.user.level < 1 ||
-      context.user.level > 4
-    ) {
-      errors.push(`Invalid user level: ${String(context.user.level)}`)
-    }
-
-    // 3. Execution ID must be set
-    if (context.executionId === '' || context.executionId.trim() === '') {
-      errors.push('Execution ID is required')
-    }
-
-    // 4. Check execution limits
-    const workflowLimit =
-      this.workflow.executionLimits ?? this.getDefaultExecutionLimits()
-    if (
-      context.executionLimits.maxExecutionTime > workflowLimit.maxExecutionTime
-    ) {
-      errors.push(
-        `Requested execution time (${String(context.executionLimits.maxExecutionTime)}ms) ` +
-          `exceeds workflow limit (${String(workflowLimit.maxExecutionTime)}ms)`
-      )
-    }
-
-    if (errors.length > 0) {
-      throw new Error(
-        `Context validation failed:\n${errors.map(e => `  - ${e}`).join('\n')}`
-      )
-    }
-  }
-
-  /**
-   * Validate variables don't cross tenant boundaries
-   */
-  private validateVariableTenantIsolation(
-    context: ExtendedWorkflowContext
-  ): void {
-    for (const [varName, varValue] of Object.entries(context.variables)) {
-      if (varValue != null && typeof varValue === 'object') {
-        const record = varValue as Record<string, unknown>
-        if (record._tenantId != null) {
-          if (record._tenantId !== context.tenantId) {
-            // Filter out cross-tenant variable rather than failing the entire
-            // build
-            context.variables[varName] = null
-          }
-        }
-      }
-    }
-  }
-
-  /**
-   * Load and bind credentials from workflow definition
-   */
-  private bindCredentials(context: ExtendedWorkflowContext): void {
-    const bindings = this.workflow.credentials
-
-    for (const binding of bindings) {
-      try {
-        // TODO: Load credential from secure store
-        // const credential = await loadCredential(
-        //   binding.credentialId,
-        //   context.tenantId
-        // )
-        //
-        // if (credential == null) {
-        //   console.warn(
-        //     `[SECURITY] Credential ${binding.credentialId} not found ` +
-        //     `for node ${binding.nodeId}`
-        //   )
-        //   continue
-        // }
-
-        context.credentialBindings.set(binding.nodeId, {
-          id: binding.credentialId,
-          name: binding.credentialName,
-        })
-      } catch (error: unknown) {
-        console.error(
-          `Failed to bind credential for node ${binding.nodeId}:`,
-          error
-        )
-        throw error
-      }
-    }
-  }
-
-  /**
-   * Get default execution limits
-   */
-  private getDefaultExecutionLimits(): ExecutionLimits {
-    return {
-      maxExecutionTime: 3600000, // 1 hour
-      maxMemoryMb: 512,
-      maxNodeExecutions: 1000,
-      maxDataSizeMb: 100,
-      maxArrayItems: 10000,
-    }
-  }
-
-  /**
-   * Log context creation for audit trail
-   */
-  private logContextCreation(context: ExtendedWorkflowContext): void {
-    // eslint-disable-next-line no-console
-    console.info('[AUDIT] Workflow execution context created', {
-      executionId: context.executionId,
-      workflowId: this.workflow.id,
-      tenantId: context.tenantId,
-      userId: context.userId,
-      executionMode: context.multiTenant.executionMode,
-      timestamp: context.multiTenant.requestedAt,
-      ipAddress: context.multiTenant.ipAddress,
-    })
-  }
-
-  /**
-   * Validate complete execution context
-   * Can be called to verify context before execution
-   */
-  validate(): ContextValidationResult {
-    const errors: ContextValidationError[] = []
-    const warnings: ContextValidationWarning[] = []
-
-    // 1. Check tenant access
-    try {
-      this.validateTenantAccess()
-    } catch (error: unknown) {
-      errors.push({
-        path: 'multiTenant.tenantId',
-        message: error instanceof Error ? error.message : 'Unknown error',
-        code: 'TENANT_MISMATCH',
-      })
-    }
-
-    // 2. Validate user level
-    if (
-      !Number.isFinite(this.requestContext.userLevel) ||
-      this.requestContext.userLevel < 1 ||
-      this.requestContext.userLevel > 4
-    ) {
-      errors.push({
-        path: 'user.level',
-        message: `Invalid user level: ${String(this.requestContext.userLevel)}`,
-        code: 'UNAUTHORIZED_ACCESS',
-      })
-    }
-
-    // 3. Check required fields
-    if (
-      this.requestContext.userId === '' ||
-      this.requestContext.userId.trim() === ''
-    ) {
-      errors.push({
-        path: 'user.id',
-        message: 'User ID is required',
-        code: 'MISSING_REQUIRED_FIELD',
-      })
-    }
-
-    if (this.workflow.tenantId === '' || this.workflow.tenantId.trim() === '') {
-      errors.push({
-        path: 'workflow.tenantId',
-        message: 'Workflow must have a tenantId',
-        code: 'MISSING_REQUIRED_FIELD',
-      })
-    }
-
-    // 4. Check for global scope variables
-    for (const [varName, varDef] of Object.entries(this.workflow.variables)) {
-      if (varDef.scope === 'global') {
-        warnings.push({
-          path: `variables.${varName}`,
-          message: `global-scope variable will be skipped for security`,
-          severity: 'high',
-        })
-      }
-    }
-
-    // 5. Check credentials
-    const credentialCount = this.workflow.credentials.length
-    if (this.options.enforceCredentialValidation && credentialCount > 0) {
-      warnings.push({
-        path: 'credentials',
-        message: `${String(credentialCount)} credential(s) will be validated during execution`,
-        severity: 'low',
-      })
-    }
-
-    return {
-      valid: errors.length === 0,
-      errors,
-      warnings,
+      trigger: trigger ?? buildDefaultTrigger(this.workflow, request),
+      triggerData: requestData?.triggerData ?? {},
+      variables: buildVariables(this.workflow, request, requestData?.variables),
+      secrets: requestData?.secrets ?? {},
+      request:
+        this.options.captureRequestData === true
+          ? (requestData?.request as ExtendedWorkflowContext['request'])
+          : undefined,
+      multiTenant: buildMultiTenantMetadata(request, trigger),
+      requestMetadata: {
+        ipAddress: request.ipAddress,
+        userAgent: request.userAgent,
+        originUrl: request.originUrl,
+        sessionId: request.sessionId,
+      },
+      executionLimits:
+        this.workflow.executionLimits ?? defaultExecutionLimits(),
+      credentialBindings: new Map(),
     }
   }
 }
 
-/**
- * Factory function to create context from HTTP request
- * Extracts tenant/user info from JWT token, session, or headers
- */
+/** Build a context straight from a verified request. */
 export async function createContextFromRequest(
   workflow: WorkflowDefinition,
   requestContext: RequestContext,
   requestData?: ContextRequestData,
   options?: ContextBuilderOptions
 ): Promise<ExtendedWorkflowContext> {
-  const builder = new MultiTenantContextBuilder(
+  return new MultiTenantContextBuilder(
     workflow,
     requestContext,
     options
-  )
-  return builder.build(requestData)
-}
-
-/**
- * Verify user can access workflow
- * Simple access check without full context building
- */
-export function extractRequestContext(
-  headers?: Record<string, string>
-): RequestContext | null {
-  if (headers == null) {
-    return null
-  }
-
-  // TODO: Implement JWT parsing and tenant/user extraction
-  // This is a placeholder - in production, parse the JWT token
-  // and extract tenantId, userId, userLevel, etc.
-
-  return null
-}
-
-/**
- * Sanitize context for logging (remove secrets)
- */
-export function createMockContext(
-  workflow: WorkflowDefinition,
-  overrides?: Partial<RequestContext>
-): ExtendedWorkflowContext {
-  const requestContext: RequestContext = {
-    tenantId: workflow.tenantId,
-    userId: 'test-user-123',
-    userEmail: 'test@example.com',
-    userLevel: 2,
-    ipAddress: '127.0.0.1',
-    userAgent: 'Test Client',
-    ...overrides,
-  }
-
-  return {
-    executionId: uuidv4(),
-    tenantId: requestContext.tenantId,
-    userId: requestContext.userId,
-    user: {
-      id: requestContext.userId,
-      email: requestContext.userEmail,
-      level: requestContext.userLevel,
-    },
-    trigger: {
-      nodeId: workflow.nodes[0]?.id ?? 'trigger',
-      kind: 'manual',
-      enabled: true,
-      metadata: {},
-    },
-    triggerData: {},
-    variables: {},
-    secrets: {},
-    multiTenant: {
-      enforced: true,
-      tenantId: requestContext.tenantId,
-      userId: requestContext.userId,
-      userLevel: requestContext.userLevel,
-      userEmail: requestContext.userEmail,
-      requestedAt: new Date().toISOString(),
-      executionMode: 'manual',
-    },
-    requestMetadata: {
-      ipAddress: requestContext.ipAddress,
-      userAgent: requestContext.userAgent,
-    },
-    executionLimits: {
-      maxExecutionTime: 3600000,
-      maxMemoryMb: 512,
-      maxNodeExecutions: 1000,
-      maxDataSizeMb: 100,
-      maxArrayItems: 10000,
-    },
-    credentialBindings: new Map(),
-  }
+  ).build(requestData)
 }

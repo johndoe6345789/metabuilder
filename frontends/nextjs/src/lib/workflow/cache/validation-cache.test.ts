@@ -74,3 +74,61 @@ describe('ValidationCache', () => {
     expect(cache.getStats()).toMatchObject({ hits: 0, misses: 0, entries: 0 })
   })
 })
+
+describe('getByPrefix', () => {
+  it('finds an entry by the prefix of its key', () => {
+    const cache = make(1000, 10)
+    cache.set('acme:wf1:abc123', result())
+    expect(cache.getByPrefix('acme:wf1:')).toEqual(result())
+  })
+
+  // Entries are keyed `tenant:id:hash`, so a caller holding only a tenant
+  // and a workflow id cannot name the key -- asking for `tenant:id`
+  // matched nothing, and the lookup could only ever answer null.
+  it('answers where an exact-key lookup could not', () => {
+    const cache = make(1000, 10)
+    cache.set('acme:wf1:abc123', result())
+    expect(cache.get('acme:wf1')).toBeNull()
+    expect(cache.getByPrefix('acme:wf1:')).not.toBeNull()
+  })
+
+  it('is null when nothing matches', () => {
+    const cache = make(1000, 10)
+    cache.set('acme:wf1:abc', result())
+    expect(cache.getByPrefix('acme:wf2:')).toBeNull()
+  })
+
+  it('does not cross tenants', () => {
+    const cache = make(1000, 10)
+    cache.set('other:wf1:abc', result())
+    expect(cache.getByPrefix('acme:wf1:')).toBeNull()
+  })
+
+  it('ignores an entry that has expired', () => {
+    vi.useFakeTimers()
+    const cache = make(100, 10)
+    cache.set('acme:wf1:abc', result())
+    vi.advanceTimersByTime(200)
+    expect(cache.getByPrefix('acme:wf1:')).toBeNull()
+    vi.useRealTimers()
+  })
+
+  // Two entries under one prefix are two versions of the same workflow.
+  it('prefers the newest of several versions', () => {
+    vi.useFakeTimers()
+    const cache = make(10000, 10)
+    cache.set('acme:wf1:old', result(false))
+    vi.advanceTimersByTime(10)
+    cache.set('acme:wf1:new', result(true))
+    expect(cache.getByPrefix('acme:wf1:')).toEqual(result(true))
+    vi.useRealTimers()
+  })
+
+  it('counts a find as a hit and a miss as a miss', () => {
+    const cache = make(1000, 10)
+    cache.set('acme:wf1:abc', result())
+    cache.getByPrefix('acme:wf1:')
+    cache.getByPrefix('acme:missing:')
+    expect(cache.getStats()).toMatchObject({ hits: 1, misses: 1 })
+  })
+})
