@@ -321,7 +321,13 @@ export function validatePackageData(pkg: Partial<PackageInfo>): string[] {
   if (pkg.version == null || typeof pkg.version !== 'string') {
     errors.push('Invalid version')
   }
-  if (typeof pkg.rating !== 'number' || pkg.rating < 0 || pkg.rating > 5) {
+  // Number.isFinite as well as typeof: NaN is a number, and it is neither
+  // below zero nor above five, so it validated cleanly and then rendered
+  // as "NaN" wherever the rating was shown.
+  const rating = pkg.rating
+  if (typeof rating !== 'number' || !Number.isFinite(rating)) {
+    errors.push('Invalid rating')
+  } else if (rating < 0 || rating > 5) {
     errors.push('Invalid rating')
   }
 

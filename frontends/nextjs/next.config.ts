@@ -120,10 +120,6 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve(projectDir, '../..'),
     resolveAlias: {
-      '@metabuilder/components': path.resolve(
-        projectDir,
-        'src/lib/components-shim.ts'
-      ),
       '@dbal-ui': path.resolve(projectDir, '../../dbal/shared/ui'),
     },
   },
@@ -153,10 +149,6 @@ const nextConfig: NextConfig = {
     if (config.resolve != null) {
       config.resolve.alias = {
         ...(config.resolve.alias as Record<string, string>),
-        '@metabuilder/components': path.resolve(
-          projectDir,
-          'src/lib/components-shim.ts'
-        ),
         '@dbal-ui': path.resolve(projectDir, '../../dbal/shared/ui'),
         // Resolve service-adapters to source (dist/ is not pre-built)
         '@metabuilder/service-adapters': path.resolve(

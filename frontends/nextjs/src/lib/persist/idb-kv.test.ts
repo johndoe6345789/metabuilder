@@ -1,106 +1,205 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { idbDump, idbGet, idbRestore, idbSet } from './idb-kv'
+import {
+  createFakeIndexedDb,
+  type FakeIdbOptions,
+} from '@/test/fake-indexeddb'
+import type * as IdbKv from './idb-kv'
+
+type Module = typeof IdbKv
 
 /**
- * There is no IndexedDB in this environment, which is exactly the case the
- * module's fallback exists for: SSR, private mode, and old browsers. These
- * cover that path -- the one that decides whether a god-panel draft
- * survives or is silently lost when IndexedDB is unavailable.
+ * The open request is memoised in a module-level promise, so every test
+ * needs a fresh registry to reach a differently-behaving database.
  */
-describe('idb-kv without IndexedDB', () => {
-  beforeEach(() => {
-    localStorage.clear()
-    vi.restoreAllMocks()
+const load = async (
+  options?: FakeIdbOptions,
+  seed?: Array<[IDBValidKey, unknown]>
+): Promise<{ mod: Module; fake: ReturnType<typeof createFakeIndexedDb> }> => {
+  vi.resetModules()
+  const fake = createFakeIndexedDb(options ?? {}, seed)
+  vi.stubGlobal('indexedDB', fake.indexedDB)
+  return { mod: await import('./idb-kv'), fake }
+}
+
+/** jsdom ships no IndexedDB at all, which is the fallback's real case. */
+const loadWithoutIdb = async (): Promise<Module> => {
+  vi.resetModules()
+  vi.stubGlobal('indexedDB', undefined)
+  return await import('./idb-kv')
+}
+
+beforeEach(() => localStorage.clear())
+afterEach(() => vi.unstubAllGlobals())
+
+describe('idbGet / idbSet with IndexedDB', () => {
+  it('reads back what it wrote', async () => {
+    const { mod } = await load()
+    await mod.idbSet('k', { a: 1 })
+    expect(await mod.idbGet('k')).toEqual({ a: 1 })
   })
 
-  describe('idbSet and idbGet', () => {
-    it('round-trips a value through localStorage', async () => {
-      await idbSet('k', { a: 1 })
+  it('is null for a key that was never written', async () => {
+    const { mod } = await load()
+    expect(await mod.idbGet('missing')).toBeNull()
+  })
 
-      await expect(idbGet('k')).resolves.toEqual({ a: 1 })
-    })
+  it('stores the value in the database', async () => {
+    const { mod, fake } = await load()
+    await mod.idbSet('k', 'v')
+    expect(fake.data.get('k')).toBe('v')
+  })
 
-    it('answers null for a key that was never set', async () => {
-      await expect(idbGet('missing')).resolves.toBeNull()
-    })
+  // Belt and braces: the same value is written to localStorage, so a
+  // database that later refuses to open does not lose it.
+  it('mirrors every write to localStorage', async () => {
+    const { mod } = await load()
+    await mod.idbSet('k', { a: 1 })
+    expect(localStorage.getItem('k')).toBe('{"a":1}')
+  })
 
-    it('round-trips falsy values that are not null', async () => {
-      await idbSet('zero', 0)
-      await idbSet('empty', '')
-      await idbSet('no', false)
+  it('falls back to the mirror when the read fails', async () => {
+    const { mod } = await load({ failReads: true })
+    localStorage.setItem('k', '"mirrored"')
+    expect(await mod.idbGet('k')).toBe('mirrored')
+  })
 
-      await expect(idbGet('zero')).resolves.toBe(0)
-      await expect(idbGet('empty')).resolves.toBe('')
-      await expect(idbGet('no')).resolves.toBe(false)
-    })
+  it('falls back to the mirror when the row is absent', async () => {
+    const { mod } = await load()
+    localStorage.setItem('k', '"mirrored"')
+    expect(await mod.idbGet('k')).toBe('mirrored')
+  })
 
-    it('round-trips an array', async () => {
-      await idbSet('list', [1, 2, 3])
+  it('does not throw when a write transaction fails', async () => {
+    const { mod } = await load({ failWrites: true })
+    await expect(mod.idbSet('k', 'v')).resolves.toBeUndefined()
+    expect(localStorage.getItem('k')).toBe('"v"')
+  })
 
-      await expect(idbGet('list')).resolves.toEqual([1, 2, 3])
-    })
+  it('opens the database once, however many calls are made', async () => {
+    const { mod, fake } = await load()
+    const open = vi.spyOn(fake.indexedDB, 'open')
+    await mod.idbSet('a', 1)
+    await mod.idbGet('a')
+    await mod.idbGet('b')
+    expect(open).toHaveBeenCalledTimes(1)
+  })
+})
 
-    it('overwrites a previous value', async () => {
-      await idbSet('k', 'first')
-      await idbSet('k', 'second')
+describe('idbGet / idbSet without IndexedDB', () => {
+  it('reads and writes through localStorage', async () => {
+    const mod = await loadWithoutIdb()
+    await mod.idbSet('k', [1, 2])
+    expect(await mod.idbGet('k')).toEqual([1, 2])
+  })
 
-      await expect(idbGet('k')).resolves.toBe('second')
-    })
+  it('is null for a key with nothing stored', async () => {
+    const mod = await loadWithoutIdb()
+    expect(await mod.idbGet('missing')).toBeNull()
+  })
 
-    it('answers null rather than throwing on corrupt stored JSON', async () => {
-      // A half-written entry must not break the whole panel on load.
-      localStorage.setItem('bad', '{not json')
+  it('is null rather than throwing on unparseable stored text', async () => {
+    const mod = await loadWithoutIdb()
+    localStorage.setItem('k', '{ not json')
+    expect(await mod.idbGet('k')).toBeNull()
+  })
 
-      await expect(idbGet('bad')).resolves.toBeNull()
-    })
-
-    it('does not throw when storage is full', async () => {
-      // Private-mode Safari throws on every setItem; losing the write is
-      // acceptable, taking the caller down with it is not.
-      vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
-        throw new DOMException('QuotaExceededError')
+  it('does not throw when localStorage refuses the write', async () => {
+    const mod = await loadWithoutIdb()
+    const setItem = vi
+      .spyOn(Storage.prototype, 'setItem')
+      .mockImplementation(() => {
+        throw new Error('QuotaExceededError')
       })
+    await expect(mod.idbSet('k', 'v')).resolves.toBeUndefined()
+    setItem.mockRestore()
+  })
 
-      await expect(idbSet('k', 'v')).resolves.toBeUndefined()
-    })
-
-    it('does not throw when storage cannot be read', async () => {
-      vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
-        throw new DOMException('SecurityError')
+  it('is null rather than throwing when localStorage refuses the read', async () => {
+    const mod = await loadWithoutIdb()
+    const getItem = vi
+      .spyOn(Storage.prototype, 'getItem')
+      .mockImplementation(() => {
+        throw new Error('SecurityError')
       })
+    expect(await mod.idbGet('k')).toBeNull()
+    getItem.mockRestore()
+  })
+})
 
-      await expect(idbGet('k')).resolves.toBeNull()
+describe('idbGet with a database that will not open', () => {
+  it('falls back to localStorage', async () => {
+    const { mod } = await load({ failOpen: true })
+    localStorage.setItem('k', '"from the mirror"')
+    expect(await mod.idbGet('k')).toBe('from the mirror')
+  })
+
+  it('still mirrors writes', async () => {
+    const { mod } = await load({ failOpen: true })
+    await mod.idbSet('k', 'v')
+    expect(localStorage.getItem('k')).toBe('"v"')
+  })
+})
+
+describe('idbDump', () => {
+  it('returns every stored pair', async () => {
+    const { mod } = await load({}, [
+      ['a', 1],
+      ['b', { two: true }],
+    ])
+    expect(await mod.idbDump()).toEqual({ a: 1, b: { two: true } })
+  })
+
+  it('is empty when the database will not open', async () => {
+    const { mod } = await load({ failOpen: true })
+    expect(await mod.idbDump()).toEqual({})
+  })
+
+  it('is empty rather than a rejection when the read fails', async () => {
+    const { mod } = await load({ failReads: true }, [['a', 1]])
+    expect(await mod.idbDump()).toEqual({})
+  })
+
+  it('renders a numeric key as a string', async () => {
+    const { mod } = await load({}, [[7, 'seven']])
+    expect(await mod.idbDump()).toEqual({ '7': 'seven' })
+  })
+
+  it('renders a date key as an ISO string', async () => {
+    const when = new Date('2026-01-15T00:00:00.000Z')
+    const { mod } = await load({}, [[when, 'then']])
+    expect(await mod.idbDump()).toEqual({
+      '2026-01-15T00:00:00.000Z': 'then',
     })
   })
 
-  describe('idbDump', () => {
-    it('answers an empty object when there is no database', async () => {
-      await idbSet('k', 'v')
+  it('renders a composite key as JSON', async () => {
+    const { mod } = await load({}, [[['a', 1], 'composite']])
+    expect(await mod.idbDump()).toEqual({ '["a",1]': 'composite' })
+  })
+})
 
-      // The dump reads IndexedDB only; the fallback mirror is not enumerated.
-      await expect(idbDump()).resolves.toEqual({})
-    })
+describe('idbRestore', () => {
+  it('writes every pair back', async () => {
+    const { mod, fake } = await load()
+    await mod.idbRestore({ a: 1, b: 'two' })
+    expect(fake.data.get('a')).toBe(1)
+    expect(fake.data.get('b')).toBe('two')
   })
 
-  describe('idbRestore', () => {
-    it('writes every entry back', async () => {
-      await idbRestore({ a: 1, b: 'two' })
+  it('round-trips a dump', async () => {
+    const { mod } = await load({}, [
+      ['a', 1],
+      ['b', 2],
+    ])
+    const dumped = await mod.idbDump()
+    const restored = await load()
+    await restored.mod.idbRestore(dumped)
+    expect(await restored.mod.idbDump()).toEqual(dumped)
+  })
 
-      await expect(idbGet('a')).resolves.toBe(1)
-      await expect(idbGet('b')).resolves.toBe('two')
-    })
-
-    it('accepts an empty payload', async () => {
-      await expect(idbRestore({})).resolves.toBeUndefined()
-    })
-
-    it('overwrites what was there before', async () => {
-      await idbSet('a', 'old')
-
-      await idbRestore({ a: 'new' })
-
-      await expect(idbGet('a')).resolves.toBe('new')
-    })
+  it('accepts an empty project', async () => {
+    const { mod } = await load()
+    await expect(mod.idbRestore({})).resolves.toBeUndefined()
   })
 })
