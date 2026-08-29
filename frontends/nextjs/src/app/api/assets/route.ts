@@ -14,26 +14,18 @@ import { cookies } from 'next/headers'
 import { fetchSession } from '@/lib/auth/api/fetch-session'
 import { SESSION_COOKIE } from '@/app/api/auth/session/route'
 import { ensureBucket, listObjects, putObject } from '@/lib/object-store/client'
-
-/** One bucket per tenant, so a tenant's assets cannot name-collide. */
-const bucketFor = (tenant: string): string => `tenant-${tenant}`
-
-/** What a browser may be handed, and nothing executable. */
-const ALLOWED = new Set([
-  'image/png',
-  'image/jpeg',
-  'image/gif',
-  'image/webp',
-  'image/svg+xml',
-  'image/x-icon',
-  'application/pdf',
-])
-const MAX_BYTES = 8 * 1024 * 1024
+import { bucketFor, refuseUpload, safeAssetKey } from './upload-policy'
 
 async function signedIn(): Promise<boolean> {
   const token = (await cookies()).get(SESSION_COOKIE)?.value ?? null
   if (token === null) return false
   return (await fetchSession(token)) !== null
+}
+
+/** form.get can hand back a File; only a string is a tenant. */
+function tenantFrom(form: FormData): string {
+  const field = form.get('tenant')
+  return typeof field === 'string' && field !== '' ? field : 'system'
 }
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
@@ -57,28 +49,20 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   const form = await request.formData()
   const file = form.get('file')
-  // form.get can hand back a File; only a string is a tenant.
-  const field = form.get('tenant')
-  const tenant = typeof field === 'string' && field !== '' ? field : 'system'
+  const tenant = tenantFrom(form)
   if (!(file instanceof File)) {
     return NextResponse.json({ error: 'No file supplied' }, { status: 400 })
   }
-  if (!ALLOWED.has(file.type)) {
+
+  const refusal = refuseUpload(file)
+  if (refusal !== null) {
     return NextResponse.json(
-      { error: `${file.type || 'That file type'} is not allowed` },
-      { status: 415 }
-    )
-  }
-  if (file.size > MAX_BYTES) {
-    return NextResponse.json(
-      { error: 'Files must be 8MB or smaller' },
-      { status: 413 }
+      { error: refusal.error },
+      { status: refusal.status }
     )
   }
 
-  // Keep the author's filename -- it is how they will recognise it in the
-  // list -- but only the parts of it that are safe in a URL path.
-  const name = file.name.replace(/[^a-zA-Z0-9._-]/g, '-').replace(/^-+/, '')
+  const name = safeAssetKey(file.name)
   const bucket = bucketFor(tenant)
   try {
     await ensureBucket(bucket)

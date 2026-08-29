@@ -60,7 +60,8 @@ test.describe('Media Centre', () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(
       ([key, token]) => {
-        sessionStorage.setItem(key, JSON.stringify({ token, refreshToken: null }))
+        const session = { token, refreshToken: null }
+        sessionStorage.setItem(key, JSON.stringify(session))
       },
       [SESSION_STORAGE_KEY, makeSessionToken()] as const
     )

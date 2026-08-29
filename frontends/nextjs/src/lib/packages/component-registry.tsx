@@ -21,11 +21,11 @@
  */
 
 import type { ComponentType } from 'react'
-import { DashboardContent } from '@/app/[tenantSlug]/panel/dashboard/page'
-import { AdminContent } from '@/app/[tenantSlug]/panel/admin/page'
-import { ProfileContent } from '@/app/[tenantSlug]/panel/profile/page'
-import { CommentsContent } from '@/app/[tenantSlug]/panel/comments/page'
-import { ChatContent } from '@/app/[tenantSlug]/panel/chat/page'
+import { DashboardContent } from '@/app/[tenantSlug]/panel/dashboard/DashboardContent'
+import { AdminContent } from '@/app/[tenantSlug]/panel/admin/AdminContent'
+import { ProfileContent } from '@/app/[tenantSlug]/panel/profile/ProfileContent'
+import { CommentsContent } from '@/app/[tenantSlug]/panel/comments/CommentsContent'
+import { ChatContent } from '@/app/[tenantSlug]/panel/chat/ChatContent'
 import { VaultShell } from '@/app/[tenantSlug]/panel/vault/VaultShell'
 
 export const COMPONENT_REGISTRY: Record<string, ComponentType> = {
