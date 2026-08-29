@@ -21,10 +21,10 @@ export default defineConfig({
       // each batch lands rather than setting an aspirational figure that is
       // red every day and therefore ignored.
       thresholds: {
-        statements: 40,
-        branches: 36,
-        functions: 31,
-        lines: 41,
+        statements: 41,
+        branches: 37,
+        functions: 32,
+        lines: 42,
       },
       exclude: [
         'src/**/*.test.{ts,tsx}',
