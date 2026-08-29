@@ -20,7 +20,10 @@ declare module '@monaco-editor/react' {
     saveViewState?: boolean
     keepCurrentModel?: boolean
     path?: string
-    onChange?: (value: string | undefined, event?: editor.IModelContentChangedEvent) => void
+    onChange?: (
+      value: string | undefined,
+      event?: editor.IModelContentChangedEvent
+    ) => void
     onMount?: (editor: editor.IStandaloneCodeEditor, monaco: Monaco) => void
     onValidate?: (markers: languages.IMarker[]) => void
     beforeMount?: (monaco: Monaco) => void

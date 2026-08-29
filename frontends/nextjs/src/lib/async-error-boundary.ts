@@ -52,7 +52,8 @@ function createTimeoutPromise<T>(ms: number): Promise<T> {
  *
  * @param operation - The async operation to wrap
  * @param options - Configuration options
- * @returns Promise that resolves with the operation result or rejects after all retries
+ * @returns Promise that resolves with the operation result or rejects after all
+ * retries
  */
 export async function withAsyncErrorBoundary<T>(
   operation: () => Promise<T>,

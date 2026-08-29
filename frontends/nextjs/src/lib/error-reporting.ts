@@ -205,7 +205,8 @@ class ErrorReportingService {
       isRetryable,
     } as ErrorReport
 
-    // suggestedAction reflects the current category, even if mutated after creation
+    // suggestedAction reflects the current category, even if mutated after
+    // creation
     Object.defineProperty(report, 'suggestedAction', {
       get(this: ErrorReport) {
         return getSuggestedAction(this.category)
@@ -287,26 +288,6 @@ class ErrorReportingService {
     }
 
     return categoryMessages[errorCategory]
-  }
-
-  /**
-   * Get user message for HTTP error codes
-   */
-  private getHttpErrorMessage(statusCode: number): string {
-    const messages: Record<number, string> = {
-      400: 'Invalid request. Please check your input.',
-      401: 'Unauthorized. Please log in again.',
-      403: 'You do not have permission to access this resource.',
-      404: 'The requested resource was not found.',
-      409: 'This resource already exists.',
-      429: 'Too many requests. Please try again later.',
-      500: 'Server error. Please try again later.',
-      502: 'Bad gateway. Please try again later.',
-      503: 'Service unavailable. Please try again later.',
-      504: 'Gateway timeout. Please try again later.',
-    }
-
-    return messages[statusCode] ?? 'An unexpected error occurred.'
   }
 
   /**

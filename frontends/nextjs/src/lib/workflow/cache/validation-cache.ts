@@ -58,6 +58,24 @@ export class ValidationCache {
 
   delete = (key: string): void => void this.memoryCache.delete(key)
 
+  /**
+   * Drops every entry whose key starts with `prefix`.
+   *
+   * Cache keys carry a content hash as their last segment, so a caller that
+   * knows only the workflow and tenant cannot name the key to delete. It can
+   * name the prefix.
+   */
+  deleteByPrefix(prefix: string): number {
+    let removed = 0
+    for (const key of [...this.memoryCache.keys()]) {
+      if (key.startsWith(prefix)) {
+        this.memoryCache.delete(key)
+        removed += 1
+      }
+    }
+    return removed
+  }
+
   /** Empties the cache and resets the counters with it. */
   clear(): void {
     this.memoryCache.clear()

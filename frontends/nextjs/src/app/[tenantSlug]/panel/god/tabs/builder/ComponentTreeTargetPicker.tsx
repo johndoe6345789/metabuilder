@@ -60,7 +60,8 @@ export function ComponentTreeTargetPicker({
             }) as never
           }
         >
-          {/* Kept so a route that does not exist yet can still be typed below. */}
+          {/* Kept so a route that does not exist yet can still be typed
+          below. */}
           <option value={CUSTOM}>Custom…</option>
           {pages.map(p => (
             <option key={p.id} value={p.path}>

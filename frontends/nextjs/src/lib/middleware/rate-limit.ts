@@ -33,9 +33,11 @@ export interface RateLimitStore {
 }
 
 /**
- * In-memory rate limit store (suitable for development and single-instance deployments)
+ * In-memory rate limit store (suitable for development and single-instance
+ * deployments)
  *
- * ⚠️ Not suitable for distributed systems - use Redis adapter for production multi-instance
+ * ⚠️ Not suitable for distributed systems - use Redis adapter for production
+ * multi-instance
  */
 class InMemoryRateLimitStore implements RateLimitStore {
   private readonly store = new Map<string, { count: number; resetAt: number }>()

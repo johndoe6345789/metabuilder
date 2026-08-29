@@ -53,7 +53,8 @@ interface ExecutionListEntry {
 }
 
 export class WorkflowService {
-  private static readonly executor: unknown = null
+  // No executor field yet: integrating @metabuilder/workflow is still to do,
+  // and an unread placeholder is dead code rather than a plan.
 
   /**
    * Initialize the workflow engine

@@ -18,6 +18,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useClickOutside, useDebouncedSave } from '@metabuilder/hooks'
 import { TextField, Typography } from '@/m3'
 import s from './SearchSelect.module.scss'
+import { readList } from '@/lib/dbal/read-list'
 
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
@@ -34,15 +35,6 @@ interface SearchSelectProps {
   /** Extracts the display label from a raw DBAL record. */
   getLabel: (record: Record<string, unknown>) => string
   onSelect: (item: SearchSelectItem) => void
-}
-
-function unwrapList(raw: unknown): Record<string, unknown>[] {
-  if (raw === null || typeof raw !== 'object') return []
-  const outer = raw as { data?: unknown }
-  const inner = outer.data
-  if (inner === null || typeof inner !== 'object') return []
-  const rows = (inner as { data?: unknown }).data
-  return Array.isArray(rows) ? (rows as Record<string, unknown>[]) : []
 }
 
 export function SearchSelect({
@@ -76,7 +68,7 @@ export function SearchSelect({
           setResults([])
           return
         }
-        const rows = unwrapList(await res.json())
+        const rows = readList<Record<string, unknown>>(await res.json())
         setResults(
           rows
             .filter(r => typeof r.id === 'string')

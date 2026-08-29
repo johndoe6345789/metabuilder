@@ -188,7 +188,8 @@ describe('retry utilities', () => {
         backoffMultiplier: 2,
       })
 
-      // The delays would be: 1000, 2000, 2000 (capped), 2000 (capped), 2000 (capped)
+      // The delays would be: 1000, 2000, 2000 (capped), 2000 (capped), 2000
+      // (capped)
       await vi.advanceTimersByTimeAsync(10000)
 
       await promise

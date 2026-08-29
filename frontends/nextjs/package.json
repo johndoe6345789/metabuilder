@@ -21,7 +21,8 @@
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:report": "playwright show-report",
     "test:e2e:dbal-daemon": "playwright test --config=../../e2e/playwright.dbal-daemon.config.ts",
-    "typecheck": "node scripts/typecheck.cjs"
+    "typecheck": "node scripts/typecheck.cjs",
+    "typecheck:strict": "node scripts/typecheck-strict.mjs"
   },
   "dependencies": {
     "@metabuilder/api-clients": "*",

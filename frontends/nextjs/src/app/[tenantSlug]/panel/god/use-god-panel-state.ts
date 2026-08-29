@@ -1,5 +1,6 @@
 'use client'
 
+import { firstOf } from '@/lib/first-of'
 import { useCallback, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import {
@@ -25,7 +26,7 @@ export function useGodPanelState(activeTabId: string) {
     tabs.findIndex(tab => tab.id === activeTabId),
     0
   )
-  const activeTabConfig = tabs[activeTab] ?? tabs[0]
+  const activeTabConfig = tabs[activeTab] ?? firstOf(tabs, 'God panel tabs')
 
   const tenantForPaths = normalizeTenantId(routeTenantId)
 

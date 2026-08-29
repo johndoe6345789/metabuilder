@@ -17,7 +17,8 @@
  * - Manages resource constraints
  * - Provides comprehensive diagnostics
  *
- * Part of the 95% data pattern: Workflow structure is JSON, validation is TypeScript
+ * Part of the 95% data pattern: Workflow structure is JSON, validation is
+ * TypeScript
  *
  * @module workflow-loader-v2
  * @version 2.0.0
@@ -313,8 +314,10 @@ export class WorkflowLoaderV2 {
    * loader.invalidateCache('wf1', 'tenant1')
    */
   invalidateCache(workflowId: string, tenantId: string): void {
-    const cacheKey = `${tenantId}:${workflowId}`
-    this.cache.delete(cacheKey)
+    // Cache keys are `tenant:id:hash`, so deleting `tenant:id` matched
+    // nothing and this method silently did no work at all. Every version of
+    // this workflow has to go, whatever its hash.
+    this.cache.deleteByPrefix(`${tenantId}:${workflowId}:`)
     if (this.enableLogging) {
       console.warn(`[CACHE INVALIDATED] ${workflowId}`)
     }

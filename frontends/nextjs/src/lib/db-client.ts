@@ -2,7 +2,8 @@
  * Server-Side DBAL Client (plain fetch)
  *
  * Minimal fetch wrapper for API routes and server-side code ONLY.
- * Client components must use the Redux useDBAL hook from @metabuilder/api-clients,
+ * Client components must use the Redux useDBAL hook from
+ * @metabuilder/api-clients,
  * which calls the C++ daemon directly via NEXT_PUBLIC_DBAL_API_URL.
  *
  * Usage:
@@ -11,6 +12,7 @@
  *   const user = await db.users.read('user-123')
  */
 
+import { readList } from '@/lib/dbal/read-list'
 import 'server-only'
 
 const DBAL_URL =
@@ -133,18 +135,14 @@ function createOps(entityName: string): EntityOps {
 
       try {
         const raw = await dbalFetch<unknown>(url)
+        const rows = readList<Record<string, unknown>>(raw)
         const payload = unwrap<Record<string, unknown>>(raw)
+        const total =
+          payload !== null && typeof payload === 'object'
+            ? (payload as { total?: number }).total
+            : undefined
 
-        if (Array.isArray(payload)) {
-          return { data: payload, total: payload.length }
-        }
-        if (Array.isArray(payload.data)) {
-          return {
-            data: payload.data as Record<string, unknown>[],
-            total: payload.total as number | undefined,
-          }
-        }
-        return { data: [] }
+        return { data: rows, total: total ?? rows.length }
       } catch {
         return { data: [] }
       }

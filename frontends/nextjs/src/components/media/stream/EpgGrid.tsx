@@ -5,7 +5,8 @@ import type { ScheduledChannel } from './useTvChannels'
 import { hueFor } from './hue'
 import s from './EpgGrid.module.scss'
 
-const WINDOW_MINUTES = 150 // matches Sky's guide: a couple hours of grid at a time
+// matches Sky's guide: a couple hours of grid at a time
+const WINDOW_MINUTES = 150
 const SLOT_MINUTES = 30
 
 interface Props {

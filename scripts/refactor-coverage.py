@@ -30,10 +30,11 @@ ROOT = Path(__file__).parent.parent
 FRONTENDS_DIR = ROOT / "frontends"
 DB_PATH = ROOT / "txt" / "reports.db"
 
-FRONTENDS = [
-    "postgres", "workflowui", "pastebin",
-    "codegen", "dbal", "exploded-diagrams",
-]
+# The 2026-08-11 reposplit moved every frontend except these two out to
+# sibling repos, and `cli` is C++ -- so `nextjs` is the only one this script
+# can measure from inside metabuilder. The old list silently reported
+# "src/ not found" six times and a compliance score of nothing at all.
+FRONTENDS = ["nextjs"]
 
 SKIP_DIRS = {
     "node_modules", ".next", "coverage", "__pycache__",
@@ -46,8 +47,11 @@ SKIP_FILES = {
     "playwright.config.ts",
 }
 
-LOC_WARN = 100        # files above this are non-compliant
-LOC_MIN  = 50         # below this is also flagged (may be fine for small helpers)
+# 80, matching the project rule in CLAUDE.md ("Atomic components <=80 LOC").
+# This read 100, so a 96-line file scored as compliant against a standard it
+# did not meet.
+LOC_WARN = 80         # files above this are non-compliant
+LOC_MIN  = 20         # below this is a helper, not a smell
 LINE_WIDTH = 80       # max line width
 LINE_WIDTH_PCT = 0.10 # >10% of lines over limit = wide-line violation
 
@@ -197,7 +201,7 @@ def print_report(results: list[dict]) -> None:
         print(f"{BOLD}{r['frontend']}{RESET} violations:")
 
         if r["violations"]["loc"]:
-            print(f"  {RED}Over 100 LOC:{RESET}")
+            print(f"  {RED}Over {LOC_WARN} LOC:{RESET}")
             for f in r["violations"]["loc"][:10]:
                 print(f"    {f['loc']:4d} lines  {f['file']}")
 

@@ -96,8 +96,12 @@ const nextConfig: NextConfig = {
   },
 
   // TypeScript configuration
+  //
+  // Type errors fail the build. This was `true`, which meant a build could
+  // ship code `tsc` rejects -- the CI typecheck was the only thing catching
+  // them, and only if it ran first.
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   // Environment variables exposed to browser
   env: {

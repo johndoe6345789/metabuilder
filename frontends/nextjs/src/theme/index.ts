@@ -22,7 +22,8 @@ export type ThemeVars = Record<ThemeVarKey, string>
 
 /**
  * Apply theme CSS variables to an element
- * @param element - The element to apply the theme to (defaults to document.documentElement)
+ * @param element - The element to apply the theme to (defaults to
+ * document.documentElement)
  * @param theme - The theme object containing CSS variable definitions
  */
 export const applyTheme = (

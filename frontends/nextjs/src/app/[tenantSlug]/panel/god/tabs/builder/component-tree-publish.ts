@@ -1,5 +1,6 @@
 'use client'
 
+import { readOne } from '@/lib/dbal/read-list'
 import { useCallback, useState } from 'react'
 import { useAppDispatch } from '@/store/hooks'
 import { loadTree, saveTree, type TreeNodeShape } from '@/lib/tenant/page-tree'
@@ -37,8 +38,8 @@ async function findRowForPath(
     const json = (await res.json()) as {
       data?: { data?: Record<string, unknown>[] }
     }
-    const row = (json.data?.data ?? [])[0]
-    if (row === undefined) return null
+    const row = readOne<Record<string, unknown>>(json)
+    if (row === null) return null
     return {
       id: String(row.id),
       packageId: typeof row.packageId === 'string' ? row.packageId : undefined,
@@ -54,7 +55,9 @@ export interface PublishTarget {
   tenant: string
   path: string
   title: string
-  /** 0=public, 1=user, 2=moderator, 3=admin, 4=god, 5=supergod — see ROLE_LEVELS */
+  /**
+   * 0=public, 1=user, 2=moderator, 3=admin, 4=god, 5=supergod — see ROLE_LEVELS
+   */
   level: number
   requiresAuth: boolean
 }
@@ -174,8 +177,8 @@ export function useComponentTreePublish(tree: TreeNode) {
         const json = (await res.json()) as {
           data?: { data?: Record<string, unknown>[] }
         }
-        const row = json.data?.data?.[0]
-        if (row === undefined) return null
+        const row = readOne<Record<string, unknown>>(json)
+        if (row === null) return null
         const treeId = row.pageTreeId
         if (typeof treeId !== 'string' || treeId.length === 0) return null
         const parsed = await loadTree(DBAL, tenant, treeId)

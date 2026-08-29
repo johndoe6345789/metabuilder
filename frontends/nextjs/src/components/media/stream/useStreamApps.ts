@@ -9,7 +9,8 @@ import { getAuthToken } from '@metabuilder/dbal-sso/core'
 // exists inside the Next.js app, which is mounted under basePath "/app"
 // (next.config.js) — so it must be reached as /app/api/v1/... . A bare
 // /api/... path never reaches Next.js at all: nginx's own "/api/" location
-// (config/nginx/production.conf in the deployment repo) proxies straight to raw DBAL
+// (config/nginx/production.conf in the deployment repo) proxies straight to raw
+// DBAL
 // under a *different* convention, /api/{tenant}/{package}/{entity} (no
 // "v1"), stripping just "/api/". Hitting it with the Next.js-shaped path
 // shifts every segment by one, so DBAL parsed our packageId ("platform")
@@ -22,7 +23,8 @@ import { getAuthToken } from '@metabuilder/dbal-sso/core'
 // design ("custom REST is optional").
 //
 // Auth here is a Bearer token, not the session cookie: getSessionUser()
-// (frontends/nextjs/src/lib/routing/index.ts) reads req.headers['authorization']
+// (frontends/nextjs/src/lib/routing/index.ts) reads
+// req.headers['authorization']
 // specifically — the browser's own OIDC session cookie doesn't cover this
 // route on its own (confirmed live: an authenticated browser still got 401
 // until the token was attached explicitly). getAuthToken() reads the

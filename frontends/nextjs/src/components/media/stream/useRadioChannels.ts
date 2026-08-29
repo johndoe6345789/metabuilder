@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useMediaChannels } from './use-media-channels'
 
 const MEDIA_API =
   process.env.NEXT_PUBLIC_MEDIA_API_URL ?? 'http://localhost:8090'
@@ -22,57 +22,13 @@ export interface RadioChannel {
 }
 
 export function useRadioChannels() {
-  const [channels, setChannels] = useState<RadioChannel[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const { channels, loading, error, refresh, start, stop } =
+    useMediaChannels<RadioChannel>({
+      api: MEDIA_API,
+      service: 'radio',
+      urlField: 'stream_url',
+      loadError: 'Failed to load stations',
+    })
 
-  const refresh = useCallback(async (): Promise<void> => {
-    try {
-      const res = await fetch(`${MEDIA_API}/api/radio/channels`)
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      const data = (await res.json()) as { channels: RadioChannel[] }
-      setChannels(data.channels)
-      setError(null)
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to load stations')
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    void refresh()
-    const interval = setInterval(() => {
-      void refresh()
-    }, 15000)
-    return () => {
-      clearInterval(interval)
-    }
-  }, [refresh])
-
-  const listen = useCallback(
-    async (channelId: string): Promise<string> => {
-      const res = await fetch(
-        `${MEDIA_API}/api/radio/channels/${channelId}/start`,
-        { method: 'POST' }
-      )
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      const data = (await res.json()) as { stream_url: string }
-      await refresh()
-      return `${MEDIA_API}${data.stream_url}`
-    },
-    [refresh]
-  )
-
-  const stop = useCallback(
-    async (channelId: string): Promise<void> => {
-      await fetch(`${MEDIA_API}/api/radio/channels/${channelId}/stop`, {
-        method: 'POST',
-      })
-      await refresh()
-    },
-    [refresh]
-  )
-
-  return { channels, loading, error, refresh, listen, stop }
+  return { channels, loading, error, refresh, listen: start, stop }
 }

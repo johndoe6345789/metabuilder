@@ -19,6 +19,7 @@
  * (that only controls whether the JSON is fetchable, not whether it's shown).
  */
 
+import { readList } from '@/lib/dbal/read-list'
 import { createElement, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import { LevelGate } from '@/components/layout/LevelGate'
@@ -51,7 +52,9 @@ async function fetchSlot(
     const json = (await res.json()) as {
       data?: { data?: Record<string, unknown>[] }
     }
-    const row = (json.data?.data ?? []).find(r => r.isPublished !== false)
+    const row = readList<Record<string, unknown>>(json).find(
+      r => r.isPublished !== false
+    )
     if (row === undefined) return null
 
     const component = typeof row.component === 'string' ? row.component : null

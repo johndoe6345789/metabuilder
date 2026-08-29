@@ -20,7 +20,8 @@ export interface RouteValidationResult {
  * Returns true if the packageId is safe to use in file paths.
  */
 function isValidPackageId(packageId: string): boolean {
-  // Must match pattern: starts with letter, contains only lowercase letters, numbers, underscores
+  // Must match pattern: starts with letter, contains only lowercase letters,
+  // numbers, underscores
   if (!/^[a-z][a-z0-9_]*$/.test(packageId)) {
     return false
   }

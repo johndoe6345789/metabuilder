@@ -1,5 +1,6 @@
 'use client'
 
+import { readList } from '@/lib/dbal/read-list'
 import { useCallback, useEffect, useState } from 'react'
 
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
@@ -8,7 +9,9 @@ export interface PageConfigRow {
   id: string
   path: string
   title: string
-  /** Registered component name, or 'component_tree' for builder-authored pages. */
+  /**
+   * Registered component name, or 'component_tree' for builder-authored pages.
+   */
   component: string | null
   /** True when this route points at a PageTree the builder can load. */
   hasTree: boolean
@@ -56,7 +59,7 @@ export function usePageConfigs(tenant: string) {
       const json = (await res.json()) as {
         data?: { data?: Record<string, unknown>[] }
       }
-      const parsed = (json.data?.data ?? [])
+      const parsed = readList<Record<string, unknown>>(json)
         .map(toRow)
         .filter((r): r is PageConfigRow => r !== null)
         .sort((a, b) => a.path.localeCompare(b.path))

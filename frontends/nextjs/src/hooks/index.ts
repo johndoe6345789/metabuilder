@@ -1,7 +1,8 @@
 /**
  * Hooks barrel export for frontends/nextjs
  *
- * Re-exports all hooks from @metabuilder/hooks plus local NextJS-specific auth hooks
+ * Re-exports all hooks from @metabuilder/hooks plus local NextJS-specific auth
+ * hooks
  */
 
 // Re-export everything from the centralized hooks package

@@ -1,5 +1,6 @@
 'use client'
 
+import { findOrFirst } from '@/lib/first-of'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import {
@@ -19,29 +20,7 @@ export type VaultNotice = {
   message: string
 }
 
-function draftFromEntry(entry: VaultEntry | null): VaultDraft {
-  return (
-    entry ?? {
-      slug: '',
-      title: '',
-      username: '',
-      password: '',
-      group: 'General',
-      notes: '',
-      loginUrl: '/app/login',
-      appUrl: '/app',
-    }
-  )
-}
-
-function normalizeSlug(value: string): string {
-  return value
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .replace(/-{2,}/g, '-')
-}
+import { draftFromEntry, normalizeSlug } from './vault-normalize'
 
 export function useVaultController() {
   const router = useRouter()
@@ -120,9 +99,11 @@ export function useVaultController() {
   }, [entries, search])
 
   const activeFields = useMemo(() => {
-    const tab =
-      vaultView.tabs.find(candidate => candidate.id === editorTab) ??
-      vaultView.tabs[0]
+    const tab = findOrFirst(
+      vaultView.tabs,
+      candidate => candidate.id === editorTab,
+      'Vault editor tabs'
+    )
     return tab.fields.map(field => ({
       ...field,
       value: draft[field.key],
