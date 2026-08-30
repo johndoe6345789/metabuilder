@@ -19,62 +19,10 @@
  * (that only controls whether the JSON is fetchable, not whether it's shown).
  */
 
-import { readList } from '@/lib/db/read-list'
-import { createElement, useEffect, useMemo, useState } from 'react'
-import type { ReactNode } from 'react'
+import { createElement, type ReactNode } from 'react'
 import { LevelGate } from '@/components/layout/LevelGate'
 import { UIPageRenderer } from '@/components/ui-page-renderer/UIPageRenderer'
-import type { TreeNode } from '@/components/blocks/block-registry'
-import { resolveComponent } from '@/lib/packages/component-registry'
-import { loadTree } from '@/lib/tenant/page-tree'
-
-const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
-
-interface SlotConfig {
-  level: number
-  component: string | null
-  componentTree: TreeNode | null
-}
-
-async function fetchSlot(
-  tenant: string,
-  path: string
-): Promise<SlotConfig | null> {
-  try {
-    const params = new URLSearchParams({ 'filter.path': path })
-    const res = await fetch(
-      `${DBAL}/${tenant}/core/PageConfig?${params.toString()}`,
-      {
-        signal: AbortSignal.timeout(6000),
-      }
-    )
-    if (!res.ok) return null
-    const json = (await res.json()) as {
-      data?: { data?: Record<string, unknown>[] }
-    }
-    const row = readList<Record<string, unknown>>(json).find(
-      r => r.isPublished !== false
-    )
-    if (row === undefined) return null
-
-    const component = typeof row.component === 'string' ? row.component : null
-    const treeId = typeof row.pageTreeId === 'string' ? row.pageTreeId : null
-    const componentTree =
-      treeId === null
-        ? null
-        : ((await loadTree(DBAL, tenant, treeId)) as TreeNode | null)
-
-    // Nothing this slot can actually render -- same as no row at all.
-    if (component === null && componentTree === null) return null
-    return {
-      level: typeof row.level === 'number' ? row.level : 0,
-      component,
-      componentTree,
-    }
-  } catch {
-    return null
-  }
-}
+import { useWorkspaceSlot } from './use-workspace-slot'
 
 interface WorkspacePageSlotProps {
   tenant?: string
@@ -87,38 +35,7 @@ export function WorkspacePageSlot({
   path,
   children,
 }: WorkspacePageSlotProps) {
-  const [slot, setSlot] = useState<SlotConfig | null | undefined>(undefined)
-
-  useEffect(() => {
-    let cancelled = false
-    setSlot(undefined)
-    void fetchSlot(tenant, path).then(result => {
-      if (!cancelled) setSlot(result)
-    })
-    return () => {
-      cancelled = true
-    }
-  }, [tenant, path])
-
-  // System package: a registered `component` name wins over `componentTree`
-  // when both happen to be present. component-tree-publish.ts stamps every
-  // user-package row's `component` field with the literal marker
-  // "component_tree" (not a real registry name), so this correctly falls
-  // through to the componentTree branch for those rather than matching.
-  //
-  // Memoized rather than resolved inline: resolveComponent always returns
-  // the same reference for the same name (a static lookup table, not a
-  // factory). Mounted via createElement rather than JSX (<Resolved/>)
-  // because eslint's react-hooks/static-components rule flags any
-  // capitalized JSX tag whose value comes from a runtime lookup, on the
-  // assumption it's a fresh component *definition* (which would remount and
-  // lose state every render) -- createElement is the same thing JSX compiles
-  // to, so this is not a behavior change, just a way to select a component
-  // dynamically without tripping a rule aimed at a different mistake.
-  const Resolved = useMemo(
-    () => resolveComponent(slot?.component ?? null),
-    [slot?.component]
-  )
+  const { slot, resolved } = useWorkspaceSlot(tenant, path)
 
   // Still loading. Renders nothing rather than `children`: children are the
   // fallback for "nothing is published at this path", and showing them before
@@ -135,10 +52,17 @@ export function WorkspacePageSlot({
     return <>{children}</>
   }
 
-  if (Resolved !== null) {
+  // Mounted via createElement rather than JSX (<Resolved/>) because
+  // eslint's react-hooks/static-components rule flags any capitalized JSX
+  // tag whose value comes from a runtime lookup, on the assumption it's a
+  // fresh component *definition* (which would remount and lose state
+  // every render) -- createElement is the same thing JSX compiles to, so
+  // this is not a behavior change, just a way to select a component
+  // dynamically without tripping a rule aimed at a different mistake.
+  if (resolved !== null) {
     return (
       <LevelGate minLevel={slot.level} silent>
-        {createElement(Resolved)}
+        {createElement(resolved)}
       </LevelGate>
     )
   }

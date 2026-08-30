@@ -21,8 +21,8 @@ export default defineConfig({
       // each batch lands rather than setting an aspirational figure that is
       // red every day and therefore ignored.
       thresholds: {
-        statements: 56,
-        branches: 50,
+        statements: 57,
+        branches: 51,
         functions: 47,
         lines: 57,
       },
