@@ -22,9 +22,9 @@ export default defineConfig({
       // red every day and therefore ignored.
       thresholds: {
         statements: 54,
-        branches: 48,
-        functions: 45,
-        lines: 54,
+        branches: 49,
+        functions: 46,
+        lines: 55,
       },
       exclude: [
         'src/**/*.test.{ts,tsx}',
