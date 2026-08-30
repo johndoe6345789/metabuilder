@@ -248,4 +248,239 @@ describe('useWorkflowEditor', () => {
       expect(result.current.getNodeType('not.a.type')).toBeUndefined()
     })
   })
+
+  describe('canvas drag and drop', () => {
+    /** A canvasRef is a plain object at runtime; its type only marks
+     *  .current readonly to discourage mutation from outside the hook. */
+    const attachCanvas = (
+      result: { current: ReturnType<typeof useWorkflowEditor> },
+      rect: Partial<DOMRect> = {}
+    ): void => {
+      const div = document.createElement('div')
+      vi.spyOn(div, 'getBoundingClientRect').mockReturnValue({
+        left: 0,
+        top: 0,
+        ...rect,
+      } as DOMRect)
+      ;(
+        result.current.canvasRef as { current: HTMLDivElement | null }
+      ).current = div
+    }
+
+    const dragEvent = (
+      data: Record<string, string> = {}
+    ): React.DragEvent => {
+      const store = { ...data }
+      return {
+        preventDefault: vi.fn(),
+        clientX: 0,
+        clientY: 0,
+        dataTransfer: {
+          setData: (key: string, value: string) => {
+            store[key] = value
+          },
+          getData: (key: string) => store[key] ?? '',
+          effectAllowed: '',
+          dropEffect: '',
+        },
+      } as unknown as React.DragEvent
+    }
+
+    it('marks a palette item copyable when the drag starts', () => {
+      const { result } = setup()
+      const event = dragEvent()
+      act(() => {
+        result.current.onPaletteDragStart(event, {
+          type: 'trigger.manual',
+          name: 'Manual',
+          defaultConfig: {},
+          inputs: [],
+          outputs: ['main'],
+        } as never)
+      })
+      expect(event.dataTransfer.effectAllowed).toBe('copy')
+    })
+
+    it('allows a drop over the canvas', () => {
+      const { result } = setup()
+      const event = dragEvent()
+      act(() => {
+        result.current.onCanvasDragOver(event)
+      })
+      expect(event.preventDefault).toHaveBeenCalled()
+      expect(event.dataTransfer.dropEffect).toBe('copy')
+    })
+
+    it('adds a node where the drop landed', () => {
+      const { result } = setup(workflow({ nodes: [] }))
+      attachCanvas(result)
+      const event = dragEvent({ 'application/node-type': 'trigger' })
+
+      act(() => {
+        result.current.onCanvasDrop(event)
+      })
+
+      expect(result.current.workflow.nodes).toHaveLength(1)
+      expect(result.current.workflow.nodes[0]?.type).toBe('trigger')
+    })
+
+    it('does nothing for a drop naming no real node type', () => {
+      const { result, onChange } = setup(workflow({ nodes: [] }))
+      attachCanvas(result)
+      const event = dragEvent({ 'application/node-type': 'not.a.type' })
+
+      act(() => {
+        result.current.onCanvasDrop(event)
+      })
+
+      expect(result.current.workflow.nodes).toHaveLength(0)
+      expect(onChange).not.toHaveBeenCalled()
+    })
+
+    it('does nothing when the canvas has not mounted yet', () => {
+      const { result } = setup(workflow({ nodes: [] }))
+      const event = dragEvent({ 'application/node-type': 'trigger' })
+
+      act(() => {
+        result.current.onCanvasDrop(event)
+      })
+
+      expect(result.current.workflow.nodes).toHaveLength(0)
+    })
+  })
+
+  describe('panning', () => {
+    const mouseDown = (target: EventTarget): React.MouseEvent =>
+      ({ target, clientX: 10, clientY: 10 } as unknown as React.MouseEvent)
+
+    it('starts panning on a mousedown that hits the canvas itself', () => {
+      const { result } = setup()
+      const div = document.createElement('div')
+      ;(
+        result.current.canvasRef as { current: HTMLDivElement | null }
+      ).current = div
+
+      act(() => {
+        result.current.onCanvasMouseDown(mouseDown(div))
+      })
+
+      expect(result.current.isPanning).toBe(true)
+    })
+
+    it('ignores a mousedown on something else on the canvas', () => {
+      const { result } = setup()
+      const div = document.createElement('div')
+      ;(
+        result.current.canvasRef as { current: HTMLDivElement | null }
+      ).current = div
+      const child = document.createElement('span')
+
+      act(() => {
+        result.current.onCanvasMouseDown(mouseDown(child))
+      })
+
+      expect(result.current.isPanning).toBe(false)
+    })
+
+    it('moves the canvas offset as the mouse moves, and stops on mouseup', () => {
+      const { result } = setup()
+      const div = document.createElement('div')
+      ;(
+        result.current.canvasRef as { current: HTMLDivElement | null }
+      ).current = div
+
+      act(() => {
+        result.current.onCanvasMouseDown(mouseDown(div))
+      })
+      act(() => {
+        window.dispatchEvent(
+          new MouseEvent('mousemove', { clientX: 40, clientY: 25 })
+        )
+      })
+      expect(result.current.canvasOffset).toEqual({ x: 30, y: 15 })
+
+      act(() => {
+        window.dispatchEvent(new MouseEvent('mouseup'))
+      })
+      expect(result.current.isPanning).toBe(false)
+    })
+  })
+
+  describe('dragging a node', () => {
+    it('moves the node as the mouse moves, and reports the change on release', () => {
+      const { result, onChange } = setup()
+
+      act(() => {
+        result.current.onNodeDragStart(
+          { clientX: 0, clientY: 0 } as unknown as React.MouseEvent,
+          'a'
+        )
+      })
+      act(() => {
+        window.dispatchEvent(
+          new MouseEvent('mousemove', { clientX: 20, clientY: 5 })
+        )
+      })
+      const moved = result.current.workflow.nodes.find(n => n.id === 'a')
+      expect(moved?.position).toEqual({ x: 20, y: 5 })
+      expect(onChange).not.toHaveBeenCalled()
+
+      act(() => {
+        window.dispatchEvent(new MouseEvent('mouseup'))
+      })
+      expect(onChange).toHaveBeenCalledWith(result.current.workflow)
+    })
+
+    it('does nothing for a node id that does not exist', () => {
+      const { result } = setup()
+
+      act(() => {
+        result.current.onNodeDragStart(
+          { clientX: 0, clientY: 0 } as unknown as React.MouseEvent,
+          'ghost'
+        )
+      })
+      act(() => {
+        window.dispatchEvent(
+          new MouseEvent('mousemove', { clientX: 20, clientY: 5 })
+        )
+      })
+
+      expect(result.current.workflow.nodes.map(n => n.position)).toEqual([
+        { x: 0, y: 0 },
+        { x: 200, y: 0 },
+      ])
+    })
+  })
+
+  describe('zoom controls', () => {
+    it('narrows on a wheel scroll down', () => {
+      const { result } = setup()
+      act(() => {
+        result.current.onWheel({ deltaY: 100 } as React.WheelEvent)
+      })
+      expect(result.current.zoom).toBeLessThan(1)
+    })
+
+    it('widens on a wheel scroll up', () => {
+      const { result } = setup()
+      act(() => {
+        result.current.onWheel({ deltaY: -100 } as React.WheelEvent)
+      })
+      expect(result.current.zoom).toBeGreaterThan(1)
+    })
+
+    it('resets zoom and offset together', () => {
+      const { result } = setup()
+      act(() => result.current.zoomIn())
+      act(() => {
+        result.current.onCanvasMouseDown({
+          target: null,
+        } as unknown as React.MouseEvent)
+      })
+      act(() => result.current.zoomReset())
+      expect(result.current.zoom).toBe(1)
+      expect(result.current.canvasOffset).toEqual({ x: 0, y: 0 })
+    })
+  })
 })
