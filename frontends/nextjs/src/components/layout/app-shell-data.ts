@@ -1,6 +1,7 @@
 import type { PackageNavItem } from '@/lib/packages/navigation'
 import { packageMetadataToNavItem } from '@/lib/packages/navigation'
 import { BASE_PATH } from '@/lib/app-config'
+import { readList } from '@/lib/db/read-list'
 
 const DBAL_PROXY_URL = `${BASE_PATH}/api/dbal`
 
@@ -41,13 +42,14 @@ export async function fetchNavigablePackages(): Promise<PackageNavItem[]> {
     })
     if (!res.ok) return []
 
-    const json = (await res.json()) as {
-      data?: Array<Record<string, unknown>>
-    }
+    // The proxy forwards DBAL's own envelope untouched -- {data: {data:
+    // [...]}} -- so reading json.data directly is reading the inner
+    // envelope object, not the row array, and always fails the
+    // Array.isArray check below. readList unwraps whichever shape DBAL
+    // actually sends.
+    const rows = readList<Record<string, unknown>>(await res.json())
 
-    if (!Array.isArray(json.data)) return []
-
-    return json.data
+    return rows
       .filter(isPackageRecord)
       .map(pkg => packageMetadataToNavItem(pkg))
       .filter(pkg => pkg.showInNav)
