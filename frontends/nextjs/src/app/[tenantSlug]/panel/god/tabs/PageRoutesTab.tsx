@@ -4,14 +4,17 @@ import { useState } from 'react'
 import { Typography, Button, Chip, Alert } from '@/m3'
 import { usePageRoutes } from '@/hooks/usePageRoutes'
 import type { PageRoute, PageRouteInput } from '@/hooks/usePageRoutes'
-import { BASE_PATH } from '@/lib/app-config'
 import { PageList } from './page-routes/PageList'
 import { PageFormDialog } from './page-routes/PageFormDialog'
 import { DeletePageDialog } from './page-routes/DeletePageDialog'
+import {
+  normalizeTenant,
+  previewUrl,
+  publishCounts,
+  SYSTEM_TENANT,
+} from './page-routes-logic'
 import s from './PageRoutesTab.module.scss'
 import { TenantSelect } from '@/components/tenant/TenantSelect'
-
-const SYSTEM_TENANT = 'system'
 
 export function PageRoutesTab() {
   const [tenant, setTenant] = useState(SYSTEM_TENANT)
@@ -42,16 +45,15 @@ export function PageRoutesTab() {
   }
 
   const openPreview = (page: PageRoute) => {
-    const path = page.path.startsWith('/') ? page.path : `/${page.path}`
-    const previewUrl = page.path.startsWith('http')
-      ? page.path
-      : `${window.location.origin}${BASE_PATH}/${tenant}${path}`
-    window.open(previewUrl, '_blank', 'noopener')
+    window.open(
+      previewUrl(page, tenant, window.location.origin),
+      '_blank',
+      'noopener'
+    )
   }
 
   const applyTenant = (next?: string) => {
-    const trimmed = (next ?? tenantInput).trim()
-    setTenant(trimmed.length > 0 ? trimmed : SYSTEM_TENANT)
+    setTenant(normalizeTenant(next ?? tenantInput))
   }
 
   const handleFormClose = () => {
@@ -63,8 +65,7 @@ export function PageRoutesTab() {
     setDeletePage(null)
   }
 
-  const live = pages.filter(p => p.isPublished).length
-  const draft = pages.length - live
+  const { live, draft } = publishCounts(pages)
 
   return (
     <div className={s.root}>
