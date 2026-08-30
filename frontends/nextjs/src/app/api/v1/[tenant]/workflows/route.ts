@@ -1,175 +1,86 @@
 /**
  * GET /api/v1/{tenant}/workflows
- * GET
- * /api/v1/{tenant}/workflows
- *   ?category=automation&limit=10&includeValidation=true
+ *   ?category=automation&limit=10&tags=a,b&active=true
  *
- * List workflows for tenant with optional filtering and validation metadata
- *
- * Query parameters:
- * - limit: number (default: 50, max: 100)
- * - offset: number (default: 0)
- * - category: 'automation' | 'integration' | 'business-logic' | etc
- * - tags: comma-separated string
- * - active: boolean
- * - includeValidation: boolean (default: false) - Include validation state for
- * each workflow
- * - includeMetrics: boolean (default: false) - Include execution metrics
- *
- * Response includes optional validation metadata when requested:
- * {
- *   "success": true,
- *   "data": {
- *     "workflows": [
- *       {
- *         "id": "uuid",
- *         "name": "string",
- *         ...other fields...,
- *         "validation": {
- *           "valid": boolean,
- *           "errors": ValidationError[],
- *           "warnings": ValidationError[],
- *           "validatedAt": ISO8601,
- *           "cacheHit": boolean
- *         }
- *       }
- *     ],
- *     "pagination": {
- *       "total": number,
- *       "limit": number,
- *       "offset": number,
- *       "hasMore": boolean
- *     }
- *   }
- * }
- *
- * ---
+ * List workflows for a tenant, filtered and paginated.
  *
  * POST /api/v1/{tenant}/workflows
  *
- * Create new workflow with pre-creation validation
- *
- * Request body:
- * {
- *   "name": "string",
- *   "description": "string",
- *   "category": "automation",
- *   "nodes": [],
- *   "connections": {},
- *   "triggers": [],
- *   "tags": []
- * }
+ * Create a new workflow. Requires level 2+; tenantId, id and createdBy are
+ * always the route's own resolved values, never the caller's body -- see
+ * buildWorkflowRecord.
  */
 
 import { type NextRequest, NextResponse } from 'next/server'
+import { v4 as uuidv4 } from 'uuid'
 import { authenticate } from '@/lib/middleware/auth-middleware'
 import { applyRateLimit } from '@/lib/middleware/rate-limit'
-import { v4 as uuidv4 } from 'uuid'
-import { asString } from '@/lib/api/as-string'
+import { parseWorkflowListQuery } from './list-query'
+import { buildWorkflowRecord, validateWorkflowInput } from './workflow-input'
+import { createWorkflow, listWorkflows } from './workflows-store'
 
 interface RouteParams {
-  params: Promise<{
-    tenant: string
-  }>
+  params: Promise<{ tenant: string }>
 }
 
-/**
- * GET handler - List workflows for tenant
- */
+const unauthorized = (): NextResponse =>
+  NextResponse.json(
+    { error: 'Unauthorized', message: 'Authentication failed' },
+    { status: 401 }
+  )
+
+const forbidden = (): NextResponse =>
+  NextResponse.json(
+    { error: 'Forbidden', message: 'Access denied to this tenant' },
+    { status: 403 }
+  )
+
+/** True once rate limiting, auth and tenant access all pass. */
+async function authorizeRequest(
+  request: NextRequest,
+  tenant: string,
+  minLevel: number,
+  limitKind: 'list' | 'mutation'
+): Promise<
+  { ok: true; userId: string } | { ok: false; response: Response }
+> {
+  const limitResponse = applyRateLimit(request, limitKind)
+  if (limitResponse != null) return { ok: false, response: limitResponse }
+
+  const authResult = await authenticate(request, { minLevel })
+  if (!authResult.success || authResult.error != null) {
+    return { ok: false, response: authResult.error ?? unauthorized() }
+  }
+  const user = authResult.user
+  if (user == null) return { ok: false, response: unauthorized() }
+
+  if (user.tenantId !== tenant && user.level < 4) {
+    return { ok: false, response: forbidden() }
+  }
+  return { ok: true, userId: user.id }
+}
+
 export async function GET(
   request: NextRequest,
   { params }: RouteParams
 ): Promise<Response> {
   try {
-    // 1. Apply rate limiting for list endpoints
-    const limitResponse = applyRateLimit(request, 'list')
-    if (limitResponse != null) {
-      return limitResponse
-    }
+    const { tenant } = await params
+    const auth = await authorizeRequest(request, tenant, 1, 'list')
+    if (!auth.ok) return auth.response
 
-    // 2. Authenticate user
-    const authResult = await authenticate(request, { minLevel: 1 })
-    if (!authResult.success || authResult.error != null) {
-      return (
-        authResult.error ??
-        NextResponse.json(
-          { error: 'Unauthorized', message: 'Authentication failed' },
-          { status: 401 }
-        )
-      )
-    }
-    const user = authResult.user
-    if (user == null) {
-      return NextResponse.json(
-        { error: 'Unauthorized', message: 'Authentication failed' },
-        { status: 401 }
-      )
-    }
-
-    // 3. Extract route parameters
-    const resolvedParams = await params
-    const { tenant } = resolvedParams
-
-    // 4. Validate tenant access (multi-tenant safety)
-    if (user.tenantId !== tenant && user.level < 4) {
-      return NextResponse.json(
-        { error: 'Forbidden', message: 'Access denied to this tenant' },
-        { status: 403 }
-      )
-    }
-
-    // 5. Parse query parameters
     const { searchParams } = new URL(request.url)
-    const limit = Math.min(parseInt(searchParams.get('limit') ?? '50'), 100)
-    const offset = parseInt(searchParams.get('offset') ?? '0')
-    const category = searchParams.get('category')
-    const tags = searchParams
-      .get('tags')
-      ?.split(',')
-      .map(t => t.trim())
-    const activeParam = searchParams.get('active')
-    const active = activeParam != null ? activeParam === 'true' : undefined
+    const query = parseWorkflowListQuery(searchParams, tenant)
+    const page = await listWorkflows(query)
 
-    // 6. Build filter
-    const filter: Record<string, unknown> = {
-      tenantId: tenant,
-    }
-
-    if (category != null) {
-      filter.category = category
-    }
-    if (tags != null && tags.length > 0) {
-      filter.tags = { $in: tags }
-    }
-    if (active !== undefined) {
-      filter.active = active
-    }
-
-    // 7. Query workflows from database
-    // TODO: Implement DBAL integration
-    // const result = await db.workflows.list({
-    //   filter,
-    //   limit,
-    //   offset,
-    //   sort: { updatedAt: -1 }
-    // })
-
-    const result = {
-      items: [],
-      total: 0,
-      limit,
-      offset,
-    }
-
-    // 8. Return results
     return NextResponse.json(
       {
-        workflows: result.items,
+        workflows: page.items,
         pagination: {
-          total: result.total,
-          limit: result.limit,
-          offset: result.offset,
-          hasMore: result.offset + result.limit < result.total,
+          total: page.total,
+          limit: query.limit,
+          offset: query.offset,
+          hasMore: query.offset + query.limit < page.total,
         },
       },
       { status: 200 }
@@ -177,94 +88,32 @@ export async function GET(
   } catch (error) {
     console.error('Workflow list error:', error)
     return NextResponse.json(
-      {
-        error: 'Internal Server Error',
-        message: 'Failed to list workflows',
-      },
+      { error: 'Internal Server Error', message: 'Failed to list workflows' },
       { status: 500 }
     )
   }
 }
 
-/**
- * POST handler - Create new workflow
- */
 export async function POST(
   request: NextRequest,
   { params }: RouteParams
 ): Promise<Response> {
   try {
-    // 1. Apply rate limiting for mutations
-    const limitResponse = applyRateLimit(request, 'mutation')
-    if (limitResponse != null) {
-      return limitResponse
-    }
+    const { tenant } = await params
+    const auth = await authorizeRequest(request, tenant, 2, 'mutation')
+    if (!auth.ok) return auth.response
 
-    // 2. Authenticate user (require level 2+)
-    const authResult = await authenticate(request, { minLevel: 2 })
-    if (!authResult.success || authResult.error != null) {
-      return (
-        authResult.error ??
-        NextResponse.json(
-          { error: 'Unauthorized', message: 'Authentication failed' },
-          { status: 401 }
-        )
-      )
-    }
-    const user = authResult.user
-    if (user == null) {
-      return NextResponse.json(
-        { error: 'Unauthorized', message: 'Authentication failed' },
-        { status: 401 }
-      )
-    }
-
-    // 3. Extract route parameters
-    const resolvedParams = await params
-    const { tenant } = resolvedParams
-
-    // 4. Validate tenant access (multi-tenant safety)
-    if (user.tenantId !== tenant && user.level < 4) {
-      return NextResponse.json(
-        { error: 'Forbidden', message: 'Access denied to this tenant' },
-        { status: 403 }
-      )
-    }
-
-    // 5. Parse and validate request body
     let body: Record<string, unknown>
     try {
       body = (await request.json()) as Record<string, unknown>
-    } catch (_error) {
+    } catch {
       return NextResponse.json(
         { error: 'Bad Request', message: 'Invalid JSON in request body' },
         { status: 400 }
       )
     }
 
-    // 6. Validate required fields
-    const errors: string[] = []
-    if (body.name == null || typeof body.name !== 'string') {
-      errors.push('name is required and must be a string')
-    }
-    const validCategories = [
-      'automation',
-      'integration',
-      'business-logic',
-      'data-transformation',
-      'notification',
-      'approval',
-      'other',
-    ]
-    if (
-      typeof body.category !== 'string' ||
-      !validCategories.includes(body.category)
-    ) {
-      errors.push(
-        'category must be one of: automation, integration, business-logic, etc'
-      )
-    }
-
+    const errors = validateWorkflowInput(body)
     if (errors.length > 0) {
       return NextResponse.json(
         { error: 'Validation Error', errors },
@@ -272,103 +121,31 @@ export async function POST(
       )
     }
 
-    // 7. Create workflow object
-    const workflowId = uuidv4()
-    const now = new Date()
+    const record = buildWorkflowRecord(body, {
+      tenant,
+      createdBy: auth.userId,
+      id: uuidv4(),
+      now: new Date(),
+    })
+    const saved = await createWorkflow(record)
 
-    const workflow = {
-      id: workflowId,
-      tenantId: tenant,
-      name: asString(body.name),
-      description: typeof body.description === 'string' ? body.description : '',
-      version: '1.0.0',
-      createdBy: user.id,
-      createdAt: now,
-      updatedAt: now,
-      active: body.active !== false,
-      locked: false,
-      tags: Array.isArray(body.tags) ? (body.tags as unknown[]) : [],
-      category: asString(body.category),
-      settings: {
-        timezone: 'UTC',
-        executionTimeout: 300000, // 5 minutes
-        saveExecutionProgress: true,
-        saveExecutionData: 'all' as const,
-        maxConcurrentExecutions: 5,
-        debugMode: false,
-        enableNotifications: false,
-        notificationChannels: [],
-      },
-      nodes: Array.isArray(body.nodes) ? (body.nodes as unknown[]) : [],
-      connections: body.connections as Record<string, unknown>,
-      triggers: Array.isArray(body.triggers)
-        ? (body.triggers as unknown[])
-        : [],
-      variables: body.variables as Record<string, unknown>,
-      errorHandling: {
-        default: 'stopWorkflow' as const,
-        errorNotification: false,
-        notifyChannels: [],
-      },
-      retryPolicy: {
-        enabled: false,
-        maxAttempts: 1,
-        backoffType: 'exponential' as const,
-        initialDelay: 1000,
-        maxDelay: 60000,
-        retryableErrors: [],
-        retryableStatusCodes: [408, 429, 500, 502, 503, 504],
-      },
-      rateLimiting: {
-        enabled: false,
-        key: 'tenant' as const,
-        onLimitExceeded: 'reject' as const,
-      },
-      credentials: [],
-      metadata: body.metadata as Record<string, unknown>,
-      executionLimits: {
-        maxExecutionTime: 300000,
-        maxMemoryMb: 512,
-        maxDataSizeMb: 100,
-        maxArrayItems: 10000,
-      },
-      multiTenancy: {
-        enforced: true,
-        tenantIdField: 'tenantId',
-        restrictNodeTypes: [],
-        allowCrossTenantAccess: false,
-        auditLogging: true,
-      },
-      versionHistory: [],
-    }
-
-    // 8. Save to database
-    // TODO: Implement DBAL integration
-    // const saved = await db.workflows.create(workflow)
-
-    const saved = workflow
-
-    // 9. Return created workflow
     return NextResponse.json(
       {
-        id: saved.id,
-        name: saved.name,
-        description: saved.description,
-        category: saved.category,
-        version: saved.version,
-        createdAt: saved.createdAt,
-        updatedAt: saved.updatedAt,
-        active: saved.active,
+        id: saved.id ?? record.id,
+        name: saved.name ?? record.name,
+        description: saved.description ?? record.description,
+        category: saved.category ?? record.category,
+        version: saved.version ?? record.version,
+        createdAt: saved.createdAt ?? record.createdAt,
+        updatedAt: saved.updatedAt ?? record.updatedAt,
+        active: saved.active ?? record.active,
       },
       { status: 201 }
     )
   } catch (error) {
     console.error('Workflow creation error:', error)
     return NextResponse.json(
-      {
-        error: 'Internal Server Error',
-        message: 'Failed to create workflow',
-      },
+      { error: 'Internal Server Error', message: 'Failed to create workflow' },
       { status: 500 }
     )
   }

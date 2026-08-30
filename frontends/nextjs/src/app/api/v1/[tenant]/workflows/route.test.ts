@@ -2,11 +2,16 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mw = vi.hoisted(() => ({ applyRateLimit: vi.fn(() => null) }))
 const auth = vi.hoisted(() => ({ authenticate: vi.fn() }))
+const store = vi.hoisted(() => ({
+  listWorkflows: vi.fn(async () => ({ items: [], total: 0 })),
+  createWorkflow: vi.fn(async (record: Record<string, unknown>) => record),
+}))
 
 vi.mock('@/lib/middleware/rate-limit', () => mw)
 vi.mock('@/lib/middleware/auth-middleware', () => auth)
+vi.mock('./workflows-store', () => store)
 
-import { GET } from './route'
+import { GET, POST } from './route'
 
 const params = (tenant = 'acme') => ({ params: Promise.resolve({ tenant }) })
 
@@ -130,5 +135,91 @@ describe('GET /api/v1/[tenant]/workflows', () => {
       expect(res.status).toBe(500)
       expect((await res.json()).message).toBe('Failed to list workflows')
     })
+  })
+})
+
+const validBody = {
+  name: 'Sync inventory',
+  category: 'automation',
+}
+
+const postReq = (body: unknown): Request =>
+  new Request('http://localhost/api/v1/acme/workflows', {
+    method: 'POST',
+    body: typeof body === 'string' ? body : JSON.stringify(body),
+  })
+
+describe('POST /api/v1/[tenant]/workflows', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mw.applyRateLimit.mockReturnValue(null)
+    signedInAs({ level: 2 })
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+  })
+
+  it('asks the authenticator for at least level 2', async () => {
+    await POST(postReq(validBody), params())
+    expect(auth.authenticate).toHaveBeenCalledWith(
+      expect.anything(),
+      { minLevel: 2 }
+    )
+  })
+
+  it('applies mutation-rate limiting before authenticating', async () => {
+    mw.applyRateLimit.mockReturnValue(new Response('', { status: 429 }))
+    const res = await POST(postReq(validBody), params())
+    expect(res.status).toBe(429)
+    expect(auth.authenticate).not.toHaveBeenCalled()
+  })
+
+  it('is 400 for a body that is not JSON', async () => {
+    const res = await POST(postReq('not json'), params())
+    expect(res.status).toBe(400)
+    expect(store.createWorkflow).not.toHaveBeenCalled()
+  })
+
+  it('is 400 when the name is missing', async () => {
+    const res = await POST(postReq({ category: 'automation' }), params())
+    expect(res.status).toBe(400)
+    const body = await res.json()
+    expect(body.errors).toContain('name is required and must be a string')
+  })
+
+  it('is 400 for an unrecognised category', async () => {
+    const res = await POST(
+      postReq({ name: 'x', category: 'made-up' }),
+      params()
+    )
+    expect(res.status).toBe(400)
+  })
+
+  it('persists the workflow and returns 201', async () => {
+    const res = await POST(postReq(validBody), params())
+    expect(res.status).toBe(201)
+    expect(store.createWorkflow).toHaveBeenCalledOnce()
+    const body = await res.json()
+    expect(body.name).toBe('Sync inventory')
+    expect(body.category).toBe('automation')
+  })
+
+  // The caller cannot write into another tenant, and cannot claim to be
+  // someone else, by naming either in the body.
+  it('stamps the resolved tenant and author, ignoring what the body claims', async () => {
+    await POST(
+      postReq({ ...validBody, tenantId: 'other', createdBy: 'someone-else' }),
+      params('acme')
+    )
+    const record = store.createWorkflow.mock.calls[0]?.[0] as Record<
+      string,
+      unknown
+    >
+    expect(record.tenantId).toBe('acme')
+    expect(record.createdBy).toBe('u1')
+  })
+
+  it('answers 500 rather than throwing when the write fails', async () => {
+    store.createWorkflow.mockRejectedValue(new Error('DBAL down'))
+    const res = await POST(postReq(validBody), params())
+    expect(res.status).toBe(500)
   })
 })

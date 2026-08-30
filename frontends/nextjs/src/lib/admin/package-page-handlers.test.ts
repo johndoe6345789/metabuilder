@@ -4,7 +4,12 @@ import { createPackagePageHandlers } from './package-page-handlers'
 
 const pkg = { id: 'p1', name: 'Forum', status: 'available' }
 
-function deps(over: { confirmed?: boolean } = {}) {
+function deps(
+  over: {
+    confirmed?: boolean
+    selectedPackage?: { id: string; name: string } | null
+  } = {}
+) {
   const showToast = vi.fn()
   const showConfirmation = vi.fn(async (opts: { onConfirm: () => unknown }) => {
     await opts.onConfirm()
@@ -27,12 +32,19 @@ function deps(over: { confirmed?: boolean } = {}) {
   const detailHandlers = {
     openDetails: vi.fn(async () => {}),
     closeDetails: vi.fn(),
+    refreshDetails: vi.fn(async () => {}),
   }
 
   const built = createPackagePageHandlers({
     usePackages: { state: { packages: [pkg] }, handlers: packageHandlers },
     usePackageActions: { state: {}, handlers: actionHandlers },
-    usePackageDetails: { state: {}, handlers: detailHandlers },
+    usePackageDetails: {
+      state: {
+        selectedPackage:
+          over.selectedPackage === undefined ? pkg : over.selectedPackage,
+      },
+      handlers: detailHandlers,
+    },
     showConfirmation,
     showToast,
   } as never)
@@ -173,5 +185,92 @@ describe('createPackagePageHandlers', () => {
 
       expect(errorToast(d.showToast)).toHaveLength(1)
     })
+  })
+
+  const modalLifecycle: [string, string, string][] = [
+    ['handleInstallFromModal', 'installPackage', 'Package installed successfully'],
+    ['handleUninstallFromModal', 'uninstallPackage', 'Package uninstalled successfully'],
+    ['handleEnableFromModal', 'enablePackage', 'Package enabled'],
+    ['handleDisableFromModal', 'disablePackage', 'Package disabled'],
+  ]
+
+  describe.each(modalLifecycle)('%s', (handler, action, success) => {
+    it('confirms before acting', async () => {
+      const d = deps()
+      await d.handlers[handler]('p1')
+      expect(d.showConfirmation).toHaveBeenCalled()
+    })
+
+    it('performs the action', async () => {
+      const d = deps()
+      await d.handlers[handler]('p1')
+      expect(
+        (d.actionHandlers as Record<string, ReturnType<typeof vi.fn>>)[action]
+      ).toHaveBeenCalledWith('p1')
+    })
+
+    it('refetches the list and reports success', async () => {
+      const d = deps()
+      await d.handlers[handler]('p1')
+
+      expect(d.packageHandlers.refetchPackages).toHaveBeenCalled()
+      expect(
+        d.showToast.mock.calls.map(c => c[0]).some(a => a.message === success)
+      ).toBe(true)
+    })
+
+    it('says nothing more when the user cancels', async () => {
+      const d = deps({ confirmed: false })
+      await d.handlers[handler]('p1')
+
+      expect(d.packageHandlers.refetchPackages).not.toHaveBeenCalled()
+      expect(d.showToast).not.toHaveBeenCalled()
+    })
+
+    it('toasts when the action itself throws', async () => {
+      const d = deps()
+      ;(d.actionHandlers as Record<string, ReturnType<typeof vi.fn>>)[
+        action
+      ].mockRejectedValue(new Error('server said no'))
+
+      await d.handlers[handler]('p1')
+
+      expect(errorToast(d.showToast)).toHaveLength(1)
+    })
+  })
+
+  // Only the install/uninstall pair checks for a selected package before
+  // confirming; enable/disable read the name directly off state, which is
+  // itself worth pinning since it means they tolerate no selection.
+  describe.each([
+    ['handleInstallFromModal', 'refreshDetails'],
+    ['handleUninstallFromModal', 'closeDetails'],
+  ])('%s with nothing selected', (handler, followUp) => {
+    it('refuses before ever confirming', async () => {
+      const d = deps({ selectedPackage: null })
+      await d.handlers[handler]('p1')
+
+      expect(d.showConfirmation).not.toHaveBeenCalled()
+      expect(errorToast(d.showToast)[0]?.message).toBe('No package selected')
+      expect(
+        (d.detailHandlers as Record<string, ReturnType<typeof vi.fn>>)[
+          followUp
+        ]
+      ).not.toHaveBeenCalled()
+    })
+  })
+
+  it('closes the modal, rather than refreshing it, after an uninstall', async () => {
+    const d = deps()
+    await d.handlers.handleUninstallFromModal('p1')
+    expect(d.detailHandlers.closeDetails).toHaveBeenCalled()
+    expect(d.detailHandlers.refreshDetails).not.toHaveBeenCalled()
+  })
+
+  it('refreshes the modal, rather than closing it, after an install', async () => {
+    const d = deps()
+    await d.handlers.handleInstallFromModal('p1')
+    expect(d.detailHandlers.refreshDetails).toHaveBeenCalled()
+    expect(d.detailHandlers.closeDetails).not.toHaveBeenCalled()
   })
 })
