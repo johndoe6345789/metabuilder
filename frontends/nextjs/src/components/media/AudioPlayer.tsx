@@ -1,7 +1,10 @@
 'use client'
 
-import { useRef, useState, useCallback } from 'react'
 import { isSafeMediaSrc } from './mediaUrl'
+import { useAudioElement } from './audio-player/use-audio-element'
+import { TrackArtwork } from './audio-player/TrackArtwork'
+import { TrackInfo } from './audio-player/TrackInfo'
+import { PlaybackControls } from './audio-player/PlaybackControls'
 import s from './AudioPlayer.module.scss'
 
 export interface AudioPlayerProps {
@@ -12,13 +15,6 @@ export interface AudioPlayerProps {
   isLive?: boolean
 }
 
-function fmt(sec: number): string {
-  if (!isFinite(sec)) return '--:--'
-  const m = Math.floor(sec / 60)
-  const ss = Math.floor(sec % 60)
-  return `${m}:${ss.toString().padStart(2, '0')}`
-}
-
 export function AudioPlayer({
   src,
   title,
@@ -26,33 +22,19 @@ export function AudioPlayer({
   artwork,
   isLive,
 }: AudioPlayerProps) {
-  const audioRef = useRef<HTMLAudioElement>(null)
-  const [playing, setPlaying] = useState(false)
-  const [current, setCurrent] = useState(0)
-  const [duration, setDuration] = useState(0)
-  const [vol, setVol] = useState(1)
-
-  const toggle = useCallback(() => {
-    const el = audioRef.current
-    if (el === null) return
-    if (el.paused) {
-      void el.play()
-    } else {
-      el.pause()
-    }
-  }, [])
-
-  const seek = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const el = audioRef.current
-    if (el === null) return
-    el.currentTime = Number(e.target.value)
-  }, [])
-
-  const changeVol = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const v = Number(e.target.value)
-    setVol(v)
-    if (audioRef.current !== null) audioRef.current.volume = v
-  }, [])
+  const {
+    audioRef,
+    playing,
+    setPlaying,
+    current,
+    setCurrent,
+    duration,
+    setDuration,
+    vol,
+    toggle,
+    seek,
+    changeVol,
+  } = useAudioElement()
 
   return (
     <div className={s.root}>
@@ -73,55 +55,18 @@ export function AudioPlayer({
         }}
       />
 
-      {artwork !== undefined && (
-        <img src={artwork} alt={title} className={s.artwork} />
-      )}
-      {artwork === undefined && (
-        <div className={s.artworkPlaceholder}>
-          <span className="material-symbols-rounded">music_note</span>
-        </div>
-      )}
-
-      <div className={s.info}>
-        <p className={s.title}>{title ?? 'Unknown track'}</p>
-        <p className={s.artist}>{artist ?? ''}</p>
-        {isLive === true && <span className={s.livePill}>LIVE</span>}
-      </div>
-
-      <div className={s.controls}>
-        <button className={s.playBtn} onClick={toggle}>
-          <span className="material-symbols-rounded">
-            {playing ? 'pause' : 'play_arrow'}
-          </span>
-        </button>
-        {isLive !== true && (
-          <>
-            <span className={s.time}>{fmt(current)}</span>
-            <input
-              type="range"
-              className={s.seek}
-              min={0}
-              max={duration}
-              step={0.1}
-              value={current}
-              onChange={seek}
-            />
-            <span className={s.time}>{fmt(duration)}</span>
-          </>
-        )}
-        <span className="material-symbols-rounded" style={{ fontSize: 18 }}>
-          volume_up
-        </span>
-        <input
-          type="range"
-          className={s.vol}
-          min={0}
-          max={1}
-          step={0.02}
-          value={vol}
-          onChange={changeVol}
-        />
-      </div>
+      <TrackArtwork artwork={artwork} title={title} />
+      <TrackInfo title={title} artist={artist} isLive={isLive} />
+      <PlaybackControls
+        playing={playing}
+        onToggle={toggle}
+        isLive={isLive}
+        current={current}
+        duration={duration}
+        onSeek={seek}
+        vol={vol}
+        onVolChange={changeVol}
+      />
     </div>
   )
 }
