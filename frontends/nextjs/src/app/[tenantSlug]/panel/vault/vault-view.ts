@@ -78,7 +78,7 @@ export type VaultActionDefinition<TId extends string> = {
   event: `vault.events.${string}`
 }
 
-type VaultViewDefinition = {
+export type VaultViewDefinition = {
   hooks: Array<{ id: 'vault'; hook: 'useVaultController' }>
   title: string
   loadingLabel: string
