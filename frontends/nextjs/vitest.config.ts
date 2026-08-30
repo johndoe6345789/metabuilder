@@ -22,8 +22,8 @@ export default defineConfig({
       // red every day and therefore ignored.
       thresholds: {
         statements: 61,
-        branches: 54,
-        functions: 52,
+        branches: 55,
+        functions: 53,
         lines: 61,
       },
       exclude: [
