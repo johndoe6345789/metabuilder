@@ -58,12 +58,15 @@ export default defineConfig({
       // real callers -- its own test file even documents the
       // attempt-always-0 quirk as expected behavior, confirming it was
       // never wired to anything that would have surfaced it) (measured
-      // 66/59.39/58.15/65.96).
+      // 66/59.39/58.15/65.96). Raised again in phase 53 after splitting
+      // component-tree-publish.ts and backfilling tests for its
+      // previously-untested load() path (measured 66.29/59.66/58.24/
+      // 66.22).
       thresholds: {
-        statements: 65.9,
-        branches: 59.3,
-        functions: 58.1,
-        lines: 65.9,
+        statements: 66.2,
+        branches: 59.6,
+        functions: 58.2,
+        lines: 66.1,
       },
       exclude: [
         'src/**/*.test.{ts,tsx}',
