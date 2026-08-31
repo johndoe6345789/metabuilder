@@ -3,7 +3,6 @@ import type { useAppDispatch } from '@/store/hooks'
 import { readOne } from '@/lib/db/read-list'
 import { loadTree } from '@/lib/tenant/page-tree'
 import { clearDirty, setTree } from '@/store/slices/god-slice'
-import type { TreeNode } from '../builder-registry'
 import { DBAL } from './find-row-for-path'
 import type { PublishTarget } from './types'
 
@@ -38,7 +37,7 @@ export function useLoadPage(dispatch: ReturnType<typeof useAppDispatch>) {
         if (typeof treeId !== 'string' || treeId.length === 0) return null
         const parsed = await loadTree(DBAL, tenant, treeId)
         if (parsed === null) return null
-        dispatch(setTree(parsed as TreeNode))
+        dispatch(setTree(parsed))
         dispatch(clearDirty('tree'))
         return {
           title: typeof row.title === 'string' ? row.title : path,

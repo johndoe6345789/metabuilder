@@ -6,8 +6,8 @@ function buildQuery(options?: ListOptions): string {
   const params = new URLSearchParams()
   if (options?.filter != null) {
     for (const [k, v] of Object.entries(options.filter)) {
-      if (v !== undefined && v !== null) {
-        params.set(`filter.${k}`, String(v as string | number | boolean))
+      if (typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean') {
+        params.set(`filter.${k}`, String(v))
       }
     }
   }

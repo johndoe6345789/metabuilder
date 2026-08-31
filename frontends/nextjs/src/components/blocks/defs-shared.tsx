@@ -7,11 +7,10 @@ import type { ReactNode } from 'react'
 import type { BlockCategory, PaletteItem } from './block-types'
 import { propText } from './block-coerce'
 import { store } from '@/store/store'
-import type { RootState } from '@/store/store'
 import { runWorkflow } from '@/lib/workflow/run-workflow'
 
 export function fireWorkflow(): void {
-  const state = store.getState() as unknown as RootState
+  const state = store.getState()
   const wf = state.god.workflow
   if (wf.nodes.length === 0) {
     window.alert('No workflow wired yet.')

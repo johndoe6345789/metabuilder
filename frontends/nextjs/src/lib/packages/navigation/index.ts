@@ -15,9 +15,8 @@ import type {
 export type { SidebarConfig, GodPanelConfig, PackageNavItem, SidebarNavItem }
 export type { GodPanelTab, GodPanelTool } from './types'
 
-export const sidebarConfig: SidebarConfig = sidebarConfigData as SidebarConfig
-export const godPanelConfig: GodPanelConfig =
-  godPanelConfigData as GodPanelConfig
+export const sidebarConfig: SidebarConfig = sidebarConfigData
+export const godPanelConfig: GodPanelConfig = godPanelConfigData
 
 /**
  * Get sidebar items filtered by user level

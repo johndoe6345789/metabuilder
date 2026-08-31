@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import type { useAppDispatch } from '@/store/hooks'
-import { saveTree, type TreeNodeShape } from '@/lib/tenant/page-tree'
+import { saveTree } from '@/lib/tenant/page-tree'
 import { clearDirty } from '@/store/slices/god-slice'
 import { snapshot } from '@/lib/persist/versions'
 import type { TreeNode } from '../builder-registry'
@@ -46,7 +46,7 @@ export function usePublishPage(
           tenant,
           treeId,
           target.title,
-          tree as unknown as TreeNodeShape,
+          tree,
           `Published from the God Panel for ${path}`
         )
         if (!wrote) return false

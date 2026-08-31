@@ -57,22 +57,30 @@ export function parseRestfulRequest(
     return { error: PATH_SHAPE, status: STATUS.BAD_REQUEST }
   }
 
-  const [tenant, packageId, entity, id, action] = slug
+  // .at() is typed `string | undefined` under both tsconfig variants
+  // (unlike destructuring from `string[]`, whose element type depends on
+  // noUncheckedIndexedAccess), so the undefined checks below are real
+  // narrowing everywhere rather than an assertion needed only in strict.
+  const tenant = slug.at(0)
+  const packageId = slug.at(1)
+  const entity = slug.at(2)
+  const id = slug.at(3)
+  const action = slug.at(4)
+
   const missing = missingSegment(tenant, packageId, entity)
   if (missing !== null) {
     return { error: missing, status: STATUS.BAD_REQUEST }
   }
+  // missingSegment returning null guarantees these three are non-empty,
+  // but that guarantee doesn't flow back through the function call.
+  if (tenant === undefined || packageId === undefined || entity === undefined) {
+    return { error: PATH_SHAPE, status: STATUS.BAD_REQUEST }
+  }
 
   const operation = operationFor(req.method, id, action)
   return {
-    route: {
-      tenant: tenant as string,
-      package: packageId as string,
-      entity: entity as string,
-      id,
-      action,
-    },
+    route: { tenant, package: packageId, entity, id, action },
     operation,
-    dbalOp: { entity: entity as string, operation, id, action },
+    dbalOp: { entity, operation, id, action },
   }
 }

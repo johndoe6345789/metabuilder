@@ -39,7 +39,7 @@ export async function fetchSlot(
     const componentTree =
       treeId === null
         ? null
-        : ((await loadTree(DBAL, tenant, treeId)) as TreeNode | null)
+        : await loadTree(DBAL, tenant, treeId)
 
     // Nothing this slot can actually render -- same as no row at all.
     if (component === null && componentTree === null) return null
