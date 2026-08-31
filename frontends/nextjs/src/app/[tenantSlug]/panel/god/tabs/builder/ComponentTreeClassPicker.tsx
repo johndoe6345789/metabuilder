@@ -11,11 +11,12 @@
  * say) can still be typed in the field and is preserved.
  */
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import Link from 'next/link'
-import { TextField, Typography } from '@/m3'
+import { TextField } from '@/m3'
 import { tenantGodPanelPath } from '@/lib/tenant/workspace-paths'
 import { useCssClasses } from '../styles/use-css-classes'
+import { ClassChipList } from './ClassChipList'
 import s from './ComponentTreeTab.module.scss'
 
 const split = (value: string): string[] =>
@@ -30,7 +31,6 @@ type Props = {
 export function ComponentTreeClassPicker({ value, tenant, onChange }: Props) {
   const { classes, hydrate } = useCssClasses()
   const applied = split(value)
-  const [query, setQuery] = useState('')
 
   // Pull the tenant's published classes in, so the picker offers what the
   // Styles tab actually defines rather than only what this session created.
@@ -59,67 +59,7 @@ export function ComponentTreeClassPicker({ value, tenant, onChange }: Props) {
         }}
       />
 
-      {classes.length > 0 ? (
-        <>
-          {/* Worth a filter once the list is longer than a glance. Applied
-              classes are never filtered out, so searching cannot hide what is
-              already on the node. */}
-          {classes.length > 8 && (
-            <TextField
-              size="small"
-              fullWidth
-              label="Find a style"
-              value={query}
-              onChange={event => {
-                setQuery(event.target.value)
-              }}
-            />
-          )}
-          <div className={s.classChips}>
-            {classes
-              .filter(
-                css =>
-                  applied.includes(css.name) ||
-                  css.name.toLowerCase().includes(query.trim().toLowerCase())
-              )
-              .map(css => {
-                const on = applied.includes(css.name)
-                return (
-                  <button
-                    key={css.id}
-                    type="button"
-                    className={`${s.classChip} ${on ? s.classChipOn : ''}`}
-                    aria-pressed={on}
-                    title={
-                      Object.keys(css.props).length > 0
-                        ? Object.entries(css.props)
-                            .map(([k, v]) => `${k}: ${v}`)
-                            .join('\n')
-                        : 'No declarations yet'
-                    }
-                    onClick={() => {
-                      toggle(css.name)
-                    }}
-                  >
-                    {on && (
-                      <span
-                        className="material-symbols-rounded"
-                        aria-hidden="true"
-                      >
-                        check
-                      </span>
-                    )}
-                    {css.name}
-                  </button>
-                )
-              })}
-          </div>
-        </>
-      ) : (
-        <Typography variant="caption" className={s.propHint}>
-          No classes defined yet.
-        </Typography>
-      )}
+      <ClassChipList classes={classes} applied={applied} onToggle={toggle} />
 
       <Link className={s.propLink} href={tenantGodPanelPath(tenant, 'styles')}>
         <span className="material-symbols-rounded" aria-hidden="true">
