@@ -6,7 +6,10 @@ import { evaluateExpression } from './evaluate-expression'
  *  template expression in any of them resolves before it reaches the
  *  DOM element. */
 export function buildElementProps(
-  nodeObj: Record<string, JsonValue>,
+  // A package author's raw ui.json node -- Partial, not Record, because
+  // any of these keys can genuinely be absent, and Partial carries
+  // `| undefined` on every property regardless of noUncheckedIndexedAccess.
+  nodeObj: Partial<Record<string, JsonValue>>,
   context: RenderContext
 ): Record<string, JsonValue> {
   const props: Record<string, JsonValue> = {}

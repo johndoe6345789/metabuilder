@@ -38,11 +38,19 @@ function evaluateTernary(
   context: RenderContext,
   fallback: JsonValue | undefined
 ): JsonValue | undefined {
-  const [condition, branches] = part.split('?')
+  // .at() is typed `string | undefined` under both tsconfig variants
+  // (unlike destructuring from split()'s `string[]`), and a part with no
+  // `?`/`:` genuinely produces a shorter array at runtime -- these checks
+  // are real, not just satisfying strict mode.
+  const parts = part.split('?')
+  const condition = parts.at(0)
+  const branches = parts.at(1)
   if (condition === undefined || condition.length === 0) return fallback
   if (branches === undefined || branches.length === 0) return fallback
 
-  const [trueBranch, falseBranch] = branches.split(':')
+  const branchParts = branches.split(':')
+  const trueBranch = branchParts.at(0)
+  const falseBranch = branchParts.at(1)
   if (trueBranch === undefined || trueBranch.length === 0) return fallback
   if (falseBranch === undefined || falseBranch.length === 0) return fallback
 
