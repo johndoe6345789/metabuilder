@@ -6,7 +6,7 @@ declare module '@metabuilder/workflow' {
     defaultValue?: unknown
     required?: boolean
     scope?: string
-    [key: string]: any
+    [key: string]: unknown
   }
 
   export interface ConnectionTarget {
@@ -33,7 +33,7 @@ declare module '@metabuilder/workflow' {
     disabled?: boolean
     notes?: string
     metadata?: Record<string, unknown>
-    [key: string]: any
+    [key: string]: unknown
   }
 
   export interface WorkflowTrigger {
@@ -41,6 +41,6 @@ declare module '@metabuilder/workflow' {
     kind: string
     enabled: boolean
     metadata: Record<string, unknown>
-    [key: string]: any
+    [key: string]: unknown
   }
 }

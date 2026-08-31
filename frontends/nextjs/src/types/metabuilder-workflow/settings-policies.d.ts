@@ -8,7 +8,7 @@ declare module '@metabuilder/workflow' {
     debugMode?: boolean
     enableNotifications?: boolean
     notificationChannels?: string[]
-    [key: string]: any
+    [key: string]: unknown
   }
 
   export interface RetryPolicy {
@@ -34,6 +34,6 @@ declare module '@metabuilder/workflow' {
     maxExecutionTime: number
     maxMemoryMb?: number
     maxNodeExecutions?: number
-    [key: string]: any
+    [key: string]: unknown
   }
 }

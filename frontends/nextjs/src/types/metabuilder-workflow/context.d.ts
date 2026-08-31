@@ -12,11 +12,11 @@ declare module '@metabuilder/workflow' {
       email: string
       level: number
       role?: string
-      [key: string]: any
+      [key: string]: unknown
     }
     request?: Record<string, unknown>
     metadata?: Record<string, unknown>
-    [key: string]: any
+    [key: string]: unknown
   }
 
   export type BuiltInNodeType = string

@@ -9,11 +9,11 @@ declare module '@github/spark/hooks' {
 }
 
 declare module '*.scss' {
-  const content: any
+  const content: unknown
   export default content
 }
 
 declare module '*.module.scss' {
-  const classes: any
+  const classes: Record<string, string>
   export default classes
 }

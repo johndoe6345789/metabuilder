@@ -1,3 +1,15 @@
+// The index signatures below are `any`, not `unknown`, on purpose: this
+// module's NodeResult/ExecutionMetrics/LogEntry/ExecutionRecord are a
+// genuinely different, independently-maintained shape from the ones in
+// ../../../libraries/types/workflow.ts (different field names entirely --
+// `timestamp: number` vs `startedAt?: string`, `startTime: number` vs
+// `startTime: Date`, extra fields like `dataProcessed`/`apiCallsMade` on one
+// side only). ExecutionMonitor.tsx assigns the libraries/types version into
+// this one, and TS only accepts that across an index signature when it's
+// `any` -- `unknown` correctly re-exposes the structural mismatch (missing
+// index signature on the source) as a hard error. Reconciling the two type
+// families is a cross-repo change outside this file's scope; until then,
+// `any` here is a documented, load-bearing escape hatch, not an oversight.
 declare module '@metabuilder/workflow' {
   export interface NodeResult {
     status:
@@ -18,7 +30,7 @@ declare module '@metabuilder/workflow' {
     duration?: number
     durationMs?: number
     retries?: number
-    [key: string]: any
+    [key: string]: any // eslint-disable-line @typescript-eslint/no-explicit-any
   }
 
   export interface ExecutionMetrics {
@@ -38,7 +50,7 @@ declare module '@metabuilder/workflow' {
     validationFailures: number
     recoveryAttempts: number
     recoverySuccesses: number
-    [key: string]: any
+    [key: string]: any // eslint-disable-line @typescript-eslint/no-explicit-any
   }
 
   export interface LogEntry {
@@ -46,7 +58,7 @@ declare module '@metabuilder/workflow' {
     level: 'debug' | 'info' | 'warn' | 'error'
     message: string
     nodeId?: string
-    [key: string]: any
+    [key: string]: any // eslint-disable-line @typescript-eslint/no-explicit-any
   }
 
   export interface ExecutionState {
@@ -73,6 +85,6 @@ declare module '@metabuilder/workflow' {
     startTime: Date
     duration?: number
     error?: { message: string; code: string; nodeId?: string }
-    [key: string]: any
+    [key: string]: any // eslint-disable-line @typescript-eslint/no-explicit-any
   }
 }

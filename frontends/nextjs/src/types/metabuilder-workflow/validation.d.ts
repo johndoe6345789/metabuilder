@@ -4,7 +4,7 @@ declare module '@metabuilder/workflow' {
     message: string
     severity?: 'error' | 'warning' | 'info'
     code: string
-    [key: string]: any
+    [key: string]: unknown
   }
 
   export interface WorkflowValidationResult {

@@ -10,6 +10,6 @@ declare module '@metabuilder/workflow' {
     credentialId: string
     credentialName?: string
     credentialType?: string
-    [key: string]: any
+    [key: string]: unknown
   }
 }
