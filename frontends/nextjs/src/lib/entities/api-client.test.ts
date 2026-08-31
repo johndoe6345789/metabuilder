@@ -179,6 +179,21 @@ describe('API Client', () => {
       expect(result.status).toBe(500)
       expect(result.error).toBe('Network error')
     })
+
+    it('unwraps the real DBAL double-nested list envelope', async () => {
+      // DBAL's actual list shape is { data: { data: [...] } } with no
+      // `success` key -- a naive `Array.isArray(x) ? x : x.data` would
+      // return the inner { data: [...] } object here instead of the rows.
+      vi.mocked(fetch).mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: () => ({ data: { data: [{ id: '1' }], total: 1 } }),
+      } as unknown as Response)
+
+      const result = await fetchEntityList('acme', 'forum', 'posts')
+
+      expect(result.data).toEqual([{ id: '1' }])
+    })
   })
 
   describe('fetchEntity', () => {

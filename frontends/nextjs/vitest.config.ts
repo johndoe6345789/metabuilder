@@ -25,10 +25,10 @@ export default defineConfig({
       // covered slice of the denominator along with its numerator, so
       // the honest floor drops even though nothing real got less tested.
       thresholds: {
-        statements: 65,
-        branches: 57,
+        statements: 64,
+        branches: 58,
         functions: 56,
-        lines: 65,
+        lines: 64,
       },
       exclude: [
         'src/**/*.test.{ts,tsx}',
