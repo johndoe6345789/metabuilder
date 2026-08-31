@@ -10,7 +10,7 @@ function buildAuthResponse(authenticated: boolean): NextResponse {
   return NextResponse.json({ authenticated })
 }
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
+export function GET(request: NextRequest): NextResponse {
   const expected = getExpectedVaultSessionToken()
   if (expected === null) {
     return NextResponse.json(
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   return response
 }
 
-export async function DELETE(): Promise<NextResponse> {
+export function DELETE(): NextResponse {
   const response = buildAuthResponse(false)
   response.cookies.set(VAULT_COOKIE_NAME, '', {
     httpOnly: true,

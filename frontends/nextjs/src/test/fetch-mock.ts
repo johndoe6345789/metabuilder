@@ -15,7 +15,7 @@ export type Route = { match: string; body: unknown; status?: number }
 export function installFetch(routes: Route[]) {
   const calls: string[] = []
 
-  const impl = vi.fn(async (input: RequestInfo | URL) => {
+  const impl = vi.fn((input: RequestInfo | URL) => {
     // A Request stringifies to [object Request]; take its url instead.
     const url =
       typeof input === 'string'
@@ -27,15 +27,18 @@ export function installFetch(routes: Route[]) {
 
     const route = routes.find(r => url.includes(r.match))
     if (route === undefined) {
-      throw new Error(`Unmocked fetch: ${url}`)
+      return Promise.reject(new Error(`Unmocked fetch: ${url}`))
     }
 
-    return {
+    // Real Response methods return promises -- callers may chain .catch()
+    // off res.json() directly rather than always awaiting it first.
+    const response = {
       ok: (route.status ?? 200) < 400,
       status: route.status ?? 200,
-      json: async () => route.body,
-      text: async () => JSON.stringify(route.body),
-    } as Response
+      json: () => Promise.resolve(route.body),
+      text: () => Promise.resolve(JSON.stringify(route.body)),
+    }
+    return Promise.resolve(response as unknown as Response)
   })
 
   vi.stubGlobal('fetch', impl)

@@ -85,7 +85,7 @@ export function useTestRunner() {
     [workflow]
   )
 
-  const runAll = useCallback(async () => {
+  const runAll = useCallback(() => {
     setRunning(true)
     const out: Record<string, TestResult> = {}
     for (const tc of cases) out[tc.id] = runOne(tc)

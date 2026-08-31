@@ -12,18 +12,21 @@ export function mockFetch(body: unknown, ok = true): FetchCall[] {
   const calls: FetchCall[] = []
   vi.stubGlobal(
     'fetch',
-    vi.fn(async (url: string, init?: RequestInit) => {
+    vi.fn((url: string, init?: RequestInit) => {
       calls.push({
         url: String(url),
         method: init?.method ?? 'GET',
         body: init?.body as string | undefined,
       })
-      return {
+      // Real Response methods return promises -- callers may chain
+      // .catch() off res.json() directly rather than always awaiting it.
+      const response = {
         ok,
         status: ok ? 200 : 500,
-        json: async () => body,
-        text: async () => JSON.stringify(body),
-      } as Response
+        json: () => Promise.resolve(body),
+        text: () => Promise.resolve(JSON.stringify(body)),
+      }
+      return Promise.resolve(response as unknown as Response)
     })
   )
   return calls

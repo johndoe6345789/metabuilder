@@ -70,7 +70,12 @@ export class MultiTenantContextBuilder {
     this.options = { ...DEFAULT_OPTIONS, ...options }
   }
 
-  /** The context this request may run under, or a throw explaining why not. */
+  /** The context this request may run under, or a throw explaining why not.
+   *  Deliberately async though nothing inside awaits: assertTenantAccess/
+   *  assertContextSafe throw synchronously, and callers rely on that
+   *  surfacing as a rejected promise (see the .rejects.toThrow() test)
+   *  rather than a synchronous exception. */
+  // eslint-disable-next-line @typescript-eslint/require-await
   async build(
     requestData?: ContextRequestData,
     trigger?: WorkflowTrigger
