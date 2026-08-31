@@ -32,12 +32,15 @@ export default defineConfig({
       // splitting api/dbal/schema/route.ts and backfilling approve/reject
       // tests (measured 65.67/58.47/57.58/65.71). Raised again in phase 43
       // after splitting use-package-registry.ts and backfilling publish
-      // tests (measured 65.97/58.73/57.89/66).
+      // tests (measured 65.97/58.73/57.89/66). Raised again in phase 44
+      // after splitting api/v1/[...slug]/route.ts and backfilling unit
+      // tests for its extracted pure helpers (measured 66.12/58.9/58.03/
+      // 66.12).
       thresholds: {
-        statements: 65.9,
-        branches: 58.6,
-        functions: 57.8,
-        lines: 65.9,
+        statements: 66.0,
+        branches: 58.8,
+        functions: 58.0,
+        lines: 66.0,
       },
       exclude: [
         'src/**/*.test.{ts,tsx}',
