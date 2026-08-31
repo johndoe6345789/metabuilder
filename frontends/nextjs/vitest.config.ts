@@ -63,12 +63,14 @@ export default defineConfig({
       // previously-untested load() path (measured 66.29/59.66/58.24/
       // 66.22). Raised again in phase 54 after splitting page-tree.ts and
       // backfilling tests for its previously-untested saveTree (measured
-      // 66.56/59.85/58.35/66.49).
+      // 66.56/59.85/58.35/66.49). Raised again in phase 57 after splitting
+      // ComponentTreeCommonProps.tsx and backfilling its first-ever tests
+      // (measured 66.8/60.21/58.63/66.74).
       thresholds: {
-        statements: 66.5,
-        branches: 59.8,
-        functions: 58.3,
-        lines: 66.4,
+        statements: 66.7,
+        branches: 60.1,
+        functions: 58.5,
+        lines: 66.6,
       },
       exclude: [
         'src/**/*.test.{ts,tsx}',
