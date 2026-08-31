@@ -28,12 +28,14 @@ export default defineConfig({
       // split retryable-error-boundary modules (measured 65.29/58.22/
       // 57.33/65.3; kept a small margin below that for run-to-run noise).
       // Raised again in phase 41 after splitting use-workflow-editor.ts
-      // (measured 65.4/58.22/57.46/65.43).
+      // (measured 65.4/58.22/57.46/65.43). Raised again in phase 42 after
+      // splitting api/dbal/schema/route.ts and backfilling approve/reject
+      // tests (measured 65.67/58.47/57.58/65.71).
       thresholds: {
-        statements: 65.3,
-        branches: 58.1,
-        functions: 57.3,
-        lines: 65.3,
+        statements: 65.6,
+        branches: 58.4,
+        functions: 57.5,
+        lines: 65.6,
       },
       exclude: [
         'src/**/*.test.{ts,tsx}',
