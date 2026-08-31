@@ -1,90 +1,15 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Typography, Paper, Button, Chip, Alert } from '@/m3'
+import { DB_BACKENDS, DEFAULT_BACKEND } from './db-backends'
+import { useDbalHealth } from './use-dbal-health'
+import { DbBackendCard } from './DbBackendCard'
 import s from './DatabaseTab.module.scss'
-
-const DBAL_URL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
-
-interface DbBackend {
-  name: string
-  desc: string
-  env: string
-}
-
-const DB_BACKENDS: [DbBackend, ...DbBackend[]] = [
-  {
-    name: 'Memory',
-    desc: 'In-memory adapter for tests and demos',
-    env: 'DBAL_BACKEND=memory',
-  },
-  {
-    name: 'SQLite',
-    desc: 'Embedded file database for local installs',
-    env: 'DATABASE_URL=sqlite://...',
-  },
-  {
-    name: 'PostgreSQL',
-    desc: 'Primary production relational backend',
-    env: 'DATABASE_URL=postgres://...',
-  },
-  {
-    name: 'MySQL',
-    desc: 'Direct SQL backend for MySQL-compatible stores',
-    env: 'DATABASE_URL=mysql://...',
-  },
-  {
-    name: 'MongoDB',
-    desc: 'Document storage for JSON/BSON data',
-    env: 'DATABASE_URL=mongodb://...',
-  },
-  {
-    name: 'Redis',
-    desc: 'Cache and ephemeral state layer',
-    env: 'REDIS_URL=redis://...',
-  },
-  {
-    name: 'Elasticsearch',
-    desc: 'Full-text index and search backend',
-    env: 'ELASTICSEARCH_URL=http://...',
-  },
-  {
-    name: 'SurrealDB',
-    desc: 'Multi-model backend for graph-like data',
-    env: 'SURREALDB_URL=http://...',
-  },
-]
-
-const DEFAULT_BACKEND = DB_BACKENDS[0]
 
 export function DatabaseTab() {
   const [selected, setSelected] = useState(DEFAULT_BACKEND)
-  const [status, setStatus] = useState<'checking' | 'online' | 'offline'>(
-    'checking'
-  )
-  const [message, setMessage] = useState<string | null>(null)
-
-  const checkHealth = () => {
-    fetch(`${DBAL_URL}/health`, { signal: AbortSignal.timeout(5000) })
-      .then(res => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        setStatus('online')
-        setMessage(null)
-      })
-      .catch((e: unknown) => {
-        setStatus('offline')
-        setMessage(e instanceof Error ? e.message : 'DBAL health check failed')
-      })
-  }
-
-  const refresh = () => {
-    setStatus('checking')
-    checkHealth()
-  }
-
-  useEffect(() => {
-    checkHealth()
-  }, [])
+  const { status, message, refresh } = useDbalHealth()
 
   return (
     <div className={s.root}>
@@ -109,19 +34,12 @@ export function DatabaseTab() {
       {message !== null && <Alert severity="warning">{message}</Alert>}
       <div className={s.grid}>
         {DB_BACKENDS.map(db => (
-          <button
+          <DbBackendCard
             key={db.name}
-            type="button"
-            className={`${s.backend} ${selected.name === db.name ? s.selected : ''}`}
-            onClick={() => {
-              setSelected(db)
-            }}
-          >
-            <Typography variant="subtitle2">{db.name}</Typography>
-            <Typography variant="caption" color="text.secondary">
-              {db.desc}
-            </Typography>
-          </button>
+            db={db}
+            selected={selected.name === db.name}
+            onSelect={setSelected}
+          />
         ))}
       </div>
       <Paper className={s.detail}>
