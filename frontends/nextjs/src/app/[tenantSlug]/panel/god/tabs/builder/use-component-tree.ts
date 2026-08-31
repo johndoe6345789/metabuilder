@@ -12,7 +12,7 @@ import { useComponentTreePublish } from './component-tree-publish'
 export function useComponentTree() {
   const dispatch = useAppDispatch()
   const tree: TreeNode = useAppSelector(s => s.god.tree)
-  const dirty = useAppSelector(s => s.god.dirty.tree)
+  const dirty: boolean = useAppSelector(s => s.god.dirty.tree)
   const [selectedId, setSelectedId] = useState<string>('root')
 
   /**

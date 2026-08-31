@@ -21,7 +21,7 @@ const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 export function useGodWorkflow(tenant = 'system') {
   const dispatch = useAppDispatch()
   const workflow: Workflow = useAppSelector(s => s.god.workflow)
-  const dirty = useAppSelector(s => s.god.dirty.workflow)
+  const dirty: boolean = useAppSelector(s => s.god.dirty.workflow)
   const [publishing, setPublishing] = useState(false)
 
   const save = useCallback(

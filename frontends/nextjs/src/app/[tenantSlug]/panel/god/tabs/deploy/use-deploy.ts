@@ -48,8 +48,8 @@ export function useDeploy() {
           god?: GodState
           idb?: Record<string, unknown>
         }
-        if (parsed.god) dispatch(rehydrate(parsed.god))
-        if (parsed.idb) await idbRestore(parsed.idb)
+        if (parsed.god !== undefined) dispatch(rehydrate(parsed.god))
+        if (parsed.idb !== undefined) await idbRestore(parsed.idb)
         setFlash('Project imported.')
       } catch {
         setFlash('Import failed — not a valid project file.')

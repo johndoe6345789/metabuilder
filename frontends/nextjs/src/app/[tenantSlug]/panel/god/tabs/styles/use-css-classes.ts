@@ -17,7 +17,7 @@ export interface CssClass {
 export function useCssClasses() {
   const dispatch = useAppDispatch()
   const classes: CssClass[] = useAppSelector(s => s.god.css)
-  const dirty = useAppSelector(s => s.god.dirty.css)
+  const dirty: boolean = useAppSelector(s => s.god.dirty.css)
   const [publishing, setPublishing] = useState(false)
 
   const persist = useCallback(

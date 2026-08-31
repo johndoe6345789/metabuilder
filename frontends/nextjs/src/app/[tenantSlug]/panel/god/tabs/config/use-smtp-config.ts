@@ -20,7 +20,7 @@ export interface SmtpConfig {
 export function useSmtpConfig() {
   const dispatch = useAppDispatch()
   const config: SmtpConfig = useAppSelector(s => s.god.smtp)
-  const dirty = useAppSelector(s => s.god.dirty.smtp)
+  const dirty: boolean = useAppSelector(s => s.god.dirty.smtp)
   const [publishing, setPublishing] = useState(false)
 
   const set = useCallback(
