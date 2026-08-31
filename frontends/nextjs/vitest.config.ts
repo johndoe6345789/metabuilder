@@ -35,12 +35,14 @@ export default defineConfig({
       // tests (measured 65.97/58.73/57.89/66). Raised again in phase 44
       // after splitting api/v1/[...slug]/route.ts and backfilling unit
       // tests for its extracted pure helpers (measured 66.12/58.9/58.03/
-      // 66.12).
+      // 66.12). Raised again in phase 46 after splitting style-controls.ts
+      // and backfilling tests for its pure helpers (measured 66.16/58.93/
+      // 58.03/66.15).
       thresholds: {
-        statements: 66.0,
-        branches: 58.8,
+        statements: 66.1,
+        branches: 58.9,
         functions: 58.0,
-        lines: 66.0,
+        lines: 66.1,
       },
       exclude: [
         'src/**/*.test.{ts,tsx}',
