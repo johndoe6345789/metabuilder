@@ -26,7 +26,7 @@ export default defineConfig({
       // dropped even though nothing real got less tested.
       thresholds: {
         statements: 65,
-        branches: 57,
+        branches: 58,
         functions: 57,
         lines: 65,
       },
