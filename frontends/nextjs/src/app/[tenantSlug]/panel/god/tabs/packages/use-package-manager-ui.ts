@@ -31,7 +31,9 @@ export function usePackageManagerUi() {
     setEditingId(id)
     setDraft(d)
   }, [])
-  const cancelEdit = useCallback(() => setEditingId(null), [])
+  const cancelEdit = useCallback(() => {
+    setEditingId(null)
+  }, [])
   const patchDraft = useCallback((p: Partial<EditDraft>) => {
     setDraft(d => ({ ...d, ...p }))
   }, [])

@@ -23,13 +23,14 @@ export function handleCommand(
   const cmd = (parts[0] ?? '').toLowerCase()
   const now = new Date().toISOString()
 
-  const sys = (content: string) =>
+  const sys = (content: string) => {
     onSystem({
       content,
       createdBy: 'System',
       createdAt: now,
       type: 'system',
     })
+  }
 
   if (cmd === '/help') {
     sys(HELP_TEXT)

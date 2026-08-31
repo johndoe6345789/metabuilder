@@ -32,7 +32,9 @@ export function useVersions<T>(key: string) {
     versions,
     open,
     toggle,
-    close: () => setOpen(false),
+    close: () => {
+      setOpen(false)
+    },
     refresh,
     restore,
   }

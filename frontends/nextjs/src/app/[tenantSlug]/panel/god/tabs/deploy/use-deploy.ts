@@ -65,6 +65,8 @@ export function useDeploy() {
     busy,
     exportProject,
     importProject,
-    clearFlash: () => setFlash(null),
+    clearFlash: () => {
+      setFlash(null)
+    },
   }
 }

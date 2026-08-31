@@ -65,7 +65,9 @@ export function WorkflowEditor({
 
       <PropertiesDialog
         open={ed.propertiesOpen}
-        onClose={() => ed.setPropertiesOpen(false)}
+        onClose={() => {
+          ed.setPropertiesOpen(false)
+        }}
         node={ed.selectedNode}
         nodeType={
           ed.selectedNode ? ed.getNodeType(ed.selectedNode.type) : undefined

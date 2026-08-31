@@ -31,13 +31,31 @@ export function GodPanelTopBar({
           ⌂ Home
         </Button>
         <span className={s.previewLabel}>PREVIEW</span>
-        <Button variant="outlined" size="small" onClick={() => onPreview(1)}>
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={() => {
+            onPreview(1)
+          }}
+        >
           L1
         </Button>
-        <Button variant="outlined" size="small" onClick={() => onPreview(2)}>
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={() => {
+            onPreview(2)
+          }}
+        >
           L2
         </Button>
-        <Button variant="outlined" size="small" onClick={() => onPreview(3)}>
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={() => {
+            onPreview(3)
+          }}
+        >
           L3
         </Button>
         <span className={s.divider} />

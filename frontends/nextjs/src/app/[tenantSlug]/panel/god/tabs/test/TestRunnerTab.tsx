@@ -27,9 +27,7 @@ export function TestRunnerTab() {
           variant="contained"
           size="small"
           disabled={t.running}
-          onClick={() => {
-            void t.runAll()
-          }}
+          onClick={t.runAll}
         >
           {t.running ? 'Running…' : '▶ Run all'}
         </Button>
