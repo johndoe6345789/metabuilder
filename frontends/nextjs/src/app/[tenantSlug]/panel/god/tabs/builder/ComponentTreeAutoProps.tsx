@@ -15,31 +15,13 @@
  * names can be changed without touching code.
  */
 
-import { FormControl, FormLabel, Select, TextField, Typography } from '@/m3'
+import { Typography } from '@/m3'
 import { paletteItem, type TreeNode } from './builder-registry'
-import { propSchema, type PropField } from '@/components/blocks/block-props'
+import { propSchema } from '@/components/blocks/block-props'
 import { useDropdownConfigs } from '../config/use-dropdown-configs'
+import { inferred } from './auto-props-infer'
+import { AutoPropField } from './AutoPropField'
 import s from './ComponentTreeTab.module.scss'
-
-/** "runWorkflow" -> "Run workflow", "src" -> "Src". */
-function humanise(key: string): string {
-  const spaced = key.replace(/([a-z0-9])([A-Z])/g, '$1 $2').toLowerCase()
-  return spaced.charAt(0).toUpperCase() + spaced.slice(1)
-}
-
-/** Fields inferred from defaults, for a block with no schema of its own. */
-function inferred(defaults: Record<string, unknown>): PropField[] {
-  return Object.entries(defaults).map(([name, value]) => ({
-    name,
-    label: humanise(name),
-    type:
-      typeof value === 'boolean'
-        ? 'boolean'
-        : typeof value === 'number'
-          ? 'number'
-          : 'text',
-  }))
-}
 
 type Props = {
   node: TreeNode
@@ -62,115 +44,16 @@ export function ComponentTreeAutoProps({ node, onChange }: Props) {
 
   return (
     <div className={s.propCol}>
-      {fields.map(field => {
-        const current = node.props[field.name] ?? defaults[field.name]
-
-        if (field.type === 'boolean') {
-          return (
-            <label key={field.name} className={s.propCheck}>
-              <input
-                type="checkbox"
-                checked={current === true}
-                onChange={event => {
-                  onChange({ [field.name]: event.target.checked })
-                }}
-              />
-              <span>
-                {field.label}
-                {field.hint !== undefined && (
-                  <Typography
-                    variant="caption"
-                    component="span"
-                    className={s.propHint}
-                  >
-                    {field.hint}
-                  </Typography>
-                )}
-              </span>
-            </label>
-          )
-        }
-
-        if (field.type === 'select') {
-          // The tenant's own list wins over the built-in choices.
-          const custom =
-            field.source === undefined
-              ? undefined
-              : configs.find(c => c.name === field.source)
-          const options = custom?.options ?? field.options ?? []
-          const id = `prop-${node.id}-${field.name}`
-          return (
-            <FormControl key={field.name}>
-              <FormLabel htmlFor={id}>{field.label}</FormLabel>
-              <Select
-                native
-                value={typeof current === 'string' ? current : ''}
-                inputProps={{ id }}
-                onChange={
-                  ((event: React.ChangeEvent<HTMLSelectElement>) => {
-                    onChange({ [field.name]: event.target.value })
-                  }) as never
-                }
-              >
-                {options.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </Select>
-              {field.hint !== undefined && (
-                <Typography variant="caption" className={s.propHint}>
-                  {field.hint}
-                </Typography>
-              )}
-            </FormControl>
-          )
-        }
-
-        if (field.type === 'number') {
-          return (
-            <TextField
-              key={field.name}
-              size="small"
-              fullWidth
-              type="number"
-              label={field.label}
-              helperText={field.hint}
-              value={typeof current === 'number' ? String(current) : ''}
-              onChange={event => {
-                // An emptied field means "no value", not zero. `Number('') ||
-                // 0`
-                // turned every clear into a 0 that could not be undone, so a
-                // badge's count could never be returned to its default.
-                const raw = event.target.value
-                if (raw === '') {
-                  onChange({ [field.name]: undefined })
-                  return
-                }
-                const parsed = Number(raw)
-                onChange({
-                  [field.name]: Number.isNaN(parsed) ? undefined : parsed,
-                })
-              }}
-            />
-          )
-        }
-
-        return (
-          <TextField
-            key={field.name}
-            size="small"
-            fullWidth
-            label={field.label}
-            placeholder={field.placeholder}
-            helperText={field.hint}
-            value={typeof current === 'string' ? current : ''}
-            onChange={event => {
-              onChange({ [field.name]: event.target.value })
-            }}
-          />
-        )
-      })}
+      {fields.map(field => (
+        <AutoPropField
+          key={field.name}
+          field={field}
+          current={node.props[field.name] ?? defaults[field.name]}
+          configs={configs}
+          fieldId={`prop-${node.id}-${field.name}`}
+          onChange={onChange}
+        />
+      ))}
     </div>
   )
 }
