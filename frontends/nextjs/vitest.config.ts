@@ -45,11 +45,19 @@ export default defineConfig({
       // 66.75/60.04/58.69/66.76). Raised again in phase 49 after splitting
       // db-client.ts and backfilling tests for toEntityName/unwrap
       // (measured 66.8/60.07/58.88/66.81).
+      // Recalibrated down in phase 50: deleted the confirmed-dead
+      // WorkflowLoaderV2 subsystem (workflow-loader-v2.ts + loader/ +
+      // cache/, ~1830 lines including its own extensive tests) after
+      // confirming zero real callers -- run-workflow.ts and workflow-
+      // graph.ts are what production code actually uses. Removing a
+      // fully-tested subsystem drops a covered slice of the denominator
+      // along with its numerator, so the honest floor drops even though
+      // nothing real got less tested (measured 66.12/59.52/58.26/66.1).
       thresholds: {
-        statements: 66.7,
-        branches: 60.0,
-        functions: 58.8,
-        lines: 66.7,
+        statements: 66.1,
+        branches: 59.5,
+        functions: 58.2,
+        lines: 66.0,
       },
       exclude: [
         'src/**/*.test.{ts,tsx}',
