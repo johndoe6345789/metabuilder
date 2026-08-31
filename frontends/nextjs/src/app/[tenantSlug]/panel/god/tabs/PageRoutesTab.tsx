@@ -1,71 +1,15 @@
 'use client'
 
-import { useState } from 'react'
-import { Typography, Button, Chip, Alert } from '@/m3'
-import { usePageRoutes } from '@/hooks/usePageRoutes'
-import type { PageRoute, PageRouteInput } from '@/hooks/usePageRoutes'
+import { Typography, Button, Alert } from '@/m3'
 import { PageList } from './page-routes/PageList'
 import { PageFormDialog } from './page-routes/PageFormDialog'
 import { DeletePageDialog } from './page-routes/DeletePageDialog'
-import {
-  normalizeTenant,
-  previewUrl,
-  publishCounts,
-  SYSTEM_TENANT,
-} from './page-routes-logic'
+import { usePageRoutesTab } from './use-page-routes-tab'
+import { PageRoutesTenantRow } from './PageRoutesTenantRow'
 import s from './PageRoutesTab.module.scss'
-import { TenantSelect } from '@/components/tenant/TenantSelect'
 
 export function PageRoutesTab() {
-  const [tenant, setTenant] = useState(SYSTEM_TENANT)
-  const [tenantInput, setTenantInput] = useState(SYSTEM_TENANT)
-  const [editPage, setEditPage] = useState<PageRoute | null>(null)
-  const [deletePage, setDeletePage] = useState<PageRoute | null>(null)
-  const [formOpen, setFormOpen] = useState(false)
-
-  const { pages, loading, error, reload, create, update, remove } =
-    usePageRoutes(tenant)
-
-  const handleCreate = async (data: PageRouteInput, id?: string) => {
-    if (id !== undefined) {
-      await update(id, data)
-    } else {
-      await create(data)
-    }
-  }
-
-  const openCreate = () => {
-    setEditPage(null)
-    setFormOpen(true)
-  }
-
-  const openEdit = (page: PageRoute) => {
-    setEditPage(page)
-    setFormOpen(true)
-  }
-
-  const openPreview = (page: PageRoute) => {
-    window.open(
-      previewUrl(page, tenant, window.location.origin),
-      '_blank',
-      'noopener'
-    )
-  }
-
-  const applyTenant = (next?: string) => {
-    setTenant(normalizeTenant(next ?? tenantInput))
-  }
-
-  const handleFormClose = () => {
-    setFormOpen(false)
-    reload()
-  }
-
-  const handleDeleteClose = () => {
-    setDeletePage(null)
-  }
-
-  const { live, draft } = publishCounts(pages)
+  const t = usePageRoutesTab()
 
   return (
     <div className={s.root}>
@@ -79,73 +23,54 @@ export function PageRoutesTab() {
             component tree rendered at runtime.
           </Typography>
         </div>
-        <Button variant="contained" onClick={openCreate}>
+        <Button variant="contained" onClick={t.openCreate}>
           + New Page
         </Button>
       </div>
 
-      <div className={s.tenantRow}>
-        <TenantSelect
-          id="page-routes-tenant"
-          value={tenantInput}
-          onChange={next => {
-            setTenantInput(next)
-            applyTenant(next)
-          }}
-        />
-        <Button
-          variant="outlined"
-          size="small"
-          onClick={() => {
-            applyTenant()
-          }}
-        >
-          Load
-        </Button>
-        <Chip label={`/${tenant}/`} size="small" variant="outlined" />
-        {pages.length > 0 && (
-          <>
-            <Chip label={`${live} live`} size="small" color="success" />
-            {draft > 0 && <Chip label={`${draft} draft`} size="small" />}
-          </>
-        )}
-      </div>
+      <PageRoutesTenantRow
+        tenant={t.tenant}
+        tenantInput={t.tenantInput}
+        setTenantInput={t.setTenantInput}
+        applyTenant={t.applyTenant}
+        pageCount={t.pages.length}
+        live={t.live}
+        draft={t.draft}
+      />
 
-      {error !== null && (
+      {t.error !== null && (
         <Alert severity="warning" style={{ marginBottom: 16 }}>
-          DBAL offline — {error}. Connect daemon to manage pages.
+          DBAL offline — {t.error}. Connect daemon to manage pages.
         </Alert>
       )}
 
-      {loading ? (
+      {t.loading ? (
         <Typography variant="body2" color="text.secondary">
           Loading pages…
         </Typography>
       ) : (
         <PageList
-          pages={pages}
-          onEdit={openEdit}
-          onDelete={p => {
-            setDeletePage(p)
-          }}
-          onPreview={openPreview}
+          pages={t.pages}
+          onEdit={t.openEdit}
+          onDelete={t.setDeletePage}
+          onPreview={t.openPreview}
         />
       )}
 
       <PageFormDialog
-        key={editPage?.id ?? 'new'}
-        open={formOpen}
-        page={editPage}
-        tenant={tenant}
-        onClose={handleFormClose}
-        onSubmit={handleCreate}
+        key={t.editPage?.id ?? 'new'}
+        open={t.formOpen}
+        page={t.editPage}
+        tenant={t.tenant}
+        onClose={t.handleFormClose}
+        onSubmit={t.handleCreate}
       />
 
       <DeletePageDialog
-        open={deletePage !== null}
-        page={deletePage}
-        onClose={handleDeleteClose}
-        onConfirm={remove}
+        open={t.deletePage !== null}
+        page={t.deletePage}
+        onClose={t.handleDeleteClose}
+        onConfirm={t.remove}
       />
     </div>
   )
