@@ -67,12 +67,14 @@ export default defineConfig({
       // ComponentTreeCommonProps.tsx and backfilling its first-ever tests
       // (measured 66.8/60.21/58.63/66.74). Raised again in phase 58 after
       // splitting product-packages.ts and backfilling its first-ever
-      // tests (measured 66.88/60.21/58.8/66.8).
+      // tests (measured 66.88/60.21/58.8/66.8). Raised again in phase 59
+      // after splitting vault-fallback-store.ts (measured 66.9/60.21/
+      // 58.8/66.82).
       thresholds: {
-        statements: 66.8,
-        branches: 60.1,
-        functions: 58.7,
-        lines: 66.7,
+        statements: 66.85,
+        branches: 60.2,
+        functions: 58.8,
+        lines: 66.8,
       },
       exclude: [
         'src/**/*.test.{ts,tsx}',

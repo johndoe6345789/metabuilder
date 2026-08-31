@@ -1,0 +1,32 @@
+export const ADMINISTRATION_GROUP_LOGINS = [
+  {
+    slug: 'admin',
+    title: 'Admin operator',
+    username: 'admin',
+    password: 'admin1234',
+    group: 'Administration',
+    notes: 'Covers admin and configuration flows.',
+    loginUrl: '/app/login',
+    appUrl: '/app/admin',
+  },
+  {
+    slug: 'god',
+    title: 'God operator',
+    username: 'god',
+    password: 'god1234',
+    group: 'Administration',
+    notes: 'Exercises god panel controls.',
+    loginUrl: '/app/login',
+    appUrl: '/app/god-panel',
+  },
+  {
+    slug: 'supergod',
+    title: 'Supergod operator',
+    username: 'supergod',
+    password: 'supergod1234',
+    group: 'Administration',
+    notes: 'Exercises super-god workflows.',
+    loginUrl: '/app/login',
+    appUrl: '/app/super-god-panel',
+  },
+]

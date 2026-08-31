@@ -1,0 +1,32 @@
+export const TESTING_GROUP_LOGINS = [
+  {
+    slug: 'guest',
+    title: 'Guest viewer',
+    username: 'guest',
+    password: 'guest1234',
+    group: 'Public',
+    notes: 'Low-friction smoke test account.',
+    loginUrl: '/app/login',
+    appUrl: '/app',
+  },
+  {
+    slug: 'qa',
+    title: 'QA engineer',
+    username: 'qa',
+    password: 'qa1234',
+    group: 'Testing',
+    notes: 'Used for general QA runs.',
+    loginUrl: '/app/login',
+    appUrl: '/app/dashboard',
+  },
+  {
+    slug: 'analyst',
+    title: 'Analytics reviewer',
+    username: 'analyst',
+    password: 'analyst1234',
+    group: 'Testing',
+    notes: 'Checks reporting surfaces and read-only flows.',
+    loginUrl: '/app/login',
+    appUrl: '/app/dashboard',
+  },
+]

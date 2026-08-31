@@ -1,0 +1,32 @@
+export const DEFAULT_GROUP_LOGINS = [
+  {
+    slug: 'demo',
+    title: 'Demo user',
+    username: 'demo',
+    password: 'demo1234',
+    group: 'Default',
+    notes: 'Primary smoke-test login.',
+    loginUrl: '/app/login',
+    appUrl: '/app',
+  },
+  {
+    slug: 'alice',
+    title: 'Alice tester',
+    username: 'alice',
+    password: 'alice1234',
+    group: 'Default',
+    notes: 'Secondary test account.',
+    loginUrl: '/app/login',
+    appUrl: '/app',
+  },
+  {
+    slug: 'bob',
+    title: 'Bob tester',
+    username: 'bob',
+    password: 'bob12345',
+    group: 'Default',
+    notes: 'Used for permission and role checks.',
+    loginUrl: '/app/login',
+    appUrl: '/app',
+  },
+]
