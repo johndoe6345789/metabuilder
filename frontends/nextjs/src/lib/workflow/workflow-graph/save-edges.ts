@@ -10,6 +10,13 @@ export async function saveEdges(
   workflowId: string,
   edges: GraphEdges
 ): Promise<boolean> {
+  // GraphEdges says these levels are always present, but the only caller
+  // (use-god-workflow.ts) reaches this via `workflow.connections as unknown
+  // as GraphEdges` -- a double-unknown cast from @/workflow-editor's own
+  // Connection[] (a flat array), not this nested Record<string,
+  // Record<string, Record<string, ConnectionTarget[]>>> adjacency shape at
+  // all. The declared type doesn't describe what's actually on the wire
+  // here, so every level falls back defensively rather than trusting it.
   for (const [sourceKey, handles] of Object.entries(edges ?? {})) {
     for (const [handle, outputs] of Object.entries(handles ?? {})) {
       for (const [sourceIndex, conns] of Object.entries(outputs ?? {})) {

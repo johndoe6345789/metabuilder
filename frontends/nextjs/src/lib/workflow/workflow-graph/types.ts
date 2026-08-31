@@ -21,9 +21,12 @@ export interface NodeRow {
   nodeKey: string
   name: string
   type: string
-  typeVersion: number
-  positionX: number
-  positionY: number
+  // Genuinely optional, not just defensive typing: this is DBAL row data
+  // cast via readList<NodeRow>(), so a row from before these columns
+  // existed (or written by an older client) can lack them outright.
+  typeVersion?: number
+  positionX?: number
+  positionY?: number
 }
 
 export interface ParamRow {

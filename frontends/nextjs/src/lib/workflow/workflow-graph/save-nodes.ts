@@ -21,8 +21,15 @@ export async function saveNodes(
         tenantId: tenant,
         workflowId,
         nodeKey: node.id,
-        name: node.name || node.id,
+        name: node.name.length > 0 ? node.name : node.id,
         type: node.type,
+        // GraphNode says these are always present, but the only caller
+        // (use-god-workflow.ts) reaches this via `workflow.nodes as unknown
+        // as GraphNode[]` -- a double-unknown cast from @/workflow-editor's
+        // own WorkflowNode, which has no typeVersion field at all and a
+        // `Position` ({x,y}) rather than a [number, number] tuple. The
+        // declared type doesn't describe what's actually on the wire here,
+        // so these fall back defensively rather than trusting it.
         typeVersion: node.typeVersion ?? 1,
         positionX: node.position?.[0] ?? 0,
         positionY: node.position?.[1] ?? 0,
