@@ -30,12 +30,14 @@ export default defineConfig({
       // Raised again in phase 41 after splitting use-workflow-editor.ts
       // (measured 65.4/58.22/57.46/65.43). Raised again in phase 42 after
       // splitting api/dbal/schema/route.ts and backfilling approve/reject
-      // tests (measured 65.67/58.47/57.58/65.71).
+      // tests (measured 65.67/58.47/57.58/65.71). Raised again in phase 43
+      // after splitting use-package-registry.ts and backfilling publish
+      // tests (measured 65.97/58.73/57.89/66).
       thresholds: {
-        statements: 65.6,
-        branches: 58.4,
-        functions: 57.5,
-        lines: 65.6,
+        statements: 65.9,
+        branches: 58.6,
+        functions: 57.8,
+        lines: 65.9,
       },
       exclude: [
         'src/**/*.test.{ts,tsx}',
