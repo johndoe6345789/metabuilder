@@ -13,7 +13,6 @@ export type {
 export {
   applyRateLimit,
   createRateLimiter,
-  createCustomRateLimiter,
   rateLimiters,
   resetRateLimit,
   getRateLimitStatus,

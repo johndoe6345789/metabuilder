@@ -28,7 +28,7 @@ export default defineConfig({
         statements: 64,
         branches: 57,
         functions: 56,
-        lines: 64,
+        lines: 65,
       },
       exclude: [
         'src/**/*.test.{ts,tsx}',
