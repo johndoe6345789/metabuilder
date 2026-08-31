@@ -28,8 +28,13 @@ export const RESERVED_PATHS = [
 export function parseRoute(url: string): ParsedRoute {
   const result: ParsedRoute = { b_params: {} }
 
-  // Split URL into path and query
-  const [pathname = '', queryString] = url.split('?')
+  // Split URL into path and query. .at() is typed `string | undefined`
+  // under both tsconfig variants (unlike destructuring from split()'s
+  // `string[]`), and a url with no `?` genuinely produces a 1-element
+  // array at runtime -- this check is real, not just satisfying strict.
+  const urlParts = url.split('?')
+  const pathname = urlParts.at(0) ?? ''
+  const queryString = urlParts.at(1)
 
   // Parse query parameters
   if (queryString !== undefined && queryString.length > 0) {
@@ -44,11 +49,9 @@ export function parseRoute(url: string): ParsedRoute {
 
   // Try to extract tenant/package/path from segments
   // Pattern: /{tenant}/{package}/...rest
-  if (segments.length >= 1 && segments[0] !== undefined) {
-    const firstSegment = segments[0]
-    if (!isReservedPath(firstSegment)) {
-      result.tenant = firstSegment
-    }
+  const firstSegment = segments.at(0)
+  if (firstSegment !== undefined && !isReservedPath(firstSegment)) {
+    result.tenant = firstSegment
   }
 
   if (segments.length >= 2) {
@@ -83,8 +86,10 @@ export function getTableName(entity: string, tenantId?: string): string {
 export function isReservedPath(path: string): boolean {
   // Normalize path to get the first segment
   const normalizedPath = path.startsWith('/') ? path.slice(1) : path
-  const segment = normalizedPath.split('/')[0]
+  // String.split() always returns at least one element, so this is never
+  // undefined -- unlike the array-index cases above.
+  const [segment] = normalizedPath.split('/')
 
   // Check if the segment matches any reserved paths
-  return segment !== undefined && RESERVED_PATHS.includes(segment)
+  return RESERVED_PATHS.includes(segment)
 }

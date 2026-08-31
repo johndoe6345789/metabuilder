@@ -12,7 +12,7 @@ interface FieldRowProps {
 }
 
 export function FieldRow({ field, onEdit, onDelete }: FieldRowProps) {
-  const typeLabel = FIELD_TYPE_LABELS[field.type] ?? field.type
+  const typeLabel = FIELD_TYPE_LABELS[field.type]
 
   return (
     <div className={styles.row}>
@@ -23,7 +23,7 @@ export function FieldRow({ field, onEdit, onDelete }: FieldRowProps) {
       <Tooltip title="Required">
         <span
           className={`${styles.toggle} ${
-            field.required ? styles.toggleOn : styles.toggleOff
+            field.required === true ? styles.toggleOn : styles.toggleOff
           }`}
         >
           R
@@ -33,7 +33,7 @@ export function FieldRow({ field, onEdit, onDelete }: FieldRowProps) {
       <Tooltip title="Unique">
         <span
           className={`${styles.toggle} ${
-            field.unique ? styles.toggleOn : styles.toggleOff
+            field.unique === true ? styles.toggleOn : styles.toggleOff
           }`}
         >
           U
