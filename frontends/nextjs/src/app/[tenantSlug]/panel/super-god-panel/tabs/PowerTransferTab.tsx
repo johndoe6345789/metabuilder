@@ -1,40 +1,15 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
-import { Typography, Paper, Button, Chip } from '@/m3'
+import { Typography, Button } from '@/m3'
+import { usePowerTransferUsers } from './use-power-transfer-users'
+import { PowerTransferUserRow } from './PowerTransferUserRow'
 import s from './PowerTransferTab.module.scss'
-
-const DBAL_URL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
-
-interface GodUser {
-  id: string
-  username: string
-  email: string
-  role: string
-}
 
 export function PowerTransferTab() {
   const auth = useAuthContext()
-  const [allUsers, setAllUsers] = useState<GodUser[]>([])
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null)
-
-  useEffect(() => {
-    fetch(`${DBAL_URL}/system/core/user`, { signal: AbortSignal.timeout(5000) })
-      .then(res => (res.ok ? res.json() : null))
-      .then((json: { data?: GodUser[] } | null) => {
-        if (json?.data != null) {
-          setAllUsers(
-            json.data.filter(
-              u => u.id !== auth.user?.id && u.role !== 'supergod'
-            )
-          )
-        }
-      })
-      .catch(() => {
-        /* offline */
-      })
-  }, [auth.user?.id])
+  const { allUsers, selectedUserId, setSelectedUserId } =
+    usePowerTransferUsers(auth.user?.id)
 
   return (
     <div>
@@ -60,23 +35,12 @@ export function PowerTransferTab() {
       </Typography>
       <div className={s.userList}>
         {allUsers.map(user => (
-          <Paper
+          <PowerTransferUserRow
             key={user.id}
-            className={`${s.userRow} ${
-              selectedUserId === user.id ? s.userRowSelected : ''
-            }`}
-            onClick={() => {
-              setSelectedUserId(user.id)
-            }}
-          >
-            <div>
-              <Typography variant="subtitle2">{user.username}</Typography>
-              <Typography variant="caption" color="text.secondary">
-                {user.email}
-              </Typography>
-            </div>
-            <Chip label={user.role} size="small" variant="outlined" />
-          </Paper>
+            user={user}
+            selected={selectedUserId === user.id}
+            onSelect={setSelectedUserId}
+          />
         ))}
         {allUsers.length === 0 && (
           <div className={s.empty}>

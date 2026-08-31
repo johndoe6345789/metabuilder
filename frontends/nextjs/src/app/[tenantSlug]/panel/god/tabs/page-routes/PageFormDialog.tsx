@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import {
   Dialog,
   DialogTitle,
@@ -11,6 +10,7 @@ import {
 } from '@/m3'
 import type { PageRoute, PageRouteInput } from '@/hooks/usePageRoutes'
 import { PageFormFields } from './PageFormFields'
+import { usePageForm } from './use-page-form'
 
 interface PageFormDialogProps {
   open: boolean
@@ -20,20 +20,6 @@ interface PageFormDialogProps {
   onSubmit: (data: PageRouteInput, id?: string) => Promise<void>
 }
 
-const DEFAULTS: PageRouteInput = {
-  path: '/',
-  title: '',
-  description: null,
-  level: 0,
-  requiresAuth: false,
-  requiredRole: null,
-  pageTreeId: null,
-  isPublished: true,
-  sortOrder: 0,
-  tenantId: null,
-  packageId: null,
-}
-
 export function PageFormDialog({
   open,
   page,
@@ -41,39 +27,15 @@ export function PageFormDialog({
   onClose,
   onSubmit,
 }: PageFormDialogProps) {
-  const [form, setForm] = useState<Partial<PageRouteInput>>(
-    () => page ?? { ...DEFAULTS, tenantId: tenant }
-  )
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  const handleChange = <K extends keyof PageRouteInput>(
-    field: K,
-    value: PageRouteInput[K]
-  ) => {
-    setForm(f => ({ ...f, [field]: value }))
-  }
-
-  const handleSubmit = async () => {
-    setSaving(true)
-    setError(null)
-    try {
-      const data: PageRouteInput = {
-        ...DEFAULTS,
-        ...form,
-        tenantId: tenant,
-      }
-      await onSubmit(data, page?.id)
-      onClose()
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to save')
-    } finally {
-      setSaving(false)
-    }
-  }
-
-  const pathValid = (form.path?.length ?? 0) > 0
-  const titleValid = (form.title?.length ?? 0) > 0
+  const {
+    form,
+    saving,
+    error,
+    handleChange,
+    handleSubmit,
+    pathValid,
+    titleValid,
+  } = usePageForm({ page, tenant, onSubmit, onClose })
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>

@@ -1,15 +1,9 @@
 'use client'
 
-import { Button, TextField, Typography } from '@/m3'
-import { useTestRunner, type TestResult } from './use-test-runner'
+import { Button, Typography } from '@/m3'
+import { useTestRunner } from './use-test-runner'
+import { TestCaseRow } from './TestCaseRow'
 import s from './TestRunnerTab.module.scss'
-
-function badge(r: TestResult | undefined) {
-  if (!r) return { cls: '', label: '—' }
-  if (r.status === 'pass') return { cls: 'pass', label: '✓ Pass' }
-  if (r.status === 'fail') return { cls: 'fail', label: '✕ Fail' }
-  return { cls: 'err', label: '⚠ Error' }
-}
 
 export function TestRunnerTab() {
   const t = useTestRunner()
@@ -47,63 +41,15 @@ export function TestRunnerTab() {
       </Typography>
 
       <div className={s.list}>
-        {t.cases.map(c => {
-          const r = t.results[c.id]
-          const b = badge(r)
-          return (
-            <div key={c.id} className={s.case}>
-              <div className={s.caseHead}>
-                <TextField
-                  size="small"
-                  label="Test name"
-                  value={c.name}
-                  onChange={e => {
-                    t.update(c.id, { name: e.target.value })
-                  }}
-                />
-                <span className={`${s.badge} ${b.cls ? s[b.cls] : ''}`}>
-                  {b.label}
-                </span>
-                <button
-                  className={s.del}
-                  onClick={() => {
-                    t.remove(c.id)
-                  }}
-                >
-                  ✕
-                </button>
-              </div>
-              <div className={s.io}>
-                <div className={s.field}>
-                  <label>Input (JSON)</label>
-                  <textarea
-                    className={s.code}
-                    value={c.input}
-                    onChange={e => {
-                      t.update(c.id, { input: e.target.value })
-                    }}
-                  />
-                </div>
-                <div className={s.field}>
-                  <label>Expected (subset)</label>
-                  <textarea
-                    className={s.code}
-                    value={c.expected}
-                    onChange={e => {
-                      t.update(c.id, { expected: e.target.value })
-                    }}
-                  />
-                </div>
-              </div>
-              {r?.message && <div className={s.msg}>{r.message}</div>}
-              {r?.actual && (
-                <pre className={s.actual}>
-                  actual → {JSON.stringify(r.actual)}
-                </pre>
-              )}
-            </div>
-          )
-        })}
+        {t.cases.map(c => (
+          <TestCaseRow
+            key={c.id}
+            case_={c}
+            result={t.results[c.id]}
+            onUpdate={t.update}
+            onRemove={t.remove}
+          />
+        ))}
       </div>
     </div>
   )
