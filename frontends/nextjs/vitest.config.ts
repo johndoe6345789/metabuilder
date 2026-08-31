@@ -27,11 +27,13 @@ export default defineConfig({
       // Raised in phase 40 after backfilling real tests for the newly
       // split retryable-error-boundary modules (measured 65.29/58.22/
       // 57.33/65.3; kept a small margin below that for run-to-run noise).
+      // Raised again in phase 41 after splitting use-workflow-editor.ts
+      // (measured 65.4/58.22/57.46/65.43).
       thresholds: {
-        statements: 65.2,
+        statements: 65.3,
         branches: 58.1,
-        functions: 57.2,
-        lines: 65.2,
+        functions: 57.3,
+        lines: 65.3,
       },
       exclude: [
         'src/**/*.test.{ts,tsx}',
