@@ -1,5 +1,5 @@
 import type { GraphNode, GraphEdges, NodeRow, ParamRow, EdgeRow } from './types'
-import { rowsOf } from './rows-of'
+import { readList } from '@/lib/db/read-list'
 import { readValue } from './param-value'
 
 /** Reassemble a workflow's nodes and connections from its rows. */
@@ -21,9 +21,9 @@ export async function loadGraph(
     return { nodes: [], edges: {} }
   }
 
-  const nodeRows = rowsOf(await nodeRes.json()) as unknown as NodeRow[]
-  const paramRows = rowsOf(await paramRes.json()) as unknown as ParamRow[]
-  const edgeRows = rowsOf(await edgeRes.json()) as unknown as EdgeRow[]
+  const nodeRows = readList<NodeRow>(await nodeRes.json())
+  const paramRows = readList<ParamRow>(await paramRes.json())
+  const edgeRows = readList<EdgeRow>(await edgeRes.json())
 
   const paramsByNode = new Map<string, Record<string, unknown>>()
   for (const p of paramRows) {

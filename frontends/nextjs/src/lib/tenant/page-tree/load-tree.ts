@@ -1,4 +1,4 @@
-import { rowsOf } from './rows-of'
+import { readList } from '@/lib/db/read-list'
 import { assembleTree } from './assemble-tree'
 import type { NodeRow, PropRow, TreeNodeShape } from './types'
 
@@ -18,8 +18,8 @@ export async function loadTree(
   ])
   if (!nodeRes.ok || !propRes.ok) return null
 
-  const nodes = rowsOf(await nodeRes.json()) as unknown as NodeRow[]
-  const props = rowsOf(await propRes.json()) as unknown as PropRow[]
+  const nodes = readList<NodeRow>(await nodeRes.json())
+  const props = readList<PropRow>(await propRes.json())
   if (nodes.length === 0) return null
 
   return assembleTree(nodes, props)

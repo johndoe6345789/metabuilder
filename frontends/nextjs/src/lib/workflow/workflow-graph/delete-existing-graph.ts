@@ -1,4 +1,4 @@
-import { rowsOf } from './rows-of'
+import { readList } from '@/lib/db/read-list'
 
 /** Deletes every stored node and edge for a workflow, so saveGraph can
  *  write the new graph as a clean set rather than a diff. Params
@@ -14,7 +14,8 @@ export async function deleteExistingGraph(
     cache: 'no-store',
   })
   if (existingNodes.ok) {
-    for (const row of rowsOf(await existingNodes.json())) {
+    const nodeRows = readList<{ id: unknown }>(await existingNodes.json())
+    for (const row of nodeRows) {
       await fetch(`${base}/WorkflowNode/${String(row.id)}`, {
         method: 'DELETE',
       })
@@ -25,7 +26,8 @@ export async function deleteExistingGraph(
     cache: 'no-store',
   })
   if (existingEdges.ok) {
-    for (const row of rowsOf(await existingEdges.json())) {
+    const edgeRows = readList<{ id: unknown }>(await existingEdges.json())
+    for (const row of edgeRows) {
       await fetch(`${base}/WorkflowEdge/${String(row.id)}`, {
         method: 'DELETE',
       })
