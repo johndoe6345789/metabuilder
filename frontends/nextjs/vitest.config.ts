@@ -65,12 +65,14 @@ export default defineConfig({
       // backfilling tests for its previously-untested saveTree (measured
       // 66.56/59.85/58.35/66.49). Raised again in phase 57 after splitting
       // ComponentTreeCommonProps.tsx and backfilling its first-ever tests
-      // (measured 66.8/60.21/58.63/66.74).
+      // (measured 66.8/60.21/58.63/66.74). Raised again in phase 58 after
+      // splitting product-packages.ts and backfilling its first-ever
+      // tests (measured 66.88/60.21/58.8/66.8).
       thresholds: {
-        statements: 66.7,
+        statements: 66.8,
         branches: 60.1,
-        functions: 58.5,
-        lines: 66.6,
+        functions: 58.7,
+        lines: 66.7,
       },
       exclude: [
         'src/**/*.test.{ts,tsx}',
