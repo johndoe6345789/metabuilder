@@ -39,12 +39,15 @@ export default defineConfig({
       // and backfilling tests for its pure helpers (measured 66.16/58.93/
       // 58.03/66.15). Raised again in phase 47 after splitting workflow-
       // graph.ts and backfilling tests for its pure helpers (measured
-      // 66.29/59.23/58.13/66.28).
+      // 66.29/59.23/58.13/66.28). Raised again in phase 48 after splitting
+      // AppBar.tsx (previously untested) and backfilling tests for its
+      // hooks, pure helpers, and a rendering smoke test (measured
+      // 66.75/60.04/58.69/66.76).
       thresholds: {
-        statements: 66.2,
-        branches: 59.1,
-        functions: 58.1,
-        lines: 66.2,
+        statements: 66.7,
+        branches: 59.9,
+        functions: 58.6,
+        lines: 66.7,
       },
       exclude: [
         'src/**/*.test.{ts,tsx}',
