@@ -33,10 +33,13 @@ export default async function EntityPage({ params }: EntityPageProps) {
   const dbPage = await tenantPageFallback(tenantSlug, pkg, slug)
   if (dbPage !== null) return dbPage
 
-  const [entity] = slug
+  // .at() is typed `string | undefined` under both tsconfig variants
+  // (unlike destructuring/indexing from `string[]`, whose element type
+  // depends on noUncheckedIndexedAccess), so this stays real narrowing.
+  const entity = slug.at(0)
   if (entity === undefined) notFound()
-  const id = slug[1]
-  const action = slug[2]
+  const id = slug.at(1)
+  const action = slug.at(2)
 
   // Load entity schema
   const schema = await loadEntitySchema(pkg, entity)
