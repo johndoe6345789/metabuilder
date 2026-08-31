@@ -17,7 +17,7 @@ export function usePackageManagerActions(
   tenant: string
 ) {
   const doCreate = (): void => {
-    if (!ui.newName.trim()) return
+    if (ui.newName.trim().length === 0) return
     reg.create(ui.newName)
     ui.setNewName('')
     ui.setFlash('Package created')
@@ -39,13 +39,13 @@ export function usePackageManagerActions(
   // duplicate entry.
   const addWorkflow = (id: string, item: PackageRef): void => {
     const p = reg.packages.find(pkg => pkg.manifest.id === id)
-    if (!p || p.workflows.some(w => w.id === item.id)) return
+    if (p === undefined || p.workflows.some(w => w.id === item.id)) return
     reg.updateContents(id, { workflows: [...p.workflows, item] })
   }
 
   const addPageConfig = (id: string, item: PackageRef): void => {
     const p = reg.packages.find(pkg => pkg.manifest.id === id)
-    if (!p || p.pageConfigs.some(pc => pc.id === item.id)) return
+    if (p === undefined || p.pageConfigs.some(pc => pc.id === item.id)) return
     reg.updateContents(id, { pageConfigs: [...p.pageConfigs, item] })
   }
 

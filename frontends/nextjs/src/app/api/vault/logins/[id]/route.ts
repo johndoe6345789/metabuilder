@@ -57,11 +57,11 @@ export async function PUT(
   if (denied !== null) return denied
 
   const { id } = await context.params
-  if (!id) {
+  if (id.length === 0) {
     return NextResponse.json({ error: 'Missing login id' }, { status: 400 })
   }
 
-  const body = await request.json().catch(() => null)
+  const body: unknown = await request.json().catch(() => null)
   if (!isObject(body)) {
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
   }
@@ -77,17 +77,21 @@ export async function PUT(
   }
 
   const updatedAt = Date.now()
+  // asString's own fallback param, not `??`: currentVault.<field> is always
+  // a real string, so falling back to it here (rather than chaining `?? ''`
+  // after the value has already left asString's validity check) means a
+  // malformed body field -- present but not a string/number/boolean --
+  // keeps the existing value instead of silently wiping it to ''.
+  const trimmedGroup = asString(body.group, currentVault.group).trim()
   const nextEntry = {
-    slug: asString(body.slug ?? currentVault.slug ?? '').trim(),
-    title: asString(body.title ?? currentVault.title ?? '').trim(),
-    username: asString(body.username ?? currentVault.username ?? '').trim(),
-    password: asString(body.password ?? currentVault.password ?? ''),
-    group:
-      asString(body.group ?? currentVault.group ?? 'General').trim() ||
-      'General',
-    notes: asString(body.notes ?? currentVault.notes ?? '').trim(),
-    loginUrl: asString(body.loginUrl ?? currentVault.loginUrl ?? '').trim(),
-    appUrl: asString(body.appUrl ?? currentVault.appUrl ?? '').trim(),
+    slug: asString(body.slug, currentVault.slug).trim(),
+    title: asString(body.title, currentVault.title).trim(),
+    username: asString(body.username, currentVault.username).trim(),
+    password: asString(body.password, currentVault.password),
+    group: trimmedGroup.length > 0 ? trimmedGroup : 'General',
+    notes: asString(body.notes, currentVault.notes).trim(),
+    loginUrl: asString(body.loginUrl, currentVault.loginUrl).trim(),
+    appUrl: asString(body.appUrl, currentVault.appUrl).trim(),
     tenantId: 'system',
     createdAt: currentVault.createdAt,
     updatedAt,
@@ -146,7 +150,7 @@ export async function DELETE(
   if (denied !== null) return denied
 
   const { id } = await context.params
-  if (!id) {
+  if (id.length === 0) {
     return NextResponse.json({ error: 'Missing login id' }, { status: 400 })
   }
 

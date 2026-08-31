@@ -30,7 +30,7 @@ export function TestCaseRow({
             onUpdate(c.id, { name: e.target.value })
           }}
         />
-        <span className={`${s.badge} ${b.cls ? s[b.cls] : ''}`}>
+        <span className={`${s.badge} ${b.cls.length > 0 ? s[b.cls] : ''}`}>
           {b.label}
         </span>
         <button
@@ -64,8 +64,10 @@ export function TestCaseRow({
           />
         </div>
       </div>
-      {r?.message && <div className={s.msg}>{r.message}</div>}
-      {r?.actual && (
+      {r?.message !== undefined && r.message.length > 0 && (
+        <div className={s.msg}>{r.message}</div>
+      )}
+      {r?.actual !== undefined && (
         <pre className={s.actual}>actual → {JSON.stringify(r.actual)}</pre>
       )}
     </div>
