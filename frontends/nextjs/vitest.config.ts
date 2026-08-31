@@ -53,11 +53,17 @@ export default defineConfig({
       // fully-tested subsystem drops a covered slice of the denominator
       // along with its numerator, so the honest floor drops even though
       // nothing real got less tested (measured 66.12/59.52/58.26/66.1).
+      // Recalibrated down again in phase 52: deleted the confirmed-dead
+      // async-error-boundary.ts (retry/timeout wrapper utilities, zero
+      // real callers -- its own test file even documents the
+      // attempt-always-0 quirk as expected behavior, confirming it was
+      // never wired to anything that would have surfaced it) (measured
+      // 66/59.39/58.15/65.96).
       thresholds: {
-        statements: 66.1,
-        branches: 59.5,
-        functions: 58.2,
-        lines: 66.0,
+        statements: 65.9,
+        branches: 59.3,
+        functions: 58.1,
+        lines: 65.9,
       },
       exclude: [
         'src/**/*.test.{ts,tsx}',
