@@ -42,11 +42,13 @@ export default defineConfig({
       // 66.29/59.23/58.13/66.28). Raised again in phase 48 after splitting
       // AppBar.tsx (previously untested) and backfilling tests for its
       // hooks, pure helpers, and a rendering smoke test (measured
-      // 66.75/60.04/58.69/66.76).
+      // 66.75/60.04/58.69/66.76). Raised again in phase 49 after splitting
+      // db-client.ts and backfilling tests for toEntityName/unwrap
+      // (measured 66.8/60.07/58.88/66.81).
       thresholds: {
         statements: 66.7,
-        branches: 59.9,
-        functions: 58.6,
+        branches: 60.0,
+        functions: 58.8,
         lines: 66.7,
       },
       exclude: [
