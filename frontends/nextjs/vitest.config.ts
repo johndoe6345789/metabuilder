@@ -69,11 +69,15 @@ export default defineConfig({
       // splitting product-packages.ts and backfilling its first-ever
       // tests (measured 66.88/60.21/58.8/66.8). Raised again in phase 59
       // after splitting vault-fallback-store.ts (measured 66.9/60.21/
-      // 58.8/66.82).
+      // 58.8/66.82). Raised again in phase 60 after splitting
+      // api/bootstrap/route.ts, generifying its four repeated seed-
+      // attempt try/catch blocks into trackSeedAttempt, and backfilling
+      // tests for it and hasValidSetupSecret (measured 66.95/60.25/
+      // 58.99/66.87).
       thresholds: {
-        statements: 66.85,
+        statements: 66.9,
         branches: 60.2,
-        functions: 58.8,
+        functions: 58.9,
         lines: 66.8,
       },
       exclude: [
