@@ -1,7 +1,6 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import Link from 'next/link'
 import type { CSSProperties } from 'react'
 import {
   getSidebarItems,
@@ -9,44 +8,14 @@ import {
   getLevelLabel,
   getLevelColor,
 } from '@/lib/packages/navigation'
-import type { PackageNavItem } from '@/lib/packages/navigation'
 import { tenantGodPanelPath, tenantPath } from '@/lib/tenant/workspace-paths'
+import { SidebarUserHeader } from './SidebarUserHeader'
+import { SidebarNavList } from './SidebarNavList'
+import { SidebarPackages } from './SidebarPackages'
+import type { SidebarProps } from './sidebar-types'
 import s from './Sidebar.module.scss'
 
-const iconMap: Record<string, string> = {
-  dashboard: 'D',
-  live_tv: 'S',
-  person: 'P',
-  chat: 'C',
-  chat_bubble: 'C',
-  admin: 'A',
-  build: 'G',
-  crown: 'S',
-  settings: '⚙',
-  package: 'K',
-  analytics: 'A',
-  forum: 'F',
-  gallery: 'G',
-  blog: 'B',
-  guestbook: 'G',
-  music: 'M',
-  marketplace: 'M',
-}
-
-function iconChar(icon: string): string {
-  return iconMap[icon] ?? icon.charAt(0).toUpperCase()
-}
-
-export interface SidebarProps {
-  userLevel: number
-  tenantId: string
-  username: string
-  role: string
-  packages?: PackageNavItem[]
-  /** Set on narrow viewports, where the sidebar is an overlay that has to
-   *  close itself after a link is followed. */
-  onNavigate?: () => void
-}
+export type { SidebarProps } from './sidebar-types'
 
 export function Sidebar({
   userLevel,
@@ -59,9 +28,7 @@ export function Sidebar({
   const pathname = usePathname()
   const staticItems = getSidebarItems(userLevel)
   const bottomItems = getBottomSidebarItems(userLevel)
-  const levelLabel = getLevelLabel(userLevel)
   const navigable = packages.filter(p => p.showInNav && p.level <= userLevel)
-  const levelColor = getLevelColor(userLevel)
   // Every workspace route has a tenant-scoped twin; link there directly.
   const itemHref = (path: string) =>
     path === '/god-panel'
@@ -71,83 +38,41 @@ export function Sidebar({
   return (
     <aside
       className={s.paper}
-      style={{ '--level-accent': levelColor } as CSSProperties}
+      style={{ '--level-accent': getLevelColor(userLevel) } as CSSProperties}
     >
-      <div className={s.userHeader}>
-        <div className={s.userRow}>
-          <div className={s.avatar}>{username.charAt(0).toUpperCase()}</div>
-          <div className={s.userText}>
-            <div className={s.userName}>{username}</div>
-            <div className={s.userRole}>{role}</div>
-          </div>
-        </div>
-        <span className={s.levelChip}>
-          Level {userLevel} — {levelLabel}
-        </span>
-      </div>
+      <SidebarUserHeader
+        username={username}
+        role={role}
+        userLevel={userLevel}
+        levelLabel={getLevelLabel(userLevel)}
+      />
 
       <div className={s.navLabel}>Navigation</div>
 
       <nav className={s.navList}>
-        {staticItems.map(item => {
-          const href = itemHref(item.path)
-          const active = pathname === href || pathname.startsWith(href + '/')
-          return (
-            <Link
-              key={item.id}
-              href={href}
-              className={`${s.navItem} ${active ? s.active : ''}`}
-              onClick={onNavigate}
-            >
-              <span className={s.icon}>{iconChar(item.icon)}</span>
-              {item.label}
-            </Link>
-          )
-        })}
+        <SidebarNavList
+          items={staticItems}
+          itemHref={itemHref}
+          pathname={pathname}
+          onNavigate={onNavigate}
+          prefixMatch
+        />
 
-        {navigable.length > 0 && (
-          <>
-            <div className={s.divider} />
-            <div className={s.sectionLabel}>Packages</div>
-            {navigable.map(pkg => {
-              const path = tenantPath(tenantId, `/packages/${pkg.packageId}`)
-              const active =
-                pathname === path || pathname.startsWith(path + '/')
-              return (
-                <Link
-                  key={pkg.packageId}
-                  href={path}
-                  className={`${s.navItem} ${active ? s.active : ''}`}
-                  onClick={onNavigate}
-                >
-                  <span className={s.icon}>
-                    {pkg.icon.charAt(0).toUpperCase()}
-                  </span>
-                  {pkg.navLabel}
-                  <span className={s.pkgBadge}>L{pkg.level}</span>
-                </Link>
-              )
-            })}
-          </>
-        )}
+        <SidebarPackages
+          navigable={navigable}
+          tenantId={tenantId}
+          pathname={pathname}
+          onNavigate={onNavigate}
+        />
       </nav>
 
       <div className={s.bottom}>
-        {bottomItems.map(item => {
-          const href = itemHref(item.path)
-          const active = pathname === href
-          return (
-            <Link
-              key={item.id}
-              href={href}
-              className={`${s.navItem} ${active ? s.active : ''}`}
-              onClick={onNavigate}
-            >
-              <span className={s.icon}>{iconChar(item.icon)}</span>
-              {item.label}
-            </Link>
-          )
-        })}
+        <SidebarNavList
+          items={bottomItems}
+          itemHref={itemHref}
+          pathname={pathname}
+          onNavigate={onNavigate}
+        />
       </div>
     </aside>
   )
