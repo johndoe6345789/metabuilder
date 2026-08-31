@@ -20,11 +20,15 @@ export default defineConfig({
       // has already been earned, so the number can only go up. Raise it as
       // each batch lands rather than setting an aspirational figure that is
       // red every day and therefore ignored.
+      // Recalibrated down in phase 31: deleting the confirmed-dead
+      // package-admin subsystem (its own tests included) removed a
+      // fully-covered slice of the denominator, so the honest floor
+      // dropped even though nothing real got less tested.
       thresholds: {
-        statements: 66,
-        branches: 58,
-        functions: 58,
-        lines: 66,
+        statements: 65,
+        branches: 57,
+        functions: 57,
+        lines: 65,
       },
       exclude: [
         'src/**/*.test.{ts,tsx}',
