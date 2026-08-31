@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom'
 import { useStreamApps } from './useStreamApps'
 import { IframeModal } from './IframeModal'
 import { AppsSettingsModal } from './AppsSettingsModal'
+import { AppTile } from './AppTile'
 import s from './AppsRow.module.scss'
 
 export function AppsRow() {
@@ -23,31 +24,14 @@ export function AppsRow() {
         {!loading &&
           error === null &&
           apps.map((app, i) => (
-            <a
+            <AppTile
               key={app.id}
-              href={app.url}
-              target={app.embedMode === 'newtab' ? '_blank' : undefined}
-              rel="noopener noreferrer"
-              className={s.tile}
-              style={
-                {
-                  '--bg': app.bgColor,
-                  '--fg': app.fgColor,
-                  '--i': i,
-                } as React.CSSProperties
-              }
-              onClick={e => {
-                if (app.embedMode === 'iframe') {
-                  e.preventDefault()
-                  setEmbedded({ name: app.name, url: app.url })
-                }
+              app={app}
+              index={i}
+              onEmbed={(name, url) => {
+                setEmbedded({ name, url })
               }}
-            >
-              <span className={s.tileName}>{app.name}</span>
-              <span className={s.tileArrow}>
-                {app.embedMode === 'iframe' ? '⛶' : '↗'}
-              </span>
-            </a>
+            />
           ))}
 
         <button

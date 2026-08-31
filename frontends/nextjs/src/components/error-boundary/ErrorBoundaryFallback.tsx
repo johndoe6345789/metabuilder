@@ -9,10 +9,12 @@
  */
 
 import type { ErrorView } from './error-view'
+import { ErrorHeader } from './ErrorHeader'
 import { ErrorDetails } from './error-boundary-details'
 import { ErrorStatus } from './error-boundary-status'
 import { ErrorActions } from './error-boundary-actions'
 import { ErrorSupport } from './error-boundary-support'
+import { fallbackWrapperStyle } from './fallback-wrapper-style'
 
 export type { ErrorView } from './error-view'
 
@@ -45,74 +47,30 @@ export function ErrorBoundaryFallback({
   } = view
 
   return (
-    <div
-      style={{
-        padding: '24px',
-        margin: '16px',
-        border: `1px solid ${colors.border}`,
-        borderRadius: '1.25rem',
-        backgroundColor: colors.bg,
-        boxShadow: `0 2px 4px rgba(0, 0, 0, 0.05)`,
-      }}
-    >
-      <div
-        style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}
+    <div style={fallbackWrapperStyle(colors)}>
+      <ErrorHeader
+        icon={icon}
+        category={category}
+        colors={colors}
+        userMessage={userMessage}
       >
-        <div
-          style={{
-            fontSize: '28px',
-            flexShrink: 0,
-            marginTop: '4px',
-          }}
-        >
-          {icon}
-        </div>
-        <div style={{ flex: 1 }}>
-          <h2
-            style={{
-              color: colors.text,
-              margin: '0 0 8px 0',
-              fontSize: '18px',
-              fontWeight: 600,
-            }}
-          >
-            {category === 'not-found'
-              ? 'Not Found'
-              : 'Something went wrong'}
-          </h2>
-          <p
-            style={{
-              color: '#495057',
-              margin: '0 0 12px 0',
-              fontSize: '14px',
-              lineHeight: '1.5',
-            }}
-          >
-            {userMessage}
-          </p>
-
-          <ErrorDetails error={error} category={category} />
-          <ErrorStatus
-            colors={colors}
-            errorCount={errorCount}
-            retryCount={retryCount}
-            maxAutoRetries={maxAutoRetries}
-            autoRetryScheduled={autoRetryScheduled}
-            nextRetryIn={nextRetryIn}
-          />
-          <ErrorActions
-            colors={colors}
-            onRetry={onRetry}
-            onReload={onReload}
-          />
-          <ErrorSupport
-            category={category}
-            colors={colors}
-            showSupportInfo={showSupportInfo}
-            supportEmail={supportEmail}
-          />
-        </div>
-      </div>
+        <ErrorDetails error={error} category={category} />
+        <ErrorStatus
+          colors={colors}
+          errorCount={errorCount}
+          retryCount={retryCount}
+          maxAutoRetries={maxAutoRetries}
+          autoRetryScheduled={autoRetryScheduled}
+          nextRetryIn={nextRetryIn}
+        />
+        <ErrorActions colors={colors} onRetry={onRetry} onReload={onReload} />
+        <ErrorSupport
+          category={category}
+          colors={colors}
+          showSupportInfo={showSupportInfo}
+          supportEmail={supportEmail}
+        />
+      </ErrorHeader>
     </div>
   )
 }

@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import {
   Dialog,
   DialogTitle,
@@ -11,6 +10,7 @@ import {
   Alert,
 } from '@/m3'
 import type { PageRoute } from '@/hooks/usePageRoutes'
+import { useDeleteConfirm } from './use-delete-confirm'
 
 interface DeletePageDialogProps {
   open: boolean
@@ -25,21 +25,12 @@ export function DeletePageDialog({
   onClose,
   onConfirm,
 }: DeletePageDialogProps) {
-  const [deleting, setDeleting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const { deleting, error, confirm } = useDeleteConfirm(async () => {
+    if (page !== null) await onConfirm(page.id)
+  })
 
   const handleConfirm = async () => {
-    if (page === null) return
-    setDeleting(true)
-    setError(null)
-    try {
-      await onConfirm(page.id)
-      onClose()
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Delete failed')
-    } finally {
-      setDeleting(false)
-    }
+    if (await confirm()) onClose()
   }
 
   return (
