@@ -1,6 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 
+// The component-tree and no-renderable-content resolution branches -- split
+// out of WorkspacePageSlot.test.tsx (which covers the plain-component
+// branches) to stay under the 80-line file limit.
+
 const slotData = vi.hoisted(() => ({ fetchSlot: vi.fn() }))
 vi.mock('./workspace-slot-data', () => slotData)
 
@@ -19,26 +23,36 @@ vi.mock('@/components/ui-page-renderer/UIPageRenderer', () => ({
 
 import { WorkspacePageSlot } from './WorkspacePageSlot'
 
-const Registered = () => <div data-testid="registered-component" />
-
 beforeEach(() => {
   vi.clearAllMocks()
   registry.resolveComponent.mockReturnValue(null)
 })
 
-describe('WorkspacePageSlot', () => {
-  it('renders nothing while the slot is still loading', () => {
-    slotData.fetchSlot.mockReturnValue(new Promise(() => undefined))
-    const { container } = render(
+describe('WorkspacePageSlot component tree', () => {
+  it('renders the component tree when no component resolves', async () => {
+    slotData.fetchSlot.mockResolvedValue({
+      level: 1,
+      component: null,
+      componentTree: { id: 'root' },
+    })
+    render(
       <WorkspacePageSlot path="/x">
         <p>fallback</p>
       </WorkspacePageSlot>
     )
-    expect(container.innerHTML).toBe('')
+    await waitFor(() => {
+      expect(screen.getByTestId('ui-page-renderer')).toBeTruthy()
+    })
   })
 
-  it('renders the children once resolved with nothing published', async () => {
-    slotData.fetchSlot.mockResolvedValue(null)
+  // A row that names neither -- fetchSlot's own contract says this can't
+  // happen, but the view falls back safely if it ever does.
+  it('falls back to children when the slot resolves nothing renderable', async () => {
+    slotData.fetchSlot.mockResolvedValue({
+      level: 1,
+      component: null,
+      componentTree: null,
+    })
     render(
       <WorkspacePageSlot path="/x">
         <p>fallback</p>
@@ -47,24 +61,5 @@ describe('WorkspacePageSlot', () => {
     await waitFor(() => {
       expect(screen.getByText('fallback')).toBeTruthy()
     })
-  })
-
-  it('renders the registered component when one resolves', async () => {
-    slotData.fetchSlot.mockResolvedValue({
-      level: 2,
-      component: 'dashboard_home',
-      componentTree: null,
-    })
-    registry.resolveComponent.mockReturnValue(Registered)
-    render(
-      <WorkspacePageSlot path="/x">
-        <p>fallback</p>
-      </WorkspacePageSlot>
-    )
-    await waitFor(() => {
-      expect(screen.getByTestId('registered-component')).toBeTruthy()
-    })
-    expect(screen.getByTestId('level-gate')).toBeTruthy()
-    expect(screen.queryByText('fallback')).toBeNull()
   })
 })

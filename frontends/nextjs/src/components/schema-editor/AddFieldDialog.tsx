@@ -1,17 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  Select,
-} from '@/m3'
-import type { FieldSchema, SelectChoice } from './schema-types'
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@/m3'
+import type { FieldSchema } from './schema-types'
 import { ChoicesEditor } from './ChoicesEditor'
 import { FieldMetaInputs } from './FieldMetaInputs'
+import { RelatedModelSelect } from './RelatedModelSelect'
+import { useAddField } from './use-add-field'
 import styles from './AddFieldDialog.module.scss'
 
 interface AddFieldDialogProps {
@@ -22,15 +16,6 @@ interface AddFieldDialogProps {
   onClose: () => void
 }
 
-const BLANK: FieldSchema = {
-  name: '',
-  type: 'string',
-  label: '',
-  required: false,
-  unique: false,
-  default: '',
-}
-
 export function AddFieldDialog({
   open,
   initial,
@@ -38,30 +23,11 @@ export function AddFieldDialog({
   onSave,
   onClose,
 }: AddFieldDialogProps) {
-  const [field, setField] = useState<FieldSchema>(BLANK)
-  const [choices, setChoices] = useState<SelectChoice[]>([])
-
-  useEffect(() => {
-    if (open) {
-      setField(initial ?? BLANK)
-      setChoices(initial?.choices ?? [])
-    }
-  }, [open, initial])
-
-  function patch(updates: Partial<FieldSchema>) {
-    setField(prev => ({ ...prev, ...updates }))
-  }
-
-  function handleSave() {
-    const name = field.name.trim()
-    if (name === '') return
-    onSave({
-      ...field,
-      name,
-      choices: field.type === 'select' ? choices : undefined,
-      relatedModel: field.type === 'relation' ? field.relatedModel : undefined,
-    })
-  }
+  const { field, choices, setChoices, patch, handleSave } = useAddField(
+    open,
+    initial,
+    onSave
+  )
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
@@ -77,24 +43,13 @@ export function AddFieldDialog({
           )}
 
           {field.type === 'relation' && (
-            <div className={styles.fullRow}>
-              <div className={styles.label}>Related Model</div>
-              <Select
-                native
-                size="small"
-                value={field.relatedModel ?? ''}
-                onChange={e => {
-                  patch({ relatedModel: e.target.value as string })
-                }}
-              >
-                <option value="">-- select model --</option>
-                {modelNames.map(m => (
-                  <option key={m} value={m}>
-                    {m}
-                  </option>
-                ))}
-              </Select>
-            </div>
+            <RelatedModelSelect
+              value={field.relatedModel}
+              modelNames={modelNames}
+              onChange={relatedModel => {
+                patch({ relatedModel })
+              }}
+            />
           )}
         </div>
       </DialogContent>
