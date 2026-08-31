@@ -14,28 +14,13 @@
  * browsing here, it doesn't replace it.
  */
 
-import { useCallback, useEffect, useState } from 'react'
-import { useClickOutside, useDebouncedSave } from '@metabuilder/hooks'
-import { TextField, Typography } from '@/m3'
+import { TextField } from '@/m3'
+import type { SearchSelectProps } from './search-select-types'
+import { useSearchSelect } from './use-search-select'
+import { SearchSelectResults } from './SearchSelectResults'
 import s from './SearchSelect.module.scss'
-import { readList } from '@/lib/db/read-list'
 
-const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
-
-export interface SearchSelectItem {
-  id: string
-  label: string
-}
-
-interface SearchSelectProps {
-  tenant?: string
-  packageName: string
-  entity: string
-  placeholder?: string
-  /** Extracts the display label from a raw DBAL record. */
-  getLabel: (record: Record<string, unknown>) => string
-  onSelect: (item: SearchSelectItem) => void
-}
+export type { SearchSelectItem, SearchSelectProps } from './search-select-types'
 
 export function SearchSelect({
   tenant = 'system',
@@ -45,78 +30,19 @@ export function SearchSelect({
   getLabel,
   onSelect,
 }: SearchSelectProps) {
-  const [query, setQuery] = useState('')
-  const [debouncedQuery, setDebouncedQuery] = useState('')
-  const [results, setResults] = useState<SearchSelectItem[]>([])
-  const [loading, setLoading] = useState(false)
-  const [highlighted, setHighlighted] = useState(0)
-  const { ref, isOpen, setIsOpen } = useClickOutside<HTMLDivElement>()
-
-  useDebouncedSave(query, setDebouncedQuery, 300)
-
-  const fetchResults = useCallback(
-    async (q: string) => {
-      setLoading(true)
-      try {
-        const base = `${DBAL}/${tenant}/${packageName}/${entity}`
-        const url =
-          q.trim().length > 0
-            ? `${base}/_search?${new URLSearchParams({ q, limit: '10' }).toString()}`
-            : `${base}?${new URLSearchParams({ limit: '10' }).toString()}`
-        const res = await fetch(url, { signal: AbortSignal.timeout(6000) })
-        if (!res.ok) {
-          setResults([])
-          return
-        }
-        const rows = readList<Record<string, unknown>>(await res.json())
-        setResults(
-          rows
-            .filter(r => typeof r.id === 'string')
-            .map(r => ({ id: r.id as string, label: getLabel(r) }))
-        )
-        setHighlighted(0)
-      } catch {
-        setResults([])
-      } finally {
-        setLoading(false)
-      }
-    },
-    [tenant, packageName, entity, getLabel]
-  )
-
-  useEffect(() => {
-    if (!isOpen) return
-    void fetchResults(debouncedQuery)
-  }, [debouncedQuery, isOpen, fetchResults])
-
-  const handleFocus = () => {
-    setIsOpen(true)
-    if (results.length === 0) void fetchResults(query)
-  }
-
-  const choose = (item: SearchSelectItem) => {
-    onSelect(item)
-    setQuery('')
-    setResults([])
-    setIsOpen(false)
-  }
-
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (!isOpen || results.length === 0) return
-    if (event.key === 'ArrowDown') {
-      event.preventDefault()
-      setHighlighted(i => Math.min(i + 1, results.length - 1))
-    } else if (event.key === 'ArrowUp') {
-      event.preventDefault()
-      setHighlighted(i => Math.max(i - 1, 0))
-    } else if (event.key === 'Enter') {
-      event.preventDefault()
-      const item = results[highlighted]
-      if (item !== undefined) choose(item)
-    } else if (event.key === 'Escape') {
-      setIsOpen(false)
-    }
-  }
+  const {
+    query,
+    setQuery,
+    results,
+    loading,
+    highlighted,
+    setHighlighted,
+    ref,
+    isOpen,
+    handleFocus,
+    choose,
+    handleKeyDown,
+  } = useSearchSelect({ tenant, packageName, entity, getLabel, onSelect })
 
   return (
     <div className={s.root} ref={ref}>
@@ -132,42 +58,13 @@ export function SearchSelect({
         onKeyDown={handleKeyDown}
       />
       {isOpen && (
-        <div className={s.panel}>
-          {loading && (
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              className={s.status}
-            >
-              Searching…
-            </Typography>
-          )}
-          {!loading && results.length === 0 && (
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              className={s.status}
-            >
-              No matches
-            </Typography>
-          )}
-          {!loading &&
-            results.map((item, index) => (
-              <button
-                key={item.id}
-                type="button"
-                className={`${s.item} ${index === highlighted ? s.itemHighlighted : ''}`}
-                onMouseEnter={() => {
-                  setHighlighted(index)
-                }}
-                onClick={() => {
-                  choose(item)
-                }}
-              >
-                {item.label}
-              </button>
-            ))}
-        </div>
+        <SearchSelectResults
+          loading={loading}
+          results={results}
+          highlighted={highlighted}
+          onHighlight={setHighlighted}
+          onChoose={choose}
+        />
       )}
     </div>
   )
