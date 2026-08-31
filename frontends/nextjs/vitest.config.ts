@@ -37,12 +37,14 @@ export default defineConfig({
       // tests for its extracted pure helpers (measured 66.12/58.9/58.03/
       // 66.12). Raised again in phase 46 after splitting style-controls.ts
       // and backfilling tests for its pure helpers (measured 66.16/58.93/
-      // 58.03/66.15).
+      // 58.03/66.15). Raised again in phase 47 after splitting workflow-
+      // graph.ts and backfilling tests for its pure helpers (measured
+      // 66.29/59.23/58.13/66.28).
       thresholds: {
-        statements: 66.1,
-        branches: 58.9,
-        functions: 58.0,
-        lines: 66.1,
+        statements: 66.2,
+        branches: 59.1,
+        functions: 58.1,
+        lines: 66.2,
       },
       exclude: [
         'src/**/*.test.{ts,tsx}',
