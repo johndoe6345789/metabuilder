@@ -29,7 +29,7 @@ export function useComponentTreeActions(
      *  dropping "on" a leaf visually implies. */
     (type: string, parentId?: string) => {
       const item = paletteItem(type)
-      if (!item) return
+      if (item === undefined) return
       const node: TreeNode = {
         id: nid(),
         type,
@@ -38,11 +38,14 @@ export function useComponentTreeActions(
       }
       let parent: string
       if (parentId === undefined) {
-        parent = paletteItem(selected.type)?.container ? selected.id : 'root'
+        parent =
+          paletteItem(selected.type)?.container === true
+            ? selected.id
+            : 'root'
       } else {
         const target = findNode(tree, parentId)
         parent =
-          target !== null && paletteItem(target.type)?.container
+          target !== null && paletteItem(target.type)?.container === true
             ? parentId
             : (parentOf(tree, parentId)?.id ?? 'root')
       }
@@ -88,7 +91,7 @@ export function useComponentTreeActions(
       if (dragId === 'root' || dragId === targetId) return
       if (isDescendant(tree, dragId, targetId)) return
       const dragged = findNode(tree, dragId)
-      if (!dragged) return
+      if (dragged === null) return
       const without = removeNode(tree, dragId)
       const target = findNode(without, targetId)
       if (target === null) return
