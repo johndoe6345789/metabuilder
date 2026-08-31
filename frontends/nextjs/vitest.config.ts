@@ -24,11 +24,14 @@ export default defineConfig({
       // deleting a confirmed-dead, fully-tested subsystem removed a
       // covered slice of the denominator along with its numerator, so
       // the honest floor drops even though nothing real got less tested.
+      // Raised in phase 40 after backfilling real tests for the newly
+      // split retryable-error-boundary modules (measured 65.29/58.22/
+      // 57.33/65.3; kept a small margin below that for run-to-run noise).
       thresholds: {
-        statements: 65,
-        branches: 58,
-        functions: 57,
-        lines: 65,
+        statements: 65.2,
+        branches: 58.1,
+        functions: 57.2,
+        lines: 65.2,
       },
       exclude: [
         'src/**/*.test.{ts,tsx}',

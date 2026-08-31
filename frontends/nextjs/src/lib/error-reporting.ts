@@ -1,10 +1,5 @@
-/**
- * Error Reporting & Logging System
- *
- * Centralized error handling, logging, and user-friendly error messages.
- * Supports both development and production error reporting, with error
- * categorization for better recovery strategies.
- */
+/** Centralized error handling: categorization, logging, and
+ *  user-friendly messages for both development and production. */
 
 import type { ErrorCategory, ErrorReport, ErrorReportContext } from './error-reporting/types'
 import { categorizeError } from './error-reporting/error-category'
@@ -14,6 +9,9 @@ import { buildErrorReport } from './error-reporting/build-report'
 import { logReport } from './error-reporting/log-report'
 
 export type { ErrorCategory, ErrorReportContext, ErrorReport }
+// Pure categorization, for a caller that wants the category without
+// also logging/recording a report (e.g. an error boundary's render).
+export { categorizeError } from './error-reporting/error-category'
 
 class ErrorReportingService {
   private errors: ErrorReport[] = []
