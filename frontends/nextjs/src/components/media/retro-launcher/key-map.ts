@@ -1,5 +1,7 @@
 /** Keyboard-to-gamepad-button mapping for the retro launcher. */
-export const KEY_MAP: Record<string, string> = {
+// Partial, not Record: e.key is an arbitrary string, and most keys
+// aren't mapped.
+export const KEY_MAP: Partial<Record<string, string>> = {
   ArrowUp: 'up',
   ArrowDown: 'down',
   ArrowLeft: 'left',

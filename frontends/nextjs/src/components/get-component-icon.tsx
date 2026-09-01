@@ -32,7 +32,9 @@ type ComponentIcon = (props: ComponentIconProps) => ReactElement
 
 const asComponentIcon = (icon: unknown): ComponentIcon => icon as ComponentIcon
 
-const iconMap: Record<string, ComponentIcon> = {
+// Partial, not Record: iconName is an arbitrary string, and most of
+// them aren't a registered icon.
+const iconMap: Partial<Record<string, ComponentIcon>> = {
   Article: asComponentIcon(Article),
   Card: asComponentIcon(CropPortrait),
   Chat: asComponentIcon(Chat),

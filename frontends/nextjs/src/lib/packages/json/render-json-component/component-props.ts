@@ -5,7 +5,9 @@ import { evaluateExpression } from './evaluate-expression'
 /** Evaluates every declared prop for a registry component, dropping any
  *  that resolve to undefined rather than passing it through literally. */
 export function buildComponentProps(
-  nodeObj: Record<string, JsonValue>,
+  // Partial, not Record: a package author's ui.json node can genuinely
+  // omit props -- see element-props.ts for the full reasoning.
+  nodeObj: Partial<Record<string, JsonValue>>,
   context: RenderContext
 ): Record<string, JsonValue> {
   const props: Record<string, JsonValue> = {}

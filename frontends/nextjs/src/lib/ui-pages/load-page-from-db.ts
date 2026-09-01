@@ -22,7 +22,7 @@ export async function loadPageFromDb(
   }
 
   const result = await db.pageConfigs.list({ filter })
-  const page = result.data[0] ?? null
+  const page = result.data.at(0) ?? null
 
   if (page === null) {
     return null

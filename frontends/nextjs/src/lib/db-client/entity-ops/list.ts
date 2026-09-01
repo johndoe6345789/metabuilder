@@ -29,7 +29,10 @@ export async function listEntity(
     const raw = await dbalFetch<unknown>(url)
     const rows = readList<Record<string, unknown>>(raw)
     const payload = unwrap<Record<string, unknown>>(raw)
+    // unwrap<T>() casts rather than validates -- `payload`'s declared type
+    // is a lie about what an arbitrary DBAL JSON response actually is.
     const total =
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       payload !== null && typeof payload === 'object'
         ? (payload as { total?: number }).total
         : undefined

@@ -25,7 +25,9 @@ export function VideoPlayer({
 
   useEffect(() => {
     const video = videoRef.current
-    if (video === null || !src || !isSafeMediaSrc(src)) return undefined
+    if (video === null || src.length === 0 || !isSafeMediaSrc(src)) {
+      return undefined
+    }
 
     hlsRef.current?.destroy()
     hlsRef.current = null
@@ -35,7 +37,6 @@ export function VideoPlayer({
       video.src = src
       return undefined
     }
-
     let active = true
 
     void import('hls.js').then(mod => {

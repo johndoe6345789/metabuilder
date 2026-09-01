@@ -37,7 +37,7 @@ export async function validateTenantAccess(
     const tenantResult = await db
       .entity('Tenant')
       .list({ filter: { slug: tenantSlug } })
-    const tenant = tenantResult.data[0] ?? null
+    const tenant = tenantResult.data.at(0) ?? null
 
     if (tenant == null) {
       return { allowed: false, reason: `Tenant not found: ${tenantSlug}` }

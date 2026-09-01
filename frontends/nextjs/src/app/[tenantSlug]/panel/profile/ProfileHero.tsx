@@ -41,7 +41,9 @@ export function ProfileHero({
               Level {summary.roleLevel}
             </span>
             <span>{summary.role} account</span>
-            <span>{summary.email || 'No email on file'}</span>
+            <span>
+              {summary.email.length > 0 ? summary.email : 'No email on file'}
+            </span>
           </div>
         </div>
       </div>

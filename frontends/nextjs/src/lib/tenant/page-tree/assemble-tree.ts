@@ -30,7 +30,7 @@ export function assembleTree(
   for (const n of ordered) {
     const node = built.get(n.id)
     if (node === undefined) continue
-    if (n.parentId === null || n.parentId === undefined) {
+    if (n.parentId === null) {
       root ??= node
       continue
     }

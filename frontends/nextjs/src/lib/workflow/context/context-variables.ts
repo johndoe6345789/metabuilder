@@ -30,6 +30,10 @@ export function buildVariables(
   }
 
   for (const [name, value] of Object.entries(requestVariables ?? {})) {
+    // `name` is a key from the request, not from workflow.variables --
+    // this is the "not in workflow definition" security check the file
+    // header describes, not a type-narrowing formality.
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (workflow.variables[name] != null) {
       variables[name] = value
       continue

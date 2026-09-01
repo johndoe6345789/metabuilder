@@ -29,7 +29,7 @@ export function useSearchSelectKeyDown({
       setHighlighted(i => Math.max(i - 1, 0))
     } else if (event.key === 'Enter') {
       event.preventDefault()
-      const item = results[highlighted]
+      const item = results.at(highlighted)
       if (item !== undefined) choose(item)
     } else if (event.key === 'Escape') {
       close()

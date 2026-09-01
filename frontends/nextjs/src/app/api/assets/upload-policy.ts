@@ -47,7 +47,7 @@ export function safeAssetKey(name: string, now: number = Date.now()): string {
 export function refuseUpload(file: File): UploadRefusal | null {
   if (!ALLOWED.has(file.type)) {
     return {
-      error: `${file.type || 'That file type'} is not allowed`,
+      error: `${file.type.length > 0 ? file.type : 'That file type'} is not allowed`,
       status: 415,
     }
   }

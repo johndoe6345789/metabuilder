@@ -8,7 +8,7 @@ export function getClientIp(request: NextRequest): string {
 
   const forwarded = request.headers.get('x-forwarded-for')
   if (forwarded !== null) {
-    const firstIp = forwarded.split(',')[0]
+    const firstIp = forwarded.split(',').at(0)
     if (firstIp !== undefined) return firstIp.trim()
   }
 

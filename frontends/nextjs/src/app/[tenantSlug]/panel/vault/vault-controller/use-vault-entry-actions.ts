@@ -61,9 +61,8 @@ export function useVaultEntryActions({
       setSaving(true)
       await deleteVaultEntry(currentEntry.id)
       const next = await refresh()
-      router.push(
-        next[0] !== undefined ? `/vault/${next[0].slug}` : '/vault/new'
-      )
+      const first = next.at(0)
+      router.push(first !== undefined ? `/vault/${first.slug}` : '/vault/new')
       showNotice('info', `Deleted ${currentEntry.title}.`)
     } catch (error) {
       showNotice(

@@ -43,7 +43,8 @@ export function useVaultAuthActions({
       setAuthenticated(true)
       setMasterPassword('')
       const next = await refresh()
-      router.push(next[0] !== undefined ? `/vault/${next[0].slug}` : '/vault/new')
+      const first = next.at(0)
+      router.push(first !== undefined ? `/vault/${first.slug}` : '/vault/new')
       showNotice('success', 'Vault unlocked.')
     } catch (error) {
       showNotice(
