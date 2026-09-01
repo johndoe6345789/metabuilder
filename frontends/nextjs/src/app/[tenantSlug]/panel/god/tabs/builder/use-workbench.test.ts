@@ -1,0 +1,120 @@
+import { describe, expect, it, vi } from 'vitest'
+import { act, renderHook } from '@testing-library/react'
+
+const componentTree = vi.hoisted(() => ({
+  useComponentTree: vi.fn(() => ({
+    tree: { id: 'root', type: 'root', props: {}, children: [] },
+    selected: { id: 'root', type: 'root', props: {}, children: [] },
+    undo: vi.fn(),
+    redo: vi.fn(),
+  })),
+}))
+const auth = vi.hoisted(() => ({
+  useAuthContext: vi.fn(() => ({ user: { tenantId: 'acme' } })),
+}))
+const pageConfigs = vi.hoisted(() => ({
+  usePageConfigs: vi.fn(() => ({
+    rows: [{ path: '/a', title: 'A', hasTree: true }],
+  })),
+}))
+const publishTarget = vi.hoisted(() => ({
+  usePublishTarget: vi.fn(() => [{ path: '/a', tenant: 'acme' }, vi.fn()]),
+}))
+const collapsedSet = vi.hoisted(() => ({
+  useCollapsedSet: vi.fn(() => ({ collapsed: new Set(), toggle: vi.fn() })),
+}))
+const targetActions = vi.hoisted(() => ({
+  useTargetActions: vi.fn(() => ({ save: vi.fn() })),
+}))
+const undoRedoKeys = vi.hoisted(() => ({ useUndoRedoKeys: vi.fn() }))
+
+vi.mock('./use-component-tree', () => componentTree)
+vi.mock(
+  '@/app/_components/auth-provider/auth-provider-component',
+  () => auth
+)
+vi.mock('./use-page-configs', () => pageConfigs)
+vi.mock('./use-publish-target', () => publishTarget)
+vi.mock('./use-collapsed-set', () => collapsedSet)
+vi.mock('./use-target-actions', () => targetActions)
+vi.mock('./use-undo-redo-keys', () => undoRedoKeys)
+
+import { useWorkbench } from './use-workbench'
+
+describe('useWorkbench', () => {
+  it('derives the tenant from the signed-in user', () => {
+    const { result } = renderHook(() => useWorkbench())
+    expect(result.current.tenant).toBe('acme')
+  })
+
+  it('starts on the tree view with setup closed', () => {
+    const { result } = renderHook(() => useWorkbench())
+    expect(result.current.view).toBe('tree')
+    expect(result.current.setupOpen).toBe(false)
+  })
+
+  it('toggleSetup flips setupOpen', () => {
+    const { result } = renderHook(() => useWorkbench())
+    act(() => result.current.toggleSetup())
+    expect(result.current.setupOpen).toBe(true)
+    act(() => result.current.toggleSetup())
+    expect(result.current.setupOpen).toBe(false)
+  })
+
+  it('setView switches panes', () => {
+    const { result } = renderHook(() => useWorkbench())
+    act(() => result.current.setView('setup'))
+    expect(result.current.view).toBe('setup')
+  })
+
+  it('reports no duplicate id for a selected node with no id', () => {
+    const { result } = renderHook(() => useWorkbench())
+    expect(result.current.duplicateId).toBe(false)
+  })
+
+  it('reports a duplicate id when two nodes share one', () => {
+    componentTree.useComponentTree.mockReturnValueOnce({
+      tree: {
+        id: 'root',
+        type: 'root',
+        props: {},
+        children: [
+          { id: 'a', type: 'div', props: { id: 'dup' }, children: [] },
+          { id: 'b', type: 'div', props: { id: 'dup' }, children: [] },
+        ],
+      },
+      selected: { id: 'a', type: 'div', props: { id: 'dup' }, children: [] },
+      undo: vi.fn(),
+      redo: vi.fn(),
+    })
+    const { result } = renderHook(() => useWorkbench())
+    expect(result.current.duplicateId).toBe(true)
+  })
+
+  it('only keeps pages with a component tree in trees', () => {
+    pageConfigs.usePageConfigs.mockReturnValueOnce({
+      rows: [
+        { path: '/a', title: 'A', hasTree: true },
+        { path: '/b', title: 'B', hasTree: false },
+      ],
+    })
+    const { result } = renderHook(() => useWorkbench())
+    expect(result.current.trees).toEqual([
+      { path: '/a', title: 'A', hasTree: true },
+    ])
+  })
+
+  it("resolves currentTree to the target's path when it is a saved tree", () => {
+    const { result } = renderHook(() => useWorkbench())
+    expect(result.current.currentTree).toBe('/a')
+  })
+
+  it('falls back to the blank tree value when the target has no saved tree', () => {
+    publishTarget.usePublishTarget.mockReturnValueOnce([
+      { path: '/missing', tenant: 'acme' },
+      vi.fn(),
+    ])
+    const { result } = renderHook(() => useWorkbench())
+    expect(result.current.currentTree).toBe('__blank__')
+  })
+})
