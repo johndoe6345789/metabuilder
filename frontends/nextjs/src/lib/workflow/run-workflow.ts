@@ -33,8 +33,11 @@ export function runWorkflow(
   const queue: WorkflowNode[] = wf.nodes.filter(
     n => (incoming.get(n.id) ?? 0) === 0
   )
-  const first = wf.nodes[0]
-  if (queue.length === 0 && first) queue.push(first)
+  // .at() is typed `string | undefined` under both tsconfig variants
+  // (unlike indexing wf.nodes directly), and an empty node list genuinely
+  // has no first element at runtime.
+  const first = wf.nodes.at(0)
+  if (queue.length === 0 && first !== undefined) queue.push(first)
 
   const seen = new Set<string>()
   while (queue.length > 0) {
@@ -47,7 +50,12 @@ export function runWorkflow(
     const feed = wf.connections
       .filter(c => c.targetNodeId === node.id)
       .map(c => outputs.get(c.sourceNodeId) ?? {})
-    const inData = Object.assign({}, input, ...feed)
+    // Object.assign's TS types collapse to `any` once a spread array joins
+    // the fixed arguments; reduce over object spread keeps this typed.
+    const inData = feed.reduce<Record<string, unknown>>(
+      (acc, f) => ({ ...acc, ...f }),
+      { ...input }
+    )
     const out = { ...inData, ...node.config }
     outputs.set(node.id, out)
     logs.push(`▶ ${node.name} (${node.type})`)
@@ -56,17 +64,16 @@ export function runWorkflow(
       const d = (indegree.get(c.targetNodeId) ?? 1) - 1
       indegree.set(c.targetNodeId, d)
       const target = byId.get(c.targetNodeId)
-      if (target && d <= 0) queue.push(target)
+      if (target !== undefined && d <= 0) queue.push(target)
     }
   }
 
   // Result = merged outputs of leaf nodes (no outgoing connections).
   const hasOut = new Set(wf.connections.map(c => c.sourceNodeId))
   const leaves = wf.nodes.filter(n => !hasOut.has(n.id) && outputs.has(n.id))
-  const output = Object.assign(
-    {},
-    ...(leaves.length > 0 ? leaves : wf.nodes).map(n => outputs.get(n.id) ?? {})
-  )
+  const output = (leaves.length > 0 ? leaves : wf.nodes).reduce<
+    Record<string, unknown>
+  >((acc, n) => ({ ...acc, ...(outputs.get(n.id) ?? {}) }), {})
 
   return { logs, output, order }
 }

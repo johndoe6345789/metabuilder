@@ -17,15 +17,22 @@ export const FALLBACK_STATUS = 500
 export const FALLBACK_MESSAGE = 'Workflow request failed'
 
 export function statusFor(code: WorkflowErrorCode): number {
+  // The tables are typed Record<WorkflowErrorCode, T> (exhaustive at compile
+  // time), so eslint sees this fallback as dead -- it exists for exactly the
+  // case the file comment above describes: a runtime code that doesn't
+  // actually match a key despite the type saying it always will.
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   return ERROR_STATUS_MAP[code] ?? FALLBACK_STATUS
 }
 
 export function messageFor(code: WorkflowErrorCode): string {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   return ERROR_MESSAGES[code] ?? FALLBACK_MESSAGE
 }
 
 /** Hints are advisory, so an absent one is empty rather than invented. */
 export function hintFor(code: WorkflowErrorCode): string {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   return ERROR_HINTS[code] ?? ''
 }
 

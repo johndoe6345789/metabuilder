@@ -15,7 +15,7 @@ export async function writeNode(
   nodeCounter: { value: number }
 ): Promise<boolean> {
   nodeCounter.value += 1
-  const nodeId = `${treeId}__${node.id || `n${nodeCounter.value}`}`
+  const nodeId = `${treeId}__${node.id.length > 0 ? node.id : `n${nodeCounter.value}`}`
   const nodeRes = await fetch(`${base}/PageTreeNode`, {
     method: 'POST',
     headers: JSON_HEADERS,
@@ -30,7 +30,7 @@ export async function writeNode(
   })
   if (!nodeRes.ok) return false
 
-  for (const [name, raw] of Object.entries(node.props ?? {})) {
+  for (const [name, raw] of Object.entries(node.props)) {
     const { valueType, value } = propValueType(raw)
     const propRes = await fetch(`${base}/PageTreeProp`, {
       method: 'POST',
@@ -48,7 +48,7 @@ export async function writeNode(
     if (!propRes.ok) return false
   }
 
-  for (const [index, child] of (node.children ?? []).entries()) {
+  for (const [index, child] of node.children.entries()) {
     const ok = await writeNode(
       base,
       tenant,

@@ -21,8 +21,10 @@ export function middleware(request: NextRequest) {
     return new NextResponse('Not Found', { status: 404 })
   }
 
-  // Skip reserved paths
-  const firstSegment = pathname.split('/')[1]
+  // Skip reserved paths. .at() is typed `string | undefined` under both
+  // tsconfig variants (unlike indexing split()'s `string[]`), and an empty
+  // pathname genuinely produces a 1-element array at runtime.
+  const firstSegment = pathname.split('/').at(1)
   if (
     firstSegment === undefined ||
     firstSegment.length === 0 ||
@@ -35,16 +37,16 @@ export function middleware(request: NextRequest) {
   const segments = pathname.split('/').filter(Boolean)
 
   if (segments.length >= 2) {
-    // Looks like a tenant route
-    const tenant = segments[0]
-    const pkg = segments[1]
+    // Looks like a tenant route. The length check above already
+    // guarantees both of these exist.
+    const [tenant, pkg] = segments
 
     // Add tenant info to headers for downstream use
     const response = NextResponse.next()
-    if (tenant !== undefined && tenant.length > 0) {
+    if (tenant.length > 0) {
       response.headers.set('x-tenant-id', tenant)
     }
-    if (pkg !== undefined && pkg.length > 0) {
+    if (pkg.length > 0) {
       response.headers.set('x-package-id', pkg)
     }
 
