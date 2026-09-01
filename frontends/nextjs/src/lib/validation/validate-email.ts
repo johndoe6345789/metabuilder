@@ -43,15 +43,10 @@ export function validateEmail(email: unknown): boolean {
     return false
   }
 
-  const localPart = parts[0]
-  const domain = parts[1]
+  // The length === 2 check above guarantees both of these exist.
+  const [localPart, domain] = parts
 
-  if (
-    localPart === undefined ||
-    localPart === '' ||
-    domain === undefined ||
-    domain === ''
-  ) {
+  if (localPart === '' || domain === '') {
     return false
   }
 

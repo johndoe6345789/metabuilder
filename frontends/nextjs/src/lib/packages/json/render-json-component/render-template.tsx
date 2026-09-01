@@ -9,7 +9,11 @@ import {
   renderRegistryComponent,
 } from './render-branches'
 
-type Registry = Record<string, React.ComponentType<Record<string, unknown>>>
+// Partial, not Record: nodeType names an arbitrary string, and most of
+// them aren't a registered component.
+type Registry = Partial<
+  Record<string, React.ComponentType<Record<string, unknown>>>
+>
 
 /** Render one JSON template node to a React element -- the recursive
  *  core `renderJSONComponent` bootstraps into. Each shape of node

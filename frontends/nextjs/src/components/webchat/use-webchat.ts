@@ -30,13 +30,13 @@ export function useWebchat(sender: string) {
 
   useEffect(() => {
     void idbGet<ChatMessage[]>(KEY).then(m => {
-      if (m?.length) setMessages(m)
+      if (m !== null && m.length > 0) setMessages(m)
     })
   }, [])
 
   const send = useCallback(() => {
     const text = draft.trim()
-    if (!text) return
+    if (text.length === 0) return
     setMessages(prev => {
       const next = [
         ...prev,

@@ -48,10 +48,11 @@ export async function listObjects(
   }
 
   return [...xml.matchAll(/<Contents>([\s\S]*?)<\/Contents>/g)].map(match => {
-    const block = match[1] ?? ''
+    const block = match.at(1) ?? ''
+    const size = Number(pick(block, 'Size'))
     return {
       key: pick(block, 'Key'),
-      size: Number(pick(block, 'Size')) || 0,
+      size: Number.isNaN(size) ? 0 : size,
       // The service wraps the etag in quotes, as S3 does.
       etag: pick(block, 'ETag').replace(/^"|"$/g, ''),
       lastModified: pick(block, 'LastModified'),

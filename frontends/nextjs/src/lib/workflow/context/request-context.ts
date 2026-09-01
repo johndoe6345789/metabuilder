@@ -25,7 +25,8 @@ export function toWorkflowLevel(roleLevel: number): number {
 
 /** The bearer token in these headers, or null. */
 export function bearerToken(
-  headers?: Record<string, string> | null
+  // Partial, not Record: arbitrary request headers, not every key present.
+  headers?: Partial<Record<string, string>> | null
 ): string | null {
   if (headers == null) return null
   const raw = headers.authorization ?? headers.Authorization ?? ''

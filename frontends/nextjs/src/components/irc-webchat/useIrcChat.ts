@@ -45,7 +45,7 @@ export function useIrcChat(tenantId = TENANT): UseIrcChatReturn {
         setState(s => ({
           ...s,
           channels,
-          activeChannelId: s.activeChannelId ?? channels[0]?.id ?? null,
+          activeChannelId: s.activeChannelId ?? channels.at(0)?.id ?? null,
           loading: false,
         }))
       } catch {
@@ -54,7 +54,7 @@ export function useIrcChat(tenantId = TENANT): UseIrcChatReturn {
         setState(s => ({
           ...s,
           channels,
-          activeChannelId: s.activeChannelId ?? channels[0]?.id ?? null,
+          activeChannelId: s.activeChannelId ?? channels.at(0)?.id ?? null,
           loading: false,
           error: 'DBAL offline — using local data',
         }))
@@ -97,7 +97,7 @@ export function useIrcChat(tenantId = TENANT): UseIrcChatReturn {
     return () => {
       if (timer.current != null) clearInterval(timer.current)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [state.activeChannelId])
 
   const setActiveChannelId = useCallback((id: string) => {

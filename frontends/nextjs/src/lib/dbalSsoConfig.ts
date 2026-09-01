@@ -18,7 +18,9 @@ export function loadPersistedSession(): PersistedSession | null {
   if (typeof window === 'undefined') return null
   try {
     const raw = sessionStorage.getItem(STORAGE_KEY)
-    return raw ? (JSON.parse(raw) as PersistedSession) : null
+    return raw !== null && raw.length > 0
+      ? (JSON.parse(raw) as PersistedSession)
+      : null
   } catch {
     return null
   }
@@ -26,7 +28,9 @@ export function loadPersistedSession(): PersistedSession | null {
 
 export function savePersistedSession(session: PersistedSession | null): void {
   try {
-    if (session) sessionStorage.setItem(STORAGE_KEY, JSON.stringify(session))
+    if (session !== null) {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(session))
+    }
     else sessionStorage.removeItem(STORAGE_KEY)
   } catch {
     // ignore quota errors

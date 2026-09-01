@@ -31,7 +31,9 @@ export function renderRef(
 }
 
 export function renderConditional(
-  nodeObj: Record<string, JsonValue>,
+  // Partial, not Record: a package author's ui.json node can genuinely
+  // omit condition/then/else -- see element-props.ts for the full reasoning.
+  nodeObj: Partial<Record<string, JsonValue>>,
   context: RenderContext,
   render: RenderFn
 ): React.ReactElement {
