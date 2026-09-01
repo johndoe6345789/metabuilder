@@ -1,38 +1,15 @@
 'use client'
 
 import { useState, useCallback } from 'react'
+import type { RetroSession, RetroSessionState, RetroSystem } from './retro-session-types'
+
+export type { RetroSession, RetroSystem } from './retro-session-types'
 
 const MEDIA_API =
   process.env.NEXT_PUBLIC_MEDIA_API_URL ?? 'http://localhost:8090'
 
-export type RetroSystem =
-  | 'nes'
-  | 'snes'
-  | 'n64'
-  | 'gb'
-  | 'gbc'
-  | 'gba'
-  | 'genesis'
-  | 'ps1'
-  | 'arcade'
-  | 'dos'
-
-export interface RetroSession {
-  id: string
-  system: RetroSystem
-  romPath: string
-  streamUrl: string
-  startedAt: string
-}
-
-interface State {
-  session: RetroSession | null
-  loading: boolean
-  error: string | null
-}
-
 export function useRetroSession() {
-  const [state, setState] = useState<State>({
+  const [state, setState] = useState<RetroSessionState>({
     session: null,
     loading: false,
     error: null,
@@ -69,6 +46,10 @@ export function useRetroSession() {
       await fetch(`${MEDIA_API}/api/retro/sessions/${id}`, {
         method: 'DELETE',
       })
+    } catch {
+      // Both callers fire this with `void stop()` -- the session is
+      // dropped client-side either way, so a network failure here isn't
+      // worth surfacing, only swallowing quietly.
     } finally {
       setState({ session: null, loading: false, error: null })
     }
@@ -78,11 +59,16 @@ export function useRetroSession() {
     async (button: string, pressed: boolean): Promise<void> => {
       const id = state.session?.id
       if (id === undefined) return
-      await fetch(`${MEDIA_API}/api/retro/sessions/${id}/input`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ button, pressed }),
-      })
+      try {
+        await fetch(`${MEDIA_API}/api/retro/sessions/${id}/input`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ button, pressed }),
+        })
+      } catch {
+        // Called as `void sendInput(...)` on every keypress -- a dropped
+        // input is invisible in-game, not worth an unhandled rejection.
+      }
     },
     [state.session?.id]
   )
