@@ -3,13 +3,14 @@ import { defineConfig, devices } from '@playwright/test'
 // Next.js basePath is '/app'; baseURL is the origin only so that absolute
 // goto paths ('/app/...') resolve correctly without doubling the prefix.
 const BASE = process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:3004'
+const CI = process.env.CI !== undefined && process.env.CI !== ''
 
 export default defineConfig({
   testDir: './e2e',
   testMatch: '**/*.spec.ts',
   fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
+  forbidOnly: CI,
+  retries: CI ? 2 : 0,
   workers: 1,
   reporter: [['html', { open: 'never' }], ['line']],
   use: {

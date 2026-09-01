@@ -109,18 +109,19 @@ export async function POST(request: Request) {
   const denied = requireVaultMasterAccess(request)
   if (denied !== null) return denied
 
-  const body = await request.json().catch(() => null)
+  const body: unknown = await request.json().catch(() => null)
   if (!isObject(body)) {
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
   }
 
   const now = Date.now()
+  const trimmedGroup = asString(body.group ?? 'General').trim()
   const entry = {
     slug: asString(body.slug ?? '').trim(),
     title: asString(body.title ?? '').trim(),
     username: asString(body.username ?? '').trim(),
     password: asString(body.password ?? ''),
-    group: asString(body.group ?? 'General').trim() || 'General',
+    group: trimmedGroup.length > 0 ? trimmedGroup : 'General',
     notes: asString(body.notes ?? '').trim(),
     loginUrl: asString(body.loginUrl ?? '').trim(),
     appUrl: asString(body.appUrl ?? '').trim(),

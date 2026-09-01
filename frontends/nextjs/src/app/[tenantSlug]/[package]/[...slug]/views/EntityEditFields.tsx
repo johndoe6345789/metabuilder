@@ -36,11 +36,8 @@ export function EntityEditFields({
                 // eslint-disable-next-line @typescript-eslint/no-base-to-string
                 return String(value)
               })()}
-              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
               placeholder={
-                field.description !== null &&
-                field.description !== undefined &&
-                field.description.length > 0
+                field.description !== undefined && field.description.length > 0
                   ? field.description
                   : `Enter ${field.name}`
               }
