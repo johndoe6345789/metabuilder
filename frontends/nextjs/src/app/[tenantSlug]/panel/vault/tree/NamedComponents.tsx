@@ -12,9 +12,10 @@ import s from '../page.module.scss'
  * reads the controller's own notice state) rather than being a config-
  * driven passthrough.
  */
-export const NAMED_COMPONENTS: Record<
-  string,
-  (children: ReactNode, context: Context) => ReactNode
+// Partial, not Record: node.component names an arbitrary string, and most
+// of them aren't a key here -- see primitives.ts for why this matters.
+export const NAMED_COMPONENTS: Partial<
+  Record<string, (children: ReactNode, context: Context) => ReactNode>
 > = {
   Page: children => <div className={s.page}>{children}</div>,
   Loading: () => <Typography variant="body2">{vaultView.loadingLabel}</Typography>,

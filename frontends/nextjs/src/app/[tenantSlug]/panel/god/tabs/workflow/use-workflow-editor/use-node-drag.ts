@@ -42,12 +42,12 @@ export function useNodeDrag(args: UseNodeDragArgs) {
   useEffect(() => {
     const move = (e: MouseEvent) => {
       const d = dragRef.current
-      if (!d) return
+      if (d === null) return
       const dx = e.clientX - d.sx
       const dy = e.clientY - d.sy
       if (d.kind === 'pan') {
         setCanvasOffset({ x: d.ox + dx, y: d.oy + dy })
-      } else if (d.id) {
+      } else if (d.id !== undefined) {
         const origin = { x: d.ox, y: d.oy }
         const position = draggedNodePosition(origin, dx, dy, zoom)
         setWorkflow(wf => ({

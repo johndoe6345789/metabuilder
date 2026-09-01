@@ -21,7 +21,7 @@ export function useDragStart(args: UseDragStartArgs) {
     (e: React.MouseEvent) => {
       if (
         e.target !== canvasRef.current &&
-        !(e.target as HTMLElement).dataset.canvas
+        (e.target as HTMLElement).dataset.canvas === undefined
       )
         return
       dragRef.current = {
@@ -39,7 +39,7 @@ export function useDragStart(args: UseDragStartArgs) {
   const onNodeDragStart = useCallback(
     (e: React.MouseEvent, id: string) => {
       const n = workflow.nodes.find(x => x.id === id)
-      if (!n) return
+      if (n === undefined) return
       dragRef.current = {
         kind: 'node',
         id,

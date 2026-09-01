@@ -5,7 +5,11 @@ import { Alert, Button, Chip, Paper, TextField, Typography } from '@/m3'
 
 type M3Component = ComponentType<Record<string, unknown>>
 
-export const PRIMITIVES: Record<string, M3Component> = {
+// Partial, not Record: node.component names an arbitrary string, and most
+// of them aren't a key here -- Partial carries `| undefined` on every
+// property regardless of noUncheckedIndexedAccess, so the lookup's real
+// possibly-missing result is honest under both tsconfig variants.
+export const PRIMITIVES: Partial<Record<string, M3Component>> = {
   Alert: Alert as M3Component,
   Chip: Chip as M3Component,
   Button: Button as M3Component,

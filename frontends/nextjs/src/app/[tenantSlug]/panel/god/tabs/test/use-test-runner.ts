@@ -70,8 +70,12 @@ export function useTestRunner() {
       let input: Record<string, unknown>
       let expected: Record<string, unknown>
       try {
-        input = JSON.parse(tc.input || '{}') as Record<string, unknown>
-        expected = JSON.parse(tc.expected || '{}') as Record<string, unknown>
+        input = JSON.parse(
+          tc.input.length > 0 ? tc.input : '{}'
+        ) as Record<string, unknown>
+        expected = JSON.parse(
+          tc.expected.length > 0 ? tc.expected : '{}'
+        ) as Record<string, unknown>
       } catch {
         return { status: 'error', message: 'Input/expected is not valid JSON' }
       }

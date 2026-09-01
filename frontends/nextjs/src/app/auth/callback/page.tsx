@@ -15,20 +15,28 @@ function AuthCallbackContent() {
   useEffect(() => {
     const code = searchParams.get('code')
     const state = searchParams.get('state')
-    if (!code || !state) {
-      setError(
-        'Your sign-in link looks incomplete or was already used — please try signing in again.'
-      )
-      return
-    }
 
-    completeLogin(dbalSsoConfig, code, state)
+    // Every setError call below runs from inside a .then()/.catch()
+    // callback, never synchronously during the effect itself -- including
+    // the missing-params case, folded into the same chain via a thrown
+    // sentinel rather than an early synchronous setState call.
+    Promise.resolve()
+      .then(() => {
+        if (code === null || state === null) {
+          throw new Error('missing-params')
+        }
+        return completeLogin(dbalSsoConfig, code, state)
+      })
       .then(tokens => authStore.applySession(tokens.token, tokens.refreshToken))
       .then(() => {
         router.replace('/dashboard')
       })
-      .catch(e => {
-        setError(friendlySignInError(e))
+      .catch((e: unknown) => {
+        setError(
+          e instanceof Error && e.message === 'missing-params'
+            ? 'Your sign-in link looks incomplete or was already used — please try signing in again.'
+            : friendlySignInError(e)
+        )
       })
   }, [searchParams, router])
 

@@ -38,12 +38,12 @@ export function useOutlineDrag({ nodeId, onAdd, onMove }: UseOutlineDragArgs) {
     const where = dropping ?? 'into'
     setDropping(null)
     const paletteType = event.dataTransfer.getData(PALETTE_MIME)
-    if (paletteType) {
+    if (paletteType.length > 0) {
       onAdd(paletteType, nodeId)
       return
     }
     const dragId = event.dataTransfer.getData(NODE_MIME)
-    if (dragId) onMove(dragId, nodeId, where)
+    if (dragId.length > 0) onMove(dragId, nodeId, where)
   }
 
   return { dropping, onDragStart, onDragOver, onDragLeave, onDrop }

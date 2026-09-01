@@ -59,7 +59,7 @@ export function findNode(node: TreeNode, id: string): TreeNode | null {
   if (node.id === id) return node
   for (const child of node.children) {
     const found = findNode(child, id)
-    if (found) return found
+    if (found !== null) return found
   }
   return null
 }
@@ -70,7 +70,9 @@ export function isDescendant(
   id: string
 ): boolean {
   const ancestor = findNode(node, ancestorId)
-  return ancestor ? findNode(ancestor, id) !== null && ancestorId !== id : false
+  return ancestor !== null
+    ? findNode(ancestor, id) !== null && ancestorId !== id
+    : false
 }
 
 export function insertAfter(

@@ -31,10 +31,12 @@ export function ConfigTab() {
             optLabel={c.ui.optLabel}
             optValue={c.ui.optValue}
             onRename={name => {
-              if (c.selected) c.dd.rename(c.selected.id, name)
+              if (c.selected !== undefined) c.dd.rename(c.selected.id, name)
             }}
             onRemoveOption={index => {
-              if (c.selected) c.dd.removeOption(c.selected.id, index)
+              if (c.selected !== undefined) {
+                c.dd.removeOption(c.selected.id, index)
+              }
             }}
             onOptLabelChange={c.ui.setOptLabel}
             onOptValueChange={c.ui.setOptValue}
