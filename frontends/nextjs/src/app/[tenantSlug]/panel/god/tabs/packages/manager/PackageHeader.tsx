@@ -22,7 +22,7 @@ export function PackageHeader({ p }: { p: RegistryPackage }) {
           color={p.publishedId != null ? 'success' : 'default'}
         />
       </div>
-      {p.manifest.description && (
+      {p.manifest.description.length > 0 && (
         <p className={s.desc}>{p.manifest.description}</p>
       )}
     </>

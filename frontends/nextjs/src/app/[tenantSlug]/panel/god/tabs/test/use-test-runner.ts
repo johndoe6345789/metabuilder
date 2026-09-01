@@ -34,7 +34,10 @@ export function useTestRunner() {
   const dispatch = useAppDispatch()
   const cases: TestCase[] = useAppSelector(s => s.god.tests)
   const workflow: Workflow = useAppSelector(s => s.god.workflow)
-  const [results, setResults] = useState<Record<string, TestResult>>({})
+  // Partial, not Record: only run cases have a result.
+  const [results, setResults] = useState<Partial<Record<string, TestResult>>>(
+    {}
+  )
   const [running, setRunning] = useState(false)
 
   const persist = useCallback(

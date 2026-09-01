@@ -19,7 +19,7 @@ export function usePublishPackage({
   const publish = useCallback(
     async (id: string, tenant = 'system'): Promise<boolean> => {
       const pkg = packages.find(p => p.manifest.id === id)
-      if (!pkg) return false
+      if (pkg === undefined) return false
       setPublishing(id)
       try {
         const payload = buildPublishPayload(pkg, tenant)

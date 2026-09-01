@@ -15,8 +15,9 @@ export interface UsePackageCrudArgs {
 export function usePackageCrud({ packages, persist }: UsePackageCrudArgs) {
   const create = useCallback(
     (name: string): string => {
+      const trimmed = name.trim()
       const pkg: RegistryPackage = {
-        manifest: newManifest(name.trim() || 'Untitled Package'),
+        manifest: newManifest(trimmed.length > 0 ? trimmed : 'Untitled Package'),
         content: emptyContent(),
         archived: false,
         workflows: [],

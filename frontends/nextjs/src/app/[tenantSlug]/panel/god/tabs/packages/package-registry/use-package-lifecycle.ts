@@ -31,7 +31,7 @@ export function usePackageLifecycle({
   const duplicate = useCallback(
     (id: string) => {
       const src = packages.find(p => p.manifest.id === id)
-      if (!src) return
+      if (src === undefined) return
       persist([
         ...packages,
         {

@@ -8,7 +8,9 @@ export interface StyleGroupSectionProps {
   group: StyleGroup
   isOpen: boolean
   onToggle: () => void
-  props: Record<string, string>
+  // Partial, not Record: control.prop names an arbitrary CSS property,
+  // and most of them aren't set on this class.
+  props: Partial<Record<string, string>>
   onSet: (prop: string, value: string) => void
   onClear: (prop: string) => void
 }

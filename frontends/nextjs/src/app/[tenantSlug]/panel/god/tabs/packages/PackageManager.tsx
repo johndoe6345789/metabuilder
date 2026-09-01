@@ -27,7 +27,9 @@ export function PackageManager({ tenant }: { tenant: string }) {
         }}
       />
 
-      {ui.flash && <div className={s.flash}>{ui.flash}</div>}
+      {ui.flash !== null && ui.flash.length > 0 && (
+        <div className={s.flash}>{ui.flash}</div>
+      )}
       {visible.length === 0 && (
         <Typography variant="body2" color="text.secondary">
           {ui.showArchived

@@ -21,7 +21,7 @@ export function useSelectedClass({
   onSelect,
   onNewNameChange,
 }: Args) {
-  const selected = classes.find(c => c.id === selectedId) ?? classes[0]
+  const selected = classes.find(c => c.id === selectedId) ?? classes.at(0)
 
   const addClass = () => {
     if (newName.trim() === '') return

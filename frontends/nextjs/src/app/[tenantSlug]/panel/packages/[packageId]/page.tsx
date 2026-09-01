@@ -50,7 +50,7 @@ function PackageContent({ packageId }: { packageId: string }) {
 
 export default function PackagePage() {
   const params = useParams()
-  const packageId = params?.packageId as string | undefined
+  const packageId = params.packageId as string | undefined
 
   if (packageId == null || packageId === '') {
     return (
