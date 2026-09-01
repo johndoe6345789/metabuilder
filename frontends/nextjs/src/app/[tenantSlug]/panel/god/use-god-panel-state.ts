@@ -54,7 +54,7 @@ export function useGodPanelState(activeTabId: string) {
   const moveGuide = useCallback(
     (nextStep: number) => {
       setGuideStep(nextStep)
-      const step = WALK_ME_STEPS[nextStep]
+      const step = WALK_ME_STEPS.at(nextStep)
       if (step !== undefined) openTabById(step.tabId)
     },
     [openTabById]
@@ -68,7 +68,7 @@ export function useGodPanelState(activeTabId: string) {
     guideOpen,
     setGuideOpen,
     guideStep,
-    currentStep: WALK_ME_STEPS[guideStep],
+    currentStep: WALK_ME_STEPS.at(guideStep),
     preview,
     openTabById,
     moveGuide,

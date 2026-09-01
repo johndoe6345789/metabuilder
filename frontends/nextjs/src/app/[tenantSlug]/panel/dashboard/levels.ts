@@ -20,6 +20,10 @@ type LevelKey = keyof typeof LEVEL_COLORS
 
 /** The colour pair for a level, or a neutral fallback for an unknown one. */
 export function levelColors(level: number): { from: string; to: string } {
+  // `level` is an arbitrary number from the caller, not narrowed to
+  // LevelKey -- the `as` cast doesn't make the lookup exhaustive, so this
+  // fallback is real defense against a level outside 1-5.
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   return LEVEL_COLORS[level as LevelKey] ?? { from: '#9c27b0', to: '#9c27b0' }
 }
 

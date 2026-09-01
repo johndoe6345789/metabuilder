@@ -28,7 +28,7 @@ export function GodPanelWalkMe({
   onSelectStep,
 }: Props) {
   if (!open) return null
-  const step = steps[currentStep]
+  const step = steps.at(currentStep)
   if (step === undefined) return null
 
   return (

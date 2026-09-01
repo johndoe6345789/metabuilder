@@ -59,7 +59,7 @@ export function ExportImportCards({ deploy: d }: ExportImportCardsProps) {
           hidden
           onChange={e => {
             const f = e.target.files?.[0]
-            if (f) void d.importProject(f)
+            if (f !== undefined) void d.importProject(f)
           }}
         />
       </div>

@@ -36,7 +36,8 @@ export function SmtpEditor(props: SmtpEditorProps) {
           label="Port"
           value={String(props.config.port)}
           onChange={e => {
-            props.onChange('port', Number(e.target.value) || 0)
+            const port = Number(e.target.value)
+            props.onChange('port', Number.isNaN(port) ? 0 : port)
           }}
         />
         {SMTP_FIELDS.map(field => (

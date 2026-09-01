@@ -20,7 +20,7 @@ export function DeployTab() {
         between environments, or import one to restore it.
       </Typography>
 
-      {d.flash && <div className={s.flash}>{d.flash}</div>}
+      {d.flash !== null && <div className={s.flash}>{d.flash}</div>}
 
       <ExportImportCards deploy={d} />
       <EnvironmentInfo />

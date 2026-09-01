@@ -35,7 +35,7 @@ export function AssetsTab() {
         busy={busy}
         pickerRef={picker}
         onFile={file => {
-          if (file) void upload(file)
+          if (file !== undefined) void upload(file)
         }}
       />
 

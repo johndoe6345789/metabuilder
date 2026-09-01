@@ -2,7 +2,9 @@
 
 import { BASE_PATH } from '@/lib/app-config'
 
-const PATH_BY_LEVEL: Record<number, string> = {
+// Partial, not Record: level is an arbitrary number, and most levels
+// don't have a page.
+const PATH_BY_LEVEL: Partial<Record<number, string>> = {
   1: '/',
   2: '/profile',
   3: '/admin',

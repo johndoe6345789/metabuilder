@@ -6,8 +6,8 @@ import type { EntityPageProps } from './entity-page-props'
 
 export async function generateMetadata({ params }: EntityPageProps) {
   const { tenantSlug, package: pkg, slug } = await params
-  const entity = slug[0] ?? 'unknown'
-  const id = slug[1]
+  const entity = slug.at(0) ?? 'unknown'
+  const id = slug.at(1)
 
   let title = `${entity} - ${pkg}`
   if (id === 'new') {
