@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { getRoleLevel } from '@/lib/constants'
 import { setCredential } from './credentials-api'
 import { normalizeTenant } from './credentials-data'
@@ -31,12 +31,18 @@ export function useCredentials(viewer: CredentialsViewer) {
   const list = useCredentialAccounts(appliedScope, isSupergod, ownTenant)
 
   // A god's chosen scope is pinned to their own tenant, so a stale
-  // selection cannot survive a change of viewer.
-  useEffect(() => {
-    if (isSupergod) return
+  // selection cannot survive a change of viewer. Adjusted during render
+  // (the documented React pattern for state that tracks props) instead
+  // of an effect, so the stale scope is never committed to a paint.
+  const [prevViewer, setPrevViewer] = useState({ isSupergod, ownTenant })
+  if (
+    !isSupergod &&
+    (prevViewer.isSupergod !== isSupergod || prevViewer.ownTenant !== ownTenant)
+  ) {
+    setPrevViewer({ isSupergod, ownTenant })
     setScope(ownTenant)
     setCreateTenant(ownTenant)
-  }, [isSupergod, ownTenant])
+  }
 
   const save = useCallback(async () => {
     const target = isSupergod ? normalizeTenant(createTenant) : ownTenant

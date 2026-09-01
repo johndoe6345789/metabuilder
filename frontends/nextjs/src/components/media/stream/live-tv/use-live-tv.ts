@@ -37,7 +37,9 @@ export function useLiveTv(externalWatchTrigger?: WatchTrigger | null) {
     if (externalWatchTrigger.nonce === lastTriggerNonce.current) return
     lastTriggerNonce.current = externalWatchTrigger.nonce
     const ch = channels.find(c => c.id === externalWatchTrigger.channelId)
-    if (ch !== undefined) void handleWatch(ch.id, ch.name)
+    if (ch !== undefined) {
+      void Promise.resolve().then(() => handleWatch(ch.id, ch.name))
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [externalWatchTrigger, channels])
 

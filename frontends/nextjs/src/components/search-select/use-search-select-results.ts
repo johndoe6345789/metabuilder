@@ -45,7 +45,7 @@ export function useSearchSelectResults({
 
   useEffect(() => {
     if (!isOpen) return
-    void fetchResults(debouncedQuery)
+    void Promise.resolve().then(() => fetchResults(debouncedQuery))
   }, [debouncedQuery, isOpen, fetchResults])
 
   return {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import type { FieldSchema, SelectChoice } from './schema-types'
 
 const BLANK: FieldSchema = {
@@ -20,12 +20,18 @@ export function useAddField(
   const [field, setField] = useState<FieldSchema>(BLANK)
   const [choices, setChoices] = useState<SelectChoice[]>([])
 
-  useEffect(() => {
+  // Resets the draft from `initial` whenever the dialog opens, or a
+  // different field to edit is picked while it's already open. Adjusted
+  // during render (the documented React pattern for state that tracks
+  // props) instead of an effect.
+  const [prevKey, setPrevKey] = useState({ open, initial })
+  if (prevKey.open !== open || prevKey.initial !== initial) {
+    setPrevKey({ open, initial })
     if (open) {
       setField(initial ?? BLANK)
       setChoices(initial?.choices ?? [])
     }
-  }, [open, initial])
+  }
 
   function patch(updates: Partial<FieldSchema>) {
     setField(prev => ({ ...prev, ...updates }))

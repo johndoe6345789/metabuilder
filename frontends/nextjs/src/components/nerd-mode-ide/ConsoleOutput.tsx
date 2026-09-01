@@ -12,9 +12,16 @@ export function ConsoleOutput({ lines }: ConsoleOutputProps) {
   const bottomRef = useRef<HTMLDivElement>(null)
   const [localLines, setLocalLines] = useState<string[]>(lines)
 
-  useEffect(() => {
+  // Mirrors the `lines` prop into local state so Clear can diverge from
+  // it, then re-syncs on the next real change. Adjusted during render
+  // (the documented React pattern for state that tracks a prop) instead
+  // of an effect, comparing by reference since `lines` only gets a new
+  // array when the parent actually appends output.
+  const [prevLines, setPrevLines] = useState(lines)
+  if (lines !== prevLines) {
+    setPrevLines(lines)
     setLocalLines(lines)
-  }, [lines])
+  }
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })

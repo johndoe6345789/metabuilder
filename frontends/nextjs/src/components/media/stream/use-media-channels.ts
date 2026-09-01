@@ -71,7 +71,7 @@ export function useMediaChannels<T>(
   }, [base, loadError])
 
   useEffect(() => {
-    void refresh()
+    void Promise.resolve().then(() => refresh())
     const interval = setInterval(() => {
       void refresh()
     }, POLL_MS)

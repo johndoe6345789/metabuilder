@@ -39,7 +39,7 @@ export function useCredentialAccounts(
   }, [appliedScope, isSupergod])
 
   useEffect(() => {
-    void load()
+    void Promise.resolve().then(() => load())
   }, [load])
 
   return {

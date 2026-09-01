@@ -11,9 +11,17 @@ import { fetchSlot, type SlotConfig } from './workspace-slot-data'
 export function useWorkspaceSlot(tenant: string, path: string) {
   const [slot, setSlot] = useState<SlotConfig | null | undefined>(undefined)
 
+  // A tenant/path change needs to show loading again before the refetch
+  // below resolves. Adjusted during render (the documented React pattern
+  // for state that tracks props) instead of synchronously in the effect.
+  const [prevKey, setPrevKey] = useState({ tenant, path })
+  if (prevKey.tenant !== tenant || prevKey.path !== path) {
+    setPrevKey({ tenant, path })
+    setSlot(undefined)
+  }
+
   useEffect(() => {
     let cancelled = false
-    setSlot(undefined)
     void fetchSlot(tenant, path).then(result => {
       if (!cancelled) setSlot(result)
     })

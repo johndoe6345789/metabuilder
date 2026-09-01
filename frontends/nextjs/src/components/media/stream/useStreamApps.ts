@@ -77,7 +77,7 @@ export function useStreamApps() {
   }, [])
 
   useEffect(() => {
-    void refresh()
+    void Promise.resolve().then(() => refresh())
   }, [refresh])
 
   const createApp = useCallback(

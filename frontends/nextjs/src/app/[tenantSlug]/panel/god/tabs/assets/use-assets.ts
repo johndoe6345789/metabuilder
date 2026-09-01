@@ -44,7 +44,7 @@ export function useAssets(tenant: string) {
   }, [tenant])
 
   useEffect(() => {
-    void refresh()
+    void Promise.resolve().then(() => refresh())
   }, [refresh])
 
   const upload = useCallback(

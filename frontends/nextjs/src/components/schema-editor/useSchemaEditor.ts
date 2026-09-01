@@ -47,9 +47,17 @@ export function useSchemaEditor(tenantId: string): UseSchemaEditorResult {
   const [loading, setLoading] = useState(true)
   const [offline, setOffline] = useState(false)
 
+  // A tenant switch needs to show loading again before the refetch below
+  // resolves. Adjusted during render (the documented React pattern for
+  // state that tracks a prop) instead of synchronously inside the effect.
+  const [prevTenantId, setPrevTenantId] = useState(tenantId)
+  if (tenantId !== prevTenantId) {
+    setPrevTenantId(tenantId)
+    setLoading(true)
+  }
+
   useEffect(() => {
     let cancelled = false
-    setLoading(true)
 
     fetch(`${DBAL_URL}/${tenantId}/core/entity_schema`, {
       signal: AbortSignal.timeout(4000),
