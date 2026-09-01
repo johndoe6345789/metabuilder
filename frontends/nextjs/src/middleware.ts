@@ -37,9 +37,12 @@ export function middleware(request: NextRequest) {
   const segments = pathname.split('/').filter(Boolean)
 
   if (segments.length >= 2) {
-    // Looks like a tenant route. The length check above already
-    // guarantees both of these exist.
-    const [tenant, pkg] = segments
+    // Looks like a tenant route. .at() is typed `string | undefined`
+    // under both tsconfig variants (unlike destructuring from
+    // split()'s `string[]`, which strict mode cannot correlate with
+    // the length check above even though it guarantees both exist).
+    const tenant = segments.at(0) ?? ''
+    const pkg = segments.at(1) ?? ''
 
     // Add tenant info to headers for downstream use
     const response = NextResponse.next()

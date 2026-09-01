@@ -43,8 +43,12 @@ export function validateEmail(email: unknown): boolean {
     return false
   }
 
-  // The length === 2 check above guarantees both of these exist.
-  const [localPart, domain] = parts
+  // .at() is typed `string | undefined` under both tsconfig variants
+  // (unlike destructuring from split()'s `string[]`, which strict mode
+  // cannot correlate with the length===2 check above even though it
+  // guarantees both exist at runtime).
+  const localPart = parts.at(0) ?? ''
+  const domain = parts.at(1) ?? ''
 
   if (localPart === '' || domain === '') {
     return false

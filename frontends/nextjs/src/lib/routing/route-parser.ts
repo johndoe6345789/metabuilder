@@ -86,9 +86,11 @@ export function getTableName(entity: string, tenantId?: string): string {
 export function isReservedPath(path: string): boolean {
   // Normalize path to get the first segment
   const normalizedPath = path.startsWith('/') ? path.slice(1) : path
-  // String.split() always returns at least one element, so this is never
-  // undefined -- unlike the array-index cases above.
-  const [segment] = normalizedPath.split('/')
+  // .at() is typed `string | undefined` under both tsconfig variants
+  // (unlike destructuring from split()'s `string[]`, which strict mode
+  // cannot prove non-empty even though split() always returns >=1
+  // element at runtime).
+  const segment = normalizedPath.split('/').at(0) ?? ''
 
   // Check if the segment matches any reserved paths
   return RESERVED_PATHS.includes(segment)
