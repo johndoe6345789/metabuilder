@@ -45,7 +45,7 @@ export async function DELETE(
     }
 
     // Delete package data using DBAL
-    await db.entity('packageData').remove(resolvedParams.packageId)
+    await db.entity('PackageData').remove(resolvedParams.packageId)
 
     return NextResponse.json({ deleted: true })
   } catch (error) {

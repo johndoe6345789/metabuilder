@@ -34,7 +34,7 @@ export async function GET(
 
     // Get package data using DBAL
     const packageData = await db
-      .entity('packageData')
+      .entity('PackageData')
       .read(resolvedParams.packageId)
 
     if (packageData == null) {
