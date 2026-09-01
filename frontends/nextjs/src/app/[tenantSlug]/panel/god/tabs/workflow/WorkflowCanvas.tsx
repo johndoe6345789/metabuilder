@@ -1,19 +1,24 @@
 'use client'
 
+import type { RefObject } from 'react'
 import { CanvasNode, ConnectionLine } from '@/workflow-editor'
 import type { useWorkflowEditor } from './use-workflow-editor'
 import s from './WorkflowEditor.module.scss'
 
 export interface WorkflowCanvasProps {
-  ed: ReturnType<typeof useWorkflowEditor>
+  ed: Omit<ReturnType<typeof useWorkflowEditor>, 'canvasRef'>
+  canvasRef: RefObject<HTMLDivElement | null>
 }
 
 /** The pannable/zoomable node graph -- drag surface, connection lines, and
- *  nodes -- kept out of WorkflowEditor so that file only owns page layout. */
-export function WorkflowCanvas({ ed }: WorkflowCanvasProps) {
+ *  nodes -- kept out of WorkflowEditor so that file only owns page layout.
+ *  `canvasRef` travels as its own prop, not folded into `ed`: a ref sitting
+ *  next to plain render values in the same object makes the react-compiler
+ *  lint rule treat every `ed.x` access in this component as a ref read. */
+export function WorkflowCanvas({ ed, canvasRef }: WorkflowCanvasProps) {
   return (
     <div
-      ref={ed.canvasRef}
+      ref={canvasRef}
       data-canvas="1"
       className={s.canvas}
       style={{

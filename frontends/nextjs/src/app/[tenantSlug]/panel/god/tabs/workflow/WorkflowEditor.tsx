@@ -28,8 +28,10 @@ export function WorkflowEditor({
   onRun,
   onBack,
 }: Props) {
-  const ed = useWorkflowEditor(workflow, onChange)
+  const { canvasRef, ...ed } = useWorkflowEditor(workflow, onChange)
   const pal = useNodePalette()
+  const selectedNodeType =
+    ed.selectedNode !== null ? ed.getNodeType(ed.selectedNode.type) : undefined
 
   return (
     <div className={s.editor}>
@@ -48,7 +50,7 @@ export function WorkflowEditor({
       />
 
       <div className={s.content}>
-        <WorkflowCanvas ed={ed} />
+        <WorkflowCanvas ed={ed} canvasRef={canvasRef} />
 
         <NodePalette
           nodeSearch={pal.search}
@@ -65,13 +67,9 @@ export function WorkflowEditor({
 
       <PropertiesDialog
         open={ed.propertiesOpen}
-        onClose={() => {
-          ed.setPropertiesOpen(false)
-        }}
+        onClose={() => { ed.setPropertiesOpen(false) }}
         node={ed.selectedNode}
-        nodeType={
-          ed.selectedNode ? ed.getNodeType(ed.selectedNode.type) : undefined
-        }
+        nodeType={selectedNodeType}
         onUpdateConfig={ed.updateConfig}
         onUpdateName={ed.updateName}
         onDelete={ed.deleteNode}
