@@ -12,7 +12,7 @@ import s from './OverviewTab.module.scss'
 /** What this installation is, and the handful of things to do to it. */
 export function OverviewTab() {
   const status = useDbalStatus()
-  const tools = useOverviewTools(status.version ?? null)
+  const { importRef, ...tools } = useOverviewTools(status.version ?? null)
 
   return (
     <div>
@@ -27,7 +27,7 @@ export function OverviewTab() {
       )}
 
       <input
-        ref={tools.importRef}
+        ref={importRef}
         type="file"
         accept="application/json"
         className={s.fileInput}

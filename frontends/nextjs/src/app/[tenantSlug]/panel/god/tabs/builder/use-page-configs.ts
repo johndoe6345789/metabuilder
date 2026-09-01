@@ -72,7 +72,7 @@ export function usePageConfigs(tenant: string) {
   }, [tenant])
 
   useEffect(() => {
-    void refresh()
+    void Promise.resolve().then(() => refresh())
   }, [refresh])
 
   return { rows, loading, refresh }
