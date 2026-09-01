@@ -30,13 +30,17 @@ export async function saveNodes(
         // `Position` ({x,y}) rather than a [number, number] tuple. The
         // declared type doesn't describe what's actually on the wire here,
         // so these fall back defensively rather than trusting it.
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         typeVersion: node.typeVersion ?? 1,
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         positionX: node.position?.[0] ?? 0,
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         positionY: node.position?.[1] ?? 0,
       }),
     })
     if (!res.ok) return false
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     for (const [name, raw] of Object.entries(node.parameters ?? {})) {
       const { valueType, value } = writeValue(raw)
       const p = await fetch(`${base}/WorkflowNodeParam`, {

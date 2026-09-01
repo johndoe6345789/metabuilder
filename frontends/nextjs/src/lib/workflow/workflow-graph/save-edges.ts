@@ -17,9 +17,13 @@ export async function saveEdges(
   // Record<string, Record<string, ConnectionTarget[]>>> adjacency shape at
   // all. The declared type doesn't describe what's actually on the wire
   // here, so every level falls back defensively rather than trusting it.
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   for (const [sourceKey, handles] of Object.entries(edges ?? {})) {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     for (const [handle, outputs] of Object.entries(handles ?? {})) {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       for (const [sourceIndex, conns] of Object.entries(outputs ?? {})) {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         for (const conn of conns ?? []) {
           const res = await fetch(`${base}/WorkflowEdge`, {
             method: 'POST',

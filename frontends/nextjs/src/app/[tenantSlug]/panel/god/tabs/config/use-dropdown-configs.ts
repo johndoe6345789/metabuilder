@@ -28,9 +28,10 @@ export function useDropdownConfigs() {
   const create = useCallback(
     (name: string): string => {
       const id = `d_${Date.now()}`
+      const trimmed = name.trim()
       persist([
         ...configs,
-        { id, name: name.trim() || 'new-list', options: [] },
+        { id, name: trimmed.length > 0 ? trimmed : 'new-list', options: [] },
       ])
       return id
     },

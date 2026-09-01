@@ -30,7 +30,11 @@ export function useCssClasses() {
   const create = useCallback(
     (name: string): string => {
       const id = `c_${Date.now()}`
-      persist([...classes, { id, name: name.trim() || 'new-class', props: {} }])
+      const trimmed = name.trim()
+      persist([
+        ...classes,
+        { id, name: trimmed.length > 0 ? trimmed : 'new-class', props: {} },
+      ])
       return id
     },
     [classes, persist]
