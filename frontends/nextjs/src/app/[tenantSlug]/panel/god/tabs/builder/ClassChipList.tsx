@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { TextField, Typography } from '@/m3'
+import { SearchSelect } from '@/components/search-select/SearchSelect'
+import { Typography } from '@/m3'
 import type { CssClass } from '../styles/use-css-classes'
 import { ClassChip } from './ClassChip'
 import s from './ComponentTreeTab.module.scss'
@@ -9,18 +9,24 @@ import s from './ComponentTreeTab.module.scss'
 export interface ClassChipListProps {
   classes: CssClass[]
   applied: string[]
+  tenant: string
   onToggle: (name: string) => void
 }
 
-/** The searchable chip grid, or the empty hint when the tenant has not
- *  defined any classes yet. */
+const SEARCH_THRESHOLD = 8
+
+/** The class picker: every class as a toggle chip while the list is short
+ *  enough to scan at a glance, or -- once a tenant has defined enough that
+ *  it no longer is -- a search dropdown backed by DBAL's Elasticsearch-
+ *  mirrored `_search` endpoint. Whatever is already on the node stays
+ *  visible as a removable chip either way, regardless of how the rest are
+ *  found, so search can't hide a class the node already has. */
 export function ClassChipList({
   classes,
   applied,
+  tenant,
   onToggle,
 }: ClassChipListProps) {
-  const [query, setQuery] = useState('')
-
   if (classes.length === 0) {
     return (
       <Typography variant="caption" className={s.propHint}>
@@ -29,38 +35,42 @@ export function ClassChipList({
     )
   }
 
+  if (classes.length <= SEARCH_THRESHOLD) {
+    return (
+      <div className={s.classChips}>
+        {classes.map(css => (
+          <ClassChip
+            key={css.id}
+            css={css}
+            on={applied.includes(css.name)}
+            onToggle={onToggle}
+          />
+        ))}
+      </div>
+    )
+  }
+
+  const appliedClasses = classes.filter(css => applied.includes(css.name))
+
   return (
     <>
-      {/* Worth a filter once the list is longer than a glance. Applied
-          classes are never filtered out, so searching cannot hide what is
-          already on the node. */}
-      {classes.length > 8 && (
-        <TextField
-          size="small"
-          fullWidth
-          label="Find a style"
-          value={query}
-          onChange={event => {
-            setQuery(event.target.value)
-          }}
-        />
-      )}
-      <div className={s.classChips}>
-        {classes
-          .filter(
-            css =>
-              applied.includes(css.name) ||
-              css.name.toLowerCase().includes(query.trim().toLowerCase())
-          )
-          .map(css => (
-            <ClassChip
-              key={css.id}
-              css={css}
-              on={applied.includes(css.name)}
-              onToggle={onToggle}
-            />
+      {appliedClasses.length > 0 && (
+        <div className={s.classChips}>
+          {appliedClasses.map(css => (
+            <ClassChip key={css.id} css={css} on onToggle={onToggle} />
           ))}
-      </div>
+        </div>
+      )}
+      <SearchSelect
+        tenant={tenant}
+        packageName="core"
+        entity="StyleRule"
+        placeholder="Find a style to add…"
+        getLabel={row => (typeof row.name === 'string' ? row.name : '')}
+        onSelect={item => {
+          if (!applied.includes(item.label)) onToggle(item.label)
+        }}
+      />
     </>
   )
 }

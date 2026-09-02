@@ -2,21 +2,20 @@
 
 /**
  * Style classes for the selected node, sourced from the god panel's Styles
- * tab rather than typed blind: the classes offered here are exactly the ones
- * that tab defines, so a class chosen in the builder is one that will actually
- * exist in the published stylesheet.
- *
- * className stays a plain space-separated string -- the same thing the DOM
- * takes -- so a class the Styles tab does not know about (a global utility,
- * say) can still be typed in the field and is preserved.
+ * tab rather than typed blind: the chips offered here are exactly the ones
+ * that tab defines, so applying one is a click, never typing. A class the
+ * Styles tab doesn't know about (a global utility, say) still reaches the
+ * node -- that's rare enough to live behind the "Advanced" disclosure below
+ * rather than in a text box everyone has to look at first.
  */
 
 import { useEffect } from 'react'
 import Link from 'next/link'
-import { TextField } from '@/m3'
 import { tenantGodPanelPath } from '@/lib/tenant/workspace-paths'
 import { useCssClasses } from '../styles/use-css-classes'
+import { useAdvancedClassesOpen } from './use-advanced-classes-open'
 import { ClassChipList } from './ClassChipList'
+import { AdvancedClassInput } from './AdvancedClassInput'
 import s from './ComponentTreeTab.module.scss'
 
 const split = (value: string): string[] =>
@@ -31,6 +30,10 @@ type Props = {
 export function ComponentTreeClassPicker({ value, tenant, onChange }: Props) {
   const { classes, hydrate } = useCssClasses()
   const applied = split(value)
+  const [advancedOpen, toggleAdvanced] = useAdvancedClassesOpen(
+    applied,
+    classes
+  )
 
   // Pull the tenant's published classes in, so the picker offers what the
   // Styles tab actually defines rather than only what this session created.
@@ -47,19 +50,19 @@ export function ComponentTreeClassPicker({ value, tenant, onChange }: Props) {
 
   return (
     <>
-      <TextField
-        size="small"
-        fullWidth
-        label="CSS classes"
-        placeholder="card card--wide"
-        value={value}
-        helperText="Space separated, same as the class attribute"
-        onChange={event => {
-          onChange(event.target.value)
-        }}
+      <ClassChipList
+        classes={classes}
+        applied={applied}
+        tenant={tenant}
+        onToggle={toggle}
       />
 
-      <ClassChipList classes={classes} applied={applied} onToggle={toggle} />
+      <AdvancedClassInput
+        value={value}
+        open={advancedOpen}
+        onToggleOpen={toggleAdvanced}
+        onChange={onChange}
+      />
 
       <Link className={s.propLink} href={tenantGodPanelPath(tenant, 'styles')}>
         <span className="material-symbols-rounded" aria-hidden="true">
