@@ -1,6 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-const sso = vi.hoisted(() => ({ beginLogin: vi.fn(async () => undefined) }))
+const sso = vi.hoisted(() => ({
+  beginLogin: vi.fn(async () => undefined),
+  logout: vi.fn(async () => undefined),
+}))
 vi.mock('@metabuilder/dbal-sso/core', () => sso)
 vi.mock('@/lib/dbalSsoConfig', () => ({ dbalSsoConfig: {} }))
 
@@ -52,6 +55,20 @@ describe('submitSignup', () => {
     stub(true, { success: true })
     expect(await submitSignup(fields)).toBeNull()
     expect(sso.beginLogin).toHaveBeenCalledOnce()
+  })
+
+  // /oidc/authorize silently reuses an existing DBAL SSO session instead of
+  // prompting for credentials (that's SSO working as designed) -- without
+  // clearing it first, a signup made while already signed in as someone
+  // else lands the new account right back in the OLD one's tenant, which
+  // is exactly the confusing "still says system tenant" symptom this
+  // guards against.
+  it('logs out any existing session before starting the new one', async () => {
+    stub(true, { success: true })
+    await submitSignup(fields)
+    const logoutOrder = sso.logout.mock.invocationCallOrder[0]
+    const beginLoginOrder = sso.beginLogin.mock.invocationCallOrder[0]
+    expect(logoutOrder).toBeLessThan(beginLoginOrder)
   })
 
   it('reports the server\'s own message on failure, without logging in', async () => {
