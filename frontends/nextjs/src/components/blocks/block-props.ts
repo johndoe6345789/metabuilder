@@ -28,6 +28,17 @@ export interface PropField {
   source?: string
   hint?: string
   placeholder?: string
+  /**
+   * Surfaces a plain-language accessibility nudge right on this field,
+   * instead of asking the author to already know what to check. Shown when
+   * the field is empty and `when` says the rest of the block's properties
+   * make that a real gap rather than a normal default -- an unset image has
+   * no description to miss, one with a picture but no description does.
+   */
+  warnIfEmpty?: {
+    when: (props: Record<string, unknown>) => boolean
+    message: string
+  }
 }
 
 const text = (
@@ -97,6 +108,12 @@ export const PROP_SCHEMAS: Record<string, PropField[]> = {
     text('src', 'Image address', { placeholder: 'https://…/photo.jpg' }),
     text('alt', 'Description', {
       hint: 'Read aloud to people who cannot see the image. Leave empty only if it is decorative.',
+      warnIfEmpty: {
+        when: props =>
+          typeof props.src === 'string' && props.src.trim() !== '',
+        message:
+          'This image has no description, so screen readers will skip it. Add one, or leave it blank on purpose if the image is purely decorative.',
+      },
     }),
     num('radius', 'Rounded corners', { hint: 'Pixels' }),
   ],

@@ -20,6 +20,7 @@ import { paletteItem, type TreeNode } from './builder-registry'
 import { propSchema } from '@/components/blocks/block-props'
 import { useDropdownConfigs } from '../config/use-dropdown-configs'
 import { inferred } from './auto-props-infer'
+import { fieldWarning } from './field-warning'
 import { AutoPropField } from './AutoPropField'
 import s from './ComponentTreeTab.module.scss'
 
@@ -42,18 +43,24 @@ export function ComponentTreeAutoProps({ node, onChange }: Props) {
     )
   }
 
+  const allProps = { ...defaults, ...node.props }
+
   return (
     <div className={s.propCol}>
-      {fields.map(field => (
-        <AutoPropField
-          key={field.name}
-          field={field}
-          current={node.props[field.name] ?? defaults[field.name]}
-          configs={configs}
-          fieldId={`prop-${node.id}-${field.name}`}
-          onChange={onChange}
-        />
-      ))}
+      {fields.map(field => {
+        const current = allProps[field.name]
+        return (
+          <AutoPropField
+            key={field.name}
+            field={field}
+            current={current}
+            warning={fieldWarning(field, current, allProps)}
+            configs={configs}
+            fieldId={`prop-${node.id}-${field.name}`}
+            onChange={onChange}
+          />
+        )
+      })}
     </div>
   )
 }

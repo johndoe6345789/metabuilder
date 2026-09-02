@@ -10,6 +10,7 @@ import { TextPropField } from './TextPropField'
 export interface AutoPropFieldProps {
   field: PropField
   current: unknown
+  warning?: string
   configs: DropdownConfig[]
   fieldId: string
   onChange: (patch: Record<string, unknown>) => void
@@ -19,6 +20,7 @@ export interface AutoPropFieldProps {
 export function AutoPropField({
   field,
   current,
+  warning,
   configs,
   fieldId,
   onChange,
@@ -44,5 +46,12 @@ export function AutoPropField({
       <NumberPropField field={field} current={current} onChange={onChange} />
     )
   }
-  return <TextPropField field={field} current={current} onChange={onChange} />
+  return (
+    <TextPropField
+      field={field}
+      current={current}
+      warning={warning}
+      onChange={onChange}
+    />
+  )
 }
