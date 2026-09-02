@@ -96,4 +96,16 @@ describe('buildRegisterPayload', () => {
     expect(payload.tenantName).toBe('acme')
     expect(payload.plan).toBe('studio')
   })
+
+  // DBAL's route parser only accepts alphanumeric + underscore in a
+  // tenant segment (rpc_restful_handler.cpp's is_valid_name) -- a hyphen
+  // there 400s the whole request with "Invalid tenant name", which is
+  // exactly what slugify() produces for any multi-word community name.
+  // The username field isn't a URL path segment, so it keeps the
+  // hyphenated, more URL-conventional slug unchanged.
+  it('sends an underscore tenantName even for a multi-word community', () => {
+    const payload = buildRegisterPayload(fields({ community: 'Acme Club' }))
+    expect(payload.tenantName).toBe('acme_club')
+    expect(payload.username).toBe('acme-club')
+  })
 })

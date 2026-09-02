@@ -60,7 +60,10 @@ export function buildRegisterPayload(
     username: slug.length > 0 ? slug : fields.name.toLowerCase(),
     email: fields.email,
     password: fields.password,
-    tenantName: slug,
+    // DBAL's route parser only accepts alphanumeric + underscore in a
+    // tenant path segment -- a hyphenated slug 400s with "Invalid tenant
+    // name" the moment it's used as one.
+    tenantName: slug.replaceAll('-', '_'),
     plan: fields.tier,
   }
 }
