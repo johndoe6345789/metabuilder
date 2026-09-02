@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import {
   PRODUCT_TIERS,
   PRODUCT_PACKAGES,
@@ -33,12 +34,12 @@ export function PricingSection() {
                   ? `Up to ${tier.memberLimit.toLocaleString()} members`
                   : 'Unlimited members'}
               </p>
-              <a
+              <Link
                 className={`${s.cta} ${tier.highlight ? s.ctaFilled : s.ctaOutline}`}
                 href="/ui/signup"
               >
                 {tier.cta}
-              </a>
+              </Link>
               <ul className={s.includes}>
                 {tier.packageIds.map(pid => {
                   const pkg = PRODUCT_PACKAGES.find(p => p.id === pid)

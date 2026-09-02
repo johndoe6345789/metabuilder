@@ -37,4 +37,9 @@ describe('WelcomePage', () => {
     const year = new Date().getFullYear().toString()
     expect(screen.getByText(new RegExp(year))).toBeTruthy()
   })
+
+  it('shows the app version in the footer', () => {
+    render(<WelcomePage />)
+    expect(screen.getByText(/^v\d+\.\d+\.\d+$/)).toBeTruthy()
+  })
 })

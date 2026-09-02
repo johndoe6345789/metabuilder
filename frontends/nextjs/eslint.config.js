@@ -1,6 +1,9 @@
 import js from '@eslint/js'
 import reactHooks from 'eslint-plugin-react-hooks'
 import tseslint from 'typescript-eslint'
+import nextConfig from 'eslint-config-next'
+
+const nextPlugin = nextConfig[0].plugins['@next/next']
 
 /**
  * MetaBuilder ESLint Configuration
@@ -144,6 +147,24 @@ export default tseslint.config(
         skipBlankLines: true,
         skipComments: true,
       }],
+    },
+  },
+
+  // ============================================================================
+  // Next.js basePath correctness
+  // ============================================================================
+  // A plain <a href="/internal/route"> silently skips Next's basePath
+  // rewrite (this app is served under basePath: '/app'), producing a link
+  // that 404s in production while looking correct in dev/tests -- jsdom
+  // component tests never exercise the real router, so nothing else catches
+  // this. Caught two live instances (PricingSection, auth/callback) on
+  // 2026-09-02; kept as an error, not the upstream default warn, since it's
+  // a correctness bug, not a style nit.
+  {
+    files: ['src/**/*.tsx'],
+    plugins: { '@next/next': nextPlugin },
+    rules: {
+      '@next/next/no-html-link-for-pages': ['error', 'src/app'],
     },
   },
 

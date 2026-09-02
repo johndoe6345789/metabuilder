@@ -14,7 +14,10 @@ const dbalSso = vi.hoisted(() => ({
 vi.mock('@metabuilder/dbal-sso/core', () => dbalSso)
 
 const authStore = vi.hoisted(() => ({
-  authStore: { applySession: vi.fn() },
+  authStore: {
+    applySession: vi.fn(),
+    getState: vi.fn(() => ({ user: { tenantId: 'acme' } })),
+  },
 }))
 vi.mock('@/hooks/auth/auth-store', () => authStore)
 
@@ -46,7 +49,7 @@ describe('AuthCallbackPage completing the exchange', () => {
     render(<AuthCallbackPage />)
 
     await waitFor(() => {
-      expect(replace).toHaveBeenCalledWith('/dashboard')
+      expect(replace).toHaveBeenCalledWith('/acme/panel')
     })
     expect(dbalSso.completeLogin).toHaveBeenCalledWith(
       expect.anything(),

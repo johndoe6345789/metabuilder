@@ -14,7 +14,7 @@ const created = {
   id: 'new-id',
   username: 'alice',
   email: 'alice@example.com',
-  role: 'user',
+  role: 'god',
   createdAt: 1700000000000,
   tenantId: 'system',
 }
@@ -89,7 +89,7 @@ describe('register', () => {
     expect(result.user).toMatchObject({
       id: 'new-id',
       username: 'alice',
-      role: 'user',
+      role: 'god',
       isInstanceOwner: false,
     })
   })
@@ -101,18 +101,21 @@ describe('register', () => {
     stubCredentialEndpoint()
     await register('alice', 'alice@example.com', 'pw')
     expect(client.db.users.create).toHaveBeenCalledWith(
-      expect.objectContaining({ tenantId: 'system', role: 'user' })
+      expect.objectContaining({ tenantId: 'system', role: 'god' })
     )
   })
 
-  it('never lets the caller choose its own role', async () => {
+  // Self-service signup founds a community, so it grants God Panel access
+  // (level 4) -- but never 'supergod' (level 5), which is reserved for the
+  // instance owner and must never be reachable through public signup.
+  it('gives a new signup god-level access but never supergod', async () => {
     stubCredentialEndpoint()
     await register('alice', 'alice@example.com', 'pw')
     const row = client.db.users.create.mock.calls[0]?.[0] as {
       role: string
       isInstanceOwner: boolean
     }
-    expect(row.role).toBe('user')
+    expect(row.role).toBe('god')
     expect(row.isInstanceOwner).toBe(false)
   })
 

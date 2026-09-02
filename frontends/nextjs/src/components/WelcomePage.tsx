@@ -43,9 +43,14 @@ export function WelcomePage() {
             <Logo size={18} />
             <span>MetaBuilder</span>
           </div>
-          <span className={s.footerCopy}>
-            © {new Date().getFullYear()} · Your platform, your rules.
-          </span>
+          <div className={s.footerMeta}>
+            <span className={s.footerCopy}>
+              © {new Date().getFullYear()} · Your platform, your rules.
+            </span>
+            <span className={s.footerVersion}>
+              v{process.env.NEXT_PUBLIC_APP_VERSION ?? '0.1.0'}
+            </span>
+          </div>
         </div>
       </footer>
     </div>

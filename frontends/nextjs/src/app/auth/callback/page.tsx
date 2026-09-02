@@ -2,9 +2,11 @@
 
 import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 import { completeLogin, friendlySignInError } from '@metabuilder/dbal-sso/core'
 import { dbalSsoConfig } from '@/lib/dbalSsoConfig'
 import { authStore } from '@/hooks/auth/auth-store'
+import { tenantPanelPath } from '@/lib/tenant/workspace-paths'
 import s from '../../login/page.module.scss'
 
 function AuthCallbackContent() {
@@ -29,7 +31,8 @@ function AuthCallbackContent() {
       })
       .then(tokens => authStore.applySession(tokens.token, tokens.refreshToken))
       .then(() => {
-        router.replace('/dashboard')
+        const tenantId = authStore.getState().user?.tenantId
+        router.replace(tenantPanelPath(tenantId))
       })
       .catch((e: unknown) => {
         setError(
@@ -47,9 +50,9 @@ function AuthCallbackContent() {
         {error !== null ? (
           <>
             <p className={s.error}>{error}</p>
-            <a className={s.back} href="/login">
+            <Link className={s.back} href="/login">
               Back to sign in
-            </a>
+            </Link>
           </>
         ) : (
           <p className={s.subtitle}>Signing in…</p>

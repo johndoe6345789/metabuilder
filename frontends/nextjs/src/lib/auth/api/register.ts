@@ -97,7 +97,11 @@ export async function register(
       id: userId,
       username,
       email,
-      role: 'user',
+      // Self-service signup creates a community, so its founder gets the
+      // God Panel (level 4) rather than plain member access (level 1) --
+      // 'supergod' (level 5) is reserved for the instance owner and is
+      // never assigned here.
+      role: 'god',
       createdAt: Date.now(),
       isInstanceOwner: false,
       // Every DBAL list/filter query auto-adds `WHERE tenantId = '{route
