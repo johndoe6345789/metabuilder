@@ -2,14 +2,18 @@
 
 import type { TreeNode } from './builder-registry'
 import { paletteItem } from './builder-registry'
+import { DeleteRowButton } from './DeleteRowButton'
+import { RowTwisty } from './RowTwisty'
 import s from './ComponentTreeTab.module.scss'
 
 export interface OutlineRowContentProps {
   node: TreeNode
   hasChildren: boolean
   isCollapsed: boolean
+  draggable: boolean
   onToggleCollapse: (id: string) => void
   onDelete: (id: string) => void
+  onDragStart: (event: React.DragEvent) => void
 }
 
 /** The twisty, icon, name, node-id badge, child count, and delete button
@@ -19,41 +23,33 @@ export function OutlineRowContent({
   node,
   hasChildren,
   isCollapsed,
+  draggable,
   onToggleCollapse,
   onDelete,
+  onDragStart,
 }: OutlineRowContentProps) {
   const item = paletteItem(node.type)
 
   return (
     <>
-      <button
-        type="button"
-        className={[
-          s.twisty,
-          hasChildren ? '' : s.twistyLeaf,
-          hasChildren && !isCollapsed ? s.twistyOpen : '',
-        ]
-          .filter(Boolean)
-          .join(' ')}
-        aria-label={isCollapsed ? 'Expand' : 'Collapse'}
-        aria-expanded={hasChildren ? !isCollapsed : undefined}
-        onClick={event => {
-          event.stopPropagation()
-          if (hasChildren) onToggleCollapse(node.id)
-        }}
+      <RowTwisty
+        id={node.id}
+        hasChildren={hasChildren}
+        isCollapsed={isCollapsed}
+        onToggleCollapse={onToggleCollapse}
+      />
+      {/* The only draggable element in the row: a click that drifts a few
+          pixels used to start a drag from anywhere on the row, silently
+          reordering or reparenting the wrong node. Reordering now has to
+          start here, deliberately. */}
+      <span
+        className={s.grip}
+        draggable={draggable}
+        onDragStart={onDragStart}
+        aria-hidden="true"
       >
-        {/* One glyph rotated by state rather than two characters: the
-            text triangles rendered at wildly different sizes across
-            platforms, and a single rotating chevron matches the icon
-            set the rest of the row already uses. */}
-        <span
-          className={`material-symbols-rounded ${s.twistyIcon}`}
-          aria-hidden="true"
-        >
-          chevron_right
-        </span>
-      </button>
-      <span className={s.grip}>⠿</span>
+        ⠿
+      </span>
       <span className="material-symbols-rounded">{item?.icon ?? 'widgets'}</span>
       <span className={s.rowName}>{item?.name ?? node.type}</span>
       {typeof node.props.id === 'string' && node.props.id !== '' && (
@@ -65,15 +61,12 @@ export function OutlineRowContent({
         <span className={s.childCount}>{node.children.length}</span>
       )}
       {node.id !== 'root' && (
-        <button
-          className={s.del}
-          onClick={event => {
-            event.stopPropagation()
-            onDelete(node.id)
-          }}
-        >
-          ✕
-        </button>
+        <DeleteRowButton
+          id={node.id}
+          name={item?.name ?? node.type}
+          hasChildren={hasChildren}
+          onDelete={onDelete}
+        />
       )}
     </>
   )

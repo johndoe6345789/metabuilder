@@ -53,12 +53,25 @@ describe('useComponentTreeActions', () => {
       expect(childIds(committed(commit), 'box')).toHaveLength(2)
     })
 
-    it('adds at the root when the selection cannot hold children', () => {
+    it('adds at the root when the selection cannot hold children and is itself at the root', () => {
       const { result, commit } = setup(tree(), 'p2')
 
       act(() => result.current.addNode('html.p'))
 
       expect(childIds(committed(commit), 'root')).toHaveLength(3)
+    })
+
+    it('adds beside a nested selection, in its actual parent, not the root', () => {
+      // p1's parent is 'box', two levels down from 'root'. Clicking the
+      // palette with p1 selected should land the new node next to it in
+      // 'box' -- landing it at 'root' instead would silently move the new
+      // block far away from where the author was working.
+      const { result, commit } = setup(tree(), 'p1')
+
+      act(() => result.current.addNode('html.p'))
+
+      expect(childIds(committed(commit), 'box')).toHaveLength(2)
+      expect(childIds(committed(commit), 'root')).toHaveLength(2)
     })
 
     it('drops into the named container when one is given', () => {

@@ -42,11 +42,9 @@ export function ComponentTreeOutline({
       <div
         className={outlineRowClassName(s, node.id === selectedId, dropping)}
         style={{ paddingLeft: 8 + depth * 16 }}
-        draggable={node.id !== 'root'}
         onClick={() => {
           onSelect(node.id)
         }}
-        onDragStart={onDragStart}
         onDragOver={onDragOver}
         onDragLeave={onDragLeave}
         onDrop={onDrop}
@@ -55,8 +53,10 @@ export function ComponentTreeOutline({
           node={node}
           hasChildren={hasChildren}
           isCollapsed={isCollapsed}
+          draggable={node.id !== 'root'}
           onToggleCollapse={onToggleCollapse}
           onDelete={onDelete}
+          onDragStart={onDragStart}
         />
       </div>
       {!isCollapsed &&

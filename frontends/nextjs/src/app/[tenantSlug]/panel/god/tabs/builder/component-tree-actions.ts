@@ -24,9 +24,10 @@ export function useComponentTreeActions(
 ) {
   const addNode = useCallback(
     /** `parentId` is set when a palette item is dropped onto a specific row;
-     *  clicking the palette falls back to the selection as before. A drop onto
-     *  a non-container lands beside it, in that node's parent, which is what
-     *  dropping "on" a leaf visually implies. */
+     *  clicking the palette falls back to the selection. Either way, landing
+     *  on a non-container lands beside it, in that node's actual parent --
+     *  never at the tree root -- which is what targeting a leaf visually
+     *  implies. */
     (type: string, parentId?: string) => {
       const item = paletteItem(type)
       if (item === undefined) return
@@ -41,7 +42,7 @@ export function useComponentTreeActions(
         parent =
           paletteItem(selected.type)?.container === true
             ? selected.id
-            : 'root'
+            : (parentOf(tree, selected.id)?.id ?? 'root')
       } else {
         const target = findNode(tree, parentId)
         parent =

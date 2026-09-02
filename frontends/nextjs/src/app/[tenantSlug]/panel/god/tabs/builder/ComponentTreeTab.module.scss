@@ -72,7 +72,34 @@
   border: 1px solid var(--mat-sys-outline-variant, #30363d);
   border-radius: 12px;
   background: var(--mat-sys-surface-container-lowest, #0d1117);
+}
+.palette,
+.previewWrap {
   overflow: auto;
+}
+
+/* .middle holds the tree and the property editor. It used to share one
+   overflow:auto box between them -- scrolling the tree could run into
+   the properties content in the same region, and an unrelated wheel
+   gesture at the top/bottom of that box would chain to the page scroll
+   instead of stopping, making the tree feel like it needed several
+   attempts to scroll anywhere. Each pane now owns its own bounded,
+   independently-scrolling region instead. */
+.middle {
+  display: flex;
+  overflow: hidden;
+}
+.treePane,
+.propsPane {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-width: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.treePane {
+  border-right: 1px solid var(--mat-sys-outline-variant, #30363d);
 }
 
 .paneTitle {
