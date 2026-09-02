@@ -24,7 +24,22 @@ describe('POST /api/auth/register', () => {
     const res = await POST(req(valid))
     expect(res.status).toBe(200)
     await expect(res.json()).resolves.toMatchObject({ success: true })
-    expect(api.register).toHaveBeenCalledWith('alice', 'a@b.c', 'pw')
+    expect(api.register).toHaveBeenCalledWith(
+      'alice',
+      'a@b.c',
+      'pw',
+      undefined
+    )
+  })
+
+  it('passes tenantName through when the signup names a community', async () => {
+    await POST(req({ ...valid, tenantName: 'acme' }))
+    expect(api.register).toHaveBeenCalledWith(
+      'alice',
+      'a@b.c',
+      'pw',
+      'acme'
+    )
   })
 
   it.each(['username', 'email', 'password'])(
@@ -40,7 +55,7 @@ describe('POST /api/auth/register', () => {
 
   it('does not treat an empty string as missing', async () => {
     await POST(req({ ...valid, password: '' }))
-    expect(api.register).toHaveBeenCalledWith('alice', 'a@b.c', '')
+    expect(api.register).toHaveBeenCalledWith('alice', 'a@b.c', '', undefined)
   })
 
   it('passes a registration failure through as 400', async () => {

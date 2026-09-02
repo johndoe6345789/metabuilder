@@ -33,7 +33,8 @@ export interface RegisterResult {
 
 async function createDbalCredential(
   username: string,
-  password: string
+  password: string,
+  tenantId: string
 ): Promise<void> {
   const res = await fetch(`${DBAL_URL}/admin/credentials`, {
     method: 'POST',
@@ -41,7 +42,7 @@ async function createDbalCredential(
       'Content-Type': 'application/json',
       Authorization: `Bearer ${process.env.DBAL_ADMIN_TOKEN ?? ''}`,
     },
-    body: JSON.stringify({ username, password }),
+    body: JSON.stringify({ username, password, tenantId }),
   })
   if (!res.ok) {
     const body = await res.text().catch(() => '')
@@ -52,7 +53,8 @@ async function createDbalCredential(
 export async function register(
   username: string,
   email: string,
-  password: string
+  password: string,
+  tenantName?: string
 ): Promise<RegisterResult> {
   try {
     // Validate input
@@ -64,8 +66,34 @@ export async function register(
       }
     }
 
-    // Check if username already exists
-    const existingByUsername = await db.users.list({
+    // A named signup founds its own community; DBAL's OIDC login flow
+    // resolves and signs this same tenantId into the access token from the
+    // Credential row (see LoginRouteHandler), and fetchSession() reads it
+    // back from /oidc/userinfo -- so the User row created here, the
+    // Credential provisioned below, and every future login all agree on
+    // which tenant this account belongs to.
+    const foundingNewTenant = tenantName != null && tenantName.length > 0
+    const tenantId = foundingNewTenant ? tenantName : DEFAULT_TENANT_ID
+    const users = db.entity('User', tenantId)
+
+    // Only a *named* community can be "already taken" -- 'system' is the
+    // shared bucket every un-named signup lands in, not owned by any one
+    // founder, so it has no founding-collision to guard against.
+    if (foundingNewTenant) {
+      const existingMembers = await users.list({})
+      if (existingMembers.data.length > 0) {
+        return {
+          success: false,
+          user: null,
+          error: 'That community name is already taken',
+        }
+      }
+    }
+
+    // Check if username already exists (within this tenant -- global
+    // username uniqueness is enforced independently by Credential's own
+    // primary key, see createDbalCredential)
+    const existingByUsername = await users.list({
       filter: { username },
     })
 
@@ -77,8 +105,8 @@ export async function register(
       }
     }
 
-    // Check if email already exists
-    const existingByEmail = await db.users.list({
+    // Check if email already exists (within this tenant)
+    const existingByEmail = await users.list({
       filter: { email },
     })
 
@@ -93,7 +121,7 @@ export async function register(
     // Create user
     const userId = crypto.randomUUID()
 
-    const newUser = (await db.users.create({
+    const newUser = (await users.create({
       id: userId,
       username,
       email,
@@ -104,22 +132,15 @@ export async function register(
       role: 'god',
       createdAt: Date.now(),
       isInstanceOwner: false,
-      // Every DBAL list/filter query auto-adds `WHERE tenantId = '{route
-      // tenant}'` (list_handler.cpp) -- this route is /system/core/User
-      // (db-client.ts's TENANT default), so a row written with tenantId:
-      // null here is permanently invisible to that filter afterward, even
-      // though it's readable by direct id. That includes the exact list
-      // query fetchSession() uses to resolve a login token to a user, so a
-      // null tenantId here made every signup unable to log in at all, not
-      // just miss some content.
-      tenantId: DEFAULT_TENANT_ID,
+      tenantId,
       profilePicture: null,
       bio: null,
     })) as unknown as DbalUserRecord
 
     // Provision the Credential through DBAL's own admin endpoint so the
-    // password is Argon2id-hashed the same way DBAL's OIDC login verifies it.
-    await createDbalCredential(username, password)
+    // password is Argon2id-hashed the same way DBAL's OIDC login verifies
+    // it, and so login resolves this same tenantId (see the comment above).
+    await createDbalCredential(username, password, tenantId)
 
     const user: User = {
       id: newUser.id,

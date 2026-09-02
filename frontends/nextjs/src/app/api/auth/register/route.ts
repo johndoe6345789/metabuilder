@@ -16,8 +16,9 @@ export async function POST(request: Request): Promise<NextResponse> {
       username?: string
       email?: string
       password?: string
+      tenantName?: string
     }
-    const { username, email, password } = body
+    const { username, email, password, tenantName } = body
 
     if (
       username === undefined ||
@@ -34,7 +35,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       )
     }
 
-    const result = await register(username, email, password)
+    const result = await register(username, email, password, tenantName)
 
     if (!result.success || result.user === null) {
       return NextResponse.json(result, { status: 400 })

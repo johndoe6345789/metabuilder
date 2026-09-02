@@ -1,7 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
+const usersOps = () => ({
+  list: vi.fn().mockResolvedValue({ data: [] }),
+  create: vi.fn().mockResolvedValue(created),
+})
+
 const client = vi.hoisted(() => ({
-  db: { users: { list: vi.fn(), create: vi.fn() } },
+  db: { entity: vi.fn() },
 }))
 vi.mock('@/lib/db-client', () => client)
 vi.mock('@/lib/tenant/workspace-paths', () => ({
@@ -40,10 +45,12 @@ const stubCredentialEndpoint = (ok = true) => {
   return calls
 }
 
+let ops: ReturnType<typeof usersOps>
+
 beforeEach(() => {
   vi.clearAllMocks()
-  client.db.users.list.mockResolvedValue({ data: [] })
-  client.db.users.create.mockResolvedValue(created)
+  ops = usersOps()
+  client.db.entity.mockReturnValue(ops)
   vi.spyOn(console, 'error').mockImplementation(() => {})
 })
 
@@ -53,7 +60,7 @@ describe('register', () => {
   it('rejects an empty username', async () => {
     const result = await register('', 'a@b.c', 'pw')
     expect(result).toMatchObject({ success: false, user: null })
-    expect(client.db.users.create).not.toHaveBeenCalled()
+    expect(ops.create).not.toHaveBeenCalled()
   })
 
   it('rejects an empty email', async () => {
@@ -67,19 +74,19 @@ describe('register', () => {
   })
 
   it('rejects a username that is already taken', async () => {
-    client.db.users.list.mockResolvedValueOnce({ data: [created] })
+    ops.list.mockResolvedValueOnce({ data: [created] })
     const result = await register('alice', 'a@b.c', 'pw')
     expect(result.error).toBe('Username already exists')
-    expect(client.db.users.create).not.toHaveBeenCalled()
+    expect(ops.create).not.toHaveBeenCalled()
   })
 
   it('rejects an email that is already taken', async () => {
-    client.db.users.list
+    ops.list
       .mockResolvedValueOnce({ data: [] })
       .mockResolvedValueOnce({ data: [created] })
     const result = await register('alice', 'a@b.c', 'pw')
     expect(result.error).toBe('Email already exists')
-    expect(client.db.users.create).not.toHaveBeenCalled()
+    expect(ops.create).not.toHaveBeenCalled()
   })
 
   it('returns the created user on success', async () => {
@@ -94,14 +101,12 @@ describe('register', () => {
     })
   })
 
-  // A row written with a null tenantId is invisible to every tenant-scoped
-  // list query, including the one that resolves a login token to a user --
-  // so an account created that way could never log in.
-  it('stamps the default tenant on the new row', async () => {
+  it('defaults to the system tenant with no community name given', async () => {
     stubCredentialEndpoint()
     await register('alice', 'alice@example.com', 'pw')
-    expect(client.db.users.create).toHaveBeenCalledWith(
-      expect.objectContaining({ tenantId: 'system', role: 'god' })
+    expect(client.db.entity).toHaveBeenCalledWith('User', 'system')
+    expect(ops.create).toHaveBeenCalledWith(
+      expect.objectContaining({ tenantId: 'system' })
     )
   })
 
@@ -111,7 +116,7 @@ describe('register', () => {
   it('gives a new signup god-level access but never supergod', async () => {
     stubCredentialEndpoint()
     await register('alice', 'alice@example.com', 'pw')
-    const row = client.db.users.create.mock.calls[0]?.[0] as {
+    const row = ops.create.mock.calls[0]?.[0] as {
       role: string
       isInstanceOwner: boolean
     }
@@ -119,10 +124,10 @@ describe('register', () => {
     expect(row.isInstanceOwner).toBe(false)
   })
 
-  it('gives the new row a generated id', async () => {
+  it('gives a new row a generated id', async () => {
     stubCredentialEndpoint()
     await register('alice', 'alice@example.com', 'pw')
-    const row = client.db.users.create.mock.calls[0]?.[0] as { id: string }
+    const row = ops.create.mock.calls[0]?.[0] as { id: string }
     expect(row.id).toMatch(/^[0-9a-f-]{36}$/)
   })
 
@@ -133,7 +138,7 @@ describe('register', () => {
     const calls = stubCredentialEndpoint()
     await register('alice', 'alice@example.com', 'secret')
     expect(calls[0]?.url).toContain('/admin/credentials')
-    expect(JSON.parse(calls[0]?.body ?? '{}')).toEqual({
+    expect(JSON.parse(calls[0]?.body ?? '{}')).toMatchObject({
       username: 'alice',
       password: 'secret',
     })
@@ -150,7 +155,7 @@ describe('register', () => {
   it('never writes the password into the user row', async () => {
     stubCredentialEndpoint()
     await register('alice', 'alice@example.com', 'secret')
-    const row = JSON.stringify(client.db.users.create.mock.calls[0]?.[0])
+    const row = JSON.stringify(ops.create.mock.calls[0]?.[0])
     expect(row).not.toContain('secret')
   })
 
@@ -162,11 +167,53 @@ describe('register', () => {
   })
 
   it('reports failure rather than throwing when the write fails', async () => {
-    client.db.users.create.mockRejectedValue(new Error('dbal down'))
+    ops.create.mockRejectedValue(new Error('dbal down'))
     expect(await register('alice', 'a@b.c', 'pw')).toMatchObject({
       success: false,
       user: null,
       error: 'dbal down',
+    })
+  })
+
+  describe('founding a named community', () => {
+    it('creates the user under the given tenant, not system', async () => {
+      stubCredentialEndpoint()
+      await register('alice', 'alice@example.com', 'pw', 'acme')
+      expect(client.db.entity).toHaveBeenCalledWith('User', 'acme')
+      expect(ops.create).toHaveBeenCalledWith(
+        expect.objectContaining({ tenantId: 'acme' })
+      )
+    })
+
+    it('sends the new tenant to DBAL when provisioning the credential', async () => {
+      const calls = stubCredentialEndpoint()
+      await register('alice', 'alice@example.com', 'pw', 'acme')
+      expect(JSON.parse(calls[0]?.body ?? '{}')).toMatchObject({
+        tenantId: 'acme',
+      })
+    })
+
+    it('rejects founding a community whose name is already taken', async () => {
+      ops.list.mockResolvedValueOnce({ data: [created] })
+      const result = await register('bob', 'bob@example.com', 'pw', 'acme')
+      expect(result.success).toBe(false)
+      expect(result.error).toBe('That community name is already taken')
+      expect(ops.create).not.toHaveBeenCalled()
+    })
+
+    it('does not check for a name collision against the system tenant', async () => {
+      // No tenantName -> no "is this community already founded" check at
+      // all, since 'system' is the shared bucket every un-named signup
+      // lands in and isn't "owned" by any single founder.
+      stubCredentialEndpoint()
+      await register('alice', 'alice@example.com', 'pw')
+      expect(ops.list).toHaveBeenCalledTimes(2) // username + email only
+    })
+
+    it('treats a blank community name the same as none', async () => {
+      stubCredentialEndpoint()
+      await register('alice', 'alice@example.com', 'pw', '')
+      expect(client.db.entity).toHaveBeenCalledWith('User', 'system')
     })
   })
 })

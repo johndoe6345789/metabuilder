@@ -43,12 +43,14 @@ export function canSubmit(fields: SignupFields): boolean {
 /**
  * The registration request body.
  *
- * NOTE: tenantName and plan are sent here but /api/auth/register reads
- * only username/email/password -- every signup lands in the system
- * tenant regardless of the community name typed, and the chosen tier is
- * discarded. Self-service tenant creation and plan provisioning are not
- * implemented; wiring this up needs a Tenant-creation path in DBAL and
- * package provisioning for the chosen tier, not a change here.
+ * tenantName founds a real, isolated community: register() creates the
+ * User row and DBAL Credential under this exact tenant, DBAL's own OIDC
+ * login flow resolves and signs it into the access token from the
+ * Credential row, and fetchSession() reads it back from
+ * /oidc/userinfo -- so every future login for this account lands back in
+ * the same tenant, not a shared one. `plan` (the chosen tier) is still
+ * discarded -- provisioning packages for a tier is a separate,
+ * not-yet-built feature.
  */
 export function buildRegisterPayload(
   fields: SignupFields

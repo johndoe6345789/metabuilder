@@ -29,5 +29,5 @@ export interface DBALClient {
   pageConfigs: EntityOps
   installedPackages: EntityOps
   credentials: EntityOps
-  entity(name: string): EntityOps
+  entity(name: string, tenantId?: string): EntityOps
 }

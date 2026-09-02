@@ -5,8 +5,11 @@ import { readEntity } from './entity-ops/read'
 import { createEntity, updateEntity } from './entity-ops/write'
 import { removeEntity } from './entity-ops/remove'
 
-export function createOps(entityName: string): EntityOps {
-  const base = `${DBAL_URL}/${TENANT}/${PACKAGE}/${entityName}`
+export function createOps(
+  entityName: string,
+  tenantId: string = TENANT
+): EntityOps {
+  const base = `${DBAL_URL}/${tenantId}/${PACKAGE}/${entityName}`
 
   return {
     list: options => listEntity(base, options),

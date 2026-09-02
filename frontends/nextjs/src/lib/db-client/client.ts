@@ -17,7 +17,9 @@ function getOps(name: string): EntityOps {
 export const db: DBALClient = new Proxy({} as DBALClient, {
   get(_target, prop: string | symbol) {
     if (typeof prop === 'symbol') return undefined
-    if (prop === 'entity') return (name: string) => createOps(name)
+    if (prop === 'entity') {
+      return (name: string, tenantId?: string) => createOps(name, tenantId)
+    }
     return getOps(prop)
   },
 })
