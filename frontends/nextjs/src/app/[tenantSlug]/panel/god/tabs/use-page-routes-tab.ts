@@ -7,8 +7,9 @@ import { usePageRoutesTenant } from './use-page-routes-tenant'
 /** All of PageRoutesTab's state and handlers, kept out of the component
  *  so it only owns layout. */
 export function usePageRoutesTab() {
-  const { tenant, tenantInput, setTenantInput, applyTenant } =
-    usePageRoutesTenant()
+  const {
+    tenant, tenantInput, setTenantInput, applyTenant, canPickOtherTenant,
+  } = usePageRoutesTenant()
   const [editPage, setEditPage] = useState<PageRoute | null>(null)
   const [deletePage, setDeletePage] = useState<PageRoute | null>(null)
   const [formOpen, setFormOpen] = useState(false)
@@ -57,6 +58,7 @@ export function usePageRoutesTab() {
     tenant,
     tenantInput,
     setTenantInput,
+    canPickOtherTenant,
     editPage,
     deletePage,
     setDeletePage,

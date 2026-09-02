@@ -4,6 +4,14 @@ import { act, renderHook } from '@testing-library/react'
 const pageRoutes = vi.hoisted(() => ({ usePageRoutes: vi.fn() }))
 vi.mock('@/hooks/usePageRoutes', () => pageRoutes)
 
+const scopeMod = vi.hoisted(() => ({
+  useCurrentTenantScope: vi.fn(() => ({
+    tenant: 'system',
+    canPickOtherTenant: true,
+  })),
+}))
+vi.mock('./use-current-tenant-scope', () => scopeMod)
+
 import { usePageRoutesTab } from './use-page-routes-tab'
 import type { PageRoute } from '@/hooks/usePageRoutes'
 

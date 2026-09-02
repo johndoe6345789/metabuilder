@@ -3,6 +3,14 @@ import { render, screen } from '@testing-library/react'
 
 const routes = vi.hoisted(() => ({ usePageRoutes: vi.fn() }))
 vi.mock('@/hooks/usePageRoutes', () => routes)
+
+const scopeMod = vi.hoisted(() => ({
+  useCurrentTenantScope: vi.fn(() => ({
+    tenant: 'system',
+    canPickOtherTenant: true,
+  })),
+}))
+vi.mock('./use-current-tenant-scope', () => scopeMod)
 vi.mock('@/components/tenant/TenantSelect', () => ({
   TenantSelect: (p: { value: string; onChange: (v: string) => void }) => (
     <input aria-label="tenant" value={p.value} readOnly />

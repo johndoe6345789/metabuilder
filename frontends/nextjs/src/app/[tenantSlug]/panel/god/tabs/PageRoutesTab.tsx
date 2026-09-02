@@ -33,6 +33,7 @@ export function PageRoutesTab() {
         tenantInput={t.tenantInput}
         setTenantInput={t.setTenantInput}
         applyTenant={t.applyTenant}
+        canPickOtherTenant={t.canPickOtherTenant}
         pageCount={t.pages.length}
         live={t.live}
         draft={t.draft}
