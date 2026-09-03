@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const usersOps = () => ({
   list: vi.fn().mockResolvedValue({ data: [] }),
-  create: vi.fn().mockResolvedValue(created),
+  create: vi.fn(),
 })
 
 const client = vi.hoisted(() => ({
@@ -24,26 +24,47 @@ const created = {
   tenantId: 'system',
 }
 
-/** Captures what the Credential provisioning call sends to DBAL. */
-const stubCredentialEndpoint = (ok = true) => {
-  const calls: { url: string; auth?: string; body?: string }[] = []
+interface Call {
+  url: string
+  auth?: string
+  body?: string
+}
+
+/**
+ * Both privileged DBAL writes register() makes -- creating the User row and
+ * provisioning the Credential -- now go through this same admin-authenticated
+ * fetch, distinguished only by URL (.../User vs .../admin/credentials), so
+ * one stub answers both rather than two separate ones.
+ */
+const stubDbal = (
+  { userOk = true, credentialOk = true } = {}
+): Call[] => {
+  const calls: Call[] = []
   vi.stubGlobal(
     'fetch',
     vi.fn(async (url: string, init?: RequestInit) => {
       calls.push({
         url: String(url),
         auth: (init?.headers as Record<string, string>)?.Authorization,
-        body: init?.body as string,
+        body: init?.body as string | undefined,
       })
+      const isCredential = String(url).includes('/admin/credentials')
+      const ok = isCredential ? credentialOk : userOk
       return {
         ok,
         status: ok ? 200 : 403,
+        json: async () => ({ data: created, success: true }),
         text: async () => 'refused',
       } as Response
     })
   )
   return calls
 }
+
+const userCall = (calls: Call[]) =>
+  calls.find(c => !c.url.includes('/admin/credentials'))
+const credentialCall = (calls: Call[]) =>
+  calls.find(c => c.url.includes('/admin/credentials'))
 
 let ops: ReturnType<typeof usersOps>
 
@@ -60,7 +81,7 @@ describe('register', () => {
   it('rejects an empty username', async () => {
     const result = await register('', 'a@b.c', 'pw')
     expect(result).toMatchObject({ success: false, user: null })
-    expect(ops.create).not.toHaveBeenCalled()
+    expect(ops.list).not.toHaveBeenCalled()
   })
 
   it('rejects an empty email', async () => {
@@ -77,7 +98,6 @@ describe('register', () => {
     ops.list.mockResolvedValueOnce({ data: [created] })
     const result = await register('alice', 'a@b.c', 'pw')
     expect(result.error).toBe('Username already exists')
-    expect(ops.create).not.toHaveBeenCalled()
   })
 
   it('rejects an email that is already taken', async () => {
@@ -86,11 +106,10 @@ describe('register', () => {
       .mockResolvedValueOnce({ data: [created] })
     const result = await register('alice', 'a@b.c', 'pw')
     expect(result.error).toBe('Email already exists')
-    expect(ops.create).not.toHaveBeenCalled()
   })
 
   it('returns the created user on success', async () => {
-    stubCredentialEndpoint()
+    stubDbal()
     const result = await register('alice', 'alice@example.com', 'pw')
     expect(result.success).toBe(true)
     expect(result.user).toMatchObject({
@@ -102,21 +121,22 @@ describe('register', () => {
   })
 
   it('defaults to the system tenant with no community name given', async () => {
-    stubCredentialEndpoint()
+    const calls = stubDbal()
     await register('alice', 'alice@example.com', 'pw')
     expect(client.db.entity).toHaveBeenCalledWith('User', 'system')
-    expect(ops.create).toHaveBeenCalledWith(
-      expect.objectContaining({ tenantId: 'system' })
-    )
+    expect(userCall(calls)?.url).toContain('/system/core/User')
+    expect(JSON.parse(userCall(calls)?.body ?? '{}')).toMatchObject({
+      tenantId: 'system',
+    })
   })
 
   // Self-service signup founds a community, so it grants God Panel access
   // (level 4) -- but never 'supergod' (level 5), which is reserved for the
   // instance owner and must never be reachable through public signup.
   it('gives a new signup god-level access but never supergod', async () => {
-    stubCredentialEndpoint()
+    const calls = stubDbal()
     await register('alice', 'alice@example.com', 'pw')
-    const row = ops.create.mock.calls[0]?.[0] as { role: string }
+    const row = JSON.parse(userCall(calls)?.body ?? '{}') as { role: string }
     expect(row.role).toBe('god')
   })
 
@@ -126,56 +146,82 @@ describe('register', () => {
   // check). The schema already defaults it to false, so the client must
   // never send the key -- not send it as false.
   it('never sends isInstanceOwner, since DBAL rejects that key on an anonymous write', async () => {
-    stubCredentialEndpoint()
+    const calls = stubDbal()
     await register('alice', 'alice@example.com', 'pw')
-    const row = ops.create.mock.calls[0]?.[0] as Record<string, unknown>
+    const row = JSON.parse(userCall(calls)?.body ?? '{}') as Record<
+      string,
+      unknown
+    >
     expect('isInstanceOwner' in row).toBe(false)
   })
 
   it('gives a new row a generated id', async () => {
-    stubCredentialEndpoint()
+    const calls = stubDbal()
     await register('alice', 'alice@example.com', 'pw')
-    const row = ops.create.mock.calls[0]?.[0] as { id: string }
+    const row = JSON.parse(userCall(calls)?.body ?? '{}') as { id: string }
     expect(row.id).toMatch(/^[0-9a-f-]{36}$/)
+  })
+
+  // role is just as privileged as isInstanceOwner -- an anonymous request
+  // could otherwise mint itself 'god' -- so creating the User row needs the
+  // same admin authority already used to provision the Credential below,
+  // not the plain unauthenticated db-client path.
+  it('authenticates the User row creation with the admin token', async () => {
+    process.env.DBAL_ADMIN_TOKEN = 'operator-token'
+    const calls = stubDbal()
+    await register('alice', 'alice@example.com', 'pw')
+    expect(userCall(calls)?.auth).toBe('Bearer operator-token')
+    delete process.env.DBAL_ADMIN_TOKEN
   })
 
   // The password is hashed by DBAL with Argon2id, which is what its OIDC
   // login verifies against -- hashing it here with anything else would
   // produce an account that cannot sign in.
   it('provisions the credential through DBAL rather than hashing here', async () => {
-    const calls = stubCredentialEndpoint()
+    const calls = stubDbal()
     await register('alice', 'alice@example.com', 'secret')
-    expect(calls[0]?.url).toContain('/admin/credentials')
-    expect(JSON.parse(calls[0]?.body ?? '{}')).toMatchObject({
+    expect(credentialCall(calls)?.url).toContain('/admin/credentials')
+    expect(JSON.parse(credentialCall(calls)?.body ?? '{}')).toMatchObject({
       username: 'alice',
       password: 'secret',
     })
   })
 
-  it('sends the admin token rather than the caller\'s own', async () => {
+  it('sends the admin token for the credential call too', async () => {
     process.env.DBAL_ADMIN_TOKEN = 'operator-token'
-    const calls = stubCredentialEndpoint()
+    const calls = stubDbal()
     await register('alice', 'alice@example.com', 'pw')
-    expect(calls[0]?.auth).toBe('Bearer operator-token')
+    expect(credentialCall(calls)?.auth).toBe('Bearer operator-token')
     delete process.env.DBAL_ADMIN_TOKEN
   })
 
   it('never writes the password into the user row', async () => {
-    stubCredentialEndpoint()
+    const calls = stubDbal()
     await register('alice', 'alice@example.com', 'secret')
-    const row = JSON.stringify(ops.create.mock.calls[0]?.[0])
-    expect(row).not.toContain('secret')
+    expect(userCall(calls)?.body).not.toContain('secret')
   })
 
   it('reports failure when the credential cannot be provisioned', async () => {
-    stubCredentialEndpoint(false)
+    stubDbal({ credentialOk: false })
     const result = await register('alice', 'alice@example.com', 'pw')
     expect(result.success).toBe(false)
     expect(result.error).toContain('Failed to provision credential')
   })
 
+  it('reports failure rather than throwing when the user row cannot be created', async () => {
+    stubDbal({ userOk: false })
+    const result = await register('alice', 'alice@example.com', 'pw')
+    expect(result.success).toBe(false)
+    expect(result.error).toContain('Failed to create user')
+  })
+
   it('reports failure rather than throwing when the write fails', async () => {
-    ops.create.mockRejectedValue(new Error('dbal down'))
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => {
+        throw new Error('dbal down')
+      })
+    )
     expect(await register('alice', 'a@b.c', 'pw')).toMatchObject({
       success: false,
       user: null,
@@ -185,18 +231,19 @@ describe('register', () => {
 
   describe('founding a named community', () => {
     it('creates the user under the given tenant, not system', async () => {
-      stubCredentialEndpoint()
+      const calls = stubDbal()
       await register('alice', 'alice@example.com', 'pw', 'acme')
       expect(client.db.entity).toHaveBeenCalledWith('User', 'acme')
-      expect(ops.create).toHaveBeenCalledWith(
-        expect.objectContaining({ tenantId: 'acme' })
-      )
+      expect(userCall(calls)?.url).toContain('/acme/core/User')
+      expect(JSON.parse(userCall(calls)?.body ?? '{}')).toMatchObject({
+        tenantId: 'acme',
+      })
     })
 
     it('sends the new tenant to DBAL when provisioning the credential', async () => {
-      const calls = stubCredentialEndpoint()
+      const calls = stubDbal()
       await register('alice', 'alice@example.com', 'pw', 'acme')
-      expect(JSON.parse(calls[0]?.body ?? '{}')).toMatchObject({
+      expect(JSON.parse(credentialCall(calls)?.body ?? '{}')).toMatchObject({
         tenantId: 'acme',
       })
     })
@@ -206,20 +253,19 @@ describe('register', () => {
       const result = await register('bob', 'bob@example.com', 'pw', 'acme')
       expect(result.success).toBe(false)
       expect(result.error).toBe('That community name is already taken')
-      expect(ops.create).not.toHaveBeenCalled()
     })
 
     it('does not check for a name collision against the system tenant', async () => {
       // No tenantName -> no "is this community already founded" check at
       // all, since 'system' is the shared bucket every un-named signup
       // lands in and isn't "owned" by any single founder.
-      stubCredentialEndpoint()
+      stubDbal()
       await register('alice', 'alice@example.com', 'pw')
       expect(ops.list).toHaveBeenCalledTimes(2) // username + email only
     })
 
     it('treats a blank community name the same as none', async () => {
-      stubCredentialEndpoint()
+      stubDbal()
       await register('alice', 'alice@example.com', 'pw', '')
       expect(client.db.entity).toHaveBeenCalledWith('User', 'system')
     })

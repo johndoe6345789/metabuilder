@@ -31,6 +31,35 @@ export interface RegisterResult {
   error?: string
 }
 
+/**
+ * Creates the User row through the admin token, not the plain db-client.
+ *
+ * `role` is a privileged field -- DBAL rejects any anonymous write that
+ * sets it, the same guard that blocks isInstanceOwner, so an unauthenticated
+ * request could never mint the 'god' role a self-service founder needs.
+ * This route already holds DBAL_ADMIN_TOKEN and uses it below to provision
+ * the Credential; using it here too is the same trust, not a new one.
+ */
+async function createDbalUser(
+  tenantId: string,
+  data: Record<string, unknown>
+): Promise<DbalUserRecord> {
+  const res = await fetch(`${DBAL_URL}/${tenantId}/core/User`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.DBAL_ADMIN_TOKEN ?? ''}`,
+    },
+    body: JSON.stringify(data),
+  })
+  if (!res.ok) {
+    const body = await res.text().catch(() => '')
+    throw new Error(`Failed to create user: ${res.status} ${body}`)
+  }
+  const raw = (await res.json()) as { data?: unknown }
+  return (raw.data ?? raw) as DbalUserRecord
+}
+
 async function createDbalCredential(
   username: string,
   password: string,
@@ -121,7 +150,7 @@ export async function register(
     // Create user
     const userId = crypto.randomUUID()
 
-    const newUser = (await users.create({
+    const newUser = await createDbalUser(tenantId, {
       id: userId,
       username,
       email,
@@ -139,7 +168,7 @@ export async function register(
       tenantId,
       profilePicture: null,
       bio: null,
-    })) as unknown as DbalUserRecord
+    })
 
     // Provision the Credential through DBAL's own admin endpoint so the
     // password is Argon2id-hashed the same way DBAL's OIDC login verifies
