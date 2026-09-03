@@ -37,6 +37,19 @@ interface RouteParams {
 
 const WRITE_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE'])
 
+/**
+ * POST routes that parse or read only -- no tenant data is touched, so the
+ * write-auth gate below would otherwise demand a session for a call that
+ * changes nothing. bql/parse is DBAL's shared BQL syntax parser (stateless,
+ * no dbal::Client): see the dbal repo's bql_route_handler.hpp. Keep this
+ * list to routes verified not to write.
+ */
+const STATELESS_UTILITY_SUFFIXES = ['/bql/parse']
+
+function isStatelessUtility(path: string): boolean {
+  return STATELESS_UTILITY_SUFFIXES.some(suffix => path.endsWith(suffix))
+}
+
 async function proxy(
   request: NextRequest,
   { params }: RouteParams
@@ -50,7 +63,7 @@ async function proxy(
   // already vouched for, so its presence is not enough -- it is verified on
   // every write rather than trusted because it exists.
   const token = request.cookies.get(SESSION_COOKIE)?.value ?? null
-  if (WRITE_METHODS.has(request.method)) {
+  if (WRITE_METHODS.has(request.method) && !isStatelessUtility(path)) {
     const user = token === null ? null : await fetchSession(token)
     if (user === null) {
       return NextResponse.json(

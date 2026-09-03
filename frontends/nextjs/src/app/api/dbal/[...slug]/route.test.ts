@@ -52,6 +52,7 @@ const req = (
 
 const params = (slug: string[]) => ({ params: Promise.resolve({ slug }) })
 const core = params(['system', 'core', 'Page'])
+const bqlParse = params(['community_darkroom', 'core', 'bql', 'parse'])
 
 beforeEach(() => {
   vi.clearAllMocks()
@@ -176,5 +177,34 @@ describe('writes', () => {
     stubDbal()
     await POST(req('POST'), core)
     expect(session.fetchSession).toHaveBeenCalledWith('tok')
+  })
+})
+
+describe('stateless utility routes (e.g. bql/parse)', () => {
+  // bql/parse only tokenizes text -- it never touches tenant data, so the
+  // write-auth gate (built for genuine writes) must not demand a session
+  // for it, unlike every other POST.
+  it('does not require a session', async () => {
+    const calls = stubDbal()
+    const res = await POST(req('POST', { cookie: '' }), bqlParse)
+    expect(res.status).toBe(200)
+    expect(session.fetchSession).not.toHaveBeenCalled()
+    expect(calls).toHaveLength(1)
+  })
+
+  it('still forwards the request body', async () => {
+    const calls = stubDbal()
+    await POST(req('POST', { cookie: '', body: '{"script":"Add a Box."}' }), bqlParse)
+    expect(calls[0]?.body).toBe('{"script":"Add a Box."}')
+  })
+
+  it('does not exempt a path that merely ends similarly', async () => {
+    const calls = stubDbal()
+    const res = await POST(
+      req('POST', { cookie: '' }),
+      params(['t', 'core', 'notbql', 'parse'])
+    )
+    expect(res.status).toBe(401)
+    expect(calls).toHaveLength(0)
   })
 })
