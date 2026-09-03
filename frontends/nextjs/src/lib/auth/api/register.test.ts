@@ -187,6 +187,18 @@ describe('register', () => {
     })
   })
 
+  // `username` here is a system-generated community slug, not something a
+  // founder was ever shown or asked to remember -- without the email also
+  // recorded on the Credential, only that slug could ever sign back in,
+  // even though the email is the one identifier the founder actually has.
+  it('sends the email alongside the credential, not just the username', async () => {
+    const calls = stubDbal()
+    await register('alice', 'alice@example.com', 'secret')
+    expect(JSON.parse(credentialCall(calls)?.body ?? '{}')).toMatchObject({
+      email: 'alice@example.com',
+    })
+  })
+
   it('sends the admin token for the credential call too', async () => {
     process.env.DBAL_ADMIN_TOKEN = 'operator-token'
     const calls = stubDbal()

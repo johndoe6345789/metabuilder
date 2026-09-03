@@ -63,7 +63,8 @@ async function createDbalUser(
 async function createDbalCredential(
   username: string,
   password: string,
-  tenantId: string
+  tenantId: string,
+  email: string
 ): Promise<void> {
   const res = await fetch(`${DBAL_URL}/admin/credentials`, {
     method: 'POST',
@@ -71,7 +72,7 @@ async function createDbalCredential(
       'Content-Type': 'application/json',
       Authorization: `Bearer ${process.env.DBAL_ADMIN_TOKEN ?? ''}`,
     },
-    body: JSON.stringify({ username, password, tenantId }),
+    body: JSON.stringify({ username, password, tenantId, email }),
   })
   if (!res.ok) {
     const body = await res.text().catch(() => '')
@@ -173,7 +174,12 @@ export async function register(
     // Provision the Credential through DBAL's own admin endpoint so the
     // password is Argon2id-hashed the same way DBAL's OIDC login verifies
     // it, and so login resolves this same tenantId (see the comment above).
-    await createDbalCredential(username, password, tenantId)
+    // The email is stored alongside username as a second login identifier
+    // (see DBAL's verifyCredentialIdentifier) -- username here is a
+    // system-generated community slug a founder was never shown or asked
+    // to remember, so signing back in with the email they typed at signup
+    // has to work too, not just the slug.
+    await createDbalCredential(username, password, tenantId, email)
 
     const user: User = {
       id: newUser.id,
