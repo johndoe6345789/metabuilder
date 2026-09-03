@@ -14,6 +14,7 @@ import { HTML_DEFS } from './defs-html'
 import { INPUTS_DEFS } from './defs-inputs'
 import { LAYOUT_DEFS } from './defs-layout'
 import { MISC_DEFS } from './defs-misc'
+import { NAVIGATION_DEFS } from './defs-navigation'
 
 export const DEFS: BlockDef[] = [
   ...CONTENT_DEFS,
@@ -22,4 +23,5 @@ export const DEFS: BlockDef[] = [
   ...INPUTS_DEFS,
   ...LAYOUT_DEFS,
   ...MISC_DEFS,
+  ...NAVIGATION_DEFS,
 ]

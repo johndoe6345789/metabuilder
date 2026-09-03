@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import {
   isRecord,
+  parseNavLinks,
   propDirection,
   propGap,
   propNumber,
@@ -77,5 +78,44 @@ describe('propNumber', () => {
     // The builder stores numbers as numbers; a string here means the prop
     // was never coerced, so the block default is the safer answer.
     expect(propNumber('3', 9)).toBe(9)
+  })
+})
+
+describe('parseNavLinks', () => {
+  it('parses several label->href entries', () => {
+    expect(parseNavLinks('Home->/|About->/about|Contact->/contact')).toEqual([
+      { label: 'Home', href: '/' },
+      { label: 'About', href: '/about' },
+      { label: 'Contact', href: '/contact' },
+    ])
+  })
+
+  it('trims whitespace around entries and their parts', () => {
+    expect(parseNavLinks(' Home -> / | About -> /about ')).toEqual([
+      { label: 'Home', href: '/' },
+      { label: 'About', href: '/about' },
+    ])
+  })
+
+  it('does not mistake a URL\'s own colon for the separator', () => {
+    expect(parseNavLinks('Docs->https://example.com/docs')).toEqual([
+      { label: 'Docs', href: 'https://example.com/docs' },
+    ])
+  })
+
+  it('defaults a bare label with no -> to a "#" placeholder link', () => {
+    expect(parseNavLinks('Home')).toEqual([{ label: 'Home', href: '#' }])
+  })
+
+  it('drops empty entries from stray separators', () => {
+    expect(parseNavLinks('Home->/||About->/about')).toEqual([
+      { label: 'Home', href: '/' },
+      { label: 'About', href: '/about' },
+    ])
+  })
+
+  it('returns nothing for an empty or unset value', () => {
+    expect(parseNavLinks('')).toEqual([])
+    expect(parseNavLinks(undefined)).toEqual([])
   })
 })

@@ -190,6 +190,15 @@ export const PROP_SCHEMAS: Record<string, PropField[]> = {
     }),
   ],
 
+  // ---- navigation --------------------------------------------------------
+  'nav.header': [
+    text('brand', 'Site name'),
+    text('links', 'Links', {
+      placeholder: 'Home->/|About->/about|Contact->/contact',
+      hint: 'Label->path, separated by | -- shown as a burger menu on narrow screens',
+    }),
+  ],
+
   // ---- community -------------------------------------------------------
   'pkg.webchat': [
     text('channel', 'Channel', {

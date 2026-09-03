@@ -3,6 +3,7 @@
 export const CATEGORIES = [
   'HTML',
   'Layout',
+  'Navigation',
   'Content',
   'Inputs',
   'Feedback',

@@ -1,0 +1,90 @@
+/* nav.header — a small enough interaction (a checkbox-free disclosure via
+   <details>/<summary>) that it needs no JavaScript of its own, so it works
+   identically in the builder's live preview and a published page. */
+
+.navBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 24px;
+  position: relative;
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  a {
+    text-decoration: none;
+    color: inherit;
+    font-size: 0.95rem;
+  }
+}
+
+/* The disclosure itself is invisible chrome on wide screens -- only its
+   <summary> (the burger icon) ever renders there, and only on narrow ones. */
+.burger {
+  display: none;
+}
+
+.burgerIcon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  list-style: none;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+  &::marker {
+    content: '';
+  }
+
+  span {
+    display: block;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+  }
+}
+
+@media (max-width: 720px) {
+  .burger {
+    display: block;
+  }
+
+  .links {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    padding: 16px 24px;
+    background: inherit;
+    z-index: 20;
+  }
+
+  /* :has() lets the burger's own open/closed state (native to <details>,
+     no script) decide whether the sibling link list shows -- no ids, so
+     two nav bars on one page can never collide the way a checkbox-hack's
+     id-linked label would. */
+  .navBar:has(.burger[open]) .links {
+    display: flex;
+  }
+}

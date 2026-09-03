@@ -18,6 +18,7 @@ export interface TreeNode {
 export type BlockCategory =
   | 'HTML'
   | 'Layout'
+  | 'Navigation'
   | 'Content'
   | 'Inputs'
   | 'Feedback'
