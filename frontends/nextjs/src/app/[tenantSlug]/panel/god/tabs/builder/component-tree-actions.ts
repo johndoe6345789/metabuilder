@@ -4,6 +4,7 @@ import type { DropWhere } from './component-tree-drop'
 import { useCallback } from 'react'
 import type { TreeNode } from './builder-registry'
 import { paletteItem } from './builder-registry'
+import { autoId } from './auto-identity'
 import {
   findNode,
   insertAfter,
@@ -31,12 +32,11 @@ export function useComponentTreeActions(
     (type: string, parentId?: string) => {
       const item = paletteItem(type)
       if (item === undefined) return
-      const node: TreeNode = {
-        id: nid(),
-        type,
-        props: { ...item.defaults },
-        children: [],
-      }
+      const id = nid()
+      const props = { ...item.defaults }
+      const autoIdValue = autoId(type, props, tree, id)
+      if (autoIdValue !== '') props.id = autoIdValue
+      const node: TreeNode = { id, type, props, children: [] }
       let parent: string
       if (parentId === undefined) {
         parent =

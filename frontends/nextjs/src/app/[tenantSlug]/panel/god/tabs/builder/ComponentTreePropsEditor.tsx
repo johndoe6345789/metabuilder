@@ -39,7 +39,9 @@ export function ComponentTreePropsEditor({
         onChange={onChange}
       />
       <div className={s.propTypeGroup}>
-        <div className={s.propTypeTitle}>{node.type}</div>
+        {/* The Properties pane title already names the selected element --
+            repeating its name here would just be the same words twice. */}
+        <div className={s.propTypeTitle}>Settings</div>
         <ComponentTreeAutoProps node={node} onChange={onChange} />
       </div>
     </>

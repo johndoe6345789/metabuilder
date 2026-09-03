@@ -106,6 +106,33 @@ describe('useComponentTreeActions', () => {
 
       expect(commit).not.toHaveBeenCalled()
     })
+
+    // A new block's id should never be its own data-entry chore -- see
+    // auto-identity.ts. html.p's default text is "Paragraph text."
+    it('gives a new node an id inferred from its own default text', () => {
+      const { result, commit } = setup(tree(), 'p2')
+
+      act(() => result.current.addNode('html.p'))
+
+      const added = childIds(committed(commit), 'root')?.at(-1)
+      expect(findNode(committed(commit), added ?? '')?.props.id).toBe(
+        'paragraph-text'
+      )
+    })
+
+    it('disambiguates the inferred id from one already used in the tree', () => {
+      const withId = n('root', 'html.section', [
+        { ...n('taken', 'html.p'), props: { id: 'paragraph-text' } },
+      ])
+      const { result, commit } = setup(withId, 'taken')
+
+      act(() => result.current.addNode('html.p'))
+
+      const added = childIds(committed(commit), 'root')?.at(-1)
+      expect(findNode(committed(commit), added ?? '')?.props.id).toBe(
+        'paragraph-text-2'
+      )
+    })
   })
 
   describe('updateProps', () => {

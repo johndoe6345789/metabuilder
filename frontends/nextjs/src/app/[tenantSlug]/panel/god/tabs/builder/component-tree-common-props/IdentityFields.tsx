@@ -27,7 +27,10 @@ export function IdentityFields({
         placeholder="contact-form"
         value={domId}
         error={idProblem !== null}
-        helperText={idProblem ?? 'Used for anchors and aria references'}
+        helperText={
+          idProblem ??
+          'Auto-filled from this element’s text or label — edit to override'
+        }
         onChange={event => {
           onChange({ id: event.target.value })
         }}

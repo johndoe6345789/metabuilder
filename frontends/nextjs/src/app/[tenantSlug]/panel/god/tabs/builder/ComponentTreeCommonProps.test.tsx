@@ -16,7 +16,7 @@ const node = (props: Record<string, unknown> = {}): TreeNode => ({
 })
 
 describe('ComponentTreeCommonProps', () => {
-  it('opens the Identity section by default', () => {
+  it('opens the Accessibility section by default', () => {
     render(
       <ComponentTreeCommonProps
         node={node()}
@@ -25,7 +25,7 @@ describe('ComponentTreeCommonProps', () => {
         onChange={vi.fn()}
       />
     )
-    expect(screen.getByLabelText('ID')).toBeDefined()
+    expect(screen.getByLabelText('Label (aria-label)')).toBeDefined()
   })
 
   it('reports a duplicate id as an error', () => {
@@ -37,6 +37,7 @@ describe('ComponentTreeCommonProps', () => {
         onChange={vi.fn()}
       />
     )
+    fireEvent.click(screen.getByText('Identity'))
     expect(screen.getByText('Already used in this tree')).toBeDefined()
   })
 
@@ -49,9 +50,9 @@ describe('ComponentTreeCommonProps', () => {
         onChange={vi.fn()}
       />
     )
-    fireEvent.click(screen.getByText('Accessibility'))
-    expect(screen.getByLabelText('Label (aria-label)')).toBeDefined()
-    expect(screen.queryByLabelText('ID')).toBeNull()
+    fireEvent.click(screen.getByText('Identity'))
+    expect(screen.getByLabelText('ID')).toBeDefined()
+    expect(screen.queryByLabelText('Label (aria-label)')).toBeNull()
   })
 
   it('forwards an identity field edit', () => {
@@ -64,6 +65,7 @@ describe('ComponentTreeCommonProps', () => {
         onChange={onChange}
       />
     )
+    fireEvent.click(screen.getByText('Identity'))
     fireEvent.change(screen.getByLabelText('ID'), {
       target: { value: 'hero' },
     })

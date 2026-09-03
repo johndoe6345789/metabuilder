@@ -33,7 +33,11 @@ export function ComponentTreeCommonProps({
   duplicateId,
   onChange,
 }: Props) {
-  const [open, setOpen] = useState<Section | null>('identity')
+  // Accessibility comes first because it's the source, not the last stop:
+  // the ID below falls back to the aria-label set here when the element has
+  // no text of its own (see auto-identity.ts), so the field that feeds the
+  // fallback has to appear before the field it fills in.
+  const [open, setOpen] = useState<Section | null>('a11y')
   const uid = useId()
   const p = node.props
 
@@ -43,6 +47,15 @@ export function ComponentTreeCommonProps({
 
   return (
     <div className={s.propSections}>
+      <PropSection
+        id={`${uid}-a11y`}
+        label="Accessibility"
+        isOpen={open === 'a11y'}
+        onToggle={toggle('a11y')}
+      >
+        <A11yFields props={p} onChange={onChange} />
+      </PropSection>
+
       <PropSection
         id={`${uid}-identity`}
         label="Identity"
@@ -63,15 +76,6 @@ export function ComponentTreeCommonProps({
         onToggle={toggle('style')}
       >
         <StyleField props={p} tenant={tenant} onChange={onChange} />
-      </PropSection>
-
-      <PropSection
-        id={`${uid}-a11y`}
-        label="Accessibility"
-        isOpen={open === 'a11y'}
-        onToggle={toggle('a11y')}
-      >
-        <A11yFields props={p} onChange={onChange} />
       </PropSection>
     </div>
   )
