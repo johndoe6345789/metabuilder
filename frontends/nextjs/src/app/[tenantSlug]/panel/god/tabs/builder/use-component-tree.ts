@@ -5,6 +5,8 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { setTree } from '@/store/slices/god-slice'
 import { type TreeNode } from './builder-registry'
 import { getSelectedTreeNode } from './component-tree-selection'
+import { findNode } from './component-tree-utils'
+import { autoId } from './auto-identity'
 import { useComponentTreeActions } from './component-tree-actions'
 import { useComponentTreePublish } from './component-tree-publish'
 
@@ -69,6 +71,29 @@ export function useComponentTree() {
   const selected = getSelectedTreeNode(tree, selectedId)
   const { addNode, updateProps, deleteNode, moveNode } =
     useComponentTreeActions(tree, selected, commit, setSelectedId)
+
+  /**
+   * Selecting a node is also the moment its id gets backfilled if it never
+   * had one -- content published before auto-identity.ts existed, or a
+   * node some other client wrote directly. Computed the same way as a
+   * brand-new node (see addNode) and just as stable afterward: editing the
+   * text later never re-derives it, so an existing anchor or aria-reference
+   * to this id can't silently break once it exists.
+   */
+  const selectNode = useCallback(
+    (id: string) => {
+      setSelectedId(id)
+      const node = findNode(tree, id)
+      if (node === null) return
+      const hasId =
+        typeof node.props.id === 'string' && node.props.id.trim() !== ''
+      if (hasId) return
+      const computed = autoId(node.type, node.props, tree, node.id)
+      if (computed !== '') updateProps(id, { id: computed })
+    },
+    [tree, updateProps]
+  )
+
   /** Start over from an empty root, for the "Blank tree" option. */
   const resetTree = useCallback(() => {
     commit({ id: 'root', type: 'container', props: {}, children: [] })
@@ -93,7 +118,7 @@ export function useComponentTree() {
     tree,
     selected,
     selectedId,
-    setSelectedId,
+    setSelectedId: selectNode,
     addNode,
     updateProps,
     deleteNode,

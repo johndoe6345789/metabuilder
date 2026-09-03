@@ -76,6 +76,72 @@ describe('useComponentTree', () => {
 
       expect(result.current.selectedId).toBe('other')
     })
+
+    // A node an older client wrote (or content published before
+    // auto-identity.ts existed) never got the id auto-fill new nodes get
+    // at creation -- selecting it is the next best moment to backfill one,
+    // so the Properties panel is never showing a "some other value.
+    it('backfills an id for a selected node that never had one', () => {
+      store.tree = {
+        id: 'root',
+        type: 'container',
+        props: {},
+        children: [
+          {
+            id: 'h1',
+            type: 'html.h1',
+            props: { text: 'Community Darkroom' },
+            children: [],
+          },
+        ],
+      }
+      const { result, rerender } = setup()
+
+      act(() => result.current.setSelectedId('h1'))
+      rerender()
+
+      const h1 = result.current.tree.children.find(c => c.id === 'h1')
+      expect(h1?.props.id).toBe('community-darkroom')
+    })
+
+    it('leaves an id already set untouched', () => {
+      store.tree = {
+        id: 'root',
+        type: 'container',
+        props: {},
+        children: [
+          {
+            id: 'h1',
+            type: 'html.h1',
+            props: { text: 'Community Darkroom', id: 'custom-id' },
+            children: [],
+          },
+        ],
+      }
+      const { result, rerender } = setup()
+
+      act(() => result.current.setSelectedId('h1'))
+      rerender()
+
+      const h1 = result.current.tree.children.find(c => c.id === 'h1')
+      expect(h1?.props.id).toBe('custom-id')
+    })
+
+    it('falls back to the block\'s own name when there is nothing else to go on', () => {
+      store.tree = {
+        id: 'root',
+        type: 'container',
+        props: {},
+        children: [{ id: 'box', type: 'container', props: {}, children: [] }],
+      }
+      const { result, rerender } = setup()
+
+      act(() => result.current.setSelectedId('box'))
+      rerender()
+
+      const box = result.current.tree.children.find(c => c.id === 'box')
+      expect(box?.props.id).toBe('container')
+    })
   })
 
   describe('history', () => {
