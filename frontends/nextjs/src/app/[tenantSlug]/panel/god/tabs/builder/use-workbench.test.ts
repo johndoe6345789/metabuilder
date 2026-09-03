@@ -7,6 +7,7 @@ const componentTree = vi.hoisted(() => ({
     selected: { id: 'root', type: 'root', props: {}, children: [] },
     undo: vi.fn(),
     redo: vi.fn(),
+    load: vi.fn(),
   })),
 }))
 const auth = vi.hoisted(() => ({
@@ -116,5 +117,57 @@ describe('useWorkbench', () => {
     ])
     const { result } = renderHook(() => useWorkbench())
     expect(result.current.currentTree).toBe('__blank__')
+  })
+
+  describe('reload on tenant change', () => {
+    it('does not reload on first mount for the signed-in tenant', () => {
+      const load = vi.fn()
+      componentTree.useComponentTree.mockReturnValue({
+        tree: { id: 'root', type: 'root', props: {}, children: [] },
+        selected: { id: 'root', type: 'root', props: {}, children: [] },
+        undo: vi.fn(),
+        redo: vi.fn(),
+        load,
+      })
+      renderHook(() => useWorkbench())
+      expect(load).not.toHaveBeenCalled()
+    })
+
+    it('reloads from DBAL when the signed-in tenant changes', () => {
+      const load = vi.fn()
+      componentTree.useComponentTree.mockReturnValue({
+        tree: { id: 'root', type: 'root', props: {}, children: [] },
+        selected: { id: 'root', type: 'root', props: {}, children: [] },
+        undo: vi.fn(),
+        redo: vi.fn(),
+        load,
+      })
+      auth.useAuthContext.mockReturnValue({ user: { tenantId: 'acme' } })
+      const { rerender } = renderHook(() => useWorkbench())
+      expect(load).not.toHaveBeenCalled()
+
+      auth.useAuthContext.mockReturnValue({ user: { tenantId: 'globex' } })
+      rerender()
+
+      expect(load).toHaveBeenCalledWith('globex', '/a')
+    })
+
+    it('does not reload again on a re-render for the same tenant', () => {
+      const load = vi.fn()
+      componentTree.useComponentTree.mockReturnValue({
+        tree: { id: 'root', type: 'root', props: {}, children: [] },
+        selected: { id: 'root', type: 'root', props: {}, children: [] },
+        undo: vi.fn(),
+        redo: vi.fn(),
+        load,
+      })
+      auth.useAuthContext.mockReturnValue({ user: { tenantId: 'acme' } })
+      const { rerender } = renderHook(() => useWorkbench())
+
+      rerender()
+      rerender()
+
+      expect(load).not.toHaveBeenCalled()
+    })
   })
 })

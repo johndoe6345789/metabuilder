@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
 import { normalizeTenantId } from '@/lib/tenant/workspace-paths'
 import { useComponentTree } from './use-component-tree'
@@ -27,6 +27,24 @@ export function useWorkbench() {
   const { rows: pages } = usePageConfigs(tenant)
   const { collapsed, toggle: toggleCollapse } = useCollapsedSet()
   const targetActions = useTargetActions(t, tenant, target, pages, setTarget)
+
+  /**
+   * The draft tree persists in IndexedDB keyed by browser origin, not by
+   * tenant (redux-persist has no tenant-aware key -- see the sibling redux
+   * repo), so signing into a different tenant in the same browser can leave
+   * a previous tenant's real page content showing under this one's URL,
+   * even after a hard reload. Reload from DBAL whenever the signed-in
+   * tenant actually changes -- but only then, not on every mount, so a
+   * genuine unpublished draft still survives an accidental refresh for the
+   * SAME tenant.
+   */
+  const loadedForTenant = useRef(tenant)
+  const { load } = t
+  useEffect(() => {
+    if (loadedForTenant.current === tenant) return
+    loadedForTenant.current = tenant
+    void load(tenant, target.path)
+  }, [tenant, target.path, load])
 
   // Ignored above the breakpoint, where all four panes are on screen at
   // once -- the CSS decides, so there is no width measuring here.
