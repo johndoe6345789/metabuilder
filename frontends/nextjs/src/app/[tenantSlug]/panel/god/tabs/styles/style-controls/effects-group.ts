@@ -26,5 +26,28 @@ export const EFFECTS_GROUP: StyleGroup = {
       step: 0.1,
       unit: '',
     },
+    {
+      kind: 'choice',
+      prop: 'cursor',
+      label: 'Cursor',
+      hint: 'What the mouse pointer looks like over this',
+      options: [
+        { label: 'Default', value: 'default' },
+        { label: 'Pointer', value: 'pointer' },
+        { label: 'Text', value: 'text' },
+        { label: 'Not allowed', value: 'not-allowed' },
+      ],
+    },
+    {
+      kind: 'choice',
+      prop: 'overflow',
+      label: 'Overflow',
+      hint: 'What happens to content too big to fit',
+      options: [
+        { label: 'Visible', value: 'visible' },
+        { label: 'Hidden', value: 'hidden' },
+        { label: 'Scrollable', value: 'auto' },
+      ],
+    },
   ],
 }

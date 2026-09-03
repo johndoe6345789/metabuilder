@@ -1,7 +1,8 @@
 'use client'
 
 /**
- * A block's own properties.
+ * A block's own properties, beyond its one primary field (see
+ * ComponentTreePrimaryField, which renders that field on its own).
  *
  * Driven by the block's declared schema (block-props.ts) where it has one:
  * real labels, help text, and a choice list where the prop has fixed values.
@@ -16,34 +17,43 @@
  */
 
 import { Typography } from '@/m3'
-import { paletteItem, type TreeNode } from './builder-registry'
-import { propSchema } from '@/components/blocks/block-props'
+import type { TreeNode } from './builder-registry'
 import { useDropdownConfigs } from '../config/use-dropdown-configs'
-import { inferred } from './auto-props-infer'
 import { fieldWarning } from './field-warning'
 import { AutoPropField } from './AutoPropField'
+import { fieldsFor } from './primary-field'
+import { mergedProps } from './node-props'
 import s from './ComponentTreeTab.module.scss'
 
 type Props = {
   node: TreeNode
   onChange: (patch: Record<string, unknown>) => void
+  /** Skip this field -- it's already shown prominently on its own, see
+   *  ComponentTreePrimaryField. */
+  excludeField?: string
 }
 
-export function ComponentTreeAutoProps({ node, onChange }: Props) {
+export function ComponentTreeAutoProps({
+  node,
+  onChange,
+  excludeField,
+}: Props) {
   const { configs } = useDropdownConfigs()
-  const defaults = paletteItem(node.type)?.defaults ?? {}
-  const fields = propSchema(node.type) ?? inferred(defaults)
+  const fields = fieldsFor(node.type).filter(f => f.name !== excludeField)
 
   if (fields.length === 0) {
+    // A field to exclude means this type does have properties -- just
+    // none beyond the one already shown above -- so saying nothing here
+    // is correct, not a block that truly has none of its own.
+    if (excludeField !== undefined) return null
     return (
       <Typography variant="body2" color="text.secondary">
-        This block has no properties of its own — use Identity, Style and
-        Accessibility above.
+        This block has no settings of its own.
       </Typography>
     )
   }
 
-  const allProps = { ...defaults, ...node.props }
+  const allProps = mergedProps(node)
 
   return (
     <div className={s.propCol}>

@@ -13,24 +13,9 @@
  * "final" as one this module generated -- neither is ever overwritten.
  */
 import { paletteItem, type TreeNode } from './builder-registry'
-import { propSchema } from '@/components/blocks/block-props'
-import { inferred } from './auto-props-infer'
+import { primaryFieldName } from './primary-field'
 
 const MAX_SLUG_LENGTH = 40
-
-/** list-item's first text-typed field is its icon (a Material Symbol name,
- *  not text to a reader), so its real text -- title -- has to be named
- *  explicitly rather than found by "first text field" like every other
- *  block. */
-const PRIMARY_TEXT_FIELD: Record<string, string> = {
-  'list-item': 'title',
-}
-
-function primaryTextFieldName(type: string): string | undefined {
-  if (type in PRIMARY_TEXT_FIELD) return PRIMARY_TEXT_FIELD[type]
-  const fields = propSchema(type) ?? inferred(paletteItem(type)?.defaults ?? {})
-  return fields.find(f => f.type === 'text')?.name
-}
 
 const nonBlank = (value: unknown): string | undefined =>
   typeof value === 'string' && value.trim() !== '' ? value : undefined
@@ -44,7 +29,7 @@ export function identitySource(
   type: string,
   props: Record<string, unknown>
 ): string {
-  const textField = primaryTextFieldName(type)
+  const textField = primaryFieldName(type)
   return (
     (textField === undefined ? undefined : nonBlank(props[textField])) ??
     nonBlank(props.ariaLabel) ??

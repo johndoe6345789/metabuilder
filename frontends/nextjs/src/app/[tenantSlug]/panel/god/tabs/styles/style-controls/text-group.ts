@@ -46,6 +46,7 @@ export const TEXT_GROUP: StyleGroup = {
       label: 'ALL CAPS',
       on: 'uppercase',
     },
+    { kind: 'toggle', prop: 'text-decoration', label: 'Underline', on: 'underline' },
     {
       kind: 'size',
       prop: 'line-height',
@@ -55,6 +56,16 @@ export const TEXT_GROUP: StyleGroup = {
       max: 2.5,
       step: 0.1,
       unit: '',
+    },
+    {
+      kind: 'size',
+      prop: 'letter-spacing',
+      label: 'Letter spacing',
+      hint: 'Space between characters',
+      min: 0,
+      max: 0.3,
+      step: 0.01,
+      unit: 'em',
     },
   ],
 }

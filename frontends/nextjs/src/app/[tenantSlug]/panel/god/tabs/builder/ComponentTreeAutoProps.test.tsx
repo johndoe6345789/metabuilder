@@ -45,4 +45,33 @@ describe('ComponentTreeAutoProps', () => {
     )
     expect(screen.queryByText(/screen readers will skip it/)).toBeNull()
   })
+
+  it('omits a field already shown as the primary field elsewhere', () => {
+    render(
+      <ComponentTreeAutoProps
+        node={node({ src: 'https://example.com/photo.jpg', alt: '' })}
+        onChange={vi.fn()}
+        excludeField="src"
+      />
+    )
+    expect(screen.queryByLabelText('Image address')).toBeNull()
+    expect(screen.getByLabelText('Description')).toBeTruthy()
+  })
+
+  it('renders nothing when the only field is the excluded primary one', () => {
+    const heading = (props: Record<string, unknown>): TreeNode => ({
+      id: 'n1',
+      type: 'html.h1',
+      props,
+      children: [],
+    })
+    const { container } = render(
+      <ComponentTreeAutoProps
+        node={heading({ text: 'Hello' })}
+        onChange={vi.fn()}
+        excludeField="text"
+      />
+    )
+    expect(container.innerHTML).toBe('')
+  })
 })
