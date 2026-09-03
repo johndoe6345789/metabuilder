@@ -35,49 +35,53 @@ export function PalettePane({
 
   return (
     <aside className={s.palette}>
-      <div className={s.palGroup}>
-        <TextField
-          size="small"
-          fullWidth
-          placeholder="Find a block…"
-          value={query}
-          onChange={event => {
-            setQuery(event.target.value)
-          }}
-        />
-      </div>
-      {query.trim() !== '' ? (
+      <div className={s.paletteScroll}>
         <div className={s.palGroup}>
-          {matches.length === 0 ? (
-            <Typography variant="caption" className={s.propHint}>
-              No block matches “{query.trim()}”.
-            </Typography>
-          ) : (
-            matches.map(i => (
-              <PaletteItemButton
-                key={i.type}
-                item={i}
-                selected={i.type === pendingType}
-                onSelect={onSelectType}
-              />
-            ))
-          )}
+          <TextField
+            size="small"
+            fullWidth
+            placeholder="Find a block…"
+            value={query}
+            onChange={event => {
+              setQuery(event.target.value)
+            }}
+          />
         </div>
-      ) : (
-        CATEGORIES.map(cat => (
-          <div key={cat} className={s.palGroup}>
-            <div className={s.palTitle}>{cat}</div>
-            {PALETTE.filter((i: PaletteItem) => i.category === cat).map(i => (
-              <PaletteItemButton
-                key={i.type}
-                item={i}
-                selected={i.type === pendingType}
-                onSelect={onSelectType}
-              />
-            ))}
+        {query.trim() !== '' ? (
+          <div className={s.palGroup}>
+            {matches.length === 0 ? (
+              <Typography variant="caption" className={s.propHint}>
+                No block matches “{query.trim()}”.
+              </Typography>
+            ) : (
+              matches.map(i => (
+                <PaletteItemButton
+                  key={i.type}
+                  item={i}
+                  selected={i.type === pendingType}
+                  onSelect={onSelectType}
+                />
+              ))
+            )}
           </div>
-        ))
-      )}
+        ) : (
+          CATEGORIES.map(cat => (
+            <div key={cat} className={s.palGroup}>
+              <div className={s.palTitle}>{cat}</div>
+              {PALETTE.filter((i: PaletteItem) => i.category === cat).map(
+                i => (
+                  <PaletteItemButton
+                    key={i.type}
+                    item={i}
+                    selected={i.type === pendingType}
+                    onSelect={onSelectType}
+                  />
+                )
+              )}
+            </div>
+          ))
+        )}
+      </div>
       {pendingItem !== undefined && (
         <PaletteAddBar item={pendingItem} onRequestAdd={onRequestAdd} />
       )}

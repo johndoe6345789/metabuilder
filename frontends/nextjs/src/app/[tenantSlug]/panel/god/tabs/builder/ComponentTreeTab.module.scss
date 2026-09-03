@@ -73,7 +73,6 @@
   border-radius: 12px;
   background: var(--mat-sys-surface-container-lowest, #0d1117);
 }
-.palette,
 .previewWrap {
   overflow: auto;
 }
@@ -116,8 +115,20 @@
   border-bottom: 1px solid var(--mat-sys-outline-variant, #30363d);
 }
 
-/* palette */
+/* palette. Split the same way as .middle above: the Add bar must stay
+   visible regardless of scroll position within the block list, which
+   position: sticky cannot do on its own -- sticky only pins once you've
+   scrolled far enough to reach it, so picking a block near the top of a
+   long, un-scrolled list left the bar off-screen below the fold. */
 .palette {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.paletteScroll {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
   padding-bottom: 10px;
 }
 .palGroup {
@@ -171,8 +182,7 @@
   }
 }
 .palAddBar {
-  position: sticky;
-  bottom: 0;
+  flex-shrink: 0;
   padding: 8px 6px;
   background: var(--mat-sys-surface-container-low, #161b22);
   border-top: 1px solid var(--mat-sys-outline-variant, #30363d);
