@@ -158,6 +158,25 @@
     border-color: var(--mat-sys-outline-variant, #30363d);
   }
 }
+.palItemSelected {
+  background: color-mix(
+    in srgb,
+    var(--mat-sys-primary, #4493f8) 14%,
+    transparent
+  );
+  border-color: var(--mat-sys-primary, #4493f8);
+
+  :global(.material-symbols-rounded) {
+    color: var(--mat-sys-primary, #4493f8);
+  }
+}
+.palAddBar {
+  position: sticky;
+  bottom: 0;
+  padding: 8px 6px;
+  background: var(--mat-sys-surface-container-low, #161b22);
+  border-top: 1px solid var(--mat-sys-outline-variant, #30363d);
+}
 
 /* tree outline */
 .outline {

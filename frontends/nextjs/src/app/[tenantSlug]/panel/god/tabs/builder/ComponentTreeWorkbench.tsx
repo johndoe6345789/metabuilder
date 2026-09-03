@@ -2,6 +2,8 @@
 
 import { ComponentTreePublishBar } from './ComponentTreePublishBar'
 import { useWorkbench } from './use-workbench'
+import { useAddDialog } from './use-add-dialog'
+import { AddBlockDialog } from './workbench/AddBlockDialog'
 import { HistoryControls } from './workbench/HistoryControls'
 import { MiddlePanes } from './workbench/MiddlePanes'
 import { PaneTabs } from './workbench/PaneTabs'
@@ -12,6 +14,7 @@ import s from './ComponentTreeTab.module.scss'
 
 export function ComponentTreeWorkbench() {
   const w = useWorkbench()
+  const add = useAddDialog(w.t.addNode)
 
   return (
     <div className={s.root}>
@@ -56,7 +59,11 @@ export function ComponentTreeWorkbench() {
       <PaneTabs view={w.view} onChange={w.setView} />
 
       <div className={s.grid} data-view={w.view}>
-        <PalettePane onAdd={w.t.addNode} />
+        <PalettePane
+          pendingType={add.pendingType}
+          onSelectType={add.selectType}
+          onRequestAdd={add.openDialog}
+        />
         <MiddlePanes
           t={w.t}
           tenant={w.tenant}
@@ -66,6 +73,16 @@ export function ComponentTreeWorkbench() {
         />
         <PreviewPane tree={w.t.tree} />
       </div>
+
+      <AddBlockDialog
+        key={add.pendingType ?? 'none'}
+        open={add.open}
+        pendingType={add.pendingType}
+        tree={w.t.tree}
+        defaultTargetId={w.t.selectedId}
+        onClose={add.closeDialog}
+        onConfirm={add.confirm}
+      />
     </div>
   )
 }
