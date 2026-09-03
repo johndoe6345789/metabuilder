@@ -33,6 +33,14 @@ export function paletteItem(type: string): PaletteItem | undefined {
   return BLOCK_REGISTRY[type]?.meta
 }
 
+/** Looks a block up by the plain-language name shown in the Add panel
+ *  ("Container", "Heading 1") rather than its internal type key -- for BQL
+ *  scripts and anything else that should never need to know a type key. */
+export function paletteItemByName(name: string): PaletteItem | undefined {
+  const target = name.trim().toLowerCase()
+  return PALETTE.find(p => p.name.toLowerCase() === target)
+}
+
 /**
  * Attributes every block accepts, whatever it renders: identity, styling and
  * accessibility. They are applied centrally in renderNode rather than by each

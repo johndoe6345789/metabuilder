@@ -10,6 +10,7 @@ export {
   BLOCK_REGISTRY,
   PALETTE,
   paletteItem,
+  paletteItemByName,
   renderNode,
   type TreeNode,
   type PaletteItem,
