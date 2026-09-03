@@ -131,7 +131,11 @@ export async function register(
       // never assigned here.
       role: 'god',
       createdAt: Date.now(),
-      isInstanceOwner: false,
+      // Never sent: isInstanceOwner is privileged, and DBAL rejects any
+      // anonymous write that sets it at all -- even to its own default of
+      // false (see the sibling dbal repo's write-authorization check). The
+      // User schema already defaults it, so omitting the key is correct,
+      // not merely convenient.
       tenantId,
       profilePicture: null,
       bio: null,

@@ -116,12 +116,20 @@ describe('register', () => {
   it('gives a new signup god-level access but never supergod', async () => {
     stubCredentialEndpoint()
     await register('alice', 'alice@example.com', 'pw')
-    const row = ops.create.mock.calls[0]?.[0] as {
-      role: string
-      isInstanceOwner: boolean
-    }
+    const row = ops.create.mock.calls[0]?.[0] as { role: string }
     expect(row.role).toBe('god')
-    expect(row.isInstanceOwner).toBe(false)
+  })
+
+  // isInstanceOwner is privileged: DBAL rejects any anonymous write that
+  // sets it at all, even to false, since granting it is what makes a user
+  // the instance owner (see the sibling dbal repo's write-authorization
+  // check). The schema already defaults it to false, so the client must
+  // never send the key -- not send it as false.
+  it('never sends isInstanceOwner, since DBAL rejects that key on an anonymous write', async () => {
+    stubCredentialEndpoint()
+    await register('alice', 'alice@example.com', 'pw')
+    const row = ops.create.mock.calls[0]?.[0] as Record<string, unknown>
+    expect('isInstanceOwner' in row).toBe(false)
   })
 
   it('gives a new row a generated id', async () => {
