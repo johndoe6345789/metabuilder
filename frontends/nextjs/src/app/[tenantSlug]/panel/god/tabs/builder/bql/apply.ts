@@ -143,6 +143,13 @@ export async function applyBql(
       workingTree = mapTree(workingTree, n =>
         n.id === id ? { ...n, props: { ...n.props, ...patch } } : n
       )
+    } else if (sentence.kind === 'clear') {
+      // Keep the root and drop its contents: a page still needs something
+      // to build into, and the aliases from earlier lines would point at
+      // nodes that no longer exist.
+      workingTree = { ...workingTree, children: [] }
+      aliasToId.clear()
+      aliasToType.clear()
     } else if (sentence.kind === 'publish') {
       pages.push(
         sentence.title === undefined

@@ -24,3 +24,8 @@ export type BqlSentence =
   | { kind: 'class'; line: number; names: string[]; alias: string }
   /** Where the tree this script built should be published. */
   | { kind: 'publish'; line: number; title?: string; path: string }
+  /**
+   * Build a page of its own from here, rather than adding to the tree the
+   * editor already has loaded.
+   */
+  | { kind: 'clear'; line: number }

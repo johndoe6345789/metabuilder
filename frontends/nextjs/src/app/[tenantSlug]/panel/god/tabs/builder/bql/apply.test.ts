@@ -437,3 +437,66 @@ describe('applyBql: where the page goes', () => {
   })
 })
 
+describe('applyBql: starting a page from scratch', () => {
+  /**
+   * Without this, a script for a second page inherited the first page's
+   * blocks from the editor, and running the same script twice added its
+   * blocks twice -- a live page ended up with four stacked copies of
+   * itself.
+   */
+  const existing = (): TreeNode => ({
+    id: 'root',
+    type: 'container',
+    props: {},
+    children: [
+      { id: 'old', type: 'html.h1', props: { text: 'Left over' }, children: [] },
+    ],
+  })
+
+  it('drops what was already loaded', async () => {
+    mockDbal([
+      { kind: 'clear', line: 1 },
+      { kind: 'add', line: 2, blockName: 'Heading 1', text: 'Fresh', attrs: [] },
+    ])
+
+    const result = await applyBql('irrelevant', 'tenant', 'root', existing(), [])
+
+    expect(result.errors).toEqual([])
+    expect(result.tree.children).toHaveLength(1)
+    expect(result.tree.children[0].props.text).toBe('Fresh')
+  })
+
+  it('keeps the root itself, so the page still has something to build in', async () => {
+    mockDbal([{ kind: 'clear', line: 1 }])
+
+    const result = await applyBql('irrelevant', 'tenant', 'root', existing(), [])
+
+    expect(result.tree.id).toBe('root')
+    expect(result.tree.children).toEqual([])
+  })
+
+  it('adds to what is loaded when the script does not ask to start over', async () => {
+    mockDbal([
+      { kind: 'add', line: 1, blockName: 'Heading 1', text: 'Added', attrs: [] },
+    ])
+
+    const result = await applyBql('irrelevant', 'tenant', 'root', existing(), [])
+
+    expect(result.tree.children).toHaveLength(2)
+  })
+
+  it('makes running the same script twice produce the same page', async () => {
+    const script = [
+      { kind: 'clear', line: 1 },
+      { kind: 'add', line: 2, blockName: 'Heading 1', text: 'Classes', attrs: [] },
+    ] as const
+
+    mockDbal([...script])
+    const once = await applyBql('irrelevant', 'tenant', 'root', existing(), [])
+    mockDbal([...script])
+    const twice = await applyBql('irrelevant', 'tenant', 'root', once.tree, [])
+
+    expect(twice.tree.children).toHaveLength(1)
+  })
+})
+
