@@ -115,6 +115,7 @@ export function useComponentTree() {
     publish,
     publishing,
     conflict,
+    error: publishError,
     load: loadTree,
     loading,
   } = useComponentTreePublish(tree)
@@ -145,6 +146,7 @@ export function useComponentTree() {
     publish,
     publishing,
     conflict,
+    publishError,
     load,
     loading,
   }

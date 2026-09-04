@@ -10,8 +10,11 @@ export { DEFAULT_PUBLISH_TARGET } from './component-tree-publish/types'
 
 export function useComponentTreePublish(tree: TreeNode) {
   const dispatch = useAppDispatch()
-  const { publish, publishing, conflict } = usePublishPage(tree, dispatch)
+  const { publish, publishing, conflict, error } = usePublishPage(
+    tree,
+    dispatch
+  )
   const { load, loading } = useLoadPage(dispatch)
 
-  return { publish, publishing, conflict, load, loading }
+  return { publish, publishing, conflict, error, load, loading }
 }

@@ -1,10 +1,12 @@
 import { propValueType } from './prop-value'
+import { describeFailure } from './write-failure'
 import type { TreeNodeShape } from './types'
 
 const JSON_HEADERS = { 'Content-Type': 'application/json' }
 
-/** Writes one node's row, its prop rows, then recurses into its
- *  children in order -- returns false on the first failed write. */
+/** Writes one node's row, its prop rows, then recurses into its children
+ *  in order. Returns null when everything wrote, or the server's reason for
+ *  refusing the first write that failed. */
 export async function writeNode(
   base: string,
   tenant: string,
@@ -13,7 +15,7 @@ export async function writeNode(
   parentId: string | null,
   order: number,
   nodeCounter: { value: number }
-): Promise<boolean> {
+): Promise<string | null> {
   nodeCounter.value += 1
   const nodeId = `${treeId}__${node.id.length > 0 ? node.id : `n${nodeCounter.value}`}`
   const nodeRes = await fetch(`${base}/PageTreeNode`, {
@@ -28,7 +30,7 @@ export async function writeNode(
       sortOrder: order,
     }),
   })
-  if (!nodeRes.ok) return false
+  if (!nodeRes.ok) return await describeFailure('PageTreeNode', nodeRes)
 
   for (const [propOrder, [name, raw]] of Object.entries(node.props).entries()) {
     const { valueType, value } = propValueType(raw)
@@ -49,11 +51,11 @@ export async function writeNode(
         sortOrder: propOrder,
       }),
     })
-    if (!propRes.ok) return false
+    if (!propRes.ok) return await describeFailure('PageTreeProp', propRes)
   }
 
   for (const [index, child] of node.children.entries()) {
-    const ok = await writeNode(
+    const failure = await writeNode(
       base,
       tenant,
       treeId,
@@ -62,7 +64,7 @@ export async function writeNode(
       index,
       nodeCounter
     )
-    if (!ok) return false
+    if (failure !== null) return failure
   }
-  return true
+  return null
 }

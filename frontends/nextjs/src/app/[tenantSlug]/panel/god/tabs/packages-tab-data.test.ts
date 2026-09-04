@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const tree = vi.hoisted(() => ({
-  saveTree: vi.fn(async () => true),
+  saveTree: vi.fn(async () => null),
 }))
 vi.mock('@/lib/tenant/page-tree', () => tree)
 
@@ -97,7 +97,7 @@ describe('createDefaultPages', () => {
 
   it('stamps the tree id when the tree saved successfully', async () => {
     stub()
-    tree.saveTree.mockResolvedValue(true)
+    tree.saveTree.mockResolvedValue(null)
     let body: Record<string, unknown> = {}
     vi.stubGlobal(
       'fetch',
@@ -111,7 +111,7 @@ describe('createDefaultPages', () => {
   })
 
   it('leaves pageTreeId null when the tree failed to save', async () => {
-    tree.saveTree.mockResolvedValue(false)
+    tree.saveTree.mockResolvedValue('PageTreeProp rejected (422)')
     let body: Record<string, unknown> = {}
     vi.stubGlobal(
       'fetch',

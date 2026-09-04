@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react'
 import type { useAppDispatch } from '@/store/hooks'
 import { saveTree } from '@/lib/tenant/page-tree'
+import { describeFailure } from '@/lib/tenant/page-tree/write-failure'
 import { clearDirty } from '@/store/slices/god-slice'
 import { snapshot } from '@/lib/persist/versions'
 import type { TreeNode } from '../builder-registry'
@@ -13,8 +14,14 @@ export function usePublishPage(
   dispatch: ReturnType<typeof useAppDispatch>
 ) {
   const [publishing, setPublishing] = useState(false)
-  /** Why the last publish was refused, if it was. */
+  /** Why the last publish took a path over from a package, if it did. */
   const [conflict, setConflict] = useState<string | null>(null)
+  /**
+   * Why the last publish failed, in the server's words. Without this a
+   * refused publish looked exactly like one never attempted -- the bar just
+   * kept reading "Staged changes -- not yet published".
+   */
+  const [error, setError] = useState<string | null>(null)
 
   const publish = useCallback(
     async (
@@ -22,6 +29,7 @@ export function usePublishPage(
     ): Promise<boolean> => {
       const { tenant, path } = target
       setPublishing(true)
+      setError(null)
       try {
         // "path" carries a UNIQUE index, so a path can only ever have one
         // row. Taking a page over therefore means repointing whichever row
@@ -41,7 +49,7 @@ export function usePublishPage(
 
         const treeId = `tree_${id}`
         const stamp = Date.now()
-        const wrote = await saveTree(
+        const failure = await saveTree(
           DBAL,
           tenant,
           treeId,
@@ -49,15 +57,26 @@ export function usePublishPage(
           tree,
           `Published from the God Panel for ${path}`
         )
-        if (!wrote) return false
+        if (failure !== null) {
+          setError(failure)
+          return false
+        }
 
         const res = await writePageRow(owner, id, target, treeId, stamp)
-        if (!res.ok) return false
+        if (!res.ok) {
+          setError(await describeFailure('PageConfig', res))
+          return false
+        }
 
         await snapshot('god.componentTree', tree, 'Published page')
         dispatch(clearDirty('tree'))
         return true
-      } catch {
+      } catch (cause) {
+        setError(
+          cause instanceof Error
+            ? `Could not reach the server: ${cause.message}`
+            : 'Could not reach the server.'
+        )
         return false
       } finally {
         setPublishing(false)
@@ -66,5 +85,5 @@ export function usePublishPage(
     [tree, dispatch]
   )
 
-  return { publish, publishing, conflict }
+  return { publish, publishing, conflict, error }
 }

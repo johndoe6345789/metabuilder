@@ -30,10 +30,10 @@ describe('saveTree failure paths', () => {
       })
     )
 
-    const ok = await saveTree(DBAL, 'acme', 'tree_1', 'Home', tree())
+    const failure = await saveTree(DBAL, 'acme', 'tree_1', 'Home', tree())
 
     expect(treeCreated).toBe(true)
-    expect(ok).toBe(false)
+    expect(failure).toMatch(/PageTreeNode rejected \(500\)/)
   })
 
   it('writes nothing when creating the tree row itself fails', async () => {
@@ -47,9 +47,9 @@ describe('saveTree failure paths', () => {
       })
     )
 
-    const ok = await saveTree(DBAL, 'acme', 'tree_1', 'Home', tree())
+    const failure = await saveTree(DBAL, 'acme', 'tree_1', 'Home', tree())
 
-    expect(ok).toBe(false)
+    expect(failure).toMatch(/PageTree rejected \(500\)/)
     expect(calls.some(u => u.endsWith('/PageTreeNode'))).toBe(false)
   })
 })

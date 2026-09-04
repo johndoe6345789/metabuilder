@@ -3,7 +3,7 @@ import { act, renderHook } from '@testing-library/react'
 
 const pageTree = vi.hoisted(() => ({
   loadTree: vi.fn(),
-  saveTree: vi.fn(async () => true),
+  saveTree: vi.fn(async () => null),
 }))
 const dispatch = vi.hoisted(() => vi.fn())
 const versions = vi.hoisted(() => ({ snapshot: vi.fn() }))
@@ -54,7 +54,7 @@ const publish = async (
 describe('useComponentTreePublish', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    pageTree.saveTree.mockResolvedValue(true)
+    pageTree.saveTree.mockResolvedValue(null)
   })
 
   afterEach(() => {
@@ -97,7 +97,7 @@ describe('useComponentTreePublish', () => {
     it('gives up when the tree cannot be saved', async () => {
       // Publishing a page that points at a tree that was never written
       // would render an empty page rather than fail visibly.
-      pageTree.saveTree.mockResolvedValue(false)
+      pageTree.saveTree.mockResolvedValue('PageTreeProp rejected (422)')
       const calls = mockFetch(null)
       const { result } = renderHook(() =>
         useComponentTreePublish(tree as never)

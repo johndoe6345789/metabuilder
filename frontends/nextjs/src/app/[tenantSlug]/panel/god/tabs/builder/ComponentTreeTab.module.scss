@@ -447,6 +447,21 @@
   background: color-mix(in srgb, #dc2626 12%, transparent);
 }
 
+/* A publish the server refused. Same weight as .conflict -- both are the
+   page not being where you think it is. */
+.publishError {
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  font-family: monospace;
+  word-break: break-word;
+  color: var(--mat-sys-on-surface, #e6edf3);
+  border: 1px solid color-mix(in srgb, #dc2626 55%, transparent);
+  background: color-mix(in srgb, #dc2626 16%, transparent);
+}
+
 /* The tree picker sits above everything else: which tree you are editing is
    the first decision, before which route it publishes to. */
 .treeBar {

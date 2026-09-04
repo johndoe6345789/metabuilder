@@ -10,6 +10,7 @@ import { PaneTabs } from './workbench/PaneTabs'
 import { PalettePane } from './workbench/PalettePane'
 import { PreviewPane } from './workbench/PreviewPane'
 import { SetupPanel } from './workbench/SetupPanel'
+import { WorkbenchAlerts } from './workbench/WorkbenchAlerts'
 import s from './ComponentTreeTab.module.scss'
 
 export function ComponentTreeWorkbench() {
@@ -33,11 +34,10 @@ export function ComponentTreeWorkbench() {
         onLoad={w.targetActions.load}
       />
 
-      {w.t.conflict !== null && (
-        <div className={s.conflict} role="alert">
-          {w.t.conflict}
-        </div>
-      )}
+      <WorkbenchAlerts
+        conflict={w.t.conflict}
+        publishError={w.t.publishError}
+      />
 
       <ComponentTreePublishBar
         path={w.target.path}

@@ -1,4 +1,5 @@
 import { writeNode } from './write-node'
+import { describeFailure } from './write-failure'
 import type { TreeNodeShape } from './types'
 
 /**
@@ -6,6 +7,10 @@ import type { TreeNodeShape } from './types'
  *
  * Deleting the PageTree first cascades its nodes and their properties away,
  * so a republish replaces a tree instead of merging into it.
+ *
+ * Returns null when the whole tree wrote, or the server's reason for
+ * refusing -- a caller that only needs a boolean can check for null, but the
+ * reason is what makes a failed publish diagnosable.
  */
 export async function saveTree(
   dbal: string,
@@ -14,7 +19,7 @@ export async function saveTree(
   name: string,
   root: TreeNodeShape,
   description = ''
-): Promise<boolean> {
+): Promise<string | null> {
   const base = `${dbal}/${tenant}/core`
 
   await fetch(`${base}/PageTree/${treeId}`, { method: 'DELETE' }).catch(
@@ -34,7 +39,7 @@ export async function saveTree(
       updatedAt: stamp,
     }),
   })
-  if (!tree.ok) return false
+  if (!tree.ok) return await describeFailure('PageTree', tree)
 
-  return writeNode(base, tenant, treeId, root, null, 0, { value: 0 })
+  return await writeNode(base, tenant, treeId, root, null, 0, { value: 0 })
 }

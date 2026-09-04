@@ -35,7 +35,7 @@ async function createDefaultPage(
   route: { path: string; title: string }
 ): Promise<Response> {
   const treeId = treeIdFor(pkg, route.path)
-  const wrote = await saveTree(
+  const treeFailure = await saveTree(
     DBAL,
     tenant,
     treeId,
@@ -55,7 +55,7 @@ async function createDefaultPage(
       sortOrder: 0,
       packageId: pkg.id,
       tenantId: tenant,
-      pageTreeId: wrote ? treeId : null,
+      pageTreeId: treeFailure === null ? treeId : null,
     }),
   })
 }

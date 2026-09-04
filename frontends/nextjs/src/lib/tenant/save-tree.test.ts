@@ -44,7 +44,7 @@ describe('saveTree', () => {
       })
     )
 
-    const ok = await saveTree(
+    const failure = await saveTree(
       DBAL,
       'acme',
       'tree_1',
@@ -52,7 +52,7 @@ describe('saveTree', () => {
       tree({ props: { title: 'Hi' } })
     )
 
-    expect(ok).toBe(true)
+    expect(failure).toBeNull()
     expect(calls.some(c => c.url.endsWith('/PageTreeNode'))).toBe(true)
     expect(
       calls.some(c => c.url.endsWith('/PageTreeProp') && c.body.includes('Hi'))
