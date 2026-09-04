@@ -57,6 +57,15 @@ export function useWorkbench() {
    * than guessing. Left alone, "untouched" is still whatever the previous
    * tenant's rehydrated draft was, so a miss has to fall back to blanking
    * the tree explicitly instead of trusting load's no-op.
+   *
+   * Trade-off, accepted deliberately: with no tenant tag on the persisted
+   * draft itself, this can't distinguish "nothing published yet" from "an
+   * unpublished draft that belongs to this same tenant, just from before a
+   * detour through some other tenant." Both blank the tree. Losing a draft
+   * after a cross-tenant round trip is a real cost, but showing one
+   * tenant's staged content to another is worse -- see the CLAUDE.md gotcha
+   * on unscoped redux-persist for the actual fix (a tenant-scoped persist
+   * key in the sibling redux repo).
    */
   const loadedForTenant = useRef(readLastLoadedTenant())
   const { load, resetTree } = t
