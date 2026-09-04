@@ -15,21 +15,8 @@ import {
   hasDuplicateId,
   treesWithContent,
 } from './workbench-derivations'
+import { readTreeTenant } from './tree-tenant'
 import type { PaneView } from './workbench/PaneTabs'
-
-/**
- * Which tenant's draft is currently sitting in the shared IndexedDB store,
- * recorded outside React state so it survives a full page reload -- a plain
- * `useRef` re-initializes to whatever tenant is signed in on the very next
- * mount, which is exactly the reload the real bug happens on (a fresh
- * sign-in redirects through a full page load, it doesn't just re-render).
- */
-const LAST_LOADED_TENANT_KEY = 'metabuilder:builder-last-tenant'
-
-function readLastLoadedTenant(): string | undefined {
-  if (typeof window === 'undefined') return undefined
-  return window.localStorage.getItem(LAST_LOADED_TENANT_KEY) ?? undefined
-}
 
 /** Every piece of state and derived value the workbench's JSX reads. */
 export function useWorkbench() {
@@ -43,40 +30,21 @@ export function useWorkbench() {
   const targetActions = useTargetActions(t, tenant, target, pages, setTarget)
 
   /**
-   * The draft tree persists in IndexedDB keyed by browser origin, not by
-   * tenant (redux-persist has no tenant-aware key -- see the sibling redux
-   * repo), so signing into a different tenant in the same browser can leave
-   * a previous tenant's real page content showing under this one's URL,
-   * even after a hard reload. Reload from DBAL whenever the signed-in
-   * tenant actually changes -- but only then, not on every mount, so a
-   * genuine unpublished draft still survives an accidental refresh for the
-   * SAME tenant.
+   * Load this tenant's saved page when the signed-in tenant changes.
    *
-   * A brand-new tenant has no saved page at all, so `load` finds nothing and
-   * -- correctly, for its own contract -- leaves the tree untouched rather
-   * than guessing. Left alone, "untouched" is still whatever the previous
-   * tenant's rehydrated draft was, so a miss has to fall back to blanking
-   * the tree explicitly instead of trusting load's no-op.
-   *
-   * Trade-off, accepted deliberately: with no tenant tag on the persisted
-   * draft itself, this can't distinguish "nothing published yet" from "an
-   * unpublished draft that belongs to this same tenant, just from before a
-   * detour through some other tenant." Both blank the tree. Losing a draft
-   * after a cross-tenant round trip is a real cost, but showing one
-   * tenant's staged content to another is worse -- see the CLAUDE.md gotcha
-   * on unscoped redux-persist for the actual fix (a tenant-scoped persist
-   * key in the sibling redux repo).
+   * Whether the tree in the store is even *ours* is no longer decided here
+   * -- useComponentTree answers that for every consumer, because deciding
+   * it in this one view model left BQL free to build on another tenant's
+   * draft. What remains here is the useful half: fetching the page this
+   * tenant actually has, if it has one.
    */
-  const loadedForTenant = useRef(readLastLoadedTenant())
-  const { load, resetTree } = t
+  const loadedForTenant = useRef(readTreeTenant())
+  const { load } = t
   useEffect(() => {
     if (loadedForTenant.current === tenant) return
     loadedForTenant.current = tenant
-    window.localStorage.setItem(LAST_LOADED_TENANT_KEY, tenant)
-    void load(tenant, target.path).then(result => {
-      if (result === null) resetTree()
-    })
-  }, [tenant, target.path, load, resetTree])
+    void load(tenant, target.path)
+  }, [tenant, target.path, load])
 
   // Ignored above the breakpoint, where all four panes are on screen at
   // once -- the CSS decides, so there is no width measuring here.

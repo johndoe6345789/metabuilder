@@ -1,6 +1,8 @@
 'use client'
 
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
+import { normalizeTenantId } from '@/lib/tenant/workspace-paths'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { setTree, type GodState } from '@/store/slices/god-slice'
 import { type TreeNode } from './builder-registry'
@@ -9,13 +11,33 @@ import { findNode } from './component-tree-utils'
 import { autoId } from './auto-identity'
 import { useComponentTreeActions } from './component-tree-actions'
 import { useComponentTreePublish } from './component-tree-publish'
+import { treeBelongsToAnother, writeTreeTenant } from './tree-tenant'
+
+const BLANK: TreeNode = { id: 'root', type: 'container', props: {}, children: [] }
 
 /** Component-tree editor state — tree persisted in Redux (god slice). */
 export function useComponentTree() {
   const dispatch = useAppDispatch()
-  const tree = useAppSelector(s => (s.god as GodState).tree)
+  const stored = useAppSelector(s => (s.god as GodState).tree)
   const dirty = useAppSelector(s => (s.god as GodState).dirty.tree)
   const [selectedId, setSelectedId] = useState<string>('root')
+
+  const auth = useAuthContext()
+  const tenant = normalizeTenantId(auth.user?.tenantId)
+
+  /**
+   * Whose tree this is, answered here rather than by whichever tab asked.
+   * It used to be checked in useWorkbench -- the Components tab's view
+   * model -- so every other consumer skipped it. BQL was one: run from its
+   * tab on a different tenant, it appended to the previous tenant's
+   * leftover draft and published the result to a live route.
+   *
+   * Derived during render, not in an effect, so no consumer ever sees the
+   * other tenant's content -- an effect would leave one render where a
+   * script could read it and a page could show it.
+   */
+  const foreign = treeBelongsToAnother(tenant)
+  const tree = foreign ? BLANK : stored
 
   /**
    * Edit history. Every change to the tree goes through commit(), so keeping
@@ -68,6 +90,17 @@ export function useComponentTree() {
     future.current = []
     sync()
   }, [sync])
+  useEffect(() => {
+    if (foreign) {
+      // Straight to setTree rather than through commit(): a tenant's
+      // content must not sit on the undo stack, where Ctrl+Z would put it
+      // back.
+      dispatch(setTree(BLANK))
+      clearHistory()
+    }
+    writeTreeTenant(tenant)
+  }, [foreign, tenant, dispatch, clearHistory])
+
   const selected = getSelectedTreeNode(tree, selectedId)
   const { addNode, updateProps, deleteNode, moveNode } =
     useComponentTreeActions(tree, selected, commit, setSelectedId)

@@ -191,8 +191,16 @@ describe('useWorkbench', () => {
       expect(load).not.toHaveBeenCalled()
     })
 
-    it('blanks the tree when the newly signed-in tenant has no saved page, instead of leaving the previous tenant\'s draft on screen', async () => {
-      window.localStorage.setItem('metabuilder:builder-last-tenant', 'previous-tenant')
+    // Blanking a tree that belongs to someone else is no longer this
+    // hook's job: useComponentTree does it for every consumer, because
+    // doing it here left BQL free to build on another tenant's draft. See
+    // use-component-tree-tenant.test.ts. What is still this hook's job is
+    // fetching the page, which the tests above cover.
+    it('asks for the page rather than deciding whose tree is loaded', async () => {
+      window.localStorage.setItem(
+        'metabuilder:builder-last-tenant',
+        'previous-tenant'
+      )
       auth.useAuthContext.mockReturnValue({ user: { tenantId: 'acme' } })
       const load = vi.fn(() => Promise.resolve(null))
       const resetTree = vi.fn()
@@ -203,7 +211,8 @@ describe('useWorkbench', () => {
         await Promise.resolve()
       })
 
-      expect(resetTree).toHaveBeenCalled()
+      expect(load).toHaveBeenCalledWith('acme', '/a')
+      expect(resetTree).not.toHaveBeenCalled()
     })
 
     it('does not blank the tree when the newly signed-in tenant does have a saved page', async () => {

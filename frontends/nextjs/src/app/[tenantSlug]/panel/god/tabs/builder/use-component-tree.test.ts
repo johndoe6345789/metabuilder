@@ -28,6 +28,9 @@ vi.mock('@/store/slices/god-slice', async importOriginal => {
     clearDirty: (p: unknown) => ({ type: 'clearDirty', payload: p }),
   }
 })
+vi.mock('@/app/_components/auth-provider/auth-provider-component', () => ({
+  useAuthContext: () => ({ user: { tenantId: 'acme' } }),
+}))
 vi.mock('./component-tree-publish', () => ({
   useComponentTreePublish: () => ({
     publish: vi.fn(),
@@ -61,6 +64,9 @@ describe('useComponentTree', () => {
     vi.clearAllMocks()
     store.tree = root()
     store.dirty = false
+    // The tree belongs to the signed-in tenant here; the guard for when it
+    // does not has its own file.
+    window.localStorage.setItem('metabuilder:builder-last-tenant', 'acme')
   })
 
   describe('selection', () => {
