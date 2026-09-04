@@ -2,7 +2,7 @@
 
 import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { setPackages } from '@/store/slices/god-slice'
+import { setPackages, type GodState } from '@/store/slices/god-slice'
 import type { RegistryPackage } from './package-registry/types'
 import { usePackageCrud } from './package-registry/use-package-crud'
 import { usePackageLifecycle } from './package-registry/use-package-lifecycle'
@@ -12,7 +12,7 @@ export type { PackageRef, RegistryPackage } from './package-registry/types'
 
 export function usePackageRegistry() {
   const dispatch = useAppDispatch()
-  const packages: RegistryPackage[] = useAppSelector(s => s.god.packages)
+  const packages = useAppSelector(s => (s.god as GodState).packages)
   const persist = useCallback(
     (next: RegistryPackage[]) => {
       dispatch(setPackages(next))

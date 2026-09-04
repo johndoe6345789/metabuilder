@@ -2,7 +2,7 @@
 
 import { useCallback, useRef, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { setTree } from '@/store/slices/god-slice'
+import { setTree, type GodState } from '@/store/slices/god-slice'
 import { type TreeNode } from './builder-registry'
 import { getSelectedTreeNode } from './component-tree-selection'
 import { findNode } from './component-tree-utils'
@@ -13,8 +13,8 @@ import { useComponentTreePublish } from './component-tree-publish'
 /** Component-tree editor state — tree persisted in Redux (god slice). */
 export function useComponentTree() {
   const dispatch = useAppDispatch()
-  const tree: TreeNode = useAppSelector(s => s.god.tree)
-  const dirty: boolean = useAppSelector(s => s.god.dirty.tree)
+  const tree = useAppSelector(s => (s.god as GodState).tree)
+  const dirty = useAppSelector(s => (s.god as GodState).dirty.tree)
   const [selectedId, setSelectedId] = useState<string>('root')
 
   /**

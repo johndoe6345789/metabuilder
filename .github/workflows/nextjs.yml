@@ -69,23 +69,36 @@ jobs:
         with:
           node-version: '22'
 
+      # v2 deliberately abandons every cache entry written before it. The old
+      # `npm-<os>-` prefix had a poisoned entry that `restore-keys` handed back
+      # on every single run, and a corrupt ~/.npm/_cacache is what npm reports
+      # as "Cannot read properties of null (reading 'edgesOut')" -- an error
+      # that reads like a broken dependency graph and is nothing of the kind.
       - name: Cache npm downloads
         uses: actions/cache@v6
         with:
           path: ~/.npm
-          key: npm-${{ runner.os }}-${{ hashFiles('package.json', 'frontends/nextjs/package.json', '.github/workspace.json') }}
-          restore-keys: npm-${{ runner.os }}-
+          key: npm-v2-${{ runner.os }}-${{ hashFiles('package.json', 'frontends/nextjs/package.json', '.github/workspace.json') }}
+          restore-keys: npm-v2-${{ runner.os }}-
 
       # No package-lock.json is committed, so npm ci is not an option.
-      # Retried because workspace installs of this size hit transient
-      # registry failures often enough to matter.
+      # The retry exists for transient registry failures, but a retry that
+      # changes nothing between attempts cannot fix a bad cache -- which is
+      # how the same install failed three identical times for days. Clearing
+      # the cache before retrying makes the second attempt a genuinely
+      # different one, so a poisoned cache heals itself instead of pinning
+      # the whole job red until someone notices.
       - name: Install dependencies
         id: install
         run: |
           for attempt in 1 2 3; do
             npm install && exit 0
-            echo "npm install attempt $attempt failed; retrying in 15s"
-            sleep 15
+            echo "npm install attempt $attempt failed"
+            if [ "$attempt" -lt 3 ]; then
+              echo "clearing the npm cache before retrying"
+              npm cache clean --force || true
+              sleep 15
+            fi
           done
           exit 1
 

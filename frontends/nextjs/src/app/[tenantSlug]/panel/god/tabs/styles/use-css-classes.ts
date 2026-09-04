@@ -2,7 +2,7 @@
 
 import { useCallback, useRef, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { setCss, clearDirty } from '@/store/slices/god-slice'
+import { setCss, clearDirty, type GodState } from '@/store/slices/god-slice'
 import { loadStyleClasses, saveStyleClasses } from '@/lib/tenant/style-classes'
 
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
@@ -16,8 +16,8 @@ export interface CssClass {
 /** Named CSS class registry (persisted in Redux god slice). */
 export function useCssClasses() {
   const dispatch = useAppDispatch()
-  const classes: CssClass[] = useAppSelector(s => s.god.css)
-  const dirty: boolean = useAppSelector(s => s.god.dirty.css)
+  const classes = useAppSelector(s => (s.god as GodState).css)
+  const dirty = useAppSelector(s => (s.god as GodState).dirty.css)
   const [publishing, setPublishing] = useState(false)
 
   const persist = useCallback(

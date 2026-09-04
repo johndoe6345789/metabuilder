@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { setSmtp, clearDirty } from '@/store/slices/god-slice'
+import { setSmtp, clearDirty, type GodState } from '@/store/slices/god-slice'
 
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
@@ -19,8 +19,8 @@ export interface SmtpConfig {
 /** Outbound email (SMTP) settings, persisted in Redux + published to DBAL. */
 export function useSmtpConfig() {
   const dispatch = useAppDispatch()
-  const config: SmtpConfig = useAppSelector(s => s.god.smtp)
-  const dirty: boolean = useAppSelector(s => s.god.dirty.smtp)
+  const config = useAppSelector(s => (s.god as GodState).smtp)
+  const dirty = useAppSelector(s => (s.god as GodState).dirty.smtp)
   const [publishing, setPublishing] = useState(false)
 
   const set = useCallback(

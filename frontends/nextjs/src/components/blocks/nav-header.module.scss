@@ -7,27 +7,45 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 14px 24px;
-  position: relative;
+  padding: 16px 32px;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: var(--mat-sys-surface-container-lowest, #fff);
+  border-bottom: 1px solid var(--mat-sys-outline-variant, #e2e2e6);
 }
 
 .brand {
   font-weight: 700;
-  font-size: 1.15rem;
+  font-size: 1.2rem;
+  letter-spacing: -0.01em;
+  color: var(--mat-sys-on-surface, #1a1c1e);
 }
 
 .links {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 4px;
   list-style: none;
   margin: 0;
   padding: 0;
 
   a {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 999px;
     text-decoration: none;
-    color: inherit;
+    color: var(--mat-sys-on-surface-variant, #44474a);
     font-size: 0.95rem;
+    font-weight: 500;
+    transition:
+      background 0.15s ease,
+      color 0.15s ease;
+
+    &:hover {
+      background: var(--mat-sys-surface-container-high, #e6e6ea);
+      color: var(--mat-sys-on-surface, #1a1c1e);
+    }
   }
 }
 
@@ -42,10 +60,17 @@
   flex-direction: column;
   justify-content: center;
   gap: 5px;
-  width: 30px;
-  height: 30px;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
   cursor: pointer;
   list-style: none;
+  color: var(--mat-sys-on-surface, #1a1c1e);
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: var(--mat-sys-surface-container-high, #e6e6ea);
+  }
 
   &::-webkit-details-marker {
     display: none;
@@ -56,6 +81,7 @@
 
   span {
     display: block;
+    margin: 0 7px;
     height: 2px;
     border-radius: 2px;
     background: currentColor;
@@ -63,6 +89,10 @@
 }
 
 @media (max-width: 720px) {
+  .navBar {
+    padding: 12px 20px;
+  }
+
   .burger {
     display: block;
   }
@@ -70,14 +100,22 @@
   .links {
     display: none;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+    gap: 2px;
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
-    padding: 16px 24px;
-    background: inherit;
+    padding: 12px;
+    background: var(--mat-sys-surface-container-lowest, #fff);
+    border-bottom: 1px solid var(--mat-sys-outline-variant, #e2e2e6);
+    box-shadow: 0 8px 16px rgb(0 0 0 / 12%);
     z-index: 20;
+
+    a {
+      border-radius: 12px;
+      padding: 12px 16px;
+    }
   }
 
   /* :has() lets the burger's own open/closed state (native to <details>,

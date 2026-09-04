@@ -1,9 +1,8 @@
 'use client'
 
 import { useCallback, useState } from 'react'
-import type { Workflow } from '@/workflow-editor'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { setTests } from '@/store/slices/god-slice'
+import { setTests, type GodState } from '@/store/slices/god-slice'
 import { runWorkflow } from '@/lib/workflow/run-workflow'
 
 export interface TestCase {
@@ -32,8 +31,8 @@ function subsetMatch(
 /** Point-and-click unit tests run against the current workflow (from Redux). */
 export function useTestRunner() {
   const dispatch = useAppDispatch()
-  const cases: TestCase[] = useAppSelector(s => s.god.tests)
-  const workflow: Workflow = useAppSelector(s => s.god.workflow)
+  const cases = useAppSelector(s => (s.god as GodState).tests)
+  const workflow = useAppSelector(s => (s.god as GodState).workflow)
   // Partial, not Record: only run cases have a result.
   const [results, setResults] = useState<Partial<Record<string, TestResult>>>(
     {}

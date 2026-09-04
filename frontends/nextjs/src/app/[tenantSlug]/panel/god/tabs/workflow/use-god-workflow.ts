@@ -8,7 +8,11 @@ import {
 } from '@/lib/workflow/workflow-graph'
 import type { Workflow } from '@/workflow-editor'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { setWorkflow, clearDirty } from '@/store/slices/god-slice'
+import {
+  setWorkflow,
+  clearDirty,
+  type GodState,
+} from '@/store/slices/god-slice'
 import { snapshot } from '@/lib/persist/versions'
 
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
@@ -20,8 +24,8 @@ const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
  */
 export function useGodWorkflow(tenant = 'system') {
   const dispatch = useAppDispatch()
-  const workflow: Workflow = useAppSelector(s => s.god.workflow)
-  const dirty: boolean = useAppSelector(s => s.god.dirty.workflow)
+  const workflow = useAppSelector(s => (s.god as GodState).workflow)
+  const dirty = useAppSelector(s => (s.god as GodState).dirty.workflow)
   const [publishing, setPublishing] = useState(false)
 
   const save = useCallback(

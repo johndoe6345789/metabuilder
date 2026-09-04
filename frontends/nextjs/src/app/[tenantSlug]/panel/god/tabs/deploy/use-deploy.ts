@@ -10,7 +10,7 @@ import { rehydrate, type GodState } from '@/store/slices/god-slice'
  */
 export function useDeploy() {
   const dispatch = useAppDispatch()
-  const god: GodState = useAppSelector(s => s.god)
+  const god = useAppSelector(s => s.god as GodState)
   const [flash, setFlash] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
 

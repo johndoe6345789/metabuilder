@@ -2,7 +2,7 @@
 
 import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { setDropdowns } from '@/store/slices/god-slice'
+import { setDropdowns, type GodState } from '@/store/slices/god-slice'
 
 export interface DropdownOption {
   label: string
@@ -17,7 +17,7 @@ export interface DropdownConfig {
 /** Named dropdown option-sets (persisted in Redux god slice). */
 export function useDropdownConfigs() {
   const dispatch = useAppDispatch()
-  const configs: DropdownConfig[] = useAppSelector(s => s.god.dropdowns)
+  const configs = useAppSelector(s => (s.god as GodState).dropdowns)
   const persist = useCallback(
     (next: DropdownConfig[]) => {
       dispatch(setDropdowns(next))

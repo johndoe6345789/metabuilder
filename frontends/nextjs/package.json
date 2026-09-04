@@ -7,7 +7,7 @@
     "dev": "node scripts/compile-tokens.mjs && next dev --turbopack",
     "build": "node scripts/compile-tokens.mjs && next build --webpack",
     "start": "next start",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings 0",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx}\"",

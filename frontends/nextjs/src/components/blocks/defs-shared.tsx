@@ -8,11 +8,10 @@ import type { BlockCategory, PaletteItem } from './block-types'
 import { propText } from './block-coerce'
 import { store } from '@/store/store'
 import { runWorkflow } from '@/lib/workflow/run-workflow'
-import type { Workflow } from '@/workflow-editor'
+import type { GodState } from '@/store/slices/god-slice'
 
 export function fireWorkflow(): void {
-  const state = store.getState()
-  const wf: Workflow = state.god.workflow
+  const wf = (store.getState().god as GodState).workflow
   if (wf.nodes.length === 0) {
     window.alert('No workflow wired yet.')
     return
