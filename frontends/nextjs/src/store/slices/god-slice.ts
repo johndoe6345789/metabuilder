@@ -60,12 +60,15 @@ const godSlice = createSlice({
       s,
       a: PayloadAction<{ tenant: string; scripts: BqlScript[] }>
     ) => {
+      // See the read side: a rehydrated slice may predate this key.
+      s.bql ??= {}
       s.bql[a.payload.tenant] = a.payload.scripts
     },
     addBqlScript: (
       s,
       a: PayloadAction<{ tenant: string; script: BqlScript }>
     ) => {
+      s.bql ??= {}
       const list = s.bql[a.payload.tenant] ?? []
       s.bql[a.payload.tenant] = [...list, a.payload.script]
     },
@@ -77,6 +80,7 @@ const godSlice = createSlice({
         change: Partial<BqlScript>
       }>
     ) => {
+      s.bql ??= {}
       const list = s.bql[a.payload.tenant] ?? []
       s.bql[a.payload.tenant] = list.map(script =>
         script.id === a.payload.id ? { ...script, ...a.payload.change } : script
@@ -86,6 +90,7 @@ const godSlice = createSlice({
       s,
       a: PayloadAction<{ tenant: string; id: string }>
     ) => {
+      s.bql ??= {}
       const list = s.bql[a.payload.tenant] ?? []
       // Never leave the tab with nothing to type into.
       if (list.length <= 1) return

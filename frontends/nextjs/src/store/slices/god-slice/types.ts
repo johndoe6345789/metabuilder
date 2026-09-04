@@ -33,7 +33,12 @@ export interface GodState {
    * would show one tenant's scripts, paths and copy to the next person to
    * sign in here, which is the same hole that put one tenant's draft tree
    * under another's URL.
+   *
+   * Optional because it genuinely can be absent: redux-persist replaces
+   * this slice with whatever it saved, so a store written before this key
+   * existed rehydrates without it. Saying so in the type is what makes the
+   * guards at every read and write legitimate rather than dead code.
    */
-  bql: Record<string, BqlScript[]>
+  bql?: Record<string, BqlScript[]>
   dirty: Record<GodDomain, boolean>
 }

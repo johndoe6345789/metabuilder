@@ -56,9 +56,11 @@ export function useBqlTab() {
    * switching God Panel tabs -- the point of a separate "Routes" script is
    * that it stays put while page content is rewritten. Read per tenant.
    */
-  const stored = useAppSelector(
-    s => (s.god as GodState).bql[tenant] as BqlScript[] | undefined
-  )
+  // Optional all the way down: redux-persist replaces this slice with
+  // whatever it saved, so a browser that last used the app before `bql`
+  // existed rehydrates a slice with no such key. That is every existing
+  // install on its first load after this ships.
+  const stored = useAppSelector(s => (s.god as GodState).bql?.[tenant])
   const scripts = stored ?? FIRST
 
   // Seed once per tenant, so every later edit is a reducer applied to what

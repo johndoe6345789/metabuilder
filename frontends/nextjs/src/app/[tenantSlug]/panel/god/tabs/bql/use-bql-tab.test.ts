@@ -33,6 +33,7 @@ vi.mock('@/store/hooks', () => ({
       id?: string
       change?: Record<string, unknown>
     }
+    store.bql ??= {}
     const list = store.bql[p.tenant] ?? []
     if (action.type === 'setBql') store.bql[p.tenant] = p.scripts ?? []
     if (action.type === 'addBqlScript') {
@@ -293,6 +294,39 @@ describe('useBqlTab', () => {
       expect(result.current.scripts[0].text).toBe('')
       expect(store.bql.acme).toHaveLength(1)
       auth.useAuthContext.mockReturnValue({ user: { tenantId: 'acme' } })
+    })
+  })
+
+  describe('a store saved before scripts existed', () => {
+    /**
+     * redux-persist replaces the whole god slice with what it saved, so a
+     * browser that last used this app before `bql` existed rehydrates a
+     * slice with no `bql` key at all -- and reading bql[tenant] off
+     * undefined took the entire tab down with "Cannot read properties of
+     * undefined". Every existing install is in exactly that state on the
+     * first load after this ships.
+     */
+    it('opens on a slice that has no bql key at all', () => {
+      // @ts-expect-error -- modelling a slice persisted before this key.
+      delete store.bql
+
+      const { result } = renderHook(() => useBqlTab())
+
+      expect(result.current.scripts).toHaveLength(1)
+      expect(result.current.scripts[0].name).toBe('Page content')
+    })
+
+    it('can still be typed into once seeded from such a slice', () => {
+      // @ts-expect-error -- modelling a slice persisted before this key.
+      delete store.bql
+      const { result, rerender } = renderHook(() => useBqlTab())
+
+      act(() => {
+        result.current.patch(result.current.scripts[0].id, { text: 'add a Box' })
+      })
+      rerender()
+
+      expect(result.current.scripts[0].text).toBe('add a Box')
     })
   })
 })
