@@ -17,6 +17,20 @@ import {
 } from './workbench-derivations'
 import type { PaneView } from './workbench/PaneTabs'
 
+/**
+ * Which tenant's draft is currently sitting in the shared IndexedDB store,
+ * recorded outside React state so it survives a full page reload -- a plain
+ * `useRef` re-initializes to whatever tenant is signed in on the very next
+ * mount, which is exactly the reload the real bug happens on (a fresh
+ * sign-in redirects through a full page load, it doesn't just re-render).
+ */
+const LAST_LOADED_TENANT_KEY = 'metabuilder:builder-last-tenant'
+
+function readLastLoadedTenant(): string | undefined {
+  if (typeof window === 'undefined') return undefined
+  return window.localStorage.getItem(LAST_LOADED_TENANT_KEY) ?? undefined
+}
+
 /** Every piece of state and derived value the workbench's JSX reads. */
 export function useWorkbench() {
   const t = useComponentTree()
@@ -38,11 +52,12 @@ export function useWorkbench() {
    * genuine unpublished draft still survives an accidental refresh for the
    * SAME tenant.
    */
-  const loadedForTenant = useRef(tenant)
+  const loadedForTenant = useRef(readLastLoadedTenant())
   const { load } = t
   useEffect(() => {
     if (loadedForTenant.current === tenant) return
     loadedForTenant.current = tenant
+    window.localStorage.setItem(LAST_LOADED_TENANT_KEY, tenant)
     void load(tenant, target.path)
   }, [tenant, target.path, load])
 

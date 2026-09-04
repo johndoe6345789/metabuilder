@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { act, renderHook } from '@testing-library/react'
 
 const componentTree = vi.hoisted(() => ({
@@ -120,8 +120,7 @@ describe('useWorkbench', () => {
   })
 
   describe('reload on tenant change', () => {
-    it('does not reload on first mount for the signed-in tenant', () => {
-      const load = vi.fn()
+    const mockTree = (load: ReturnType<typeof vi.fn>) => {
       componentTree.useComponentTree.mockReturnValue({
         tree: { id: 'root', type: 'root', props: {}, children: [] },
         selected: { id: 'root', type: 'root', props: {}, children: [] },
@@ -129,20 +128,32 @@ describe('useWorkbench', () => {
         redo: vi.fn(),
         load,
       })
+    }
+
+    beforeEach(() => {
+      window.localStorage.clear()
+      auth.useAuthContext.mockReturnValue({ user: { tenantId: 'acme' } })
+    })
+
+    it('reloads on the very first mount, since a fresh sign-in is a full page load, not a re-render', () => {
+      const load = vi.fn()
+      mockTree(load)
+      renderHook(() => useWorkbench())
+      expect(load).toHaveBeenCalledWith('acme', '/a')
+    })
+
+    it('does not reload on a later mount for a tenant already recorded as loaded', () => {
+      window.localStorage.setItem('metabuilder:builder-last-tenant', 'acme')
+      const load = vi.fn()
+      mockTree(load)
       renderHook(() => useWorkbench())
       expect(load).not.toHaveBeenCalled()
     })
 
-    it('reloads from DBAL when the signed-in tenant changes', () => {
+    it('reloads from DBAL when the signed-in tenant changes within a session', () => {
+      window.localStorage.setItem('metabuilder:builder-last-tenant', 'acme')
       const load = vi.fn()
-      componentTree.useComponentTree.mockReturnValue({
-        tree: { id: 'root', type: 'root', props: {}, children: [] },
-        selected: { id: 'root', type: 'root', props: {}, children: [] },
-        undo: vi.fn(),
-        redo: vi.fn(),
-        load,
-      })
-      auth.useAuthContext.mockReturnValue({ user: { tenantId: 'acme' } })
+      mockTree(load)
       const { rerender } = renderHook(() => useWorkbench())
       expect(load).not.toHaveBeenCalled()
 
@@ -152,16 +163,19 @@ describe('useWorkbench', () => {
       expect(load).toHaveBeenCalledWith('globex', '/a')
     })
 
-    it('does not reload again on a re-render for the same tenant', () => {
-      const load = vi.fn()
-      componentTree.useComponentTree.mockReturnValue({
-        tree: { id: 'root', type: 'root', props: {}, children: [] },
-        selected: { id: 'root', type: 'root', props: {}, children: [] },
-        undo: vi.fn(),
-        redo: vi.fn(),
-        load,
-      })
+    it('reloads on a fresh page load into a different tenant than was last recorded', () => {
+      window.localStorage.setItem('metabuilder:builder-last-tenant', 'previous-tenant')
       auth.useAuthContext.mockReturnValue({ user: { tenantId: 'acme' } })
+      const load = vi.fn()
+      mockTree(load)
+      renderHook(() => useWorkbench())
+      expect(load).toHaveBeenCalledWith('acme', '/a')
+    })
+
+    it('does not reload again on a re-render for the same tenant', () => {
+      window.localStorage.setItem('metabuilder:builder-last-tenant', 'acme')
+      const load = vi.fn()
+      mockTree(load)
       const { rerender } = renderHook(() => useWorkbench())
 
       rerender()
