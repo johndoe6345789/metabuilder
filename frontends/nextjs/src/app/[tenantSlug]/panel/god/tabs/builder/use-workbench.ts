@@ -51,15 +51,23 @@ export function useWorkbench() {
    * tenant actually changes -- but only then, not on every mount, so a
    * genuine unpublished draft still survives an accidental refresh for the
    * SAME tenant.
+   *
+   * A brand-new tenant has no saved page at all, so `load` finds nothing and
+   * -- correctly, for its own contract -- leaves the tree untouched rather
+   * than guessing. Left alone, "untouched" is still whatever the previous
+   * tenant's rehydrated draft was, so a miss has to fall back to blanking
+   * the tree explicitly instead of trusting load's no-op.
    */
   const loadedForTenant = useRef(readLastLoadedTenant())
-  const { load } = t
+  const { load, resetTree } = t
   useEffect(() => {
     if (loadedForTenant.current === tenant) return
     loadedForTenant.current = tenant
     window.localStorage.setItem(LAST_LOADED_TENANT_KEY, tenant)
-    void load(tenant, target.path)
-  }, [tenant, target.path, load])
+    void load(tenant, target.path).then(result => {
+      if (result === null) resetTree()
+    })
+  }, [tenant, target.path, load, resetTree])
 
   // Ignored above the breakpoint, where all four panes are on screen at
   // once -- the CSS decides, so there is no width measuring here.

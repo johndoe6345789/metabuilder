@@ -7,7 +7,8 @@ const componentTree = vi.hoisted(() => ({
     selected: { id: 'root', type: 'root', props: {}, children: [] },
     undo: vi.fn(),
     redo: vi.fn(),
-    load: vi.fn(),
+    load: vi.fn(() => Promise.resolve(null)),
+    resetTree: vi.fn(),
   })),
 }))
 const auth = vi.hoisted(() => ({
@@ -87,6 +88,8 @@ describe('useWorkbench', () => {
       selected: { id: 'a', type: 'div', props: { id: 'dup' }, children: [] },
       undo: vi.fn(),
       redo: vi.fn(),
+      load: vi.fn(() => Promise.resolve(null)),
+      resetTree: vi.fn(),
     })
     const { result } = renderHook(() => useWorkbench())
     expect(result.current.duplicateId).toBe(true)
@@ -120,13 +123,17 @@ describe('useWorkbench', () => {
   })
 
   describe('reload on tenant change', () => {
-    const mockTree = (load: ReturnType<typeof vi.fn>) => {
+    const mockTree = (
+      load: ReturnType<typeof vi.fn>,
+      resetTree: ReturnType<typeof vi.fn> = vi.fn()
+    ) => {
       componentTree.useComponentTree.mockReturnValue({
         tree: { id: 'root', type: 'root', props: {}, children: [] },
         selected: { id: 'root', type: 'root', props: {}, children: [] },
         undo: vi.fn(),
         redo: vi.fn(),
         load,
+        resetTree,
       })
     }
 
@@ -136,7 +143,7 @@ describe('useWorkbench', () => {
     })
 
     it('reloads on the very first mount, since a fresh sign-in is a full page load, not a re-render', () => {
-      const load = vi.fn()
+      const load = vi.fn(() => Promise.resolve(null))
       mockTree(load)
       renderHook(() => useWorkbench())
       expect(load).toHaveBeenCalledWith('acme', '/a')
@@ -144,7 +151,7 @@ describe('useWorkbench', () => {
 
     it('does not reload on a later mount for a tenant already recorded as loaded', () => {
       window.localStorage.setItem('metabuilder:builder-last-tenant', 'acme')
-      const load = vi.fn()
+      const load = vi.fn(() => Promise.resolve(null))
       mockTree(load)
       renderHook(() => useWorkbench())
       expect(load).not.toHaveBeenCalled()
@@ -152,7 +159,7 @@ describe('useWorkbench', () => {
 
     it('reloads from DBAL when the signed-in tenant changes within a session', () => {
       window.localStorage.setItem('metabuilder:builder-last-tenant', 'acme')
-      const load = vi.fn()
+      const load = vi.fn(() => Promise.resolve(null))
       mockTree(load)
       const { rerender } = renderHook(() => useWorkbench())
       expect(load).not.toHaveBeenCalled()
@@ -166,7 +173,7 @@ describe('useWorkbench', () => {
     it('reloads on a fresh page load into a different tenant than was last recorded', () => {
       window.localStorage.setItem('metabuilder:builder-last-tenant', 'previous-tenant')
       auth.useAuthContext.mockReturnValue({ user: { tenantId: 'acme' } })
-      const load = vi.fn()
+      const load = vi.fn(() => Promise.resolve(null))
       mockTree(load)
       renderHook(() => useWorkbench())
       expect(load).toHaveBeenCalledWith('acme', '/a')
@@ -174,7 +181,7 @@ describe('useWorkbench', () => {
 
     it('does not reload again on a re-render for the same tenant', () => {
       window.localStorage.setItem('metabuilder:builder-last-tenant', 'acme')
-      const load = vi.fn()
+      const load = vi.fn(() => Promise.resolve(null))
       mockTree(load)
       const { rerender } = renderHook(() => useWorkbench())
 
@@ -182,6 +189,38 @@ describe('useWorkbench', () => {
       rerender()
 
       expect(load).not.toHaveBeenCalled()
+    })
+
+    it('blanks the tree when the newly signed-in tenant has no saved page, instead of leaving the previous tenant\'s draft on screen', async () => {
+      window.localStorage.setItem('metabuilder:builder-last-tenant', 'previous-tenant')
+      auth.useAuthContext.mockReturnValue({ user: { tenantId: 'acme' } })
+      const load = vi.fn(() => Promise.resolve(null))
+      const resetTree = vi.fn()
+      mockTree(load, resetTree)
+
+      renderHook(() => useWorkbench())
+      await act(async () => {
+        await Promise.resolve()
+      })
+
+      expect(resetTree).toHaveBeenCalled()
+    })
+
+    it('does not blank the tree when the newly signed-in tenant does have a saved page', async () => {
+      window.localStorage.setItem('metabuilder:builder-last-tenant', 'previous-tenant')
+      auth.useAuthContext.mockReturnValue({ user: { tenantId: 'acme' } })
+      const load = vi.fn(() =>
+        Promise.resolve({ title: 'A', level: 0, requiresAuth: false })
+      )
+      const resetTree = vi.fn()
+      mockTree(load, resetTree)
+
+      renderHook(() => useWorkbench())
+      await act(async () => {
+        await Promise.resolve()
+      })
+
+      expect(resetTree).not.toHaveBeenCalled()
     })
   })
 })
