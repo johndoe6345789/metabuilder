@@ -1,8 +1,8 @@
 'use client'
 
-import { Button, Typography } from '@/m3'
+import { Typography } from '@/m3'
 import { useBqlTab } from './use-bql-tab'
-import { BqlResultsPanel } from './BqlResultsPanel'
+import { BqlScriptCard } from './BqlScriptCard'
 import { BqlDocsPanel } from './BqlDocsPanel'
 import s from './BqlTab.module.scss'
 
@@ -14,36 +14,33 @@ export function BqlTab() {
       <div className={s.bar}>
         <Typography variant="h6">BQL</Typography>
         <span className={s.spacer} />
-        <Button
-          variant="contained"
-          size="small"
-          disabled={t.running || t.script.trim() === ''}
-          onClick={() => {
-            void t.run()
-          }}
-        >
-          {t.running ? 'Running…' : '▶ Run'}
-        </Button>
+        <button type="button" className={s.add} onClick={t.add}>
+          + Add script
+        </button>
       </div>
 
       <Typography variant="body2" color="text.secondary" className={s.hint}>
         Build or edit the current page by describing it, one sentence per
-        line. Runs against the page open in Components, and is undoable from
-        there like any other edit.
+        line. Each script runs on its own, against the page open in
+        Components, and is undoable from there like any other edit.
       </Typography>
 
       <div className={s.layout}>
         <div className={s.editor}>
-          <textarea
-            className={s.code}
-            value={t.script}
-            onChange={e => {
-              t.setScript(e.target.value)
-            }}
-            placeholder={'add a Heading 1 that says "Hello"'}
-            spellCheck={false}
-          />
-          <BqlResultsPanel result={t.result} />
+          {t.scripts.map(script => (
+            <BqlScriptCard
+              key={script.id}
+              script={script}
+              result={t.results[script.id]}
+              running={t.runningId === script.id}
+              removable={t.scripts.length > 1}
+              onPatch={t.patch}
+              onRemove={t.remove}
+              onRun={id => {
+                void t.run(id)
+              }}
+            />
+          ))}
         </div>
         <BqlDocsPanel />
       </div>

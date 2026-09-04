@@ -11,139 +11,123 @@ const componentTree = vi.hoisted(() => ({
   })),
 }))
 const cssClasses = vi.hoisted(() => ({
-  useCssClasses: vi.fn(() => ({
-    classes: [],
-    replace: vi.fn(),
-  })),
+  useCssClasses: vi.fn(() => ({ classes: [], replace: vi.fn() })),
 }))
-const bqlApply = vi.hoisted(() => ({
-  applyBql: vi.fn(),
-}))
+const bqlApply = vi.hoisted(() => ({ applyBql: vi.fn() }))
 
-vi.mock(
-  '@/app/_components/auth-provider/auth-provider-component',
-  () => auth
-)
+vi.mock('@/app/_components/auth-provider/auth-provider-component', () => auth)
 vi.mock('../builder/use-component-tree', () => componentTree)
 vi.mock('../styles/use-css-classes', () => cssClasses)
 vi.mock('../builder/bql/apply', () => bqlApply)
 
 import { useBqlTab } from './use-bql-tab'
 
+const okResult = {
+  tree: { id: 'root', type: 'container', props: {}, children: [] },
+  classes: [],
+  errors: [],
+  warnings: [],
+}
+
 describe('useBqlTab', () => {
-  it('starts with an empty script and no result', () => {
+  it('starts with one named script', () => {
     const { result } = renderHook(() => useBqlTab())
-    expect(result.current.script).toBe('')
-    expect(result.current.result).toBeNull()
-    expect(result.current.running).toBe(false)
+    expect(result.current.scripts).toHaveLength(1)
+    expect(result.current.scripts[0].name).toBe('Page content')
+    expect(result.current.scripts[0].text).toBe('')
   })
 
-  it('runs the script against the current tree and classes', async () => {
-    const tree = { id: 'root', type: 'container', props: {}, children: [] }
-    componentTree.useComponentTree.mockReturnValue({
-      tree,
-      replaceTree: vi.fn(),
-    })
-    bqlApply.applyBql.mockResolvedValue({
-      tree,
-      classes: [],
-      errors: [],
-      warnings: [],
-    })
+  it('adds another script without touching the first', () => {
     const { result } = renderHook(() => useBqlTab())
+    act(() => {
+      result.current.patch(result.current.scripts[0].id, {
+        text: 'add a Heading 1',
+      })
+    })
+    act(() => result.current.add())
 
-    act(() => result.current.setScript('add a Heading 1 that says "Hi"'))
+    expect(result.current.scripts).toHaveLength(2)
+    expect(result.current.scripts[0].text).toBe('add a Heading 1')
+    expect(result.current.scripts[1].text).toBe('')
+  })
+
+  it('renames only the script asked for', () => {
+    const { result } = renderHook(() => useBqlTab())
+    act(() => result.current.add())
+    const second = result.current.scripts[1].id
+    act(() => {
+      result.current.patch(second, { name: 'Routes' })
+    })
+
+    expect(result.current.scripts[1].name).toBe('Routes')
+    expect(result.current.scripts[0].name).toBe('Page content')
+  })
+
+  it('keeps the last script rather than leaving nothing to type into', () => {
+    const { result } = renderHook(() => useBqlTab())
+    act(() => {
+      result.current.remove(result.current.scripts[0].id)
+    })
+    expect(result.current.scripts).toHaveLength(1)
+  })
+
+  it('removes the script asked for when there is more than one', () => {
+    const { result } = renderHook(() => useBqlTab())
+    act(() => result.current.add())
+    const first = result.current.scripts[0].id
+    act(() => {
+      result.current.remove(first)
+    })
+
+    expect(result.current.scripts).toHaveLength(1)
+    expect(result.current.scripts[0].id).not.toBe(first)
+  })
+
+  it('runs only the script asked for, and keeps its result under its own id', async () => {
+    bqlApply.applyBql.mockResolvedValue(okResult)
+    const { result } = renderHook(() => useBqlTab())
+    act(() => result.current.add())
+    const second = result.current.scripts[1].id
+    act(() => {
+      result.current.patch(second, { text: 'add a Paragraph' })
+    })
+
     await act(async () => {
-      await result.current.run()
+      await result.current.run(second)
     })
 
     expect(bqlApply.applyBql).toHaveBeenCalledWith(
-      'add a Heading 1 that says "Hi"',
+      'add a Paragraph',
       'acme',
       'root',
-      tree,
+      expect.anything(),
       []
     )
+    expect(result.current.results[second]).toEqual(okResult)
+    expect(result.current.results[result.current.scripts[0].id]).toBeUndefined()
   })
 
-  it('commits the returned tree and classes when there are no errors', async () => {
+  it('leaves the tree alone when a script has errors', async () => {
     const replaceTree = vi.fn()
-    const replaceClasses = vi.fn()
     componentTree.useComponentTree.mockReturnValue({
       tree: { id: 'root', type: 'container', props: {}, children: [] },
       replaceTree,
     })
-    cssClasses.useCssClasses.mockReturnValue({
-      classes: [],
-      replace: replaceClasses,
-    })
-    const newTree = { id: 'root', type: 'container', props: {}, children: [] }
-    const newClasses = [{ id: 'c1', name: 'hero', props: {} }]
     bqlApply.applyBql.mockResolvedValue({
-      tree: newTree,
-      classes: newClasses,
-      errors: [],
-      warnings: [],
-    })
-    const { result } = renderHook(() => useBqlTab())
-
-    await act(async () => {
-      await result.current.run()
-    })
-
-    expect(replaceTree).toHaveBeenCalledWith(newTree)
-    expect(replaceClasses).toHaveBeenCalledWith(newClasses)
-  })
-
-  it('does not touch the tree or classes when the script has errors', async () => {
-    const replaceTree = vi.fn()
-    const replaceClasses = vi.fn()
-    componentTree.useComponentTree.mockReturnValue({
-      tree: { id: 'root', type: 'container', props: {}, children: [] },
-      replaceTree,
-    })
-    cssClasses.useCssClasses.mockReturnValue({
-      classes: [],
-      replace: replaceClasses,
-    })
-    bqlApply.applyBql.mockResolvedValue({
-      tree: { id: 'root', type: 'container', props: {}, children: [] },
-      classes: [],
+      ...okResult,
       errors: [{ line: 1, message: 'No block called "Frobnicator"' }],
-      warnings: [],
     })
     const { result } = renderHook(() => useBqlTab())
+    act(() => {
+      result.current.patch(result.current.scripts[0].id, { text: 'nonsense' })
+    })
 
     await act(async () => {
-      await result.current.run()
+      await result.current.run(result.current.scripts[0].id)
     })
 
     expect(replaceTree).not.toHaveBeenCalled()
-    expect(replaceClasses).not.toHaveBeenCalled()
-    expect(result.current.result?.errors).toEqual([
-      { line: 1, message: 'No block called "Frobnicator"' },
-    ])
-  })
-
-  it('reports running while the apply is in flight', async () => {
-    let resolve: (v: unknown) => void = () => {}
-    bqlApply.applyBql.mockReturnValue(
-      new Promise(r => {
-        resolve = r
-      })
-    )
-    const { result } = renderHook(() => useBqlTab())
-
-    let running = new Promise<void>(() => {})
-    act(() => {
-      running = result.current.run()
-    })
-    expect(result.current.running).toBe(true)
-
-    await act(async () => {
-      resolve({ tree: {}, classes: [], errors: [], warnings: [] })
-      await running
-    })
-    expect(result.current.running).toBe(false)
+    const own = result.current.results[result.current.scripts[0].id]
+    expect(own?.errors).toHaveLength(1)
   })
 })

@@ -35,7 +35,7 @@
 }
 
 .code {
-  min-height: 260px;
+  min-height: 150px;
   resize: vertical;
   padding: 12px;
   border-radius: 16px;
@@ -45,6 +45,52 @@
   font-family: monospace;
   font-size: 13px;
   line-height: 1.55;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--mat-sys-outline-variant, #30363d);
+  border-radius: 16px;
+  background: var(--mat-sys-surface-container-lowest, #0d1117);
+}
+
+.cardBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.remove {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 999px;
+  line-height: 1;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+
+  &:hover {
+    color: var(--mat-sys-error, #f85149);
+    background: var(--mat-sys-surface-container-high, #21262d);
+  }
+}
+
+.add {
+  border: 1px solid var(--mat-sys-outline-variant, #30363d);
+  background: transparent;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--mat-sys-primary, #4493f8);
+
+  &:hover {
+    background: var(--mat-sys-surface-container-high, #21262d);
+  }
 }
 
 .errors {

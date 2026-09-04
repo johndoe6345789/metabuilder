@@ -1,80 +1,68 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
+
+import { node, script, stubWith } from './bql-tab-test-harness'
 
 const bqlTab = vi.hoisted(() => ({ useBqlTab: vi.fn() }))
 vi.mock('./use-bql-tab', () => bqlTab)
 
-import { BqlTab } from './BqlTab'
+const stub = (over: Record<string, unknown> = {}) =>
+  stubWith(bqlTab.useBqlTab, over)
 
-const node = { id: 'root', type: 'container', props: {}, children: [] }
-const stub = (overrides: Record<string, unknown> = {}) => {
-  bqlTab.useBqlTab.mockReturnValue({
-    script: '',
-    setScript: vi.fn(),
-    running: false,
-    result: null,
-    run: vi.fn(async () => {}),
-    ...overrides,
-  })
-}
-const runButton = () =>
-  screen.getByText('▶ Run').closest('button') as HTMLButtonElement
+import { BqlTab } from './BqlTab'
 
 beforeEach(() => {
   vi.clearAllMocks()
 })
 
 describe('BqlTab', () => {
-  it('disables Run with an empty script', () => {
-    stub({ script: '' })
+  it('renders a box per script, each with its own name', () => {
+    stub({ scripts: [script('a', 'Page content'), script('b', 'Routes')] })
     render(<BqlTab />)
-    expect(runButton().disabled).toBe(true)
+
+    const names = screen.getAllByLabelText('Name') as HTMLInputElement[]
+    expect(names.map(n => n.value)).toEqual(['Page content', 'Routes'])
+    expect(screen.getAllByRole('textbox').length).toBe(4)
   })
 
-  it('enables Run once a script is entered', () => {
-    stub({ script: 'add a Heading 1 that says "Hi"' })
-    render(<BqlTab />)
-    expect(runButton().disabled).toBe(false)
-  })
-
-  it('calls run when Run is clicked', () => {
-    const run = vi.fn(async () => {})
-    stub({ script: 'add a Heading 1 that says "Hi"', run })
-    render(<BqlTab />)
-    fireEvent.click(screen.getByText('▶ Run'))
-    expect(run).toHaveBeenCalled()
-  })
-
-  it('shows a running label while applying', () => {
-    stub({ script: 'add a Heading 1', running: true })
-    render(<BqlTab />)
-    expect(screen.getByText('Running…')).toBeTruthy()
-  })
-
-  it('shows returned errors', () => {
+  it('shows only the running script as running', () => {
     stub({
-      result: {
-        tree: node,
-        classes: [],
-        errors: [{ line: 2, message: 'No block called "Frobnicator"' }],
-        warnings: [],
+      scripts: [script('a', 'Page content'), script('b', 'Routes')],
+      runningId: 'b',
+    })
+    render(<BqlTab />)
+
+    expect(screen.getByText('Running…')).toBeTruthy()
+    expect(screen.getAllByText('▶ Run')).toHaveLength(1)
+  })
+
+  it('keeps each result with its own script', () => {
+    stub({
+      scripts: [script('a', 'Page content'), script('b', 'Routes')],
+      results: {
+        b: {
+          tree: node,
+          classes: [],
+          errors: [{ line: 2, message: 'No block called "Frobnicator"' }],
+          warnings: [],
+        },
       },
     })
     render(<BqlTab />)
+
     expect(screen.getByText('Line 2')).toBeTruthy()
-    expect(screen.getByText(/No block called/)).toBeTruthy()
+    expect(screen.queryAllByText(/Applied to the current page/)).toHaveLength(0)
   })
 
-  it('shows success once applied with no errors', () => {
-    stub({ result: { tree: node, classes: [], errors: [], warnings: [] } })
+  it('offers no removal while a single script is left', () => {
+    stub()
     render(<BqlTab />)
-    expect(screen.getByText(/Applied to the current page/)).toBeTruthy()
+    expect(screen.queryByLabelText(/^Remove /)).toBeNull()
   })
 
-  it('renders on-site docs with the real sentence forms', () => {
+  it('still renders the on-site docs', () => {
     stub()
     render(<BqlTab />)
     expect(screen.getByText('Add a block')).toBeTruthy()
-    expect(screen.getByText('Define a reusable style')).toBeTruthy()
   })
 })
