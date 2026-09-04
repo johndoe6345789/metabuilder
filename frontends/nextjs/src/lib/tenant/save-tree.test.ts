@@ -53,9 +53,14 @@ describe('saveTree', () => {
     )
 
     expect(failure).toBeNull()
-    expect(calls.some(c => c.url.endsWith('/PageTreeNode'))).toBe(true)
+    expect(calls.some(c => c.url.endsWith('/PageTreeNode/_bulk/create'))).toBe(
+      true
+    )
     expect(
-      calls.some(c => c.url.endsWith('/PageTreeProp') && c.body.includes('Hi'))
+      calls.some(
+        c =>
+          c.url.endsWith('/PageTreeProp/_bulk/create') && c.body.includes('Hi')
+      )
     ).toBe(true)
   })
 
@@ -68,12 +73,15 @@ describe('saveTree', () => {
    * stable; the index is that.
    */
   it('sends a sortOrder on every prop row, as the schema requires', async () => {
-    const props: Record<string, unknown>[] = []
+    let props: Record<string, unknown>[] = []
     vi.stubGlobal(
       'fetch',
       vi.fn(async (url: string, init?: RequestInit) => {
-        if (String(url).endsWith('/PageTreeProp')) {
-          props.push(JSON.parse(String(init?.body ?? '{}')) as Record<string, unknown>)
+        if (String(url).endsWith('/PageTreeProp/_bulk/create')) {
+          props = JSON.parse(String(init?.body ?? '[]')) as Record<
+            string,
+            unknown
+          >[]
         }
         return new Response('{}', { status: 200 })
       })

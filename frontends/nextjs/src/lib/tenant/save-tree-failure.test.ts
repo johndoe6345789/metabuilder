@@ -50,6 +50,6 @@ describe('saveTree failure paths', () => {
     const failure = await saveTree(DBAL, 'acme', 'tree_1', 'Home', tree())
 
     expect(failure).toMatch(/PageTree rejected \(500\)/)
-    expect(calls.some(u => u.endsWith('/PageTreeNode'))).toBe(false)
+    expect(calls.some(u => u.includes('/PageTreeNode'))).toBe(false)
   })
 })

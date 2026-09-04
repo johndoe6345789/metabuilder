@@ -16,14 +16,17 @@ afterEach(() => {
 })
 
 describe('saveTree write order', () => {
+  // The rows go in one bulk request now, so the ordering that matters is
+  // the order within its array: a child must not appear before the parent
+  // it points at, or the insert violates the foreign key.
   it('writes children after their parent, in order', async () => {
-    const nodeIds: string[] = []
+    let nodeIds: string[] = []
     vi.stubGlobal(
       'fetch',
       vi.fn(async (url: string, init?: RequestInit) => {
-        if (url.endsWith('/PageTreeNode')) {
-          const body = JSON.parse(String(init?.body)) as { id: string }
-          nodeIds.push(body.id)
+        if (url.endsWith('/PageTreeNode/_bulk/create')) {
+          const rows = JSON.parse(String(init?.body)) as { id: string }[]
+          nodeIds = rows.map(r => r.id)
         }
         return new Response('{}', { status: 200 })
       })

@@ -35,7 +35,7 @@ describe('usePublishPage', () => {
     vi.stubGlobal(
       'fetch',
       vi.fn(async (url: string, init?: RequestInit) => {
-        if (String(url).endsWith('/PageTreeProp')) {
+        if (String(url).endsWith('/PageTreeProp/_bulk/create')) {
           return new Response(
             JSON.stringify({
               error: 'Validation failed',
