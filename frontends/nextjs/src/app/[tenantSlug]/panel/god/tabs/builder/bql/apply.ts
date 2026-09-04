@@ -17,6 +17,7 @@ import type { TreeNode } from '../builder-registry'
 import { paletteItem, paletteItemByName } from '../builder-registry'
 import { insertChild, mapTree, nid } from '../component-tree-utils'
 import { inferred } from '../auto-props-infer'
+import { primaryField } from '../primary-field'
 import { coerceValue, resolveField } from './fields'
 import { parseBqlViaDbal } from './dbal-parse'
 import type { BqlAttr } from './types'
@@ -99,7 +100,10 @@ export async function applyBql(
       const fields = fieldsFor(item.type)
       const props: Record<string, unknown> = { ...item.defaults }
       if (sentence.text !== undefined) {
-        const primary = fields.find(f => f.type === 'text')
+        // The same rule the Properties tab uses, so a sentence fills the
+        // box a person would have typed into -- a List item's Title, not
+        // whichever text field the schema happens to declare first.
+        const primary = primaryField(item.type)
         if (primary === undefined) {
           errors.push({ line, message: `A ${item.name} has no text of its own` })
         } else {

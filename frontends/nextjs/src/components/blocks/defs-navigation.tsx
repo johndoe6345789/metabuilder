@@ -9,7 +9,11 @@ import s from './nav-header.module.scss'
 export const NAVIGATION_DEFS: BlockDef[] = [
   {
     meta: m('nav.header', 'Nav bar', 'menu', 'Navigation', false, {
-      brand: 'Site name',
+      // No brand default: it would arrive pre-filled with the words "Site
+      // name" and typing would append to them. The render below falls back
+      // to the same words, so an untouched nav still reads sensibly. The
+      // links default stays -- a nav with no links is useless, and the row
+      // editor makes them obviously editable.
       links: 'Home->/|About->/about|Contact->/contact',
     }),
     render: p => {

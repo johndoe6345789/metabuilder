@@ -344,3 +344,34 @@ describe('applyBql: the whole Community Darkroom homepage in one script', () => 
     ])
   })
 })
+
+describe("applyBql: which field 'that says' fills", () => {
+  /**
+   * The Properties tab treats a List item's Title as its main text (see
+   * PRIMARY_TEXT_FIELD in primary-field.ts), because Icon happening to be
+   * declared first is an accident of the schema's order, not a statement
+   * about what the block is mostly about. BQL used to pick the first text
+   * field outright, so the same sentence filled a different box than the
+   * editor would have -- "hello@example.com" landing in Icon, rendering as
+   * the literal word next to nothing.
+   */
+  it('fills the block\'s primary field, not merely its first text one', async () => {
+    mockDbal([
+      {
+        kind: 'add',
+        line: 1,
+        blockName: 'List Item',
+        text: 'hello@example.com',
+        attrs: [],
+      },
+    ])
+
+    const result = await applyBql('irrelevant', 'tenant', 'root', root(), [])
+
+    expect(result.errors).toEqual([])
+    const item = result.tree.children[0]
+    expect(item.props.title).toBe('hello@example.com')
+    expect(item.props.icon).not.toBe('hello@example.com')
+  })
+})
+
