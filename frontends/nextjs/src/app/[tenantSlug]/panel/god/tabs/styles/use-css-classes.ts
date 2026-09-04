@@ -126,6 +126,8 @@ export function useCssClasses() {
     setProp,
     removeProp,
     remove,
+    /** Swap in a whole class list computed elsewhere (BQL's `style`s). */
+    replace: persist,
     dirty,
     publish,
     publishing,

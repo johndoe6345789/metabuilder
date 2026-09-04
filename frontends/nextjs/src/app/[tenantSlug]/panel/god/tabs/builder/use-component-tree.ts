@@ -99,6 +99,18 @@ export function useComponentTree() {
     commit({ id: 'root', type: 'container', props: {}, children: [] })
     setSelectedId('root')
   }, [commit])
+
+  /**
+   * Swap in a whole tree computed elsewhere (BQL's apply step builds one
+   * from a script). Goes through the same commit() as every other edit so
+   * it lands on the undo stack like anything a person does by hand.
+   */
+  const replaceTree = useCallback(
+    (next: TreeNode) => {
+      commit(next)
+    },
+    [commit]
+  )
   const {
     publish,
     publishing,
@@ -124,6 +136,7 @@ export function useComponentTree() {
     deleteNode,
     moveNode,
     resetTree,
+    replaceTree,
     undo,
     redo,
     canUndo: depth.undo > 0,

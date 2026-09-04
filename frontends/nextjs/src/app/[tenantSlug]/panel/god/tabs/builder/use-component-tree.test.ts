@@ -275,6 +275,39 @@ describe('useComponentTree', () => {
     })
   })
 
+  describe('replaceTree', () => {
+    it('swaps in the given tree', () => {
+      const { result, rerender } = setup()
+      const next: TreeNode = {
+        id: 'root',
+        type: 'container',
+        props: { marker: 'from-bql' },
+        children: [],
+      }
+
+      act(() => result.current.replaceTree(next))
+      rerender()
+
+      expect(markerOf(result.current.tree)).toBe('from-bql')
+    })
+
+    it('is itself undoable, like every other edit', () => {
+      const { result, rerender } = setup()
+
+      act(() =>
+        result.current.replaceTree({
+          id: 'root',
+          type: 'container',
+          props: {},
+          children: [],
+        })
+      )
+      rerender()
+
+      expect(result.current.canUndo).toBe(true)
+    })
+  })
+
   describe('load', () => {
     it('starts a fresh history, since the old one is not ours', async () => {
       const { result, edit, rerender } = setup()

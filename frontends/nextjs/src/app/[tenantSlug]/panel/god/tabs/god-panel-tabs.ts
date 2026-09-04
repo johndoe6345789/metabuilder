@@ -6,6 +6,7 @@ import { WorkflowsTab } from './WorkflowsTab'
 import { PackagesTab } from './PackagesTab'
 import { PageRoutesTab } from './PageRoutesTab'
 import { ComponentTreeTab } from './builder/ComponentTreeTab'
+import { BqlTab } from './bql/BqlTab'
 import { UsersTab } from './UsersTab'
 import { DatabaseTab } from './DatabaseTab'
 import { CredentialsTab } from './CredentialsTab'
@@ -24,6 +25,7 @@ export const TAB_COMPONENTS = {
   packages: PackagesTab,
   pages: PageRoutesTab,
   components: ComponentTreeTab,
+  bql: BqlTab,
   users: UsersTab,
   database: DatabaseTab,
   credentials: CredentialsTab,

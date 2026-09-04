@@ -43,6 +43,12 @@
       "description": "Component hierarchy and JSON renderer"
     },
     {
+      "id": "bql",
+      "label": "BQL",
+      "icon": "terminal",
+      "description": "Build the current page from plain-English sentences"
+    },
+    {
       "id": "users",
       "label": "Users",
       "icon": "people",

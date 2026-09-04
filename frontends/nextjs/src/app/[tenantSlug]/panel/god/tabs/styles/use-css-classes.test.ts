@@ -242,4 +242,16 @@ describe('useCssClasses', () => {
       )
     })
   })
+
+  describe('replace', () => {
+    it('swaps in the whole class list', () => {
+      store.css = [cls('a')]
+      const { result } = renderHook(() => useCssClasses())
+      const next = [cls('b'), cls('c')]
+
+      act(() => result.current.replace(next))
+
+      expect(persisted()).toEqual(next)
+    })
+  })
 })
