@@ -69,16 +69,20 @@ jobs:
         with:
           node-version: '22'
 
-      # Pinned, not "whatever ships with node 22". npm's own version is an
-      # input to dependency resolution, and this workspace has been resolvable
-      # by 10.9.8 and unresolvable by the npm the runner happened to bundle:
-      # the latter dies in arborist's #loadPeerSet with "Cannot read
-      # properties of null (reading 'edgesOut')" while walking rolldown's peer
-      # set. 10.9.8 is the version this exact tree was verified against, on
-      # linux, in a node:22 container.
+      # npm 10 cannot resolve this workspace from scratch. It dies in
+      # arborist's #loadPeerSet -- "Cannot read properties of null (reading
+      # 'edgesOut')" -- walking rolldown's peer set, deterministically, 4 runs
+      # out of 4 in a node:22 container. npm 11 resolves the same tree, from
+      # the same clone, with no lockfile, first time.
+      #
+      # This is only invisible on a machine that has installed once already:
+      # a successful install leaves a package-lock.json behind, and every
+      # later install replays it instead of resolving. That is exactly what
+      # made this look like a CI-only problem for days, and what makes the
+      # version worth pinning rather than inheriting from the runner image.
       - name: Pin npm
         run: |
-          npm install -g npm@10.9.8
+          npm install -g npm@11.19.1
           node -v && npm -v
 
       # v2 deliberately abandons every cache entry written before it. The old
