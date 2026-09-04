@@ -8,6 +8,7 @@ const componentTree = vi.hoisted(() => ({
   useComponentTree: vi.fn(() => ({
     tree: { id: 'root', type: 'container', props: {}, children: [] },
     replaceTree: vi.fn(),
+    publish: vi.fn(async () => true),
   })),
 }))
 const cssClasses = vi.hoisted(() => ({
@@ -25,6 +26,7 @@ import { useBqlTab } from './use-bql-tab'
 const okResult = {
   tree: { id: 'root', type: 'container', props: {}, children: [] },
   classes: [],
+  pages: [],
   errors: [],
   warnings: [],
 }
@@ -112,6 +114,7 @@ describe('useBqlTab', () => {
     componentTree.useComponentTree.mockReturnValue({
       tree: { id: 'root', type: 'container', props: {}, children: [] },
       replaceTree,
+      publish: vi.fn(async () => true),
     })
     bqlApply.applyBql.mockResolvedValue({
       ...okResult,
@@ -129,5 +132,84 @@ describe('useBqlTab', () => {
     expect(replaceTree).not.toHaveBeenCalled()
     const own = result.current.results[result.current.scripts[0].id]
     expect(own?.errors).toHaveLength(1)
+  })
+
+  describe('a script that says where its page goes', () => {
+    const built = { id: 'root', type: 'container', props: {}, children: [] }
+
+    const setup = (pages: unknown[]) => {
+      const publish = vi.fn(async () => true)
+      componentTree.useComponentTree.mockReturnValue({
+        tree: { id: 'root', type: 'container', props: {}, children: [] },
+        replaceTree: vi.fn(),
+        publish,
+      })
+      bqlApply.applyBql.mockResolvedValue({ ...okResult, tree: built, pages })
+      return publish
+    }
+
+    const runFirst = async (
+      result: { current: ReturnType<typeof useBqlTab> },
+      text = 'add a Heading 1'
+    ) => {
+      act(() => {
+        result.current.patch(result.current.scripts[0].id, { text })
+      })
+      await act(async () => {
+        await result.current.run(result.current.scripts[0].id)
+      })
+    }
+
+    it('publishes the tree it just built, not the one Redux still holds', async () => {
+      const publish = setup([{ line: 2, title: 'About', path: '/about' }])
+      const { result } = renderHook(() => useBqlTab())
+
+      await runFirst(result)
+
+      expect(publish).toHaveBeenCalledWith(
+        {
+          tenant: 'acme',
+          path: '/about',
+          title: 'About',
+          level: 0,
+          requiresAuth: false,
+        },
+        built
+      )
+    })
+
+    it('titles the page after its path when the sentence gave no title', async () => {
+      const publish = setup([{ line: 1, path: '/contact' }])
+      const { result } = renderHook(() => useBqlTab())
+
+      await runFirst(result)
+
+      expect(publish).toHaveBeenCalledWith(
+        expect.objectContaining({ path: '/contact', title: '/contact' }),
+        built
+      )
+    })
+
+    it('records which routes took, so a refusal is visible', async () => {
+      const publish = setup([{ line: 1, title: 'About', path: '/about' }])
+      publish.mockResolvedValue(false)
+      const { result } = renderHook(() => useBqlTab())
+
+      await runFirst(result)
+
+      const id = result.current.scripts[0].id
+      expect(result.current.published[id]).toEqual([
+        { path: '/about', ok: false },
+      ])
+    })
+
+    it('publishes nothing when the script asked for no route', async () => {
+      const publish = setup([])
+      const { result } = renderHook(() => useBqlTab())
+
+      await runFirst(result)
+
+      expect(publish).not.toHaveBeenCalled()
+    })
   })
 })

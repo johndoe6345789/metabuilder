@@ -27,9 +27,22 @@ export interface BqlError {
   message: string
 }
 
+/** A route a script asked its tree to be published at. */
+export interface BqlPage {
+  line: number
+  title?: string
+  path: string
+}
+
 export interface ApplyBqlResult {
   tree: TreeNode
   classes: CssClass[]
+  /**
+   * Routes the script asked for. Reported rather than acted on: publishing
+   * from inside a tree transform would make "what does this script do"
+   * unanswerable without running it against a live server.
+   */
+  pages: BqlPage[]
   errors: BqlError[]
   warnings: string[]
 }
@@ -69,10 +82,11 @@ export async function applyBql(
 ): Promise<ApplyBqlResult> {
   const parsed = await parseBqlViaDbal(tenant, script)
   if (!parsed.ok) {
-    return { tree, classes, errors: parsed.errors, warnings: [] }
+    return { tree, classes, pages: [], errors: parsed.errors, warnings: [] }
   }
   let workingTree = tree
   let workingClasses = classes
+  const pages: BqlPage[] = []
   const errors: BqlError[] = []
   const aliasToId = new Map<string, string>()
   const aliasToType = new Map<string, string>()
@@ -129,6 +143,12 @@ export async function applyBql(
       workingTree = mapTree(workingTree, n =>
         n.id === id ? { ...n, props: { ...n.props, ...patch } } : n
       )
+    } else if (sentence.kind === 'publish') {
+      pages.push(
+        sentence.title === undefined
+          ? { line, path: sentence.path }
+          : { line, title: sentence.title, path: sentence.path }
+      )
     } else if (sentence.kind === 'style') {
       const cssProps: Record<string, string> = {}
       for (const attr of sentence.attrs) cssProps[attr.key] = attr.value
@@ -167,10 +187,15 @@ export async function applyBql(
     }
   }
 
-  if (errors.length > 0) return { tree, classes, errors, warnings: [] }
+  // Nothing partially applies, and that includes publishing: a script with
+  // a bad line must not leave a half-built page live at a real route.
+  if (errors.length > 0) {
+    return { tree, classes, pages: [], errors, warnings: [] }
+  }
   return {
     tree: workingTree,
     classes: workingClasses,
+    pages,
     errors: [],
     warnings: [],
   }

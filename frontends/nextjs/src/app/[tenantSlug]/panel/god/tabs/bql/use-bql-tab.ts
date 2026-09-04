@@ -15,7 +15,12 @@
 import { useCallback, useState } from 'react'
 import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
 import { normalizeTenantId } from '@/lib/tenant/workspace-paths'
-import { applyBql, type ApplyBqlResult } from '../builder/bql/apply'
+import type { TreeNode } from '../builder/builder-registry'
+import {
+  applyBql,
+  type ApplyBqlResult,
+  type BqlPage,
+} from '../builder/bql/apply'
 import { useComponentTree } from '../builder/use-component-tree'
 import { useCssClasses } from '../styles/use-css-classes'
 
@@ -34,13 +39,17 @@ const newScript = (name: string): BqlScript => {
 export function useBqlTab() {
   const auth = useAuthContext()
   const tenant = normalizeTenantId(auth.user?.tenantId)
-  const { tree, replaceTree } = useComponentTree()
+  const { tree, replaceTree, publish } = useComponentTree()
   const { classes, replace: replaceClasses } = useCssClasses()
 
   const [scripts, setScripts] = useState<BqlScript[]>(() => [
     newScript('Page content'),
   ])
   const [runningId, setRunningId] = useState<string | null>(null)
+  /** Routes a script published to, and whether each one took. */
+  const [published, setPublished] = useState<
+    Record<string, { path: string; ok: boolean }[] | undefined>
+  >({})
   const [results, setResults] = useState<
     Record<string, ApplyBqlResult | undefined>
   >({})
@@ -64,6 +73,24 @@ export function useBqlTab() {
     )
   }, [])
 
+  const publishTo = useCallback(
+    async (pages: BqlPage[], built: TreeNode) => {
+      const landed: { path: string; ok: boolean }[] = []
+      for (const page of pages) {
+        const ok = await publish({
+          tenant,
+          path: page.path,
+          title: page.title ?? page.path,
+          level: 0,
+          requiresAuth: false,
+        }, built)
+        landed.push({ path: page.path, ok })
+      }
+      return landed
+    },
+    [publish, tenant]
+  )
+
   const run = useCallback(
     async (id: string) => {
       const script = scripts.find(s => s.id === id)
@@ -78,16 +105,21 @@ export function useBqlTab() {
           classes
         )
         setResults(prev => ({ ...prev, [id]: outcome }))
-        if (outcome.errors.length === 0) {
-          replaceTree(outcome.tree)
-          replaceClasses(outcome.classes)
-        }
+        if (outcome.errors.length > 0) return
+
+        replaceTree(outcome.tree)
+        replaceClasses(outcome.classes)
+        // applyBql only reports the routes; publishing is this hook's job,
+        // and it publishes the tree the script just produced rather than
+        // whichever route the Components tab happens to have selected.
+        const landed = await publishTo(outcome.pages, outcome.tree)
+        if (landed.length > 0) setPublished(prev => ({ ...prev, [id]: landed }))
       } finally {
         setRunningId(null)
       }
     },
-    [scripts, tenant, tree, classes, replaceTree, replaceClasses]
+    [scripts, tenant, tree, classes, replaceTree, replaceClasses, publishTo]
   )
 
-  return { scripts, results, runningId, add, remove, patch, run }
+  return { scripts, results, published, runningId, add, remove, patch, run }
 }

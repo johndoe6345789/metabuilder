@@ -25,8 +25,16 @@ export function usePublishPage(
 
   const publish = useCallback(
     async (
-      target: PublishTarget = DEFAULT_PUBLISH_TARGET
+      target: PublishTarget = DEFAULT_PUBLISH_TARGET,
+      /**
+       * The tree to publish, when the caller has just computed one and must
+       * not wait for it to come back through Redux. BQL needs this: it
+       * builds a tree and publishes it in the same turn, and the `tree`
+       * closed over here is still the previous render's.
+       */
+      override?: TreeNode
     ): Promise<boolean> => {
+      const treeToPublish = override ?? tree
       const { tenant, path } = target
       setPublishing(true)
       setError(null)
@@ -54,7 +62,7 @@ export function usePublishPage(
           tenant,
           treeId,
           target.title,
-          tree,
+          treeToPublish,
           `Published from the God Panel for ${path}`
         )
         if (failure !== null) {
@@ -68,7 +76,7 @@ export function usePublishPage(
           return false
         }
 
-        await snapshot('god.componentTree', tree, 'Published page')
+        await snapshot('god.componentTree', treeToPublish, 'Published page')
         dispatch(clearDirty('tree'))
         return true
       } catch (cause) {

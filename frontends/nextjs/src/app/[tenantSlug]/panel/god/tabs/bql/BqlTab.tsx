@@ -32,6 +32,7 @@ export function BqlTab() {
               key={script.id}
               script={script}
               result={t.results[script.id]}
+              published={t.published[script.id]}
               running={t.runningId === script.id}
               removable={t.scripts.length > 1}
               onPatch={t.patch}

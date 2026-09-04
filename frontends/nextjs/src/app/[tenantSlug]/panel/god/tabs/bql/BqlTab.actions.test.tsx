@@ -57,4 +57,19 @@ describe('BqlTab actions', () => {
     })
     expect(t.patch).toHaveBeenCalledWith('b', { name: 'Page routes' })
   })
+
+  it('shows where a script published, and where it could not', () => {
+    stub({
+      published: {
+        a: [
+          { path: '/about', ok: true },
+          { path: '/contact', ok: false },
+        ],
+      },
+    })
+    render(<BqlTab />)
+
+    expect(screen.getByText('✓ Published at /about')).toBeTruthy()
+    expect(screen.getByText('Could not publish at /contact')).toBeTruthy()
+  })
 })

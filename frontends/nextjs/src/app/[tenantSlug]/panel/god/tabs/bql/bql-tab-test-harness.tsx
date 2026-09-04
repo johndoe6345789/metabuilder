@@ -23,6 +23,7 @@ export const stubWith = (
   const value = {
     scripts: [script('a', 'Page content')],
     results: {},
+    published: {},
     runningId: null,
     add: vi.fn(),
     remove: vi.fn(),

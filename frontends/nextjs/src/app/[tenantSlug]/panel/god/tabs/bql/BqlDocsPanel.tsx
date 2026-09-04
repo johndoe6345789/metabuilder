@@ -34,6 +34,11 @@ const FORMS: { title: string; syntax: string; example: string }[] = [
     syntax: 'apply "<style>" [, "<style>" ...] to <name>',
     example: 'apply "hero-panel" to hero',
   },
+  {
+    title: 'Say where the page goes',
+    syntax: 'publish this [as "<title>"] at <path>',
+    example: 'publish this as "About" at /about',
+  },
 ]
 
 const HOMEPAGE_EXAMPLE = `# Hero
@@ -57,7 +62,10 @@ add an Alert that says "New: weekend darkroom slots just opened up." with kind o
 
 # Styling
 make a style called "hero-panel" with background of "#1a1a1a", padding of 32
-apply "hero-panel" to hero`
+apply "hero-panel" to hero
+
+# Where it lives
+publish this as "Home" at /`
 
 export function BqlDocsPanel() {
   return (

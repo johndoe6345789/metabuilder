@@ -375,3 +375,65 @@ describe("applyBql: which field 'that says' fills", () => {
   })
 })
 
+describe('applyBql: where the page goes', () => {
+  /**
+   * applyBql stays pure -- it reports the routes a script asked for and
+   * lets the caller do the publishing. Writing to DBAL from the middle of
+   * a tree transform would make "what does this script do" unanswerable
+   * without running it.
+   */
+  it('reports the route a script publishes to', async () => {
+    mockDbal([
+      { kind: 'add', line: 1, blockName: 'Heading 1', text: 'Hi', attrs: [] },
+      { kind: 'publish', line: 2, title: 'About', path: '/about' },
+    ])
+
+    const result = await applyBql('irrelevant', 'tenant', 'root', root(), [])
+
+    expect(result.errors).toEqual([])
+    expect(result.pages).toEqual([{ line: 2, title: 'About', path: '/about' }])
+    expect(result.tree.children[0].props.text).toBe('Hi')
+  })
+
+  it('carries no title when the sentence gave none', async () => {
+    mockDbal([{ kind: 'publish', line: 1, path: '/contact' }])
+
+    const result = await applyBql('irrelevant', 'tenant', 'root', root(), [])
+
+    expect(result.pages).toEqual([{ line: 1, path: '/contact' }])
+  })
+
+  it('reports every route, in the order the script asked for them', async () => {
+    mockDbal([
+      { kind: 'publish', line: 1, title: 'Home', path: '/' },
+      { kind: 'publish', line: 2, title: 'About', path: '/about' },
+    ])
+
+    const result = await applyBql('irrelevant', 'tenant', 'root', root(), [])
+
+    expect(result.pages.map(p => p.path)).toEqual(['/', '/about'])
+  })
+
+  it('asks for no route when the script never mentions one', async () => {
+    mockDbal([
+      { kind: 'add', line: 1, blockName: 'Heading 1', text: 'Hi', attrs: [] },
+    ])
+
+    const result = await applyBql('irrelevant', 'tenant', 'root', root(), [])
+
+    expect(result.pages).toEqual([])
+  })
+
+  it('publishes nothing when the script has errors', async () => {
+    mockDbal([
+      { kind: 'add', line: 1, blockName: 'Frobnicator', attrs: [] },
+      { kind: 'publish', line: 2, title: 'About', path: '/about' },
+    ])
+
+    const result = await applyBql('irrelevant', 'tenant', 'root', root(), [])
+
+    expect(result.errors).toHaveLength(1)
+    expect(result.pages).toEqual([])
+  })
+})
+

@@ -22,3 +22,5 @@ export type BqlSentence =
   | { kind: 'give'; line: number; alias: string; attrs: BqlAttr[] }
   | { kind: 'style'; line: number; name: string; attrs: BqlAttr[] }
   | { kind: 'class'; line: number; names: string[]; alias: string }
+  /** Where the tree this script built should be published. */
+  | { kind: 'publish'; line: number; title?: string; path: string }

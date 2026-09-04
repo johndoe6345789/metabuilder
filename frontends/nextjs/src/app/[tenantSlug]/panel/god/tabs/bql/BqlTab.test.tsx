@@ -66,3 +66,4 @@ describe('BqlTab', () => {
     expect(screen.getByText('Add a block')).toBeTruthy()
   })
 })
+

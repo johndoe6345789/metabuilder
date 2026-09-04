@@ -4,11 +4,14 @@ import { Button, TextField } from '@/m3'
 import type { ApplyBqlResult } from '../builder/bql/apply'
 import type { BqlScript } from './use-bql-tab'
 import { BqlResultsPanel } from './BqlResultsPanel'
+import { BqlPublishedList } from './BqlPublishedList'
 import s from './BqlTab.module.scss'
 
 export interface BqlScriptCardProps {
   script: BqlScript
   result: ApplyBqlResult | undefined
+  /** Routes this script published to, and whether each took. */
+  published: { path: string; ok: boolean }[] | undefined
   running: boolean
   /** Removal is hidden for the last one -- the tab always keeps a box. */
   removable: boolean
@@ -20,6 +23,7 @@ export interface BqlScriptCardProps {
 export function BqlScriptCard({
   script,
   result,
+  published,
   running,
   removable,
   onPatch,
@@ -72,6 +76,8 @@ export function BqlScriptCard({
         spellCheck={false}
       />
       <BqlResultsPanel result={result ?? null} />
+
+      <BqlPublishedList published={published} />
     </div>
   )
 }
