@@ -69,6 +69,18 @@ jobs:
         with:
           node-version: '22'
 
+      # Pinned, not "whatever ships with node 22". npm's own version is an
+      # input to dependency resolution, and this workspace has been resolvable
+      # by 10.9.8 and unresolvable by the npm the runner happened to bundle:
+      # the latter dies in arborist's #loadPeerSet with "Cannot read
+      # properties of null (reading 'edgesOut')" while walking rolldown's peer
+      # set. 10.9.8 is the version this exact tree was verified against, on
+      # linux, in a node:22 container.
+      - name: Pin npm
+        run: |
+          npm install -g npm@10.9.8
+          node -v && npm -v
+
       # v2 deliberately abandons every cache entry written before it. The old
       # `npm-<os>-` prefix had a poisoned entry that `restore-keys` handed back
       # on every single run, and a corrupt ~/.npm/_cacache is what npm reports
