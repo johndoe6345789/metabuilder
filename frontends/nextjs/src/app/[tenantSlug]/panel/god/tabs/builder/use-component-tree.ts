@@ -24,6 +24,9 @@ export function useComponentTree() {
 
   const auth = useAuthContext()
   const tenant = normalizeTenantId(auth.user?.tenantId)
+  // Only act on a tenant we actually know. While auth resolves, and when
+  // signed out, `tenant` is the "system" fallback rather than an answer.
+  const tenantKnown = !auth.isLoading && auth.user != null
 
   /**
    * Whose tree this is, answered here rather than by whichever tab asked.
@@ -36,7 +39,7 @@ export function useComponentTree() {
    * other tenant's content -- an effect would leave one render where a
    * script could read it and a page could show it.
    */
-  const foreign = treeBelongsToAnother(tenant)
+  const foreign = treeBelongsToAnother(tenant, tenantKnown)
   const tree = foreign ? BLANK : stored
 
   /**
@@ -91,6 +94,7 @@ export function useComponentTree() {
     sync()
   }, [sync])
   useEffect(() => {
+    if (!tenantKnown) return
     if (foreign) {
       // Straight to setTree rather than through commit(): a tenant's
       // content must not sit on the undo stack, where Ctrl+Z would put it
@@ -99,7 +103,7 @@ export function useComponentTree() {
       clearHistory()
     }
     writeTreeTenant(tenant)
-  }, [foreign, tenant, dispatch, clearHistory])
+  }, [foreign, tenant, tenantKnown, dispatch, clearHistory])
 
   const selected = getSelectedTreeNode(tree, selectedId)
   const { addNode, updateProps, deleteNode, moveNode } =

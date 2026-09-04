@@ -14,7 +14,10 @@ const foreign: TreeNode = {
 
 const store = vi.hoisted(() => ({ tree: null as unknown, dirty: false }))
 const auth = vi.hoisted(() => ({
-  useAuthContext: vi.fn(() => ({ user: { tenantId: 'acme' } })),
+  useAuthContext: vi.fn(() => ({
+    user: { tenantId: 'acme' },
+    isLoading: false,
+  })),
 }))
 
 vi.mock('@/store/hooks', () => ({
@@ -59,7 +62,10 @@ beforeEach(() => {
   window.localStorage.clear()
   store.tree = foreign
   store.dirty = false
-  auth.useAuthContext.mockReturnValue({ user: { tenantId: 'acme' } })
+  auth.useAuthContext.mockReturnValue({
+    user: { tenantId: 'acme' },
+    isLoading: false,
+  })
 })
 
 describe('useComponentTree, on a tree from another tenant', () => {
@@ -112,5 +118,81 @@ describe('useComponentTree, on a tree from another tenant', () => {
 
     expect(result.current.tree.children).toHaveLength(1)
     expect(window.localStorage.getItem(TREE_TENANT_KEY)).toBe('acme')
+  })
+})
+
+describe('useComponentTree tenant guard, adversarially', () => {
+  /**
+   * Ways this could wipe a tree it should have kept. Each is a real state
+   * the app passes through, not a hypothetical.
+   */
+  describe('does not mistake a half-known tenant for another one', () => {
+    it('leaves the tree alone while auth is still resolving', () => {
+      // normalizeTenantId(undefined) is "system", so during the render
+      // before auth resolves, every tenant's tree looks foreign. Acting on
+      // that would blank a real draft on every single page load.
+      window.localStorage.setItem(TREE_TENANT_KEY, 'acme')
+      auth.useAuthContext.mockReturnValue({ user: null, isLoading: true })
+
+      const { result } = renderHook(() => useComponentTree())
+
+      expect(result.current.tree.children).toHaveLength(1)
+      expect(window.localStorage.getItem(TREE_TENANT_KEY)).toBe('acme')
+    })
+
+    it('leaves the tree alone when signed out entirely', () => {
+      window.localStorage.setItem(TREE_TENANT_KEY, 'acme')
+      auth.useAuthContext.mockReturnValue({ user: null, isLoading: false })
+
+      const { result } = renderHook(() => useComponentTree())
+
+      expect(result.current.tree.children).toHaveLength(1)
+      expect(window.localStorage.getItem(TREE_TENANT_KEY)).toBe('acme')
+    })
+
+    it('still guards once auth resolves to a different tenant', () => {
+      window.localStorage.setItem(TREE_TENANT_KEY, 'globex')
+      auth.useAuthContext.mockReturnValue({ user: null, isLoading: true })
+      const { result, rerender } = renderHook(() => useComponentTree())
+      expect(result.current.tree.children).toHaveLength(1)
+
+      auth.useAuthContext.mockReturnValue({
+        user: { tenantId: 'acme' },
+        isLoading: false,
+      })
+      rerender()
+
+      expect(result.current.tree.children).toEqual([])
+    })
+  })
+
+  describe('when the browser refuses local storage', () => {
+    /**
+     * Safari in private mode, and any browser with site data blocked,
+     * throws on localStorage rather than returning null. An unhandled
+     * throw here takes the whole builder down, so the guard has to fail
+     * open -- keeping the tree -- rather than failing loudly.
+     */
+    const withBrokenStorage = (fn: () => void) => {
+      const real = Object.getOwnPropertyDescriptor(window, 'localStorage')
+      Object.defineProperty(window, 'localStorage', {
+        configurable: true,
+        get() {
+          throw new Error('The operation is insecure.')
+        },
+      })
+      try {
+        fn()
+      } finally {
+        if (real) Object.defineProperty(window, 'localStorage', real)
+      }
+    }
+
+    it('still renders the builder instead of throwing', () => {
+      withBrokenStorage(() => {
+        const { result } = renderHook(() => useComponentTree())
+        expect(result.current.tree).toBeDefined()
+      })
+    })
   })
 })
