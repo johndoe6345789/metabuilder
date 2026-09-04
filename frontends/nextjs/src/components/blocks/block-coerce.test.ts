@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import {
   isRecord,
+  formatNavLinks,
   parseNavLinks,
   propDirection,
   propGap,
@@ -117,5 +118,30 @@ describe('parseNavLinks', () => {
   it('returns nothing for an empty or unset value', () => {
     expect(parseNavLinks('')).toEqual([])
     expect(parseNavLinks(undefined)).toEqual([])
+  })
+})
+
+describe('formatNavLinks', () => {
+  it('round-trips what parseNavLinks read', () => {
+    const line = 'Home->/|About->/about|Contact->/contact'
+    expect(formatNavLinks(parseNavLinks(line))).toBe(line)
+  })
+
+  it('keeps a half-filled row, so typing a label does not vanish', () => {
+    expect(formatNavLinks([{ label: 'About', href: '' }])).toBe('About->')
+  })
+
+  it('drops a wholly empty row', () => {
+    expect(
+      formatNavLinks([{ label: 'Home', href: '/' }, { label: '', href: '' }])
+    ).toBe('Home->/')
+  })
+
+  it('trims stray spaces around what was typed', () => {
+    expect(formatNavLinks([{ label: ' Home ', href: ' / ' }])).toBe('Home->/')
+  })
+
+  it('is empty for no links at all', () => {
+    expect(formatNavLinks([])).toBe('')
   })
 })

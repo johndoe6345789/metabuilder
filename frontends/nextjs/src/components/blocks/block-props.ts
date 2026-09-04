@@ -17,7 +17,13 @@
 export interface PropField {
   name: string
   label: string
-  type: 'text' | 'number' | 'boolean' | 'select'
+  /**
+   * `links` is a repeating list of label/destination pairs. It stores as one
+   * delimited line (see parseNavLinks) because the schema has no repeating
+   * type, but nobody should have to type that line -- the editor renders a
+   * row per link.
+   */
+  type: 'text' | 'number' | 'boolean' | 'select' | 'links'
   /** For `select`: the built-in choices. */
   options?: { label: string; value: string }[]
   /**
@@ -192,11 +198,13 @@ export const PROP_SCHEMAS: Record<string, PropField[]> = {
 
   // ---- navigation --------------------------------------------------------
   'nav.header': [
-    text('brand', 'Site name'),
-    text('links', 'Links', {
-      placeholder: 'Home->/|About->/about|Contact->/contact',
-      hint: 'Label->path, separated by | -- shown as a burger menu on narrow screens',
-    }),
+    text('brand', 'Site name', { placeholder: 'Your community' }),
+    {
+      name: 'links',
+      label: 'Links',
+      type: 'links',
+      hint: 'Collapses into a burger menu on narrow screens',
+    },
   ],
 
   // ---- community -------------------------------------------------------

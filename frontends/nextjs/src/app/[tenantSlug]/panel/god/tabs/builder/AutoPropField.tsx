@@ -6,6 +6,7 @@ import { BooleanPropField } from './BooleanPropField'
 import { SelectPropField } from './SelectPropField'
 import { NumberPropField } from './NumberPropField'
 import { TextPropField } from './TextPropField'
+import { LinksPropField } from './LinksPropField'
 
 export interface AutoPropFieldProps {
   field: PropField
@@ -44,6 +45,11 @@ export function AutoPropField({
   if (field.type === 'number') {
     return (
       <NumberPropField field={field} current={current} onChange={onChange} />
+    )
+  }
+  if (field.type === 'links') {
+    return (
+      <LinksPropField field={field} current={current} onChange={onChange} />
     )
   }
   return (

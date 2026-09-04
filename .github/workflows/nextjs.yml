@@ -100,6 +100,15 @@ jobs:
               sleep 15
             fi
           done
+          # The error npm prints for this ("Cannot read properties of null")
+          # names neither the package nor the edge it choked on, and this
+          # reproduces on no other machine -- a fresh clone assembled the same
+          # way installs clean on macOS and in a node:22 container. The debug
+          # log has the stack and the offending node; without it the next
+          # person is left guessing the same way.
+          echo "::group::npm debug log"
+          tail -n 120 "$(ls -t ~/.npm/_logs/*-debug-0.log | head -1)" || true
+          echo "::endgroup::"
           exit 1
 
       # frontends/nextjs/scripts/typecheck.cjs suppresses module-resolution

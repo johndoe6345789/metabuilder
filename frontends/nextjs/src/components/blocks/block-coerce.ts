@@ -29,10 +29,13 @@ export interface NavLink {
   href: string
 }
 
-/** A nav bar's links, authored as one line rather than a repeating field
- *  the prop-schema system has no way to express: "Label->/path" entries
- *  separated by "|". "->" rather than ":" so a full URL's own colon
- *  ("Home->https://example.com") can't be mistaken for the separator. */
+/** A nav bar's links, stored as one line: "Label->/path" entries separated
+ *  by "|". "->" rather than ":" so a full URL's own colon
+ *  ("Home->https://example.com") can't be mistaken for the separator.
+ *
+ *  This is a storage format, not something anyone should have to type --
+ *  the Properties tab edits it as a row per link (see LinksPropField), and
+ *  formatNavLinks below is that editor's way back to this one line. */
 export function parseNavLinks(value: unknown): NavLink[] {
   return propText(value)
     .split('|')
@@ -44,4 +47,17 @@ export function parseNavLinks(value: unknown): NavLink[] {
         ? { label: entry, href: '#' }
         : { label: entry.slice(0, i).trim(), href: entry.slice(i + 2).trim() }
     })
+}
+
+/**
+ * Back to the stored line. A row still being filled in -- a label typed
+ * before its path, or an empty row just added -- is kept rather than
+ * dropped, because it is dropped that the author notices as their typing
+ * disappearing. Only a wholly empty row is left out.
+ */
+export function formatNavLinks(links: NavLink[]): string {
+  return links
+    .filter(link => link.label.trim() !== '' || link.href.trim() !== '')
+    .map(link => `${link.label.trim()}->${link.href.trim()}`)
+    .join('|')
 }
