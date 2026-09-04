@@ -57,6 +57,7 @@ export function AutoPropField({
       field={field}
       current={current}
       warning={warning}
+      configs={configs}
       onChange={onChange}
     />
   )
