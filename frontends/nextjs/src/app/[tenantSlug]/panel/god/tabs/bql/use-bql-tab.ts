@@ -12,10 +12,19 @@
  * hands DBAL raw script text and receives back sentences or syntax errors.
  */
 
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
 import { normalizeTenantId } from '@/lib/tenant/workspace-paths'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import {
+  addBqlScript,
+  patchBqlScript,
+  removeBqlScript,
+  setBql,
+  type GodState,
+} from '@/store/slices/god-slice'
 import type { TreeNode } from '../builder/builder-registry'
+import type { BqlScript } from './bql-script'
 import {
   applyBql,
   type ApplyBqlResult,
@@ -24,17 +33,16 @@ import {
 import { useComponentTree } from '../builder/use-component-tree'
 import { useCssClasses } from '../styles/use-css-classes'
 
-export interface BqlScript {
-  id: string
-  name: string
-  text: string
-}
+export type { BqlScript } from './bql-script'
 
 let nextId = 0
 const newScript = (name: string): BqlScript => {
   nextId += 1
-  return { id: `bql_${nextId}`, name, text: '' }
+  return { id: `bql_${nextId}_${Date.now()}`, name, text: '' }
 }
+
+/** Stable, so the seeding effect cannot loop on a fresh array each render. */
+const FIRST: BqlScript[] = [newScript('Page content')]
 
 export function useBqlTab() {
   const auth = useAuthContext()
@@ -42,9 +50,23 @@ export function useBqlTab() {
   const { tree, replaceTree, publish } = useComponentTree()
   const { classes, replace: replaceClasses } = useCssClasses()
 
-  const [scripts, setScripts] = useState<BqlScript[]>(() => [
-    newScript('Page content'),
-  ])
+  const dispatch = useAppDispatch()
+  /**
+   * Kept in the god slice rather than component state so a script survives
+   * switching God Panel tabs -- the point of a separate "Routes" script is
+   * that it stays put while page content is rewritten. Read per tenant.
+   */
+  const stored = useAppSelector(
+    s => (s.god as GodState).bql[tenant] as BqlScript[] | undefined
+  )
+  const scripts = stored ?? FIRST
+
+  // Seed once per tenant, so every later edit is a reducer applied to what
+  // is actually stored rather than to a list captured during a render.
+  useEffect(() => {
+    if (stored === undefined) dispatch(setBql({ tenant, scripts: FIRST }))
+  }, [stored, tenant, dispatch])
+
   const [runningId, setRunningId] = useState<string | null>(null)
   /** Routes a script published to, and whether each one took. */
   const [published, setPublished] = useState<
@@ -54,24 +76,25 @@ export function useBqlTab() {
     Record<string, ApplyBqlResult | undefined>
   >({})
 
-  const patch = useCallback((id: string, change: Partial<BqlScript>) => {
-    setScripts(prev =>
-      prev.map(script =>
-        script.id === id ? { ...script, ...change } : script
-      )
-    )
-  }, [])
+  const patch = useCallback(
+    (id: string, change: Partial<BqlScript>) => {
+      dispatch(patchBqlScript({ tenant, id, change }))
+    },
+    [dispatch, tenant]
+  )
 
   const add = useCallback(() => {
-    setScripts(prev => [...prev, newScript(`Script ${prev.length + 1}`)])
-  }, [])
-
-  const remove = useCallback((id: string) => {
-    // Never leave the tab with nothing to type into.
-    setScripts(prev =>
-      prev.length === 1 ? prev : prev.filter(script => script.id !== id)
+    dispatch(
+      addBqlScript({ tenant, script: newScript(`Script ${scripts.length + 1}`) })
     )
-  }, [])
+  }, [dispatch, tenant, scripts.length])
+
+  const remove = useCallback(
+    (id: string) => {
+      dispatch(removeBqlScript({ tenant, id }))
+    },
+    [dispatch, tenant]
+  )
 
   const publishTo = useCallback(
     async (pages: BqlPage[], built: TreeNode) => {

@@ -5,6 +5,7 @@ import type { GodState } from './types'
 const now = () => new Date().toISOString()
 
 export const initialState: GodState = {
+  bql: {},
   workflow: {
     id: 'wf_god_default',
     name: 'Untitled Workflow',

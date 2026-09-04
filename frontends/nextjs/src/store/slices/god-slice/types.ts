@@ -6,6 +6,7 @@ import type { DropdownConfig } from '@/app/[tenantSlug]/panel/god/tabs/config/us
 import type { SmtpConfig } from '@/app/[tenantSlug]/panel/god/tabs/config/use-smtp-config'
 import type { TestCase } from '@/app/[tenantSlug]/panel/god/tabs/test/use-test-runner'
 import type { Task } from '@/app/[tenantSlug]/panel/god/tabs/plan/use-plan-board'
+import type { BqlScript } from '@/app/[tenantSlug]/panel/god/tabs/bql/bql-script'
 
 export type GodDomain =
   | 'workflow'
@@ -26,5 +27,13 @@ export interface GodState {
   smtp: SmtpConfig
   tests: TestCase[]
   plan: Task[]
+  /**
+   * BQL scripts, keyed by tenant. Keyed rather than a flat list because
+   * this slice persists per browser origin, not per tenant -- a flat list
+   * would show one tenant's scripts, paths and copy to the next person to
+   * sign in here, which is the same hole that put one tenant's draft tree
+   * under another's URL.
+   */
+  bql: Record<string, BqlScript[]>
   dirty: Record<GodDomain, boolean>
 }

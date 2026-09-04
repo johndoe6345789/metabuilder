@@ -7,6 +7,7 @@ import type { DropdownConfig } from '@/app/[tenantSlug]/panel/god/tabs/config/us
 import type { SmtpConfig } from '@/app/[tenantSlug]/panel/god/tabs/config/use-smtp-config'
 import type { TestCase } from '@/app/[tenantSlug]/panel/god/tabs/test/use-test-runner'
 import type { Task } from '@/app/[tenantSlug]/panel/god/tabs/plan/use-plan-board'
+import type { BqlScript } from '@/app/[tenantSlug]/panel/god/tabs/bql/bql-script'
 import { initialState } from './god-slice/initial-state'
 import { normalizeCssProps } from './god-slice/normalize-css-props'
 import type { GodDomain, GodState } from './god-slice/types'
@@ -49,6 +50,49 @@ const godSlice = createSlice({
       s.plan = a.payload
       s.dirty.plan = true
     },
+    /**
+     * Scripts are per tenant; see GodState.bql for why. These are shaped as
+     * intents rather than a wholesale set so that two edits in one tick
+     * cannot clobber each other: a `setBql(nextList)` built from a value
+     * read during render is stale the moment anything else has dispatched.
+     */
+    setBql: (
+      s,
+      a: PayloadAction<{ tenant: string; scripts: BqlScript[] }>
+    ) => {
+      s.bql[a.payload.tenant] = a.payload.scripts
+    },
+    addBqlScript: (
+      s,
+      a: PayloadAction<{ tenant: string; script: BqlScript }>
+    ) => {
+      const list = s.bql[a.payload.tenant] ?? []
+      s.bql[a.payload.tenant] = [...list, a.payload.script]
+    },
+    patchBqlScript: (
+      s,
+      a: PayloadAction<{
+        tenant: string
+        id: string
+        change: Partial<BqlScript>
+      }>
+    ) => {
+      const list = s.bql[a.payload.tenant] ?? []
+      s.bql[a.payload.tenant] = list.map(script =>
+        script.id === a.payload.id ? { ...script, ...a.payload.change } : script
+      )
+    },
+    removeBqlScript: (
+      s,
+      a: PayloadAction<{ tenant: string; id: string }>
+    ) => {
+      const list = s.bql[a.payload.tenant] ?? []
+      // Never leave the tab with nothing to type into.
+      if (list.length <= 1) return
+      s.bql[a.payload.tenant] = list.filter(
+        script => script.id !== a.payload.id
+      )
+    },
     clearDirty: (s, a: PayloadAction<GodDomain>) => {
       s.dirty[a.payload] = false
     },
@@ -65,6 +109,10 @@ export const {
   setSmtp,
   setTests,
   setPlan,
+  setBql,
+  addBqlScript,
+  patchBqlScript,
+  removeBqlScript,
   clearDirty,
   rehydrate,
 } = godSlice.actions
