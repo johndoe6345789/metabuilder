@@ -26,13 +26,19 @@ export function SelectPropField({
       ? undefined
       : configs.find(c => c.name === field.source)
   const options = custom?.options ?? field.options ?? []
+  const value = typeof current === 'string' ? current : ''
+  // With nothing stored, a native select shows its first option -- so the
+  // panel claims a value the block does not have, and the two only agree
+  // by luck of the render fallback matching the first option. An explicit
+  // empty entry keeps "unset" sayable and visible.
+  const unset = !options.some(option => option.value === value)
 
   return (
     <FormControl>
       <FormLabel htmlFor={fieldId}>{field.label}</FormLabel>
       <Select
         native
-        value={typeof current === 'string' ? current : ''}
+        value={value}
         inputProps={{ id: fieldId }}
         onChange={
           ((event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -40,6 +46,7 @@ export function SelectPropField({
           }) as never
         }
       >
+        {unset && <option value="">Not set</option>}
         {options.map(option => (
           <option key={option.value} value={option.value}>
             {option.label}

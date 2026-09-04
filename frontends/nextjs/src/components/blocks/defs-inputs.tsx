@@ -17,14 +17,11 @@ import {
 
 export const INPUTS_DEFS: BlockDef[] = [
   {
-    meta: m('button', 'Button', 'smart_button', 'Inputs', false, {
-      label: 'Click me',
-    }),
+    meta: m('button', 'Button', 'smart_button', 'Inputs', false, {}),
     render: renderButton,
   },
   {
     meta: m('m3.textfield', 'Text field', 'edit', 'Inputs', false, {
-      label: 'Label',
       placeholder: '',
     }),
     render: p => (
@@ -36,9 +33,7 @@ export const INPUTS_DEFS: BlockDef[] = [
     ),
   },
   {
-    meta: m('m3.checkbox', 'Checkbox', 'check_box', 'Inputs', false, {
-      label: 'Checkbox',
-    }),
+    meta: m('m3.checkbox', 'Checkbox', 'check_box', 'Inputs', false, {}),
     render: p => (
       <label style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
         <Checkbox />
@@ -47,9 +42,7 @@ export const INPUTS_DEFS: BlockDef[] = [
     ),
   },
   {
-    meta: m('m3.switch', 'Switch', 'toggle_on', 'Inputs', false, {
-      label: 'Switch',
-    }),
+    meta: m('m3.switch', 'Switch', 'toggle_on', 'Inputs', false, {}),
     render: p => (
       <label style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
         <Switch />

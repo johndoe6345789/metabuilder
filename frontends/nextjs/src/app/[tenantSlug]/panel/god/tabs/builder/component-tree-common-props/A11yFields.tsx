@@ -1,6 +1,7 @@
 'use client'
 
 import { TextField, Typography } from '@/m3'
+import { RoleField } from './RoleField'
 import { text } from './text'
 import s from '../ComponentTreeTab.module.scss'
 
@@ -34,17 +35,7 @@ export function A11yFields({ props, onChange }: A11yFieldsProps) {
           onChange({ ariaDescribedby: event.target.value })
         }}
       />
-      <TextField
-        size="small"
-        fullWidth
-        label="Role"
-        placeholder="navigation"
-        value={text(props.role)}
-        helperText="Only when the element's own meaning is wrong"
-        onChange={event => {
-          onChange({ role: event.target.value })
-        }}
-      />
+      <RoleField role={text(props.role)} onChange={onChange} />
       <label className={s.propCheck}>
         <input
           type="checkbox"

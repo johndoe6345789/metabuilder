@@ -17,15 +17,12 @@ import {
 
 export const CONTENT_DEFS_2: BlockDef[] = [
   {
-    meta: m('stat', 'Stat', 'monitoring', 'Content', false, {
-      label: 'Members',
-      value: '0',
-    }),
+    meta: m('stat', 'Stat', 'monitoring', 'Content', false, {}),
     render: p => (
       <div>
         <Typography variant="h4">{propText(p.value, '0')}</Typography>
         <Typography variant="body2" color="text.secondary">
-          {propText(p.label, 'Label')}
+          {propText(p.label, 'Members')}
         </Typography>
       </div>
     ),
@@ -33,8 +30,6 @@ export const CONTENT_DEFS_2: BlockDef[] = [
   {
     meta: m('list-item', 'List Item', 'list', 'Content', false, {
       icon: 'notifications',
-      title: 'Title',
-      description: 'Description',
     }),
     render: p => (
       <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
@@ -44,14 +39,14 @@ export const CONTENT_DEFS_2: BlockDef[] = [
         <div>
           <Typography variant="body1">{propText(p.title, 'Title')}</Typography>
           <Typography variant="body2" color="text.secondary">
-            {propText(p.description)}
+            {propText(p.description, 'Description')}
           </Typography>
         </div>
       </div>
     ),
   },
   {
-    meta: m('m3.chip', 'Chip', 'label', 'Content', false, { label: 'Chip' }),
+    meta: m('m3.chip', 'Chip', 'label', 'Content', false, {}),
     render: p => <Chip label={propText(p.label, 'Chip')} size="small" />,
   },
   {

@@ -91,20 +91,23 @@ export const PROP_SCHEMAS: Record<string, PropField[]> = {
   'html.div': [num('padding', 'Space inside', { hint: 'Pixels' })],
   'm3.paper': [num('padding', 'Space inside', { hint: 'Pixels' })],
   'm3.accordion': [
-    text('title', 'Summary', { hint: 'The line shown when it is closed' }),
+    text('title', 'Summary', {
+      placeholder: 'Details',
+      hint: 'The line shown when it is closed',
+    }),
   ],
 
   // ---- content ---------------------------------------------------------
-  heading: [text('text', 'Heading text')],
-  text: [text('text', 'Text')],
-  'html.span': [text('text', 'Text')],
-  'html.p': [text('text', 'Text')],
-  'html.h1': [text('text', 'Heading text')],
-  'html.h2': [text('text', 'Heading text')],
-  'html.h3': [text('text', 'Heading text')],
-  'html.li': [text('text', 'Text')],
+  heading: [text('text', 'Heading text', { placeholder: 'Heading' })],
+  text: [text('text', 'Text', { placeholder: 'Some text' })],
+  'html.span': [text('text', 'Text', { placeholder: 'Some words' })],
+  'html.p': [text('text', 'Text', { placeholder: 'Paragraph text.' })],
+  'html.h1': [text('text', 'Heading text', { placeholder: 'Heading 1' })],
+  'html.h2': [text('text', 'Heading text', { placeholder: 'Heading 2' })],
+  'html.h3': [text('text', 'Heading text', { placeholder: 'Heading 3' })],
+  'html.li': [text('text', 'Text', { placeholder: 'Item' })],
   'html.a': [
-    text('text', 'Link text'),
+    text('text', 'Link text', { placeholder: 'Link' }),
     text('href', 'Goes to', {
       placeholder: '/contact',
       hint: 'A page path or full web address',
@@ -124,7 +127,10 @@ export const PROP_SCHEMAS: Record<string, PropField[]> = {
     num('radius', 'Rounded corners', { hint: 'Pixels' }),
   ],
   avatar: [
-    text('initials', 'Initials', { hint: 'Shown when there is no picture' }),
+    text('initials', 'Initials', {
+      placeholder: 'AB',
+      hint: 'Shown when there is no picture',
+    }),
     text('src', 'Picture address', { placeholder: 'https://…/face.jpg' }),
     pick(
       'size',
@@ -133,26 +139,31 @@ export const PROP_SCHEMAS: Record<string, PropField[]> = {
         { label: 'Small', value: 'sm' },
         { label: 'Medium', value: 'md' },
         { label: 'Large', value: 'lg' },
+        // The block has always rendered xl; only the picker omitted it.
+        { label: 'Extra large', value: 'xl' },
       ],
       { source: 'avatar-size' }
     ),
   ],
-  stat: [text('label', 'Caption'), text('value', 'Figure')],
+  stat: [
+    text('label', 'Caption', { placeholder: 'Members' }),
+    text('value', 'Figure', { placeholder: '1,204' }),
+  ],
   'list-item': [
     text('icon', 'Icon', {
       placeholder: 'notifications',
       hint: 'A Material Symbols name',
       source: 'icons',
     }),
-    text('title', 'Title'),
-    text('description', 'Description'),
+    text('title', 'Title', { placeholder: 'Title' }),
+    text('description', 'Description', { placeholder: 'Description' }),
   ],
-  'm3.chip': [text('label', 'Label')],
+  'm3.chip': [text('label', 'Label', { placeholder: 'Chip' })],
   'm3.badge': [num('count', 'Number shown')],
 
   // ---- inputs ----------------------------------------------------------
   button: [
-    text('label', 'Button text'),
+    text('label', 'Button text', { placeholder: 'Click me' }),
     text('href', 'Goes to', {
       placeholder: '/contact',
       hint: 'Leave empty for a button that does not navigate',
@@ -169,9 +180,15 @@ export const PROP_SCHEMAS: Record<string, PropField[]> = {
     ),
     bool('runWorkflow', 'Run the workflow when clicked'),
   ],
-  'm3.textfield': [text('label', 'Label'), text('placeholder', 'Placeholder')],
-  'm3.checkbox': [text('label', 'Label')],
-  'm3.switch': [text('label', 'Label')],
+  'm3.textfield': [
+    text('label', 'Label', { placeholder: 'Email address' }),
+    text('placeholder', 'Hint inside the box', {
+      placeholder: 'you@example.com',
+      hint: 'Grey example text, shown until someone types',
+    }),
+  ],
+  'm3.checkbox': [text('label', 'Label', { placeholder: 'Checkbox' })],
+  'm3.switch': [text('label', 'Label', { placeholder: 'Switch' })],
 
   // ---- feedback --------------------------------------------------------
   'm3.alert': [
@@ -186,12 +203,13 @@ export const PROP_SCHEMAS: Record<string, PropField[]> = {
       ],
       { source: 'alert-severity' }
     ),
-    text('text', 'Message'),
+    text('text', 'Message', { placeholder: 'Something worth knowing.' }),
   ],
   'm3.progress': [num('value', 'Percent complete', { hint: '0 to 100' })],
   'm3.skeleton': [num('height', 'Height', { hint: 'Pixels' })],
   'm3.tooltip': [
     text('title', 'Tooltip text', {
+      placeholder: 'Explanation',
       hint: 'Shown when someone hovers the contents',
     }),
   ],

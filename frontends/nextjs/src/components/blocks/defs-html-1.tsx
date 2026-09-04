@@ -28,15 +28,11 @@ export const HTML_DEFS_1: BlockDef[] = [
     render: (_p, kids) => <section>{kids}</section>,
   },
   {
-    meta: m('html.span', 'Inline text', 'text_fields', 'HTML', false, {
-      text: 'span',
-    }),
+    meta: m('html.span', 'Inline text', 'text_fields', 'HTML', false, {}),
     render: p => <span>{propText(p.text, 'span')}</span>,
   },
   {
-    meta: m('html.p', 'Paragraph', 'notes', 'HTML', false, {
-      text: 'Paragraph text.',
-    }),
+    meta: m('html.p', 'Paragraph', 'notes', 'HTML', false, {}),
     render: p => <p>{propText(p.text, 'Paragraph text.')}</p>,
   },
 ]

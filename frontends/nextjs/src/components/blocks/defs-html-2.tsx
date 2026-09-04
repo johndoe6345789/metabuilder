@@ -15,21 +15,15 @@ import { m } from './defs-shared'
 
 export const HTML_DEFS_2: BlockDef[] = [
   {
-    meta: m('html.h1', 'Heading 1', 'format_h1', 'HTML', false, {
-      text: 'Heading 1',
-    }),
+    meta: m('html.h1', 'Heading 1', 'format_h1', 'HTML', false, {}),
     render: p => <h1>{propText(p.text, 'Heading 1')}</h1>,
   },
   {
-    meta: m('html.h2', 'Heading 2', 'format_h2', 'HTML', false, {
-      text: 'Heading 2',
-    }),
+    meta: m('html.h2', 'Heading 2', 'format_h2', 'HTML', false, {}),
     render: p => <h2>{propText(p.text, 'Heading 2')}</h2>,
   },
   {
-    meta: m('html.h3', 'Heading 3', 'format_h3', 'HTML', false, {
-      text: 'Heading 3',
-    }),
+    meta: m('html.h3', 'Heading 3', 'format_h3', 'HTML', false, {}),
     render: p => <h3>{propText(p.text, 'Heading 3')}</h3>,
   },
   {
@@ -45,7 +39,6 @@ export const HTML_DEFS_2: BlockDef[] = [
   },
   {
     meta: m('html.li', 'List item', 'chevron_right', 'HTML', true, {
-      text: 'Item',
     }),
     render: (p, kids) => (
       <li>
@@ -56,8 +49,6 @@ export const HTML_DEFS_2: BlockDef[] = [
   },
   {
     meta: m('html.a', 'Link', 'link', 'HTML', false, {
-      text: 'Link',
-      href: '#',
     }),
     render: p => <a href={propText(p.href, '#')}>{propText(p.text, 'Link')}</a>,
   },

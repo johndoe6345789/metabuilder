@@ -20,7 +20,6 @@ export const FEEDBACK_DEFS: BlockDef[] = [
   {
     meta: m('m3.alert', 'Alert', 'info', 'Feedback', false, {
       severity: 'info',
-      text: 'Something worth knowing.',
     }),
     render: p => (
       <Alert severity={propText(p.severity, 'info') as 'info'}>
@@ -46,7 +45,6 @@ export const FEEDBACK_DEFS: BlockDef[] = [
   },
   {
     meta: m('m3.tooltip', 'Tooltip', 'help', 'Feedback', true, {
-      title: 'Explanation',
     }),
     render: (p, kids) => (
       <Tooltip title={propText(p.title, 'Explanation')}>

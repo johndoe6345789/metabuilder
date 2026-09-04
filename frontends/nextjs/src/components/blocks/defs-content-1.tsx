@@ -16,16 +16,16 @@ import {
 
 export const CONTENT_DEFS_1: BlockDef[] = [
   {
-    meta: m('heading', 'Heading', 'title', 'Content', false, {
-      text: 'Heading',
-    }),
+    meta: m('heading', 'Heading', 'title', 'Content', false, {}),
     render: p => (
       <Typography variant="h5">{propText(p.text, 'Heading')}</Typography>
     ),
   },
   {
-    meta: m('text', 'Text', 'notes', 'Content', false, { text: 'Some text' }),
-    render: p => <Typography variant="body1">{propText(p.text)}</Typography>,
+    meta: m('text', 'Text', 'notes', 'Content', false, {}),
+    render: p => (
+      <Typography variant="body1">{propText(p.text, 'Some text')}</Typography>
+    ),
   },
   {
     meta: m('image', 'Image', 'image', 'Content', false, {
@@ -50,7 +50,6 @@ export const CONTENT_DEFS_1: BlockDef[] = [
   },
   {
     meta: m('avatar', 'Avatar', 'account_circle', 'Content', false, {
-      initials: 'U',
       size: 'md',
     }),
     render: p => {

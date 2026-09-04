@@ -39,7 +39,6 @@ export const LAYOUT_DEFS_2: BlockDef[] = [
   },
   {
     meta: m('m3.accordion', 'Accordion', 'expand_more', 'Layout', true, {
-      title: 'Details',
     }),
     render: (p, kids) => (
       <Accordion>
