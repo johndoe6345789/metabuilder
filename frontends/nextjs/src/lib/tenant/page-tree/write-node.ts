@@ -30,7 +30,7 @@ export async function writeNode(
   })
   if (!nodeRes.ok) return false
 
-  for (const [name, raw] of Object.entries(node.props)) {
+  for (const [propOrder, [name, raw]] of Object.entries(node.props).entries()) {
     const { valueType, value } = propValueType(raw)
     const propRes = await fetch(`${base}/PageTreeProp`, {
       method: 'POST',
@@ -43,6 +43,10 @@ export async function writeNode(
         name,
         value,
         valueType,
+        // Required by the schema. Props are reassembled by name, so the
+        // value is not meaningful ordering -- it only has to be present
+        // and stable. Omitting it 422'd every publish at the first prop.
+        sortOrder: propOrder,
       }),
     })
     if (!propRes.ok) return false

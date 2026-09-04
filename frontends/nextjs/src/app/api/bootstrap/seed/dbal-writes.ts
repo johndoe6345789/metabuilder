@@ -55,7 +55,7 @@ export async function seedPageTree(
     if (!nodeRes.ok) return false
 
     const props = (node.props ?? {}) as Record<string, unknown>
-    for (const [name, raw] of Object.entries(props)) {
+    for (const [propOrder, [name, raw]] of Object.entries(props).entries()) {
       const valueType =
         typeof raw === 'boolean'
           ? 'boolean'
@@ -72,6 +72,8 @@ export async function seedPageTree(
         name,
         value,
         valueType,
+        // See write-node.ts: the schema requires this on every prop row.
+        sortOrder: propOrder,
       })
       if (!propRes.ok) return false
     }
