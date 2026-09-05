@@ -55,12 +55,12 @@ describe('usePublishPage', () => {
 
     const { result } = renderHook(() => usePublishPage(tree, vi.fn()))
 
-    let ok = true
+    let outcome: string | null = null
     await act(async () => {
-      ok = await result.current.publish(target)
+      outcome = await result.current.publish(target)
     })
 
-    expect(ok).toBe(false)
+    expect(outcome).not.toBeNull()
     expect(result.current.error).not.toBeNull()
     expect(result.current.error).toMatch(/sortOrder/)
   })
@@ -79,12 +79,69 @@ describe('usePublishPage', () => {
 
     const { result } = renderHook(() => usePublishPage(tree, vi.fn()))
 
-    let ok = false
+    let outcome: string | null = 'not set'
     await act(async () => {
-      ok = await result.current.publish(target)
+      outcome = await result.current.publish(target)
     })
 
-    expect(ok).toBe(true)
+    expect(outcome).toBeNull()
     expect(result.current.error).toBeNull()
   })
+
+  /**
+   * A caller that publishes several pages in one go -- BQL does -- cannot
+   * read the `error` state between them: it is React state, still the
+   * previous render's value at the moment the next publish starts. The
+   * reason has to come back from the call itself, or the only way to find
+   * out why a page did not go live is the browser's network tab, which is
+   * where I ended up during the showcase.
+   */
+  it('hands the reason back to the caller, not only to the panel', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string, init?: RequestInit) => {
+        if (String(url).endsWith('/PageTreeProp/_bulk/create')) {
+          return new Response('{}', { status: 429 })
+        }
+        if ((init?.method ?? 'GET') === 'GET') {
+          return new Response(JSON.stringify({ data: { data: [] } }), {
+            status: 200,
+          })
+        }
+        return new Response('{}', { status: 200 })
+      })
+    )
+
+    const { result } = renderHook(() => usePublishPage(tree, vi.fn()))
+
+    let outcome: string | null = null
+    await act(async () => {
+      outcome = await result.current.publish(target)
+    })
+
+    expect(outcome).toMatch(/429/)
+  })
+
+  it('hands back null when the page went live', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string, init?: RequestInit) =>
+        (init?.method ?? 'GET') === 'GET'
+          ? new Response(JSON.stringify({ data: { data: [] } }), {
+              status: 200,
+            })
+          : new Response('{}', { status: 200 })
+      )
+    )
+
+    const { result } = renderHook(() => usePublishPage(tree, vi.fn()))
+
+    let outcome: string | null = 'not set'
+    await act(async () => {
+      outcome = await result.current.publish(target)
+    })
+
+    expect(outcome).toBeNull()
+  })
 })
+

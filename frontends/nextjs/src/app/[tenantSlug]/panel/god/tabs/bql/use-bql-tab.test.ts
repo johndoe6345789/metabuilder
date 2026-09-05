@@ -238,16 +238,16 @@ describe('useBqlTab', () => {
       )
     })
 
-    it('records which routes took, so a refusal is visible', async () => {
+    it("records the server's reason, so a refusal explains itself", async () => {
       const publish = setup([{ line: 1, title: 'About', path: '/about' }])
-      publish.mockResolvedValue(false)
+      publish.mockResolvedValue('PageTree rejected (429)')
       const { result } = renderHook(() => useBqlTab())
 
       await runFirst(result)
 
       const id = result.current.scripts[0].id
       expect(result.current.published[id]).toEqual([
-        { path: '/about', ok: false },
+        { path: '/about', reason: 'PageTree rejected (429)' },
       ])
     })
 

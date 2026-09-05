@@ -40,11 +40,12 @@ function mockFetch(owner: Record<string, unknown> | null = null, ok = true) {
   return calls
 }
 
+/** null means the page went live; a string is the reason it did not. */
 const publish = async (
   hook: { current: ReturnType<typeof useComponentTreePublish> },
   target = DEFAULT_PUBLISH_TARGET
 ) => {
-  let result = false
+  let result: string | null = 'not run'
   await act(async () => {
     result = await hook.current.publish(target)
   })
@@ -68,7 +69,7 @@ describe('useComponentTreePublish', () => {
         useComponentTreePublish(tree as never)
       )
 
-      expect(await publish(result)).toBe(true)
+      expect(await publish(result)).toBeNull()
       expect(calls.some(c => c.method === 'POST')).toBe(true)
     })
 
@@ -103,7 +104,7 @@ describe('useComponentTreePublish', () => {
         useComponentTreePublish(tree as never)
       )
 
-      expect(await publish(result)).toBe(false)
+      expect(await publish(result)).not.toBeNull()
       expect(calls.some(c => c.method === 'POST')).toBe(false)
     })
   })

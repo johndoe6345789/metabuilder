@@ -33,7 +33,13 @@ export function usePublishPage(
        * closed over here is still the previous render's.
        */
       override?: TreeNode
-    ): Promise<boolean> => {
+      /**
+       * Returns null when the page went live, or why it did not. A caller
+       * publishing several pages in one go cannot read `error` between
+       * them -- it is React state, still the previous render's value when
+       * the next publish begins -- so the reason travels with the call.
+       */
+    ): Promise<string | null> => {
       const treeToPublish = override ?? tree
       const { tenant, path } = target
       setPublishing(true)
@@ -67,25 +73,26 @@ export function usePublishPage(
         )
         if (failure !== null) {
           setError(failure)
-          return false
+          return failure
         }
 
         const res = await writePageRow(owner, id, target, treeId, stamp)
         if (!res.ok) {
-          setError(await describeFailure('PageConfig', res))
-          return false
+          const reason = await describeFailure('PageConfig', res)
+          setError(reason)
+          return reason
         }
 
         await snapshot('god.componentTree', treeToPublish, 'Published page')
         dispatch(clearDirty('tree'))
-        return true
+        return null
       } catch (cause) {
-        setError(
+        const reason =
           cause instanceof Error
             ? `Could not reach the server: ${cause.message}`
             : 'Could not reach the server.'
-        )
-        return false
+        setError(reason)
+        return reason
       } finally {
         setPublishing(false)
       }

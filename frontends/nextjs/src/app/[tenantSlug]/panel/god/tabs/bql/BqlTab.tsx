@@ -20,9 +20,10 @@ export function BqlTab() {
       </div>
 
       <Typography variant="body2" color="text.secondary" className={s.hint}>
-        Build or edit the current page by describing it, one sentence per
-        line. Each script runs on its own, against the page open in
-        Components, and is undoable from there like any other edit.
+        Describe a page one sentence per line, and a script can publish it
+        to its own route. Open with <em>start a new page</em> unless you
+        mean to add to whatever is loaded in Components. Each script runs on
+        its own and is undoable from Components like any other edit.
       </Typography>
 
       <div className={s.layout}>

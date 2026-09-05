@@ -62,14 +62,18 @@ describe('BqlTab actions', () => {
     stub({
       published: {
         a: [
-          { path: '/about', ok: true },
-          { path: '/contact', ok: false },
+          { path: '/about', reason: null },
+          { path: '/contact', reason: 'PageTree rejected (429)' },
         ],
       },
     })
     render(<BqlTab />)
 
     expect(screen.getByText('✓ Published at /about')).toBeTruthy()
-    expect(screen.getByText('Could not publish at /contact')).toBeTruthy()
+    // The reason travels with it: "could not publish" on its own is what
+    // sent me to the network tab to find a 429.
+    expect(
+      screen.getByText(/Could not publish at \/contact — .*429/)
+    ).toBeTruthy()
   })
 })

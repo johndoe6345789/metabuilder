@@ -35,6 +35,13 @@ import { useCssClasses } from '../styles/use-css-classes'
 
 export type { BqlScript } from './bql-script'
 
+/** Where a script's `publish` line landed, and why if it did not. */
+export interface PublishOutcome {
+  path: string
+  /** null when the page went live. */
+  reason: string | null
+}
+
 let nextId = 0
 const newScript = (name: string): BqlScript => {
   nextId += 1
@@ -70,9 +77,9 @@ export function useBqlTab() {
   }, [stored, tenant, dispatch])
 
   const [runningId, setRunningId] = useState<string | null>(null)
-  /** Routes a script published to, and whether each one took. */
+  /** Routes a script published to, and why any of them did not take. */
   const [published, setPublished] = useState<
-    Record<string, { path: string; ok: boolean }[] | undefined>
+    Record<string, PublishOutcome[] | undefined>
   >({})
   const [results, setResults] = useState<
     Record<string, ApplyBqlResult | undefined>
@@ -100,16 +107,19 @@ export function useBqlTab() {
 
   const publishTo = useCallback(
     async (pages: BqlPage[], built: TreeNode) => {
-      const landed: { path: string; ok: boolean }[] = []
+      const landed: PublishOutcome[] = []
       for (const page of pages) {
-        const ok = await publish({
-          tenant,
-          path: page.path,
-          title: page.title ?? page.path,
-          level: 0,
-          requiresAuth: false,
-        }, built)
-        landed.push({ path: page.path, ok })
+        const reason = await publish(
+          {
+            tenant,
+            path: page.path,
+            title: page.title ?? page.path,
+            level: 0,
+            requiresAuth: false,
+          },
+          built
+        )
+        landed.push({ path: page.path, reason })
       }
       return landed
     },
