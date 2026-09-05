@@ -151,6 +151,18 @@ export async function applyBql(
       aliasToId.clear()
       aliasToType.clear()
     } else if (sentence.kind === 'publish') {
+      // The parser is pure syntax and takes the path as written, so a
+      // missing slash reaches here intact. A page at "about" is published,
+      // looks published, and can never be reached -- worth refusing rather
+      // than quietly correcting, since the script is what someone will
+      // read again later.
+      if (!sentence.path.startsWith('/')) {
+        errors.push({
+          line,
+          message: `A page's path has to start with "/" -- did you mean "/${sentence.path}"?`,
+        })
+        continue
+      }
       pages.push(
         sentence.title === undefined
           ? { line, path: sentence.path }

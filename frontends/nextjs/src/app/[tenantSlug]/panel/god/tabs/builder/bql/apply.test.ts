@@ -500,3 +500,50 @@ describe('applyBql: starting a page from scratch', () => {
   })
 })
 
+describe('applyBql: the path a page is published at', () => {
+  /**
+   * A route has to start with a slash to resolve. The parser stays pure
+   * syntax and takes the word as written, so "publish this at about"
+   * parsed happily and would have created a page nothing could reach --
+   * live, and looking published.
+   */
+  it('accepts a leading slash as written', async () => {
+    mockDbal([{ kind: 'publish', line: 1, path: '/about' }])
+    const result = await applyBql('irrelevant', 'tenant', 'root', root(), [])
+    expect(result.pages).toEqual([{ line: 1, path: '/about' }])
+  })
+
+  it('refuses a path that could never resolve, rather than publishing it', async () => {
+    mockDbal([{ kind: 'publish', line: 1, path: 'about' }])
+
+    const result = await applyBql('irrelevant', 'tenant', 'root', root(), [])
+
+    expect(result.pages).toEqual([])
+    expect(result.errors).toHaveLength(1)
+    expect(result.errors[0].line).toBe(1)
+    expect(result.errors[0].message).toMatch(/\/about/)
+  })
+
+  it('names the line, so a long script says which one to fix', async () => {
+    mockDbal([
+      { kind: 'add', line: 1, blockName: 'Heading 1', text: 'Hi', attrs: [] },
+      { kind: 'publish', line: 7, path: 'contact' },
+    ])
+
+    const result = await applyBql('irrelevant', 'tenant', 'root', root(), [])
+
+    expect(result.errors[0].line).toBe(7)
+  })
+
+  it('publishes nothing at all when one route is unreachable', async () => {
+    mockDbal([
+      { kind: 'publish', line: 1, path: '/good' },
+      { kind: 'publish', line: 2, path: 'bad' },
+    ])
+
+    const result = await applyBql('irrelevant', 'tenant', 'root', root(), [])
+
+    expect(result.pages).toEqual([])
+  })
+})
+
