@@ -4,6 +4,8 @@ import { useCallback, useRef, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { setCss, clearDirty, type GodState } from '@/store/slices/god-slice'
 import { loadStyleClasses, saveStyleClasses } from '@/lib/tenant/style-classes'
+import { useGodTenant } from '../use-god-tenant'
+import { SEED_CSS } from '@/store/slices/god-slice/seed-css'
 
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
@@ -16,8 +18,21 @@ export interface CssClass {
 /** Named CSS class registry (persisted in Redux god slice). */
 export function useCssClasses() {
   const dispatch = useAppDispatch()
-  const classes = useAppSelector(s => (s.god as GodState).css)
-  const dirty = useAppSelector(s => (s.god as GodState).dirty.css)
+  const stored = useAppSelector(s => (s.god as GodState).css)
+  const storedDirty = useAppSelector(s => (s.god as GodState).dirty.css)
+  /**
+   * Styles persist per browser origin like the tree does, so a second
+   * tenant signing in on the same browser inherited the first one's
+   * classes -- shown as staged changes, one click from being published
+   * into their own data. Derived during render, not in an effect, so no
+   * consumer ever reads the other tenant's classes: BQL applies them to a
+   * page and publish() writes them under this tenant's id.
+   */
+  const { foreign } = useGodTenant()
+  // The same value resetTenantOwned() writes, so the render before that
+  // effect runs shows what the render after it will.
+  const classes = foreign ? SEED_CSS : stored
+  const dirty = foreign ? false : storedDirty
   const [publishing, setPublishing] = useState(false)
 
   const persist = useCallback(

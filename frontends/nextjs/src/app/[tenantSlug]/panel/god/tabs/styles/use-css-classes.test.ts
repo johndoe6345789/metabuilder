@@ -12,6 +12,11 @@ const styleApi = vi.hoisted(() => ({
   styleSheetText: vi.fn(() => ''),
 }))
 
+// The tenant guard is exercised in use-css-classes.tenant.test.ts; here
+// the draft is always this tenant's own.
+vi.mock('../use-god-tenant', () => ({
+  useGodTenant: () => ({ tenant: 'acme', known: true, foreign: false }),
+}))
 vi.mock('@/store/hooks', () => ({
   useAppDispatch: () => store.dispatch,
   useAppSelector: (fn: (s: unknown) => unknown) =>

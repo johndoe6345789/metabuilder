@@ -20,9 +20,15 @@ const auth = vi.hoisted(() => ({
   })),
 }))
 
+const BLANK: TreeNode = { id: 'root', type: 'container', props: {}, children: [] }
+
 vi.mock('@/store/hooks', () => ({
   useAppDispatch: () => (action: { type: string; payload?: unknown }) => {
     if (action.type === 'setTree') store.tree = action.payload
+    // The guard clears every tenant-owned key of the slice at once, rather
+    // than the tree on its own -- styles persist the same way and were
+    // left behind when the guard covered only the tree.
+    if (action.type === 'god/resetTenantOwned') store.tree = BLANK
   },
   useAppSelector: (fn: (s: unknown) => unknown) =>
     fn({ god: { tree: store.tree, dirty: { tree: store.dirty } } }),

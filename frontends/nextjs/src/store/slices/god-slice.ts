@@ -34,6 +34,26 @@ const godSlice = createSlice({
       s.css = a.payload
       s.dirty.css = true
     },
+    /**
+     * Blank everything in this slice that belongs to one tenant.
+     *
+     * The slice persists per browser origin, so nothing stored in it says
+     * whose it is -- see tree-tenant.ts. The tree had a guard; `css` did
+     * not, and a founder signing in after someone else in the same browser
+     * was shown the other tenant's styles, staged and one click from being
+     * published into their own. Both are cleared together here so a guard
+     * cannot cover one and miss the other again.
+     *
+     * Cloned rather than assigned: initialState is a module-level object,
+     * and handing Immer a reference to it would let the next edit mutate
+     * the defaults for the rest of the session.
+     */
+    resetTenantOwned: s => {
+      s.tree = structuredClone(initialState.tree)
+      s.css = structuredClone(initialState.css)
+      s.dirty.tree = false
+      s.dirty.css = false
+    },
     setDropdowns: (s, a: PayloadAction<DropdownConfig[]>) => {
       s.dropdowns = a.payload
       s.dirty.dropdowns = true
@@ -110,6 +130,7 @@ export const {
   setTree,
   setPackages,
   setCss,
+  resetTenantOwned,
   setDropdowns,
   setSmtp,
   setTests,

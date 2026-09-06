@@ -1,8 +1,6 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
-import { normalizeTenantId } from '@/lib/tenant/workspace-paths'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { setTree, type GodState } from '@/store/slices/god-slice'
 import { type TreeNode } from './builder-registry'
@@ -11,7 +9,7 @@ import { findNode } from './component-tree-utils'
 import { autoId } from './auto-identity'
 import { useComponentTreeActions } from './component-tree-actions'
 import { useComponentTreePublish } from './component-tree-publish'
-import { treeBelongsToAnother, writeTreeTenant } from './tree-tenant'
+import { useGodTenant } from '../use-god-tenant'
 
 const BLANK: TreeNode = { id: 'root', type: 'container', props: {}, children: [] }
 
@@ -22,24 +20,14 @@ export function useComponentTree() {
   const dirty = useAppSelector(s => (s.god as GodState).dirty.tree)
   const [selectedId, setSelectedId] = useState<string>('root')
 
-  const auth = useAuthContext()
-  const tenant = normalizeTenantId(auth.user?.tenantId)
-  // Only act on a tenant we actually know. While auth resolves, and when
-  // signed out, `tenant` is the "system" fallback rather than an answer.
-  const tenantKnown = !auth.isLoading && auth.user != null
-
   /**
-   * Whose tree this is, answered here rather than by whichever tab asked.
-   * It used to be checked in useWorkbench -- the Components tab's view
-   * model -- so every other consumer skipped it. BQL was one: run from its
-   * tab on a different tenant, it appended to the previous tenant's
-   * leftover draft and published the result to a live route.
-   *
-   * Derived during render, not in an effect, so no consumer ever sees the
-   * other tenant's content -- an effect would leave one render where a
-   * script could read it and a page could show it.
+   * Whose tree this is, answered by the slice's own guard rather than by
+   * whichever tab asked. It was checked in useWorkbench -- the Components
+   * tab's view model -- so every other consumer skipped it; then it moved
+   * here and covered the tree but not the styles beside it. It now lives
+   * in useGodTenant, which clears every tenant-owned key at once.
    */
-  const foreign = treeBelongsToAnother(tenant, tenantKnown)
+  const { foreign } = useGodTenant()
   const tree = foreign ? BLANK : stored
 
   /**
@@ -93,17 +81,11 @@ export function useComponentTree() {
     future.current = []
     sync()
   }, [sync])
+  // useGodTenant does the clearing; the history is this hook's own and has
+  // to go with it, or Ctrl+Z would put the other tenant's tree back.
   useEffect(() => {
-    if (!tenantKnown) return
-    if (foreign) {
-      // Straight to setTree rather than through commit(): a tenant's
-      // content must not sit on the undo stack, where Ctrl+Z would put it
-      // back.
-      dispatch(setTree(BLANK))
-      clearHistory()
-    }
-    writeTreeTenant(tenant)
-  }, [foreign, tenant, tenantKnown, dispatch, clearHistory])
+    if (foreign) clearHistory()
+  }, [foreign, clearHistory])
 
   const selected = getSelectedTreeNode(tree, selectedId)
   const { addNode, updateProps, deleteNode, moveNode } =

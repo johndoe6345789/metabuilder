@@ -7,6 +7,10 @@ const store = vi.hoisted(() => ({
   dispatch: vi.fn(),
 }))
 
+// The tenant guard has its own tests; here the draft is this tenant's.
+vi.mock('../use-god-tenant', () => ({
+  useGodTenant: () => ({ tenant: 'acme', known: true, foreign: false }),
+}))
 vi.mock('@/store/hooks', () => ({
   useAppDispatch: () => store.dispatch,
   useAppSelector: (fn: (s: unknown) => unknown) =>
