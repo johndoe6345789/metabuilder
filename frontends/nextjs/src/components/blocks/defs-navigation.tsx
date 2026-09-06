@@ -4,6 +4,7 @@
 import type { BlockDef } from './block-types'
 import { propText, parseNavLinks } from './block-coerce'
 import { m } from './defs-shared'
+import { NavBarLinks } from './NavBarLinks'
 import s from './nav-header.module.scss'
 
 export const NAVIGATION_DEFS: BlockDef[] = [
@@ -32,13 +33,7 @@ export const NAVIGATION_DEFS: BlockDef[] = [
               <span />
             </summary>
           </details>
-          <ul className={s.links}>
-            {links.map(link => (
-              <li key={`${link.label}-${link.href}`}>
-                <a href={link.href}>{link.label}</a>
-              </li>
-            ))}
-          </ul>
+          <NavBarLinks links={links} />
         </nav>
       )
     },
