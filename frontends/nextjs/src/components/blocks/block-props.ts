@@ -178,7 +178,23 @@ export const PROP_SCHEMAS: Record<string, PropField[]> = {
       ],
       { source: 'button-variant' }
     ),
-    bool('runWorkflow', 'Run the workflow when clicked'),
+    text('action', 'Runs a workflow, recorded as', {
+      placeholder: 'book-a-repair',
+      hint:
+        'Clicking records this, which runs whichever workflow is set to ' +
+        'run when a form is submitted. Leave empty for a button that ' +
+        'only navigates. Ignored inside a Form -- the Form records it',
+    }),
+    text('doneLabel', 'Says this once clicked', {
+      placeholder: 'Thanks -- that is with us.',
+    }),
+    // Was labelled "Run the workflow when clicked", which is not what it
+    // does: it runs the God Panel's unsaved draft in this browser through
+    // a mock runner and shows an alert. On a published page there is no
+    // draft, so a visitor got "No workflow wired yet." Renamed rather than
+    // removed -- pages already set it, and hiding a prop that still works
+    // is how it came to be misleading in the first place.
+    bool('runWorkflow', 'Try the draft here instead (preview only)'),
   ],
   form: [
     text('formName', 'What this form is for', {

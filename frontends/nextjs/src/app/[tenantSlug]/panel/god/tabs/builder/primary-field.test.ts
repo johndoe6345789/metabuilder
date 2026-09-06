@@ -7,6 +7,8 @@ describe('fieldsFor', () => {
       'label',
       'href',
       'variant',
+      'action',
+      'doneLabel',
       'runWorkflow',
     ])
   })
