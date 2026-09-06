@@ -1,13 +1,13 @@
 'use client'
 
 import { useCallback, useState } from 'react'
-import { NODE_CATEGORIES } from '@/workflow-editor'
+import { RUNNABLE_CATEGORIES } from './runnable-steps'
 
 /** Search + category-expansion state for the node palette. */
 export function useNodePalette() {
   const [search, setSearch] = useState('')
   const [expanded, setExpanded] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(Object.keys(NODE_CATEGORIES).map(k => [k, true]))
+    Object.fromEntries(Object.keys(RUNNABLE_CATEGORIES).map(k => [k, true]))
   )
 
   const toggle = useCallback((cat: string) => {
@@ -15,12 +15,12 @@ export function useNodePalette() {
   }, [])
   const expandAll = useCallback(() => {
     setExpanded(
-      Object.fromEntries(Object.keys(NODE_CATEGORIES).map(k => [k, true]))
+      Object.fromEntries(Object.keys(RUNNABLE_CATEGORIES).map(k => [k, true]))
     )
   }, [])
   const collapseAll = useCallback(() => {
     setExpanded(
-      Object.fromEntries(Object.keys(NODE_CATEGORIES).map(k => [k, false]))
+      Object.fromEntries(Object.keys(RUNNABLE_CATEGORIES).map(k => [k, false]))
     )
   }, [])
 

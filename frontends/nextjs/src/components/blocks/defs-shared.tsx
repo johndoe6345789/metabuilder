@@ -9,6 +9,7 @@ import { propText } from './block-coerce'
 import { store } from '@/store/store'
 import { runWorkflow } from '@/lib/workflow/run-workflow'
 import type { GodState } from '@/store/slices/god-slice'
+import { useFormScope } from './form/form-context'
 
 export function fireWorkflow(): void {
   const wf = (store.getState().god as GodState).workflow
@@ -32,11 +33,27 @@ export const m = (
 ): PaletteItem => ({ type, name, icon, category, container, defaults })
 
 export function renderButton(p: Record<string, unknown>): ReactNode {
+  return <BlockButton p={p} />
+}
+
+/**
+ * Split out from renderButton because a button inside a Form has to know
+ * it is inside one, and that is a hook -- which a render() function, being
+ * a plain function rather than a component, cannot call.
+ */
+function BlockButton({ p }: { p: Record<string, unknown> }): ReactNode {
+  const scope = useFormScope()
   const href = propText(p.href)
   const variant = propText(p.variant, 'contained')
   const runWorkflow = p.runWorkflow === true
+  // Inside a Form the button submits it, which is what someone dropping a
+  // button under some fields plainly means. A link and the older
+  // click-to-run-the-local-draft behaviour both still win if asked for.
+  const submits = scope !== null && !runWorkflow && href === ''
   const buttonProps: Record<string, unknown> = {
     variant,
+    type: submits ? 'submit' : 'button',
+    disabled: scope?.sending ?? false,
     onClick: runWorkflow
       ? () => {
           fireWorkflow()

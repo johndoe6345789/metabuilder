@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import { act, renderHook } from '@testing-library/react'
 
-import { NODE_CATEGORIES } from '@/workflow-editor'
 import { useNodePalette } from './use-node-palette'
+import { RUNNABLE_CATEGORIES } from './runnable-steps'
 
-const categories = Object.keys(NODE_CATEGORIES)
+const categories = Object.keys(RUNNABLE_CATEGORIES)
 
 describe('useNodePalette', () => {
   it('starts with every category expanded', () => {
@@ -60,7 +60,7 @@ describe('useNodePalette', () => {
 
   it('drops a stray category on expandAll', () => {
     // toggle() on an unknown key adds it as expanded (!undefined is true).
-    // expandAll rebuilds from NODE_CATEGORIES, so the stray key goes away.
+    // expandAll rebuilds from RUNNABLE_CATEGORIES, so the stray goes away.
     const { result } = renderHook(() => useNodePalette())
 
     act(() => {

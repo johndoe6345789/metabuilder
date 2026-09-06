@@ -1,0 +1,19 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sent {
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  font-weight: 600;
+}
+
+.error {
+  margin: 0;
+  color: var(--mat-sys-error, #b3261e);
+  font-size: 0.9rem;
+}

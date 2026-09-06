@@ -13,6 +13,8 @@
  * or served from another base path, still points at its own pages.
  */
 
+import { tenantFromPathname } from './site-tenant'
+
 /** Anything that already names where it goes is left exactly as written. */
 function isAbsolute(href: string): boolean {
   return (
@@ -53,10 +55,7 @@ export function navBaseFromPathname(
 ): string {
   // usePathname() is typed `string`, but answers null outside a router --
   // every unit test that renders a nav, and any render outside the shell.
-  if (pathname === null) return ''
-  // .at() is `string | undefined`; indexing is not, unless
-  // noUncheckedIndexedAccess is on -- and it is not in every tsconfig here.
-  const tenant = pathname.split('/').filter(s => s !== '').at(0)
-  if (tenant === undefined) return ''
+  const tenant = tenantFromPathname(pathname)
+  if (tenant === '') return ''
   return `${basePath}/${tenant}`
 }

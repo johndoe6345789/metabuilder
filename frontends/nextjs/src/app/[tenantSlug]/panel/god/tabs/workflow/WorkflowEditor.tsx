@@ -4,12 +4,12 @@ import {
   EditorToolbar,
   NodePalette,
   PropertiesDialog,
-  NODE_CATEGORIES,
   type Workflow,
 } from '@/workflow-editor'
 import { useWorkflowEditor } from './use-workflow-editor'
 import { useNodePalette } from './use-node-palette'
 import { filterNodeTypes } from './filter-node-types'
+import { RUNNABLE_CATEGORIES } from './runnable-steps'
 import { WorkflowCanvas } from './WorkflowCanvas'
 import s from './WorkflowEditor.module.scss'
 
@@ -61,7 +61,7 @@ export function WorkflowEditor({
           onCollapseAll={pal.collapseAll}
           onDragStart={ed.onPaletteDragStart}
           nodeTypes={filterNodeTypes(pal.search)}
-          categories={NODE_CATEGORIES}
+          categories={RUNNABLE_CATEGORIES}
         />
       </div>
 

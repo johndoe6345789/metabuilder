@@ -180,8 +180,25 @@ export const PROP_SCHEMAS: Record<string, PropField[]> = {
     ),
     bool('runWorkflow', 'Run the workflow when clicked'),
   ],
+  form: [
+    text('formName', 'What this form is for', {
+      placeholder: 'book-a-repair',
+      hint:
+        'The name the answers arrive under, and what a workflow watches ' +
+        'for. Lower case, hyphens instead of spaces',
+    }),
+    text('successMessage', 'Shown after it is sent', {
+      placeholder: 'Thanks -- we will be in touch.',
+    }),
+  ],
   'm3.textfield': [
     text('label', 'Label', { placeholder: 'Email address' }),
+    text('name', 'Answer name', {
+      placeholder: 'name',
+      hint:
+        'What this answer is called when it reaches a workflow, as ' +
+        '${event.data.name}. Leave empty and the answer is not collected',
+    }),
     text('placeholder', 'Hint inside the box', {
       placeholder: 'you@example.com',
       hint: 'Grey example text, shown until someone types',
