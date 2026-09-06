@@ -38,11 +38,19 @@ const godSlice = createSlice({
      * Blank everything in this slice that belongs to one tenant.
      *
      * The slice persists per browser origin, so nothing stored in it says
-     * whose it is -- see tree-tenant.ts. The tree had a guard; `css` did
-     * not, and a founder signing in after someone else in the same browser
-     * was shown the other tenant's styles, staged and one click from being
-     * published into their own. Both are cleared together here so a guard
-     * cannot cover one and miss the other again.
+     * whose it is -- see tree-tenant.ts. The tree had a guard; nothing
+     * else did, and a founder signing in after someone else in the same
+     * browser was shown the other tenant's styles, staged and one click
+     * from being published into their own.
+     *
+     * The set is every key that is published under a tenant id: `tree` and
+     * `css` (page content and its classes), `workflow`, and `smtp` --
+     * which carries an outbound mail password, so leaving it out would
+     * have handed one tenant another's credential. `packages`,
+     * `dropdowns`, `tests` and `plan` are deliberately not here: none of
+     * them is written to DBAL under a tenant at all. Check that before
+     * adding a key, rather than assuming either way -- `smtp` was assumed
+     * to be local editor state and is not.
      *
      * Cloned rather than assigned: initialState is a module-level object,
      * and handing Immer a reference to it would let the next edit mutate
@@ -51,8 +59,12 @@ const godSlice = createSlice({
     resetTenantOwned: s => {
       s.tree = structuredClone(initialState.tree)
       s.css = structuredClone(initialState.css)
+      s.workflow = structuredClone(initialState.workflow)
+      s.smtp = structuredClone(initialState.smtp)
       s.dirty.tree = false
       s.dirty.css = false
+      s.dirty.workflow = false
+      s.dirty.smtp = false
     },
     setDropdowns: (s, a: PayloadAction<DropdownConfig[]>) => {
       s.dropdowns = a.payload

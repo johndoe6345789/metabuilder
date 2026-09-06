@@ -15,7 +15,7 @@
 
 import type { User } from '@/lib/types/level-types'
 import type { DbalUserRecord } from '@/lib/auth/types'
-import { db } from '@/lib/db-client'
+import { readList } from '@/lib/db/read-list'
 import { DEFAULT_TENANT_ID } from '@/lib/tenant/workspace-paths'
 
 const DBAL_URL =
@@ -55,10 +55,28 @@ export async function fetchSession(token: string | null): Promise<User | null> {
       claims.tenant_id !== undefined && claims.tenant_id.length > 0
         ? claims.tenant_id
         : DEFAULT_TENANT_ID
-    const users = await db
-      .entity('User', tenantId)
-      .list({ filter: { username: claims.sub } })
-    const user = users.data[0] as unknown as DbalUserRecord | undefined
+    // Carries the caller's own token, like the userinfo call above.
+    // Reading User requires a caller now that DBAL enforces the read ACL
+    // its schema declares; going through the shared db client, which
+    // attaches nothing, made every sign-in fail here -- after the OIDC
+    // callback had already succeeded, so the error read as "session token
+    // rejected" for a token that had just been minted and was perfectly
+    // valid. The token that proved who you are is the right one to read
+    // your own record with.
+    const params = new URLSearchParams({ 'filter.username': claims.sub })
+    const usersRes = await fetch(
+      `${DBAL_URL}/${tenantId}/core/User?${params.toString()}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        cache: 'no-store',
+      }
+    )
+    if (!usersRes.ok) {
+      return null
+    }
+    // .at() is `string | undefined`-shaped even without
+    // noUncheckedIndexedAccess, which indexing is not.
+    const user = readList<DbalUserRecord>(await usersRes.json()).at(0)
     if (user === undefined) {
       return null
     }

@@ -3,6 +3,8 @@
 import { useCallback, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { setSmtp, clearDirty, type GodState } from '@/store/slices/god-slice'
+import { initialState } from '@/store/slices/god-slice/initial-state'
+import { useGodTenant } from '../use-god-tenant'
 
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
@@ -19,8 +21,18 @@ export interface SmtpConfig {
 /** Outbound email (SMTP) settings, persisted in Redux + published to DBAL. */
 export function useSmtpConfig() {
   const dispatch = useAppDispatch()
-  const config = useAppSelector(s => (s.god as GodState).smtp)
-  const dirty = useAppSelector(s => (s.god as GodState).dirty.smtp)
+  const stored = useAppSelector(s => (s.god as GodState).smtp)
+  const storedDirty = useAppSelector(s => (s.god as GodState).dirty.smtp)
+  /**
+   * These settings carry an outbound mail password and are published under
+   * a tenant id, but persist per browser origin like the rest of the
+   * slice. Without this, a founder signing in after someone else in the
+   * same browser was shown that person's SMTP host, username and password.
+   * Derived during render so it is never handed out, not even once.
+   */
+  const { foreign } = useGodTenant()
+  const config = foreign ? initialState.smtp : stored
+  const dirty = foreign ? false : storedDirty
   const [publishing, setPublishing] = useState(false)
 
   const set = useCallback(

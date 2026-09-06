@@ -15,6 +15,10 @@ const store = vi.hoisted(() => ({
   cleared: [] as string[],
 }))
 
+// The tenant guard has its own tests; here the draft is this tenant's own.
+vi.mock('../use-god-tenant', () => ({
+  useGodTenant: () => ({ tenant: 'acme', known: true, foreign: false }),
+}))
 vi.mock('@/store/hooks', () => ({
   useAppDispatch: () => (action: { type: string; payload?: unknown }) => {
     if (action.type === 'setSmtp') {

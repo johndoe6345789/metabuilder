@@ -14,6 +14,8 @@ import {
   type GodState,
 } from '@/store/slices/god-slice'
 import { snapshot } from '@/lib/persist/versions'
+import { initialState } from '@/store/slices/god-slice/initial-state'
+import { useGodTenant } from '../use-god-tenant'
 
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
@@ -24,8 +26,14 @@ const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
  */
 export function useGodWorkflow(tenant = 'system') {
   const dispatch = useAppDispatch()
-  const workflow = useAppSelector(s => (s.god as GodState).workflow)
-  const dirty = useAppSelector(s => (s.god as GodState).dirty.workflow)
+  const stored = useAppSelector(s => (s.god as GodState).workflow)
+  const storedDirty = useAppSelector(s => (s.god as GodState).dirty.workflow)
+  // Published under a tenant id, persisted per browser origin -- see
+  // useGodTenant. Derived during render so publish() can never write one
+  // tenant's workflow into another's rows.
+  const { foreign } = useGodTenant()
+  const workflow = foreign ? initialState.workflow : stored
+  const dirty = foreign ? false : storedDirty
   const [publishing, setPublishing] = useState(false)
 
   const save = useCallback(
