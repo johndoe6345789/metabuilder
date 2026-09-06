@@ -58,3 +58,41 @@
     min-height: 320px;
   }
 }
+
+.addStep {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+}
+
+.addStepLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+}
+
+.addStepSelect {
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  border: 1px solid var(--mat-sys-outline-variant, #30363d);
+  background: var(--mat-sys-surface-container-lowest, #0d1117);
+  color: var(--mat-sys-on-surface, #c9d1d9);
+  cursor: pointer;
+}
+
+.addStepButton {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--mat-sys-outline-variant, #30363d);
+  background: transparent;
+  color: var(--mat-sys-primary, #4493f8);
+
+  &:hover {
+    background: var(--mat-sys-surface-container-high, #21262d);
+  }
+}

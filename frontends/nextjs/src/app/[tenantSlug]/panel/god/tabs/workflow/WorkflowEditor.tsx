@@ -11,6 +11,7 @@ import { useNodePalette } from './use-node-palette'
 import { filterNodeTypes } from './filter-node-types'
 import { RUNNABLE_CATEGORIES } from './runnable-steps'
 import { WorkflowCanvas } from './WorkflowCanvas'
+import { AddStep } from './AddStep'
 import s from './WorkflowEditor.module.scss'
 
 interface Props {
@@ -48,6 +49,8 @@ export function WorkflowEditor({
         onSave={() => onSave?.(ed.workflow)}
         onRun={() => onRun?.(ed.workflow)}
       />
+
+      <AddStep onAdd={ed.addStep} />
 
       <div className={s.content}>
         <WorkflowCanvas ed={ed} canvasRef={canvasRef} />

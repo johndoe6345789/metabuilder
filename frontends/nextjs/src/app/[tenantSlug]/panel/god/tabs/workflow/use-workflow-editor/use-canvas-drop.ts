@@ -2,12 +2,11 @@
 
 import { useCallback } from 'react'
 import {
-  generateNodeId,
   type NodeType,
   type Position,
   type Workflow,
-  type WorkflowNode,
 } from '@/workflow-editor'
+import { makeNode, nextStepPosition } from './make-node'
 
 export interface UseCanvasDropArgs {
   canvasRef: React.RefObject<HTMLDivElement | null>
@@ -46,19 +45,28 @@ export function useCanvasDrop(args: UseCanvasDropArgs) {
         x: (e.clientX - rect.left - canvasOffset.x) / zoom - 90,
         y: (e.clientY - rect.top - canvasOffset.y) / zoom - 30,
       }
-      const node: WorkflowNode = {
-        id: generateNodeId(),
-        type: nt.type,
-        name: nt.name,
-        position,
-        config: { ...nt.defaultConfig },
-        inputs: nt.inputs,
-        outputs: nt.outputs,
-      }
+      const node = makeNode(nt, position)
       commit({ ...workflow, nodes: [...workflow.nodes, node] })
     },
     [workflow, canvasOffset, zoom, getNodeType, commit, canvasRef]
   )
 
-  return { onPaletteDragStart, onCanvasDragOver, onCanvasDrop }
+  /**
+   * Add a step without a pointer.
+   *
+   * The palette is drag-only -- PaletteNode takes an onDragStart and
+   * nothing else -- so until this existed, a workflow could not be built
+   * at all without a mouse, and a drag is the one gesture that is hardest
+   * to make accessible. It also could not be exercised by anything that
+   * does not synthesise HTML5 drag events, which is most things.
+   */
+  const addStep = useCallback(
+    (nt: NodeType) => {
+      const node = makeNode(nt, nextStepPosition(workflow.nodes.length))
+      commit({ ...workflow, nodes: [...workflow.nodes, node] })
+    },
+    [workflow, commit]
+  )
+
+  return { onPaletteDragStart, onCanvasDragOver, onCanvasDrop, addStep }
 }

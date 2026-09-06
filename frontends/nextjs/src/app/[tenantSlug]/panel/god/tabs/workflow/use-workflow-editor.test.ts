@@ -314,14 +314,18 @@ describe('useWorkflowEditor', () => {
     it('adds a node where the drop landed', () => {
       const { result } = setup(workflow({ nodes: [] }))
       attachCanvas(result)
-      const event = dragEvent({ 'application/node-type': 'trigger' })
+      // A step the daemon actually implements: the palette offers the
+      // runnable set now, so 'trigger' is no longer one of them.
+      const event = dragEvent({
+        'application/node-type': 'dbal.entity.create',
+      })
 
       act(() => {
         result.current.onCanvasDrop(event)
       })
 
       expect(result.current.workflow.nodes).toHaveLength(1)
-      expect(result.current.workflow.nodes[0]?.type).toBe('trigger')
+      expect(result.current.workflow.nodes[0]?.type).toBe('dbal.entity.create')
     })
 
     it('does nothing for a drop naming no real node type', () => {

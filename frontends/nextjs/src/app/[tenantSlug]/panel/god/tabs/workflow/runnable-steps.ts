@@ -33,7 +33,11 @@ const step = (
   defaultConfig: Record<string, unknown>
 ): NodeType => ({
   id,
-  type: category,
+  // The step type the daemon dispatches on, and the key the editor looks
+  // a node type up by -- both are `type`, so it cannot be the category.
+  // Setting it to the category stored every node as "rows" or "make", and
+  // the executor skips a type it does not implement, silently.
+  type: id,
   category,
   name,
   icon,

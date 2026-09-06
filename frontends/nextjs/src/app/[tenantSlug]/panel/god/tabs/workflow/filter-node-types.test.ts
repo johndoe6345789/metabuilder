@@ -69,3 +69,26 @@ describe('the palette and the engine', () => {
     }
   })
 })
+
+/**
+ * `type` is two things at once: the key the editor looks a node type up
+ * by, and the value stored on every node and published as
+ * WorkflowNode.type for the daemon to dispatch on. Setting it to the
+ * category made every saved node "rows" or "make" -- a type the executor
+ * does not implement, so it skipped every step and logged a warning
+ * nobody was reading. Dropping one was worse: getNodeType found nothing
+ * and the drop was ignored outright.
+ */
+describe('the type a node is stored under', () => {
+  it('is the step the daemon dispatches on, not the category', () => {
+    for (const step of RUNNABLE_STEPS) {
+      expect(step.type).toBe(step.id)
+      expect(step.type.startsWith('dbal.')).toBe(true)
+    }
+  })
+
+  it('is unique, so a lookup cannot find the wrong step', () => {
+    const types = RUNNABLE_STEPS.map(s => s.type)
+    expect(new Set(types).size).toBe(types.length)
+  })
+})

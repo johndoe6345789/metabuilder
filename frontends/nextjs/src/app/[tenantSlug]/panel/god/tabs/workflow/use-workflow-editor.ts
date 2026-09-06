@@ -1,7 +1,8 @@
 'use client'
 
 import { useCallback, useState } from 'react'
-import { NODE_TYPES, type NodeType, type Workflow } from '@/workflow-editor'
+import { type NodeType, type Workflow } from '@/workflow-editor'
+import { RUNNABLE_STEPS } from './runnable-steps'
 import { useCanvasView } from './use-workflow-editor/use-canvas-view'
 import { useNodeDrag } from './use-workflow-editor/use-node-drag'
 import { useCanvasDrop } from './use-workflow-editor/use-canvas-drop'
@@ -24,9 +25,12 @@ export function useWorkflowEditor(
     [onChange]
   )
 
+  // Looked up in the runnable set, not the stock catalogue: the palette
+  // offers these, so dropping one and finding nothing meant the drop was
+  // ignored outright, with nothing said.
   const getNodeType = useCallback(
     (type: string): NodeType | undefined =>
-      NODE_TYPES.find(n => n.type === type),
+      RUNNABLE_STEPS.find(n => n.type === type),
     []
   )
 
