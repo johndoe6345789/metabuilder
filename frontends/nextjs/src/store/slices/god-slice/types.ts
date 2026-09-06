@@ -20,6 +20,13 @@ export type GodDomain =
 
 export interface GodState {
   workflow: Workflow
+  /**
+   * The entity event that runs `workflow`, as "<Entity>.created", or empty
+   * for a workflow nothing triggers automatically. It is not part of the
+   * Workflow type because that lives in the workflow-editor library, a
+   * separate repo mounted here; DBAL stores it as Workflow.triggerEvent.
+   */
+  workflowTrigger: string
   tree: TreeNode
   packages: RegistryPackage[]
   css: CssClass[]

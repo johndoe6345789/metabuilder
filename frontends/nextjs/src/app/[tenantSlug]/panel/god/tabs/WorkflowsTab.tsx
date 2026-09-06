@@ -4,15 +4,18 @@ import { Button } from '@/m3'
 import type { Workflow } from '@/workflow-editor'
 import { WorkflowEditor } from './workflow/WorkflowEditor'
 import { useGodWorkflow } from './workflow/use-god-workflow'
+import { WorkflowTrigger } from './workflow/WorkflowTrigger'
 import { VersionHistory } from '@/components/version-history/VersionHistory'
 import s from './WorkflowsTab.module.scss'
 
 export function WorkflowsTab() {
-  const { workflow, save, dirty, publish, publishing } = useGodWorkflow()
+  const { workflow, save, trigger, setTrigger, dirty, publish, publishing } =
+    useGodWorkflow()
 
   return (
     <>
       <div className={s.publishBar}>
+        <WorkflowTrigger value={trigger} onChange={setTrigger} />
         {dirty ? <span className={s.dot} /> : null}
         <span className={`${s.status} ${dirty ? '' : s.clean}`}>
           {dirty

@@ -21,6 +21,7 @@ export const initialState: GodState = {
     props: { direction: 'column', gap: 12 },
     children: [],
   },
+  workflowTrigger: '',
   packages: [],
   css: SEED_CSS,
   dropdowns: SEED_DROPDOWNS,

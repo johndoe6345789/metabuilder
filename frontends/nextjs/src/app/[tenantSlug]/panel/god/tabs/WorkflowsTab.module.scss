@@ -28,3 +28,26 @@
 .spacer {
   flex: 1;
 }
+
+.trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 12px;
+}
+
+.triggerLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+}
+
+.triggerSelect {
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  border: 1px solid var(--mat-sys-outline-variant, #30363d);
+  background: var(--mat-sys-surface-container-lowest, #0d1117);
+  color: var(--mat-sys-on-surface, #c9d1d9);
+  cursor: pointer;
+}

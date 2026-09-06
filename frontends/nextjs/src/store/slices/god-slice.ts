@@ -22,6 +22,10 @@ const godSlice = createSlice({
       s.workflow = a.payload
       s.dirty.workflow = true
     },
+    setWorkflowTrigger: (s, a: PayloadAction<string>) => {
+      s.workflowTrigger = a.payload
+      s.dirty.workflow = true
+    },
     setTree: (s, a: PayloadAction<TreeNode>) => {
       s.tree = a.payload
       s.dirty.tree = true
@@ -60,6 +64,7 @@ const godSlice = createSlice({
       s.tree = structuredClone(initialState.tree)
       s.css = structuredClone(initialState.css)
       s.workflow = structuredClone(initialState.workflow)
+      s.workflowTrigger = initialState.workflowTrigger
       s.smtp = structuredClone(initialState.smtp)
       s.dirty.tree = false
       s.dirty.css = false
@@ -139,6 +144,7 @@ const godSlice = createSlice({
 
 export const {
   setWorkflow,
+  setWorkflowTrigger,
   setTree,
   setPackages,
   setCss,

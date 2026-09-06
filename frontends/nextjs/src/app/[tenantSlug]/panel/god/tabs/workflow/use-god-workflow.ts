@@ -10,6 +10,7 @@ import type { Workflow } from '@/workflow-editor'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import {
   setWorkflow,
+  setWorkflowTrigger,
   clearDirty,
   type GodState,
 } from '@/store/slices/god-slice'
@@ -31,10 +32,21 @@ export function useGodWorkflow(tenant = 'system') {
   // Published under a tenant id, persisted per browser origin -- see
   // useGodTenant. Derived during render so publish() can never write one
   // tenant's workflow into another's rows.
+  const storedTrigger = useAppSelector(
+    s => (s.god as GodState).workflowTrigger
+  )
   const { foreign } = useGodTenant()
   const workflow = foreign ? initialState.workflow : stored
+  const trigger = foreign ? initialState.workflowTrigger : storedTrigger
   const dirty = foreign ? false : storedDirty
   const [publishing, setPublishing] = useState(false)
+
+  const setTrigger = useCallback(
+    (next: string) => {
+      dispatch(setWorkflowTrigger(next))
+    },
+    [dispatch]
+  )
 
   const save = useCallback(
     (wf: Workflow) => {
@@ -46,20 +58,37 @@ export function useGodWorkflow(tenant = 'system') {
   const publish = useCallback(async (): Promise<boolean> => {
     setPublishing(true)
     try {
+      const row = {
+        id: workflow.id,
+        tenantId: tenant,
+        name: workflow.name,
+        description: workflow.description,
+        // What makes it run. DBAL matches this against "<Entity>.created"
+        // for the tenant on every create.
+        triggerEvent: trigger,
+        isPublished: true,
+      }
       const res = await fetch(`${DBAL}/${tenant}/core/Workflow`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          id: workflow.id,
-          tenantId: tenant,
-          name: workflow.name,
-          description: workflow.description,
-        }),
+        body: JSON.stringify(row),
         signal: AbortSignal.timeout(6000),
       })
-      // 409 means the workflow row is already there; the graph still needs
-      // writing, so only a real failure stops here.
-      if (!res.ok && res.status !== 409) return false
+      // 409 means the row is already there -- from the second publish
+      // onwards, which is most of them. It has to be updated rather than
+      // skipped, or changing what a workflow runs on would never take.
+      if (res.status === 409) {
+        const put = await fetch(
+          `${DBAL}/${tenant}/core/Workflow/${workflow.id}`,
+          {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(row),
+            signal: AbortSignal.timeout(6000),
+          }
+        )
+        if (!put.ok) return false
+      } else if (!res.ok) return false
 
       const wrote = await saveGraph(
         DBAL,
@@ -77,7 +106,7 @@ export function useGodWorkflow(tenant = 'system') {
     } finally {
       setPublishing(false)
     }
-  }, [workflow, tenant, dispatch])
+  }, [workflow, trigger, tenant, dispatch])
 
-  return { workflow, save, dirty, publish, publishing }
+  return { workflow, save, trigger, setTrigger, dirty, publish, publishing }
 }
