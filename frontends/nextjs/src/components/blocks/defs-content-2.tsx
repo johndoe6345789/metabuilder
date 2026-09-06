@@ -28,22 +28,36 @@ export const CONTENT_DEFS_2: BlockDef[] = [
     ),
   },
   {
-    meta: m('list-item', 'List Item', 'list', 'Content', false, {
-      icon: 'notifications',
-    }),
-    render: p => (
-      <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-        <span className="material-symbols-rounded" aria-hidden="true">
-          {propText(p.icon, 'notifications')}
-        </span>
-        <div>
-          <Typography variant="body1">{propText(p.title, 'Title')}</Typography>
-          <Typography variant="body2" color="text.secondary">
-            {propText(p.description, 'Description')}
-          </Typography>
+    // No icon default, and no fallback for either optional part below: a
+    // fallback meant to show the block exists while editing is published
+    // as real content. A price list written as three plain list items came
+    // out with a bell against every line and the word "Description" under
+    // it. The title keeps its placeholder -- an empty item still has to be
+    // visible and selectable in the builder.
+    meta: m('list-item', 'List Item', 'list', 'Content', false, {}),
+    render: p => {
+      const icon = propText(p.icon)
+      const description = propText(p.description)
+      return (
+        <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+          {icon !== '' && (
+            <span className="material-symbols-rounded" aria-hidden="true">
+              {icon}
+            </span>
+          )}
+          <div>
+            <Typography variant="body1">
+              {propText(p.title, 'Title')}
+            </Typography>
+            {description !== '' && (
+              <Typography variant="body2" color="text.secondary">
+                {description}
+              </Typography>
+            )}
+          </div>
         </div>
-      </div>
-    ),
+      )
+    },
   },
   {
     meta: m('m3.chip', 'Chip', 'label', 'Content', false, {}),
