@@ -14,14 +14,21 @@ export interface UserRow {
 const DBAL_URL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
 /**
- * Fetches every user.
+ * Fetches the users of one tenant.
+ *
+ * The tenant used to be hardcoded to `system`, so every community's God
+ * Panel listed the instance's own accounts -- god, supergod, admin and the
+ * demo users -- instead of its members. That is both a disclosure (their
+ * emails and roles, to any founder) and a tab that cannot do its job: a
+ * founder could not see, search or count the people who had actually
+ * signed up to them.
  *
  * Throws with the HTTP status on a refusal, and lets a fetch failure
  * propagate as-is -- the caller reports both as one "could not load"
  * message, but the distinction is preserved for whoever reads the error.
  */
-export async function fetchUsers(): Promise<UserRow[]> {
-  const res = await fetch(`${DBAL_URL}/system/core/User`, {
+export async function fetchUsers(tenant: string): Promise<UserRow[]> {
+  const res = await fetch(`${DBAL_URL}/${tenant}/core/User`, {
     signal: AbortSignal.timeout(8000),
   })
   if (!res.ok) throw new Error(`HTTP ${res.status}`)

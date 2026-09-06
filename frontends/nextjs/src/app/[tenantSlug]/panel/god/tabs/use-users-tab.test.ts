@@ -2,6 +2,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { act, renderHook, waitFor } from '@testing-library/react'
 
 const data = vi.hoisted(() => ({ fetchUsers: vi.fn() }))
+const scope = vi.hoisted(() => ({
+  useCurrentTenantScope: vi.fn(() => ({
+    tenant: 'kestrelbindery',
+    canPickOtherTenant: false,
+  })),
+}))
+vi.mock('./use-current-tenant-scope', () => scope)
 vi.mock('./users-data', async importOriginal => {
   const actual = await importOriginal<Record<string, unknown>>()
   return { ...actual, fetchUsers: data.fetchUsers }
@@ -61,6 +68,15 @@ describe('useUsersTab', () => {
     const { result } = renderHook(() => useUsersTab())
     await waitFor(() => {
       expect(result.current.error).toBe('Failed to load users')
+    })
+  })
+})
+
+describe('tenant scope', () => {
+  it('loads the users of the tenant whose panel this is', async () => {
+    renderHook(() => useUsersTab())
+    await waitFor(() => {
+      expect(data.fetchUsers).toHaveBeenCalledWith('kestrelbindery')
     })
   })
 })

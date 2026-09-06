@@ -2,9 +2,13 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { countByRole, fetchUsers, filterUsers, type UserRow } from './users-data'
+import { useCurrentTenantScope } from './use-current-tenant-scope'
 
 /** The user list's state: what loaded, the search, and the derived views. */
 export function useUsersTab() {
+  // Scoped like every other God Panel tool: a founder is their own
+  // community's god, not an instance-wide admin.
+  const { tenant } = useCurrentTenantScope()
   const [users, setUsers] = useState<UserRow[]>([])
   const [query, setQuery] = useState('')
   const [loading, setLoading] = useState(true)
@@ -12,7 +16,7 @@ export function useUsersTab() {
 
   useEffect(() => {
     let live = true
-    fetchUsers()
+    fetchUsers(tenant)
       .then(rows => {
         if (!live) return
         setUsers(rows)
@@ -27,7 +31,11 @@ export function useUsersTab() {
     return () => {
       live = false
     }
-  }, [])
+    // Re-runs if the tenant ever changes without a remount. `loading` is
+    // not reset here: it starts true, and switching tenant in this app is
+    // always a full page reload through the SSO flow, so the only way to
+    // reach this effect a second time is a remount that resets it anyway.
+  }, [tenant])
 
   return {
     query,

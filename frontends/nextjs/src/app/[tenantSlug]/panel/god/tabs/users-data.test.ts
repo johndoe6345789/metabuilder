@@ -25,7 +25,7 @@ describe('fetchUsers', () => {
         json: async () => ({ data: { data: [user()] } }),
       }))
     )
-    expect(await fetchUsers()).toEqual([user()])
+    expect(await fetchUsers('acme')).toEqual([user()])
   })
 
   it('throws with the status when the request is refused', async () => {
@@ -33,14 +33,14 @@ describe('fetchUsers', () => {
       'fetch',
       vi.fn(async () => ({ ok: false, status: 403 }))
     )
-    await expect(fetchUsers()).rejects.toThrow('HTTP 403')
+    await expect(fetchUsers('acme')).rejects.toThrow('HTTP 403')
   })
 
   it('propagates a network failure', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => {
       throw new Error('ECONNREFUSED')
     }))
-    await expect(fetchUsers()).rejects.toThrow('ECONNREFUSED')
+    await expect(fetchUsers('acme')).rejects.toThrow('ECONNREFUSED')
   })
 })
 
@@ -97,5 +97,31 @@ describe('countByRole', () => {
 
   it('is empty for no users', () => {
     expect(countByRole([])).toEqual({})
+  })
+})
+
+/**
+ * The tenant was hardcoded to `system`, so a founder signed in to their own
+ * community saw the instance's accounts -- god, supergod, admin, the demo
+ * users -- and never their own members. Caught by opening the tab as a
+ * brand-new tenant and finding six strangers in it.
+ */
+describe('which tenant the users come from', () => {
+  afterEach(() => vi.unstubAllGlobals())
+
+  it("asks for the signed-in tenant's users, not the instance's", async () => {
+    const asked: string[] = []
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) => {
+        asked.push(url)
+        return { ok: true, json: async () => ({ data: { data: [] } }) }
+      })
+    )
+
+    await fetchUsers('kestrelbindery')
+
+    expect(asked[0]).toContain('/kestrelbindery/core/User')
+    expect(asked[0]).not.toContain('/system/')
   })
 })
