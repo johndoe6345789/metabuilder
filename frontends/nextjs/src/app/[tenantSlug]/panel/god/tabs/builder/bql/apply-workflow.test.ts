@@ -159,3 +159,29 @@ describe('isWorkflowScript', () => {
     ).toBe(false)
   })
 })
+
+/**
+ * Three workflows all subscribed to FormSubmission.created each claimed
+ * every submission, and which ran came down to database order. A script
+ * says which form its workflow answers.
+ */
+describe('scoping a workflow to one form', () => {
+  it('keeps the form the script named', () => {
+    const { workflow: built } = applyWorkflowBql([
+      workflow('Log a repair booking'),
+      { kind: 'trigger', line: 2, event: 'FormSubmission.created', form: 'book-a-repair' },
+    ])
+
+    expect(built?.formName).toBe('book-a-repair')
+  })
+
+  // Naming no form still means any of them, as it always has.
+  it('leaves the form empty when the script names none', () => {
+    const { workflow: built } = applyWorkflowBql([
+      workflow('W'),
+      trigger('FormSubmission.created'),
+    ])
+
+    expect(built?.formName).toBe('')
+  })
+})

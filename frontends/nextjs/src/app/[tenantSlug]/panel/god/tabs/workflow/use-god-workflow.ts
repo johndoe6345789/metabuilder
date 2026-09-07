@@ -67,6 +67,19 @@ export function useGodWorkflow(tenantOverride?: string) {
     [dispatch, tenant]
   )
 
+  const setFormName = useCallback(
+    (next: string) => {
+      dispatch(
+        patchWorkflow({
+          tenant,
+          id: current.workflow.id,
+          change: { formName: next },
+        })
+      )
+    },
+    [dispatch, tenant, current.workflow.id]
+  )
+
   const setTrigger = useCallback(
     (next: string) => {
       dispatch(
@@ -124,6 +137,9 @@ export function useGodWorkflow(tenantOverride?: string) {
         // for the tenant on every create, and it is also the opt-in that
         // lets a page name this workflow at all.
         triggerEvent: current.trigger,
+        // Which form it answers. Without it every workflow subscribed to
+        // FormSubmission.created claims every form on the tenant.
+        formName: current.formName,
         isPublished: true,
       }
       const res = await fetch(`${DBAL}/${tenant}/core/Workflow`, {
@@ -176,10 +192,12 @@ export function useGodWorkflow(tenantOverride?: string) {
   return {
     workflow: current.workflow,
     trigger: current.trigger,
+    formName: current.formName,
     entries,
     selectedId: current.workflow.id,
     save,
     setTrigger,
+    setFormName,
     add,
     remove,
     select,

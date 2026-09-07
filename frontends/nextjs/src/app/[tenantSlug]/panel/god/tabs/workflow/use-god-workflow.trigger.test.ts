@@ -212,3 +212,37 @@ describe('a publish that is refused', () => {
     expect(result.current.error).toBeNull()
   })
 })
+
+/**
+ * Three workflows all subscribed to FormSubmission.created each claimed
+ * every submission, and which one ran came down to whichever row the
+ * database returned first. A workflow says which form it answers.
+ */
+describe('which form a workflow answers', () => {
+  it('publishes the form the workflow was scoped to', async () => {
+    stubDbal(201)
+    const { result, rerender } = renderHook(() => useGodWorkflow())
+
+    act(() => {
+      result.current.setFormName('book-a-repair')
+    })
+    rerender()
+    await act(async () => {
+      await result.current.publish()
+    })
+
+    expect(sent[0]?.body.formName).toBe('book-a-repair')
+  })
+
+  // Naming no form still means any of them, as it always has.
+  it('publishes an empty form when none was chosen', async () => {
+    stubDbal(201)
+    const { result } = renderHook(() => useGodWorkflow())
+
+    await act(async () => {
+      await result.current.publish()
+    })
+
+    expect(sent[0]?.body.formName).toBe('')
+  })
+})

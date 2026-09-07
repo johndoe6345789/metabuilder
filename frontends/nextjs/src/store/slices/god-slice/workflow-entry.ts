@@ -11,6 +11,13 @@ export interface WorkflowEntry {
   workflow: Workflow
   /** Entity event that runs it, as "<Entity>.created", or empty. */
   trigger: string
+  /**
+   * Which form it answers, when its trigger is a form submission. Empty
+   * means any form -- which is what every workflow meant before this
+   * existed, and why three workflows on one tenant all answered the same
+   * submission and the winner came down to database order.
+   */
+  formName: string
 }
 
 const now = () => new Date().toISOString()
@@ -31,6 +38,7 @@ export function newWorkflowEntry(name: string): WorkflowEntry {
       updatedAt: now(),
     },
     trigger: '',
+    formName: '',
   }
 }
 

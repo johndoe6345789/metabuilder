@@ -21,6 +21,8 @@ export interface BqlWorkflow {
   name: string
   /** "<Entity>.created", or empty for one nothing triggers. */
   trigger: string
+  /** Which form it answers, or empty for any of them. */
+  formName: string
   nodes: ReturnType<typeof makeNode>[]
   /** True when the script asked for it to be published. */
   publish: boolean
@@ -65,6 +67,7 @@ export function applyWorkflowBql(
   const errors: BqlError[] = []
   let name = ''
   let trigger = ''
+  let formName = ''
   let publish = false
   const nodes: ReturnType<typeof makeNode>[] = []
 
@@ -82,6 +85,7 @@ export function applyWorkflowBql(
       name = sentence.name
     } else if (sentence.kind === 'trigger') {
       trigger = sentence.event
+      formName = sentence.form ?? ''
     } else if (sentence.kind === 'step') {
       const step = stepByName(sentence.stepName)
       if (step === undefined) {
@@ -115,5 +119,5 @@ export function applyWorkflowBql(
   }
 
   if (errors.length > 0) return { workflow: null, errors }
-  return { workflow: { name, trigger, nodes, publish }, errors: [] }
+  return { workflow: { name, trigger, formName, nodes, publish }, errors: [] }
 }
