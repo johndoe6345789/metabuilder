@@ -45,7 +45,18 @@ export function WorkflowsTab() {
         </Button>
       </div>
 
-      <WorkflowEditor workflow={workflow} onChange={save} onSave={save} />
+      {/*
+        Keyed by the workflow being edited so React remounts the editor
+        when the picker changes. useWorkflowEditor seeds its state from
+        the prop once, so without this the canvas kept showing the
+        previous workflow -- and every edit landed on that one, silently.
+      */}
+      <WorkflowEditor
+        key={wf.selectedId}
+        workflow={workflow}
+        onChange={save}
+        onSave={save}
+      />
     </>
   )
 }
