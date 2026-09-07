@@ -29,3 +29,12 @@ export type BqlSentence =
    * editor already has loaded.
    */
   | { kind: 'clear'; line: number }
+  /**
+   * The workflow half of the language. A script builds either a page or a
+   * workflow, and these four say so: what it is called, what sets it
+   * going, what it does step by step, and that it is ready.
+   */
+  | { kind: 'workflow'; line: number; name: string }
+  | { kind: 'trigger'; line: number; event: string }
+  | { kind: 'step'; line: number; stepName: string; attrs: BqlAttr[] }
+  | { kind: 'publishWorkflow'; line: number }

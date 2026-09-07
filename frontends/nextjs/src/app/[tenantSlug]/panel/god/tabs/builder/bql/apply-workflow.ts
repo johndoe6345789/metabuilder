@@ -1,0 +1,119 @@
+/**
+ * Turning workflow sentences into a workflow.
+ *
+ * The page half of BQL builds a tree; this builds a graph. Kept apart
+ * from apply.ts because they share only the parser: a script is one or
+ * the other, and mixing the two in one function would mean every reader
+ * working out which half they were in.
+ *
+ * Step names are resolved against the same RUNNABLE_STEPS the palette
+ * offers, so a script can only ask for a step the daemon implements --
+ * the parser deliberately does not know which those are.
+ */
+
+import type { NodeType } from '@/workflow-editor'
+import { RUNNABLE_STEPS } from '../../workflow/runnable-steps'
+import { makeNode, nextStepPosition } from '../../workflow/use-workflow-editor/make-node'
+import type { BqlAttr, BqlSentence } from './types'
+import type { BqlError } from './apply'
+
+export interface BqlWorkflow {
+  name: string
+  /** "<Entity>.created", or empty for one nothing triggers. */
+  trigger: string
+  nodes: ReturnType<typeof makeNode>[]
+  /** True when the script asked for it to be published. */
+  publish: boolean
+}
+
+export interface ApplyWorkflowResult {
+  workflow: BqlWorkflow | null
+  errors: BqlError[]
+}
+
+/** A step by the name the palette shows, ignoring case and spacing. */
+function stepByName(name: string): NodeType | undefined {
+  const wanted = name.trim().toLowerCase().replace(/\s+/g, ' ')
+  return RUNNABLE_STEPS.find(
+    s => s.name.toLowerCase().replace(/\s+/g, ' ') === wanted
+  )
+}
+
+/** A step's parameters, keyed as the daemon expects them. */
+function configFrom(step: NodeType, attrs: BqlAttr[]): Record<string, unknown> {
+  return attrs.reduce<Record<string, unknown>>(
+    (acc, a) => ({ ...acc, [a.key]: a.value }),
+    { ...step.defaultConfig }
+  )
+}
+
+/** True when this script is describing a workflow rather than a page. */
+export function isWorkflowScript(sentences: BqlSentence[]): boolean {
+  return sentences.some(s => s.kind === 'workflow')
+}
+
+/**
+ * Build a workflow from @p sentences.
+ *
+ * Either every line applies or none does, as with the page half: a
+ * half-built workflow published because one step was misspelled is worse
+ * than one that refused and said which line.
+ */
+export function applyWorkflowBql(
+  sentences: BqlSentence[]
+): ApplyWorkflowResult {
+  const errors: BqlError[] = []
+  let name = ''
+  let trigger = ''
+  let publish = false
+  const nodes: ReturnType<typeof makeNode>[] = []
+
+  for (const sentence of sentences) {
+    const line = sentence.line
+    if (sentence.kind === 'workflow') {
+      if (name !== '') {
+        errors.push({
+          line,
+          message: 'A script builds one workflow, and this one already ' +
+            `started "${name}".`,
+        })
+        continue
+      }
+      name = sentence.name
+    } else if (sentence.kind === 'trigger') {
+      trigger = sentence.event
+    } else if (sentence.kind === 'step') {
+      const step = stepByName(sentence.stepName)
+      if (step === undefined) {
+        errors.push({
+          line,
+          message: `No step called "${sentence.stepName}"`,
+        })
+        continue
+      }
+      const node = makeNode(step, nextStepPosition(nodes.length))
+      nodes.push({ ...node, config: configFrom(step, sentence.attrs) })
+    } else if (sentence.kind === 'publishWorkflow') {
+      publish = true
+    } else {
+      // The page half. Saying so beats ignoring it: a script that mixes
+      // the two has a mistake in it somewhere.
+      errors.push({
+        line,
+        message:
+          'This line builds a page, and this script is building a ' +
+          'workflow.',
+      })
+    }
+  }
+
+  if (name === '' && errors.length === 0) {
+    errors.push({
+      line: 1,
+      message: 'Start with: start a new workflow called "..."',
+    })
+  }
+
+  if (errors.length > 0) return { workflow: null, errors }
+  return { workflow: { name, trigger, nodes, publish }, errors: [] }
+}

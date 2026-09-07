@@ -176,6 +176,23 @@ export async function applyBql(
                 ? { ...c, props: { ...c.props, ...cssProps } }
                 : c
             )
+    } else if (
+      sentence.kind === 'workflow' ||
+      sentence.kind === 'trigger' ||
+      sentence.kind === 'step' ||
+      sentence.kind === 'publishWorkflow'
+    ) {
+      // A script builds a page or a workflow, not both. The workflow half
+      // is applied by apply-workflow.ts; reaching one here means a script
+      // mixed the two, which is worth saying rather than ignoring.
+      errors.push({
+        line,
+        message:
+          'This line describes a workflow, and this script is building a ' +
+          'page. Start the script with "start a new workflow called ..." ' +
+          'to build one instead.',
+      })
+      continue
     } else {
       const id = aliasToId.get(sentence.alias)
       if (id === undefined) {
