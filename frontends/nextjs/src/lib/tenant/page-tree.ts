@@ -10,4 +10,4 @@
 export type { TreeNodeShape } from './page-tree/types'
 export { propValueType } from './page-tree/prop-value'
 export { loadTree } from './page-tree/load-tree'
-export { saveTree } from './page-tree/save-tree'
+export { saveTree, deleteTree } from './page-tree/save-tree'

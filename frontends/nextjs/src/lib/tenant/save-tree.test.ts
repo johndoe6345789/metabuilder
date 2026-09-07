@@ -16,7 +16,14 @@ afterEach(() => {
 })
 
 describe('saveTree', () => {
-  it('deletes the old tree before writing the new one', async () => {
+  /**
+   * This used to DELETE the tree id first and rebuild under it, so a
+   * refusal anywhere afterwards left the founder's live page already gone
+   * with nothing to roll back to. The caller now writes beside the live
+   * tree and moves PageConfig.pageTreeId once this has succeeded, so
+   * saveTree must destroy nothing at all.
+   */
+  it('destroys nothing -- it only writes', async () => {
     const calls: { url: string; method: string }[] = []
     vi.stubGlobal(
       'fetch',
@@ -28,9 +35,10 @@ describe('saveTree', () => {
 
     await saveTree(DBAL, 'acme', 'tree_1', 'Home', tree())
 
+    expect(calls.some(c => c.method === 'DELETE')).toBe(false)
     expect(calls[0]).toMatchObject({
-      url: `${DBAL}/acme/core/PageTree/tree_1`,
-      method: 'DELETE',
+      url: `${DBAL}/acme/core/PageTree`,
+      method: 'POST',
     })
   })
 

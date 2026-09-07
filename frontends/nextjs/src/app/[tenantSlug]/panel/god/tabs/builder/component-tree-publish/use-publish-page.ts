@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import type { useAppDispatch } from '@/store/hooks'
-import { saveTree } from '@/lib/tenant/page-tree'
+import { deleteTree, saveTree } from '@/lib/tenant/page-tree'
 import { describeFailure } from '@/lib/tenant/page-tree/write-failure'
 import { clearDirty } from '@/store/slices/god-slice'
 import { snapshot } from '@/lib/persist/versions'
@@ -61,8 +61,14 @@ export function usePublishPage(
                 'setting that component back and clearing the tree.'
         )
 
-        const treeId = `tree_${id}`
         const stamp = Date.now()
+        // The new tree is written beside the live one under an id nothing
+        // is using, and PageConfig.pageTreeId is moved to it only once it
+        // is whole. Publishing used to delete the live tree first and
+        // rebuild it under the same id, so a refusal anywhere after that
+        // took the founder's site down with nothing to roll back to.
+        const liveTreeId = owner?.pageTreeId ?? null
+        const treeId = `tree_${id}_${stamp}`
         const failure = await saveTree(
           DBAL,
           tenant,
@@ -80,7 +86,15 @@ export function usePublishPage(
         if (!res.ok) {
           const reason = await describeFailure('PageConfig', res)
           setError(reason)
+          // The pointer never moved, so the old page is still serving.
+          // Clear up what we wrote rather than leaving it orphaned.
+          await deleteTree(DBAL, tenant, treeId)
           return reason
+        }
+
+        // Live now. What it replaced is unreachable and can go.
+        if (liveTreeId !== null && liveTreeId !== treeId) {
+          await deleteTree(DBAL, tenant, liveTreeId)
         }
 
         await snapshot('god.componentTree', treeToPublish, 'Published page')

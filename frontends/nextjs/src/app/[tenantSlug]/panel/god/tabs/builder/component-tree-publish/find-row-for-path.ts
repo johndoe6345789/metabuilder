@@ -11,6 +11,9 @@ export interface PathOwner {
   id: string
   packageId?: string
   component?: string
+  /** The tree this row currently renders -- what a visitor sees until a
+   *  publish moves the pointer, and what can be cleared up afterwards. */
+  pageTreeId?: string
 }
 
 /** The single row that owns this path, if there is one. `path` is unique. */
@@ -36,6 +39,8 @@ export async function findRowForPath(
       id: String(row.id),
       packageId: typeof row.packageId === 'string' ? row.packageId : undefined,
       component: typeof row.component === 'string' ? row.component : undefined,
+      pageTreeId:
+        typeof row.pageTreeId === 'string' ? row.pageTreeId : undefined,
     }
   } catch {
     // Fall through to a plain create rather than blocking on a failed lookup.

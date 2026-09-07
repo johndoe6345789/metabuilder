@@ -1,6 +1,10 @@
 /** Provisioning the pages a freshly installed package ships with. */
 
-import { saveTree, type TreeNodeShape } from '@/lib/tenant/page-tree'
+import {
+  deleteTree,
+  saveTree,
+  type TreeNodeShape,
+} from '@/lib/tenant/page-tree'
 import {
   defaultComponentTree,
   type PRODUCT_PACKAGES,
@@ -35,6 +39,10 @@ async function createDefaultPage(
   route: { path: string; title: string }
 ): Promise<Response> {
   const treeId = treeIdFor(pkg, route.path)
+  // saveTree no longer clears the id it is given -- the publish path needs
+  // it to leave the live tree alone. Here the id is deterministic and
+  // nothing is serving from it yet, so re-installing still replaces.
+  await deleteTree(DBAL, tenant, treeId)
   const treeFailure = await saveTree(
     DBAL,
     tenant,

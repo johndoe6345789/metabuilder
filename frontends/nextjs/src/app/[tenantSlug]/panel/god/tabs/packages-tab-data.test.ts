@@ -2,6 +2,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const tree = vi.hoisted(() => ({
   saveTree: vi.fn(async () => null),
+  // saveTree no longer clears the id it is handed, so a package's starter
+  // page asks for that explicitly before writing.
+  deleteTree: vi.fn(async () => undefined),
 }))
 vi.mock('@/lib/tenant/page-tree', () => tree)
 
