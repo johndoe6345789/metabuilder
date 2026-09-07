@@ -185,3 +185,68 @@ describe('scoping a workflow to one form', () => {
     expect(built?.formName).toBe('')
   })
 })
+
+/**
+ * A step's parameters are not all scalars: Save a row takes a nested
+ * `data` object naming the columns, and a step handing a value to the
+ * next one names it under `outputs`. Written flat, the daemon would look
+ * for `data` and find a key literally called "data.name".
+ */
+describe('a parameter inside a parameter', () => {
+  it('nests a dotted key', () => {
+    const { workflow: built, errors } = applyWorkflowBql([
+      workflow('W'),
+      step('Save a row', [
+        { key: 'entity', value: 'Booking' },
+        { key: 'data.name', value: '${event.data.name}' },
+        { key: 'data.status', value: 'new' },
+      ]),
+    ])
+
+    expect(errors).toEqual([])
+    expect(built?.nodes[0]?.config).toMatchObject({
+      entity: 'Booking',
+      data: { name: '${event.data.name}', status: 'new' },
+    })
+  })
+
+  it('nests an output name', () => {
+    const { workflow: built } = applyWorkflowBql([
+      workflow('W'),
+      step('Make an id', [{ key: 'outputs.id', value: 'new_id' }]),
+    ])
+
+    expect(built?.nodes[0]?.config).toMatchObject({
+      outputs: { id: 'new_id' },
+    })
+  })
+
+  it('leaves an undotted key alone', () => {
+    const { workflow: built } = applyWorkflowBql([
+      workflow('W'),
+      step('Write a note to the log', [{ key: 'message', value: 'Booked' }]),
+    ])
+
+    expect(built?.nodes[0]?.config).toMatchObject({ message: 'Booked' })
+  })
+
+  // The step's default for `data` is {}, but for `entity` it is '' -- a
+  // string cannot hold a field, so it is replaced rather than written to.
+  it('replaces a scalar default when a field is written inside it', () => {
+    const { workflow: built } = applyWorkflowBql([
+      workflow('W'),
+      step('Write a note to the log', [{ key: 'message.deep', value: 'x' }]),
+    ])
+
+    expect(built?.nodes[0]?.config).toMatchObject({ message: { deep: 'x' } })
+  })
+
+  it('goes as deep as the key says', () => {
+    const { workflow: built } = applyWorkflowBql([
+      workflow('W'),
+      step('Save a row', [{ key: 'data.a.b', value: 'deep' }]),
+    ])
+
+    expect(built?.nodes[0]?.config).toMatchObject({ data: { a: { b: 'deep' } } })
+  })
+})

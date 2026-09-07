@@ -41,12 +41,43 @@ function stepByName(name: string): NodeType | undefined {
   )
 }
 
+/**
+ * Put @p value at @p path, creating the objects along the way.
+ *
+ * `data.name` means a column called name inside the step's data, not a
+ * parameter literally called "data.name" -- which is what a flat write
+ * would produce, and the daemon would look for `data` and find nothing.
+ */
+function setPath(
+  into: Record<string, unknown>,
+  path: string[],
+  value: string
+): void {
+  // .at() is `string | undefined`; destructuring a string[] is not,
+  // unless noUncheckedIndexedAccess is on -- and it is not everywhere here.
+  const head = path.at(0)
+  const rest = path.slice(1)
+  if (head === undefined) return
+  if (rest.length === 0) {
+    into[head] = value
+    return
+  }
+  const existing = into[head]
+  // Anything already there that is not an object is replaced rather than
+  // written into: a default of '' cannot hold a field.
+  const nested =
+    typeof existing === 'object' && existing !== null && !Array.isArray(existing)
+      ? { ...(existing as Record<string, unknown>) }
+      : {}
+  into[head] = nested
+  setPath(nested, rest, value)
+}
+
 /** A step's parameters, keyed as the daemon expects them. */
 function configFrom(step: NodeType, attrs: BqlAttr[]): Record<string, unknown> {
-  return attrs.reduce<Record<string, unknown>>(
-    (acc, a) => ({ ...acc, [a.key]: a.value }),
-    { ...step.defaultConfig }
-  )
+  const config: Record<string, unknown> = { ...step.defaultConfig }
+  for (const attr of attrs) setPath(config, attr.key.split('.'), attr.value)
+  return config
 }
 
 /** True when this script is describing a workflow rather than a page. */
