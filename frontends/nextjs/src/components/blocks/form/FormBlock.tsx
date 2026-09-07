@@ -1,12 +1,10 @@
 'use client'
 
-import { useCallback, useMemo, useState, type ReactNode } from 'react'
-import { usePathname } from 'next/navigation'
+import type { ReactNode } from 'react'
 
-import { tenantFromPathname } from '../site-tenant'
 import { withOwnClass, type BlockAttrs } from '../common-attrs'
 import { FormContext } from './form-context'
-import { submitForm } from './submit-form'
+import { useFormSubmit } from './use-form-submit'
 import s from './form.module.scss'
 
 interface FormBlockProps {
@@ -21,7 +19,7 @@ interface FormBlockProps {
  * Submitting writes one FormSubmission row, and that write is the whole
  * trigger: DBAL fires <tenant>.FormSubmission.created and runs whatever
  * workflow the tenant published for it. So what happens next is decided in
- * the God Panel, not here.
+ * the God Panel, not here -- see useFormSubmit for what comes back.
  */
 export function FormBlock({
   formName,
@@ -29,43 +27,10 @@ export function FormBlock({
   children,
   ...attrs
 }: FormBlockProps & BlockAttrs) {
-  const pathname = usePathname()
-  const [values, setValues] = useState<Record<string, string>>({})
-  const [sending, setSending] = useState(false)
-  const [sent, setSent] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  const set = useCallback((name: string, value: string) => {
-    setValues(v => ({ ...v, [name]: value }))
-  }, [])
-
-  const scope = useMemo(
-    () => ({ values, set, sending }),
-    [values, set, sending]
-  )
-
-  const onSubmit = useCallback(
-    (e: React.FormEvent) => {
-      e.preventDefault()
-      if (sending) return
-      setSending(true)
-      setError(null)
-      void submitForm({
-        tenant: tenantFromPathname(pathname),
-        formName,
-        path: pathname,
-        values,
-      })
-        .then(result => {
-          if (result.ok) setSent(true)
-          else setError(result.reason)
-        })
-        .finally(() => {
-          setSending(false)
-        })
-    },
-    [sending, pathname, formName, values]
-  )
+  // Destructured rather than kept as one object: the ref has to be a
+  // plain binding here, not a property read during render.
+  const { anchor, scope, sent, error, message, onSubmit } =
+    useFormSubmit(formName)
 
   // Submitting changes what the form says, not what it is. It used to
   // return a bare <p> instead of the <form>, which made the block a
@@ -75,10 +40,14 @@ export function FormBlock({
   // contents: there is nothing for the identity to follow.
   return (
     <FormContext.Provider value={scope}>
-      <form {...withOwnClass(s.form, attrs)} onSubmit={onSubmit}>
+      <form
+        ref={anchor}
+        {...withOwnClass(s.form, attrs)}
+        onSubmit={onSubmit}
+      >
         {sent ? (
           <p className={s.sent} role="status">
-            {successMessage}
+            {message ?? successMessage}
           </p>
         ) : (
           <>
