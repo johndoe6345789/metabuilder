@@ -5,8 +5,8 @@
  *
  * A component tree is `{ type, props, children }`. This module is the single
  * source of truth for which `type`s exist, how they render, and the palette
- * metadata — used by BOTH the god-panel builder (preview) and production pages
- * (UIPageRenderer), so a tree renders identically wherever it lives.
+ * metadata — used by BOTH the god-panel builder (preview) and production
+ * pages (UIPageRenderer), so a tree renders identically wherever it lives.
  *
  * Heavy blocks (MetaBuilder self-hosting tools, webchat) are lazy-loaded so
  * tenant pages only load them when needed.
@@ -14,7 +14,7 @@
 import { cloneElement, isValidElement } from 'react'
 import type { ReactElement, ReactNode } from 'react'
 import { WorkflowClick } from './form/WorkflowClick'
-import { commonAttrs } from './common-attrs'
+import { commonAttrs, withOwnClass } from './common-attrs'
 import { DEFS } from './block-defs'
 import type { BlockDef, PaletteItem, TreeNode } from './block-types'
 
@@ -60,8 +60,8 @@ function withWorkflowClick(
   props: Record<string, unknown>,
   el: ReactNode
 ): ReactNode {
-  const workflow =
-    typeof props.onClickWorkflow === 'string' ? props.onClickWorkflow.trim() : ''
+  const named = props.onClickWorkflow
+  const workflow = typeof named === 'string' ? named.trim() : ''
   if (workflow === '') return el
   return <WorkflowClick workflow={workflow}>{el}</WorkflowClick>
 }
@@ -89,16 +89,12 @@ function withAttrs(props: Record<string, unknown>, el: ReactNode): ReactNode {
   // Nothing set, or the block returned a fragment/string that cannot carry
   // attributes -- render it exactly as before.
   if (Object.keys(attrs).length === 0 || !isValidElement(el)) return el
-  const existing = (el.props as { className?: unknown }).className
-  const added = attrs.className
-  if (
-    typeof existing === 'string' &&
-    existing !== '' &&
-    typeof added === 'string'
-  ) {
-    // The block set its own class; the author's is additional, not a override.
-    attrs.className = `${existing} ${added}`
-  }
-  return cloneElement(el as ReactElement<Record<string, unknown>>, attrs)
+  // The block set its own class; the author's is additional, not an
+  // override. A block that forwards BlockAttrs itself applies the same rule
+  // with the same helper -- see BlockButton.
+  const own = (el.props as { className?: unknown }).className
+  const merged =
+    typeof own === 'string' && own !== '' ? withOwnClass(own, attrs) : attrs
+  return cloneElement(el as ReactElement<Record<string, unknown>>, merged)
 }
 

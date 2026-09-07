@@ -2,20 +2,25 @@
 
 import { Button, TextField } from '@/m3'
 import { useWebchat } from './use-webchat'
+import {
+  withOwnClass,
+  type BlockAttrs,
+} from '@/components/blocks/common-attrs'
 import s from './Webchat.module.scss'
 
 /** IRC-style webchat — an installable package for a user's Level-2 space. */
 export function Webchat({
   sender = 'you',
   channel = '#general',
+  ...attrs
 }: {
   sender?: string
   channel?: string
-}) {
+} & BlockAttrs) {
   const chat = useWebchat(sender)
 
   return (
-    <div className={s.root}>
+    <div {...withOwnClass(s.root, attrs)}>
       <div className={s.header}>
         <span className={s.hash}>#</span>
         <span className={s.channel}>{channel.replace(/^#/, '')}</span>

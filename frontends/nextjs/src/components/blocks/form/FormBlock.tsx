@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState, type ReactNode } from 'react'
 import { usePathname } from 'next/navigation'
 
 import { tenantFromPathname } from '../site-tenant'
+import { withOwnClass, type BlockAttrs } from '../common-attrs'
 import { FormContext } from './form-context'
 import { submitForm } from './submit-form'
 import s from './form.module.scss'
@@ -26,7 +27,8 @@ export function FormBlock({
   formName,
   successMessage,
   children,
-}: FormBlockProps) {
+  ...attrs
+}: FormBlockProps & BlockAttrs) {
   const pathname = usePathname()
   const [values, setValues] = useState<Record<string, string>>({})
   const [sending, setSending] = useState(false)
@@ -65,22 +67,28 @@ export function FormBlock({
     [sending, pathname, formName, values]
   )
 
-  if (sent) {
-    return (
-      <p className={s.sent} role="status">
-        {successMessage}
-      </p>
-    )
-  }
-
+  // Submitting changes what the form says, not what it is. It used to
+  // return a bare <p> instead of the <form>, which made the block a
+  // different element in its second state -- so the author's id and class
+  // had to either follow it there or be lost on submit, and CSS written for
+  // the block stopped applying the moment somebody used it. One root, two
+  // contents: there is nothing for the identity to follow.
   return (
     <FormContext.Provider value={scope}>
-      <form className={s.form} onSubmit={onSubmit}>
-        {children}
-        {error !== null && (
-          <p className={s.error} role="alert">
-            {error}
+      <form {...withOwnClass(s.form, attrs)} onSubmit={onSubmit}>
+        {sent ? (
+          <p className={s.sent} role="status">
+            {successMessage}
           </p>
+        ) : (
+          <>
+            {children}
+            {error !== null && (
+              <p className={s.error} role="alert">
+                {error}
+              </p>
+            )}
+          </>
         )}
       </form>
     </FormContext.Provider>

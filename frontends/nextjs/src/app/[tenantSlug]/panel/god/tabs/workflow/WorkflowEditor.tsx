@@ -12,6 +12,7 @@ import { filterNodeTypes } from './filter-node-types'
 import { RUNNABLE_CATEGORIES } from './runnable-steps'
 import { WorkflowCanvas } from './WorkflowCanvas'
 import { AddStep } from './AddStep'
+import { withOwnClass, type BlockAttrs } from '@/components/blocks/common-attrs'
 import s from './WorkflowEditor.module.scss'
 
 interface Props {
@@ -20,6 +21,9 @@ interface Props {
   onSave?: (wf: Workflow) => void
   onRun?: (wf: Workflow) => void
   onBack?: () => void
+  /** Identity, class and aria set on the block, when this editor was placed
+   *  in a page tree rather than opened from its own God Panel tab. */
+  attrs?: BlockAttrs
 }
 
 export function WorkflowEditor({
@@ -28,6 +32,7 @@ export function WorkflowEditor({
   onSave,
   onRun,
   onBack,
+  attrs = {},
 }: Props) {
   const { canvasRef, ...ed } = useWorkflowEditor(workflow, onChange)
   const pal = useNodePalette()
@@ -35,7 +40,7 @@ export function WorkflowEditor({
     ed.selectedNode !== null ? ed.getNodeType(ed.selectedNode.type) : undefined
 
   return (
-    <div className={s.editor}>
+    <div {...withOwnClass(s.editor, attrs)}>
       <EditorToolbar
         workflowName={ed.workflow.name}
         onNameChange={ed.setName}

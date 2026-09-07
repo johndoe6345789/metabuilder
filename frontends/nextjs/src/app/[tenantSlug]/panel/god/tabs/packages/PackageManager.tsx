@@ -6,9 +6,18 @@ import { usePackageManagerUi } from './use-package-manager-ui'
 import { usePackageRegistry } from './use-package-registry'
 import { PackageGrid } from './manager/PackageGrid'
 import { PackageManagerToolbar } from './manager/PackageManagerToolbar'
+import { withOwnClass, type BlockAttrs } from '@/components/blocks/common-attrs'
 import s from './PackageManager.module.scss'
 
-export function PackageManager({ tenant }: { tenant: string }) {
+export function PackageManager({
+  tenant,
+  attrs = {},
+}: {
+  tenant: string
+  /** Identity, class and aria set on the block, when this manager was
+   *  placed in a page tree rather than opened from its own tab. */
+  attrs?: BlockAttrs
+}) {
   const reg = usePackageRegistry()
   const ui = usePackageManagerUi()
   const actions = usePackageManagerActions(reg, ui, tenant)
@@ -16,7 +25,7 @@ export function PackageManager({ tenant }: { tenant: string }) {
   const visible = reg.packages.filter(p => p.archived === ui.showArchived)
 
   return (
-    <div className={s.root}>
+    <div {...withOwnClass(s.root, attrs)}>
       <PackageManagerToolbar
         newName={ui.newName}
         showArchived={ui.showArchived}

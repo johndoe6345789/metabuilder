@@ -9,10 +9,8 @@ import {
 import {
   propText,
 } from './block-coerce'
-import {
-  m,
-  renderButton,
-} from './defs-shared'
+import { m } from './defs-shared'
+import { renderButton } from './BlockButton'
 import { FormTextField } from './form/FormTextField'
 import { FormBlock } from './form/FormBlock'
 
