@@ -39,6 +39,9 @@ export async function listEntity(
 
     return { data: rows, total: total ?? rows.length }
   } catch {
-    return { data: [] }
+    // Still an empty list, so readers that only want rows are unaffected --
+    // but flagged, so a guard can tell "nothing is there" from "I could
+    // not look". See ListResult.failed.
+    return { data: [], failed: true }
   }
 }

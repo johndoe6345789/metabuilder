@@ -22,10 +22,26 @@ export function slugify(value: string): string {
     .slice(0, MAX_SLUG_LENGTH)
 }
 
-/** The complaint about the community name, or null if it is fine. */
+/**
+ * The complaint about the community name, or null if it is fine.
+ *
+ * The slug is what is checked, not the raw string. This counted raw
+ * characters while slugify strips everything outside [a-z0-9-], so a name
+ * made only of punctuation or of non-Latin script passed, slugged to '',
+ * and was sent as `tenantName: ''`. register() reads an empty tenantName
+ * as "no community was named": it skips the already-taken check entirely
+ * and creates the account with role 'god' inside the shared 'system'
+ * tenant -- a founder who meant to start their own community handed the
+ * God Panel over everyone else's.
+ */
 export function communityNameError(community: string): string | null {
   if (community.trim().length < MIN_COMMUNITY_LENGTH) {
     return 'Community name must be at least 2 characters.'
+  }
+  // Hyphens survive slugging but cannot carry a name on their own, so they
+  // do not count towards the minimum.
+  if (slugify(community).replaceAll('-', '').length < MIN_COMMUNITY_LENGTH) {
+    return 'Community name needs at least 2 letters or numbers.'
   }
   return null
 }

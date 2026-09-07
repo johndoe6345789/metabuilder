@@ -40,6 +40,30 @@ describe('communityNameError', () => {
     )
   })
 
+  /**
+   * The length rule counted the raw string while slugify strips everything
+   * outside [a-z0-9-]. So a name like these passed validation, slugged to
+   * '', and buildRegisterPayload sent tenantName: ''. register() reads an
+   * empty tenantName as "no community was named", skips the already-taken
+   * check entirely, and creates the account with role 'god' inside the
+   * shared 'system' tenant -- a founder who thought they were starting
+   * their own community, given the God Panel over everyone else's.
+   */
+  it.each(['日本語', '!!', '---', '   —   '])(
+    'refuses %p, which produces no usable address',
+    community => {
+      expect(communityNameError(community)).not.toBeNull()
+    }
+  )
+
+  it('says what is wrong rather than repeating the length rule', () => {
+    expect(communityNameError('日本語')).toContain('letters')
+  })
+
+  it('still accepts a name that only partly survives slugging', () => {
+    expect(communityNameError('Harbour Cycle Works!')).toBeNull()
+  })
+
   it('trims before counting', () => {
     expect(communityNameError(' a ')).not.toBeNull()
     expect(communityNameError(' ab ')).toBeNull()

@@ -1,6 +1,20 @@
 export interface ListResult<T = Record<string, unknown>> {
   data: T[]
   total?: number
+  /**
+   * True when the list could not be read at all, as opposed to having
+   * read it and found nothing.
+   *
+   * listEntity swallows its errors into an empty list on purpose -- a page
+   * list going briefly blank during an outage beats a crash. But a caller
+   * using a list as a *guard* needs the two apart: registration's "is this
+   * community name taken" check read a DBAL timeout as "nobody has it"
+   * and created the account as a god inside somebody else's tenant.
+   *
+   * Absent or false means the answer is real. Anything deciding whether
+   * to permit something must refuse when this is true.
+   */
+  failed?: boolean
 }
 
 export interface ListOptions {

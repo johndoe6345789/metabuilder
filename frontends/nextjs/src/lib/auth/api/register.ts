@@ -80,6 +80,24 @@ async function createDbalCredential(
   }
 }
 
+/**
+ * The answer when a uniqueness check could not read its data.
+ *
+ * listEntity swallows any error into `{ data: [] }`, so a DBAL timeout was
+ * indistinguishable from "nobody has that name" -- and what follows a
+ * passed check here is an account created with role 'god' inside the very
+ * tenant being checked. A guard that cannot see has to refuse.
+ *
+ * The wording says nothing about which check it was or whether the name
+ * exists: this is a public form, and an anonymous caller should learn only
+ * that it did not go through.
+ */
+const UNVERIFIED: RegisterResult = {
+  success: false,
+  user: null,
+  error: 'Could not complete signup just now. Please try again.',
+}
+
 export async function register(
   username: string,
   email: string,
@@ -111,6 +129,7 @@ export async function register(
     // founder, so it has no founding-collision to guard against.
     if (foundingNewTenant) {
       const existingMembers = await users.list({})
+      if (existingMembers.failed === true) return UNVERIFIED
       if (existingMembers.data.length > 0) {
         return {
           success: false,
@@ -127,6 +146,7 @@ export async function register(
       filter: { username },
     })
 
+    if (existingByUsername.failed === true) return UNVERIFIED
     if (existingByUsername.data.length > 0) {
       return {
         success: false,
@@ -140,6 +160,7 @@ export async function register(
       filter: { email },
     })
 
+    if (existingByEmail.failed === true) return UNVERIFIED
     if (existingByEmail.data.length > 0) {
       return {
         success: false,

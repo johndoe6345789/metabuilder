@@ -283,3 +283,105 @@ describe('register', () => {
     })
   })
 })
+
+
+/**
+ * Every uniqueness check here is a guard reading a list, and listEntity
+ * answers `{ data: [] }` on any error -- a DBAL timeout was indistinguish-
+ * able from "nobody has that name". So a blip during signup made an
+ * existing community name read as free, and the account below is then
+ * created with role 'god' and the *existing* founder's tenantId: a full
+ * God Panel takeover of somebody else's site, from the public signup form.
+ *
+ * A guard that cannot read its data has to refuse, not permit.
+ */
+describe('signing up while the data layer is unreachable', () => {
+  const unreadable = { data: [], failed: true }
+
+  const opsWhere = (overrides: Record<string, unknown>[]) => {
+    const list = vi.fn()
+    overrides.forEach(o => list.mockResolvedValueOnce(o))
+    list.mockResolvedValue({ data: [] })
+    return { list, create: vi.fn() }
+  }
+
+  it('refuses when it cannot tell if the community name is taken', async () => {
+    const ops = opsWhere([unreadable])
+    client.db.entity.mockReturnValue(ops)
+    const calls = stubDbal()
+
+    const result = await register(
+      'alice',
+      'alice@example.com',
+      'pw',
+      'harbour_cycle_works'
+    )
+
+    expect(result.success).toBe(false)
+    // No account, and above all no Credential, inside a tenant it could
+    // not confirm was free.
+    expect(calls).toHaveLength(0)
+  })
+
+  it('refuses when it cannot tell if the username is taken', async () => {
+    client.db.entity.mockReturnValue(opsWhere([{ data: [] }, unreadable]))
+    const calls = stubDbal()
+
+    const result = await register(
+      'alice',
+      'alice@example.com',
+      'pw',
+      'harbour_cycle_works'
+    )
+
+    expect(result.success).toBe(false)
+    expect(calls).toHaveLength(0)
+  })
+
+  it('refuses when it cannot tell if the email is taken', async () => {
+    client.db.entity.mockReturnValue(
+      opsWhere([{ data: [] }, { data: [] }, unreadable])
+    )
+    const calls = stubDbal()
+
+    const result = await register(
+      'alice',
+      'alice@example.com',
+      'pw',
+      'harbour_cycle_works'
+    )
+
+    expect(result.success).toBe(false)
+    expect(calls).toHaveLength(0)
+  })
+
+  // The message must not tell an anonymous caller whether the name exists.
+  it('does not report it as the name being taken', async () => {
+    client.db.entity.mockReturnValue(opsWhere([unreadable]))
+    stubDbal()
+
+    const result = await register(
+      'alice',
+      'alice@example.com',
+      'pw',
+      'harbour_cycle_works'
+    )
+
+    expect(result.error).not.toContain('already taken')
+  })
+
+  it('still creates the account when the checks come back clean', async () => {
+    client.db.entity.mockReturnValue(opsWhere([]))
+    const calls = stubDbal()
+
+    const result = await register(
+      'alice',
+      'alice@example.com',
+      'pw',
+      'harbour_cycle_works'
+    )
+
+    expect(result.success).toBe(true)
+    expect(calls.length).toBeGreaterThan(0)
+  })
+})
