@@ -36,13 +36,13 @@ beforeEach(() => {
 
 describe('useAdminData', () => {
   it('starts out loading with nothing to show', () => {
-    const { result } = renderHook(() => useAdminData())
+    const { result } = renderHook(() => useAdminData('acme'))
     expect(result.current.status).toBe('loading')
     expect(result.current.users).toEqual([])
   })
 
   it('loads the accounts and the comment count', async () => {
-    const { result } = renderHook(() => useAdminData())
+    const { result } = renderHook(() => useAdminData('acme'))
     await waitFor(() => {
       expect(result.current.status).toBe('ready')
     })
@@ -51,7 +51,7 @@ describe('useAdminData', () => {
   })
 
   it('derives the headline counts from what it loaded', async () => {
-    const { result } = renderHook(() => useAdminData())
+    const { result } = renderHook(() => useAdminData('acme'))
     await waitFor(() => {
       expect(result.current.status).toBe('ready')
     })
@@ -62,7 +62,7 @@ describe('useAdminData', () => {
   // panel used to invent a `demo` and an `admin` account in that case.
   it('reports unreachable rather than inventing accounts', async () => {
     api.fetchUsers.mockResolvedValue(null)
-    const { result } = renderHook(() => useAdminData())
+    const { result } = renderHook(() => useAdminData('acme'))
     await waitFor(() => {
       expect(result.current.status).toBe('unreachable')
     })
@@ -71,7 +71,7 @@ describe('useAdminData', () => {
 
   it('treats an uncountable comment table as zero, not as a failure', async () => {
     api.fetchCommentCount.mockResolvedValue(null)
-    const { result } = renderHook(() => useAdminData())
+    const { result } = renderHook(() => useAdminData('acme'))
     await waitFor(() => {
       expect(result.current.status).toBe('ready')
     })
@@ -79,20 +79,20 @@ describe('useAdminData', () => {
   })
 
   it('removes an account only once the write succeeded', async () => {
-    const { result } = renderHook(() => useAdminData())
+    const { result } = renderHook(() => useAdminData('acme'))
     await waitFor(() => {
       expect(result.current.users).toHaveLength(2)
     })
     await act(async () => {
       await result.current.removeUser('1')
     })
-    expect(api.deleteUser).toHaveBeenCalledWith('1')
+    expect(api.deleteUser).toHaveBeenCalledWith('acme', '1')
     expect(result.current.users.map(u => u.id)).toEqual(['2'])
   })
 
   it('keeps the row when the delete is refused', async () => {
     api.deleteUser.mockResolvedValue(false)
-    const { result } = renderHook(() => useAdminData())
+    const { result } = renderHook(() => useAdminData('acme'))
     await waitFor(() => {
       expect(result.current.users).toHaveLength(2)
     })

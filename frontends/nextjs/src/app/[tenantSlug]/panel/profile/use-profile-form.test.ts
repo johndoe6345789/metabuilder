@@ -27,7 +27,12 @@ const stub = (ok: boolean): Call[] => {
   return calls
 }
 
-const options = { userId: 'u1', email: 'a@b.c', bio: 'hello' }
+const options = {
+  userId: 'u1',
+  email: 'a@b.c',
+  bio: 'hello',
+  tenant: 'acme',
+}
 
 beforeEach(() => vi.clearAllMocks())
 afterEach(() => vi.unstubAllGlobals())
@@ -80,7 +85,11 @@ describe('useProfileForm', () => {
       await result.current.save()
     })
     expect(calls[0]?.method).toBe('PUT')
-    expect(calls[0]?.url).toMatch(/\/system\/core\/User\/u1$/)
+    // Registration writes the row at /{tenant}/core/User, so this used to
+    // PUT to /system/core/User and reach nothing for anyone outside the
+    // system tenant -- a profile edit that reported success and saved
+    // nowhere.
+    expect(calls[0]?.url).toMatch(/\/acme\/core\/User\/u1$/)
     expect(calls[0]?.credentials).toBe('include')
     expect(JSON.parse(calls[0]?.body ?? '{}')).toEqual({
       email: 'new@b.c',

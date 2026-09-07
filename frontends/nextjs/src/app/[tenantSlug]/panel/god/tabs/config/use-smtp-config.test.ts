@@ -108,13 +108,30 @@ describe('publish', () => {
     expect(store.cleared).toEqual(['smtp'])
   })
 
-  it('defaults to the system tenant', async () => {
+  // The Config tab calls publish() with no argument, and this used to
+  // default to 'system' -- so a founder's mail host, username and password
+  // were written into a tenant they do not own, under the fixed id
+  // smtp_system, and their own tenant never got SMTP settings at all.
+  it('publishes under the signed-in tenant when given none', async () => {
     stub(true)
     const { result } = renderHook(() => useSmtpConfig())
     await act(async () => {
       await result.current.publish()
     })
-    expect(vi.mocked(fetch).mock.calls[0]?.[0]).toContain('/system/core/SmtpConfig')
+    expect(vi.mocked(fetch).mock.calls[0]?.[0]).toContain(
+      '/acme/core/SmtpConfig'
+    )
+  })
+
+  it('stamps the row with that tenant too, not just the URL', async () => {
+    stub(true)
+    const { result } = renderHook(() => useSmtpConfig())
+    await act(async () => {
+      await result.current.publish()
+    })
+    const body = String(vi.mocked(fetch).mock.calls[0]?.[1]?.body)
+    expect(body).toContain('"tenantId":"acme"')
+    expect(body).toContain('"id":"smtp_acme"')
   })
 
   it('reports failure and leaves dirty alone when the write is refused', async () => {

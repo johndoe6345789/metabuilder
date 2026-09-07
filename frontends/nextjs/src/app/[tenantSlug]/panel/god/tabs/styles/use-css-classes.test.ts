@@ -233,7 +233,13 @@ describe('useCssClasses', () => {
       expect(ok).toBe(false)
     })
 
-    it('defaults to the system tenant', async () => {
+    // The Styles tab calls publish() with no argument, and this used to
+    // default to 'system'. So a founder's classes were written to a tenant
+    // they do not own, while TenantStyleSheet loads the visited tenant's --
+    // the published page rendered unstyled and the shared tenant's sheet
+    // was overwritten. BQL passes a tenant explicitly and was unaffected,
+    // which is why only the tab was wrong.
+    it('publishes under the signed-in tenant when given none', async () => {
       const { result } = renderHook(() => useCssClasses())
 
       await act(async () => {
@@ -242,7 +248,21 @@ describe('useCssClasses', () => {
 
       expect(styleApi.saveStyleClasses).toHaveBeenCalledWith(
         expect.anything(),
-        'system',
+        'acme',
+        expect.anything()
+      )
+    })
+
+    it('still lets a caller name the tenant, as BQL does', async () => {
+      const { result } = renderHook(() => useCssClasses())
+
+      await act(async () => {
+        await result.current.publish('other')
+      })
+
+      expect(styleApi.saveStyleClasses).toHaveBeenCalledWith(
+        expect.anything(),
+        'other',
         expect.anything()
       )
     })

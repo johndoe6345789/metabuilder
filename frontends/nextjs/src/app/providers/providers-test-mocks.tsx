@@ -27,5 +27,8 @@ vi.mock('@/m3', () => m3Mock)
 vi.mock('@/components/RetryableErrorBoundary', () => errorBoundary)
 vi.mock('@/components/theme-editor/apply-tenant-theme', () => themeMock)
 vi.mock('@/store/store', () => ({ store: {}, persistor: {} }))
+// The theme applied is the visited tenant's, so these tests need to be
+// somewhere: outside a tenant there is deliberately no branding to apply.
+vi.mock('next/navigation', () => ({ usePathname: () => '/acme' }))
 
 export { persistGateMock, m3Mock, themeMock }

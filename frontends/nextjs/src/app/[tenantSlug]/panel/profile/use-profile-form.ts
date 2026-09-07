@@ -22,6 +22,12 @@ export interface ProfileFormOptions {
   userId: string | null
   email: string
   bio: string
+  /**
+   * Whose community this profile belongs to. Registration writes the row
+   * at /{tenant}/core/User, so the save used to PUT to /system/core/User
+   * and reach nothing retrievable for anyone outside the system tenant.
+   */
+  tenant: string
 }
 
 /**
@@ -52,7 +58,7 @@ export function useProfileForm(options: ProfileFormOptions): ProfileFormState {
     if (options.userId === null) return
     try {
       const res = await fetch(
-        `${DBAL_URL}/system/core/User/${options.userId}`,
+        `${DBAL_URL}/${options.tenant}/core/User/${options.userId}`,
         {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },

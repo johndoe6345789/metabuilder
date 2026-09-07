@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { deleteUser, fetchCommentCount, fetchUsers } from './admin-api'
-import { USERS_URL } from './admin-types'
+import { usersUrl } from './admin-types'
 
 interface Call {
   url: string
@@ -36,45 +36,45 @@ afterEach(() => vi.unstubAllGlobals())
 describe('fetchUsers', () => {
   it('reads rows out of the real DBAL envelope', async () => {
     stub(() => ({ ok: true, body: envelope([{ id: '1' }, { id: '2' }]) }))
-    expect(await fetchUsers()).toHaveLength(2)
+    expect(await fetchUsers('acme')).toHaveLength(2)
   })
 
   it('sends the session cookie', async () => {
     const calls = stub(() => ({ ok: true, body: envelope([]) }))
-    await fetchUsers()
+    await fetchUsers('acme')
     expect(calls[0]?.credentials).toBe('include')
-    expect(calls[0]?.url).toBe(USERS_URL)
+    expect(calls[0]?.url).toBe(usersUrl('acme'))
   })
 
   // An empty table and an unreachable data layer are different answers,
   // and the panel says something different for each.
   it('is an empty array for an empty table', async () => {
     stub(() => ({ ok: true, body: envelope([]) }))
-    expect(await fetchUsers()).toEqual([])
+    expect(await fetchUsers('acme')).toEqual([])
   })
 
   it('is null when the request is refused', async () => {
     stub(() => ({ ok: false }))
-    expect(await fetchUsers()).toBeNull()
+    expect(await fetchUsers('acme')).toBeNull()
   })
 
   it('is null when the data layer is unreachable', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => {
       throw new Error('ECONNREFUSED')
     }))
-    expect(await fetchUsers()).toBeNull()
+    expect(await fetchUsers('acme')).toBeNull()
   })
 })
 
 describe('fetchCommentCount', () => {
   it('counts the rows it was given', async () => {
     stub(() => ({ ok: true, body: envelope([{}, {}, {}]) }))
-    expect(await fetchCommentCount()).toBe(3)
+    expect(await fetchCommentCount('acme')).toBe(3)
   })
 
   it('is null when the count cannot be established', async () => {
     stub(() => ({ ok: false }))
-    expect(await fetchCommentCount()).toBeNull()
+    expect(await fetchCommentCount('acme')).toBeNull()
   })
 })
 
@@ -83,21 +83,21 @@ describe('deleteUser', () => {
   // while the operator watched it disappear.
   it('sends a DELETE to the account\'s own URL', async () => {
     const calls = stub(() => ({ ok: true }))
-    expect(await deleteUser('u1')).toBe(true)
+    expect(await deleteUser('acme', 'u1')).toBe(true)
     expect(calls[0]?.method).toBe('DELETE')
-    expect(calls[0]?.url).toBe(`${USERS_URL}/u1`)
+    expect(calls[0]?.url).toBe(`${usersUrl('acme')}/u1`)
     expect(calls[0]?.credentials).toBe('include')
   })
 
   it('reports false when the data layer refuses', async () => {
     stub(() => ({ ok: false }))
-    expect(await deleteUser('u1')).toBe(false)
+    expect(await deleteUser('acme', 'u1')).toBe(false)
   })
 
   it('reports false rather than throwing when it cannot connect', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => {
       throw new Error('ECONNREFUSED')
     }))
-    expect(await deleteUser('u1')).toBe(false)
+    expect(await deleteUser('acme', 'u1')).toBe(false)
   })
 })

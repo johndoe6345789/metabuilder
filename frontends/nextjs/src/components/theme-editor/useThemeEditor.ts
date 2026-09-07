@@ -13,11 +13,16 @@ export type { ThemeColors, ThemeEditorState }
 
 const STORAGE_KEY = 'pg-theme-overrides'
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
-// Single-tenant local deployment for now, same default every other God Panel
-// publish flow in this pass uses (ComponentTreeTab, PackagesTab).
-const TENANT = 'system'
 
-export function useThemeEditor(): ThemeEditorState {
+/**
+ * The Theme tab, editing one tenant's brand colours.
+ *
+ * `tenant` used to be the constant 'system'. A founder's colours were
+ * saved into a tenant they do not own, and the app reads a visitor's
+ * theme from the tenant whose site they are on -- so what the founder set
+ * here was never what anyone saw on their published pages.
+ */
+export function useThemeEditor(tenant: string): ThemeEditorState {
   const [activeTab, setActiveTab] = useState<'light' | 'dark'>('light')
   const [lightColors, setLightColors] = useState<ThemeColors>(LIGHT_DEFAULTS)
   const [darkColors, setDarkColors] = useState<ThemeColors>(DARK_DEFAULTS)
@@ -28,7 +33,7 @@ export function useThemeEditor(): ThemeEditorState {
   // built-in defaults.
   useEffect(() => {
     let cancelled = false
-    resolveTenantTheme()
+    resolveTenantTheme(tenant)
       .then(theme => {
         if (cancelled) return
         setLightColors(theme.light)
@@ -43,7 +48,7 @@ export function useThemeEditor(): ThemeEditorState {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [tenant])
 
   const applyColors = useCallback((colors: ThemeColors) => {
     applyColorsToRoot(colors)
@@ -65,13 +70,13 @@ export function useThemeEditor(): ThemeEditorState {
     // Best-effort: a failed DBAL write still leaves the instant-apply
     // localStorage copy above intact for this browser.
     const payload = {
-      id: TENANT,
-      tenantId: TENANT,
+      id: tenant,
+      tenantId: tenant,
       lightColors: JSON.stringify(light),
       darkColors: JSON.stringify(dark),
       updatedAt: Date.now(),
     }
-    fetch(`${DBAL}/${TENANT}/core/TenantTheme`, {
+    fetch(`${DBAL}/${tenant}/core/TenantTheme`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
@@ -79,7 +84,7 @@ export function useThemeEditor(): ThemeEditorState {
     })
       .then(res => {
         if (res.status === 409) {
-          return fetch(`${DBAL}/${TENANT}/core/TenantTheme/${TENANT}`, {
+          return fetch(`${DBAL}/${tenant}/core/TenantTheme/${tenant}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
@@ -91,7 +96,7 @@ export function useThemeEditor(): ThemeEditorState {
       .catch(() => {
         // Non-fatal — see comment above.
       })
-  }, [])
+  }, [tenant])
 
   const updateColor = useCallback(
     (tab: 'light' | 'dark', key: string, val: string) => {

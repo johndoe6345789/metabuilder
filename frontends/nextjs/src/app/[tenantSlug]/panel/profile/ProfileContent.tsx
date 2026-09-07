@@ -2,6 +2,7 @@
 
 import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
 import { getRoleLevel } from '@/lib/constants'
+import { normalizeTenantId } from '@/lib/tenant/workspace-paths'
 import { getLevelColor } from '@/lib/packages/navigation'
 import { ProfileFields } from './ProfileFields'
 import { ProfileHero } from './ProfileHero'
@@ -19,6 +20,9 @@ export function ProfileContent() {
     userId: user?.id ?? null,
     email: summary.email,
     bio: user?.bio ?? '',
+    // The account's own community, not the URL's: a supergod looking at
+    // another community's panel still edits their own profile.
+    tenant: normalizeTenantId(user?.tenantId ?? undefined),
   })
 
   return (

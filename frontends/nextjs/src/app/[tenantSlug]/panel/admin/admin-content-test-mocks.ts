@@ -3,6 +3,11 @@
 // forces AdminContent's own tests to be split across several files.
 import { createElement } from 'react'
 import { vi } from 'vitest'
+
+// AdminContent resolves the community it administers from the route.
+vi.mock('next/navigation', () => ({
+  useParams: () => ({ tenantSlug: 'acme' }),
+}))
 import type { UserRecord, EntityStat } from './admin-types'
 import type { AdminData } from './use-admin-data'
 

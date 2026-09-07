@@ -27,8 +27,14 @@ export function useCssClasses() {
    * into their own data. Derived during render, not in an effect, so no
    * consumer ever reads the other tenant's classes: BQL applies them to a
    * page and publish() writes them under this tenant's id.
+   *
+   * That last part was the claim and not the behaviour: publish() defaulted
+   * its tenant to 'system', and the Styles tab calls it with no argument.
+   * So a founder's classes were written to a tenant they do not own while
+   * TenantStyleSheet loaded the visited tenant's -- their published page
+   * rendered unstyled, and the shared tenant's sheet was overwritten.
    */
-  const { foreign } = useGodTenant()
+  const { tenant: own, foreign } = useGodTenant()
   // The same value resetTenantOwned() writes, so the render before that
   // effect runs shows what the render after it will.
   const classes = foreign ? SEED_CSS : stored
@@ -122,7 +128,7 @@ export function useCssClasses() {
    * Omitted, it publishes what the Styles tab is showing.
    */
   const publish = useCallback(
-    async (tenant = 'system', these?: CssClass[]): Promise<boolean> => {
+    async (tenant = own, these?: CssClass[]): Promise<boolean> => {
       setPublishing(true)
       try {
         // Rows, not a JSON blob: StyleClass.classes was dropped when the
@@ -138,7 +144,7 @@ export function useCssClasses() {
         setPublishing(false)
       }
     },
-    [classes, dispatch]
+    [classes, dispatch, own]
   )
 
   return {

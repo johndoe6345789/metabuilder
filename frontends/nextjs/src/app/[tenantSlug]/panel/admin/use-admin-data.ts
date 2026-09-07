@@ -21,14 +21,17 @@ export interface AdminData {
  * `demo` and `admin` -- which is the worst possible fallback for a screen
  * whose whole job is to tell an operator who really has an account.
  */
-export function useAdminData(): AdminData {
+export function useAdminData(tenant: string): AdminData {
   const [users, setUsers] = useState<UserRecord[]>([])
   const [commentCount, setCommentCount] = useState(0)
   const [status, setStatus] = useState<AdminStatus>('loading')
 
   useEffect(() => {
     let live = true
-    void Promise.all([fetchUsers(), fetchCommentCount()]).then(
+    void Promise.all([
+      fetchUsers(tenant),
+      fetchCommentCount(tenant),
+    ]).then(
       ([rows, comments]) => {
         if (!live) return
         setUsers(rows ?? [])
@@ -39,13 +42,16 @@ export function useAdminData(): AdminData {
     return () => {
       live = false
     }
-  }, [])
+  }, [tenant])
 
-  const removeUser = useCallback(async (id: string): Promise<boolean> => {
-    const ok = await deleteUser(id)
-    if (ok) setUsers(prev => prev.filter(u => u.id !== id))
-    return ok
-  }, [])
+  const removeUser = useCallback(
+    async (id: string): Promise<boolean> => {
+      const ok = await deleteUser(tenant, id)
+      if (ok) setUsers(prev => prev.filter(u => u.id !== id))
+      return ok
+    },
+    [tenant]
+  )
 
   return {
     users,

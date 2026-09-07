@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 
+vi.mock('next/navigation', () => ({
+  useParams: () => ({ tenantSlug: 'acme' }),
+}))
 vi.mock('@/components/layout/LevelGate', () => ({
   LevelGate: ({
     minLevel,

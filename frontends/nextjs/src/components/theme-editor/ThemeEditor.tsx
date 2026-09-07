@@ -6,7 +6,7 @@ import { ThemePreview } from './ThemePreview'
 import { useThemeEditor } from './useThemeEditor'
 import s from './ThemeEditor.module.scss'
 
-export function ThemeEditor() {
+export function ThemeEditor({ tenant }: { tenant: string }) {
   const {
     lightColors,
     darkColors,
@@ -16,7 +16,7 @@ export function ThemeEditor() {
     applyColors,
     resetColors,
     saveColors,
-  } = useThemeEditor()
+  } = useThemeEditor(tenant)
 
   const currentColors = activeTab === 'light' ? lightColors : darkColors
 

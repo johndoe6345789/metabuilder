@@ -7,8 +7,14 @@ const DBAL_URL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
  * rather than its filename -- this panel used to request `core/user`,
  * which matches no route, so every load fell through to the catch.
  */
-export const USERS_URL = `${DBAL_URL}/system/core/User`
-export const COMMENTS_URL = `${DBAL_URL}/system/pastebin/ProfileComment`
+/** A tenant's users. Registration writes them at /{tenant}/core/User, so
+ *  the fixed /system/ path this used to be reached another community's
+ *  rows -- or none at all. */
+export const usersUrl = (tenant: string): string =>
+  `${DBAL_URL}/${tenant}/core/User`
+/** A tenant's profile comments, for the same reason. */
+export const commentsUrl = (tenant: string): string =>
+  `${DBAL_URL}/${tenant}/pastebin/ProfileComment`
 
 export interface UserRecord {
   id: string

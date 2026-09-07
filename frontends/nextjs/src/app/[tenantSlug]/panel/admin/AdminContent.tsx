@@ -8,12 +8,18 @@ import { ConfirmDeleteUser } from './ConfirmDeleteUser'
 import { StatsGrid } from './StatsGrid'
 import { UsersTable } from './UsersTable'
 import { matchesSearch, type UserRecord } from './admin-types'
+import { useParams } from 'next/navigation'
+import { normalizeTenantId } from '@/lib/tenant/workspace-paths'
 import { useAdminData } from './use-admin-data'
 import s from './page.module.scss'
 
 /** Django-style data management: who has an account, and how many rows. */
 export function AdminContent() {
-  const data = useAdminData()
+  // Whose community this administers. Read here rather than passed in
+  // because this is also registered as a zero-prop page component, and it
+  // used to read and delete from the shared 'system' tenant regardless.
+  const params = useParams<{ tenantSlug?: string }>()
+  const data = useAdminData(normalizeTenantId(params.tenantSlug))
   const [activeTab, setActiveTab] = useState(0)
   const [search, setSearch] = useState('')
   const [pending, setPending] = useState<UserRecord | null>(null)

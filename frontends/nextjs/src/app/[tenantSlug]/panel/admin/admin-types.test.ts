@@ -2,10 +2,10 @@ import { describe, expect, it } from 'vitest'
 
 import {
   buildStats,
-  COMMENTS_URL,
+  commentsUrl,
   countElevated,
   matchesSearch,
-  USERS_URL,
+  usersUrl,
   type UserRecord,
 } from './admin-types'
 
@@ -23,11 +23,19 @@ describe('entity URLs', () => {
   // from the filename -- this panel used to request `core/user`, which
   // matches no route at all, so every load fell through to the fallback.
   it('addresses the User entity in PascalCase', () => {
-    expect(USERS_URL).toMatch(/\/system\/core\/User$/)
+    expect(usersUrl('acme')).toMatch(/\/acme\/core\/User$/)
   })
 
   it('addresses ProfileComment under the pastebin package', () => {
-    expect(COMMENTS_URL).toMatch(/\/system\/pastebin\/ProfileComment$/)
+    expect(commentsUrl('acme')).toMatch(/\/acme\/pastebin\/ProfileComment$/)
+  })
+
+  // Registration writes users at /{tenant}/core/User, so the fixed
+  // /system/ path these used to carry read another community's rows --
+  // and the delete below wrote to them.
+  it('addresses the community it was asked about, not "system"', () => {
+    expect(usersUrl('harbour_cycle_works')).toContain('/harbour_cycle_works/')
+    expect(usersUrl('harbour_cycle_works')).not.toContain('/system/')
   })
 })
 

@@ -29,8 +29,13 @@ export function useSmtpConfig() {
    * slice. Without this, a founder signing in after someone else in the
    * same browser was shown that person's SMTP host, username and password.
    * Derived during render so it is never handed out, not even once.
+   *
+   * The publish side had the mirror of that bug: its tenant defaulted to
+   * 'system' and the Config tab calls it with no argument, so a founder's
+   * mail host, username and password were written into a tenant they do
+   * not own -- and their own tenant never got SMTP settings at all.
    */
-  const { foreign } = useGodTenant()
+  const { tenant: own, foreign } = useGodTenant()
   const config = foreign ? initialState.smtp : stored
   const dirty = foreign ? false : storedDirty
   const [publishing, setPublishing] = useState(false)
@@ -43,7 +48,7 @@ export function useSmtpConfig() {
   )
 
   const publish = useCallback(
-    async (tenant = 'system'): Promise<boolean> => {
+    async (tenant = own): Promise<boolean> => {
       setPublishing(true)
       try {
         const res = await fetch(`${DBAL}/${tenant}/core/SmtpConfig`, {
@@ -65,7 +70,7 @@ export function useSmtpConfig() {
         setPublishing(false)
       }
     },
-    [config, dispatch]
+    [config, dispatch, own]
   )
 
   return { config, set, dirty, publish, publishing }

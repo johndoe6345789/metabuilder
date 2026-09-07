@@ -6,9 +6,6 @@ import {
 import type { ThemeColors } from './theme-defaults'
 
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
-// Single-tenant local deployment for now, same default every other God Panel
-// publish flow in this pass uses (ComponentTreeTab, PackagesTab).
-const TENANT = 'system'
 const STORAGE_KEY = 'pg-theme-overrides'
 
 export interface ResolvedTenantTheme {
@@ -43,10 +40,17 @@ function fromLocalStorage(): ResolvedTenantTheme | null {
  * values to populate the editor UI) and Providers (which just applies
  * them app-wide on every page load, not only while the God Panel's Theme
  * tab happens to be mounted).
+ *
+ * The tenant is an argument rather than the constant 'system' it used to
+ * be. A founder's brand colours were written to a tenant they do not own
+ * and read back from that same one, so what a visitor to their site saw
+ * was whatever the shared tenant had last been set to -- never their own.
  */
-export async function resolveTenantTheme(): Promise<ResolvedTenantTheme> {
+export async function resolveTenantTheme(
+  tenant: string
+): Promise<ResolvedTenantTheme> {
   try {
-    const res = await fetch(`${DBAL}/${TENANT}/core/TenantTheme/${TENANT}`, {
+    const res = await fetch(`${DBAL}/${tenant}/core/TenantTheme/${tenant}`, {
       signal: AbortSignal.timeout(6000),
     })
     if (res.ok) {
