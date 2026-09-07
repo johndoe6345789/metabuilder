@@ -1,62 +1,80 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { render } from '@testing-library/react'
 
-const nav = vi.hoisted(() => ({
-  useParams: vi.fn(),
-  useRouter: vi.fn(),
+const tenantMod = vi.hoisted(() => ({ fetchTenantPage: vi.fn() }))
+vi.mock('@/lib/tenant/fetch-tenant-page', () => tenantMod)
+
+const access = vi.hoisted(() => ({ mayViewPage: vi.fn() }))
+vi.mock('@/lib/tenant/page-access', () => access)
+
+vi.mock('@/components/ui-page-renderer/UIPageRenderer', () => ({
+  UIPageRenderer: ({ layout }: { layout: unknown }) => (
+    <div data-testid="rendered">{JSON.stringify(layout)}</div>
+  ),
 }))
-vi.mock('next/navigation', () => nav)
-
-vi.mock('@/components/workspace/WorkspacePageSlot', () => ({
-  WorkspacePageSlot: (props: {
-    tenant: string
-    path: string
-    children: React.ReactNode
-  }) => (
-    <div data-testid="slot">
-      <span data-testid="slot-tenant">{props.tenant}</span>
-      <span data-testid="slot-path">{props.path}</span>
-      {props.children}
-    </div>
+vi.mock('./TenantHomeFallback', () => ({
+  TenantHomeFallback: ({ tenant }: { tenant: string }) => (
+    <div data-testid="fallback">{tenant}</div>
   ),
 }))
 
 import TenantHomePage from './page'
 
+const props = (tenantSlug?: string) => ({
+  params: Promise.resolve({ tenantSlug }),
+})
+
+const published = {
+  isActive: true,
+  title: 'Harbour Cycle Works',
+  componentTree: { id: 'home' },
+  level: 0,
+}
+
+beforeEach(() => {
+  vi.clearAllMocks()
+  access.mayViewPage.mockResolvedValue(true)
+  tenantMod.fetchTenantPage.mockResolvedValue(null)
+})
+
+/**
+ * The one URL a founder hands out. It renders on the server like every
+ * other published route, so a crawler and a link preview get the page
+ * rather than an empty document.
+ */
 describe('TenantHomePage', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
+  it('renders the published tree on the server', async () => {
+    tenantMod.fetchTenantPage.mockResolvedValue(published)
+    const { container } = render(await TenantHomePage(props('acme')))
+    expect(container.textContent).toContain('home')
   })
 
-  it('normalizes the tenant slug from the URL params into the slot', () => {
-    nav.useParams.mockReturnValue({ tenantSlug: 'acme' })
-    nav.useRouter.mockReturnValue({ replace: vi.fn() })
-    render(<TenantHomePage />)
-    expect(screen.getByTestId('slot-tenant').textContent).toBe('acme')
-    expect(screen.getByTestId('slot-path').textContent).toBe('/')
+  it('asks for the home path of the tenant in the URL', async () => {
+    await TenantHomePage(props('acme'))
+    expect(tenantMod.fetchTenantPage).toHaveBeenCalledWith('acme', '/')
   })
 
-  it('falls back to the default tenant id when tenantSlug is missing', () => {
-    nav.useParams.mockReturnValue({})
-    nav.useRouter.mockReturnValue({ replace: vi.fn() })
-    render(<TenantHomePage />)
-    expect(screen.getByTestId('slot-tenant').textContent).toBe('system')
+  it('normalizes a slug containing a slash', async () => {
+    await TenantHomePage(props('acme/sub'))
+    expect(tenantMod.fetchTenantPage).toHaveBeenCalledWith('acme-sub', '/')
   })
 
-  it('sends a signed-in visitor to that tenant panel on mount', () => {
-    const replace = vi.fn()
-    nav.useParams.mockReturnValue({ tenantSlug: 'acme' })
-    nav.useRouter.mockReturnValue({ replace })
-    render(<TenantHomePage />)
-    expect(replace).toHaveBeenCalledWith('/acme/panel')
+  it('falls back to the default tenant when the slug is missing', async () => {
+    await TenantHomePage(props())
+    expect(tenantMod.fetchTenantPage).toHaveBeenCalledWith('system', '/')
   })
 
-  it('routes a slug containing a slash through normalization first', () => {
-    const replace = vi.fn()
-    nav.useParams.mockReturnValue({ tenantSlug: 'acme/sub' })
-    nav.useRouter.mockReturnValue({ replace })
-    render(<TenantHomePage />)
-    expect(screen.getByTestId('slot-tenant').textContent).toBe('acme-sub')
-    expect(replace).toHaveBeenCalledWith('/acme-sub/panel')
+  it('hands over to the client slot when nothing is published', async () => {
+    const { container } = render(await TenantHomePage(props('acme')))
+    expect(container.textContent).toContain('acme')
+  })
+
+  // Server-rendering must not become a way around the gate: the client slot
+  // applies LevelGate, so a restricted page still says so.
+  it('does not server-render a page this visitor may not see', async () => {
+    tenantMod.fetchTenantPage.mockResolvedValue({ ...published, level: 4 })
+    access.mayViewPage.mockResolvedValue(false)
+    const { container } = render(await TenantHomePage(props('acme')))
+    expect(container.textContent).not.toContain('home')
   })
 })

@@ -1,43 +1,52 @@
-'use client'
-
-import { useEffect } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import { WorkspacePageSlot } from '@/components/workspace/WorkspacePageSlot'
-import {
-  normalizeTenantId,
-  tenantPanelPath,
-} from '@/lib/tenant/workspace-paths'
+import { UIPageRenderer } from '@/components/ui-page-renderer/UIPageRenderer'
+import { fetchTenantPage } from '@/lib/tenant/fetch-tenant-page'
+import { mayViewPage } from '@/lib/tenant/page-access'
+import { normalizeTenantId } from '@/lib/tenant/workspace-paths'
+import type { JSONComponent } from '@/lib/packages/json/types'
+import { TenantHomeFallback } from './TenantHomeFallback'
 
 /**
  * /{tenant} — the tenant's published home page.
  *
- * Deliberately outside the panel: this is a page someone built and published,
- * so it renders on its own, without the app bar or sidebar. Those belong to
- * the builder, not to what the builder produced. The chrome lives under
- * /{tenant}/panel.
+ * Deliberately outside the panel: this is a page someone built and
+ * published, so it renders on its own, without the app bar or sidebar.
+ * Those belong to the builder, not to what the builder produced.
  *
- * With nothing published for "/", there is no page to show a visitor, so a
- * signed-in user is sent to the panel and everyone else sees nothing.
+ * A server component, like every other published route. It was a client one
+ * because this URL began life as the signed-in user's *workspace* and was
+ * later repurposed as their public page, and client rendering had two costs
+ * that only matter for something public: the server sent an empty document,
+ * so a crawler and a link preview saw nothing; and the page could carry no
+ * metadata at all, so the one URL a founder actually hands out reported
+ * itself as "MetaBuilder - Data-Driven Application Platform".
  */
-export default function TenantHomePage() {
-  const params = useParams<{ tenantSlug?: string }>()
-  const router = useRouter()
-  const tenant = normalizeTenantId(params.tenantSlug)
+interface TenantHomeProps {
+  params: Promise<{ tenantSlug?: string }>
+}
 
-  return (
-    <WorkspacePageSlot tenant={tenant} path="/">
-      <NoHomePage
-        onGoToPanel={() => {
-          router.replace(tenantPanelPath(tenant))
-        }}
+export default async function TenantHomePage({ params }: TenantHomeProps) {
+  const { tenantSlug } = await params
+  const tenant = normalizeTenantId(tenantSlug)
+  const page = await fetchTenantPage(tenant, '/')
+
+  if (
+    page !== null &&
+    page.isActive &&
+    page.componentTree !== null &&
+    page.componentTree !== undefined &&
+    (await mayViewPage(page))
+  ) {
+    return (
+      <UIPageRenderer
+        layout={page.componentTree as JSONComponent}
+        actions={{}}
       />
-    </WorkspacePageSlot>
-  )
+    )
+  }
+
+  // Nothing published, or nothing this visitor may see. The client slot
+  // applies the same LevelGate the rest of the app does.
+  return <TenantHomeFallback tenant={tenant} />
 }
 
-function NoHomePage({ onGoToPanel }: { onGoToPanel: () => void }) {
-  useEffect(() => {
-    onGoToPanel()
-  }, [onGoToPanel])
-  return null
-}
+export { generateMetadata } from './metadata'
