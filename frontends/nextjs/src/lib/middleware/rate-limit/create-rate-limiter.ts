@@ -1,6 +1,6 @@
 import type { NextRequest } from 'next/server'
 import { getGlobalStore } from './store'
-import { getClientIp } from './client-ip'
+import { rateLimitKey } from './bucket-key'
 
 export interface RateLimitConfig {
   /** Number of requests allowed */
@@ -39,9 +39,16 @@ function tooManyRequestsResponse(windowMs: number): Response {
  * }
  * ```
  */
-export function createRateLimiter(config: RateLimitConfig) {
+export function createRateLimiter(
+  config: RateLimitConfig,
+  /** Which limiter this is. Part of the store key, because otherwise all
+   *  six increment the same entry and share each other's counts and reset
+   *  times -- see bucket-key.ts. */
+  endpoint = 'default'
+) {
   const store = getGlobalStore()
-  const keyGenerator = config.keyGenerator ?? getClientIp
+  const keyGenerator =
+    config.keyGenerator ?? ((req: NextRequest) => rateLimitKey(endpoint, req))
 
   return function checkRateLimit(request: NextRequest): Response | null {
     const key = keyGenerator(request)

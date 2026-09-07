@@ -7,6 +7,6 @@ type Limiter = ReturnType<typeof createRateLimiter>
 export const rateLimiters = Object.fromEntries(
   Object.entries(RATE_LIMIT_CONFIGS).map(([endpoint, config]) => [
     endpoint,
-    createRateLimiter(config),
+    createRateLimiter(config, endpoint),
   ])
 ) as Record<RateLimitEndpoint, Limiter>

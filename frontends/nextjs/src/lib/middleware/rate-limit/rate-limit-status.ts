@@ -1,6 +1,6 @@
 import type { NextRequest } from 'next/server'
 import { getGlobalStore } from './store'
-import { getClientIp } from './client-ip'
+import { rateLimitKey } from './bucket-key'
 import { RATE_LIMIT_CONFIGS, type RateLimitEndpoint } from './configs'
 
 export interface RateLimitStatus {
@@ -16,7 +16,9 @@ export function getRateLimitStatus(
   request: NextRequest,
   endpointType: RateLimitEndpoint
 ): RateLimitStatus {
-  const key = getClientIp(request)
+  // The same key the limiter increments: reading a different one
+  // reported a bucket nothing was counting into.
+  const key = rateLimitKey(endpointType, request)
   const current = getGlobalStore().get(key)
   const limit = RATE_LIMIT_CONFIGS[endpointType].limit
 

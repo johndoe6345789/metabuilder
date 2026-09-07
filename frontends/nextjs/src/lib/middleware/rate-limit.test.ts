@@ -5,6 +5,8 @@ import {
   getRateLimitStatus,
   resetRateLimit,
 } from '@/lib/middleware/rate-limit'
+import { RATE_LIMIT_CONFIGS } from './rate-limit/configs'
+import { rateLimitKey } from './rate-limit/bucket-key'
 
 const keys: string[] = []
 const request = (key: string) => {
@@ -106,9 +108,19 @@ describe('getRateLimitStatus', () => {
     expect(status.remaining).toBe(50)
   })
 
+  /**
+   * A request identified the way the real limiters identify one -- by the
+   * address the proxy set, not one the caller sent.
+   */
+  const caller = (ip: string) =>
+    ({ headers: new Headers({ 'x-real-ip': ip }) }) as never
+
+  const realLimiter = (endpoint: 'mutation' | 'bootstrap') =>
+    createRateLimiter(RATE_LIMIT_CONFIGS[endpoint], endpoint)
+
   it('counts requests already made against the remaining allowance', () => {
-    const check = limiter(10)
-    const req = request('status-c')
+    const req = caller('status-c')
+    const check = realLimiter('mutation')
     check(req)
     check(req)
 
@@ -116,15 +128,30 @@ describe('getRateLimitStatus', () => {
 
     expect(status.current).toBe(2)
     expect(status.remaining).toBe(48)
+    resetRateLimit(rateLimitKey('mutation', req))
+  })
+
+  // The counts used to run together in one bucket: fifty mixed calls
+  // exhausted mutation's allowance through list's traffic, and an hour-
+  // long window touched first pinned everything open for an hour.
+  it('does not spend one endpoint’s allowance on another’s traffic', () => {
+    const req = caller('status-e')
+    const check = realLimiter('mutation')
+    check(req)
+    check(req)
+
+    expect(getRateLimitStatus(req, 'bootstrap').current).toBe(0)
+    resetRateLimit(rateLimitKey('mutation', req))
   })
 
   it('never reports a negative remaining', () => {
     // bootstrap allows 1; two requests must floor at zero, not go to -1.
-    const check = limiter(5)
-    const req = request('status-d')
+    const req = caller('status-d')
+    const check = realLimiter('bootstrap')
     check(req)
     check(req)
 
     expect(getRateLimitStatus(req, 'bootstrap').remaining).toBe(0)
+    resetRateLimit(rateLimitKey('bootstrap', req))
   })
 })
