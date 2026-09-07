@@ -3,7 +3,6 @@
 import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
 import { WorkspacePageSlot } from '@/components/workspace/WorkspacePageSlot'
 import { getRoleLevel } from '@/lib/constants'
-import { tenantGodPanelPath } from '@/lib/tenant/workspace-paths'
 import { LevelsGrid } from './LevelsGrid'
 import { ProfileCard } from './ProfileCard'
 import { QuickActions } from './QuickActions'
@@ -20,7 +19,7 @@ import s from './page.module.scss'
 export function DashboardContent() {
   const user = useAuthContext().user
   const userLevel = getRoleLevel(user?.role ?? 'user')
-  const actions = quickActionsFor(userLevel, tenantGodPanelPath(user?.tenantId))
+  const actions = quickActionsFor(userLevel, user?.tenantId)
 
   return (
     <div className={s.root}>
