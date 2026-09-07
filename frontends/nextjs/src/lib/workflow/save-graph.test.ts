@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { saveGraph, type GraphNode } from '@/lib/workflow/workflow-graph'
+import type { WorkflowNode } from '@/workflow-editor'
+import { saveGraph } from '@/lib/workflow/workflow-graph'
 
 const DBAL = 'http://dbal.test'
 
@@ -34,13 +35,18 @@ afterEach(() => {
   vi.unstubAllGlobals()
 })
 
-const node = (id: string): GraphNode => ({
+// The editor's own node, which is what saveGraph is handed. This used to
+// build the DBAL row shape instead -- `parameters` and a [x, y] tuple --
+// so the test agreed with the declared type and neither agreed with the
+// only caller.
+const node = (id: string): WorkflowNode => ({
   id,
   name: id,
   type: 'trigger',
-  typeVersion: 1,
-  position: [0, 0],
-  parameters: {},
+  position: { x: 0, y: 0 },
+  config: {},
+  inputs: ['main'],
+  outputs: ['main'],
 })
 
 describe('saveGraph', () => {

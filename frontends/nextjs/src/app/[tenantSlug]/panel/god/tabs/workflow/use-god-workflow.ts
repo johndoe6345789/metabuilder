@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { saveGraph, type GraphNode } from '@/lib/workflow/workflow-graph'
+import { saveGraph } from '@/lib/workflow/workflow-graph'
 import type { Workflow } from '@/workflow-editor'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import {
@@ -167,7 +167,7 @@ export function useGodWorkflow(tenantOverride?: string) {
           DBAL,
           tenant,
           wf.id,
-          wf.nodes as unknown as GraphNode[],
+          wf.nodes,
           wf.connections
         )
         if (!wrote) return 'The workflow was saved but its steps were not.'
