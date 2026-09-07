@@ -11,12 +11,11 @@
  * applies "most of the way".
  */
 import type { PropField } from '@/components/blocks/block-props'
-import { propSchema } from '@/components/blocks/block-props'
+import { paletteItemByName } from '../builder-registry'
+import { fieldsFor } from '../primary-field'
 import type { CssClass } from '../../styles/use-css-classes'
 import type { TreeNode } from '../builder-registry'
-import { paletteItem, paletteItemByName } from '../builder-registry'
 import { insertChild, mapTree, nid } from '../component-tree-utils'
-import { inferred } from '../auto-props-infer'
 import { primaryField } from '../primary-field'
 import { coerceValue, resolveField } from './fields'
 import { parseBqlViaDbal } from './dbal-parse'
@@ -45,10 +44,6 @@ export interface ApplyBqlResult {
   pages: BqlPage[]
   errors: BqlError[]
   warnings: string[]
-}
-
-function fieldsFor(type: string): PropField[] {
-  return propSchema(type) ?? inferred(paletteItem(type)?.defaults ?? {})
 }
 
 function applyAttrs(
