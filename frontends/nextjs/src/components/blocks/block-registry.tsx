@@ -75,8 +75,17 @@ export function renderNode(node: TreeNode): ReactNode {
     </span>
   ))
   if (def === undefined) return <em>Unknown block: {node.type}</em>
-  const el = withWorkflowClick(node.props, def.render(node.props, kids))
-  const attrs = commonAttrs(node.props)
+  // Attributes go on the block, and only then is it wrapped. The other way
+  // round, cloneElement handed the author's class to WorkflowClick -- which
+  // renders a display:contents span and reads no className -- so styling a
+  // block silently stopped working the moment it was given a workflow.
+  const el = withAttrs(node.props, def.render(node.props, kids))
+  return withWorkflowClick(node.props, el)
+}
+
+/** The block, carrying whatever identity, class and aria props were set. */
+function withAttrs(props: Record<string, unknown>, el: ReactNode): ReactNode {
+  const attrs = commonAttrs(props)
   // Nothing set, or the block returned a fragment/string that cannot carry
   // attributes -- render it exactly as before.
   if (Object.keys(attrs).length === 0 || !isValidElement(el)) return el
