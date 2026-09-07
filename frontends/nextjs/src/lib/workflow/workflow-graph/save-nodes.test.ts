@@ -81,6 +81,18 @@ describe('saveNodes', () => {
     })
   })
 
+  // sortOrder is `required` in the schema *and* carries a default of 0,
+  // and DBAL validates presence before applying defaults -- so omitting
+  // it is a 422 saying "Field is required" for a field that has one.
+  it('numbers the parameters it writes', async () => {
+    const two = { ...step(), config: { target: '.x', text: 'Hi' } }
+    await saveNodes('http://d', 't', 'wf1', [two])
+
+    expect(paramRows.map(r => (r as { sortOrder?: number }).sortOrder)).toEqual(
+      [0, 1]
+    )
+  })
+
   it('writes a step that takes no parameters', async () => {
     const bare = { ...step(), config: {} }
     expect(await saveNodes('http://d', 't', 'wf1', [bare])).toBe(true)

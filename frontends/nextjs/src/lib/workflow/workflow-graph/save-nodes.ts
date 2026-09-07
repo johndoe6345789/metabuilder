@@ -62,6 +62,7 @@ async function saveParams(
   nodeId: string,
   config: Record<string, unknown>
 ): Promise<boolean> {
+  let sortOrder = 0
   for (const [name, raw] of Object.entries(config)) {
     const { valueType, value } = writeValue(raw)
     const p = await fetch(`${base}/WorkflowNodeParam`, {
@@ -75,9 +76,14 @@ async function saveParams(
         name,
         value,
         valueType,
+        // Required by the schema, which also gives it a default of 0 --
+        // DBAL checks presence before applying defaults, so leaving it
+        // out is a 422 for a field that has one.
+        sortOrder,
       }),
     })
     if (!p.ok) return false
+    sortOrder += 1
   }
   return true
 }
