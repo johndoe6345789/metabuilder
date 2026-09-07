@@ -54,6 +54,7 @@
 
 .picker {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
   margin-right: 12px;
@@ -88,5 +89,26 @@
 
   &:hover {
     background: var(--mat-sys-surface-container-high, #21262d);
+  }
+}
+
+/*
+ * The bar holds a workflow picker, a trigger, history and publish. Below
+ * a laptop width those do not fit on one line, and the publish button was
+ * the one being pushed off.
+ */
+@media (max-width: 1000px) {
+  .publishBar {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+
+  .picker,
+  .trigger {
+    margin-right: 0;
+  }
+
+  .spacer {
+    display: none;
   }
 }

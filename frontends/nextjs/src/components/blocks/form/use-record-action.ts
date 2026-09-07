@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react'
 import { usePathname } from 'next/navigation'
 
 import { tenantFromPathname } from '../site-tenant'
+import { applyPageEffects } from './page-effects'
 import { submitForm } from './submit-form'
 
 export interface RecordAction {
@@ -12,6 +13,8 @@ export interface RecordAction {
   sending: boolean
   /** True once it has been recorded, so the button can say so. */
   done: boolean
+  /** What the workflow asked to be said, if it asked for anything. */
+  message: string | null
   /** Why it did not go, in words a visitor can read. */
   error: string | null
 }
@@ -38,6 +41,7 @@ export function useRecordAction(
   const [sending, setSending] = useState(false)
   const [done, setDone] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [message, setMessage] = useState<string | null>(null)
 
   const fire = useCallback(() => {
     if (sending || done) return
@@ -51,13 +55,24 @@ export function useRecordAction(
       workflow,
     })
       .then(result => {
-        if (result.ok) setDone(true)
-        else setError(result.reason)
+        if (!result.ok) {
+          setError(result.reason)
+          return
+        }
+        setDone(true)
+        // Applied against the whole document: the workflow is addressing
+        // the page someone is looking at, and its selectors were written
+        // against that page rather than against one block's subtree.
+        const outcome = applyPageEffects(document, result.effects)
+        if (outcome.message !== null) setMessage(outcome.message)
+        // Navigation last, so anything else the workflow asked for has
+        // already happened by the time the page changes.
+        if (outcome.go !== null) window.location.assign(outcome.go)
       })
       .finally(() => {
         setSending(false)
       })
   }, [sending, done, pathname, formName, workflow])
 
-  return { fire, sending, done, error }
+  return { fire, sending, done, message, error }
 }

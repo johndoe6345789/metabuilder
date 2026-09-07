@@ -23,6 +23,7 @@ import {
   type WorkflowEntry,
 } from '@/store/slices/god-slice/workflow-entry'
 import { snapshot } from '@/lib/persist/versions'
+import { describeFailure } from '@/lib/tenant/page-tree/write-failure'
 import { useCurrentTenantScope } from '../use-current-tenant-scope'
 
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
@@ -102,8 +103,11 @@ export function useGodWorkflow(tenantOverride?: string) {
     [dispatch, tenant]
   )
 
+  const [error, setError] = useState<string | null>(null)
+
   const publish = useCallback(async (): Promise<boolean> => {
     setPublishing(true)
+    setError(null)
     try {
       const wf = current.workflow
       const row = {
@@ -111,6 +115,11 @@ export function useGodWorkflow(tenantOverride?: string) {
         tenantId: tenant,
         name: wf.name,
         description: wf.description,
+        // Required by the schema. Omitting it made every publish 422 with
+        // "Field is required", which the tab discarded -- so publishing a
+        // workflow had never once worked, and said so only by leaving the
+        // status on "Staged changes".
+        version: 1,
         // What makes it run. DBAL matches this against "<Entity>.created"
         // for the tenant on every create, and it is also the opt-in that
         // lets a page name this workflow at all.
@@ -133,8 +142,14 @@ export function useGodWorkflow(tenantOverride?: string) {
           body: JSON.stringify(row),
           signal: AbortSignal.timeout(6000),
         })
-        if (!put.ok) return false
-      } else if (!res.ok) return false
+        if (!put.ok) {
+          setError(await describeFailure('Workflow', put))
+          return false
+        }
+      } else if (!res.ok) {
+        setError(await describeFailure('Workflow', res))
+        return false
+      }
 
       const wrote = await saveGraph(
         DBAL,
@@ -143,11 +158,15 @@ export function useGodWorkflow(tenantOverride?: string) {
         wf.nodes as unknown as GraphNode[],
         wf.connections as unknown as GraphEdges
       )
-      if (!wrote) return false
+      if (!wrote) {
+        setError('The workflow was saved but its steps were not.')
+        return false
+      }
       await snapshot('god.workflow', wf, `Published ${wf.name}`)
       dispatch(clearDirty('workflow'))
       return true
     } catch {
+      setError('Could not reach the data layer.')
       return false
     } finally {
       setPublishing(false)
@@ -167,5 +186,7 @@ export function useGodWorkflow(tenantOverride?: string) {
     dirty,
     publish,
     publishing,
+    /** Why the last publish did not take, or null. */
+    error,
   }
 }

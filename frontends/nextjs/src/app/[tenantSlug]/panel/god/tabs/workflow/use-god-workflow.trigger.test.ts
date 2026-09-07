@@ -159,3 +159,56 @@ describe('what makes a workflow run', () => {
     expect(sent[0]?.body.id).toBe(firstId)
   })
 })
+
+/**
+ * Publishing a workflow had never once worked: the schema requires
+ * `version` and the payload never sent one, so DBAL answered 422 "Field
+ * is required" -- and the tab discarded the result, leaving the status on
+ * "Staged changes" with nothing said. Found by publishing one and asking
+ * the data layer what it held: nothing.
+ */
+describe('a publish that is refused', () => {
+  it('sends the version the schema requires', async () => {
+    stubDbal(201)
+    const { result } = renderHook(() => useGodWorkflow())
+
+    await act(async () => {
+      await result.current.publish()
+    })
+
+    expect(sent[0]?.body.version).toBe(1)
+  })
+
+  it('reports why, rather than looking unsaved for no reason', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({
+        ok: false,
+        status: 422,
+        text: async () =>
+          JSON.stringify({
+            fields: [{ field: 'version', message: 'Field is required' }],
+          }),
+      }))
+    )
+    const { result } = renderHook(() => useGodWorkflow())
+
+    await act(async () => {
+      await result.current.publish()
+    })
+
+    expect(result.current.error).toContain('version')
+    expect(result.current.error).toContain('422')
+  })
+
+  it('has no error to report after a publish that worked', async () => {
+    stubDbal(201)
+    const { result } = renderHook(() => useGodWorkflow())
+
+    await act(async () => {
+      await result.current.publish()
+    })
+
+    expect(result.current.error).toBeNull()
+  })
+})

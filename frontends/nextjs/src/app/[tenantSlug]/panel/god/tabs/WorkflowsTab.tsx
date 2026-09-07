@@ -26,9 +26,10 @@ export function WorkflowsTab() {
         <WorkflowTrigger value={trigger} onChange={setTrigger} />
         {dirty ? <span className={s.dot} /> : null}
         <span className={`${s.status} ${dirty ? '' : s.clean}`}>
-          {dirty
-            ? 'Staged changes — not yet published'
-            : 'Published — up to date'}
+          {wf.error ??
+            (dirty
+              ? 'Staged changes — not yet published'
+              : 'Published — up to date')}
         </span>
         <span className={s.spacer} />
         <VersionHistory<Workflow> storageKey="god.workflow" onRevert={save} />

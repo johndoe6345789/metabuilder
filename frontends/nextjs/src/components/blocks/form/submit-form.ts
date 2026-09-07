@@ -12,6 +12,8 @@
  * would be refused outright rather than partly applied.
  */
 
+import type { PageEffect } from './page-effects'
+
 const DBAL_URL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? '/api/dbal'
 
 export interface SubmitFormRequest {
@@ -34,10 +36,36 @@ export interface SubmitFormResult {
   ok: boolean
   /** Why it did not send, in words a visitor can read. Null when it did. */
   reason: string | null
+  /**
+   * What the workflow asked the page to do, if it ran and asked for
+   * anything. Empty for a submission that named no workflow, and for one
+   * whose workflow only touched rows.
+   */
+  effects: PageEffect[]
 }
 
-const ok: SubmitFormResult = { ok: true, reason: null }
-const failed = (reason: string): SubmitFormResult => ({ ok: false, reason })
+const failed = (reason: string): SubmitFormResult => ({
+  ok: false,
+  reason,
+  effects: [],
+})
+
+/**
+ * The page changes a workflow asked for, out of the create response.
+ *
+ * A body that cannot be read, or carries none, is not a failure: the row
+ * was written, which is what the visitor cares about. Anything not a list
+ * is ignored rather than trusted.
+ */
+async function readEffects(res: Response): Promise<PageEffect[]> {
+  try {
+    const body = (await res.json()) as { data?: { effects?: unknown } }
+    const effects = body.data?.effects
+    return Array.isArray(effects) ? (effects as PageEffect[]) : []
+  } catch {
+    return []
+  }
+}
 
 /** A stable-ish id without pulling in a uuid dependency for one call. */
 function submissionId(): string {
@@ -76,7 +104,7 @@ export async function submitForm(
       return failed('Too many messages just now. Please try again shortly.')
     }
     if (!res.ok) return failed(`Could not send that (HTTP ${res.status}).`)
-    return ok
+    return { ok: true, reason: null, effects: await readEffects(res) }
   } catch {
     // A visitor cannot act on a stack trace; they can act on "try again".
     return failed('Could not reach the site. Please try again.')

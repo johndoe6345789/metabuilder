@@ -51,6 +51,8 @@ const step = (
 export const RUNNABLE_CATEGORIES = {
   make: { id: 'make', name: 'Make a value', color: '#10b981' },
   rows: { id: 'rows', name: 'Rows', color: '#3b82f6' },
+  logic: { id: 'logic', name: 'Decide', color: '#8b5cf6' },
+  page: { id: 'page', name: 'The page', color: '#ec4899' },
   note: { id: 'note', name: 'Notes', color: '#6b7280' },
 }
 
@@ -118,6 +120,99 @@ export const RUNNABLE_STEPS: NodeType[] = [
     '#3b82f6',
     'Read rows matching a filter.',
     { entity: '', filter: {}, limit: 50, [OUTPUTS_HINT]: { items: 'rows' } }
+  ),
+  step(
+    'dbal.entity.update',
+    'Change a row',
+    'edit',
+    'rows',
+    '#3b82f6',
+    'Change an existing row -- marking a booking handled, say. `id` says ' +
+      'which, and `data` the columns to change.',
+    { entity: '', id: '', data: {} }
+  ),
+  step(
+    'dbal.entity.delete',
+    'Remove a row',
+    'delete',
+    'rows',
+    '#3b82f6',
+    'Delete one row by its id.',
+    { entity: '', id: '' }
+  ),
+  step(
+    'dbal.entity.count',
+    'Count rows',
+    'tag',
+    'rows',
+    '#3b82f6',
+    'How many rows match a filter, without fetching them all.',
+    { entity: '', filter: {}, [OUTPUTS_HINT]: { count: 'how_many' } }
+  ),
+  step(
+    'dbal.stop.unless',
+    'Only carry on if',
+    'split',
+    'logic',
+    '#8b5cf6',
+    'Stop here unless a condition holds -- "only do the rest when the ' +
+      'form said X". `is` takes equals, contains, empty, not empty.',
+    { value: '', is: 'not empty', other: '' }
+  ),
+  step(
+    'page.text',
+    'Set text on the page',
+    'notes',
+    'page',
+    '#ec4899',
+    'Replace the text of everything matching a CSS selector, on the page ' +
+      'the click came from.',
+    { target: '', text: '' }
+  ),
+  step(
+    'page.show',
+    'Show something',
+    'visibility',
+    'page',
+    '#ec4899',
+    'Reveal everything matching a CSS selector.',
+    { target: '' }
+  ),
+  step(
+    'page.hide',
+    'Hide something',
+    'visibility',
+    'page',
+    '#ec4899',
+    'Conceal everything matching a CSS selector.',
+    { target: '' }
+  ),
+  step(
+    'page.class',
+    'Add a style class',
+    'brush',
+    'page',
+    '#ec4899',
+    'Add a class, so a style you made in the Styles tab takes effect.',
+    { target: '', class: '' }
+  ),
+  step(
+    'page.message',
+    'Say something',
+    'chat',
+    'page',
+    '#ec4899',
+    'Show a message to whoever clicked.',
+    { text: '' }
+  ),
+  step(
+    'page.go',
+    'Go to a page',
+    'link',
+    'page',
+    '#ec4899',
+    'Send the browser to another page of this site.',
+    { path: '' }
   ),
   step(
     'dbal.log',
