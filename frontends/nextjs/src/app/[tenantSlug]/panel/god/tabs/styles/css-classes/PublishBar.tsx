@@ -7,14 +7,25 @@ export interface PublishBarProps {
   dirty: boolean
   publishing: boolean
   onPublish: () => void
+  /** Why the last publish failed. Shown in place of the status, because
+   *  "Staged changes" is also what it says before you press Publish. */
+  error?: string | null
 }
 
-export function PublishBar({ dirty, publishing, onPublish }: PublishBarProps) {
+export function PublishBar({
+  dirty,
+  publishing,
+  onPublish,
+  error = null,
+}: PublishBarProps) {
   return (
     <div className={s.publishBar}>
       {dirty ? <span className={s.dot} /> : null}
-      <span className={`${s.status} ${dirty ? '' : s.clean}`}>
-        {dirty ? 'Staged changes — not yet published' : 'Published — up to date'}
+      <span className={`${s.status} ${dirty && error === null ? '' : s.clean}`}>
+        {error ??
+          (dirty
+            ? 'Staged changes — not yet published'
+            : 'Published — up to date')}
       </span>
       <span className={s.spacer} />
       <Button

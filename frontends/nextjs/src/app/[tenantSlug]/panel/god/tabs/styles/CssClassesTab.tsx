@@ -25,6 +25,7 @@ export function CssClassesTab() {
     <div className={s.root}>
       <PublishBar
         dirty={css.dirty}
+        error={css.error}
         publishing={css.publishing}
         onPublish={() => {
           void css.publish()

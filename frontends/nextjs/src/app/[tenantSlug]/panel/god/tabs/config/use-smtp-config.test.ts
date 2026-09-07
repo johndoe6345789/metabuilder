@@ -180,3 +180,72 @@ describe('publish', () => {
     expect(JSON.parse(body).password).toBe('hunter2')
   })
 })
+
+/**
+ * The row carries a fixed id, smtp_{tenant}, and this only ever POSTed it.
+ * So the first publish creates the row and every one after it 409s -- and
+ * the boolean was thrown away by the tab, which shows no status text at
+ * all, so nothing on screen changed. A founder could set their mail server
+ * once; rotating a password or fixing a wrong host silently did nothing
+ * and outbound mail kept using the stale credentials.
+ *
+ * use-god-workflow already has this fallback, with a comment noting it
+ * matters "from the second publish onwards, which is most of them".
+ */
+describe('publishing SMTP settings more than once', () => {
+  const stubConflict = (): string[] => {
+    const seen: string[] = []
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string, init?: RequestInit) => {
+        const method = init?.method ?? 'GET'
+        seen.push(`${method} ${String(url)}`)
+        return method === 'POST'
+          ? new Response('exists', { status: 409 })
+          : new Response('{}', { status: 200 })
+      })
+    )
+    return seen
+  }
+
+  it('updates the row that is already there', async () => {
+    const seen = stubConflict()
+    const { result } = renderHook(() => useSmtpConfig())
+
+    let ok = false
+    await act(async () => {
+      ok = await result.current.publish()
+    })
+
+    expect(ok).toBe(true)
+    expect(seen.some(c => c.startsWith('PUT') && c.includes('smtp_acme'))).toBe(
+      true
+    )
+  })
+
+  it('says so when the write is refused outright', async () => {
+    stub(false)
+    const { result } = renderHook(() => useSmtpConfig())
+
+    await act(async () => {
+      await result.current.publish()
+    })
+
+    expect(typeof result.current.error).toBe('string')
+  })
+
+  it('clears the complaint once a publish goes through', async () => {
+    stub(false)
+    const { result } = renderHook(() => useSmtpConfig())
+    await act(async () => {
+      await result.current.publish()
+    })
+    expect(typeof result.current.error).toBe('string')
+
+    stub(true)
+    await act(async () => {
+      await result.current.publish()
+    })
+    expect(result.current.error).toBeNull()
+  })
+})

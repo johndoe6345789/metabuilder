@@ -110,12 +110,17 @@ describe('saveStyleClasses', () => {
     ])
     expect(ok).toBe(true)
 
-    // The old sheet is deleted first, so a republish replaces rather than
-    // merges.
-    expect(calls[0]).toMatchObject({
-      method: 'DELETE',
-      url: `${DBAL}/system/core/StyleClass/styles_system`,
-    })
+    // The old sheet is cleared first, so a republish replaces rather than
+    // merges. Its rules and props go with it explicitly -- deleting the
+    // StyleClass alone was assumed to cascade, and nothing cascades.
+    expect(calls[0]).toMatchObject({ method: 'DELETE' })
+    const deleted = calls
+      .filter(c => c.method === 'DELETE')
+      .map(c => c.url)
+      .join(' ')
+    expect(deleted).toContain('StyleRuleProp')
+    expect(deleted).toContain('StyleRule?')
+    expect(deleted).toContain(`${DBAL}/system/core/StyleClass/styles_system`)
 
     const posted = calls.filter(c => c.method === 'POST')
     expect(posted[0]?.url).toBe(`${DBAL}/system/core/StyleClass`)

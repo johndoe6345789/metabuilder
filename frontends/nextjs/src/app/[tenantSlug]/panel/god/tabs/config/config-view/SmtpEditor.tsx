@@ -11,6 +11,9 @@ export interface SmtpEditorProps {
   publishing: boolean
   onChange: <K extends keyof SmtpConfig>(key: K, value: SmtpConfig[K]) => void
   onPublish: () => void
+  /** Why the last publish failed. There is no other status here, so
+   *  without it a refused write changed nothing on screen. */
+  error?: string | null
 }
 
 /** Outbound email settings: host/port/credentials, and a publish button. */
@@ -20,7 +23,12 @@ export function SmtpEditor(props: SmtpEditorProps) {
       <div className={s.smtpHead}>
         <Typography variant="h6">Email (SMTP)</Typography>
         <span className={s.spacer} />
-        {props.dirty && <span className={s.dot} />}
+        {props.error != null && (
+          <Typography variant="caption" role="alert">
+            {props.error}
+          </Typography>
+        )}
+        {props.dirty && props.error == null && <span className={s.dot} />}
         <Button
           variant="contained"
           size="small"

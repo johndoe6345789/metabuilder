@@ -280,3 +280,50 @@ describe('useCssClasses', () => {
     })
   })
 })
+
+/**
+ * publish() has always returned a boolean and the tab has always thrown it
+ * away, so a refused publish left the bar reading "Staged changes -- not
+ * yet published". That is what it says *before* you press Publish, so the
+ * founder reads it as still working and their site keeps serving the CSS
+ * it had. The Workflows tab next door already surfaces its reason.
+ */
+describe('a publish the data layer refused', () => {
+  it('says so instead of leaving the bar on "staged changes"', async () => {
+    styleApi.saveStyleClasses.mockResolvedValue(false)
+    const { result } = renderHook(() => useCssClasses())
+
+    await act(async () => {
+      await result.current.publish()
+    })
+
+    expect(result.current.error).not.toBeNull()
+  })
+
+  it('says so when the data layer cannot be reached at all', async () => {
+    styleApi.saveStyleClasses.mockRejectedValue(new Error('ECONNREFUSED'))
+    const { result } = renderHook(() => useCssClasses())
+
+    await act(async () => {
+      await result.current.publish()
+    })
+
+    expect(result.current.error).not.toBeNull()
+  })
+
+  it('clears the complaint once a publish goes through', async () => {
+    styleApi.saveStyleClasses.mockResolvedValue(false)
+    const { result } = renderHook(() => useCssClasses())
+    await act(async () => {
+      await result.current.publish()
+    })
+    expect(result.current.error).not.toBeNull()
+
+    styleApi.saveStyleClasses.mockResolvedValue(true)
+    await act(async () => {
+      await result.current.publish()
+    })
+
+    expect(result.current.error).toBeNull()
+  })
+})

@@ -48,6 +48,7 @@ export function ConfigTab() {
       <SmtpEditor
         config={c.smtp.config}
         dirty={c.smtp.dirty}
+        error={c.smtp.error}
         publishing={c.smtp.publishing}
         onChange={c.smtp.set}
         onPublish={() => {

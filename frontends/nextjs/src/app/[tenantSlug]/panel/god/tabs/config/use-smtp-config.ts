@@ -39,6 +39,9 @@ export function useSmtpConfig() {
   const config = foreign ? initialState.smtp : stored
   const dirty = foreign ? false : storedDirty
   const [publishing, setPublishing] = useState(false)
+  /** Why the last publish failed. The editor shows no status of its own,
+   *  so without this a refused write changed nothing on screen at all. */
+  const [error, setError] = useState<string | null>(null)
 
   const set = useCallback(
     <K extends keyof SmtpConfig>(key: K, value: SmtpConfig[K]) => {
@@ -50,21 +53,32 @@ export function useSmtpConfig() {
   const publish = useCallback(
     async (tenant = own): Promise<boolean> => {
       setPublishing(true)
+      setError(null)
       try {
-        const res = await fetch(`${DBAL}/${tenant}/core/SmtpConfig`, {
-          method: 'POST',
+        const id = `smtp_${tenant}`
+        const body = JSON.stringify({ id, tenantId: tenant, ...config })
+        const url = `${DBAL}/${tenant}/core/SmtpConfig`
+        const init = {
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            id: `smtp_${tenant}`,
-            tenantId: tenant,
-            ...config,
-          }),
+          body,
           signal: AbortSignal.timeout(6000),
-        })
-        if (!res.ok) return false
+        }
+        let res = await fetch(url, { ...init, method: 'POST' })
+        // The id is fixed, so only the first publish can ever create the
+        // row. Without this every later one 409s -- which is most of them,
+        // and exactly the ones that matter: rotating a password, fixing a
+        // wrong host.
+        if (res.status === 409) {
+          res = await fetch(`${url}/${id}`, { ...init, method: 'PUT' })
+        }
+        if (!res.ok) {
+          setError('The data layer refused these settings. Nothing was saved.')
+          return false
+        }
         dispatch(clearDirty('smtp'))
         return true
       } catch {
+        setError('Could not reach the data layer. Nothing was saved.')
         return false
       } finally {
         setPublishing(false)
@@ -73,5 +87,5 @@ export function useSmtpConfig() {
     [config, dispatch, own]
   )
 
-  return { config, set, dirty, publish, publishing }
+  return { config, set, dirty, error, publish, publishing }
 }

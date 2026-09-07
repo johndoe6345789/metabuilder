@@ -40,6 +40,16 @@ export function useCssClasses() {
   const classes = foreign ? SEED_CSS : stored
   const dirty = foreign ? false : storedDirty
   const [publishing, setPublishing] = useState(false)
+  /**
+   * Why the last publish failed, if it did.
+   *
+   * publish() has always returned a boolean and the tab has always thrown
+   * it away, so a refused publish left the bar reading "Staged changes --
+   * not yet published" -- which is what it says before you press it, and
+   * therefore reads as "still working". The Workflows tab next door
+   * already shows its reason this way.
+   */
+  const [error, setError] = useState<string | null>(null)
 
   const persist = useCallback(
     (next: CssClass[]) => {
@@ -130,15 +140,20 @@ export function useCssClasses() {
   const publish = useCallback(
     async (tenant = own, these?: CssClass[]): Promise<boolean> => {
       setPublishing(true)
+      setError(null)
       try {
         // Rows, not a JSON blob: StyleClass.classes was dropped when the
         // schema went relational, so the old POST wrote a column that is no
         // longer there.
         const ok = await saveStyleClasses(DBAL, tenant, these ?? classes)
-        if (!ok) return false
+        if (!ok) {
+          setError('The data layer refused these styles. Nothing was saved.')
+          return false
+        }
         dispatch(clearDirty('css'))
         return true
       } catch {
+        setError('Could not reach the data layer. Nothing was saved.')
         return false
       } finally {
         setPublishing(false)
@@ -148,6 +163,7 @@ export function useCssClasses() {
   )
 
   return {
+    error,
     classes,
     hydrate,
     create,
