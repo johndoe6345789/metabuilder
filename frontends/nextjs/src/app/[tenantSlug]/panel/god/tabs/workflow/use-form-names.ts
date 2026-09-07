@@ -23,7 +23,7 @@ export function useFormNames(): string[] {
 
   useEffect(() => {
     let live = true
-    fetch(`${DBAL}/${tenant}/core/FormSubmission?_limit=200`, {
+    fetch(`${DBAL}/${tenant}/core/FormSubmission?limit=200`, {
       signal: AbortSignal.timeout(8000),
     })
       .then(async (res): Promise<unknown> => (res.ok ? res.json() : null))

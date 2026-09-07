@@ -11,9 +11,15 @@ function buildQuery(options?: ListOptions): string {
       }
     }
   }
-  if (options?.limit !== undefined) params.set('_limit', String(options.limit))
+  // `limit` and `offset`, not `_limit`/`_offset`: DBAL's list handler
+  // reads the former and silently drops anything it does not recognise,
+  // so every list through this client came back at its default of twenty
+  // rows -- while `total` below reports rows.length, leaving the caller no
+  // way to tell it had been cut off. The rest of the app already spells
+  // them this way.
+  if (options?.limit !== undefined) params.set('limit', String(options.limit))
   if (options?.offset !== undefined) {
-    params.set('_offset', String(options.offset))
+    params.set('offset', String(options.offset))
   }
   return params.toString()
 }

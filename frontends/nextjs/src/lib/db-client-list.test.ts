@@ -57,13 +57,17 @@ describe('list', () => {
     expect(calls[0].url).toContain('filter.c=x')
   })
 
-  it('passes limit and offset', async () => {
+  // Underscored, these were dropped: DBAL reads limit/offset and ignores
+  // what it does not recognise, so every list came back at its default of
+  // twenty rows while reporting total as however many arrived.
+  it('passes limit and offset under the names DBAL reads', async () => {
     const calls = mockFetch({ data: [] })
 
     await db.entity('Post').list({ limit: 10, offset: 20 })
 
-    expect(calls[0].url).toContain('_limit=10')
-    expect(calls[0].url).toContain('_offset=20')
+    expect(calls[0].url).toContain('limit=10')
+    expect(calls[0].url).toContain('offset=20')
+    expect(calls[0].url).not.toContain('_limit')
   })
 
   it('sends no query string when there is nothing to send', async () => {
