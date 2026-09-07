@@ -137,3 +137,68 @@ describe('tenantExists — when the answer cannot be had', () => {
     expect(seen[0]).toBe(controller.signal)
   })
 })
+
+/** Records the headers each request was sent with, not only its URL. */
+const stubHeaders = (
+  users: Reply,
+  pages: Reply = users
+): { url: string; auth: string | undefined }[] => {
+  const sent: { url: string; auth: string | undefined }[] = []
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (url: string, init?: RequestInit) => {
+      const href = String(url)
+      const headers = (init?.headers ?? {}) as Record<string, string>
+      sent.push({ url: href, auth: headers.Authorization })
+      const reply = href.includes('/User') ? users : pages
+      const status = reply.status ?? (reply.ok === false ? 404 : 200)
+      return {
+        ok: reply.ok ?? status < 400,
+        status,
+        json: async () => reply.body ?? rows(0),
+      } as Response
+    })
+  )
+  return sent
+}
+
+/**
+ * User declares a read ACL, so DBAL now refuses to list it for a caller
+ * it cannot identify. This runs on the server and is the gate in front of
+ * every page of every tenant: unauthenticated, a brand-new tenant has a
+ * 401 for its users and no pages yet, so it reads as "does not exist" and
+ * its owner is 404'd out of the panel they just signed up for -- with no
+ * way to publish the page that would have made them real.
+ */
+describe('tenantExists — reading a restricted entity', () => {
+  const OLD = process.env.DBAL_ADMIN_TOKEN
+
+  beforeEach(() => {
+    process.env.DBAL_ADMIN_TOKEN = 'operator-token'
+  })
+  afterEach(() => {
+    if (OLD === undefined) delete process.env.DBAL_ADMIN_TOKEN
+    else process.env.DBAL_ADMIN_TOKEN = OLD
+  })
+
+  it('asks as the operator, so User answers at all', async () => {
+    const sent = stubHeaders({ ok: true, body: rows(1) })
+    await tenantExists(DBAL, 'acme')
+    for (const call of sent) {
+      expect(call.auth).toBe('Bearer operator-token')
+    }
+  })
+
+  it('finds a tenant whose only trace is its owner', async () => {
+    // The state every tenant is in for the minute after signing up.
+    stubHeaders({ ok: true, body: rows(1) }, { ok: true, body: rows(0) })
+    expect(await tenantExists(DBAL, 'acme')).toBe(true)
+  })
+
+  it('sends no header it has no token for', async () => {
+    delete process.env.DBAL_ADMIN_TOKEN
+    const sent = stubHeaders({ ok: true, body: rows(1) })
+    await tenantExists(DBAL, 'acme')
+    for (const call of sent) expect(call.auth).toBeUndefined()
+  })
+})
