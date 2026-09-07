@@ -12,7 +12,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 import { fetchSession } from '@/lib/auth/api/fetch-session'
-import { SESSION_COOKIE } from '@/app/api/auth/session/route'
+import { SESSION_COOKIE } from '@/lib/auth/session-cookie'
 import { getRoleLevel, ROLE_LEVELS } from '@/lib/constants'
 import { STATUS } from './index'
 

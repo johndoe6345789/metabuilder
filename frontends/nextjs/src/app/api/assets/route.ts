@@ -12,7 +12,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { cookies } from 'next/headers'
 import { fetchSession } from '@/lib/auth/api/fetch-session'
-import { SESSION_COOKIE } from '@/app/api/auth/session/route'
+import { SESSION_COOKIE } from '@/lib/auth/session-cookie'
 import { ensureBucket, listObjects, putObject } from '@/lib/object-store/client'
 import { bucketFor, refuseUpload, safeAssetKey } from './upload-policy'
 

@@ -67,7 +67,6 @@ export const STATUS = {
 /**
  * Session cookie name
  */
-export const SESSION_COOKIE = 'session_token'
 
 /**
  * Default timeouts (in milliseconds)

@@ -57,7 +57,7 @@ const bqlParse = params(['community_darkroom', 'core', 'bql', 'parse'])
 beforeEach(() => {
   vi.clearAllMocks()
   vi.unstubAllGlobals()
-  session.fetchSession.mockResolvedValue({ id: 'u1' })
+  session.fetchSession.mockResolvedValue({ id: 'u1', tenantId: 'system' })
 })
 
 describe('reads', () => {
@@ -206,5 +206,82 @@ describe('stateless utility routes (e.g. bql/parse)', () => {
     )
     expect(res.status).toBe(401)
     expect(calls).toHaveLength(0)
+  })
+})
+
+
+/**
+ * The proxy verified that a session was valid and then never asked whose
+ * it was. `path` is `{tenant}/{package}/{entity}` and `user.tenantId` was
+ * right there; the two were never compared. In the shipped image this
+ * proxy is the browser's only write path, so any founder who had signed up
+ * could POST, PUT or DELETE into any other tenant -- overwriting their
+ * live pages, their workflows or their SMTP credentials from a console.
+ *
+ * The rule is the one the God Panel already states in
+ * use-current-tenant-scope.ts: your own community, unless you are the
+ * instance owner.
+ */
+describe('writing to somebody else’s tenant', () => {
+  const other = params(['community_darkroom', 'core', 'Page'])
+
+  const asFounderOf = (tenantId: string, role = 'god') => {
+    session.fetchSession.mockResolvedValue({ id: 'u1', tenantId, role })
+  }
+
+  it('refuses a founder writing outside their own community', async () => {
+    const calls = stubDbal()
+    asFounderOf('harbour_cycle_works')
+
+    const res = await POST(req('POST'), other)
+
+    expect(res.status).toBe(403)
+    // Refused here, not forwarded and hoped about.
+    expect(calls).toHaveLength(0)
+  })
+
+  it('allows a founder writing to their own', async () => {
+    const calls = stubDbal()
+    asFounderOf('community_darkroom')
+
+    const res = await POST(req('POST'), other)
+
+    expect(res.status).toBe(200)
+    expect(calls).toHaveLength(1)
+  })
+
+  // The instance owner administers every community; every other god is
+  // one community's founder, not an instance-wide admin.
+  it('lets the instance owner write anywhere', async () => {
+    stubDbal()
+    asFounderOf('harbour_cycle_works', 'supergod')
+
+    expect((await POST(req('POST'), other)).status).toBe(200)
+  })
+
+  it('refuses a session that names no tenant at all', async () => {
+    stubDbal()
+    session.fetchSession.mockResolvedValue({ id: 'u1' })
+
+    expect((await POST(req('POST'), other)).status).toBe(403)
+  })
+
+  it('applies to every write verb, not just POST', async () => {
+    stubDbal()
+    asFounderOf('harbour_cycle_works')
+
+    expect((await PUT(req('PUT'), other)).status).toBe(403)
+    expect((await PATCH(req('PATCH'), other)).status).toBe(403)
+    expect((await DELETE(req('DELETE'), other)).status).toBe(403)
+  })
+
+  // Reads are left to DBAL's own per-entity ACLs, which is what lets a
+  // signed-out visitor see a published site.
+  it('does not gate reads', async () => {
+    const calls = stubDbal()
+    asFounderOf('harbour_cycle_works')
+
+    expect((await GET(req('GET'), other)).status).toBe(200)
+    expect(calls).toHaveLength(1)
   })
 })

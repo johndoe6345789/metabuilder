@@ -8,7 +8,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { cookies } from 'next/headers'
 import { fetchSession } from '@/lib/auth/api/fetch-session'
-import { SESSION_COOKIE } from '@/app/api/auth/session/route'
+import { SESSION_COOKIE } from '@/lib/auth/session-cookie'
 import { deleteObject, getObject } from '@/lib/object-store/client'
 
 const bucketFor = (tenant: string): string => `tenant-${tenant}`

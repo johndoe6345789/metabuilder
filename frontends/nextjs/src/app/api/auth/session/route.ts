@@ -18,8 +18,7 @@
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { fetchSession } from '@/lib/auth/api/fetch-session'
-
-export const SESSION_COOKIE = 'mb_session'
+import { SESSION_COOKIE } from '@/lib/auth/session-cookie'
 
 function bearer(request: Request): string | null {
   const header = request.headers.get('authorization') ?? ''

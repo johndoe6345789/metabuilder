@@ -9,7 +9,8 @@ const store = vi.hoisted(() => ({
 vi.mock('@/lib/auth/api/fetch-session', () => session)
 vi.mock('next/headers', () => ({ cookies: async () => store }))
 
-import { DELETE, GET, POST, SESSION_COOKIE } from './route'
+import { DELETE, GET, POST } from './route'
+import { SESSION_COOKIE } from '@/lib/auth/session-cookie'
 
 const req = (token: string | null): Request =>
   new Request('http://localhost/api/auth/session', {
