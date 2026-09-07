@@ -23,6 +23,43 @@ function str(value: unknown): string {
 }
 
 /**
+ * Elements a workflow may not address, whatever its selector says.
+ *
+ * Setting the text of a <script> or <style> is writing code, not writing
+ * copy, and rewriting a form control edits what someone typed. None of
+ * these is what the six verbs are for, so the selector does not reach them.
+ */
+const OFF_LIMITS = new Set([
+  'SCRIPT',
+  'STYLE',
+  'LINK',
+  'IFRAME',
+  'OBJECT',
+  'EMBED',
+  'INPUT',
+  'TEXTAREA',
+  'SELECT',
+])
+
+/**
+ * Where a workflow may send the browser.
+ *
+ * `page.go` means "another page of this site", so that is all it can do.
+ * Without this the path went straight to location.assign, where a
+ * `javascript:` or `data:` URI runs as script -- turning a six-verb
+ * vocabulary of data into a way to script somebody's browser.
+ *
+ * A protocol-relative "//host" is rejected too: it reads like a path and
+ * is a different origin.
+ */
+export function safePath(path: string): string | null {
+  const trimmed = path.trim()
+  if (!trimmed.startsWith('/')) return null
+  if (trimmed.startsWith('//')) return null
+  return trimmed
+}
+
+/**
  * Elements a workflow may address.
  *
  * querySelectorAll is scoped to the page's own content, not the document,
@@ -35,11 +72,25 @@ function targets(root: ParentNode, effect: PageEffect): Element[] {
   const selector = str(effect.target)
   if (selector === '') return []
   try {
-    return [...root.querySelectorAll(selector)]
+    return [...root.querySelectorAll(selector)].filter(
+      el => !OFF_LIMITS.has(el.tagName)
+    )
   } catch {
     // An invalid selector is the author's typo, not the visitor's problem.
     return []
   }
+}
+
+/**
+ * How far an effect may reach from @p from.
+ *
+ * The rendered page's own content, found by walking up to the marker
+ * UIPageRenderer puts down. Falling back to the document would quietly
+ * restore the very thing this exists to prevent, so an unmarked page gets
+ * nothing changed instead.
+ */
+export function effectRoot(from: Element | null): ParentNode | null {
+  return from?.closest('[data-page-root]') ?? null
 }
 
 export interface EffectOutcome {
@@ -89,7 +140,9 @@ export function applyPageEffects(
         message = str(effect.text)
         break
       case 'page.go':
-        go = str(effect.path)
+        // Null rather than the raw value: an unsafe destination is not a
+        // destination, so the caller has nothing to navigate to.
+        go = safePath(str(effect.path))
         break
       default:
         // A verb this browser does not know is skipped rather than

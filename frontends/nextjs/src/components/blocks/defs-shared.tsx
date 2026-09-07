@@ -2,6 +2,7 @@
 
 /** Palette metadata and render helpers shared by the block tables. */
 
+import { useCallback, useRef } from 'react'
 import { Button } from '@/m3'
 import type { ReactNode } from 'react'
 import type { BlockCategory, PaletteItem } from './block-types'
@@ -10,6 +11,7 @@ import { store } from '@/store/store'
 import { runWorkflow } from '@/lib/workflow/run-workflow'
 import type { GodState } from '@/store/slices/god-slice'
 import { useFormScope } from './form/form-context'
+import { effectRoot } from './form/page-effects'
 import { useRecordAction } from './form/use-record-action'
 import formStyles from './form/form.module.scss'
 
@@ -64,7 +66,9 @@ function BlockButton({ p }: { p: Record<string, unknown> }): ReactNode {
   // button inside a Form leaves this to the Form: the answers are the
   // point there, and recording the click twice would run it twice.
   const action = scope === null ? propText(p.action) : ''
-  const record = useRecordAction(action)
+  const anchor = useRef<HTMLSpanElement | null>(null)
+  const resolveRoot = useCallback(() => effectRoot(anchor.current), [])
+  const record = useRecordAction(action, propText(p.action), resolveRoot)
   // Inside a Form the button submits it, which is what someone dropping a
   // button under some fields plainly means. A link, a recorded action and
   // the draft-preview behaviour each win over that if asked for.
@@ -90,13 +94,18 @@ function BlockButton({ p }: { p: Record<string, unknown> }): ReactNode {
   }
 
   return (
-    <>
+    <span ref={anchor} style={{ display: 'contents' }}>
       <Button {...buttonProps}>{label}</Button>
+      {record.message !== null && (
+        <span role="status" className={formStyles.sent}>
+          {record.message}
+        </span>
+      )}
       {record.error !== null && (
         <span role="alert" className={formStyles.error}>
           {record.error}
         </span>
       )}
-    </>
+    </span>
   )
 }

@@ -45,7 +45,13 @@ export function UIPageRenderer({ layout, actions = {} }: UIPageRendererProps) {
 
   return (
     <UIPageActionsContext.Provider value={actions}>
-      {elements}
+      {/*
+        Marks how far a workflow's page.* effects may reach. A selector is
+        matched inside here, not across the document, so one cannot touch
+        the panel chrome a page is being previewed inside, or anything
+        else that is not this page's own content.
+      */}
+      <div data-page-root="">{elements}</div>
     </UIPageActionsContext.Provider>
   )
 }

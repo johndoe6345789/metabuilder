@@ -1,7 +1,8 @@
 'use client'
 
-import type { ReactNode } from 'react'
+import { useCallback, useRef, type ReactNode } from 'react'
 
+import { effectRoot } from './page-effects'
 import { useRecordAction } from './use-record-action'
 import s from './form.module.scss'
 
@@ -24,11 +25,14 @@ export function WorkflowClick({
 }) {
   // The workflow's own name doubles as the submission's label, so a
   // tenant reading their submissions can see which click produced each.
-  const record = useRecordAction(workflow, workflow)
+  const anchor = useRef<HTMLSpanElement | null>(null)
+  const resolveRoot = useCallback(() => effectRoot(anchor.current), [])
+  const record = useRecordAction(workflow, workflow, resolveRoot)
 
   return (
     <>
       <span
+        ref={anchor}
         style={{ display: 'contents' }}
         onClick={() => {
           record.fire()
@@ -36,6 +40,11 @@ export function WorkflowClick({
       >
         {children}
       </span>
+      {record.message !== null && (
+        <span role="status" className={s.sent}>
+          {record.message}
+        </span>
+      )}
       {record.error !== null && (
         <span role="alert" className={s.error}>
           {record.error}

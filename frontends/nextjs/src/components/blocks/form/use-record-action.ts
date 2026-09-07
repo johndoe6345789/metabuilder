@@ -35,7 +35,17 @@ export interface RecordAction {
  */
 export function useRecordAction(
   formName: string,
-  workflow?: string
+  workflow?: string,
+  /**
+   * How far a workflow's page.* effects may reach: the page's own root,
+   * resolved when the click happens. A function rather than a ref because
+   * the react-compiler lint cannot reason about a ref read inside a
+   * memoized callback -- and the caller owns the element anyway.
+   *
+   * Without one, page.* steps change nothing. That is deliberate: falling
+   * back to the document would restore exactly what the scoping prevents.
+   */
+  resolveRoot?: () => ParentNode | null
 ): RecordAction {
   const pathname = usePathname()
   const [sending, setSending] = useState(false)
@@ -60,10 +70,14 @@ export function useRecordAction(
           return
         }
         setDone(true)
-        // Applied against the whole document: the workflow is addressing
-        // the page someone is looking at, and its selectors were written
-        // against that page rather than against one block's subtree.
-        const outcome = applyPageEffects(document, result.effects)
+        // Scoped to the page's own content, not the document: a selector
+        // written for a published page must not reach the panel chrome it
+        // may be previewed inside.
+        const root = resolveRoot?.() ?? null
+        const outcome =
+          root === null
+            ? { message: null, go: null }
+            : applyPageEffects(root, result.effects)
         if (outcome.message !== null) setMessage(outcome.message)
         // Navigation last, so anything else the workflow asked for has
         // already happened by the time the page changes.
@@ -72,7 +86,7 @@ export function useRecordAction(
       .finally(() => {
         setSending(false)
       })
-  }, [sending, done, pathname, formName, workflow])
+  }, [sending, done, pathname, formName, workflow, resolveRoot])
 
   return { fire, sending, done, message, error }
 }
