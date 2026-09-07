@@ -19,6 +19,11 @@ import { insertChild, mapTree, nid } from '../component-tree-utils'
 import { primaryField } from '../primary-field'
 import { coerceValue, resolveField } from './fields'
 import { parseBqlViaDbal } from './dbal-parse'
+import {
+  applyWorkflowBql,
+  isWorkflowScript,
+  type BqlWorkflow,
+} from './apply-workflow'
 import type { BqlAttr } from './types'
 
 export interface BqlError {
@@ -44,6 +49,12 @@ export interface ApplyBqlResult {
   pages: BqlPage[]
   errors: BqlError[]
   warnings: string[]
+  /**
+   * The workflow the script described, when it described one. A script
+   * builds a page or a workflow, so exactly one of this and `tree` is
+   * ever the point of a given run.
+   */
+  workflow?: BqlWorkflow
 }
 
 function applyAttrs(
@@ -78,6 +89,19 @@ export async function applyBql(
   const parsed = await parseBqlViaDbal(tenant, script)
   if (!parsed.ok) {
     return { tree, classes, pages: [], errors: parsed.errors, warnings: [] }
+  }
+  // A script builds a page or a workflow. Deciding here, once, keeps the
+  // two appliers from having to tolerate each other's sentences.
+  if (isWorkflowScript(parsed.sentences)) {
+    const built = applyWorkflowBql(parsed.sentences)
+    return {
+      tree,
+      classes,
+      pages: [],
+      errors: built.errors,
+      warnings: [],
+      workflow: built.workflow ?? undefined,
+    }
   }
   let workingTree = tree
   let workingClasses = classes

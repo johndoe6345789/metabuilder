@@ -118,11 +118,16 @@ export function useGodWorkflow(tenantOverride?: string) {
 
   const [error, setError] = useState<string | null>(null)
 
-  const publish = useCallback(async (): Promise<boolean> => {
-    setPublishing(true)
-    setError(null)
-    try {
-      const wf = current.workflow
+  /**
+   * Write one workflow and its steps, returning null or why it failed.
+   *
+   * Shared by the Publish button and by a BQL script, so a workflow
+   * published either way is published the same way -- two copies of this
+   * would drift on the next field the schema adds.
+   */
+  const publishEntry = useCallback(
+    async (entry: WorkflowEntry): Promise<string | null> => {
+      const wf = entry.workflow
       const row = {
         id: wf.id,
         tenantId: tenant,
@@ -133,61 +138,114 @@ export function useGodWorkflow(tenantOverride?: string) {
         // workflow had never once worked, and said so only by leaving the
         // status on "Staged changes".
         version: 1,
-        // What makes it run. DBAL matches this against "<Entity>.created"
-        // for the tenant on every create, and it is also the opt-in that
-        // lets a page name this workflow at all.
-        triggerEvent: current.trigger,
+        // What makes it run, and the opt-in that lets a page name it.
+        triggerEvent: entry.trigger,
         // Which form it answers. Without it every workflow subscribed to
         // FormSubmission.created claims every form on the tenant.
-        formName: current.formName,
+        formName: entry.formName,
         isPublished: true,
       }
-      const res = await fetch(`${DBAL}/${tenant}/core/Workflow`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(row),
-        signal: AbortSignal.timeout(6000),
-      })
-      // 409 means the row is already there -- from the second publish
-      // onwards, which is most of them. It has to be updated rather than
-      // skipped, or changing what a workflow runs on would never take.
-      if (res.status === 409) {
-        const put = await fetch(`${DBAL}/${tenant}/core/Workflow/${wf.id}`, {
-          method: 'PUT',
+      try {
+        const res = await fetch(`${DBAL}/${tenant}/core/Workflow`, {
+          method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(row),
           signal: AbortSignal.timeout(6000),
         })
-        if (!put.ok) {
-          setError(await describeFailure('Workflow', put))
-          return false
+        // 409 means the row is already there -- from the second publish
+        // onwards, which is most of them. It has to be updated rather
+        // than skipped, or changing what a workflow runs on never takes.
+        if (res.status === 409) {
+          const put = await fetch(`${DBAL}/${tenant}/core/Workflow/${wf.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(row),
+            signal: AbortSignal.timeout(6000),
+          })
+          if (!put.ok) return describeFailure('Workflow', put)
+        } else if (!res.ok) {
+          return describeFailure('Workflow', res)
         }
-      } else if (!res.ok) {
-        setError(await describeFailure('Workflow', res))
-        return false
+
+        const wrote = await saveGraph(
+          DBAL,
+          tenant,
+          wf.id,
+          wf.nodes as unknown as GraphNode[],
+          wf.connections as unknown as GraphEdges
+        )
+        if (!wrote) return 'The workflow was saved but its steps were not.'
+        await snapshot('god.workflow', wf, `Published ${wf.name}`)
+        return null
+      } catch {
+        return 'Could not reach the data layer.'
+      }
+    },
+    [tenant]
+  )
+
+  /**
+   * Store a workflow a BQL script described, and publish it if the script
+   * said to.
+   *
+   * Adds it rather than editing whichever one the tab has open: a script
+   * names its workflow, and the tab's selection has nothing to do with
+   * what the script was about. A script re-run under the same name
+   * replaces that one, so running it twice does not leave two.
+   *
+   * Returns null when it worked, or why it did not.
+   */
+  const saveFromScript = useCallback(
+    async (built: {
+      name: string
+      trigger: string
+      formName: string
+      nodes: Workflow['nodes']
+      publish: boolean
+    }): Promise<string | null> => {
+      const existing = entries.find(e => e.workflow.name === built.name)
+      const base = existing ?? newWorkflowEntry(built.name)
+      const entry: WorkflowEntry = {
+        ...base,
+        workflow: {
+          ...base.workflow,
+          name: built.name,
+          nodes: built.nodes,
+          connections: [],
+        },
+        trigger: built.trigger,
+        formName: built.formName,
       }
 
-      const wrote = await saveGraph(
-        DBAL,
-        tenant,
-        wf.id,
-        wf.nodes as unknown as GraphNode[],
-        wf.connections as unknown as GraphEdges
-      )
-      if (!wrote) {
-        setError('The workflow was saved but its steps were not.')
+      if (existing === undefined) dispatch(addWorkflow({ tenant, entry }))
+      else {
+        dispatch(
+          patchWorkflow({ tenant, id: entry.workflow.id, change: entry })
+        )
+      }
+      dispatch(selectWorkflow({ tenant, id: entry.workflow.id }))
+
+      if (!built.publish) return null
+      return publishEntry(entry)
+    },
+    [entries, dispatch, tenant, publishEntry]
+  )
+
+  const publish = useCallback(async (): Promise<boolean> => {
+    setPublishing(true)
+    setError(null)
+    try {
+      const why = await publishEntry(current)
+      if (why !== null) {
+        setError(why)
         return false
       }
-      await snapshot('god.workflow', wf, `Published ${wf.name}`)
       dispatch(clearDirty('workflow'))
       return true
-    } catch {
-      setError('Could not reach the data layer.')
-      return false
     } finally {
       setPublishing(false)
     }
-  }, [current, tenant, dispatch])
+  }, [current, dispatch, publishEntry])
 
   return {
     workflow: current.workflow,
@@ -198,6 +256,7 @@ export function useGodWorkflow(tenantOverride?: string) {
     save,
     setTrigger,
     setFormName,
+    saveFromScript,
     add,
     remove,
     select,

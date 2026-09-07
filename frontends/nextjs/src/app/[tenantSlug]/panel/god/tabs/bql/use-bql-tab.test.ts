@@ -20,6 +20,11 @@ const store = vi.hoisted(() => ({ bql: {} as Record<string, unknown[]> }))
 
 vi.mock('@/app/_components/auth-provider/auth-provider-component', () => auth)
 vi.mock('../builder/use-component-tree', () => componentTree)
+// A script builds a page or a workflow; these tests are about the page
+// half and the tab's own bookkeeping.
+vi.mock('../workflow/use-god-workflow', () => ({
+  useGodWorkflow: () => ({ saveFromScript: vi.fn(async () => null) }),
+}))
 vi.mock('../styles/use-css-classes', () => cssClasses)
 vi.mock('../builder/bql/apply', () => bqlApply)
 vi.mock('@/store/hooks', () => ({

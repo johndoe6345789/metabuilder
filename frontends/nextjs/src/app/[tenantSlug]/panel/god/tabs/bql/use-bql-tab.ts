@@ -32,6 +32,7 @@ import {
 } from '../builder/bql/apply'
 import { useComponentTree } from '../builder/use-component-tree'
 import { useCssClasses } from '../styles/use-css-classes'
+import { useGodWorkflow } from '../workflow/use-god-workflow'
 
 export type { BqlScript } from './bql-script'
 
@@ -56,6 +57,7 @@ export function useBqlTab() {
   const tenant = normalizeTenantId(auth.user?.tenantId)
   const { tree, replaceTree, publish } = useComponentTree()
   const { classes, replace: replaceClasses } = useCssClasses()
+  const workflows = useGodWorkflow()
 
   const dispatch = useAppDispatch()
   /**
@@ -142,6 +144,18 @@ export function useBqlTab() {
         setResults(prev => ({ ...prev, [id]: outcome }))
         if (outcome.errors.length > 0) return
 
+        // A script builds a page or a workflow, never both.
+        if (outcome.workflow !== undefined) {
+          const saved = await workflows.saveFromScript(outcome.workflow)
+          if (saved !== null) {
+            setResults(prev => ({
+              ...prev,
+              [id]: { ...outcome, errors: [{ line: 1, message: saved }] },
+            }))
+          }
+          return
+        }
+
         replaceTree(outcome.tree)
         replaceClasses(outcome.classes)
         // applyBql only reports the routes; publishing is this hook's job,
@@ -153,7 +167,16 @@ export function useBqlTab() {
         setRunningId(null)
       }
     },
-    [scripts, tenant, tree, classes, replaceTree, replaceClasses, publishTo]
+    [
+      scripts,
+      tenant,
+      tree,
+      classes,
+      replaceTree,
+      replaceClasses,
+      publishTo,
+      workflows,
+    ]
   )
 
   return { scripts, results, published, runningId, add, remove, patch, run }
