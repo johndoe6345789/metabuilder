@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react'
 import type { useAppDispatch } from '@/store/hooks'
 import { readOne } from '@/lib/db/read-list'
 import { loadTree } from '@/lib/tenant/page-tree'
+import { parsePageLevel } from '@/lib/tenant/page-level'
 import { clearDirty, setTree } from '@/store/slices/god-slice'
 import { DBAL } from './find-row-for-path'
 import type { PublishTarget } from './types'
@@ -41,7 +42,7 @@ export function useLoadPage(dispatch: ReturnType<typeof useAppDispatch>) {
         dispatch(clearDirty('tree'))
         return {
           title: typeof row.title === 'string' ? row.title : path,
-          level: typeof row.level === 'number' ? row.level : 0,
+          level: parsePageLevel(row.level),
           requiresAuth:
             typeof row.requiresAuth === 'boolean' ? row.requiresAuth : false,
         }

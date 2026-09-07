@@ -11,6 +11,7 @@ import { loadJSONPackage } from '@/lib/packages/json/functions/load-json-package
 import { renderJSONComponent } from '@/lib/packages/json/render-json-component'
 import { getPackagesDir } from '@/lib/packages/unified/get-packages-dir'
 import { fetchTenantPage } from '@/lib/tenant/fetch-tenant-page'
+import { mayViewPage } from '@/lib/tenant/page-access'
 import { UIPageRenderer } from '@/components/ui-page-renderer/UIPageRenderer'
 import type { JSONComponent } from '@/lib/packages/json/types'
 
@@ -48,11 +49,14 @@ export default async function PackagePage({ params }: PackagePageProps) {
   } catch {
     // Not a filesystem package — check if it's a DBAL tenant page
     const page = await fetchTenantPage(tenantSlug, `/${pkg}`)
+    // The row says who may see this; without asking, a page the founder
+    // marked "Admin only" was served in full to whoever had the URL.
     if (
       page !== null &&
       page.isActive &&
       page.componentTree !== null &&
-      page.componentTree !== undefined
+      page.componentTree !== undefined &&
+      (await mayViewPage(page))
     ) {
       return (
         <UIPageRenderer
@@ -65,37 +69,4 @@ export default async function PackagePage({ params }: PackagePageProps) {
   }
 }
 
-export async function generateMetadata({ params }: PackagePageProps) {
-  const { tenantSlug, package: pkg } = await params
-
-  // Try to load package metadata
-  try {
-    const packageData = await loadJSONPackage(join(getPackagesDir(), pkg))
-    return {
-      title: `${packageData.metadata.name} - ${tenantSlug} | MetaBuilder`,
-      description:
-        packageData.metadata.description.length > 0
-          ? packageData.metadata.description
-          : `${packageData.metadata.name} package for tenant ${tenantSlug}`,
-    }
-  } catch {
-    // Fallback if package can't be loaded
-    const page = await fetchTenantPage(tenantSlug, `/${pkg}`)
-    if (page !== null && page.isActive && page.title.length > 0) {
-      return {
-        title: `${page.title} | ${tenantSlug} | MetaBuilder`,
-        description:
-          page.description !== null &&
-          page.description !== undefined &&
-          page.description.length > 0
-            ? page.description
-            : `${page.title} for tenant ${tenantSlug}`,
-      }
-    }
-
-    return {
-      title: `${pkg} - ${tenantSlug} | MetaBuilder`,
-      description: `${pkg} package for tenant ${tenantSlug}`,
-    }
-  }
-}
+export { generateMetadata } from './metadata'

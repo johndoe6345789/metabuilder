@@ -2,6 +2,7 @@ import 'server-only'
 import { readList } from '@/lib/db/read-list'
 
 import { loadTree } from '@/lib/tenant/page-tree'
+import { parsePageLevel } from '@/lib/tenant/page-level'
 
 const DBAL =
   process.env.DBAL_ENDPOINT ??
@@ -74,7 +75,7 @@ function normalize(p: Record<string, unknown>): TenantPage {
     id: p.id as string,
     path: p.path as string,
     title: p.title as string,
-    level: (p.level as number | undefined) ?? 1,
+    level: parsePageLevel(p.level),
     requiresAuth: (p.requiresAuth as boolean | undefined) ?? false,
     requiredRole: (p.requiredRole as string | null | undefined) ?? null,
     pageTreeId: (p.pageTreeId as string | null | undefined) ?? null,

@@ -3,6 +3,7 @@ import {
   pkgMod,
   renderMod,
   tenantMod,
+  accessMod,
   navMod,
   mockUIPageRenderer,
   props,
@@ -12,6 +13,7 @@ import {
 vi.mock('@/lib/packages/json/functions/load-json-package', () => pkgMod)
 vi.mock('@/lib/packages/json/render-json-component', () => renderMod)
 vi.mock('@/lib/tenant/fetch-tenant-page', () => tenantMod)
+vi.mock('@/lib/tenant/page-access', () => accessMod)
 vi.mock('@/components/ui-page-renderer/UIPageRenderer', () => ({
   UIPageRenderer: mockUIPageRenderer,
 }))

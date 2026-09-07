@@ -96,14 +96,26 @@ describe('fetchTenantPage', () => {
     expect(tree.loadTree).not.toHaveBeenCalled()
   })
 
-  it('applies the same defaults normalize applies elsewhere', async () => {
+  // This used to default to 1 while the client renderer defaulted the same
+  // field to 0, and nothing read this copy, so the disagreement was free.
+  // It is not free now that the server routes gate on it: a row that never
+  // declared a level is a public page -- which is what the builder writes
+  // by default and what the client path has always served -- so defaulting
+  // to 1 would put every such page behind a login. See page-level.ts for
+  // the value that IS present but unreadable, which fails closed.
+  it('reads an undeclared level as public, as the renderer does', async () => {
     stub(true, envelope([page()]))
     const result = await fetchTenantPage('acme', '/home')
     expect(result).toMatchObject({
-      level: 1,
+      level: 0,
       requiresAuth: false,
       requiredRole: null,
     })
+  })
+
+  it('honours a level the data layer sent back as a string', async () => {
+    stub(true, envelope([page({ level: '3' })]))
+    expect((await fetchTenantPage('acme', '/home'))?.level).toBe(3)
   })
 })
 

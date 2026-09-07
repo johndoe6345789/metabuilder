@@ -3,6 +3,7 @@
 import { readList } from '@/lib/db/read-list'
 import type { TreeNode } from '@/components/blocks/block-registry'
 import { loadTree } from '@/lib/tenant/page-tree'
+import { parsePageLevel } from '@/lib/tenant/page-level'
 
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
@@ -44,7 +45,7 @@ export async function fetchSlot(
     // Nothing this slot can actually render -- same as no row at all.
     if (component === null && componentTree === null) return null
     return {
-      level: typeof row.level === 'number' ? row.level : 0,
+      level: parsePageLevel(row.level),
       component,
       componentTree,
     }

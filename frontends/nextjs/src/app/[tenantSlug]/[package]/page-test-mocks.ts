@@ -11,6 +11,7 @@ export const renderMod = {
   ),
 }
 export const tenantMod = { fetchTenantPage: vi.fn() }
+export const accessMod = { mayViewPage: vi.fn(() => Promise.resolve(true)) }
 export const navMod = {
   notFound: vi.fn(() => {
     throw new Error('NEXT_NOT_FOUND')

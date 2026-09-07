@@ -4,6 +4,9 @@ import { render, screen } from '@testing-library/react'
 const tenantPage = vi.hoisted(() => ({ fetchTenantPage: vi.fn() }))
 vi.mock('@/lib/tenant/fetch-tenant-page', () => tenantPage)
 
+const access = vi.hoisted(() => ({ mayViewPage: vi.fn(async () => true) }))
+vi.mock('@/lib/tenant/page-access', () => access)
+
 vi.mock('@/components/ui-page-renderer/UIPageRenderer', () => ({
   UIPageRenderer: ({ layout }: { layout: unknown }) => (
     <div data-testid="ui-page-renderer">{JSON.stringify(layout)}</div>

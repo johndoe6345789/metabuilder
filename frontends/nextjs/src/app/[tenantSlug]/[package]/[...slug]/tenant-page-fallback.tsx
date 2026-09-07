@@ -8,6 +8,7 @@
 
 import { UIPageRenderer } from '@/components/ui-page-renderer/UIPageRenderer'
 import { fetchTenantPage } from '@/lib/tenant/fetch-tenant-page'
+import { mayViewPage } from '@/lib/tenant/page-access'
 import type { JSONComponent } from '@/lib/packages/json/types'
 import type { ReactElement } from 'react'
 
@@ -25,6 +26,10 @@ export async function tenantPageFallback(
   ) {
     return null
   }
+
+  // Same gate as the unnested route: a restricted page is not a page this
+  // visitor has, so it reads as absent rather than as forbidden.
+  if (!(await mayViewPage(page))) return null
 
   return (
     <UIPageRenderer
