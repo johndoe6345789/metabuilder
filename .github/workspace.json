@@ -192,7 +192,7 @@
     {
       "repo": "dbal",
       "branch": "main",
-      "ref": "b43556bfd73c9312bf3ba2107df3cc4ea3b0eb53",
+      "ref": "747f60846dcd808153586e978080cf9a22a2ac9b",
       "needed_by": [
         "nextjs"
       ],
