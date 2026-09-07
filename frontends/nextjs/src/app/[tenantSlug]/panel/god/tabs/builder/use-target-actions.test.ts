@@ -104,3 +104,69 @@ describe('load', () => {
     expect(setTarget).not.toHaveBeenCalled()
   })
 })
+
+
+/**
+ * `load` right beside `pick` applies what use-load-page returns -- title,
+ * level and requiresAuth -- and its docstring says it reads them back
+ * precisely "so a re-publish doesn't silently reset them". `pick` threw
+ * the same value away.
+ *
+ * So: open the builder, choose an Admin-only page from the route dropdown,
+ * press Publish. write-page-row writes the level sitting in the target,
+ * which is DEFAULT_PUBLISH_TARGET's 0, and the page is public. Nothing on
+ * screen says the level changed, and the page still looks right.
+ */
+describe('picking a route that is not public', () => {
+  const gated = () => {
+    const setTarget = vi.fn()
+    const t = {
+      load: vi.fn(async () => ({
+        title: 'Board minutes',
+        level: 3,
+        requiresAuth: true,
+      })),
+    }
+    const { result } = renderHook(() =>
+      useTargetActions(
+        t,
+        'acme',
+        { tenant: 'acme', path: '/blog', title: 'Blog' },
+        pages,
+        setTarget
+      )
+    )
+    return { result, setTarget, t }
+  }
+
+  const applied = (setTarget: ReturnType<typeof vi.fn>) =>
+    setTarget.mock.calls
+      .map(call => call[0] as unknown)
+      .filter((u): u is (p: unknown) => unknown => typeof u === 'function')
+      .reduce<Record<string, unknown>>(
+        (acc, update) => ({
+          ...acc,
+          ...(update(acc) as Record<string, unknown>),
+        }),
+        { level: 0, requiresAuth: false }
+      )
+
+  it('keeps the level the page was published with', async () => {
+    const { result, setTarget } = gated()
+    await act(async () => {
+      result.current.pick('/about')
+    })
+    expect(applied(setTarget)).toMatchObject({
+      level: 3,
+      requiresAuth: true,
+    })
+  })
+
+  it('still moves to the picked path', async () => {
+    const { result, setTarget } = gated()
+    await act(async () => {
+      result.current.pick('/about')
+    })
+    expect(applied(setTarget)).toMatchObject({ path: '/about' })
+  })
+})

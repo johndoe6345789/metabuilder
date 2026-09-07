@@ -20,8 +20,16 @@ export function useTargetActions(
   const pick = useCallback(
     (path: string) => {
       const row = pages.find(p => p.path === path)
+      // The path and title move at once so the picker does not lag; the
+      // rest arrives with the row.
       setTarget(prev => ({ ...prev, path, title: row?.title ?? prev.title }))
-      void t.load(tenant, path)
+      // load() returns the row's level and requiresAuth, and it exists to
+      // return them: without applying them here, choosing an Admin-only
+      // page from the dropdown and pressing Publish wrote the target's
+      // defaults over it -- level 0 -- and quietly made the page public.
+      void t.load(tenant, path).then(loaded => {
+        if (loaded !== null) setTarget(prev => ({ ...prev, ...loaded }))
+      })
     },
     [pages, setTarget, t, tenant]
   )
