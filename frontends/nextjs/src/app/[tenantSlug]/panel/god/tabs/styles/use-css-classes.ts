@@ -113,14 +113,22 @@ export function useCssClasses() {
     [dispatch]
   )
 
+  /**
+   * Write the tenant's styles.
+   *
+   * @p these is for a caller that has just computed a class list and has
+   * not yet seen it in state -- BQL runs its whole script inside one
+   * callback, so `classes` there is still the list from before the run.
+   * Omitted, it publishes what the Styles tab is showing.
+   */
   const publish = useCallback(
-    async (tenant = 'system'): Promise<boolean> => {
+    async (tenant = 'system', these?: CssClass[]): Promise<boolean> => {
       setPublishing(true)
       try {
         // Rows, not a JSON blob: StyleClass.classes was dropped when the
         // schema went relational, so the old POST wrote a column that is no
         // longer there.
-        const ok = await saveStyleClasses(DBAL, tenant, classes)
+        const ok = await saveStyleClasses(DBAL, tenant, these ?? classes)
         if (!ok) return false
         dispatch(clearDirty('css'))
         return true

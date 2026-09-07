@@ -12,7 +12,11 @@ const componentTree = vi.hoisted(() => ({
   })),
 }))
 const cssClasses = vi.hoisted(() => ({
-  useCssClasses: vi.fn(() => ({ classes: [], replace: vi.fn() })),
+  useCssClasses: vi.fn(() => ({
+    classes: [],
+    replace: vi.fn(),
+    publish: vi.fn(async () => true),
+  })),
 }))
 const bqlApply = vi.hoisted(() => ({ applyBql: vi.fn() }))
 /** A real per-tenant store, so persistence is exercised not stubbed. */
