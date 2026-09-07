@@ -40,7 +40,10 @@ export function WorkflowsTab() {
               : 'Published — up to date')}
         </span>
         <span className={s.spacer} />
-        <VersionHistory<Workflow> storageKey="god.workflow" onRevert={save} />
+        <VersionHistory<Workflow>
+          storageKey={wf.versionsKey}
+          onRevert={save}
+        />
         <Button
           variant="contained"
           size="small"

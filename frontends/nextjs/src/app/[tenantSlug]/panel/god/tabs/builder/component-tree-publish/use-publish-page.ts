@@ -4,6 +4,7 @@ import { deleteTree, saveTree } from '@/lib/tenant/page-tree'
 import { describeFailure } from '@/lib/tenant/page-tree/write-failure'
 import { clearDirty } from '@/store/slices/god-slice'
 import { snapshot } from '@/lib/persist/versions'
+import { versionsKey } from '@/lib/persist/versions-key'
 import type { TreeNode } from '../builder-registry'
 import { DBAL, findRowForPath, pageId } from './find-row-for-path'
 import { writePageRow } from './write-page-row'
@@ -97,7 +98,14 @@ export function usePublishPage(
           await deleteTree(DBAL, tenant, liveTreeId)
         }
 
-        await snapshot('god.componentTree', treeToPublish, 'Published page')
+        // Scoped like the workflow history above: this is a full copy of
+        // a page's content, and it was landing in a store shared by every
+        // tenant who signs in on this browser.
+        await snapshot(
+          versionsKey('god.componentTree', tenant),
+          treeToPublish,
+          'Published page'
+        )
         dispatch(clearDirty('tree'))
         return null
       } catch (cause) {

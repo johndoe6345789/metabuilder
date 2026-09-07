@@ -19,6 +19,7 @@ import {
   type WorkflowEntry,
 } from '@/store/slices/god-slice/workflow-entry'
 import { snapshot } from '@/lib/persist/versions'
+import { versionsKey } from '@/lib/persist/versions-key'
 import { describeFailure } from '@/lib/tenant/page-tree/write-failure'
 import { useCurrentTenantScope } from '../use-current-tenant-scope'
 
@@ -171,7 +172,11 @@ export function useGodWorkflow(tenantOverride?: string) {
           wf.connections
         )
         if (!wrote) return 'The workflow was saved but its steps were not.'
-        await snapshot('god.workflow', wf, `Published ${wf.name}`)
+        await snapshot(
+          versionsKey('god.workflow', tenant),
+          wf,
+          `Published ${wf.name}`
+        )
         return null
       } catch {
         return 'Could not reach the data layer.'
@@ -262,5 +267,12 @@ export function useGodWorkflow(tenantOverride?: string) {
     publishing,
     /** Why the last publish did not take, or null. */
     error,
+    /**
+     * Where this tenant's version history lives. Handed out rather than
+     * spelled again by the tab: the reader used the bare 'god.workflow'
+     * while the writer knew the tenant, so one community's history was
+     * offered to whoever signed in next on the same browser.
+     */
+    versionsKey: versionsKey('god.workflow', tenant),
   }
 }
