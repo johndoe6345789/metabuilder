@@ -30,7 +30,10 @@ export interface RecordAction {
  * God Panel's unsaved draft in the browser and shows an alert. That is a
  * preview; this reaches the published workflow.
  */
-export function useRecordAction(formName: string): RecordAction {
+export function useRecordAction(
+  formName: string,
+  workflow?: string
+): RecordAction {
   const pathname = usePathname()
   const [sending, setSending] = useState(false)
   const [done, setDone] = useState(false)
@@ -45,6 +48,7 @@ export function useRecordAction(formName: string): RecordAction {
       formName,
       path: pathname,
       values: {},
+      workflow,
     })
       .then(result => {
         if (result.ok) setDone(true)
@@ -53,7 +57,7 @@ export function useRecordAction(formName: string): RecordAction {
       .finally(() => {
         setSending(false)
       })
-  }, [sending, done, pathname, formName])
+  }, [sending, done, pathname, formName, workflow])
 
   return { fire, sending, done, error }
 }

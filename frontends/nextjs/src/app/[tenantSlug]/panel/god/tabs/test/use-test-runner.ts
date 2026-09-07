@@ -28,11 +28,15 @@ function subsetMatch(
   )
 }
 
-/** Point-and-click unit tests run against the current workflow (from Redux). */
+import { useGodWorkflow } from '../workflow/use-god-workflow'
+
+/** Point-and-click unit tests run against the workflow currently open. */
 export function useTestRunner() {
   const dispatch = useAppDispatch()
   const cases = useAppSelector(s => (s.god as GodState).tests)
-  const workflow = useAppSelector(s => (s.god as GodState).workflow)
+  // The one being edited. A tenant may have several now, and a test runs
+  // against whichever is open, which is what someone pressing Run means.
+  const { workflow } = useGodWorkflow()
   // Partial, not Record: only run cases have a result.
   const [results, setResults] = useState<Partial<Record<string, TestResult>>>(
     {}

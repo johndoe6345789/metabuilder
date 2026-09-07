@@ -5,16 +5,24 @@ import type { Workflow } from '@/workflow-editor'
 import { WorkflowEditor } from './workflow/WorkflowEditor'
 import { useGodWorkflow } from './workflow/use-god-workflow'
 import { WorkflowTrigger } from './workflow/WorkflowTrigger'
+import { WorkflowPicker } from './workflow/WorkflowPicker'
 import { VersionHistory } from '@/components/version-history/VersionHistory'
 import s from './WorkflowsTab.module.scss'
 
 export function WorkflowsTab() {
-  const { workflow, save, trigger, setTrigger, dirty, publish, publishing } =
-    useGodWorkflow()
+  const wf = useGodWorkflow()
+  const { workflow, save, trigger, setTrigger, dirty, publish, publishing } = wf
 
   return (
     <>
       <div className={s.publishBar}>
+        <WorkflowPicker
+          entries={wf.entries}
+          selectedId={wf.selectedId}
+          onSelect={wf.select}
+          onAdd={wf.add}
+          onRemove={wf.remove}
+        />
         <WorkflowTrigger value={trigger} onChange={setTrigger} />
         {dirty ? <span className={s.dot} /> : null}
         <span className={`${s.status} ${dirty ? '' : s.clean}`}>

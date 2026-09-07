@@ -9,6 +9,13 @@ const store = vi.hoisted(() => ({
 }))
 const engine = vi.hoisted(() => ({ runWorkflow: vi.fn() }))
 
+// The runner tests the run, not which workflow is open: a tenant may
+// have several now, and picking one reaches auth for the tenant scope.
+vi.mock('../workflow/use-god-workflow', () => ({
+  useGodWorkflow: () => ({
+    workflow: { id: 'wf', name: 'W', nodes: [], connections: [] },
+  }),
+}))
 vi.mock('@/lib/workflow/run-workflow', () => engine)
 vi.mock('@/store/hooks', () => ({
   useAppDispatch: () => (action: { type: string; payload?: unknown }) => {
@@ -174,7 +181,12 @@ describe('running cases', () => {
     await act(async () => {
       await result.current.runAll()
     })
-    expect(engine.runWorkflow).toHaveBeenCalledWith(store.workflow, { x: 9 })
+    // The workflow now comes from useGodWorkflow (mocked above) rather
+    // than straight off the slice, because a tenant may have several.
+    expect(engine.runWorkflow).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'wf' }),
+      { x: 9 }
+    )
   })
 
   it('runs every case and reports each separately', async () => {

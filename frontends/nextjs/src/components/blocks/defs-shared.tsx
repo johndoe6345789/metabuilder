@@ -13,9 +13,21 @@ import { useFormScope } from './form/form-context'
 import { useRecordAction } from './form/use-record-action'
 import formStyles from './form/form.module.scss'
 
+/**
+ * Run the God Panel's unsaved draft in this browser, and show what it did.
+ *
+ * A preview of the workflow currently open in the editor -- not the
+ * published one, and not the one a block's click names. See
+ * form/use-record-action.ts for the path that reaches a real workflow.
+ */
 export function fireWorkflow(): void {
-  const wf = (store.getState().god as GodState).workflow
-  if (wf.nodes.length === 0) {
+  const god = store.getState().god as GodState
+  // Whichever workflow the panel has open, across every tenant held in
+  // this browser: a preview has no tenant of its own to consult.
+  // .at() is `T | undefined`; indexing is not, unless
+  // noUncheckedIndexedAccess is on -- and it is not in every tsconfig here.
+  const wf = Object.values(god.workflows ?? {}).flat().at(0)?.workflow
+  if (wf === undefined || wf.nodes.length === 0) {
     window.alert('No workflow wired yet.')
     return
   }

@@ -19,6 +19,15 @@ export interface SubmitFormRequest {
   formName: string
   path: string
   values: Record<string, string>
+  /**
+   * The workflow this asks for, by name. Empty leaves it to whatever the
+   * tenant has subscribed to FormSubmission.created.
+   *
+   * Naming one does not grant anything: DBAL only runs a workflow the
+   * tenant has published *and* set to run when a form is submitted, so a
+   * name that has not opted in reaches nothing.
+   */
+  workflow?: string
 }
 
 export interface SubmitFormResult {
@@ -57,6 +66,7 @@ export async function submitForm(
           formName: request.formName,
           path: request.path,
           data: request.values,
+          workflow: request.workflow ?? '',
           createdAt: Math.floor(Date.now() / 1000),
         }),
         signal: AbortSignal.timeout(10000),

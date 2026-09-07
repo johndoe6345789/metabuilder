@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 
+// The click field's options come from a live fetch of the tenant's
+// workflows; these tests are about the declared fields, not that list.
+vi.mock('./use-workflow-names', () => ({ useWorkflowNames: () => [] }))
 vi.mock('../config/use-dropdown-configs', () => ({
   useDropdownConfigs: () => ({ configs: [] }),
 }))
@@ -58,7 +61,13 @@ describe('ComponentTreeAutoProps', () => {
     expect(screen.getByLabelText('Description')).toBeTruthy()
   })
 
-  it('renders nothing when the only field is the excluded primary one', () => {
+  /**
+   * Was "renders nothing": a heading declared only its text, so excluding
+   * the primary field left an empty panel. Every block now also carries
+   * the click field, so what is left is that and nothing else -- the
+   * exclusion still being the thing under test.
+   */
+  it('leaves only the click field when the primary one is excluded', () => {
     const heading = (props: Record<string, unknown>): TreeNode => ({
       id: 'n1',
       type: 'html.h1',
@@ -72,6 +81,8 @@ describe('ComponentTreeAutoProps', () => {
         excludeField="text"
       />
     )
-    expect(container.innerHTML).toBe('')
+    expect(screen.queryByLabelText('Text')).toBeNull()
+    expect(screen.getByLabelText('When clicked, run')).toBeTruthy()
+    expect(container.querySelectorAll('input')).toHaveLength(1)
   })
 })

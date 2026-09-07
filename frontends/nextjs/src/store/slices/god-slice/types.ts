@@ -1,4 +1,3 @@
-import type { Workflow } from '@/workflow-editor'
 import type { TreeNode } from '@/app/[tenantSlug]/panel/god/tabs/builder/builder-registry'
 import type { RegistryPackage } from '@/app/[tenantSlug]/panel/god/tabs/packages/use-package-registry'
 import type { CssClass } from '@/app/[tenantSlug]/panel/god/tabs/styles/use-css-classes'
@@ -7,6 +6,7 @@ import type { SmtpConfig } from '@/app/[tenantSlug]/panel/god/tabs/config/use-sm
 import type { TestCase } from '@/app/[tenantSlug]/panel/god/tabs/test/use-test-runner'
 import type { Task } from '@/app/[tenantSlug]/panel/god/tabs/plan/use-plan-board'
 import type { BqlScript } from '@/app/[tenantSlug]/panel/god/tabs/bql/bql-script'
+import type { WorkflowEntry } from './workflow-entry'
 
 export type GodDomain =
   | 'workflow'
@@ -19,14 +19,23 @@ export type GodDomain =
   | 'plan'
 
 export interface GodState {
-  workflow: Workflow
   /**
-   * The entity event that runs `workflow`, as "<Entity>.created", or empty
-   * for a workflow nothing triggers automatically. It is not part of the
-   * Workflow type because that lives in the workflow-editor library, a
-   * separate repo mounted here; DBAL stores it as Workflow.triggerEvent.
+   * A tenant's workflows, keyed by tenant -- as many as they like.
+   *
+   * Keyed rather than a flat list for the same reason as `bql`: this slice
+   * persists per browser origin, not per tenant, so a flat list would show
+   * one tenant's automation to the next person to sign in on the same
+   * browser. A workflow says what a business does automatically and to
+   * what, which is not something to hand over with a shared laptop.
+   *
+   * Optional for the same reason `bql` is: redux-persist replaces this
+   * slice with whatever it saved, so a browser that last used the app
+   * before these keys existed rehydrates without them. That is every
+   * existing install on its first load after this ships.
    */
-  workflowTrigger: string
+  workflows?: Record<string, WorkflowEntry[]>
+  /** Which workflow each tenant is editing, by id. */
+  workflowSelected?: Record<string, string>
   tree: TreeNode
   packages: RegistryPackage[]
   css: CssClass[]

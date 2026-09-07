@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/react'
 
+// The click field's options come from a live fetch of the tenant's
+// workflows; these tests are about the declared fields, not that list.
+vi.mock('./use-workflow-names', () => ({ useWorkflowNames: () => [] }))
 vi.mock('../config/use-dropdown-configs', () => ({
   useDropdownConfigs: () => ({ configs: [] }),
 }))

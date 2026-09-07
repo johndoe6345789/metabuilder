@@ -13,6 +13,7 @@
  */
 import { cloneElement, isValidElement } from 'react'
 import type { ReactElement, ReactNode } from 'react'
+import { WorkflowClick } from './form/WorkflowClick'
 import { commonAttrs } from './common-attrs'
 import { DEFS } from './block-defs'
 import type { BlockDef, PaletteItem, TreeNode } from './block-types'
@@ -48,6 +49,23 @@ export function paletteItemByName(name: string): PaletteItem | undefined {
  * without this, setting an id or aria-label in the builder would silently do
  * nothing on 37 different block types.
  */
+/**
+ * Wrap a rendered block so clicking it runs the workflow it names.
+ *
+ * Applied here rather than by each block for the same reason commonAttrs
+ * is: a block's render() only reads the props it knows about, so without
+ * this only the handful that thought about clicks could ever act.
+ */
+function withWorkflowClick(
+  props: Record<string, unknown>,
+  el: ReactNode
+): ReactNode {
+  const workflow =
+    typeof props.onClickWorkflow === 'string' ? props.onClickWorkflow.trim() : ''
+  if (workflow === '') return el
+  return <WorkflowClick workflow={workflow}>{el}</WorkflowClick>
+}
+
 /** Render a component-tree node (and its children) to React. Canonical. */
 export function renderNode(node: TreeNode): ReactNode {
   const def = BLOCK_REGISTRY[node.type]
@@ -57,7 +75,7 @@ export function renderNode(node: TreeNode): ReactNode {
     </span>
   ))
   if (def === undefined) return <em>Unknown block: {node.type}</em>
-  const el = def.render(node.props, kids)
+  const el = withWorkflowClick(node.props, def.render(node.props, kids))
   const attrs = commonAttrs(node.props)
   // Nothing set, or the block returned a fragment/string that cannot carry
   // attributes -- render it exactly as before.
