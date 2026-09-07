@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { saveGraph, type GraphNode } from '@/lib/workflow/workflow-graph'
+import type { WorkflowNode } from '@/workflow-editor'
+import { saveGraph } from '@/lib/workflow/workflow-graph'
 
 const DBAL = 'http://dbal.test'
 
@@ -34,20 +35,25 @@ afterEach(() => {
   vi.unstubAllGlobals()
 })
 
-const node = (id: string): GraphNode => ({
+// The editor's own node, which is what saveGraph is handed. This used to
+// build the DBAL row shape instead -- `parameters` and a [x, y] tuple --
+// so the test agreed with the declared type and neither agreed with the
+// only caller.
+const node = (id: string): WorkflowNode => ({
   id,
   name: id,
   type: 'trigger',
-  typeVersion: 1,
-  position: [0, 0],
-  parameters: {},
+  position: { x: 0, y: 0 },
+  config: {},
+  inputs: ['main'],
+  outputs: ['main'],
 })
 
 describe('saveGraph', () => {
   it('clears what was there before writing the new graph', async () => {
     const calls = record([{ id: 'old-1' }])
 
-    await saveGraph(DBAL, 'system', 'w1', [node('Start')], {})
+    await saveGraph(DBAL, 'system', 'w1', [node('Start')], [])
 
     // A republish replaces the graph; leaving old rows would merge two
     // versions of a workflow into one.
@@ -59,7 +65,7 @@ describe('saveGraph', () => {
   it('writes a row per node', async () => {
     const calls = record()
 
-    await saveGraph(DBAL, 'system', 'w1', [node('A'), node('B')], {})
+    await saveGraph(DBAL, 'system', 'w1', [node('A'), node('B')], [])
 
     const posted = calls.filter(
       c => c.method === 'POST' && c.url.endsWith('/WorkflowNode')
@@ -70,7 +76,7 @@ describe('saveGraph', () => {
   it('reports success', async () => {
     record()
     await expect(
-      saveGraph(DBAL, 'system', 'w1', [node('A')], {})
+      saveGraph(DBAL, 'system', 'w1', [node('A')], [])
     ).resolves.toBe(true)
   })
 })

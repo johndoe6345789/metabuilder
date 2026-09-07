@@ -46,16 +46,38 @@
   font-size: 14px;
 }
 
-@media (max-width: 760px) {
+/*
+ * The palette is a fixed-width column from the workflow-editor library, so
+ * below about 1100px it was taking most of the width and leaving the
+ * canvas a sliver -- which is where the graph actually is. It stacks well
+ * before that now, and the canvas keeps a usable height either way.
+ *
+ * Steps can be added without it (see AddStep), so hiding it costs nothing:
+ * it is a convenience for dragging, not the only way in.
+ */
+@media (max-width: 1100px) {
   .content {
     flex-direction: column;
   }
   .editor {
     height: auto;
+    min-height: 560px;
+  }
+  .canvas {
+    min-height: 360px;
+  }
+}
+
+/* Narrow enough that a palette column would leave nothing for the graph. */
+@media (max-width: 760px) {
+  .editor {
     min-height: 520px;
   }
   .canvas {
-    min-height: 320px;
+    min-height: 300px;
+  }
+  .addStep {
+    flex-wrap: wrap;
   }
 }
 

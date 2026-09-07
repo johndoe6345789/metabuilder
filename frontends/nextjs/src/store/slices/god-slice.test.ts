@@ -10,7 +10,6 @@ import reducer, {
   setSmtp,
   setTests,
   setTree,
-  setWorkflow,
   type GodDomain,
   type GodState,
 } from './god-slice'
@@ -23,9 +22,12 @@ describe('initial state', () => {
     expect(Object.values(initial().dirty).every(v => !v)).toBe(true)
   })
 
-  it('seeds an empty workflow and a root container', () => {
+  // Workflows are keyed by tenant and seeded on first use, not here: a
+  // slice that persists per browser origin must not carry one tenant's
+  // automation to whoever signs in next.
+  it('seeds no workflows and a root container', () => {
     const state = initial()
-    expect(state.workflow.nodes).toEqual([])
+    expect(state.workflows).toEqual({})
     expect(state.tree.id).toBe('root')
   })
 
@@ -51,7 +53,6 @@ describe('initial state', () => {
 // domain unsaved. Testing them as a table is what makes a setter that
 // forgets the second half visible.
 describe.each([
-  ['workflow', setWorkflow, { id: 'w', name: 'W', nodes: [] }],
   ['tree', setTree, { id: 'root', type: 'container', props: {}, children: [] }],
   ['packages', setPackages, [{ id: 'p' }]],
   ['css', setCss, [{ id: 'c', name: 'c', props: {} }]],

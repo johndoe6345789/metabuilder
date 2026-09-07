@@ -51,3 +51,64 @@
   color: var(--mat-sys-on-surface, #c9d1d9);
   cursor: pointer;
 }
+
+.picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-right: 12px;
+}
+
+.pickerLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+}
+
+.pickerSelect {
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  max-width: 200px;
+  border: 1px solid var(--mat-sys-outline-variant, #30363d);
+  background: var(--mat-sys-surface-container-lowest, #0d1117);
+  color: var(--mat-sys-on-surface, #c9d1d9);
+  cursor: pointer;
+}
+
+.pickerButton {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--mat-sys-outline-variant, #30363d);
+  background: transparent;
+  color: var(--mat-sys-primary, #4493f8);
+
+  &:hover {
+    background: var(--mat-sys-surface-container-high, #21262d);
+  }
+}
+
+/*
+ * The bar holds a workflow picker, a trigger, history and publish. Below
+ * a laptop width those do not fit on one line, and the publish button was
+ * the one being pushed off.
+ */
+@media (max-width: 1000px) {
+  .publishBar {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+
+  .picker,
+  .trigger {
+    margin-right: 0;
+  }
+
+  .spacer {
+    display: none;
+  }
+}

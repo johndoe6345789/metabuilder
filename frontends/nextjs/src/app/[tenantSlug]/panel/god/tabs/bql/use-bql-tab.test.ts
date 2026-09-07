@@ -12,7 +12,11 @@ const componentTree = vi.hoisted(() => ({
   })),
 }))
 const cssClasses = vi.hoisted(() => ({
-  useCssClasses: vi.fn(() => ({ classes: [], replace: vi.fn() })),
+  useCssClasses: vi.fn(() => ({
+    classes: [],
+    replace: vi.fn(),
+    publish: vi.fn(async () => true),
+  })),
 }))
 const bqlApply = vi.hoisted(() => ({ applyBql: vi.fn() }))
 /** A real per-tenant store, so persistence is exercised not stubbed. */
@@ -20,6 +24,11 @@ const store = vi.hoisted(() => ({ bql: {} as Record<string, unknown[]> }))
 
 vi.mock('@/app/_components/auth-provider/auth-provider-component', () => auth)
 vi.mock('../builder/use-component-tree', () => componentTree)
+// A script builds a page or a workflow; these tests are about the page
+// half and the tab's own bookkeeping.
+vi.mock('../workflow/use-god-workflow', () => ({
+  useGodWorkflow: () => ({ saveFromScript: vi.fn(async () => null) }),
+}))
 vi.mock('../styles/use-css-classes', () => cssClasses)
 vi.mock('../builder/bql/apply', () => bqlApply)
 vi.mock('@/store/hooks', () => ({

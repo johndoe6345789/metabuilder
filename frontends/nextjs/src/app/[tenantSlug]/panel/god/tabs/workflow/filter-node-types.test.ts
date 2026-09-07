@@ -45,10 +45,22 @@ describe('the palette and the engine', () => {
     'dbal.entity.create',
     'dbal.entity.get',
     'dbal.entity.list',
+    'dbal.entity.update',
+    'dbal.entity.delete',
+    'dbal.entity.count',
+    'dbal.stop.unless',
     'dbal.log',
     'dbal.timestamp',
     'dbal.uuid',
     'dbal.var.set',
+    // page.* record what they want done and come back as JSON for the
+    // browser to apply -- the daemon cannot reach a DOM.
+    'page.text',
+    'page.show',
+    'page.hide',
+    'page.class',
+    'page.message',
+    'page.go',
   ]
 
   it('offers only steps the daemon implements', () => {
@@ -83,7 +95,9 @@ describe('the type a node is stored under', () => {
   it('is the step the daemon dispatches on, not the category', () => {
     for (const step of RUNNABLE_STEPS) {
       expect(step.type).toBe(step.id)
-      expect(step.type.startsWith('dbal.')).toBe(true)
+      expect(
+        step.type.startsWith('dbal.') || step.type.startsWith('page.')
+      ).toBe(true)
     }
   })
 

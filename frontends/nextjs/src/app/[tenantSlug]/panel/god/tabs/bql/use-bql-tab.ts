@@ -32,6 +32,7 @@ import {
 } from '../builder/bql/apply'
 import { useComponentTree } from '../builder/use-component-tree'
 import { useCssClasses } from '../styles/use-css-classes'
+import { useGodWorkflow } from '../workflow/use-god-workflow'
 
 export type { BqlScript } from './bql-script'
 
@@ -55,7 +56,12 @@ export function useBqlTab() {
   const auth = useAuthContext()
   const tenant = normalizeTenantId(auth.user?.tenantId)
   const { tree, replaceTree, publish } = useComponentTree()
-  const { classes, replace: replaceClasses } = useCssClasses()
+  const {
+    classes,
+    replace: replaceClasses,
+    publish: publishStyles,
+  } = useCssClasses()
+  const workflows = useGodWorkflow()
 
   const dispatch = useAppDispatch()
   /**
@@ -142,8 +148,27 @@ export function useBqlTab() {
         setResults(prev => ({ ...prev, [id]: outcome }))
         if (outcome.errors.length > 0) return
 
+        // A script builds a page or a workflow, never both.
+        if (outcome.workflow !== undefined) {
+          const saved = await workflows.saveFromScript(outcome.workflow)
+          if (saved !== null) {
+            setResults(prev => ({
+              ...prev,
+              [id]: { ...outcome, errors: [{ line: 1, message: saved }] },
+            }))
+          }
+          return
+        }
+
         replaceTree(outcome.tree)
         replaceClasses(outcome.classes)
+        // A published page carries its class names, so the rules behind
+        // them have to go too -- otherwise the page goes live styled in
+        // the editor and bare to everyone else. Passed explicitly because
+        // replaceClasses above has not reached state yet.
+        if (outcome.pages.length > 0) {
+          await publishStyles(tenant, outcome.classes)
+        }
         // applyBql only reports the routes; publishing is this hook's job,
         // and it publishes the tree the script just produced rather than
         // whichever route the Components tab happens to have selected.
@@ -153,7 +178,17 @@ export function useBqlTab() {
         setRunningId(null)
       }
     },
-    [scripts, tenant, tree, classes, replaceTree, replaceClasses, publishTo]
+    [
+      scripts,
+      tenant,
+      tree,
+      classes,
+      replaceTree,
+      replaceClasses,
+      publishStyles,
+      publishTo,
+      workflows,
+    ]
   )
 
   return { scripts, results, published, runningId, add, remove, patch, run }

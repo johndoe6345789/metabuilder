@@ -62,7 +62,63 @@ describe('submitForm', () => {
 
   it('reports success', async () => {
     stub(201)
-    expect(await submitForm(request)).toEqual({ ok: true, reason: null })
+    expect(await submitForm(request)).toEqual({
+      ok: true,
+      reason: null,
+      effects: [],
+    })
+  })
+
+  /**
+   * A named workflow's page.* steps come back in the create response, for
+   * the browser to apply -- the daemon cannot reach a DOM.
+   */
+  it('carries back what the workflow asked the page to do', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({
+        ok: true,
+        status: 201,
+        json: async () => ({
+          data: {
+            effects: [{ do: 'page.message', text: 'Booked' }],
+          },
+        }),
+      }))
+    )
+
+    const result = await submitForm(request)
+
+    expect(result.effects).toEqual([{ do: 'page.message', text: 'Booked' }])
+  })
+
+  it('has no effects when the response carries none', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({
+        ok: true,
+        status: 201,
+        json: async () => ({ data: {} }),
+      }))
+    )
+    expect((await submitForm(request)).effects).toEqual([])
+  })
+
+  // The row was written, which is what the visitor cares about.
+  it('still reports success when the body cannot be read', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({
+        ok: true,
+        status: 201,
+        json: async () => {
+          throw new Error('not json')
+        },
+      }))
+    )
+    const result = await submitForm(request)
+    expect(result.ok).toBe(true)
+    expect(result.effects).toEqual([])
   })
 
   // Without a tenant the row lands in whatever DBAL defaults to, which is

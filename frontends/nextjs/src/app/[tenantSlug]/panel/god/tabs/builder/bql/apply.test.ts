@@ -547,3 +547,63 @@ describe('applyBql: the path a page is published at', () => {
   })
 })
 
+
+/**
+ * The click field is appended to every block by fieldsFor rather than
+ * declared in each of the thirty-seven schemas. BQL had its own copy of
+ * fieldsFor that read the raw per-type schema, so the field existed in the
+ * Properties panel and did not exist in BQL -- "No property called
+ * onClickWorkflow here" for a field sitting right there in the editor.
+ */
+describe('a field every block has', () => {
+  it('can be set from a script', async () => {
+    mockDbal([
+      {
+        kind: 'add',
+        line: 1,
+        blockName: 'Button',
+        text: 'Go',
+        attrs: [{ key: 'onClickWorkflow', value: 'Send it' }],
+      },
+    ])
+
+    const result = await applyBql('irrelevant', 'tenant', 'root', root(), [])
+
+    expect(result.errors).toEqual([])
+    expect(findByAlias(result.tree, [0]).props.onClickWorkflow).toBe('Send it')
+  })
+
+  // Anything is clickable, not only the blocks that look like controls.
+  it('can be set on a block that is not a control', async () => {
+    mockDbal([
+      {
+        kind: 'add',
+        line: 1,
+        blockName: 'Heading 1',
+        text: 'Tap me',
+        attrs: [{ key: 'onClickWorkflow', value: 'Send it' }],
+      },
+    ])
+
+    const result = await applyBql('irrelevant', 'tenant', 'root', root(), [])
+
+    expect(result.errors).toEqual([])
+    expect(findByAlias(result.tree, [0]).props.onClickWorkflow).toBe('Send it')
+  })
+
+  it('still refuses a field that really does not exist', async () => {
+    mockDbal([
+      {
+        kind: 'add',
+        line: 1,
+        blockName: 'Button',
+        text: 'Go',
+        attrs: [{ key: 'nonsenseField', value: 'x' }],
+      },
+    ])
+
+    const result = await applyBql('irrelevant', 'tenant', 'root', root(), [])
+
+    expect(result.errors[0]?.message).toMatch(/nonsenseField/)
+  })
+})

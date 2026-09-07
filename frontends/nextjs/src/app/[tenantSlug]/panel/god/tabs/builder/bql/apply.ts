@@ -11,15 +11,19 @@
  * applies "most of the way".
  */
 import type { PropField } from '@/components/blocks/block-props'
-import { propSchema } from '@/components/blocks/block-props'
+import { paletteItemByName } from '../builder-registry'
+import { fieldsFor } from '../primary-field'
 import type { CssClass } from '../../styles/use-css-classes'
 import type { TreeNode } from '../builder-registry'
-import { paletteItem, paletteItemByName } from '../builder-registry'
 import { insertChild, mapTree, nid } from '../component-tree-utils'
-import { inferred } from '../auto-props-infer'
 import { primaryField } from '../primary-field'
 import { coerceValue, resolveField } from './fields'
 import { parseBqlViaDbal } from './dbal-parse'
+import {
+  applyWorkflowBql,
+  isWorkflowScript,
+  type BqlWorkflow,
+} from './apply-workflow'
 import type { BqlAttr } from './types'
 
 export interface BqlError {
@@ -45,10 +49,12 @@ export interface ApplyBqlResult {
   pages: BqlPage[]
   errors: BqlError[]
   warnings: string[]
-}
-
-function fieldsFor(type: string): PropField[] {
-  return propSchema(type) ?? inferred(paletteItem(type)?.defaults ?? {})
+  /**
+   * The workflow the script described, when it described one. A script
+   * builds a page or a workflow, so exactly one of this and `tree` is
+   * ever the point of a given run.
+   */
+  workflow?: BqlWorkflow
 }
 
 function applyAttrs(
@@ -83,6 +89,19 @@ export async function applyBql(
   const parsed = await parseBqlViaDbal(tenant, script)
   if (!parsed.ok) {
     return { tree, classes, pages: [], errors: parsed.errors, warnings: [] }
+  }
+  // A script builds a page or a workflow. Deciding here, once, keeps the
+  // two appliers from having to tolerate each other's sentences.
+  if (isWorkflowScript(parsed.sentences)) {
+    const built = applyWorkflowBql(parsed.sentences)
+    return {
+      tree,
+      classes,
+      pages: [],
+      errors: built.errors,
+      warnings: [],
+      workflow: built.workflow ?? undefined,
+    }
   }
   let workingTree = tree
   let workingClasses = classes
@@ -181,6 +200,23 @@ export async function applyBql(
                 ? { ...c, props: { ...c.props, ...cssProps } }
                 : c
             )
+    } else if (
+      sentence.kind === 'workflow' ||
+      sentence.kind === 'trigger' ||
+      sentence.kind === 'step' ||
+      sentence.kind === 'publishWorkflow'
+    ) {
+      // A script builds a page or a workflow, not both. The workflow half
+      // is applied by apply-workflow.ts; reaching one here means a script
+      // mixed the two, which is worth saying rather than ignoring.
+      errors.push({
+        line,
+        message:
+          'This line describes a workflow, and this script is building a ' +
+          'page. Start the script with "start a new workflow called ..." ' +
+          'to build one instead.',
+      })
+      continue
     } else {
       const id = aliasToId.get(sentence.alias)
       if (id === undefined) {

@@ -19,6 +19,8 @@
 import { Typography } from '@/m3'
 import type { TreeNode } from './builder-registry'
 import { useDropdownConfigs } from '../config/use-dropdown-configs'
+import { useWorkflowNames } from './use-workflow-names'
+import { WORKFLOW_SOURCE } from './workflow-source'
 import { fieldWarning } from './field-warning'
 import { AutoPropField } from './AutoPropField'
 import { fieldsFor } from './primary-field'
@@ -39,6 +41,18 @@ export function ComponentTreeAutoProps({
   excludeField,
 }: Props) {
   const { configs } = useDropdownConfigs()
+  // The workflow list is live rather than something a tenant maintains by
+  // hand in the Config tab, but it reaches the field the same way -- as
+  // one more named option list -- so no field type had to learn about it.
+  const workflowNames = useWorkflowNames()
+  const withWorkflows = [
+    ...configs,
+    {
+      id: WORKFLOW_SOURCE,
+      name: WORKFLOW_SOURCE,
+      options: workflowNames.map(n => ({ label: n, value: n })),
+    },
+  ]
   const fields = fieldsFor(node.type).filter(f => f.name !== excludeField)
 
   if (fields.length === 0) {
@@ -65,7 +79,7 @@ export function ComponentTreeAutoProps({
             field={field}
             current={current}
             warning={fieldWarning(field, current, allProps)}
-            configs={configs}
+            configs={withWorkflows}
             fieldId={`prop-${node.id}-${field.name}`}
             onChange={onChange}
           />

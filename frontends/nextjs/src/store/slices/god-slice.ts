@@ -1,5 +1,4 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import type { Workflow } from '@/workflow-editor'
 import type { TreeNode } from '@/app/[tenantSlug]/panel/god/tabs/builder/builder-registry'
 import type { RegistryPackage } from '@/app/[tenantSlug]/panel/god/tabs/packages/use-package-registry'
 import type { CssClass } from '@/app/[tenantSlug]/panel/god/tabs/styles/use-css-classes'
@@ -9,6 +8,7 @@ import type { TestCase } from '@/app/[tenantSlug]/panel/god/tabs/test/use-test-r
 import type { Task } from '@/app/[tenantSlug]/panel/god/tabs/plan/use-plan-board'
 import type { BqlScript } from '@/app/[tenantSlug]/panel/god/tabs/bql/bql-script'
 import { initialState } from './god-slice/initial-state'
+import type { WorkflowEntry } from './god-slice/workflow-entry'
 import { normalizeCssProps } from './god-slice/normalize-css-props'
 import type { GodDomain, GodState } from './god-slice/types'
 
@@ -18,13 +18,65 @@ const godSlice = createSlice({
   name: 'god',
   initialState,
   reducers: {
-    setWorkflow: (s, a: PayloadAction<Workflow>) => {
-      s.workflow = a.payload
+    /**
+     * A tenant's whole workflow list. Shaped as intents below rather than
+     * a wholesale set wherever two edits could land in one tick, for the
+     * same reason as the BQL reducers: a list read during a render is
+     * stale the moment anything else has dispatched.
+     */
+    setWorkflows: (
+      s,
+      a: PayloadAction<{ tenant: string; entries: WorkflowEntry[] }>
+    ) => {
+      s.workflows ??= {}
+      s.workflows[a.payload.tenant] = a.payload.entries
+    },
+    addWorkflow: (
+      s,
+      a: PayloadAction<{ tenant: string; entry: WorkflowEntry }>
+    ) => {
+      s.workflows ??= {}
+      const list = s.workflows[a.payload.tenant] ?? []
+      s.workflows[a.payload.tenant] = [...list, a.payload.entry]
+      s.workflowSelected ??= {}
+      s.workflowSelected[a.payload.tenant] = a.payload.entry.workflow.id
       s.dirty.workflow = true
     },
-    setWorkflowTrigger: (s, a: PayloadAction<string>) => {
-      s.workflowTrigger = a.payload
+    patchWorkflow: (
+      s,
+      a: PayloadAction<{
+        tenant: string
+        id: string
+        change: Partial<WorkflowEntry>
+      }>
+    ) => {
+      s.workflows ??= {}
+      const list = s.workflows[a.payload.tenant] ?? []
+      s.workflows[a.payload.tenant] = list.map(e =>
+        e.workflow.id === a.payload.id ? { ...e, ...a.payload.change } : e
+      )
       s.dirty.workflow = true
+    },
+    removeWorkflow: (
+      s,
+      a: PayloadAction<{ tenant: string; id: string }>
+    ) => {
+      s.workflows ??= {}
+      const list = s.workflows[a.payload.tenant] ?? []
+      // Keeping the last one leaves somewhere to type; removing it would
+      // leave the tab with nothing to show and no way back.
+      if (list.length <= 1) return
+      s.workflows[a.payload.tenant] = list.filter(
+        e => e.workflow.id !== a.payload.id
+      )
+      s.dirty.workflow = true
+    },
+    selectWorkflow: (
+      s,
+      a: PayloadAction<{ tenant: string; id: string }>
+    ) => {
+      s.workflowSelected ??= {}
+      s.workflowSelected[a.payload.tenant] = a.payload.id
     },
     setTree: (s, a: PayloadAction<TreeNode>) => {
       s.tree = a.payload
@@ -63,12 +115,9 @@ const godSlice = createSlice({
     resetTenantOwned: s => {
       s.tree = structuredClone(initialState.tree)
       s.css = structuredClone(initialState.css)
-      s.workflow = structuredClone(initialState.workflow)
-      s.workflowTrigger = initialState.workflowTrigger
       s.smtp = structuredClone(initialState.smtp)
       s.dirty.tree = false
       s.dirty.css = false
-      s.dirty.workflow = false
       s.dirty.smtp = false
     },
     setDropdowns: (s, a: PayloadAction<DropdownConfig[]>) => {
@@ -143,8 +192,11 @@ const godSlice = createSlice({
 })
 
 export const {
-  setWorkflow,
-  setWorkflowTrigger,
+  setWorkflows,
+  addWorkflow,
+  patchWorkflow,
+  removeWorkflow,
+  selectWorkflow,
   setTree,
   setPackages,
   setCss,
