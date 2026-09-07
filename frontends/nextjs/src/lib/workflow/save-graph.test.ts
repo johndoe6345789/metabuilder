@@ -47,7 +47,7 @@ describe('saveGraph', () => {
   it('clears what was there before writing the new graph', async () => {
     const calls = record([{ id: 'old-1' }])
 
-    await saveGraph(DBAL, 'system', 'w1', [node('Start')], {})
+    await saveGraph(DBAL, 'system', 'w1', [node('Start')], [])
 
     // A republish replaces the graph; leaving old rows would merge two
     // versions of a workflow into one.
@@ -59,7 +59,7 @@ describe('saveGraph', () => {
   it('writes a row per node', async () => {
     const calls = record()
 
-    await saveGraph(DBAL, 'system', 'w1', [node('A'), node('B')], {})
+    await saveGraph(DBAL, 'system', 'w1', [node('A'), node('B')], [])
 
     const posted = calls.filter(
       c => c.method === 'POST' && c.url.endsWith('/WorkflowNode')
@@ -70,7 +70,7 @@ describe('saveGraph', () => {
   it('reports success', async () => {
     record()
     await expect(
-      saveGraph(DBAL, 'system', 'w1', [node('A')], {})
+      saveGraph(DBAL, 'system', 'w1', [node('A')], [])
     ).resolves.toBe(true)
   })
 })

@@ -11,7 +11,11 @@
  * the parser deliberately does not know which those are.
  */
 
-import type { NodeType } from '@/workflow-editor'
+import {
+  generateConnectionId,
+  type Connection,
+  type NodeType,
+} from '@/workflow-editor'
 import { RUNNABLE_STEPS } from '../../workflow/runnable-steps'
 import { makeNode, nextStepPosition } from '../../workflow/use-workflow-editor/make-node'
 import type { BqlAttr, BqlSentence } from './types'
@@ -24,6 +28,16 @@ export interface BqlWorkflow {
   /** Which form it answers, or empty for any of them. */
   formName: string
   nodes: ReturnType<typeof makeNode>[]
+  /**
+   * Each step joined to the one written after it.
+   *
+   * "then" means after that, and without saying so the daemon has nothing
+   * to order the steps by: it topologically sorts the graph, and with no
+   * edges every node is equally ready. The order a script ran in was the
+   * order its rows happened to come back -- insertion order today, and
+   * nothing promises that tomorrow.
+   */
+  connections: Connection[]
   /** True when the script asked for it to be published. */
   publish: boolean
 }
@@ -101,6 +115,7 @@ export function applyWorkflowBql(
   let formName = ''
   let publish = false
   const nodes: ReturnType<typeof makeNode>[] = []
+  const connections: Connection[] = []
 
   for (const sentence of sentences) {
     const line = sentence.line
@@ -127,7 +142,17 @@ export function applyWorkflowBql(
         continue
       }
       const node = makeNode(step, nextStepPosition(nodes.length))
+      const previous = nodes.at(-1)
       nodes.push({ ...node, config: configFrom(step, sentence.attrs) })
+      if (previous !== undefined) {
+        connections.push({
+          id: generateConnectionId(),
+          sourceNodeId: previous.id,
+          sourceOutput: 'main',
+          targetNodeId: node.id,
+          targetInput: 'main',
+        })
+      }
     } else if (sentence.kind === 'publishWorkflow') {
       publish = true
     } else {
@@ -150,5 +175,8 @@ export function applyWorkflowBql(
   }
 
   if (errors.length > 0) return { workflow: null, errors }
-  return { workflow: { name, trigger, formName, nodes, publish }, errors: [] }
+  return {
+    workflow: { name, trigger, formName, nodes, connections, publish },
+    errors: [],
+  }
 }

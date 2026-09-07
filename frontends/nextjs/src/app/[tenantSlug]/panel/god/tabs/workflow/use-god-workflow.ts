@@ -1,11 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import {
-  saveGraph,
-  type GraphEdges,
-  type GraphNode,
-} from '@/lib/workflow/workflow-graph'
+import { saveGraph, type GraphNode } from '@/lib/workflow/workflow-graph'
 import type { Workflow } from '@/workflow-editor'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import {
@@ -172,7 +168,7 @@ export function useGodWorkflow(tenantOverride?: string) {
           tenant,
           wf.id,
           wf.nodes as unknown as GraphNode[],
-          wf.connections as unknown as GraphEdges
+          wf.connections
         )
         if (!wrote) return 'The workflow was saved but its steps were not.'
         await snapshot('god.workflow', wf, `Published ${wf.name}`)
@@ -201,6 +197,7 @@ export function useGodWorkflow(tenantOverride?: string) {
       trigger: string
       formName: string
       nodes: Workflow['nodes']
+      connections: Workflow['connections']
       publish: boolean
     }): Promise<string | null> => {
       const existing = entries.find(e => e.workflow.name === built.name)
@@ -211,7 +208,7 @@ export function useGodWorkflow(tenantOverride?: string) {
           ...base.workflow,
           name: built.name,
           nodes: built.nodes,
-          connections: [],
+          connections: built.connections,
         },
         trigger: built.trigger,
         formName: built.formName,
