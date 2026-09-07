@@ -33,7 +33,11 @@ const stored = {
 
 const signedIn = (yes: boolean) => {
   cookieStore.get.mockReturnValue(yes ? { value: 'tok' } : undefined)
-  session.fetchSession.mockResolvedValue(yes ? { id: 'u1' } : null)
+  // The session names a community now: being signed in was never enough
+  // on its own, since the tenant comes from the query string.
+  session.fetchSession.mockResolvedValue(
+    yes ? { id: 'u1', tenantId: 'acme', role: 'god' } : null
+  )
 }
 
 beforeEach(() => {
@@ -92,7 +96,7 @@ describe('GET /api/assets/[...path]', () => {
 })
 
 describe('DELETE /api/assets/[...path]', () => {
-  it('deletes the named object for a signed-in caller', async () => {
+  it('deletes the named object for the community that owns it', async () => {
     const res = await DELETE(req('?tenant=acme'), params(['a.png']))
     expect(res.status).toBe(200)
     expect(store.deleteObject).toHaveBeenCalledWith('tenant-acme', 'a.png')

@@ -34,9 +34,17 @@ const upload = (file: File | null, tenant?: string): Req => {
 const png = (name = 'logo.png', bytes = 10) =>
   new File([new Uint8Array(bytes)], name, { type: 'image/png' })
 
+/**
+ * The session names a community. Every operation here takes its tenant
+ * from the caller, so being signed in was never enough on its own -- see
+ * asset-tenancy.test.ts. 'supergod' keeps these cases about listing and
+ * uploading rather than about which community they name.
+ */
 const signedIn = (yes: boolean) => {
   cookieStore.get.mockReturnValue(yes ? { value: 'tok' } : undefined)
-  session.fetchSession.mockResolvedValue(yes ? { id: 'u1' } : null)
+  session.fetchSession.mockResolvedValue(
+    yes ? { id: 'u1', tenantId: 'system', role: 'supergod' } : null
+  )
 }
 
 beforeEach(() => {

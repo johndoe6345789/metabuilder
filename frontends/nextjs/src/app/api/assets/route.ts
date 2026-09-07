@@ -5,21 +5,32 @@
  * reaches it. Credentials stay here: the store authenticates with an
  * AWS-style key pair that must never reach a bundle.
  *
- * Writes require a signed-in caller, the same rule the data-layer proxy
- * applies -- an open upload endpoint is a free file host.
+ * The tenant comes from the caller, so every operation here checks that
+ * the caller owns it -- the same rule the data-layer proxy applies. A
+ * session alone is not enough: listing had no check at all, so any visitor
+ * could enumerate any community's uploads by editing the query string, and
+ * the upload check stopped at "somebody is signed in", which let a founder
+ * write into another community's bucket.
  */
 
 import { NextResponse, type NextRequest } from 'next/server'
-import { cookies } from 'next/headers'
-import { fetchSession } from '@/lib/auth/api/fetch-session'
-import { SESSION_COOKIE } from '@/lib/auth/session-cookie'
+import { callerAccessTo } from '@/lib/auth/owns-tenant'
 import { ensureBucket, listObjects, putObject } from '@/lib/object-store/client'
 import { bucketFor, refuseUpload, safeAssetKey } from './upload-policy'
 
-async function signedIn(): Promise<boolean> {
-  const token = (await cookies()).get(SESSION_COOKIE)?.value ?? null
-  if (token === null) return false
-  return (await fetchSession(token)) !== null
+/** 401 for a stranger, 403 for someone else's community, else null. */
+async function refuse(tenant: string): Promise<NextResponse | null> {
+  const access = await callerAccessTo(tenant)
+  if (access === 'anonymous') {
+    return NextResponse.json({ error: 'Sign in first' }, { status: 401 })
+  }
+  if (access === 'forbidden') {
+    return NextResponse.json(
+      { error: 'That community is not yours' },
+      { status: 403 }
+    )
+  }
+  return null
 }
 
 /** form.get can hand back a File; only a string is a tenant. */
@@ -30,6 +41,10 @@ function tenantFrom(form: FormData): string {
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const tenant = request.nextUrl.searchParams.get('tenant') ?? 'system'
+  // Reading one object stays open -- that is how an image on a published
+  // page loads. Enumerating a whole bucket is not part of rendering one.
+  const refusal = await refuse(tenant)
+  if (refusal !== null) return refusal
   try {
     const objects = await listObjects(bucketFor(tenant))
     return NextResponse.json({ objects })
@@ -40,16 +55,13 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  if (!(await signedIn())) {
-    return NextResponse.json(
-      { error: 'Sign in to upload assets' },
-      { status: 401 }
-    )
-  }
-
   const form = await request.formData()
   const file = form.get('file')
   const tenant = tenantFrom(form)
+
+  const notYours = await refuse(tenant)
+  if (notYours !== null) return notYours
+
   if (!(file instanceof File)) {
     return NextResponse.json({ error: 'No file supplied' }, { status: 400 })
   }

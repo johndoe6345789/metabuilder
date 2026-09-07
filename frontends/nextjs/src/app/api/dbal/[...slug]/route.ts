@@ -29,6 +29,7 @@ import { fetchSession } from '@/lib/auth/api/fetch-session'
 import { SESSION_COOKIE } from '@/lib/auth/session-cookie'
 import { isPublicWrite } from '../public-writes'
 import { normalizeTenantId } from '@/lib/tenant/workspace-paths'
+import { ownsTenant } from '@/lib/auth/owns-tenant'
 
 const DBAL_URL =
   process.env.DBAL_ENDPOINT ??
@@ -58,29 +59,6 @@ function isStatelessUtility(path: string): boolean {
 /** The tenant a path addresses: {tenant}/{package}/{entity}[/{id}]. */
 function tenantOf(path: string): string {
   return normalizeTenantId(path.split('/').filter(s => s !== '').at(0) ?? '')
-}
-
-/**
- * Whether this session may write to that tenant.
- *
- * Verifying the session answered "is this somebody", never "is this
- * somebody who owns what they are about to change" -- so a founder could
- * write into any other community's pages, workflows and mail credentials.
- *
- * The rule is the one the God Panel already states for its own tenant
- * picker: only the instance owner may act on a community other than their
- * own, because every other 'god' is a single community's founder rather
- * than an instance-wide admin.
- */
-function ownsTenant(
-  user: { role?: unknown; tenantId?: unknown },
-  target: string
-): boolean {
-  if (user.role === 'supergod') return true
-  const own =
-    typeof user.tenantId === 'string' ? normalizeTenantId(user.tenantId) : ''
-  // A session naming no tenant cannot be shown to own this one.
-  return own !== '' && own === target
 }
 
 async function proxy(

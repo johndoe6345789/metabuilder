@@ -1,14 +1,14 @@
 /**
  * Serve and delete one asset.
  *
- * Reads are open: these are logos and images meant to appear on published
- * pages, which anyone may look at. Deletes are not.
+ * Reading one object is open: these are logos and images meant to appear
+ * on published pages, which anyone may look at. Deleting is not, and being
+ * signed in is not enough -- the tenant comes from the query string, so it
+ * has to be one the caller owns.
  */
 
 import { NextResponse, type NextRequest } from 'next/server'
-import { cookies } from 'next/headers'
-import { fetchSession } from '@/lib/auth/api/fetch-session'
-import { SESSION_COOKIE } from '@/lib/auth/session-cookie'
+import { callerAccessTo } from '@/lib/auth/owns-tenant'
 import { deleteObject, getObject } from '@/lib/object-store/client'
 
 const bucketFor = (tenant: string): string => `tenant-${tenant}`
@@ -45,15 +45,23 @@ export async function DELETE(
   request: NextRequest,
   { params }: RouteParams
 ): Promise<NextResponse> {
-  const token = (await cookies()).get(SESSION_COOKIE)?.value ?? null
-  if (token === null || (await fetchSession(token)) === null) {
+  const { path } = await params
+  const tenant = request.nextUrl.searchParams.get('tenant') ?? 'system'
+  // Being signed in was the whole check, so one founder could delete the
+  // logos and images off another community's live pages.
+  const access = await callerAccessTo(tenant)
+  if (access === 'anonymous') {
     return NextResponse.json(
       { error: 'Sign in to delete assets' },
       { status: 401 }
     )
   }
-  const { path } = await params
-  const tenant = request.nextUrl.searchParams.get('tenant') ?? 'system'
+  if (access === 'forbidden') {
+    return NextResponse.json(
+      { error: 'That community is not yours' },
+      { status: 403 }
+    )
+  }
   await deleteObject(bucketFor(tenant), path.join('/'))
   return NextResponse.json({ ok: true })
 }
