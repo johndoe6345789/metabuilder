@@ -4,6 +4,7 @@ import {
   applyColorsToRoot,
 } from './theme-defaults'
 import type { ThemeColors } from './theme-defaults'
+import { readRow } from '@/lib/db/read-list'
 
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 const STORAGE_KEY = 'pg-theme-overrides'
@@ -54,8 +55,12 @@ export async function resolveTenantTheme(
       signal: AbortSignal.timeout(6000),
     })
     if (res.ok) {
-      const json = (await res.json()) as { data?: Record<string, unknown> }
-      const row = json.data
+      // readRow, not `json.data`: a fetch-by-id may answer {data: row}
+      // or {success, data: {data: row}}, and reading one level of the
+      // second hands back the wrapper -- every field then reads as
+      // undefined and this quietly returned the built-in defaults, so a
+      // founder's brand colours never reached a visitor.
+      const row = readRow<Record<string, unknown>>(await res.json())
       const rawLight = row?.lightColors
       const rawDark = row?.darkColors
       if (typeof rawLight === 'string' && typeof rawDark === 'string') {

@@ -127,3 +127,30 @@ describe('applyTenantTheme', () => {
     )
   })
 })
+
+/**
+ * A fetch-by-id can answer {data: row} or {success, data: {data: row}},
+ * and this read one level. Against the second shape every field read as
+ * undefined and it fell through to the built-in defaults -- so a founder
+ * who had set their brand colours saw them in the editor and no visitor
+ * ever saw them on the site, with nothing anywhere saying why.
+ */
+describe('the shape the row arrives in', () => {
+  const colours = {
+    lightColors: JSON.stringify({ '--bg': '#eee' }),
+    darkColors: JSON.stringify({ '--bg': '#111' }),
+  }
+
+  it.each([
+    ['one level', { data: colours }],
+    ['two levels', { data: { data: colours } }],
+    ['an envelope', { success: true, data: { data: colours } }],
+  ])('reads the tenant colours from %s', async (_shape, payload) => {
+    mockFetch(async () => ({ ok: true, json: async () => payload }) as Response)
+
+    const theme = await resolveTenantTheme('acme')
+
+    expect(theme.light['--bg']).toBe('#eee')
+    expect(theme.dark['--bg']).toBe('#111')
+  })
+})

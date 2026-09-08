@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { readList, readListStrict, readOne } from './read-list'
+import { readList, readListStrict, readOne, readRow } from './read-list'
 
 const rows = [{ id: 'a' }, { id: 'b' }]
 
@@ -93,5 +93,40 @@ describe('readOne', () => {
 
   it('answers null for a payload that is not a list', () => {
     expect(readOne({ error: 'nope' })).toBeNull()
+  })
+})
+
+/**
+ * A fetch-by-id answers one record, and callers hand-unwrapped it as
+ * `json.data` -- right for `{data: row}`, wrong for the two-level
+ * envelope, where it hands back the inner wrapper as though it were the
+ * row. Every field then reads undefined and the caller quietly falls back
+ * to its defaults, which is how a tenant's whole theme could go missing
+ * with nothing on screen to say so.
+ */
+describe('readRow', () => {
+  const row = { id: 't1', lightColors: '{}' }
+
+  it.each([
+    ['a bare row', row],
+    ['one level', { data: row }],
+    ['an envelope', { success: true, data: row }],
+    ['two levels', { data: { data: row } }],
+    ['a one-row list', { data: { data: [row] } }],
+    ['a bare list', [row]],
+  ])('reads %s', (_shape, payload) => {
+    expect(readRow<typeof row>(payload)).toEqual(row)
+  })
+
+  it.each([null, undefined, 'text', 42, {}, { data: {} }, { data: [] }])(
+    'has no row for %p',
+    payload => {
+      expect(readRow(payload)).toBeNull()
+    }
+  )
+
+  it('takes the first of several rows', () => {
+    expect(readRow<{ id: string }>({ data: { data: [row, { id: 't2' }] } })).
+      toEqual(row)
   })
 })

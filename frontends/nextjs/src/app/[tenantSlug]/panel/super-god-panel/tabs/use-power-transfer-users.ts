@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { readList } from '@/lib/db/read-list'
 
 const DBAL_URL =
   process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
@@ -17,18 +18,20 @@ export function usePowerTransferUsers(currentUserId: string | undefined) {
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null)
 
   useEffect(() => {
-    fetch(`${DBAL_URL}/system/core/user`, {
+    // See use-god-users.ts: `core/User` is the entity's real name, and
+    // readList reads the envelope `.filter` used to be called on.
+    fetch(`${DBAL_URL}/system/core/User`, {
+      credentials: 'include',
       signal: AbortSignal.timeout(5000),
     })
       .then(res => (res.ok ? res.json() : null))
-      .then((json: { data?: GodUser[] } | null) => {
-        if (json?.data != null) {
-          setAllUsers(
-            json.data.filter(
-              u => u.id !== currentUserId && u.role !== 'supergod'
-            )
+      .then((json: unknown) => {
+        if (json === null) return
+        setAllUsers(
+          readList<GodUser>(json).filter(
+            u => u.id !== currentUserId && u.role !== 'supergod'
           )
-        }
+        )
       })
       .catch(() => {
         /* offline */

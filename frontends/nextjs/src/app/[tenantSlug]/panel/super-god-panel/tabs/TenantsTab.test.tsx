@@ -26,17 +26,26 @@ beforeEach(() => {
 describe('TenantsTab', () => {
   it('shows a placeholder when there are no tenants', () => {
     render(<TenantsTab />)
-    expect(screen.getByText(/No tenants created yet/)).toBeTruthy()
+    expect(screen.getByText(/No communities yet/)).toBeTruthy()
   })
 
   it('lists each tenant instead of the placeholder', () => {
     tenantsHook.useTenants.mockReturnValue({
-      tenants: [{ id: 't1', name: 'Acme', ownerId: 'u1', createdAt: 1 }],
+      tenants: [
+        {
+          id: 'acme',
+          name: 'acme',
+          ownerId: 'u1',
+          ownerName: 'rosa',
+          members: 1,
+          createdAt: 1,
+        },
+      ],
       create: vi.fn(),
       remove: vi.fn(),
     })
     render(<TenantsTab />)
-    expect(screen.getByText('Acme')).toBeTruthy()
+    expect(screen.getByText('acme')).toBeTruthy()
     expect(screen.queryByText(/No tenants created yet/)).toBeNull()
   })
 

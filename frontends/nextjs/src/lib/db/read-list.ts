@@ -61,3 +61,29 @@ export function readListStrict<T>(raw: unknown): T[] | null {
 export function readOne<T>(raw: unknown): T | null {
   return readList<T>(raw)[0] ?? null
 }
+
+/**
+ * The single row of a fetch-by-id response, or null.
+ *
+ * A read of `/{tenant}/{package}/{Entity}/{id}` answers one record rather
+ * than a list, and callers hand-unwrapped it as `json.data` -- which is
+ * right for `{data: row}` and wrong for `{success, data: {data: row}}`,
+ * handing back the envelope's inner wrapper as though it were the row.
+ * Every field then reads as undefined and the caller falls back to its
+ * defaults, silently. This takes either, and a one-row list too.
+ */
+export function readRow<T>(raw: unknown): T | null {
+  const fromList = readListStrict<T>(raw)
+  if (fromList !== null) return fromList[0] ?? null
+
+  let current = asRecord(raw)
+  // Two levels at most: {success, data: {data: row}}.
+  for (let depth = 0; depth < 2 && current !== null; depth += 1) {
+    const inner = asRecord(current.data)
+    if (inner === null) break
+    current = inner
+  }
+  return current === null || Object.keys(current).length === 0
+    ? null
+    : (current as T)
+}

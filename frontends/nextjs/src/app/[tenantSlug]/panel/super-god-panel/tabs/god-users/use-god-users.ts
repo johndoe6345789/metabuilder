@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { readList } from '@/lib/db/read-list'
 
 const DBAL_URL =
   process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
@@ -27,14 +28,23 @@ export function useGodUsers(): GodUser[] {
   const [godUsers, setGodUsers] = useState<GodUser[]>([])
 
   useEffect(() => {
-    fetch(`${DBAL_URL}/system/core/user`, { signal: AbortSignal.timeout(5000) })
+    // `core/User`, not `core/user`: DBAL resolves the entity by the name
+    // its schema declares, so the lowercase path answered 422 and this
+    // silently showed nothing. And readList, not `json.data` -- the real
+    // envelope is {data:{data:[…]}}, so `.filter` was being called on an
+    // object, which throws and takes the tab down with it.
+    fetch(`${DBAL_URL}/system/core/User`, {
+      credentials: 'include',
+      signal: AbortSignal.timeout(5000),
+    })
       .then(res => (res.ok ? res.json() : null))
-      .then((json: { data?: GodUser[] } | null) => {
-        if (json?.data != null) {
-          setGodUsers(
-            json.data.filter(u => u.role === 'god' || u.role === 'supergod')
+      .then((json: unknown) => {
+        if (json === null) return
+        setGodUsers(
+          readList<GodUser>(json).filter(
+            u => u.role === 'god' || u.role === 'supergod'
           )
-        }
+        )
       })
       .catch(() => {
         setGodUsers(FALLBACK_USERS)

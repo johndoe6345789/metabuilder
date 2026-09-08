@@ -10,23 +10,70 @@ afterEach(() => {
   vi.unstubAllGlobals()
 })
 
-const TENANT = {
-  id: 't1',
-  name: 'Acme',
-  ownerId: 'u1',
-  createdAt: 1,
-}
+/**
+ * There is no Tenant entity to list. This asked `/system/core/tenant`,
+ * read the 404 as "no tenants", and left the instance owner looking at an
+ * empty list for the whole life of the panel. Communities are worked out
+ * from who has an account, the rule the rest of the app applies.
+ */
+const users = [
+  {
+    id: 'u1',
+    username: 'rosa',
+    role: 'god',
+    tenantId: 'acme',
+    createdAt: 1751500000,
+  },
+  {
+    id: 'u2',
+    username: 'sam',
+    role: 'user',
+    tenantId: 'acme',
+    createdAt: 1751600000,
+  },
+]
 
 describe('useTenants', () => {
-  it('starts empty and loads tenants on mount', async () => {
+  it('lists a community per set of accounts, with its founder', async () => {
     mockFetch(
       async () =>
-        ({ ok: true, json: async () => ({ data: [TENANT] }) }) as Response
+        ({
+          ok: true,
+          json: async () => ({ data: { data: users } }),
+        }) as Response
     )
     const { result } = renderHook(() => useTenants('u1'))
 
     await waitFor(() => expect(result.current.tenants).toHaveLength(1))
-    expect(result.current.tenants[0]).toEqual(TENANT)
+    expect(result.current.tenants[0]).toMatchObject({
+      id: 'acme',
+      ownerName: 'rosa',
+      members: 2,
+    })
+  })
+
+  it('asks for the entity that exists, not a Tenant table', async () => {
+    const fn = vi.fn(
+      async () =>
+        ({ ok: true, json: async () => ({ data: { data: [] } }) }) as Response
+    )
+    vi.stubGlobal('fetch', fn)
+
+    renderHook(() => useTenants('u1'))
+    await new Promise(r => setTimeout(r, 10))
+
+    const asked = String(fn.mock.calls[0]?.[0])
+    expect(asked).toContain('/system/core/User')
+    expect(asked).not.toContain('/tenant')
+  })
+
+  // An empty list and an unreadable one look identical on screen, and
+  // this is the instance owner's only view of what exists.
+  it('says when it could not read the list at all', async () => {
+    mockFetch(async () => ({ ok: false, status: 500 }) as Response)
+    const { result } = renderHook(() => useTenants('u1'))
+
+    await waitFor(() => expect(result.current.unreachable).toBe(true))
   })
 
   it('leaves the list empty when the response is not ok', async () => {
@@ -47,7 +94,7 @@ describe('useTenants', () => {
     expect(result.current.tenants).toEqual([])
   })
 
-  it('create adds a locally-generated tenant owned by the given owner', () => {
+  it('create shows a community that does not exist yet', () => {
     mockFetch(async () => ({ ok: true, json: async () => ({}) }) as Response)
     const { result } = renderHook(() => useTenants('u1'))
 

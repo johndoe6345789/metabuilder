@@ -10,7 +10,7 @@ import s from './TenantsTab.module.scss'
 
 export function TenantsTab() {
   const auth = useAuthContext()
-  const { tenants, create, remove } = useTenants(auth.user?.id)
+  const { tenants, create, remove, unreachable } = useTenants(auth.user?.id)
   const [showCreate, setShowCreate] = useState(false)
 
   return (
@@ -19,7 +19,8 @@ export function TenantsTab() {
         <div>
           <Typography variant="h6">Tenant Management</Typography>
           <Typography variant="body2" color="text.secondary">
-            Create and manage tenants with custom homepages
+            Every community on this instance, and who founded it. A
+            community starts existing when someone signs up for it.
           </Typography>
         </div>
         <Button
@@ -45,10 +46,19 @@ export function TenantsTab() {
         />
       )}
 
-      {tenants.length === 0 ? (
+      {unreachable ? (
+        <Paper className={s.placeholder}>
+          {/* An empty list and an unreadable one look identical, and this
+              is the only view of what exists on the instance. */}
+          <Typography variant="body2" role="alert">
+            Could not read the accounts on this instance, so this list is
+            empty because nothing answered — not because nothing is here.
+          </Typography>
+        </Paper>
+      ) : tenants.length === 0 ? (
         <Paper className={s.placeholder}>
           <Typography variant="body2" color="text.secondary">
-            No tenants created yet. Every query filters by tenantId.
+            No communities yet. One starts existing when someone signs up.
           </Typography>
         </Paper>
       ) : (
