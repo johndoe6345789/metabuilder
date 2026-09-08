@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { PackageNavItem } from '@/lib/packages/navigation'
 import { fetchDbalHealth, fetchNavigablePackages } from './app-shell-data'
+import { useRouteTenant } from '@/lib/tenant/use-route-tenant'
 import { isNarrowViewport, useNarrowViewport } from './use-narrow-viewport'
 import { useShellIdentity } from './use-shell-identity'
 
@@ -13,6 +14,8 @@ export type AppShellState = ReturnType<typeof useAppShell>
 export function useAppShell() {
   const identity = useShellIdentity()
   const router = useRouter()
+  // Whose sidebar this is: packages are installed per community.
+  const tenant = useRouteTenant()
 
   // Starts closed so the server and the first client render agree; the
   // effect below opens it on wide viewports. Reading window.innerWidth in
@@ -24,8 +27,8 @@ export function useAppShell() {
 
   useEffect(() => {
     void fetchDbalHealth().then(setDbalOffline)
-    void fetchNavigablePackages().then(setPackages)
-  }, [])
+    void fetchNavigablePackages(tenant).then(setPackages)
+  }, [tenant])
 
   useNarrowViewport(
     useCallback(narrow => {

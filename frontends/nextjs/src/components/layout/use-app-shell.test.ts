@@ -23,6 +23,9 @@ const narrow = vi.hoisted(() => ({
 }))
 const nav = vi.hoisted(() => ({ push: vi.fn() }))
 
+vi.mock('@/lib/tenant/use-route-tenant', () => ({
+  useRouteTenant: () => 'acme',
+}))
 vi.mock('./use-shell-identity', () => identity)
 vi.mock('./app-shell-data', () => shellData)
 vi.mock('./use-narrow-viewport', () => narrow)

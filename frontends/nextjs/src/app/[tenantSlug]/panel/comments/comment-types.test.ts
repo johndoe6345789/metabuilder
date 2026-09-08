@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import {
-  COMMENTS_URL,
+  commentsUrl,
   toComment,
   toDbalRow,
   type Comment,
@@ -16,12 +16,12 @@ const row: DbalComment = {
   createdAt: 1700000000000,
 }
 
-describe('COMMENTS_URL', () => {
+describe('commentsUrl', () => {
   // The route is /{tenant}/{package}/{Entity}, with Entity taken from the
   // schema's own field in PascalCase -- ProfileComment lives under the
   // pastebin package, not core.
   it('addresses ProfileComment under the pastebin package', () => {
-    expect(COMMENTS_URL).toMatch(/\/system\/pastebin\/ProfileComment$/)
+    expect(commentsUrl('acme')).toMatch(/\/acme\/pastebin\/ProfileComment$/)
   })
 })
 
@@ -53,19 +53,30 @@ describe('toDbalRow', () => {
   }
 
   it('writes the author on both id fields', () => {
-    expect(toDbalRow(comment)).toMatchObject({
+    expect(toDbalRow(comment, 'acme')).toMatchObject({
       authorId: 'u1',
       profileUserId: 'u1',
       authorUsername: 'alice',
     })
   })
 
-  it('stamps the system tenant', () => {
-    expect(toDbalRow(comment).tenantId).toBe('system')
+  /**
+   * Every row carried `tenantId: 'system'` and the URL named that tenant
+   * too, so every community on the instance posted into and read one
+   * shared board -- a founder's members saw strangers' comments as their
+   * own community's, and the founder could delete them.
+   */
+  it('stamps the community the comment was written in', () => {
+    expect(toDbalRow(comment, 'acme').tenantId).toBe('acme')
+    expect(toDbalRow(comment, 'acme').tenantId).not.toBe('system')
+  })
+
+  it('is never the shared board', () => {
+    expect(commentsUrl('acme')).not.toContain('/system/')
   })
 
   it('round-trips back through toComment', () => {
-    const written = toDbalRow(comment) as unknown as DbalComment
+    const written = toDbalRow(comment, 'acme') as unknown as DbalComment
     expect(toComment(written)).toEqual(comment)
   })
 })

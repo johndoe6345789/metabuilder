@@ -57,36 +57,36 @@ const record = (over: Record<string, unknown> = {}) => ({
 describe('fetchNavigablePackages', () => {
   it('reads packages out of the real DBAL envelope', async () => {
     stub(true, envelope([record()]))
-    const result = await fetchNavigablePackages()
+    const result = await fetchNavigablePackages('acme')
     expect(result).toHaveLength(1)
     expect(result[0]?.packageId).toBe('blog')
   })
 
   it('is an empty array when the proxy refuses', async () => {
     stub(false)
-    expect(await fetchNavigablePackages()).toEqual([])
+    expect(await fetchNavigablePackages('acme')).toEqual([])
   })
 
   it('is an empty array when the table is empty', async () => {
     stub(true, envelope([]))
-    expect(await fetchNavigablePackages()).toEqual([])
+    expect(await fetchNavigablePackages('acme')).toEqual([])
   })
 
   it('is an empty array rather than throwing when unreachable', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => {
       throw new Error('offline')
     }))
-    expect(await fetchNavigablePackages()).toEqual([])
+    expect(await fetchNavigablePackages('acme')).toEqual([])
   })
 
   it('drops a row missing a package id or a name', async () => {
     stub(true, envelope([{ name: 'No id' }, { packageId: 'no-name' }]))
-    expect(await fetchNavigablePackages()).toEqual([])
+    expect(await fetchNavigablePackages('acme')).toEqual([])
   })
 
   it('keeps a row only navLabel/icon/level/category default to', async () => {
     stub(true, envelope([record({ navLabel: undefined })]))
-    const [item] = await fetchNavigablePackages()
+    const [item] = await fetchNavigablePackages('acme')
     expect(item?.navLabel).toBe('Blog')
   })
 
@@ -94,6 +94,29 @@ describe('fetchNavigablePackages', () => {
   // package that never set it must not appear in navigation.
   it('excludes a package that does not opt into navigation', async () => {
     stub(true, envelope([record({ showInNav: false }), record({ packageId: 'x', showInNav: undefined })]))
-    expect(await fetchNavigablePackages()).toEqual([])
+    expect(await fetchNavigablePackages('acme')).toEqual([])
+  })
+})
+
+/**
+ * Packages are installed per community -- the Packages tab writes
+ * InstalledPackage under the tenant it was pointed at -- and this asked
+ * `system` for every visitor of every community. So a founder who
+ * installed Community or Content never saw it in their own sidebar,
+ * while the instance's own installs showed up in everybody's.
+ */
+describe('whose packages the sidebar shows', () => {
+  it("asks for the community's own installs", async () => {
+    const fn = vi.fn(
+      async () =>
+        ({ ok: true, json: async () => ({ data: { data: [] } }) }) as Response
+    )
+    vi.stubGlobal('fetch', fn)
+
+    await fetchNavigablePackages('harbour_cycle_works')
+
+    const asked = String(fn.mock.calls[0]?.[0])
+    expect(asked).toContain('/harbour_cycle_works/core/InstalledPackage')
+    expect(asked).not.toContain('/system/')
   })
 })

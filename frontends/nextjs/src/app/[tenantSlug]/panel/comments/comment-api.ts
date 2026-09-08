@@ -2,7 +2,7 @@
 
 import { readList } from '@/lib/db/read-list'
 import {
-  COMMENTS_URL,
+  commentsUrl,
   toComment,
   toDbalRow,
   type Comment,
@@ -10,9 +10,11 @@ import {
 } from './comment-types'
 
 /** Every comment on the board, or null when it cannot be reached. */
-export async function fetchComments(): Promise<Comment[] | null> {
+export async function fetchComments(
+  tenant: string
+): Promise<Comment[] | null> {
   try {
-    const res = await fetch(COMMENTS_URL, {
+    const res = await fetch(commentsUrl(tenant), {
       credentials: 'include',
       signal: AbortSignal.timeout(5000),
     })
@@ -24,13 +26,16 @@ export async function fetchComments(): Promise<Comment[] | null> {
 }
 
 /** True when the comment was stored. */
-export async function postComment(comment: Comment): Promise<boolean> {
+export async function postComment(
+  tenant: string,
+  comment: Comment
+): Promise<boolean> {
   try {
-    const res = await fetch(COMMENTS_URL, {
+    const res = await fetch(commentsUrl(tenant), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify(toDbalRow(comment)),
+      body: JSON.stringify(toDbalRow(comment, tenant)),
     })
     return res.ok
   } catch {
@@ -39,9 +44,12 @@ export async function postComment(comment: Comment): Promise<boolean> {
 }
 
 /** True when the comment was removed. */
-export async function deleteComment(id: string): Promise<boolean> {
+export async function deleteComment(
+  tenant: string,
+  id: string
+): Promise<boolean> {
   try {
-    const res = await fetch(`${COMMENTS_URL}/${id}`, {
+    const res = await fetch(`${commentsUrl(tenant)}/${id}`, {
       method: 'DELETE',
       credentials: 'include',
     })

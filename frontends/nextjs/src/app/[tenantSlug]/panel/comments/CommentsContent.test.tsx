@@ -10,6 +10,9 @@ import {
   makeBoard,
 } from './comments-content-test-mocks'
 
+vi.mock('@/lib/tenant/use-route-tenant', () => ({
+  useRouteTenant: () => 'acme',
+}))
 vi.mock('@/app/_components/auth-provider/auth-provider-component', () => ({
   useAuthContext: authMod.useAuthContext,
 }))

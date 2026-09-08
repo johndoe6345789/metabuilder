@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouteTenant } from '@/lib/tenant/use-route-tenant'
 import { useState } from 'react'
 import { Typography } from '@/m3'
 import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
@@ -13,7 +14,8 @@ import s from './page.module.scss'
 /** The shared community board. */
 export function CommentsContent() {
   const user = useAuthContext().user
-  const board = useComments()
+  // The community whose board this is; it used to be the shared one.
+  const board = useComments(useRouteTenant())
   const [draft, setDraft] = useState('')
 
   const handlePost = (): void => {

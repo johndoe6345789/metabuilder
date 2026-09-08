@@ -30,13 +30,13 @@ beforeEach(() => {
 
 describe('useComments', () => {
   it('starts empty and loading', () => {
-    const { result } = renderHook(() => useComments())
+    const { result } = renderHook(() => useComments('acme'))
     expect(result.current.status).toBe('loading')
     expect(result.current.comments).toEqual([])
   })
 
   it('shows what it loaded', async () => {
-    const { result } = renderHook(() => useComments())
+    const { result } = renderHook(() => useComments('acme'))
     await waitFor(() => {
       expect(result.current.status).toBe('ready')
     })
@@ -47,7 +47,7 @@ describe('useComments', () => {
   // which reads as a real post by a real account.
   it('reports unreachable rather than inventing a comment', async () => {
     api.fetchComments.mockResolvedValue(null)
-    const { result } = renderHook(() => useComments())
+    const { result } = renderHook(() => useComments('acme'))
     await waitFor(() => {
       expect(result.current.status).toBe('unreachable')
     })
@@ -55,7 +55,7 @@ describe('useComments', () => {
   })
 
   it('appends a posted comment', async () => {
-    const { result } = renderHook(() => useComments())
+    const { result } = renderHook(() => useComments('acme'))
     await waitFor(() => {
       expect(result.current.comments).toHaveLength(1)
     })
@@ -67,7 +67,7 @@ describe('useComments', () => {
 
   it('does not append when the post is refused', async () => {
     api.postComment.mockResolvedValue(false)
-    const { result } = renderHook(() => useComments())
+    const { result } = renderHook(() => useComments('acme'))
     await waitFor(() => {
       expect(result.current.comments).toHaveLength(1)
     })
@@ -78,7 +78,7 @@ describe('useComments', () => {
   })
 
   it('removes a deleted comment', async () => {
-    const { result } = renderHook(() => useComments())
+    const { result } = renderHook(() => useComments('acme'))
     await waitFor(() => {
       expect(result.current.comments).toHaveLength(1)
     })
@@ -90,7 +90,7 @@ describe('useComments', () => {
 
   it('keeps the comment when the delete is refused', async () => {
     api.deleteComment.mockResolvedValue(false)
-    const { result } = renderHook(() => useComments())
+    const { result } = renderHook(() => useComments('acme'))
     await waitFor(() => {
       expect(result.current.comments).toHaveLength(1)
     })

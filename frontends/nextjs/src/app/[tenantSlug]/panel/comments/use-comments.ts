@@ -21,13 +21,13 @@ export interface CommentsBoard {
  * whenever the data layer was down, which reads as real content posted by
  * a real account.
  */
-export function useComments(): CommentsBoard {
+export function useComments(tenant: string): CommentsBoard {
   const [comments, setComments] = useState<Comment[]>([])
   const [status, setStatus] = useState<BoardStatus>('loading')
 
   useEffect(() => {
     let live = true
-    void fetchComments().then(rows => {
+    void fetchComments(tenant).then(rows => {
       if (!live) return
       setComments(rows ?? [])
       setStatus(rows === null ? 'unreachable' : 'ready')
@@ -35,19 +35,19 @@ export function useComments(): CommentsBoard {
     return () => {
       live = false
     }
-  }, [])
+  }, [tenant])
 
   const post = useCallback(async (comment: Comment): Promise<boolean> => {
-    const ok = await postComment(comment)
+    const ok = await postComment(tenant, comment)
     if (ok) setComments(prev => [...prev, comment])
     return ok
-  }, [])
+  }, [tenant])
 
   const remove = useCallback(async (id: string): Promise<boolean> => {
-    const ok = await deleteComment(id)
+    const ok = await deleteComment(tenant, id)
     if (ok) setComments(prev => prev.filter(c => c.id !== id))
     return ok
-  }, [])
+  }, [tenant])
 
   return { comments, status, post, remove }
 }

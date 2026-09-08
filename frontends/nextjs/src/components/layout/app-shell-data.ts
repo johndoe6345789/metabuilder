@@ -35,9 +35,21 @@ export async function fetchDbalHealth(): Promise<boolean> {
   }
 }
 
-export async function fetchNavigablePackages(): Promise<PackageNavItem[]> {
+/**
+ * The packages this community installed, for its own navigation.
+ *
+ * This asked `system` for every visitor of every community, and packages
+ * are installed per tenant -- the Packages tab writes InstalledPackage
+ * under the tenant it was pointed at. So a founder who installed
+ * Community or Content never saw it in their sidebar, while the
+ * instance's own installs showed up in everyone's.
+ */
+export async function fetchNavigablePackages(
+  tenant: string
+): Promise<PackageNavItem[]> {
   try {
-    const res = await fetch(`${DBAL_PROXY_URL}/system/core/InstalledPackage`, {
+    const url = `${DBAL_PROXY_URL}/${tenant}/core/InstalledPackage`
+    const res = await fetch(url, {
       signal: AbortSignal.timeout(3000),
     })
     if (!res.ok) return []
