@@ -4,13 +4,23 @@ import type { PublishTarget } from './types'
 /** Builds the PageConfig payload and picks POST-vs-PUT for the given
  *  owner, so publish() itself stays focused on the surrounding flow. */
 export async function writePageRow(
-  owner: { id: string; packageId?: string } | null,
+  owner: {
+    id: string
+    packageId?: string
+    level?: number
+    requiresAuth?: boolean
+  } | null,
   id: string,
   target: PublishTarget,
   treeId: string,
   stamp: number
 ): Promise<Response> {
-  const { tenant, path, title, level, requiresAuth } = target
+  const { tenant, path, title } = target
+  // A caller that said nothing keeps what the path already had; only a
+  // page nobody has published is public by default. BQL said nothing and
+  // got 0/false written over an Admin-only route every time it ran.
+  const level = target.level ?? owner?.level ?? 0
+  const requiresAuth = target.requiresAuth ?? owner?.requiresAuth ?? false
   const payload = {
     id,
     path,

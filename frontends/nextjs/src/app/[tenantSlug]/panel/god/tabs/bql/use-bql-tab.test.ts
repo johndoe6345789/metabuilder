@@ -223,13 +223,14 @@ describe('useBqlTab', () => {
 
       await runFirst(result)
 
+      // No level and no requiresAuth on purpose: a script that does not
+      // mention access should not decide it. These were hard-coded to
+      // 0/false, so every re-run published an Admin-only route as public.
       expect(publish).toHaveBeenCalledWith(
         {
           tenant: 'acme',
           path: '/about',
           title: 'About',
-          level: 0,
-          requiresAuth: false,
         },
         built
       )
@@ -340,3 +341,72 @@ describe('useBqlTab', () => {
   })
 })
 
+
+/**
+ * The comment above publishStyles states the exact failure it guards
+ * against -- "otherwise the page goes live styled in the editor and bare
+ * to everyone else" -- and its boolean was dropped on the floor. So a
+ * refused stylesheet left BqlPublishedList reporting "Published at
+ * /about" for a page that renders unstyled to every visitor.
+ */
+describe('a script whose styles were refused', () => {
+  const built = { id: 'root', type: 'container', props: {}, children: [] }
+
+  it('does not report the page as simply published', async () => {
+    cssClasses.useCssClasses.mockReturnValue({
+      classes: [],
+      replace: vi.fn(),
+      publish: vi.fn(async () => false),
+    })
+    componentTree.useComponentTree.mockReturnValue({
+      tree: built,
+      replaceTree: vi.fn(),
+      publish: vi.fn(async () => null),
+    })
+    bqlApply.applyBql.mockResolvedValue({
+      ...okResult,
+      tree: built,
+      pages: [{ line: 2, title: 'About', path: '/about' }],
+    })
+
+    const { result } = renderHook(() => useBqlTab())
+    act(() => {
+      result.current.patch(result.current.scripts[0].id, { text: 'x' })
+    })
+    await act(async () => {
+      await result.current.run(result.current.scripts[0].id)
+    })
+
+    const landed = result.current.published[result.current.scripts[0].id]
+    expect(landed?.[0]?.reason).toContain('styles')
+  })
+
+  it('still reports a clean run as published', async () => {
+    cssClasses.useCssClasses.mockReturnValue({
+      classes: [],
+      replace: vi.fn(),
+      publish: vi.fn(async () => true),
+    })
+    componentTree.useComponentTree.mockReturnValue({
+      tree: built,
+      replaceTree: vi.fn(),
+      publish: vi.fn(async () => null),
+    })
+    bqlApply.applyBql.mockResolvedValue({
+      ...okResult,
+      tree: built,
+      pages: [{ line: 2, title: 'About', path: '/about' }],
+    })
+
+    const { result } = renderHook(() => useBqlTab())
+    act(() => {
+      result.current.patch(result.current.scripts[0].id, { text: 'x' })
+    })
+    await act(async () => {
+      await result.current.run(result.current.scripts[0].id)
+    })
+
+    const landed = result.current.published[result.current.scripts[0].id]
+    expect(landed?.[0]?.reason).toBeNull()
+  })
+})

@@ -1,4 +1,5 @@
 import { readOne } from '@/lib/db/read-list'
+import { parsePageLevel } from '@/lib/tenant/page-level'
 
 export const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
@@ -14,6 +15,9 @@ export interface PathOwner {
   /** The tree this row currently renders -- what a visitor sees until a
    *  publish moves the pointer, and what can be cleared up afterwards. */
   pageTreeId?: string
+  /** Who may see it, so a publish that says nothing does not reset it. */
+  level?: number
+  requiresAuth?: boolean
 }
 
 /** The single row that owns this path, if there is one. `path` is unique. */
@@ -41,6 +45,9 @@ export async function findRowForPath(
       component: typeof row.component === 'string' ? row.component : undefined,
       pageTreeId:
         typeof row.pageTreeId === 'string' ? row.pageTreeId : undefined,
+      level: parsePageLevel(row.level),
+      requiresAuth:
+        typeof row.requiresAuth === 'boolean' ? row.requiresAuth : undefined,
     }
   } catch {
     // Fall through to a plain create rather than blocking on a failed lookup.

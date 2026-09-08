@@ -120,8 +120,9 @@ export function useBqlTab() {
             tenant,
             path: page.path,
             title: page.title ?? page.path,
-            level: 0,
-            requiresAuth: false,
+            // Deliberately unsaid: a script that does not mention access
+            // should not decide it. Hard-coding 0/false here made every
+            // re-run of a script publish an Admin-only route as public.
           },
           built
         )
@@ -166,14 +167,29 @@ export function useBqlTab() {
         // them have to go too -- otherwise the page goes live styled in
         // the editor and bare to everyone else. Passed explicitly because
         // replaceClasses above has not reached state yet.
-        if (outcome.pages.length > 0) {
-          await publishStyles(tenant, outcome.classes)
-        }
+        // The boolean is read, not dropped: publishStyles returns false
+        // when the sheet was refused, and the comment above is the exact
+        // failure that matters -- the page went live styled in the editor
+        // and bare to everyone else, while the list below said "Published".
+        const styled =
+          outcome.pages.length === 0 ||
+          (await publishStyles(tenant, outcome.classes))
         // applyBql only reports the routes; publishing is this hook's job,
         // and it publishes the tree the script just produced rather than
         // whichever route the Components tab happens to have selected.
         const landed = await publishTo(outcome.pages, outcome.tree)
-        if (landed.length > 0) setPublished(prev => ({ ...prev, [id]: landed }))
+        const reported = styled
+          ? landed
+          : landed.map(page => ({
+              ...page,
+              reason:
+                page.reason ??
+                'the page is live but its styles were refused, so it ' +
+                  'renders unstyled',
+            }))
+        if (reported.length > 0) {
+          setPublished(prev => ({ ...prev, [id]: reported }))
+        }
       } finally {
         setRunningId(null)
       }

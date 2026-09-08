@@ -57,15 +57,17 @@ export function ComponentTreeTargetPicker({
         {loading ? 'Loading…' : '↓ Load'}
       </Button>
 
+      {/* The picker always shows a choice: a target that has not said
+          means "whatever the path had", which for a new page is public. */}
       <TargetLevelPicker
-        level={target.level}
+        level={target.level ?? 0}
         onChange={level => {
           onChange({ level })
         }}
       />
 
       <TargetVisibilityPicker
-        requiresAuth={target.requiresAuth}
+        requiresAuth={target.requiresAuth ?? false}
         onChange={requiresAuth => {
           onChange({ requiresAuth })
         }}
