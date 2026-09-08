@@ -34,8 +34,11 @@ export function TestRunnerTab() {
       </div>
 
       <Typography variant="body2" color="text.secondary" className={s.hint}>
-        Each test feeds its input through the current workflow and checks the
-        output contains the expected fields.
+        Each test merges its input with each step&rsquo;s configuration, in
+        order, and checks the result carries the expected fields. It does
+        not run the steps &mdash; no row is written, no page is changed, no
+        request is made. The data layer&rsquo;s engine does that once the
+        workflow is published, and only publishing exercises it.
       </Typography>
 
       <div className={s.list}>

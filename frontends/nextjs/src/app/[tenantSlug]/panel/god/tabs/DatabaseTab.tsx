@@ -13,8 +13,11 @@ export function DatabaseTab() {
 
   return (
     <div className={s.root}>
+      {/* "Data backends", not "Database Management": nothing here
+          manages anything. It lists what DBAL can run on and what each
+          needs, which is what the line below already says. */}
       <Typography variant="h6" gutterBottom>
-        Database Management
+        Data backends
       </Typography>
       <Typography variant="body2" color="text.secondary">
         {DB_BACKENDS.length} backend adapters. Select one to inspect the

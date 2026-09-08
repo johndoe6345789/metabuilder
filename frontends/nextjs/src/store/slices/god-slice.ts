@@ -119,14 +119,14 @@ const godSlice = createSlice({
      * browser was shown the other tenant's styles, staged and one click
      * from being published into their own.
      *
-     * The set is every key that is published under a tenant id: `tree` and
-     * `css` (page content and its classes), `workflow`, and `smtp` --
-     * which carries an outbound mail password, so leaving it out would
-     * have handed one tenant another's credential. `packages`,
-     * `dropdowns`, `tests` and `plan` are deliberately not here: none of
-     * them is written to DBAL under a tenant at all. Check that before
-     * adding a key, rather than assuming either way -- `smtp` was assumed
-     * to be local editor state and is not.
+     * The set is every key a founder authored: `tree` and `css` (page
+     * content and its classes), `workflow`, `smtp` -- which carries an
+     * outbound mail password -- and the browser-local `plan`, `tests` and
+     * `dropdowns`. The last three were once left out because they are
+     * never written to DBAL; but the slice persists per origin, so they
+     * were on screen for whoever signed in next on the same machine. The
+     * rule is "authored by one community", not "published under one".
+     * `packages` and `bql` are keyed by tenant already.
      *
      * Cloned rather than assigned: initialState is a module-level object,
      * and handing Immer a reference to it would let the next edit mutate
@@ -136,9 +136,21 @@ const godSlice = createSlice({
       s.tree = structuredClone(initialState.tree)
       s.css = structuredClone(initialState.css)
       s.smtp = structuredClone(initialState.smtp)
+      // Never written to DBAL, which is why these were left out: the
+      // rule was "cleared if published under a tenant id". But the slice
+      // persists per browser origin, so founder A's plan cards, saved
+      // tests and dropdown lists were on screen for founder B the moment
+      // B signed in on the same machine. What is shown is what leaks; a
+      // browser-local draft is still one community's draft.
+      s.plan = structuredClone(initialState.plan)
+      s.tests = structuredClone(initialState.tests)
+      s.dropdowns = structuredClone(initialState.dropdowns)
       s.dirty.tree = false
       s.dirty.css = false
       s.dirty.smtp = false
+      s.dirty.plan = false
+      s.dirty.tests = false
+      s.dirty.dropdowns = false
       // The comment above has always named workflow; the body did not
       // clear it, so a tenant switch left the previous one's "unpublished
       // changes" showing over a list that had already been swapped out.

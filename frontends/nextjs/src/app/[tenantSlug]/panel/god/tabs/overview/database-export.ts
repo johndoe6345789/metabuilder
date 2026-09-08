@@ -14,9 +14,24 @@ const TIMEOUT_MS = 8000
  */
 export const EXPORTED_COLLECTIONS = [
   ['users', 'core/User'],
-  ['workflows', 'core/Workflow'],
+  // A page is a PageConfig row pointing at a PageTree; its content is the
+  // tree's nodes and their props. A stylesheet's substance is its rules;
+  // a workflow's is its nodes, their params and the edges between them.
+  // The export used to carry only the parent rows -- pointers to content
+  // that was not in the file -- and none of the founder's leads.
   ['pages', 'core/PageConfig'],
+  ['pageTrees', 'core/PageTree'],
+  ['pageTreeNodes', 'core/PageTreeNode'],
+  ['pageTreeProps', 'core/PageTreeProp'],
   ['styleClasses', 'core/StyleClass'],
+  ['styleRules', 'core/StyleRule'],
+  ['styleRuleProps', 'core/StyleRuleProp'],
+  ['workflows', 'core/Workflow'],
+  ['workflowNodes', 'core/WorkflowNode'],
+  ['workflowNodeParams', 'core/WorkflowNodeParam'],
+  ['workflowEdges', 'core/WorkflowEdge'],
+  ['formSubmissions', 'core/FormSubmission'],
+  ['theme', 'core/TenantTheme'],
 ] as const
 
 export interface DatabaseExport {

@@ -30,11 +30,11 @@ export const DB_BACKENDS: [DbBackend, ...DbBackend[]] = [
     desc: 'Document storage for JSON/BSON data',
     env: 'DATABASE_URL=mongodb://...',
   },
-  {
-    name: 'Redis',
-    desc: 'Cache and ephemeral state layer',
-    env: 'REDIS_URL=redis://...',
-  },
+  // Redis is deliberately absent. dbal's CMakeLists excludes
+  // adapters/redis/ from the build, so a founder who set REDIS_URL from a
+  // card here got nothing -- the card promised a backend the daemon does
+  // not contain. Redis reaches DBAL only as a read-through cache via
+  // DBAL_CACHE_URL, which is a deployment setting, not a data backend.
   {
     name: 'Elasticsearch',
     desc: 'Full-text index and search backend',

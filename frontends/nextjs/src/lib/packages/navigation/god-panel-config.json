@@ -52,13 +52,13 @@
       "id": "users",
       "label": "Users",
       "icon": "people",
-      "description": "User management and role assignment"
+      "description": "Who has an account, and the role each holds"
     },
     {
       "id": "database",
       "label": "Database",
       "icon": "storage",
-      "description": "Database inspection and management"
+      "description": "The data backends DBAL can run on, and what each needs"
     },
     {
       "id": "credentials",
