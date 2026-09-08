@@ -6,8 +6,13 @@ export interface Flash {
 }
 
 /**
- * Validation only. Nothing here writes: applying an import is the Deploy
- * tab's job, and the message says so rather than implying data changed.
+ * Validation only. Nothing here writes, and the message says so rather
+ * than implying data changed.
+ *
+ * It used to send the reader to the Deploy tab to apply it. Deploy
+ * restores this browser's editor state and never touches the data layer,
+ * so that was a dead end: an instruction to finish a job nothing in the
+ * panel can do.
  */
 export function summariseImport(raw: string): Flash {
   try {
@@ -19,7 +24,8 @@ export function summariseImport(raw: string): Flash {
       severity: 'info',
       message:
         `Import file validated (${collections} collections). ` +
-        'Apply imports from Deploy when you are ready to mutate data.',
+        'Nothing in the panel writes it back yet — restoring a database ' +
+        'export is a data-layer operation.',
     }
   } catch {
     return {

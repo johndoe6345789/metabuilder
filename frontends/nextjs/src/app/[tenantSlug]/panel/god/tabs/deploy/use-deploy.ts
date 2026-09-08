@@ -6,7 +6,15 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { rehydrate, type GodState } from '@/store/slices/god-slice'
 
 /**
- * Project-level export/import ("deploy" = ship the whole declarative bundle).
+ * Export and import this browser's editor state.
+ *
+ * The god slice plus the IndexedDB tier: drafts, staged changes and
+ * version history. Deliberately named for what it carries, because the
+ * tab's copy used to promise "routes, component trees, workflows, styles,
+ * packages" -- which are published DBAL rows, none of which appear in the
+ * file, and none of which importing can restore. A founder who exported
+ * before a migration would have got a bundle with none of their live site
+ * in it.
  */
 export function useDeploy() {
   const dispatch = useAppDispatch()

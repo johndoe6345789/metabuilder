@@ -15,9 +15,14 @@ export function DeployTab() {
         Deploy
       </Typography>
       <Typography variant="body2" color="text.secondary" className={s.hint}>
-        A project is just declarative data — routes, component trees,
-        workflows, styles, packages. Export the whole bundle to move it
-        between environments, or import one to restore it.
+        A backup of this browser&rsquo;s editor — your drafts, staged
+        changes and version history. Export it to move your work to
+        another machine, or import one to restore it here.
+      </Typography>
+      <Typography variant="body2" color="text.secondary" className={s.hint}>
+        It does not include what you have published. Live routes, page
+        trees, workflows and styles are rows in the data layer; publishing
+        is what writes them and this cannot restore them.
       </Typography>
 
       {d.flash !== null && <div className={s.flash}>{d.flash}</div>}
