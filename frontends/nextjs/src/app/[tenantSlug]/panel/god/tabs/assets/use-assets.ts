@@ -82,7 +82,14 @@ export function useAssets(tenant: string) {
     async (key: string): Promise<void> => {
       setBusy(true)
       try {
-        await fetch(assetUrl(tenant, key), { method: 'DELETE' })
+        const res = await fetch(assetUrl(tenant, key), { method: 'DELETE' })
+        // Unchecked, a refused delete refreshed the list, showed the file
+        // still there, and set no error -- so it read as a glitch to retry
+        // rather than a refusal to understand.
+        if (!res.ok) {
+          setError(`Could not delete ${key} (HTTP ${res.status}).`)
+          return
+        }
         await refresh()
       } finally {
         setBusy(false)

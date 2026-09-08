@@ -198,3 +198,31 @@ describe('useAssets', () => {
     })
   })
 })
+
+/**
+ * The DELETE's response was never read, so a refusal refreshed the list,
+ * showed the file still there, and set no error -- it read as a glitch to
+ * retry rather than a refusal to understand.
+ */
+describe('a delete the file store refuses', () => {
+  beforeEach(() => vi.clearAllMocks())
+  afterEach(() => vi.unstubAllGlobals())
+
+  it('says so and does not pretend the file went', async () => {
+    // The specific route first: mockFetch takes the first substring match,
+    // and the DELETE url contains '/api/assets' too.
+    const calls = mockFetch([
+      { match: 'logo.png', ok: false, status: 403, body: {} },
+      listed(asset('logo.png')),
+    ])
+    const { result } = await ready()
+
+    await act(async () => {
+      await result.current.remove('logo.png')
+    })
+
+    expect(result.current.error).toContain('logo.png')
+    // No refresh after a refusal: the one listing call is the initial load.
+    expect(calls.filter(c => c.method === 'GET')).toHaveLength(1)
+  })
+})

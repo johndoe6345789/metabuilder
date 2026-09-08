@@ -24,12 +24,14 @@ export default function RootPage() {
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    // access/PageConfig, not core/page_config: the entity is registered from
-    // dbal/shared/api/schema/entities/access/page_config.json under its
-    // "entity" name, and DBAL routes are /{tenant}/{package}/{Entity}. The old
-    // path answered 422 on both counts, and the .catch below swallowed it - the
-    // page rendered while the requiresAuth redirect silently never ran.
-    fetch(`${dbalUrl()}/system/access/PageConfig`, {
+    // PageConfig, not page_config: DBAL resolves the entity by its schema's
+    // "entity" name, so the snake_case filename answered 422 and the .catch
+    // below swallowed it -- the page rendered while the requiresAuth
+    // redirect silently never ran. The package segment is only checked for
+    // shape (rpc_restful_handler.cpp), so "core" here matches the twenty
+    // other call sites; this one used to say "access" and read as though
+    // one of the two must be broken.
+    fetch(`${dbalUrl()}/system/core/PageConfig`, {
       headers: { 'Content-Type': 'application/json' },
     })
       .then(res => (res.ok ? res.json() : null))

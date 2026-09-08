@@ -41,12 +41,15 @@ describe('RootPage', () => {
     expect(screen.queryByTestId('welcome')).toBeNull()
   })
 
-  it('queries the DBAL access/PageConfig endpoint', () => {
+  // DBAL routes by entity name and only checks the package for shape,
+  // so this matches the twenty other call sites rather than standing
+  // alone as 'access' and reading as though one must be wrong.
+  it('queries the DBAL core/PageConfig endpoint', () => {
     const fetchMock = vi.fn(() => new Promise(() => {}))
     vi.stubGlobal('fetch', fetchMock)
     render(<RootPage />)
     expect(fetchMock).toHaveBeenCalledWith(
-      expect.stringContaining('/system/access/PageConfig'),
+      expect.stringContaining('/system/core/PageConfig'),
       expect.objectContaining({
         headers: { 'Content-Type': 'application/json' },
       })

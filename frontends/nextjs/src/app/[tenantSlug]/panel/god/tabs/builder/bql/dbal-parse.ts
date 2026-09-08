@@ -31,6 +31,18 @@ export async function parseBqlViaDbal(
       body: JSON.stringify({ script }),
       signal: AbortSignal.timeout(6000),
     })
+    // A DBAL error envelope is JSON too. Cast straight to the success
+    // type, it had no `ok` and no `errors`, and the caller's
+    // `outcome.errors.length` threw inside a void promise -- the spinner
+    // cleared and nothing at all appeared on screen.
+    if (!res.ok) {
+      return {
+        ok: false,
+        errors: [
+          { line: 0, message: `The BQL parser answered HTTP ${res.status}` },
+        ],
+      }
+    }
     return (await res.json()) as BqlParseResponse
   } catch {
     return {
