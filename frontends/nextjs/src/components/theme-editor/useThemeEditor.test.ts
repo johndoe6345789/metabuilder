@@ -31,7 +31,7 @@ function mockFetch(status = 200) {
 }
 
 const ready = async () => {
-  const hook = renderHook(() => useThemeEditor())
+  const hook = renderHook(() => useThemeEditor('acme'))
   await waitFor(() => expect(theme.resolveTenantTheme).toHaveBeenCalled())
   return hook
 }
@@ -127,7 +127,7 @@ describe('useThemeEditor', () => {
     it('writes to localStorage first, so the change survives a failed POST', async () => {
       const { result } = await ready()
 
-      act(() => result.current.saveColors(light, dark))
+      await act(() => result.current.saveColors(light, dark))
 
       const stored = JSON.parse(
         localStorage.getItem('pg-theme-overrides') ?? '{}'
@@ -139,15 +139,14 @@ describe('useThemeEditor', () => {
       const calls = mockFetch()
       const { result } = await ready()
 
-      act(() => result.current.saveColors(light, dark))
+      await act(() => result.current.saveColors(light, dark))
 
-      await waitFor(() => {
-        expect(calls.some(c => c.method === 'POST')).toBe(true)
-      })
-      const body = JSON.parse(
-        calls.find(c => c.method === 'POST')?.body ?? '{}'
-      )
+      const post = calls.find(c => c.method === 'POST')
+      expect(post?.url).toContain('/acme/core/TenantTheme')
+      const body = JSON.parse(post?.body ?? '{}')
       expect(JSON.parse(body.lightColors)).toEqual(light)
+      expect(result.current.saveStatus).toBe('saved')
+      expect(result.current.saveError).toBeNull()
     })
 
     it('falls back to PUT when the row already exists', async () => {
@@ -155,11 +154,40 @@ describe('useThemeEditor', () => {
       const calls = mockFetch(409)
       const { result } = await ready()
 
-      act(() => result.current.saveColors(light, dark))
+      await act(() => result.current.saveColors(light, dark))
 
-      await waitFor(() => {
-        expect(calls.some(c => c.method === 'PUT')).toBe(true)
-      })
+      expect(calls.some(c => c.method === 'PUT')).toBe(true)
+      // The PUT answered 409 too in this mock, and a 409 on an update is
+      // a refusal like any other -- not "saved".
+      expect(result.current.saveStatus).toBe('failed')
+    })
+
+    /**
+     * Save used to swallow every failure as "non-fatal" because the
+     * localStorage copy still applied -- to this browser. Visitors read
+     * the TenantTheme row, so a founder whose write was refused saw their
+     * colours and shipped the defaults, with no hint of the difference.
+     */
+    it('says so when the data layer refuses the theme', async () => {
+      mockFetch(500)
+      const { result } = await ready()
+
+      await act(() => result.current.saveColors(light, dark))
+
+      expect(result.current.saveStatus).toBe('failed')
+      expect(result.current.saveError).toBe('HTTP 500')
+    })
+
+    it('clears an earlier failure once a save goes through', async () => {
+      mockFetch(500)
+      const { result } = await ready()
+      await act(() => result.current.saveColors(light, dark))
+      expect(result.current.saveStatus).toBe('failed')
+
+      mockFetch()
+      await act(() => result.current.saveColors(light, dark))
+      expect(result.current.saveStatus).toBe('saved')
+      expect(result.current.saveError).toBeNull()
     })
 
     it('does not throw when DBAL is unreachable', async () => {
@@ -171,19 +199,20 @@ describe('useThemeEditor', () => {
       )
       const { result } = await ready()
 
-      expect(() => {
-        act(() => result.current.saveColors(light, dark))
-      }).not.toThrow()
+      await act(() => result.current.saveColors(light, dark))
 
-      // The localStorage copy still applies for this browser.
+      // The localStorage copy still applies for this browser...
       expect(localStorage.getItem('pg-theme-overrides')).not.toBeNull()
+      // ...and the founder is told it went no further.
+      expect(result.current.saveStatus).toBe('failed')
+      expect(result.current.saveError).toBe('offline')
     })
   })
 
   describe('resetColors', () => {
     it('clears the stored theme', async () => {
       const { result } = await ready()
-      act(() => result.current.saveColors(light, dark))
+      await act(() => result.current.saveColors(light, dark))
 
       act(() => result.current.resetColors())
 

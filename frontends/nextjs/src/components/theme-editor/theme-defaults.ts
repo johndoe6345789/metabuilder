@@ -1,5 +1,7 @@
 export type ThemeColors = Record<string, string>
 
+export type SaveStatus = 'idle' | 'saving' | 'saved' | 'failed'
+
 export interface ThemeEditorState {
   lightColors: ThemeColors
   darkColors: ThemeColors
@@ -8,7 +10,12 @@ export interface ThemeEditorState {
   updateColor: (tab: 'light' | 'dark', key: string, val: string) => void
   applyColors: (colors: ThemeColors) => void
   resetColors: () => void
-  saveColors: (light: ThemeColors, dark: ThemeColors) => void
+  /** Resolves once the data layer has answered, one way or the other;
+   *  the outcome is in saveStatus / saveError. */
+  saveColors: (light: ThemeColors, dark: ThemeColors) => Promise<void>
+  saveStatus: SaveStatus
+  /** Why the last save did not reach the data layer, in its own words. */
+  saveError: string | null
   lightDefaults: ThemeColors
   darkDefaults: ThemeColors
 }

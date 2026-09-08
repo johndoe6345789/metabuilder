@@ -33,3 +33,13 @@
   flex-wrap: wrap;
   padding-top: 4px;
 }
+
+.status {
+  margin-top: 8px;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+}
+
+.statusError {
+  margin-top: 8px;
+  color: var(--mat-sys-error, #b3261e);
+}

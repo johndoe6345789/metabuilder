@@ -1,6 +1,7 @@
 'use client'
 
 import { Typography, Button, Tabs, Tab, Paper } from '@/m3'
+import { SaveStatus } from './SaveStatus'
 import { SwatchList } from './SwatchList'
 import { ThemePreview } from './ThemePreview'
 import { useThemeEditor } from './useThemeEditor'
@@ -16,6 +17,8 @@ export function ThemeEditor({ tenant }: { tenant: string }) {
     applyColors,
     resetColors,
     saveColors,
+    saveStatus,
+    saveError,
   } = useThemeEditor(tenant)
 
   const currentColors = activeTab === 'light' ? lightColors : darkColors
@@ -25,7 +28,7 @@ export function ThemeEditor({ tenant }: { tenant: string }) {
   }
 
   function handleSave() {
-    saveColors(lightColors, darkColors)
+    void saveColors(lightColors, darkColors)
     applyColors(currentColors)
   }
 
@@ -70,6 +73,7 @@ export function ThemeEditor({ tenant }: { tenant: string }) {
           Reset to Defaults
         </Button>
       </div>
+      <SaveStatus status={saveStatus} error={saveError} />
     </div>
   )
 }
