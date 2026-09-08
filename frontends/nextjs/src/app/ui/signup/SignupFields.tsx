@@ -1,7 +1,7 @@
 'use client'
 
 import { FormField } from './FormField'
-import { tenantNameFor } from './signup-form'
+import { slugify, tenantNameFor } from './signup-form'
 import { BASE_PATH } from '@/lib/app-config'
 import s from './page.module.scss'
 
@@ -18,10 +18,18 @@ export interface SignupFieldsProps {
 
 /** Community name, the owner's name, email and password. */
 export function SignupFields(props: SignupFieldsProps) {
+  // Two names, and the founder was told neither. The URL is the
+  // underscored tenant; the name DBAL's sign-in prompt asks for is the
+  // hyphenated slug (register sends `username: slug`), which appeared
+  // nowhere in the flow -- so a founder was bounced to a "Username" prompt
+  // seconds after signing up with nothing that would work.
   const hint = props.community.trim().length > 1 && (
     <span className={s.hint}>
       Your URL: metabuilder.app{BASE_PATH}/
       <strong>{tenantNameFor(props.community)}</strong>
+      <br />
+      You will sign in as <strong>{slugify(props.community)}</strong> --
+      write it down.
     </span>
   )
 

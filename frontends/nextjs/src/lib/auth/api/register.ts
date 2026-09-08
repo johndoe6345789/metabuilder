@@ -211,11 +211,12 @@ export async function register(
     // Provision the Credential through DBAL's own admin endpoint so the
     // password is Argon2id-hashed the same way DBAL's OIDC login verifies
     // it, and so login resolves this same tenantId (see the comment above).
-    // The email is stored alongside username as a second login identifier
-    // (see DBAL's verifyCredentialIdentifier) -- username here is a
-    // system-generated community slug a founder was never shown or asked
-    // to remember, so signing back in with the email they typed at signup
-    // has to work too, not just the slug.
+    // The email is sent alongside the username. Whether DBAL accepts it
+    // as a second login identifier depends on the DBAL build: the checkout
+    // assembled here has no verifyCredentialIdentifier, reads only
+    // username/password/tenantId from this body, and its sign-in form
+    // asks for "Username". So the slug IS the login name, and the signup
+    // screen and dashboard now say so -- do not rely on email sign-in.
     try {
       await createDbalCredential(username, password, tenantId, email)
     } catch (cause) {

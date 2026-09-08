@@ -32,7 +32,13 @@ export function ProfileCard({
           {username.charAt(0).toUpperCase()}
         </div>
         <div className={s.profileInfo}>
-          <p className={s.profileName}>{username}</p>
+          {/* Labelled: this is the one place the sign-in name appears, and
+              unlabelled it read as a display name rather than the thing
+              to type at the "Username" prompt. */}
+          <p className={s.profileName}>
+            {username}
+            <span className={s.profileEmail}> &middot; your sign-in name</span>
+          </p>
           <p className={s.profileEmail}>{email}</p>
           <div className={s.profileBadges}>
             <span
