@@ -4,8 +4,22 @@
     {
       "name": "nextjs",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--prefix", "frontends/nextjs"],
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--prefix",
+        "frontends/nextjs"
+      ],
       "port": 3000
+    },
+    {
+      "name": "god-panel",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "cd frontends/nextjs && (node e2e/dbal-stub.mjs &) && DBAL_ENDPOINT=http://localhost:8099 NEXT_PUBLIC_DBAL_API_URL=http://localhost:8099 METABUILDER_INTERNAL_URL=http://127.0.0.1:3004/app DBAL_ADMIN_TOKEN=stub npx next dev --turbopack --port 3004"
+      ],
+      "port": 3004
     }
   ]
 }

@@ -24,6 +24,24 @@ const node = (id, type, props, children = []) => ({
   children,
 })
 
+/**
+ * The one account the stub knows: the founder of harbour_cycle_works, as
+ * a god. Any bearer token resolves to them, which is what lets a browser
+ * with a hand-made session in sessionStorage drive the God Panel against
+ * this stub -- see .claude/launch.json.
+ */
+const FOUNDER = {
+  id: 'u_harbour',
+  username: 'harbour-cycle-works',
+  email: 'rosa@harbour.example',
+  role: 'god',
+  tenantId: 'harbour_cycle_works',
+  isInstanceOwner: false,
+  profilePicture: null,
+  bio: 'Wheel builder.',
+  createdAt: 1700000000000,
+}
+
 /** Rows keyed by tenant, in the shape DBAL's envelope carries them. */
 const WORLD = {
   harbour_cycle_works: {
@@ -88,6 +106,9 @@ function treeRows(tenant, treeId, entity) {
 
 function answer(url) {
   const { pathname, searchParams } = new URL(url, 'http://stub')
+  if (pathname === '/oidc/userinfo') {
+    return JSON.stringify({ sub: FOUNDER.username, tenant_id: FOUNDER.tenantId })
+  }
   const [tenant, , entity] = pathname.split('/').filter(Boolean)
   const world = WORLD[tenant]
   if (world === undefined) return envelope([])
@@ -103,12 +124,34 @@ function answer(url) {
     return envelope(treeRows(tenant, searchParams.get('filter.treeId'), entity))
   }
   // A community exists if it has anyone in it; quiet_harbour has a founder.
-  if (entity === 'User') return envelope([{ id: 'u1' }])
+  if (entity === 'User') {
+    return envelope(tenant === FOUNDER.tenantId ? [FOUNDER] : [{ id: 'u1' }])
+  }
   return envelope([])
 }
 
+const CORS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+}
+
 createServer((req, res) => {
-  res.writeHead(200, { 'Content-Type': 'application/json' })
+  // The browser calls this directly when the launch config points
+  // NEXT_PUBLIC_DBAL_API_URL here, so it has to speak CORS.
+  if (req.method === 'OPTIONS') {
+    res.writeHead(204, CORS)
+    res.end()
+    return
+  }
+  res.writeHead(200, { 'Content-Type': 'application/json', ...CORS })
+  // Writes are accepted and forgotten: enough to see what a tab does
+  // after a click, not a database.
+  if (req.method !== 'GET') {
+    req.resume()
+    res.end(JSON.stringify({ success: true, data: { id: 'stub' } }))
+    return
+  }
   res.end(answer(req.url ?? '/'))
 }).listen(PORT, () => {
   process.stdout.write(`dbal-stub listening on ${PORT}\n`)
