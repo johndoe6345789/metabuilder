@@ -1,5 +1,6 @@
 /** Save and cancel for the edit form. */
 
+import Link from 'next/link'
 import { SOFT_PILL_RADIUS } from './radii'
 
 export function EntityEditActions({
@@ -28,7 +29,7 @@ export function EntityEditActions({
         >
           Save Changes
         </button>
-        <a
+        <Link
           href={`/${tenant}/${pkg}/${entity}/${id}`}
           style={{
             padding: '0.5rem 1.5rem',
@@ -41,7 +42,7 @@ export function EntityEditActions({
           }}
         >
           Cancel
-        </a>
+        </Link>
       </div>
   )
 }

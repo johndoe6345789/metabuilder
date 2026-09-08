@@ -3,11 +3,20 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 const api = vi.hoisted(() => ({ register: vi.fn() }))
 vi.mock('@/lib/auth/api/register', () => api)
 
+import { NextRequest } from 'next/server'
 import { POST } from './route'
 
-const req = (body: unknown): Request =>
-  new Request('http://localhost/api/auth/register', {
+/**
+ * From a fresh address per request unless a test says otherwise, so the
+ * limiter's buckets do not bleed between cases -- without this the older
+ * tests all shared the "unknown" bucket and the enumeration test below
+ * drained it before they ran.
+ */
+let nextAddress = 0
+const req = (body: unknown, ip?: string): NextRequest =>
+  new NextRequest('http://localhost/api/auth/register', {
     method: 'POST',
+    headers: { 'x-real-ip': ip ?? `10.0.${++nextAddress}.1` },
     body: typeof body === 'string' ? body : JSON.stringify(body),
   })
 
@@ -93,5 +102,32 @@ describe('POST /api/auth/register', () => {
       user: null,
       error: 'Internal server error',
     })
+  })
+})
+
+/**
+ * RATE_LIMIT_CONFIGS declares register at 3 a minute "to slow
+ * account-enumeration attempts", and nothing applied it to this route --
+ * only to /api/v1's auth path, which the signup form does not use. This
+ * route answers "Username already exists", "Email already exists" and
+ * "already taken" with distinct messages, so unlimited it was an oracle
+ * for all three.
+ */
+describe('signing up over and over from one address', () => {
+  it('is refused on the fourth attempt within the minute', async () => {
+    const from = '10.9.9.9'
+    for (let i = 0; i < 3; i += 1) {
+      expect((await POST(req(valid, from))).status).toBe(200)
+    }
+    const fourth = await POST(req(valid, from))
+
+    expect(fourth.status).toBe(429)
+    // Refused before the account logic ran at all.
+    expect(api.register).toHaveBeenCalledTimes(3)
+  })
+
+  it('does not count one address against another', async () => {
+    for (let i = 0; i < 3; i += 1) await POST(req(valid, '10.8.8.8'))
+    expect((await POST(req(valid, '10.7.7.7'))).status).toBe(200)
   })
 })

@@ -1,5 +1,6 @@
 /** Breadcrumb and title above every entity view. */
 
+import Link from 'next/link'
 import type { EntitySchema } from '@/lib/entities/load-entity-schema'
 
 export function EntityPageHeader({
@@ -18,7 +19,7 @@ export function EntityPageHeader({
   return (
   <header className="entity-header">
     <nav className="breadcrumb">
-      <a href={`/${tenantSlug}/${pkg}`}>{pkg}</a>
+      <Link href={`/${tenantSlug}/${pkg}`}>{pkg}</Link>
       {' / '}
       <span>{entity}</span>
       {id !== undefined && id !== 'new' && (

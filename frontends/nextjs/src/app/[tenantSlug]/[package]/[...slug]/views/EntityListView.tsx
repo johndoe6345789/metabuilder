@@ -1,5 +1,6 @@
 /** EntityListView. */
 
+import Link from 'next/link'
 import { EntityTable } from './EntityTable'
 import { SOFT_RADIUS, SOFT_PILL_RADIUS } from './radii'
 import { fetchEntityList } from '@/lib/entities/api-client'
@@ -33,7 +34,7 @@ export async function EntityListView({
         }}
       >
         <h2>{entity} List</h2>
-        <a
+        <Link
           href={`/${tenant}/${pkg}/${entity}/new`}
           style={{
             padding: '0.5rem 1rem',
@@ -44,7 +45,7 @@ export async function EntityListView({
           }}
         >
           + New {entity}
-        </a>
+        </Link>
       </div>
 
       <p style={{ fontSize: '0.875rem', color: '#666', marginBottom: '1rem' }}>

@@ -1,5 +1,6 @@
 /** The rows and columns of a list view, derived from the schema. */
 
+import Link from 'next/link'
 import { EntityTableHead } from './EntityTableHead'
 import type { EntitySchema } from '@/lib/entities/load-entity-schema'
 
@@ -38,12 +39,12 @@ export function EntityTable({
                     </td>
                   ))}
                   <td style={{ padding: '0.75rem' }}>
-                    <a
+                    <Link
                       href={`/${tenant}/${pkg}/${entity}/${String(item[schema?.primaryKey ?? 'id'])}`}
                       style={{ color: '#1976d2', textDecoration: 'none' }}
                     >
                       View
-                    </a>
+                    </Link>
                   </td>
                 </tr>
               )

@@ -1,5 +1,6 @@
 /** EntityDetailView. */
 
+import Link from 'next/link'
 import { EntityLoadError } from './EntityLoadError'
 import { EntityDetailFields } from './EntityDetailFields'
 import { SOFT_RADIUS, SOFT_PILL_RADIUS } from './radii'
@@ -39,7 +40,7 @@ export async function EntityDetailView({
           {entity} #{id}
         </h2>
         <div className="actions">
-          <a
+          <Link
             href={`/${tenant}/${pkg}/${entity}/${id}/edit`}
             style={{
               padding: '0.5rem 1rem',
@@ -50,7 +51,7 @@ export async function EntityDetailView({
             }}
           >
             Edit
-          </a>
+          </Link>
         </div>
       </div>
 

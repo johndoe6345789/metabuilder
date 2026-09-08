@@ -7,10 +7,20 @@
  * to keep in sync with the OIDC-issued one.
  */
 
-import { NextResponse } from 'next/server'
+import { NextResponse, type NextRequest } from 'next/server'
 import { register } from '@/lib/auth/api/register'
+import { applyRateLimit } from '@/lib/middleware'
 
-export async function POST(request: Request): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<Response> {
+  // First, before the body is even parsed. RATE_LIMIT_CONFIGS declares
+  // register at 3/min "to slow account-enumeration attempts", and the only
+  // thing applying it was the /api/v1 auth route -- which the signup form
+  // does not use. This route answers "Username already exists", "Email
+  // already exists" and "already taken" with distinct messages, so unlimited
+  // it was an oracle for all three.
+  const limited = applyRateLimit(request, 'register')
+  if (limited !== null) return limited
+
   try {
     const body = (await request.json()) as {
       username?: string
