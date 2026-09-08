@@ -13,13 +13,13 @@ vi.mock('./irc-storage', () => store)
 
 import { useIrcChat } from './useIrcChat'
 
-const channel = (id: string, name = id) => ({ id, name, tenantId: 'default' })
+const channel = (id: string, name = id) => ({ id, name, tenantId: 'acme' })
 const message = (id: string) => ({
   id,
   channelId: 'ch_general',
   content: id,
   createdBy: 'u',
-  tenantId: 'default',
+  tenantId: 'acme',
   createdAt: '2020-01-01',
   type: 'message',
 })
@@ -39,17 +39,17 @@ describe('useIrcChat', () => {
 
   describe('loading channels', () => {
     it('selects the first channel automatically', async () => {
-      const { result } = renderHook(() => useIrcChat())
+      const { result } = renderHook(() => useIrcChat('acme'))
 
       await waitFor(() => expect(result.current.loading).toBe(false))
       expect(result.current.activeChannelId).toBe('ch_general')
     })
 
     it('caches what it loaded', async () => {
-      const { result } = renderHook(() => useIrcChat())
+      const { result } = renderHook(() => useIrcChat('acme'))
 
       await waitFor(() => expect(result.current.loading).toBe(false))
-      expect(store.lsSet).toHaveBeenCalledWith('irc_channels', [
+      expect(store.lsSet).toHaveBeenCalledWith('irc_channels_acme', [
         channel('ch_general'),
       ])
     })
@@ -57,7 +57,7 @@ describe('useIrcChat', () => {
     it('uses the built-in channels when the server returns none', async () => {
       api.fetchChannels.mockResolvedValue([])
 
-      const { result } = renderHook(() => useIrcChat())
+      const { result } = renderHook(() => useIrcChat('acme'))
 
       await waitFor(() => expect(result.current.loading).toBe(false))
       expect(result.current.channels.map(c => c.name)).toEqual([
@@ -76,7 +76,7 @@ describe('useIrcChat', () => {
     it('falls back to cached channels and says so', async () => {
       store.lsGet.mockReturnValue([channel('ch_cached')])
 
-      const { result } = renderHook(() => useIrcChat())
+      const { result } = renderHook(() => useIrcChat('acme'))
 
       await waitFor(() => expect(result.current.loading).toBe(false))
       expect(result.current.channels).toEqual([channel('ch_cached')])
@@ -84,7 +84,7 @@ describe('useIrcChat', () => {
     })
 
     it('does not keep asking the server for messages', async () => {
-      const { result } = renderHook(() => useIrcChat())
+      const { result } = renderHook(() => useIrcChat('acme'))
 
       await waitFor(() => expect(result.current.loading).toBe(false))
       expect(api.fetchMessages).not.toHaveBeenCalled()
@@ -93,19 +93,19 @@ describe('useIrcChat', () => {
 
   describe('messages', () => {
     it('loads them for the active channel', async () => {
-      const { result } = renderHook(() => useIrcChat())
+      const { result } = renderHook(() => useIrcChat('acme'))
 
       await waitFor(() => {
         expect(result.current.messages).toEqual([message('m1')])
       })
-      expect(api.fetchMessages).toHaveBeenCalledWith('ch_general')
+      expect(api.fetchMessages).toHaveBeenCalledWith('acme', 'ch_general')
     })
 
     it('caches them per channel', async () => {
-      renderHook(() => useIrcChat())
+      renderHook(() => useIrcChat('acme'))
 
       await waitFor(() => {
-        expect(store.lsSet).toHaveBeenCalledWith('irc_msgs_ch_general', [
+        expect(store.lsSet).toHaveBeenCalledWith('irc_msgs_acme_ch_general', [
           message('m1'),
         ])
       })
@@ -114,10 +114,10 @@ describe('useIrcChat', () => {
     it('goes offline and uses the cache when a poll fails', async () => {
       api.fetchMessages.mockRejectedValue(new Error('gone'))
       store.lsGet.mockImplementation((key: string, fallback: unknown) =>
-        key === 'irc_msgs_ch_general' ? [message('cached')] : fallback
+        key === 'irc_msgs_acme_ch_general' ? [message('cached')] : fallback
       )
 
-      const { result } = renderHook(() => useIrcChat())
+      const { result } = renderHook(() => useIrcChat('acme'))
 
       await waitFor(() => {
         expect(result.current.error).toContain('offline')
@@ -132,7 +132,7 @@ describe('useIrcChat', () => {
         channel('ch_general'),
         channel('ch_dev'),
       ])
-      const { result } = renderHook(() => useIrcChat())
+      const { result } = renderHook(() => useIrcChat('acme'))
 
       await waitFor(() => expect(result.current.messages).toHaveLength(1))
 
@@ -147,37 +147,40 @@ describe('useIrcChat', () => {
         channel('ch_general'),
         channel('ch_dev'),
       ])
-      const { result } = renderHook(() => useIrcChat())
+      const { result } = renderHook(() => useIrcChat('acme'))
 
       await waitFor(() => expect(result.current.loading).toBe(false))
       act(() => result.current.setActiveChannelId('ch_dev'))
 
       await waitFor(() => {
-        expect(api.fetchMessages).toHaveBeenCalledWith('ch_dev')
+        expect(api.fetchMessages).toHaveBeenCalledWith('acme', 'ch_dev')
       })
     })
   })
 
   describe('sending', () => {
     it('posts to the server when online', async () => {
-      const { result } = renderHook(() => useIrcChat())
+      const { result } = renderHook(() => useIrcChat('acme'))
       await waitFor(() => expect(result.current.loading).toBe(false))
 
       await act(async () => {
         await result.current.sendMessage('hello', 'alice')
       })
 
+      // The community comes first now, and it is this community: the
+      // old call passed the constant 'default' and the api ignored the
+      // argument anyway, so every community shared one set of rooms.
       expect(api.postMessage).toHaveBeenCalledWith(
+        'acme',
         'ch_general',
         'hello',
-        'alice',
-        'default'
+        'alice'
       )
     })
 
     it('keeps the message locally when the post fails', async () => {
       api.postMessage.mockRejectedValue(new Error('no route'))
-      const { result } = renderHook(() => useIrcChat())
+      const { result } = renderHook(() => useIrcChat('acme'))
       await waitFor(() => expect(result.current.loading).toBe(false))
 
       await act(async () => {
@@ -188,7 +191,7 @@ describe('useIrcChat', () => {
       // available outcome, so it is written to the local cache instead.
       expect(result.current.messages.at(-1)?.content).toBe('hello')
       expect(store.lsSet).toHaveBeenCalledWith(
-        'irc_msgs_ch_general',
+        'irc_msgs_acme_ch_general',
         expect.arrayContaining([expect.objectContaining({ content: 'hello' })])
       )
     })
@@ -198,7 +201,7 @@ describe('useIrcChat', () => {
       store.lsGet.mockReturnValue([])
       api.fetchChannels.mockRejectedValue(new Error('offline'))
 
-      const { result } = renderHook(() => useIrcChat())
+      const { result } = renderHook(() => useIrcChat('acme'))
       await waitFor(() => expect(result.current.loading).toBe(false))
 
       await act(async () => {
@@ -211,13 +214,13 @@ describe('useIrcChat', () => {
 
   describe('clearLocalMessages', () => {
     it('empties the cache and the view', async () => {
-      const { result } = renderHook(() => useIrcChat())
+      const { result } = renderHook(() => useIrcChat('acme'))
       await waitFor(() => expect(result.current.messages).toHaveLength(1))
 
       act(() => result.current.clearLocalMessages())
 
       expect(result.current.messages).toEqual([])
-      expect(store.lsSet).toHaveBeenCalledWith('irc_msgs_ch_general', [])
+      expect(store.lsSet).toHaveBeenCalledWith('irc_msgs_acme_ch_general', [])
     })
   })
 })

@@ -7,17 +7,17 @@
 import { useState, useCallback } from 'react'
 import { Typography } from '@/m3'
 import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
+import { useChatTenant } from './use-chat-tenant'
+import { mergeMessages } from './merge-messages'
 import { ChannelList } from './ChannelList'
 import { ChatPanel } from './ChatPanel'
 import { useIrcChat } from './useIrcChat'
 import type { IrcMessage } from './types'
 import styles from './IrcChatShell.module.scss'
 
-const toMs = (t: string | number) =>
-  typeof t === 'number' ? t : new Date(t).getTime()
-
 export function IrcChatShell() {
   const auth = useAuthContext()
+  const tenant = useChatTenant()
   const username = auth.user?.username ?? auth.user?.name ?? 'guest'
   const userId = auth.user?.id ?? 'anonymous'
 
@@ -30,7 +30,7 @@ export function IrcChatShell() {
     setActiveChannelId,
     sendMessage,
     clearLocalMessages,
-  } = useIrcChat()
+  } = useIrcChat(tenant)
 
   const [localMsgs, setLocalMsgs] = useState<IrcMessage[]>([])
 
@@ -44,9 +44,7 @@ export function IrcChatShell() {
   }, [clearLocalMessages])
 
   const activeChannel = channels.find(c => c.id === activeChannelId) ?? null
-  const allMessages = [...messages, ...localMsgs].sort(
-    (a, b) => toMs(a.createdAt) - toMs(b.createdAt)
-  )
+  const allMessages = mergeMessages(messages, localMsgs)
 
   return (
     <div className={styles.shell}>

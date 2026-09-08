@@ -13,6 +13,7 @@ import {
 vi.mock('@/app/_components/auth-provider/auth-provider-component', () => ({
   useAuthContext: authMod.useAuthContext,
 }))
+vi.mock('./use-chat-tenant', () => ({ useChatTenant: () => 'acme' }))
 vi.mock('./useIrcChat', () => chatHook)
 vi.mock('./ChannelList', () => listMod)
 vi.mock('./ChatPanel', () => panelMod)

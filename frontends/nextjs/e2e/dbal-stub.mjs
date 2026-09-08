@@ -164,6 +164,25 @@ function answer(url) {
     return envelope(treeRows(tenant, searchParams.get('filter.treeId'), entity))
   }
   // A community exists if it has anyone in it; quiet_harbour has a founder.
+  if (entity === 'IRCChannel') {
+    return envelope([
+      { id: 'ch_general', name: 'general', tenantId: tenant },
+      { id: 'ch_workshop', name: 'workshop', tenantId: tenant },
+    ])
+  }
+  if (entity === 'IRCMessage') {
+    return envelope([
+      {
+        id: 'm1',
+        tenantId: tenant,
+        channelId: searchParams.get('filter.channelId') ?? 'ch_general',
+        username: 'priya',
+        content: 'Is the workshop open on Saturday?',
+        type: 'message',
+        createdAt: '2025-07-02T09:00:00.000Z',
+      },
+    ])
+  }
   if (entity === 'FormSubmission') {
     return envelope(tenant === FOUNDER.tenantId ? SUBMISSIONS : [])
   }
