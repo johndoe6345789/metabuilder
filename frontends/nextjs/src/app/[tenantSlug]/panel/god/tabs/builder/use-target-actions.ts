@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import type { useComponentTree } from './use-component-tree'
 import type { PageConfigRow } from './use-page-configs'
 import type { PublishTarget } from './component-tree-publish'
@@ -17,6 +17,17 @@ export function useTargetActions(
   pages: PageConfigRow[],
   setTarget: Setter
 ) {
+  /**
+   * The path the tree on screen was loaded from, or null if it was not.
+   *
+   * The publish bar gated on dirty.tree alone, which load() clears -- so
+   * loading /about, changing the target path to /pricing and pressing
+   * Publish found the button greyed out, with nothing on screen saying
+   * why. The founder had to make a throwaway edit first. Pointing a
+   * loaded tree at a different path is a change worth publishing.
+   */
+  const [loadedPath, setLoadedPath] = useState<string | null>(null)
+
   const pick = useCallback(
     (path: string) => {
       const row = pages.find(p => p.path === path)
@@ -28,7 +39,9 @@ export function useTargetActions(
       // page from the dropdown and pressing Publish wrote the target's
       // defaults over it -- level 0 -- and quietly made the page public.
       void t.load(tenant, path).then(loaded => {
-        if (loaded !== null) setTarget(prev => ({ ...prev, ...loaded }))
+        if (loaded === null) return
+        setTarget(prev => ({ ...prev, ...loaded }))
+        setLoadedPath(path)
       })
     },
     [pages, setTarget, t, tenant]
@@ -43,9 +56,11 @@ export function useTargetActions(
 
   const load = useCallback(() => {
     void t.load(target.tenant, target.path).then(loaded => {
-      if (loaded !== null) setTarget(prev => ({ ...prev, ...loaded }))
+      if (loaded === null) return
+      setTarget(prev => ({ ...prev, ...loaded }))
+      setLoadedPath(target.path)
     })
   }, [setTarget, t, target.path, target.tenant])
 
-  return { pick, change, load }
+  return { pick, change, load, loadedPath }
 }

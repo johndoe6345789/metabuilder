@@ -21,11 +21,16 @@ function vkey(key: string): string {
   return `${key}.versions`
 }
 
+/**
+ * Record a version. Null when no storage tier would take it -- a founder
+ * in a private window or out of quota is not building a history, and the
+ * caller should not act as though they were.
+ */
 export async function snapshot<T>(
   key: string,
   data: T,
   label = 'Publish'
-): Promise<Snapshot<T>> {
+): Promise<Snapshot<T> | null> {
   const list = (await idbGet<Snapshot<T>[]>(vkey(key))) ?? []
   const snap: Snapshot<T> = {
     id: `v_${Date.now()}`,
@@ -38,8 +43,8 @@ export async function snapshot<T>(
         : (JSON.parse(JSON.stringify(data)) as T),
   }
   const next = [snap, ...list].slice(0, MAX_VERSIONS)
-  await idbSet(vkey(key), next)
-  return snap
+  const stored = await idbSet(vkey(key), next)
+  return stored ? snap : null
 }
 
 export async function listVersions<T>(key: string): Promise<Snapshot<T>[]> {

@@ -70,9 +70,12 @@ describe('idbGet / idbSet with IndexedDB', () => {
     expect(await mod.idbGet('k')).toBe('mirrored')
   })
 
+  // idbSet used to resolve to nothing either way, so a failed transaction
+  // was indistinguishable from a landed one. It reports true here because
+  // the localStorage mirror still took it.
   it('does not throw when a write transaction fails', async () => {
     const { mod } = await load({ failWrites: true })
-    await expect(mod.idbSet('k', 'v')).resolves.toBeUndefined()
+    await expect(mod.idbSet('k', 'v')).resolves.toBe(true)
     expect(localStorage.getItem('k')).toBe('"v"')
   })
 
@@ -104,6 +107,10 @@ describe('idbGet / idbSet without IndexedDB', () => {
     expect(await mod.idbGet('k')).toBeNull()
   })
 
+  // With no database and a refused mirror, nothing took the write -- and
+  // that is now the answer rather than a silent nothing. Restored in a
+  // finally: a failed assertion here used to leave the throwing spy in
+  // place for every test after it.
   it('does not throw when localStorage refuses the write', async () => {
     const mod = await loadWithoutIdb()
     const setItem = vi
@@ -111,8 +118,11 @@ describe('idbGet / idbSet without IndexedDB', () => {
       .mockImplementation(() => {
         throw new Error('QuotaExceededError')
       })
-    await expect(mod.idbSet('k', 'v')).resolves.toBeUndefined()
-    setItem.mockRestore()
+    try {
+      await expect(mod.idbSet('k', 'v')).resolves.toBe(false)
+    } finally {
+      setItem.mockRestore()
+    }
   })
 
   it('is null rather than throwing when localStorage refuses the read', async () => {

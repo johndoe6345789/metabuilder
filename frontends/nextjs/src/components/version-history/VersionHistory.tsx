@@ -31,7 +31,7 @@ export function VersionHistory<T>({
           <div className={s.head}>Version history</div>
           {v.versions.length === 0 && (
             <div className={s.empty}>
-              No versions yet — publish to snapshot.
+              No versions saved in this browser.
             </div>
           )}
           {v.versions.map((snap, i) => (

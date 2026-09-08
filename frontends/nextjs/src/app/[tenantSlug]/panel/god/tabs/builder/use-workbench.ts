@@ -29,6 +29,13 @@ export function useWorkbench() {
     usePageConfigs(tenant)
   const { collapsed, toggle: toggleCollapse } = useCollapsedSet()
   const targetActions = useTargetActions(t, tenant, target, pages, setTarget)
+  // Publishable when the tree changed, or when a loaded tree has been
+  // pointed at a different path -- the bar used to gate on dirty alone,
+  // which load() clears, so "same tree, new route" greyed the button out.
+  const canPublish =
+    t.dirty ||
+    (targetActions.loadedPath !== null &&
+      targetActions.loadedPath !== target.path)
 
   /**
    * Load this tenant's saved page when the signed-in tenant changes.
@@ -65,6 +72,7 @@ export function useWorkbench() {
     target,
     pages,
     pagesUnreachable,
+    canPublish,
     collapsed,
     toggleCollapse,
     targetActions,

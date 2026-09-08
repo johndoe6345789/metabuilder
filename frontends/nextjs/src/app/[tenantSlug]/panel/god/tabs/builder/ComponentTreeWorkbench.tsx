@@ -43,7 +43,7 @@ export function ComponentTreeWorkbench() {
       <ComponentTreePublishBar
         path={w.target.path}
         tenant={w.tenant}
-        dirty={w.t.dirty}
+        dirty={w.canPublish}
         publishing={w.t.publishing}
         onPublish={() => {
           void w.t.publish(w.target)

@@ -8,7 +8,8 @@ import { getVersion, listVersions, snapshot } from './versions'
 beforeEach(() => {
   vi.clearAllMocks()
   idb.idbGet.mockResolvedValue(undefined)
-  idb.idbSet.mockResolvedValue(undefined)
+  // The store accepts the write unless a test says otherwise.
+  idb.idbSet.mockResolvedValue(true)
 })
 
 describe('snapshot', () => {
@@ -79,5 +80,18 @@ describe('getVersion', () => {
   it('returns null when no version matches', async () => {
     idb.idbGet.mockResolvedValue([])
     expect(await getVersion('page1', 'missing')).toBeNull()
+  })
+})
+
+/**
+ * idbSet resolved to nothing whether or not anything stored the value, so
+ * snapshot() handed back a Snapshot for a version that did not exist -- and
+ * the History panel, its only reader, told a founder who had just
+ * published to "publish to snapshot".
+ */
+describe('a snapshot nothing would store', () => {
+  it('is null, not a version that was never saved', async () => {
+    idb.idbSet.mockResolvedValue(false)
+    expect(await snapshot('god.workflow.acme', { a: 1 })).toBeNull()
   })
 })

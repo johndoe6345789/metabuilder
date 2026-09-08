@@ -11,10 +11,13 @@ export function lsGet<T>(key: string): T | null {
   }
 }
 
-export function lsSet<T>(key: string, value: T): void {
+/** True if the value was stored. A quota or private-mode refusal used to
+ *  be swallowed here, so nothing above could tell it had not been. */
+export function lsSet<T>(key: string, value: T): boolean {
   try {
     localStorage.setItem(key, JSON.stringify(value))
+    return true
   } catch {
-    /* ignore */
+    return false
   }
 }

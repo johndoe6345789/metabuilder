@@ -26,20 +26,30 @@ export async function idbGet<T>(key: string): Promise<T | null> {
   })
 }
 
-export async function idbSet<T>(key: string, value: T): Promise<void> {
-  lsSet(key, value) // mirror to localStorage as a belt-and-braces fallback
+/**
+ * Store a value. True if at least one tier accepted it.
+ *
+ * tx.onerror resolved exactly as tx.oncomplete did, and lsSet swallowed
+ * its own failures, so a write nowhere accepted was indistinguishable from
+ * one that landed. The only reader of this tier is version history, whose
+ * empty state then told the founder to "publish to snapshot" after they
+ * had already published.
+ */
+export async function idbSet<T>(key: string, value: T): Promise<boolean> {
+  const mirrored = lsSet(key, value) // belt-and-braces fallback
   const db = await openDb()
-  if (db === null) return
-  await new Promise<void>(resolve => {
+  if (db === null) return mirrored
+  const stored = await new Promise<boolean>(resolve => {
     const tx = db.transaction(STORE, 'readwrite')
     tx.objectStore(STORE).put(value, key)
     tx.oncomplete = () => {
-      resolve()
+      resolve(true)
     }
     tx.onerror = () => {
-      resolve()
+      resolve(false)
     }
   })
+  return stored || mirrored
 }
 
 /** Dump every key/value (for project export). */
