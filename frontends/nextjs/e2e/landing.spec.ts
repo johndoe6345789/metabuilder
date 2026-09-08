@@ -67,7 +67,11 @@ test.describe('Signup page', () => {
     await page.goto('/app/ui/signup')
     await page.getByPlaceholder('Acme Running Club').fill('Acme Running Club')
     await expect(
-      page.getByText(/metabuilder\.app\/acme-running-club/),
+      // The hint is the URL the payload actually asks for: the tenant name goes
+      // through tenantNameFor (underscores -- DBAL's route parser takes no
+      // hyphen) under the app's basePath. It used to show a hyphenated,
+      // basePath-less address that could never have worked.
+      page.getByText(/metabuilder\.app\/app\/acme_running_club/),
     ).toBeVisible()
   })
 

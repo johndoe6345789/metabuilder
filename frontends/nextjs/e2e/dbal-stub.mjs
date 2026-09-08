@@ -95,6 +95,10 @@ const WORLD = {
   },
   // A community that has signed up and published nothing.
   quiet_harbour: { pages: [], trees: {} },
+  // The instance's own tenant. It always exists on a real install -- the
+  // seeded god user lives in it -- and the tenant layout 404s any tenant
+  // this stub does not know, which is what media-center.spec.ts hit.
+  system: { pages: [], trees: {} },
 }
 
 const envelope = rows => JSON.stringify({ data: { data: rows } })
