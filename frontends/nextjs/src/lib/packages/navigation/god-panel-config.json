@@ -55,6 +55,12 @@
       "description": "Who has an account, and the role each holds -- change one here"
     },
     {
+      "id": "submissions",
+      "label": "Messages",
+      "icon": "mail",
+      "description": "What people sent through the forms on your pages"
+    },
+    {
       "id": "database",
       "label": "Database",
       "icon": "storage",

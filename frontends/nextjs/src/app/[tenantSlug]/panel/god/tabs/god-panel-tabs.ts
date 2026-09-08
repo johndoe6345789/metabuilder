@@ -8,6 +8,7 @@ import { PageRoutesTab } from './PageRoutesTab'
 import { ComponentTreeTab } from './builder/ComponentTreeTab'
 import { BqlTab } from './bql/BqlTab'
 import { UsersTab } from './UsersTab'
+import { SubmissionsTab } from './submissions/SubmissionsTab'
 import { DatabaseTab } from './DatabaseTab'
 import { CredentialsTab } from './CredentialsTab'
 import { ThemeTab } from './ThemeTab'
@@ -27,6 +28,7 @@ export const TAB_COMPONENTS = {
   components: ComponentTreeTab,
   bql: BqlTab,
   users: UsersTab,
+  submissions: SubmissionsTab,
   database: DatabaseTab,
   credentials: CredentialsTab,
   theme: ThemeTab,

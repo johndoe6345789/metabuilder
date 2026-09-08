@@ -42,6 +42,29 @@ const FOUNDER = {
   createdAt: 1700000000000,
 }
 
+/** What visitors sent through the forms on the founder's pages. */
+const SUBMISSIONS = [
+  {
+    id: 'fs_1',
+    tenantId: 'harbour_cycle_works',
+    formName: 'contact',
+    path: '/',
+    // Stored as JSON text, the way an adapter hands an object field back.
+    data: '{"name":"Priya","message":"Do you still build 650b wheels?"}',
+    workflow: '',
+    createdAt: 1751600000,
+  },
+  {
+    id: 'fs_2',
+    tenantId: 'harbour_cycle_works',
+    formName: 'contact',
+    path: '/',
+    data: { name: 'Tom', message: 'Spoke length for a Hope hub?' },
+    status: 'handled',
+    createdAt: 1751500000,
+  },
+]
+
 /** A member of the founder's community, for the Users tab to promote. */
 const MEMBER = {
   id: 'u_sam',
@@ -141,6 +164,9 @@ function answer(url) {
     return envelope(treeRows(tenant, searchParams.get('filter.treeId'), entity))
   }
   // A community exists if it has anyone in it; quiet_harbour has a founder.
+  if (entity === 'FormSubmission') {
+    return envelope(tenant === FOUNDER.tenantId ? SUBMISSIONS : [])
+  }
   if (entity === 'User') {
     return envelope(
       tenant === FOUNDER.tenantId ? [FOUNDER, MEMBER] : [{ id: 'u1' }]
