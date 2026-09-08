@@ -3,7 +3,14 @@ import { act, renderHook, waitFor } from '@testing-library/react'
 
 import { usePageRoutes } from './usePageRoutes'
 
-const page = (id: string, path = `/${id}`) => ({ id, path, title: id })
+// Level 0 because the hook normalises the field, so a row without one
+// comes back public rather than undefined.
+const page = (id: string, path = `/${id}`) => ({
+  id,
+  path,
+  title: id,
+  level: 0,
+})
 
 function mockFetch(body: unknown, ok = true, status = 200) {
   const calls: { url: string; method: string; body?: string }[] = []
@@ -53,6 +60,20 @@ describe('usePageRoutes', () => {
       const { result } = await loaded({ data: { data: [page('a')] } })
 
       expect(result.current.pages).toEqual([page('a')])
+    })
+
+    it('reads a level the adapter sent as a string', async () => {
+      const row = { ...page('a'), level: '3' as unknown as number }
+      const { result } = await loaded({ data: { data: [row] } })
+
+      expect(result.current.pages[0].level).toBe(3)
+    })
+
+    it('reads an undeclared level as public', async () => {
+      const row = { ...page('a'), level: undefined as unknown as number }
+      const { result } = await loaded({ data: { data: [row] } })
+
+      expect(result.current.pages[0].level).toBe(0)
     })
 
     it('accepts a bare array', async () => {

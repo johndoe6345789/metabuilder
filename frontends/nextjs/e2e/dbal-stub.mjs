@@ -42,6 +42,19 @@ const FOUNDER = {
   createdAt: 1700000000000,
 }
 
+/** A member of the founder's community, for the Users tab to promote. */
+const MEMBER = {
+  id: 'u_sam',
+  username: 'sam',
+  email: 'sam@harbour.example',
+  role: 'user',
+  tenantId: 'harbour_cycle_works',
+  isInstanceOwner: false,
+  profilePicture: null,
+  bio: '',
+  createdAt: 1700000001000,
+}
+
 /** Rows keyed by tenant, in the shape DBAL's envelope carries them. */
 const WORLD = {
   harbour_cycle_works: {
@@ -125,26 +138,35 @@ function answer(url) {
   }
   // A community exists if it has anyone in it; quiet_harbour has a founder.
   if (entity === 'User') {
-    return envelope(tenant === FOUNDER.tenantId ? [FOUNDER] : [{ id: 'u1' }])
+    return envelope(
+      tenant === FOUNDER.tenantId ? [FOUNDER, MEMBER] : [{ id: 'u1' }]
+    )
   }
   return envelope([])
 }
 
-const CORS = {
-  'Access-Control-Allow-Origin': '*',
+/**
+ * The app's writes go out with `credentials: 'include'`, and a browser
+ * refuses a credentialed response whose allowed origin is `*` -- so the
+ * origin is echoed back instead. Without this every PUT from the panel
+ * died as "Failed to fetch" while the preflight answered 204.
+ */
+const cors = req => ({
+  'Access-Control-Allow-Origin': req.headers.origin ?? '*',
+  'Access-Control-Allow-Credentials': 'true',
   'Access-Control-Allow-Methods': 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type,Authorization',
-}
+})
 
 createServer((req, res) => {
   // The browser calls this directly when the launch config points
   // NEXT_PUBLIC_DBAL_API_URL here, so it has to speak CORS.
   if (req.method === 'OPTIONS') {
-    res.writeHead(204, CORS)
+    res.writeHead(204, cors(req))
     res.end()
     return
   }
-  res.writeHead(200, { 'Content-Type': 'application/json', ...CORS })
+  res.writeHead(200, { 'Content-Type': 'application/json', ...cors(req) })
   // Writes are accepted and forgotten: enough to see what a tab does
   // after a click, not a database.
   if (req.method !== 'GET') {

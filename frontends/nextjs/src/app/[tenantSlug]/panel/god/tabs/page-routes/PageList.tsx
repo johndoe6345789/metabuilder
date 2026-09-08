@@ -36,7 +36,7 @@ export function PageList({
             <TableCell>Path</TableCell>
             <TableCell>Title</TableCell>
             <TableCell>Level</TableCell>
-            <TableCell>Auth</TableCell>
+            <TableCell>Visibility</TableCell>
             <TableCell>Status</TableCell>
             <TableCell align="right">Actions</TableCell>
           </TableRow>

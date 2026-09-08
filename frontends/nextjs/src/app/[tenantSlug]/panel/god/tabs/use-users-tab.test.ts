@@ -8,7 +8,16 @@ const scope = vi.hoisted(() => ({
     canPickOtherTenant: false,
   })),
 }))
+const auth = vi.hoisted(() => ({
+  useAuthContext: vi.fn(() => ({ user: { id: 'me', role: 'god' } })),
+}))
+const roles = vi.hoisted(() => ({ updateUserRole: vi.fn() }))
 vi.mock('./use-current-tenant-scope', () => scope)
+vi.mock('@/app/_components/auth-provider/auth-provider-component', () => auth)
+vi.mock('./users-roles', async importOriginal => {
+  const actual = await importOriginal<Record<string, unknown>>()
+  return { ...actual, updateUserRole: roles.updateUserRole }
+})
 vi.mock('./users-data', async importOriginal => {
   const actual = await importOriginal<Record<string, unknown>>()
   return { ...actual, fetchUsers: data.fetchUsers }
@@ -78,5 +87,30 @@ describe('tenant scope', () => {
     await waitFor(() => {
       expect(data.fetchUsers).toHaveBeenCalledWith('kestrelbindery')
     })
+  })
+})
+
+describe('changing a role', () => {
+  it('says who is looking, so rows can decide what to offer', () => {
+    const { result } = renderHook(() => useUsersTab())
+    expect(result.current.caller).toEqual({ id: 'me', role: 'god' })
+  })
+
+  it('writes the role to the tenant whose panel this is', async () => {
+    roles.updateUserRole.mockResolvedValue(undefined)
+    const { result } = renderHook(() => useUsersTab())
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false)
+    })
+
+    await act(() => result.current.changeRole(users[0], 'moderator'))
+
+    expect(roles.updateUserRole).toHaveBeenCalledWith(
+      'kestrelbindery',
+      'u1',
+      'moderator'
+    )
+    expect(result.current.filtered[0].role).toBe('moderator')
+    expect(result.current.roleCounts).toEqual({ moderator: 1, admin: 1 })
   })
 })

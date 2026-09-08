@@ -5,6 +5,7 @@ import { fetchSession } from '@/lib/auth/api/fetch-session'
 import { SESSION_COOKIE } from '@/lib/auth/session-cookie'
 import { getRoleLevel } from '@/lib/constants'
 import type { TenantPage } from './fetch-tenant-page'
+import { requiredPageLevel } from './page-levels'
 
 /**
  * Whether the visitor may see this published page.
@@ -17,12 +18,11 @@ import type { TenantPage } from './fetch-tenant-page'
  * "Admin only" was served in full to whoever had the URL -- and, being
  * server-rendered, was crawlable.
  *
- * Levels are a floor, not a match: `requireRole` reads them that way for
- * API routes and a founder shutting a page to users below Admin plainly
- * does not mean to shut it to a God as well.
+ * The level itself comes from `requiredPageLevel`, which the route list
+ * shares so what it shows is what this enforces.
  */
 export async function mayViewPage(page: TenantPage): Promise<boolean> {
-  const required = requiredLevel(page)
+  const required = requiredPageLevel(page)
   // A public page is the common case and must not cost a session lookup on
   // every view -- nor offer a timing signal about who is asking.
   if (required <= 0) return true
@@ -44,13 +44,4 @@ export async function mayViewPage(page: TenantPage): Promise<boolean> {
     // it, and nothing downstream would notice.
     return false
   }
-}
-
-/** The lowest role level this page may be shown to. */
-function requiredLevel(page: TenantPage): number {
-  const byRole =
-    page.requiredRole === null || page.requiredRole === ''
-      ? 0
-      : getRoleLevel(page.requiredRole)
-  return Math.max(page.level, page.requiresAuth ? 1 : 0, byRole)
 }

@@ -52,7 +52,7 @@
       "id": "users",
       "label": "Users",
       "icon": "people",
-      "description": "Who has an account, and the role each holds"
+      "description": "Who has an account, and the role each holds -- change one here"
     },
     {
       "id": "database",

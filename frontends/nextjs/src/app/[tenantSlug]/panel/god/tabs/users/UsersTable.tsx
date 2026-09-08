@@ -1,6 +1,7 @@
 'use client'
 
 import { Paper, Typography } from '@/m3'
+import type { UserRole } from '@/lib/constants'
 import type { UserRow } from '../users-data'
 import { UserRowView } from './UserRowView'
 import s from '../UsersTab.module.scss'
@@ -8,10 +9,17 @@ import s from '../UsersTab.module.scss'
 export interface UsersTableProps {
   users: UserRow[]
   loading: boolean
+  caller: { id?: string; role?: string }
+  onRoleChange: (user: UserRow, role: UserRole) => void
 }
 
 /** The header row plus one row per user, or a loading/empty message. */
-export function UsersTable({ users, loading }: UsersTableProps) {
+export function UsersTable({
+  users,
+  loading,
+  caller,
+  onRoleChange,
+}: UsersTableProps) {
   return (
     <Paper className={s.table}>
       <div className={s.headerRow}>
@@ -30,7 +38,12 @@ export function UsersTable({ users, loading }: UsersTableProps) {
         </Typography>
       ) : (
         users.map(user => (
-          <UserRowView key={user.id ?? user.username} user={user} />
+          <UserRowView
+            key={user.id ?? user.username}
+            user={user}
+            caller={caller}
+            onRoleChange={onRoleChange}
+          />
         ))
       )}
     </Paper>

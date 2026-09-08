@@ -1,11 +1,20 @@
 'use client'
 
-import { Chip, Typography } from '@/m3'
+import { Typography } from '@/m3'
+import type { UserRole } from '@/lib/constants'
 import type { UserRow } from '../users-data'
+import { userLevel } from '../users-roles'
+import { RoleCell } from './RoleCell'
 import s from '../UsersTab.module.scss'
 
+export interface UserRowViewProps {
+  user: UserRow
+  caller: { id?: string; role?: string }
+  onRoleChange: (user: UserRow, role: UserRole) => void
+}
+
 /** One account in the table. */
-export function UserRowView({ user }: { user: UserRow }) {
+export function UserRowView({ user, caller, onRoleChange }: UserRowViewProps) {
   return (
     <div className={s.row}>
       <div>
@@ -16,9 +25,11 @@ export function UserRowView({ user }: { user: UserRow }) {
           {user.email ?? 'No email'}
         </Typography>
       </div>
-      <Chip label={user.role ?? 'user'} size="small" variant="outlined" />
+      <RoleCell user={user} caller={caller} onChange={onRoleChange} />
       <Typography variant="body2">{user.tenantId ?? 'system'}</Typography>
-      <Typography variant="body2">L{user.level ?? 1}</Typography>
+      {/* The level follows from the role -- the row carries no level of
+          its own, and reading one off it showed every god as L1. */}
+      <Typography variant="body2">L{userLevel(user)}</Typography>
     </div>
   )
 }

@@ -1,12 +1,9 @@
-export const LEVEL_LABELS: Record<number, string> = {
-  1: 'Public',
-  2: 'User',
-  3: 'Admin',
-  4: 'God',
-  5: 'SuperGod',
-}
+/** How the route list colours a page's access level chip. */
 
-export const LEVEL_COLORS = [
+import type { PageAccessFields } from '@/lib/tenant/page-levels'
+import { requiredPageLevel } from '@/lib/tenant/page-levels'
+
+const LEVEL_COLORS = [
   'default',
   'default',
   'info',
@@ -14,3 +11,20 @@ export const LEVEL_COLORS = [
   'error',
   'secondary',
 ] as const
+
+export type LevelColor = (typeof LEVEL_COLORS)[number]
+
+export function levelColor(level: number): LevelColor {
+  return LEVEL_COLORS[level] ?? 'default'
+}
+
+/**
+ * What the visibility chip says.
+ *
+ * It used to read `requiresAuth` alone, so an Admin-only page showed
+ * "Public" beside its "Admin" chip. The server gate takes the highest of
+ * level, requiresAuth and requiredRole; so does this.
+ */
+export function visibilityLabel(page: PageAccessFields): 'Public' | 'Sign-in' {
+  return requiredPageLevel(page) > 0 ? 'Sign-in' : 'Public'
+}

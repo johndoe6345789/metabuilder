@@ -16,6 +16,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { callerAccessTo } from '@/lib/auth/owns-tenant'
 import { ensureBucket, listObjects, putObject } from '@/lib/object-store/client'
+import { storeErrorMessage } from './store-error'
 import { bucketFor, refuseUpload, safeAssetKey } from './upload-policy'
 
 /** 401 for a stranger, 403 for someone else's community, else null. */
@@ -49,7 +50,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const objects = await listObjects(bucketFor(tenant))
     return NextResponse.json({ objects })
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'listing failed'
+    const message = storeErrorMessage(error, 'listing')
     return NextResponse.json({ objects: [], error: message }, { status: 502 })
   }
 }
@@ -84,7 +85,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       url: `/app/api/assets/${name}?tenant=${tenant}`,
     })
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'upload failed'
+    const message = storeErrorMessage(error, 'upload')
     return NextResponse.json({ error: message }, { status: 502 })
   }
 }

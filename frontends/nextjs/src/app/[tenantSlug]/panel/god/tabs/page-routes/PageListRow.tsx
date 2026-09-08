@@ -2,7 +2,8 @@
 
 import { TableCell, TableRow, Chip } from '@/m3'
 import type { PageRoute } from '@/hooks/usePageRoutes'
-import { LEVEL_LABELS, LEVEL_COLORS } from './page-list-levels'
+import { pageLevelLabel } from '@/lib/tenant/page-levels'
+import { levelColor, visibilityLabel } from './page-list-levels'
 import { PageListRowActions } from './PageListRowActions'
 import s from './PageList.module.scss'
 
@@ -27,15 +28,15 @@ export function PageListRow({
       <TableCell>{page.title}</TableCell>
       <TableCell>
         <Chip
-          label={LEVEL_LABELS[page.level] ?? `L${page.level}`}
-          color={LEVEL_COLORS[page.level] ?? 'default'}
+          label={pageLevelLabel(page.level)}
+          color={levelColor(page.level)}
           size="small"
         />
       </TableCell>
       <TableCell>
         <Chip
-          label={page.requiresAuth ? 'Auth' : 'Public'}
-          color={page.requiresAuth ? 'warning' : 'success'}
+          label={visibilityLabel(page)}
+          color={visibilityLabel(page) === 'Sign-in' ? 'warning' : 'success'}
           size="small"
         />
       </TableCell>

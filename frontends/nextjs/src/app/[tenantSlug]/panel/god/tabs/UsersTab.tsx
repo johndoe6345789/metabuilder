@@ -16,7 +16,8 @@ export function UsersTab() {
         User Management
       </Typography>
       <Typography variant="body2" color="text.secondary">
-        Role hierarchy: user → moderator → admin → god → supergod
+        Role hierarchy: user → moderator → admin → god → supergod. Pick a
+        role to change it; you can give any role below your own.
       </Typography>
 
       <UsersToolbar query={tab.query} onQueryChange={tab.setQuery} />
@@ -25,8 +26,19 @@ export function UsersTab() {
         <Alert severity="warning">User API unavailable: {tab.error}</Alert>
       )}
 
+      {tab.roleError !== null && (
+        <Alert severity="error">{tab.roleError}</Alert>
+      )}
+
       <RoleSummary counts={tab.roleCounts} />
-      <UsersTable users={tab.filtered} loading={tab.loading} />
+      <UsersTable
+        users={tab.filtered}
+        loading={tab.loading}
+        caller={tab.caller}
+        onRoleChange={(user, role) => {
+          void tab.changeRole(user, role)
+        }}
+      />
     </div>
   )
 }

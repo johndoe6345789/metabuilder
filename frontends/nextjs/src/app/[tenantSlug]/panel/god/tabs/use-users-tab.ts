@@ -1,18 +1,22 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
 import { countByRole, fetchUsers, filterUsers, type UserRow } from './users-data'
 import { useCurrentTenantScope } from './use-current-tenant-scope'
+import { useRoleChange } from './use-role-change'
 
 /** The user list's state: what loaded, the search, and the derived views. */
 export function useUsersTab() {
   // Scoped like every other God Panel tool: a founder is their own
   // community's god, not an instance-wide admin.
   const { tenant } = useCurrentTenantScope()
+  const { user: viewer } = useAuthContext()
   const [users, setUsers] = useState<UserRow[]>([])
   const [query, setQuery] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { changeRole, roleError } = useRoleChange(tenant, setUsers)
 
   useEffect(() => {
     let live = true
@@ -44,5 +48,9 @@ export function useUsersTab() {
     error,
     filtered: useMemo(() => filterUsers(users, query), [query, users]),
     roleCounts: useMemo(() => countByRole(users), [users]),
+    /** Who is looking, which decides whose role they may change. */
+    caller: { id: viewer?.id, role: viewer?.role },
+    changeRole,
+    roleError,
   }
 }
