@@ -1,13 +1,8 @@
 /** Turning a failed call to the object store into a sentence. */
 
-const STORE_URL = process.env.OBJECT_STORE_URL ?? 'http://localhost:9000'
+import { neverConnected } from '@/lib/net/never-connected'
 
-/** Node's fetch reports a connection it never made as a bare TypeError
- *  reading "fetch failed"; a timeout is an aborted DOMException. */
-function neverConnected(error: unknown): boolean {
-  if (error instanceof TypeError) return error.message === 'fetch failed'
-  return error instanceof DOMException && error.name === 'TimeoutError'
-}
+const STORE_URL = process.env.OBJECT_STORE_URL ?? 'http://localhost:9000'
 
 /**
  * What to tell the founder. A store that answered is quoted as-is; one

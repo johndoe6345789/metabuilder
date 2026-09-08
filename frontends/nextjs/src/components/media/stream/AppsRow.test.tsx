@@ -2,6 +2,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/react'
 
 const streamApps = vi.hoisted(() => ({ useStreamApps: vi.fn() }))
+vi.mock('@/lib/tenant/use-route-tenant', () => ({
+  useRouteTenant: () => 'acme',
+}))
 vi.mock('./useStreamApps', () => streamApps)
 
 const settingsModal = vi.hoisted(() => ({

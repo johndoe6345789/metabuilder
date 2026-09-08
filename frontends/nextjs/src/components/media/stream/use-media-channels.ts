@@ -10,6 +10,10 @@
  * the parameters and the rest is shared.
  */
 
+import {
+  neverConnected,
+  unreachableMessage,
+} from '@/lib/net/never-connected'
 import { useCallback, useEffect, useState } from 'react'
 
 const POLL_MS = 15000
@@ -61,14 +65,23 @@ export function useMediaChannels<T>(
       setChannels(await mapChannels(data.channels ?? []))
       setError(null)
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : loadError)
+      // A service that is not running throws a TypeError whose message is
+      // the bare "Failed to fetch", so reading cause.message showed that
+      // to the founder and never reached loadError at all.
+      setError(
+        neverConnected(cause)
+          ? unreachableMessage(`the ${service} service`, api)
+          : cause instanceof Error
+            ? cause.message
+            : loadError
+      )
     } finally {
       setLoading(false)
     }
     // mapChannels is a fresh closure each render for most callers; depending
     // on it would restart the poll on every render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [base, loadError])
+  }, [base, loadError, service, api])
 
   useEffect(() => {
     void Promise.resolve().then(() => refresh())

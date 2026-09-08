@@ -218,3 +218,22 @@ describe('useTvChannels', () => {
     })
   })
 })
+
+/**
+ * A media service that is not running throws a TypeError whose message is
+ * the bare "Failed to fetch", and the hook read `cause.message` -- so
+ * that text went straight onto the founder's Stream page and the
+ * friendly fallback beside it was never reached.
+ */
+describe('when nothing is listening', () => {
+  it('names the service and where it looked', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => Promise.reject(new TypeError('Failed to fetch')))
+    )
+    const { result } = await ready()
+
+    expect(result.current.error).toContain('Could not reach the tv service')
+    expect(result.current.error).not.toBe('Failed to fetch')
+  })
+})

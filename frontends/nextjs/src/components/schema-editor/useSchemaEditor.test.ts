@@ -147,3 +147,26 @@ describe('useSchemaEditor', () => {
     })
   })
 })
+
+/**
+ * The real envelope is {data:{data:[…]}}. Reading one level gave an
+ * object, `loaded.length > 0` was `undefined > 0` -- false -- so the
+ * editor fell through to the browser's own copy every time. A founder's
+ * saved models never loaded, and nothing said so: the tab looked like it
+ * had simply never had any.
+ */
+describe('the shape the models arrive in', () => {
+  beforeEach(() => {
+    localStorage.clear()
+    vi.clearAllMocks()
+  })
+
+  afterEach(() => vi.unstubAllGlobals())
+
+  it('reads the models out of the real two-level envelope', async () => {
+    const { result } = await ready({ data: { data: [model('Post')] } })
+
+    expect(result.current.models).toEqual([model('Post')])
+    expect(result.current.offline).toBe(false)
+  })
+})

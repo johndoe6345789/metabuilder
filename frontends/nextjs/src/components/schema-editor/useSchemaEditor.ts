@@ -9,6 +9,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { readList } from '@/lib/db/read-list'
 import type { ModelSchema } from './schema-types'
 
 const DBAL_URL =
@@ -63,9 +64,13 @@ export function useSchemaEditor(tenantId: string): UseSchemaEditorResult {
       signal: AbortSignal.timeout(4000),
     })
       .then(res => (res.ok ? res.json() : Promise.reject(new Error('not ok'))))
-      .then((json: { data?: ModelSchema[] }) => {
+      .then((json: unknown) => {
         if (cancelled) return
-        const loaded = json.data ?? []
+        // readList, not `json.data`: the real envelope is
+        // {data:{data:[…]}}, so this read an object, `.length > 0` was
+        // undefined > 0 -- false -- and the editor quietly fell back to
+        // the browser's own copy. A founder's saved models never loaded.
+        const loaded = readList<ModelSchema>(json)
         setModels(loaded.length > 0 ? loaded : readLocal(tenantId))
         setOffline(false)
         setLoading(false)

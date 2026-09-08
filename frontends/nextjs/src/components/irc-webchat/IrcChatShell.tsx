@@ -7,7 +7,7 @@
 import { useState, useCallback } from 'react'
 import { Typography } from '@/m3'
 import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
-import { useChatTenant } from './use-chat-tenant'
+import { useRouteTenant } from '@/lib/tenant/use-route-tenant'
 import { mergeMessages } from './merge-messages'
 import { ChannelList } from './ChannelList'
 import { ChatPanel } from './ChatPanel'
@@ -17,7 +17,7 @@ import styles from './IrcChatShell.module.scss'
 
 export function IrcChatShell() {
   const auth = useAuthContext()
-  const tenant = useChatTenant()
+  const tenant = useRouteTenant()
   const username = auth.user?.username ?? auth.user?.name ?? 'guest'
   const userId = auth.user?.id ?? 'anonymous'
 

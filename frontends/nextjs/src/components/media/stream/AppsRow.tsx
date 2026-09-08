@@ -3,14 +3,18 @@
 import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useStreamApps } from './useStreamApps'
+import { useRouteTenant } from '@/lib/tenant/use-route-tenant'
 import { IframeModal } from './IframeModal'
 import { AppsSettingsModal } from './AppsSettingsModal'
 import { AppTile } from './AppTile'
 import s from './AppsRow.module.scss'
 
 export function AppsRow() {
+  // The community whose page this is -- these apps used to be read from,
+  // and written to, the instance's own `system` tenant.
+  const tenant = useRouteTenant()
   const { apps, loading, error, createApp, updateApp, deleteApp } =
-    useStreamApps()
+    useStreamApps(tenant)
   const [embedded, setEmbedded] = useState<{
     name: string
     url: string

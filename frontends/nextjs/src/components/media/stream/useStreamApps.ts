@@ -29,7 +29,18 @@ import { getAuthToken } from '@metabuilder/dbal-sso/core'
 // route on its own (confirmed live: an authenticated browser still got 401
 // until the token was attached explicitly). getAuthToken() reads the
 // same in-memory bridge auth-store.ts populates on login.
-const ENTITY_PATH = '/app/api/v1/system/platform/StreamApp'
+/**
+ * The apps belong to the community whose page this is.
+ *
+ * This was the constant `/app/api/v1/system/platform/StreamApp`, so every
+ * community read and wrote the *instance's* stream apps: a founder's
+ * additions landed in a tenant they do not own, and the row they were
+ * shown -- and could delete -- was somebody else's. The same hardcoded
+ * `system` that had already been found in the theme, CSS, SMTP and
+ * schema editors.
+ */
+const entityPath = (tenant: string): string =>
+  `/app/api/v1/${tenant}/platform/StreamApp`
 
 function authHeaders(): HeadersInit {
   const token = getAuthToken()
@@ -52,14 +63,14 @@ interface ListResponse {
   data?: StreamApp[]
 }
 
-export function useStreamApps() {
+export function useStreamApps(tenant: string) {
   const [apps, setApps] = useState<StreamApp[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   const refresh = useCallback(async (): Promise<void> => {
     try {
-      const res = await fetch(ENTITY_PATH, {
+      const res = await fetch(entityPath(tenant), {
         cache: 'no-store',
         headers: authHeaders(),
       })
@@ -74,7 +85,7 @@ export function useStreamApps() {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [tenant])
 
   useEffect(() => {
     void Promise.resolve().then(() => refresh())
@@ -82,7 +93,7 @@ export function useStreamApps() {
 
   const createApp = useCallback(
     async (app: StreamApp): Promise<void> => {
-      const res = await fetch(ENTITY_PATH, {
+      const res = await fetch(entityPath(tenant), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...authHeaders() },
         body: JSON.stringify(app),
@@ -90,12 +101,12 @@ export function useStreamApps() {
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       await refresh()
     },
-    [refresh]
+    [refresh, tenant]
   )
 
   const updateApp = useCallback(
     async (id: string, patch: Partial<StreamApp>): Promise<void> => {
-      const res = await fetch(`${ENTITY_PATH}/${id}`, {
+      const res = await fetch(`${entityPath(tenant)}/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', ...authHeaders() },
         body: JSON.stringify(patch),
@@ -103,19 +114,19 @@ export function useStreamApps() {
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       await refresh()
     },
-    [refresh]
+    [refresh, tenant]
   )
 
   const deleteApp = useCallback(
     async (id: string): Promise<void> => {
-      const res = await fetch(`${ENTITY_PATH}/${id}`, {
+      const res = await fetch(`${entityPath(tenant)}/${id}`, {
         method: 'DELETE',
         headers: authHeaders(),
       })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       await refresh()
     },
-    [refresh]
+    [refresh, tenant]
   )
 
   return { apps, loading, error, refresh, createApp, updateApp, deleteApp }

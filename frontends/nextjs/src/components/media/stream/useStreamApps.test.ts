@@ -41,7 +41,7 @@ function mockFetch(body: unknown, ok = true, status = 200) {
 
 const ready = async (body: unknown = { data: [app('a')] }) => {
   const calls = mockFetch(body)
-  const hook = renderHook(() => useStreamApps())
+  const hook = renderHook(() => useStreamApps('acme'))
   await waitFor(() => expect(hook.result.current.loading).toBe(false))
   return { ...hook, calls }
 }
@@ -101,7 +101,7 @@ describe('useStreamApps', () => {
 
     it('reports a failed load', async () => {
       mockFetch({}, false, 503)
-      const hook = renderHook(() => useStreamApps())
+      const hook = renderHook(() => useStreamApps('acme'))
 
       await waitFor(() => expect(hook.result.current.loading).toBe(false))
       expect(hook.result.current.error).toBe('HTTP 503')
@@ -154,5 +154,19 @@ describe('useStreamApps', () => {
 
       await expect(run(result.current)).rejects.toThrow('HTTP 403')
     })
+  })
+})
+
+/**
+ * The path was the constant `/app/api/v1/system/platform/StreamApp`, so
+ * every community read and wrote the *instance's* apps: a founder's
+ * additions landed in a tenant they do not own, and the row they were
+ * shown -- and could delete -- was somebody else's.
+ */
+describe('which community the apps belong to', () => {
+  it('reads the apps of the community it was given', async () => {
+    const { calls } = await ready()
+    expect(calls[0].url).toContain('/acme/platform/StreamApp')
+    expect(calls[0].url).not.toContain('/system/')
   })
 })
