@@ -31,12 +31,16 @@ vi.mock('@/store/slices/god-slice', async importOriginal => {
 vi.mock('@/app/_components/auth-provider/auth-provider-component', () => ({
   useAuthContext: () => ({ user: { tenantId: 'acme' } }),
 }))
+const publishMock = vi.hoisted(() => ({
+  /** What the next load() finds: a row, or null for nothing at that path. */
+  found: { level: 0, requiresAuth: false } as object | null,
+}))
 vi.mock('./component-tree-publish', () => ({
   useComponentTreePublish: () => ({
-    publish: vi.fn(),
+    publish: vi.fn(async () => null),
     publishing: false,
     conflict: null,
-    load: vi.fn(async () => true),
+    load: vi.fn(async () => publishMock.found),
     loading: false,
   }),
 }))
@@ -66,6 +70,7 @@ describe('useComponentTree', () => {
     store.dirty = false
     // The tree belongs to the signed-in tenant here; the guard for when it
     // does not has its own file.
+    window.localStorage.removeItem('metabuilder:builder-live-path')
     window.localStorage.setItem('metabuilder:builder-last-tenant', 'acme')
   })
 
@@ -315,6 +320,65 @@ describe('useComponentTree', () => {
   })
 
   describe('load', () => {
+    /**
+     * The setup panel kept its own record of what it had loaded, and the
+     * workbench's load on mount -- how a founder's page normally arrives --
+     * went through this hook instead, so pointing that tree at a new path
+     * left Publish greyed out. The tree records where it came from.
+     */
+    it('records the path a tree was loaded from', async () => {
+      const { result, rerender } = setup()
+      expect(result.current.loadedPath).toBeNull()
+
+      await act(async () => {
+        await result.current.load('acme', '/about')
+      })
+      rerender()
+
+      expect(result.current.loadedPath).toBe('/about')
+    })
+
+    it('keeps the last record when a load finds nothing', async () => {
+      const { result, rerender } = setup()
+      await act(async () => {
+        await result.current.load('acme', '/about')
+      })
+      publishMock.found = null
+      try {
+        await act(async () => {
+          await result.current.load('acme', '/ghost')
+        })
+      } finally {
+        publishMock.found = { level: 0, requiresAuth: false }
+      }
+      rerender()
+
+      expect(result.current.loadedPath).toBe('/about')
+    })
+
+    it('remembers the path on the next mount, when the tree is rehydrated', async () => {
+      const first = setup()
+      await act(async () => {
+        await first.result.current.load('acme', '/about')
+      })
+
+      expect(setup().result.current.loadedPath).toBe('/about')
+    })
+
+    it('records where a publish put the tree', async () => {
+      const { result, rerender } = setup()
+      await act(async () => {
+        await result.current.publish({
+          tenant: 'acme',
+          path: '/pricing',
+          title: 'Pricing',
+        })
+      })
+      rerender()
+
+      expect(result.current.loadedPath).toBe('/pricing')
+    })
+
     it('starts a fresh history, since the old one is not ours', async () => {
       const { result, edit, rerender } = setup()
 

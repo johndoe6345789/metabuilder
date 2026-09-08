@@ -233,3 +233,57 @@ describe('useWorkbench', () => {
     })
   })
 })
+
+/**
+ * Publish gated on dirty alone, which load() clears, so a loaded tree
+ * pointed at a new route could not be published without a throwaway
+ * edit. The first fix recorded the loaded path in the setup panel's
+ * handlers -- and the load on mount, which is how a founder's page
+ * normally arrives, does not go through them.
+ */
+describe('canPublish', () => {
+  const treeWith = (over: Record<string, unknown>) => ({
+    tree: { id: 'root', type: 'root', props: {}, children: [] },
+    selected: { id: 'root', type: 'root', props: {}, children: [] },
+    undo: vi.fn(),
+    redo: vi.fn(),
+    load: vi.fn(() => Promise.resolve(null)),
+    resetTree: vi.fn(),
+    dirty: false,
+    loadedPath: null,
+    ...over,
+  })
+
+  it('is off for an unchanged tree still pointed where it came from', () => {
+    componentTree.useComponentTree.mockReturnValue(
+      treeWith({ loadedPath: '/a' }) as never
+    )
+    const { result } = renderHook(() => useWorkbench())
+    expect(result.current.canPublish).toBe(false)
+  })
+
+  it('is on once the loaded tree is pointed at a different path', () => {
+    componentTree.useComponentTree.mockReturnValue(
+      treeWith({ loadedPath: '/b' }) as never
+    )
+    const { result } = renderHook(() => useWorkbench())
+    expect(result.current.canPublish).toBe(true)
+  })
+
+  it('is on for an edited tree wherever it came from', () => {
+    componentTree.useComponentTree.mockReturnValue(
+      treeWith({ dirty: true }) as never
+    )
+    const { result } = renderHook(() => useWorkbench())
+    expect(result.current.canPublish).toBe(true)
+  })
+
+  // Nothing says the tree is live anywhere, so publishing it is not a
+  // no-op that the bar can rule out; greying it out here is what left a
+  // returning founder unable to publish a rehydrated tree at a new path.
+  it('is on when nothing records where the tree is live', () => {
+    componentTree.useComponentTree.mockReturnValue(treeWith({}) as never)
+    const { result } = renderHook(() => useWorkbench())
+    expect(result.current.canPublish).toBe(true)
+  })
+})

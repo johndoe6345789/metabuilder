@@ -29,13 +29,15 @@ export function useWorkbench() {
     usePageConfigs(tenant)
   const { collapsed, toggle: toggleCollapse } = useCollapsedSet()
   const targetActions = useTargetActions(t, tenant, target, pages, setTarget)
-  // Publishable when the tree changed, or when a loaded tree has been
-  // pointed at a different path -- the bar used to gate on dirty alone,
-  // which load() clears, so "same tree, new route" greyed the button out.
+  // Greyed out only when publishing would change nothing: the tree is
+  // unedited and known to be live at exactly the target path. The bar
+  // used to gate on dirty alone, which load() clears, so "same tree, new
+  // route" was impossible without a throwaway edit; then on a record the
+  // setup panel kept, which the load on mount below never wrote. The tree
+  // keeps the record now, and persists it, so a returning founder whose
+  // tree was rehydrated rather than loaded is still told the truth.
   const canPublish =
-    t.dirty ||
-    (targetActions.loadedPath !== null &&
-      targetActions.loadedPath !== target.path)
+    t.dirty || t.loadedPath === null || t.loadedPath !== target.path
 
   /**
    * Load this tenant's saved page when the signed-in tenant changes.

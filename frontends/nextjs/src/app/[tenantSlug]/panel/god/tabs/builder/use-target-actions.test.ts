@@ -10,7 +10,10 @@ const pages = [
 
 const setup = (target = { tenant: 'acme', path: '/blog', title: 'Blog' }) => {
   const setTarget = vi.fn()
-  const t = { load: vi.fn(async () => ({ path: '/blog', title: 'Blog' })) }
+  const t = {
+    load: vi.fn(async () => ({ path: '/blog', title: 'Blog' })),
+    loadedPath: null,
+  }
   const { result } = renderHook(() =>
     useTargetActions(t, 'acme', target, pages, setTarget)
   )
@@ -179,42 +182,20 @@ describe('picking a route that is not public', () => {
  * change worth publishing, so the hook now says where the tree came from.
  */
 describe('where the tree on screen came from', () => {
-  it('is nowhere until something is loaded', () => {
-    const { result } = setup()
-    expect(result.current.loadedPath).toBeNull()
-  })
-
-  it('is the path that was picked, once it has loaded', async () => {
-    const { result } = setup()
-    await act(async () => {
-      result.current.pick('/about')
-    })
-    expect(result.current.loadedPath).toBe('/about')
-  })
-
-  it('is the target path after an explicit load', async () => {
-    const { result } = setup({ tenant: 'acme', path: '/blog', title: 'B' })
-    await act(async () => {
-      result.current.load()
-    })
-    expect(result.current.loadedPath).toBe('/blog')
-  })
-
-  it('stays put when the load found nothing', async () => {
+  // The record lives with the tree, which also loads on mount; this only
+  // passes it through to the setup panel.
+  it('is whatever the tree says it loaded', () => {
     const setTarget = vi.fn()
-    const t = { load: vi.fn(async () => null) }
+    const t = { load: vi.fn(async () => null), loadedPath: '/about' }
     const { result } = renderHook(() =>
       useTargetActions(
         t,
         'acme',
-        { tenant: 'acme', path: '/ghost', title: 'G' },
+        { tenant: 'acme', path: '/blog', title: 'B' },
         pages,
         setTarget
       )
     )
-    await act(async () => {
-      result.current.pick('/ghost')
-    })
-    expect(result.current.loadedPath).toBeNull()
+    expect(result.current.loadedPath).toBe('/about')
   })
 })

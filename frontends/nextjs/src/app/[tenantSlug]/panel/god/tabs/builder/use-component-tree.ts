@@ -8,8 +8,12 @@ import { getSelectedTreeNode } from './component-tree-selection'
 import { findNode } from './component-tree-utils'
 import { autoId } from './auto-identity'
 import { useComponentTreeActions } from './component-tree-actions'
-import { useComponentTreePublish } from './component-tree-publish'
+import {
+  useComponentTreePublish,
+  type PublishTarget,
+} from './component-tree-publish'
 import { useGodTenant } from '../use-god-tenant'
+import { readTreePath, writeTreePath } from './tree-path'
 
 const BLANK: TreeNode = { id: 'root', type: 'container', props: {}, children: [] }
 
@@ -27,7 +31,7 @@ export function useComponentTree() {
    * here and covered the tree but not the styles beside it. It now lives
    * in useGodTenant, which clears every tenant-owned key at once.
    */
-  const { foreign } = useGodTenant()
+  const { foreign, tenant: ownTenant } = useGodTenant()
   const tree = foreign ? BLANK : stored
 
   /**
@@ -131,20 +135,49 @@ export function useComponentTree() {
     [commit]
   )
   const {
-    publish,
+    publish: publishTree,
     publishing,
     conflict,
     error: publishError,
     load: loadTree,
     loading,
   } = useComponentTreePublish(tree)
+  /**
+   * The path the tree on screen is live at -- where it was loaded from or
+   * last published to -- or null if nothing says.
+   *
+   * Recorded here, where loading and publishing happen, and not in the
+   * setup panel's handlers: the workbench loads a founder's page on mount
+   * through this same `load`, and a record kept by the panel missed that.
+   * Persisted (tree-path.ts) because a returning founder's tree is
+   * rehydrated from IndexedDB and never loaded at all; the record is the
+   * only thing that says the rehydrated tree is already live at "/".
+   */
+  const [loadedPath, setLoadedPath] = useState<string | null>(() =>
+    readTreePath(ownTenant)
+  )
   const load = useCallback(
     async (tenant: string, path: string) => {
       const result = await loadTree(tenant, path)
       clearHistory()
+      if (result !== null) {
+        setLoadedPath(path)
+        writeTreePath(tenant, path)
+      }
       return result
     },
     [loadTree, clearHistory]
+  )
+  const publish = useCallback(
+    async (target?: PublishTarget, override?: TreeNode) => {
+      const failure = await publishTree(target, override)
+      if (failure === null && target !== undefined) {
+        setLoadedPath(target.path)
+        writeTreePath(target.tenant, target.path)
+      }
+      return failure
+    },
+    [publishTree]
   )
   return {
     tree,
@@ -167,6 +200,7 @@ export function useComponentTree() {
     conflict,
     publishError,
     load,
+    loadedPath,
     loading,
   }
 }
