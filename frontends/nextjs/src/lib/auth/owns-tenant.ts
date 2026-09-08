@@ -3,30 +3,9 @@ import { cookies } from 'next/headers'
 
 import { fetchSession } from '@/lib/auth/api/fetch-session'
 import { SESSION_COOKIE } from '@/lib/auth/session-cookie'
-import { normalizeTenantId } from '@/lib/tenant/workspace-paths'
+import { ownsTenant } from './tenant-rule'
 
-/**
- * Whether this session may act on that community.
- *
- * Verifying a session answers "is this somebody", never "is this somebody
- * who owns what they are about to change" -- and every route that stopped
- * at the first question let one founder reach another's data.
- *
- * The rule is the one the God Panel already states for its own tenant
- * picker: your own community, unless you are the instance owner, because
- * every other 'god' is a single community's founder rather than an
- * instance-wide admin.
- */
-export function ownsTenant(
-  user: { role?: unknown; tenantId?: unknown },
-  target: string
-): boolean {
-  if (user.role === 'supergod') return true
-  const own =
-    typeof user.tenantId === 'string' ? normalizeTenantId(user.tenantId) : ''
-  // A session naming no tenant cannot be shown to own this one.
-  return own !== '' && own === normalizeTenantId(target)
-}
+export { ownsTenant }
 
 /**
  * 'anonymous' when nobody is signed in or the token no longer resolves,

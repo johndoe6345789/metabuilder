@@ -1,4 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+// The export is of the founder's own community; these paths used to be
+// fixed at /system/, handing them the shared tenant's users as a backup.
+const scopeMod = vi.hoisted(() => ({
+  useCurrentTenantScope: () => ({
+    tenant: 'acme',
+    canPickOtherTenant: false,
+  }),
+}))
+vi.mock('../use-current-tenant-scope', () => scopeMod)
 import { act, renderHook, waitFor } from '@testing-library/react'
 
 const dbExport = vi.hoisted(() => ({

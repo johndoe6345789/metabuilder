@@ -4,16 +4,28 @@ export interface TenantValidationResult {
   tenant?: unknown
 }
 
-/** Whether a user may act within a tenant at the given minimum role
- *  level -- god/supergod can access any tenant (there's no "Tenant"
- *  entity lookup that would ever fail for them); everyone else must be
- *  a member of the tenant their route names. */
+/**
+ * Whether a user may act within a tenant at the given minimum role level.
+ *
+ * It used to answer "is this person a member" by listing a `Tenant` entity
+ * -- which does not exist; tenant-exists.ts says so outright -- so the
+ * request 404'd, listEntity swallowed that into an empty list, and the
+ * empty list was indistinguishable from "no such tenant". Every caller
+ * below god was refused with "Tenant not found" across the whole
+ * /api/v1 surface. The test agreed, because it mocked the entity in.
+ *
+ * The question is answered without a lookup: the account already carries
+ * the community it belongs to. The rule is the one the DBAL proxy and the
+ * asset routes apply -- your own community, unless you are the instance
+ * owner -- so all three now say the same thing, rather than this one
+ * letting any god into any tenant.
+ */
 export async function validateTenantAccess(
   user: { id: string; role: string; tenantId?: string | null } | null,
   tenantSlug: string,
   minLevel: number = 1
 ): Promise<TenantValidationResult> {
-  const { getRoleLevel, ROLE_LEVELS } = await import('@/lib/constants')
+  const { getRoleLevel } = await import('@/lib/constants')
 
   if (user === null) {
     if (minLevel <= 0) return { allowed: true }
@@ -28,31 +40,10 @@ export async function validateTenantAccess(
     }
   }
 
-  if (userLevel >= ROLE_LEVELS.god) {
-    return { allowed: true, tenant: { id: tenantSlug } }
+  const { ownsTenant } = await import('@/lib/auth/tenant-rule')
+  if (!ownsTenant(user, tenantSlug)) {
+    return { allowed: false, reason: 'Not a member of this tenant' }
   }
 
-  try {
-    const { db } = await import('@/lib/db-client')
-    const tenantResult = await db
-      .entity('Tenant')
-      .list({ filter: { slug: tenantSlug } })
-    const tenant = tenantResult.data.at(0) ?? null
-
-    if (tenant == null) {
-      return { allowed: false, reason: `Tenant not found: ${tenantSlug}` }
-    }
-
-    const tenantId = (tenant as { id: string }).id
-    if (user.tenantId !== tenantId) {
-      return { allowed: false, reason: 'Not a member of this tenant' }
-    }
-
-    return { allowed: true, tenant }
-  } catch (error) {
-    return {
-      allowed: false,
-      reason: error instanceof Error ? error.message : 'Validation failed',
-    }
-  }
+  return { allowed: true, tenant: { id: tenantSlug } }
 }

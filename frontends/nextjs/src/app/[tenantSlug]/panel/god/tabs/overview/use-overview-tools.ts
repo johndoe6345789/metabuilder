@@ -6,18 +6,22 @@ import { buildDatabaseExport, exportFileName } from './database-export'
 import { downloadJson } from './download-json'
 import { summariseImport, type Flash } from './import-summary'
 import { previewTarget, toolLevel } from './preview-targets'
+import { useCurrentTenantScope } from '../use-current-tenant-scope'
 
 export type QuickTool = (typeof godPanelConfig.tools)[number]
 
 /** The quick-actions row: what each tool does, and what it reports. */
 export function useOverviewTools(dbalVersion: string | null) {
+  // Whose data to export. These paths were fixed at /system/, so a founder
+  // was handed the shared tenant's users as their own backup.
+  const { tenant } = useCurrentTenantScope()
   const importRef = useRef<HTMLInputElement | null>(null)
   const [flash, setFlash] = useState<Flash | null>(null)
 
   const exportDatabase = useCallback(async () => {
     try {
-      const payload = await buildDatabaseExport(dbalVersion)
-      downloadJson(exportFileName(), payload)
+      const payload = await buildDatabaseExport(tenant, dbalVersion)
+      downloadJson(exportFileName(tenant), payload)
       setFlash({
         severity: 'success',
         message: 'Database export downloaded.',
@@ -28,7 +32,7 @@ export function useOverviewTools(dbalVersion: string | null) {
         message: 'Database export failed. Check DBAL connectivity.',
       })
     }
-  }, [dbalVersion])
+  }, [dbalVersion, tenant])
 
   const readImportFile = useCallback(async (file: File) => {
     setFlash(summariseImport(await file.text()))

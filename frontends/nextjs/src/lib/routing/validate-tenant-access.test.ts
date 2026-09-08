@@ -1,11 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const list = vi.fn()
-
-vi.mock('@/lib/db-client', () => ({
-  db: { entity: () => ({ list }) },
-}))
-
 import { validateTenantAccess } from './index'
 
 const user = (role: string, tenantId: string | null = 't1') => ({
@@ -16,8 +10,7 @@ const user = (role: string, tenantId: string | null = 't1') => ({
 
 describe('validateTenantAccess', () => {
   beforeEach(() => {
-    list.mockReset()
-    list.mockResolvedValue({ data: [] })
+    vi.clearAllMocks()
   })
 
   describe('with no user', () => {
@@ -55,90 +48,59 @@ describe('validateTenantAccess', () => {
       expect(result.reason).toMatch(/Required level: 99/)
     })
 
-    it('does not query for a user it has already refused', async () => {
-      await validateTenantAccess(user('user'), 'acme', 99)
-      expect(list).not.toHaveBeenCalled()
+    it('refuses before asking anything about the community', async () => {
+      const result = await validateTenantAccess(user('user'), 'acme', 99)
+      expect(result.tenant).toBeUndefined()
     })
   })
 
-  describe('god and above', () => {
-    it('reaches any tenant without a lookup', async () => {
-      const result = await validateTenantAccess(user('god', 'other'), 'acme', 1)
+  /**
+   * Membership used to be answered by listing a `Tenant` entity, which
+   * does not exist -- tenant-exists.ts says so outright. The request 404'd,
+   * listEntity swallowed that into an empty list, and an empty list reads
+   * exactly like "no such tenant": every caller below god was refused with
+   * "Tenant not found" across the whole /api/v1 surface, which is what
+   * EntityListView and its siblings run on. This test mocked the entity
+   * in, so it agreed with a lookup that could never work.
+   *
+   * The account already carries the community it belongs to.
+   */
+  describe('membership', () => {
+    it('allows a member of the community the route names', async () => {
+      const result = await validateTenantAccess(user('user', 'acme'), 'acme', 1)
 
       expect(result.allowed).toBe(true)
       expect(result.tenant).toEqual({ id: 'acme' })
-      // There is no Tenant entity in DBAL, so a lookup would always fail.
-      expect(list).not.toHaveBeenCalled()
     })
 
-    it('does the same for supergod', async () => {
-      const result = await validateTenantAccess(user('supergod', null), 'x', 1)
-      expect(result.allowed).toBe(true)
-    })
-  })
-
-  describe('ordinary members', () => {
-    it('refuses when the tenant does not exist', async () => {
-      list.mockResolvedValue({ data: [] })
-
-      const result = await validateTenantAccess(user('user'), 'ghost', 1)
-
-      expect(result.allowed).toBe(false)
-      expect(result.reason).toBe('Tenant not found: ghost')
-    })
-
-    it('refuses a member of a different tenant', async () => {
-      list.mockResolvedValue({ data: [{ id: 'other' }] })
-
+    it('refuses a member of a different one', async () => {
       const result = await validateTenantAccess(user('user', 't1'), 'acme', 1)
 
       expect(result.allowed).toBe(false)
       expect(result.reason).toBe('Not a member of this tenant')
     })
 
-    it('allows a member of the matching tenant', async () => {
-      list.mockResolvedValue({ data: [{ id: 't1', slug: 'acme' }] })
-
-      const result = await validateTenantAccess(user('user', 't1'), 'acme', 1)
-
-      expect(result.allowed).toBe(true)
-      expect(result.tenant).toEqual({ id: 't1', slug: 'acme' })
-    })
-
-    it('refuses a user with no tenant at all', async () => {
-      list.mockResolvedValue({ data: [{ id: 't1' }] })
-
+    it('refuses an account naming no community at all', async () => {
       const result = await validateTenantAccess(user('user', null), 'acme', 1)
-
       expect(result.allowed).toBe(false)
     })
 
-    it('looks the tenant up by slug', async () => {
-      list.mockResolvedValue({ data: [{ id: 't1' }] })
-
-      await validateTenantAccess(user('user'), 'acme', 1)
-
-      expect(list).toHaveBeenCalledWith({ filter: { slug: 'acme' } })
-    })
-  })
-
-  describe('when the lookup fails', () => {
-    it('refuses rather than failing open', async () => {
-      list.mockRejectedValue(new Error('DBAL unreachable'))
-
-      const result = await validateTenantAccess(user('user'), 'acme', 1)
-
+    // The same rule the DBAL proxy and the asset routes apply: a god is
+    // one community's founder, not an instance-wide admin. This used to
+    // let any god into any tenant, which the other two refuse.
+    it('refuses a god from another community', async () => {
+      const result = await validateTenantAccess(user('god', 'other'), 'acme', 1)
       expect(result.allowed).toBe(false)
-      expect(result.reason).toBe('DBAL unreachable')
     })
 
-    it('refuses on a non-Error rejection too', async () => {
-      list.mockRejectedValue('nope')
+    it('allows a god within their own', async () => {
+      const result = await validateTenantAccess(user('god', 'acme'), 'acme', 1)
+      expect(result.allowed).toBe(true)
+    })
 
-      const result = await validateTenantAccess(user('user'), 'acme', 1)
-
-      expect(result.allowed).toBe(false)
-      expect(result.reason).toBe('Validation failed')
+    it('lets the instance owner reach any', async () => {
+      const result = await validateTenantAccess(user('supergod', null), 'x', 1)
+      expect(result.allowed).toBe(true)
     })
   })
 })
