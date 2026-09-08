@@ -50,3 +50,22 @@ describe('renderNode block types', () => {
     expect(out).not.toContain('<script>')
   })
 })
+
+/**
+ * A founder who adds an image block and publishes before pasting an
+ * address shipped the italic text "Image: no src set" to every visitor.
+ * That notice belongs in the builder, which now says it through the prop
+ * schema; the published page shows nothing.
+ */
+describe('an image block with no address', () => {
+  it('renders nothing rather than a builder notice', () => {
+    expect(html(node('image', { src: '' }))).not.toContain('no src set')
+    expect(html(node('image', { src: '' }))).not.toContain('<img')
+  })
+
+  it('still renders the image once it has one', () => {
+    expect(html(node('image', { src: 'https://x/y.png', alt: 'y' }))).toContain(
+      '<img'
+    )
+  })
+})

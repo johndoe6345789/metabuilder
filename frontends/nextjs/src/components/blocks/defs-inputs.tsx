@@ -3,16 +3,13 @@
 
 import type { BlockDef } from './block-types'
 import {
-  Checkbox,
-  Switch,
-} from '@/m3'
-import {
   propText,
 } from './block-coerce'
 import { m } from './defs-shared'
 import { renderButton } from './BlockButton'
 import { FormTextField } from './form/FormTextField'
 import { FormBlock } from './form/FormBlock'
+import { FormCheckbox } from './form/FormCheckbox'
 
 export const INPUTS_DEFS: BlockDef[] = [
   {
@@ -50,21 +47,16 @@ export const INPUTS_DEFS: BlockDef[] = [
     render: p => <FormTextField p={p} />,
   },
   {
-    meta: m('m3.checkbox', 'Checkbox', 'check_box', 'Inputs', false, {}),
-    render: p => (
-      <label style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-        <Checkbox />
-        {propText(p.label, 'Checkbox')}
-      </label>
-    ),
+    // `name` is what the answer is called when it reaches the workflow,
+    // as ${event.data.<name>}; see FormCheckbox for why an unticked box is
+    // recorded too.
+    meta: m('m3.checkbox', 'Checkbox', 'check_box', 'Inputs', false, {
+      name: '',
+    }),
+    render: p => <FormCheckbox p={p} control="checkbox" />,
   },
   {
-    meta: m('m3.switch', 'Switch', 'toggle_on', 'Inputs', false, {}),
-    render: p => (
-      <label style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-        <Switch />
-        {propText(p.label, 'Switch')}
-      </label>
-    ),
+    meta: m('m3.switch', 'Switch', 'toggle_on', 'Inputs', false, { name: '' }),
+    render: p => <FormCheckbox p={p} control="switch" />,
   },
 ]

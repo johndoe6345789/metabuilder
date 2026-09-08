@@ -55,7 +55,15 @@ describe('every palette block carries the attributes it was given', () => {
           {renderNode({
             id: 'n1',
             type,
-            props: { className: CLASS, id: ID },
+            // The image block renders nothing at all without an address --
+            // deliberately, so a forgotten src is not a notice shipped to
+            // visitors -- which leaves it no node to carry attributes on.
+            // Every other block renders something with empty props.
+            props: {
+              className: CLASS,
+              id: ID,
+              ...(type === 'image' ? { src: 'https://x/y.png', alt: 'y' } : {}),
+            },
             children: [],
           })}
         </Providers>

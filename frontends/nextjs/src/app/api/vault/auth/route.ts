@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server'
+import { applyRateLimit } from '@/lib/middleware'
 import {
   createVaultSessionToken,
   getExpectedVaultSessionToken,
@@ -22,7 +23,14 @@ export function GET(request: NextRequest): NextResponse {
   return buildAuthResponse(safeTokenEqual(current, expected))
 }
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<Response> {
+  // This compares a guess against the one instance-wide master password,
+  // and nothing throttled it: the whole vault was brute-forceable from a
+  // loop. RATE_LIMIT_CONFIGS.login (5/min) existed for exactly this and was
+  // applied to nothing, since sign-in itself is DBAL's own form.
+  const limited = applyRateLimit(request, 'login')
+  if (limited !== null) return limited
+
   const expected = getExpectedVaultSessionToken()
   if (expected === null) {
     return NextResponse.json(

@@ -31,13 +31,16 @@ describe('slugify', () => {
 })
 
 describe('communityNameError', () => {
-  it('accepts a name of two or more characters', () => {
-    expect(communityNameError('ab')).toBeNull()
+  // Three, not two: the slug becomes the founder's username and DBAL's
+  // isValidUsername refuses under three. "AB" wrote the User row, had its
+  // Credential refused, and left an orphan the retry read as taken.
+  it('accepts a name of three or more characters', () => {
+    expect(communityNameError('abc')).toBeNull()
   })
 
-  it.each(['', 'a', '  '])('refuses %p', community => {
+  it.each(['', 'a', 'ab', '  '])('refuses %p', community => {
     expect(communityNameError(community)).toBe(
-      'Community name must be at least 2 characters.'
+      'Community name must be at least 3 characters.'
     )
   })
 
@@ -67,7 +70,7 @@ describe('communityNameError', () => {
 
   it('trims before counting', () => {
     expect(communityNameError(' a ')).not.toBeNull()
-    expect(communityNameError(' ab ')).toBeNull()
+    expect(communityNameError(' abc ')).toBeNull()
   })
 })
 

@@ -81,6 +81,22 @@ async function createDbalCredential(
 }
 
 /**
+ * Remove a User row this registration wrote and then could not finish.
+ *
+ * Best-effort and deliberately quiet: the founder needs to see the error
+ * that stopped provisioning, not this one. But it has to be tried --
+ * without it the row stayed behind, the retry hit "That community name is
+ * already taken" (which checks for *any* user in the tenant), and the
+ * name was burned with no account able to log in.
+ */
+async function discardDbalUser(tenantId: string, id: string): Promise<void> {
+  await fetch(`${DBAL_URL}/${tenantId}/core/User/${id}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${process.env.DBAL_ADMIN_TOKEN ?? ''}` },
+  }).catch(() => null)
+}
+
+/**
  * The answer when a uniqueness check could not read its data.
  *
  * listEntity swallows any error into `{ data: [] }`, so a DBAL timeout was
@@ -200,7 +216,15 @@ export async function register(
     // system-generated community slug a founder was never shown or asked
     // to remember, so signing back in with the email they typed at signup
     // has to work too, not just the slug.
-    await createDbalCredential(username, password, tenantId, email)
+    try {
+      await createDbalCredential(username, password, tenantId, email)
+    } catch (cause) {
+      // The User row is already written. Left there, the retry reads the
+      // community as taken and the founder can neither sign in nor start
+      // again; the rest of the catch below returns the real reason.
+      await discardDbalUser(tenantId, newUser.id)
+      throw cause
+    }
 
     const user: User = {
       id: newUser.id,

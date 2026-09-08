@@ -114,7 +114,18 @@ export const PROP_SCHEMAS: Record<string, PropField[]> = {
     }),
   ],
   image: [
-    text('src', 'Image address', { placeholder: 'https://…/photo.jpg' }),
+    text('src', 'Image address', {
+      placeholder: 'https://…/photo.jpg',
+      // The published page shows nothing for an image with no address; it
+      // used to ship the italic text "Image: no src set" to every visitor.
+      // The builder is where that needs saying, so it is said here.
+      warnIfEmpty: {
+        when: () => true,
+        message:
+          'This image has no address, so nothing will appear here on the ' +
+          'published page.',
+      },
+    }),
     text('alt', 'Description', {
       hint: 'Read aloud to people who cannot see the image. Leave empty only if it is decorative.',
       warnIfEmpty: {
@@ -220,8 +231,24 @@ export const PROP_SCHEMAS: Record<string, PropField[]> = {
       hint: 'Grey example text, shown until someone types',
     }),
   ],
-  'm3.checkbox': [text('label', 'Label', { placeholder: 'Checkbox' })],
-  'm3.switch': [text('label', 'Label', { placeholder: 'Switch' })],
+  'm3.checkbox': [
+    text('label', 'Label', { placeholder: 'I agree to be contacted' }),
+    text('name', 'Answer name', {
+      placeholder: 'agreed',
+      hint:
+        'What this answer is called when it reaches a workflow, as ' +
+        '${event.data.name}. Leave empty and the answer is not collected',
+    }),
+  ],
+  'm3.switch': [
+    text('label', 'Label', { placeholder: 'Switch' }),
+    text('name', 'Answer name', {
+      placeholder: 'agreed',
+      hint:
+        'What this answer is called when it reaches a workflow, as ' +
+        '${event.data.name}. Leave empty and the answer is not collected',
+    }),
+  ],
 
   // ---- feedback --------------------------------------------------------
   'm3.alert': [

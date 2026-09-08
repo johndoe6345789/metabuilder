@@ -10,7 +10,11 @@ export interface SignupFields {
   tier: TierId
 }
 
-const MIN_COMMUNITY_LENGTH = 2
+// Three, because the slug doubles as the founder's username and DBAL's
+// isValidUsername refuses anything under three characters. At two, "AB"
+// wrote the User row, had its Credential refused, and left an orphan the
+// retry then read as "already taken" -- a burned name with no account.
+const MIN_COMMUNITY_LENGTH = 3
 const MAX_SLUG_LENGTH = 40
 
 /**
@@ -50,12 +54,12 @@ export function slugify(value: string): string {
  */
 export function communityNameError(community: string): string | null {
   if (community.trim().length < MIN_COMMUNITY_LENGTH) {
-    return 'Community name must be at least 2 characters.'
+    return 'Community name must be at least 3 characters.'
   }
   // Hyphens survive slugging but cannot carry a name on their own, so they
   // do not count towards the minimum.
   if (slugify(community).replaceAll('-', '').length < MIN_COMMUNITY_LENGTH) {
-    return 'Community name needs at least 2 letters or numbers.'
+    return 'Community name needs at least 3 letters or numbers.'
   }
   return null
 }

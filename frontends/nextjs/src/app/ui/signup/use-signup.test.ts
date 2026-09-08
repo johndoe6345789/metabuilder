@@ -42,8 +42,10 @@ describe('useSignup', () => {
     await act(async () => {
       await result.current.submit()
     })
+    // Three, not two: the slug becomes the founder's username, and DBAL
+    // refuses one under three characters -- at two it wrote an orphan.
     expect(result.current.error).toBe(
-      'Community name must be at least 2 characters.'
+      'Community name must be at least 3 characters.'
     )
     expect(request.submitSignup).not.toHaveBeenCalled()
   })

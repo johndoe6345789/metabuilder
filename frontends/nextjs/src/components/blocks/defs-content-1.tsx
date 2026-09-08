@@ -35,7 +35,10 @@ export const CONTENT_DEFS_1: BlockDef[] = [
     }),
     render: p => {
       const src = propText(p.src)
-      if (src.length === 0) return <em>Image: no src set</em>
+      // Nothing, not a notice: this rendered the italic text "Image: no
+      // src set" to every visitor of a page whose founder had not pasted
+      // an address yet. The builder warns through the prop schema instead.
+      if (src.length === 0) return null
       return (
         <img
           src={src}

@@ -8,9 +8,15 @@ import { createVaultSessionToken, VAULT_COOKIE_NAME } from '../vault-session'
 
 type Req = Parameters<typeof GET>[0]
 
+// A fresh address per request: POST is rate-limited now (five guesses a
+// minute), and without this every request in the file shared the
+// "unknown" bucket, so the sixth one was refused for reasons unrelated
+// to what it was testing.
+let nextAddress = 0
 const req = (cookie: string | null, body?: unknown): Req => {
   const base = new Request('http://localhost/api/vault/auth', {
     method: body === undefined ? 'GET' : 'POST',
+    headers: { 'x-real-ip': `10.30.${++nextAddress}.1` },
     body: body === undefined ? undefined : JSON.stringify(body),
   })
   return Object.assign(base, {

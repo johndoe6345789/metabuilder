@@ -26,6 +26,7 @@ const created = {
 
 interface Call {
   url: string
+  method?: string
   auth?: string
   body?: string
 }
@@ -45,6 +46,7 @@ const stubDbal = (
     vi.fn(async (url: string, init?: RequestInit) => {
       calls.push({
         url: String(url),
+        method: init?.method,
         auth: (init?.headers as Record<string, string>)?.Authorization,
         body: init?.body as string | undefined,
       })
@@ -383,5 +385,42 @@ describe('signing up while the data layer is unreachable', () => {
 
     expect(result.success).toBe(true)
     expect(calls.length).toBeGreaterThan(0)
+  })
+})
+
+
+/**
+ * The User row is written, then the Credential is provisioned, and the
+ * catch rolled nothing back. A community name that DBAL then refused as a
+ * username -- or a password it refused as too long -- left the row behind:
+ * the retry read the name as already taken (any user in the tenant), and
+ * the founder could neither sign in nor start over. The name was burned.
+ */
+describe('a registration that fails after writing the user', () => {
+  it('removes the row it wrote, so the name is not burned', async () => {
+    const calls = stubDbal({ credentialOk: false })
+
+    const result = await register('alice', 'a@b.c', 'pw', 'harbour')
+
+    expect(result.success).toBe(false)
+    const removal = calls.find(
+      c => c.method === 'DELETE' && c.url.endsWith('/harbour/core/User/new-id')
+    )
+    expect(removal).toBeDefined()
+    // As the operator: the row was written that way and nothing else may
+    // remove it.
+    expect(removal?.auth).toMatch(/^Bearer /)
+  })
+
+  it('still reports the reason provisioning failed', async () => {
+    stubDbal({ credentialOk: false })
+    const result = await register('alice', 'a@b.c', 'pw', 'harbour')
+    expect(result.error).toContain('credential')
+  })
+
+  it('removes nothing when provisioning succeeded', async () => {
+    const calls = stubDbal()
+    await register('alice', 'a@b.c', 'pw', 'harbour')
+    expect(calls.some(c => c.method === 'DELETE')).toBe(false)
   })
 })
