@@ -9,10 +9,18 @@
  * so this stays an explicit statement of the entities a stranger may
  * write to, and DBAL enforces it a second time regardless.
  *
- * Both entries are entities whose whole purpose is to be created by
- * someone with no account: registering, and answering a form on a
- * published page. Adding to this list means deciding that a stranger may
- * create rows of that kind, so keep it short and keep it deliberate.
+ * The one entry is the entity whose whole purpose is to be created by
+ * someone with no account: answering a form on a published page. Adding
+ * to this list means deciding that a stranger may create rows of that
+ * kind *in any community*, since the tenant comes from the path -- so
+ * keep it short and keep it deliberate.
+ *
+ * `User` used to be here for registration's sake, and registration never
+ * needed it: lib/auth/api/register.ts talks to DBAL directly through
+ * DBAL_ENDPOINT with the admin token, not through this proxy. What the
+ * entry did allow was a stranger POSTing a User row into somebody else's
+ * community -- and, since tenant-exists.ts decides a tenant is real if it
+ * has any users, conjuring a tenant out of a made-up slug.
  *
  * Only POST is opened. Editing and deleting an existing row are never
  * anonymous, whatever the entity -- a visitor may say something, not go
@@ -20,7 +28,7 @@
  */
 
 /** Entity names, matched against the last segment of the DBAL path. */
-const PUBLICLY_CREATABLE = new Set(['FormSubmission', 'User'])
+const PUBLICLY_CREATABLE = new Set(['FormSubmission'])
 
 /**
  * Whether @p method on @p path may proceed without a session.

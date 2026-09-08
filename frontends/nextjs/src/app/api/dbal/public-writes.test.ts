@@ -10,7 +10,13 @@ describe('what a signed-out visitor may create', () => {
   })
 
   it('lets someone register', () => {
-    expect(isPublicWrite('POST', 'system/core/User')).toBe(true)
+    // User was here for registration's sake and registration never used
+    // it -- register.ts goes to DBAL directly with the admin token. What
+    // it did allow was a stranger creating a User row inside somebody
+    // else's community, and conjuring a tenant out of a made-up slug,
+    // since tenant-exists decides a tenant is real if it has any users.
+    expect(isPublicWrite('POST', 'system/core/User')).toBe(false)
+    expect(isPublicWrite('POST', 'harbour_cycle_works/core/User')).toBe(false)
   })
 
   it('does not open anything else', () => {
