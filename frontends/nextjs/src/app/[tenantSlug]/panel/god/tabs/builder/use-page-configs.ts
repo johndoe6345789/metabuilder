@@ -45,15 +45,27 @@ function toRow(raw: Record<string, unknown>): PageConfigRow | null {
 export function usePageConfigs(tenant: string) {
   const [rows, setRows] = useState<PageConfigRow[]>([])
   const [loading, setLoading] = useState(false)
+  /**
+   * Set when the list could not be read at all.
+   *
+   * Every failure used to become an empty list, which is the same thing
+   * this says when a community really has published nothing -- so during
+   * an outage the route dropdown went blank and read as "nothing is
+   * published", and the founder would republish over a path they believed
+   * was free, taking over a page that was live.
+   */
+  const [unreachable, setUnreachable] = useState(false)
 
   const refresh = useCallback(async () => {
     setLoading(true)
+    setUnreachable(false)
     try {
       const res = await fetch(`${DBAL}/${tenant}/core/PageConfig?limit=200`, {
         signal: AbortSignal.timeout(6000),
       })
       if (!res.ok) {
         setRows([])
+        setUnreachable(true)
         return
       }
       const json = (await res.json()) as {
@@ -66,6 +78,7 @@ export function usePageConfigs(tenant: string) {
       setRows(parsed)
     } catch {
       setRows([])
+      setUnreachable(true)
     } finally {
       setLoading(false)
     }
@@ -75,5 +88,5 @@ export function usePageConfigs(tenant: string) {
     void Promise.resolve().then(() => refresh())
   }, [refresh])
 
-  return { rows, loading, refresh }
+  return { rows, loading, unreachable, refresh }
 }

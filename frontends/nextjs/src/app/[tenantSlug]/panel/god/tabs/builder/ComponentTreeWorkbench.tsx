@@ -37,6 +37,7 @@ export function ComponentTreeWorkbench() {
       <WorkbenchAlerts
         conflict={w.t.conflict}
         publishError={w.t.publishError}
+        pagesUnreachable={w.pagesUnreachable}
       />
 
       <ComponentTreePublishBar

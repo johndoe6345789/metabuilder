@@ -25,7 +25,8 @@ export function useWorkbench() {
   // The tenant is whoever is signed in -- it was never a choice to make here.
   const tenant = normalizeTenantId(auth.user?.tenantId)
   const [target, setTarget] = usePublishTarget(tenant)
-  const { rows: pages } = usePageConfigs(tenant)
+  const { rows: pages, unreachable: pagesUnreachable } =
+    usePageConfigs(tenant)
   const { collapsed, toggle: toggleCollapse } = useCollapsedSet()
   const targetActions = useTargetActions(t, tenant, target, pages, setTarget)
 
@@ -63,6 +64,7 @@ export function useWorkbench() {
     tenant,
     target,
     pages,
+    pagesUnreachable,
     collapsed,
     toggleCollapse,
     targetActions,

@@ -110,3 +110,56 @@ describe('usePageConfigs', () => {
     expect(result.current.loading).toBe(false)
   })
 })
+
+/**
+ * Every failure used to become an empty list, which is exactly what this
+ * says when a community really has published nothing. So during an outage
+ * the builder's route dropdown went blank and read as "nothing is
+ * published" -- and the founder would republish over a path they believed
+ * was free, taking over a page that was live.
+ */
+describe('when the route list cannot be read', () => {
+  it('says so, rather than looking like an empty community', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response('nope', { status: 503 }))
+    )
+    const { result } = renderHook(() => usePageConfigs('acme'))
+
+    await waitFor(() => {
+      expect(result.current.unreachable).toBe(true)
+    })
+    expect(result.current.rows).toEqual([])
+  })
+
+  it('says so when nothing answers at all', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => {
+        throw new Error('ECONNREFUSED')
+      })
+    )
+    const { result } = renderHook(() => usePageConfigs('acme'))
+
+    await waitFor(() => {
+      expect(result.current.unreachable).toBe(true)
+    })
+  })
+
+  it('does not say so for a community that has published nothing', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(
+        async () =>
+          new Response(JSON.stringify({ data: { data: [] } }), { status: 200 })
+      )
+    )
+    const { result } = renderHook(() => usePageConfigs('acme'))
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false)
+    })
+    expect(result.current.unreachable).toBe(false)
+    expect(result.current.rows).toEqual([])
+  })
+})

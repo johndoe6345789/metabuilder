@@ -89,14 +89,24 @@ export function useSchemaEditor(tenantId: string): UseSchemaEditorResult {
 
       if (!offline) {
         try {
-          await fetch(`${DBAL_URL}/${tenantId}/core/entity_schema`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tenantId, data: next }),
-            signal: AbortSignal.timeout(5000),
-          })
+          const res = await fetch(
+            `${DBAL_URL}/${tenantId}/core/entity_schema`,
+            {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ tenantId, data: next }),
+              signal: AbortSignal.timeout(5000),
+            }
+          )
+          // The response was never read, so a refusal looked exactly like
+          // a save: the editor showed the new model and it existed only in
+          // this browser. The badge already says "changes saved locally
+          // only" -- it just was not being told.
+          if (!res.ok) setOffline(true)
         } catch {
-          // DBAL unavailable — localStorage is the source of truth
+          // DBAL unavailable — localStorage is the source of truth, and
+          // the badge should say so rather than implying it reached one.
+          setOffline(true)
         }
       }
     },
