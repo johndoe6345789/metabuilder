@@ -27,10 +27,14 @@ describe('SignupFields', () => {
     expect(screen.queryByText(/Your URL:/)).toBeNull()
   })
 
-  it('shows a slugified URL hint once the community name is long enough', () => {
+  // Underscored, because that is the tenant the form creates: the hint
+  // used to show acme-running-club while the payload sent
+  // acme_running_club, and the hyphenated URL 404'd.
+  it('shows the URL the form will actually create', () => {
     render(<SignupFields {...baseProps} community="Acme Running Club" />)
     expect(screen.getByText(/Your URL:/)).toBeTruthy()
-    expect(screen.getByText('acme-running-club')).toBeTruthy()
+    expect(screen.getByText('acme_running_club')).toBeTruthy()
+    expect(screen.queryByText('acme-running-club')).toBeNull()
   })
 
   it('calls onCommunityChange when the community field changes', () => {

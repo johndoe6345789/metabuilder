@@ -35,7 +35,11 @@ describe('CredentialsTab listing accounts', () => {
     render(<CredentialsTab />)
 
     await waitFor(() => expect(calls.length).toBeGreaterThan(0))
-    expect(calls[0].url).toContain('filter.tenantId=acme')
+    // By URL tenant, not a filter param: DBAL scopes by the path and
+    // ignores filter.tenantId, so the old request fetched the system
+    // tenant's users and the client-side filter discarded them all.
+    expect(calls[0].url).toContain('/acme/core/User')
+    expect(calls[0].url).not.toContain('/system/')
   })
 
   it('does not scope for a supergod viewing all tenants', async () => {

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import {
   buildRegisterPayload,
+  tenantNameFor,
   canSubmit,
   communityNameError,
   slugify,
@@ -131,5 +132,33 @@ describe('buildRegisterPayload', () => {
     const payload = buildRegisterPayload(fields({ community: 'Acme Club' }))
     expect(payload.tenantName).toBe('acme_club')
     expect(payload.username).toBe('acme-club')
+  })
+})
+
+/**
+ * The signup screen showed metabuilder.app/acme-running-club while
+ * creating acme_running_club -- DBAL's route parser takes only
+ * alphanumerics and underscores, and tenant-exists refuses a hyphen
+ * before any request. The one URL the form promised was the one that
+ * could not work. Deriving the name once keeps the hint and the payload
+ * from drifting again.
+ */
+describe('tenantNameFor', () => {
+  it('is what the payload actually sends', () => {
+    const fields = {
+      community: 'Acme Running Club',
+      name: 'Alex',
+      email: 'a@b.c',
+      password: 'pw',
+      tier: 'starter' as const,
+    }
+    expect(buildRegisterPayload(fields).tenantName).toBe(
+      tenantNameFor('Acme Running Club')
+    )
+  })
+
+  it('uses underscores, which a tenant path can hold', () => {
+    expect(tenantNameFor('Acme Running Club')).toBe('acme_running_club')
+    expect(tenantNameFor('Acme Running Club')).not.toContain('-')
   })
 })

@@ -7,9 +7,21 @@ import { unwrapList } from './credentials-data'
 const DBAL_URL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 const TIMEOUT_MS = 8000
 
+/**
+ * The accounts in scope.
+ *
+ * This asked /system/core/User with ?filter.tenantId=<scope>. DBAL scopes
+ * by the URL's tenant and ignores filter.tenantId entirely (see
+ * tenant-exists.ts), so every founder was handed the *system* tenant's
+ * users over the wire -- and visibleAccounts then discarded all of them
+ * for having the wrong tenantId. The founder's own members live at
+ * /{tenant}/core/User and were never fetched: the tab was permanently
+ * empty. "all" has no single request behind it; the instance owner's
+ * picker walks tenants one at a time.
+ */
 function userUrl(scope: string): string {
-  const query = scope === 'all' ? '' : `?filter.tenantId=${scope}`
-  return `${DBAL_URL}/system/core/User${query}`
+  const tenant = scope === 'all' ? 'system' : scope
+  return `${DBAL_URL}/${encodeURIComponent(tenant)}/core/User`
 }
 
 /** Accounts in scope, plus the tenant list a supergod needs to switch. */
@@ -22,6 +34,9 @@ export async function fetchAccounts(
       cache: 'no-store',
       signal: AbortSignal.timeout(TIMEOUT_MS),
     }),
+    // There is no Tenant entity (see tenant-exists.ts); this 404s and the
+    // catch below hands the picker its fallback. Kept for the day one
+    // exists, and so the fallback stays exercised.
     isSupergod
       ? fetch(`${DBAL_URL}/system/core/Tenant`, {
           cache: 'no-store',

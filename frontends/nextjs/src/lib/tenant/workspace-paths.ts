@@ -42,3 +42,26 @@ export function tenantPath(
   if (clean.startsWith(`/${tenant}/panel`)) return clean
   return `/${tenant}/panel${clean}`
 }
+
+/**
+ * Where the God Panel's "preview level N" buttons send the founder.
+ *
+ * Three copies of this table hard-coded '/', '/profile' and '/admin'.
+ * Under basePath '/app' those resolve to /app/profile and /app/admin,
+ * which Next matches as tenants named "profile" and "admin", finds no such
+ * community, and 404s -- and '/' is the MetaBuilder marketing page, not
+ * the founder's site. So "Home" in the builder's own header left the
+ * product, and every Preview button on the first tab a founder lands on
+ * was dead. Level 1 is the published site; the rest sit under the panel.
+ * Null for a level with no page.
+ */
+export function previewPathForLevel(
+  value: string | null | undefined,
+  level: number
+): string | null {
+  const tenant = encodeURIComponent(normalizeTenantId(value))
+  if (level === 1) return `/${tenant}`
+  if (level === 2) return tenantPath(value, '/profile')
+  if (level === 3) return tenantPath(value, '/admin')
+  return null
+}

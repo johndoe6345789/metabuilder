@@ -6,6 +6,7 @@ import { useParams, useRouter } from 'next/navigation'
 import {
   normalizeTenantId,
   tenantGodPanelPath,
+  previewPathForLevel,
 } from '@/lib/tenant/workspace-paths'
 import { useNerdMode } from '@/components/nerd-mode-ide'
 import { godPanelConfig } from '@/lib/packages/navigation'
@@ -46,9 +47,12 @@ export function useGodPanelState(activeTabId: string) {
 
   const preview = useCallback(
     (level: number) => {
-      router.push(level === 1 ? '/' : level === 2 ? '/profile' : '/admin')
+      // The router applies the basePath itself; the path is tenant-scoped
+      // so Home reaches the founder's site rather than the marketing page.
+      const path = previewPathForLevel(tenantForPaths, level)
+      if (path !== null) router.push(path)
     },
-    [router]
+    [router, tenantForPaths]
   )
 
   const moveGuide = useCallback(

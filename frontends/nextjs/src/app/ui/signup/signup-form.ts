@@ -13,6 +13,20 @@ export interface SignupFields {
 const MIN_COMMUNITY_LENGTH = 2
 const MAX_SLUG_LENGTH = 40
 
+/**
+ * The tenant a community name becomes -- what the URL will actually say.
+ *
+ * DBAL's route parser accepts only alphanumerics and underscores in a
+ * tenant segment, so the hyphenated slug is written with underscores.
+ * Derived here, once, because the signup screen showed the founder
+ * metabuilder.app/acme-running-club while creating acme_running_club --
+ * the one URL it promised was the one URL that could not work, and it was
+ * missing the /app basePath as well.
+ */
+export function tenantNameFor(community: string): string {
+  return slugify(community).replaceAll('-', '_')
+}
+
 /** A URL-safe slug: lowercase, hyphenated, capped, nothing else. */
 export function slugify(value: string): string {
   return value
@@ -79,7 +93,7 @@ export function buildRegisterPayload(
     // DBAL's route parser only accepts alphanumeric + underscore in a
     // tenant path segment -- a hyphenated slug 400s with "Invalid tenant
     // name" the moment it's used as one.
-    tenantName: slug.replaceAll('-', '_'),
+    tenantName: tenantNameFor(fields.community),
     plan: fields.tier,
   }
 }

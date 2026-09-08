@@ -1,7 +1,8 @@
 'use client'
 
 import { FormField } from './FormField'
-import { slugify } from './signup-form'
+import { tenantNameFor } from './signup-form'
+import { BASE_PATH } from '@/lib/app-config'
 import s from './page.module.scss'
 
 export interface SignupFieldsProps {
@@ -19,7 +20,8 @@ export interface SignupFieldsProps {
 export function SignupFields(props: SignupFieldsProps) {
   const hint = props.community.trim().length > 1 && (
     <span className={s.hint}>
-      Your URL: metabuilder.app/<strong>{slugify(props.community)}</strong>
+      Your URL: metabuilder.app{BASE_PATH}/
+      <strong>{tenantNameFor(props.community)}</strong>
     </span>
   )
 

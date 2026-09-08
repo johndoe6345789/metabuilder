@@ -12,6 +12,7 @@
 import type { BlockDef } from './block-types'
 import { propText } from './block-coerce'
 import { m } from './defs-shared'
+import { LinkBlock } from './LinkBlock'
 
 export const HTML_DEFS_2: BlockDef[] = [
   {
@@ -50,6 +51,6 @@ export const HTML_DEFS_2: BlockDef[] = [
   {
     meta: m('html.a', 'Link', 'link', 'HTML', false, {
     }),
-    render: p => <a href={propText(p.href, '#')}>{propText(p.text, 'Link')}</a>,
+    render: p => <LinkBlock p={p} />,
   },
 ]

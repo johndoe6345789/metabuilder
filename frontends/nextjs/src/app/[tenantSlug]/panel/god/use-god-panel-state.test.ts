@@ -50,14 +50,30 @@ describe('useGodPanelState', () => {
     expect(nav.push).not.toHaveBeenCalled()
   })
 
-  it('preview routes each level to its public page', () => {
-    const { result } = renderHook(() => useGodPanelState('overview'))
+  /**
+   * These were '/', '/profile' and '/admin'. Under basePath '/app' the last
+   * two are /app/profile and /app/admin -- matched as tenants named
+   * "profile" and "admin", refused, 404 -- and '/' is the marketing page,
+   * not the founder's site. "Home" in the builder's own header left the
+   * product. Asserted by shape rather than by slug so the test does not
+   * bake in this fixture's tenant name.
+   */
+  it('preview routes each level into this community, not past it', () => {
+    const { result } = renderHook(() => useGodPanelState())
     act(() => result.current.preview(1))
-    expect(nav.push).toHaveBeenLastCalledWith('/')
+    const home = nav.push.mock.lastCall?.[0] as string
+    expect(home).not.toBe('/')
+    expect(home).toMatch(/^\/[^/]+$/)
+
     act(() => result.current.preview(2))
-    expect(nav.push).toHaveBeenLastCalledWith('/profile')
+    const profile = nav.push.mock.lastCall?.[0] as string
+    expect(profile).not.toBe('/profile')
+    expect(profile).toMatch(/^\/[^/]+\/panel\/profile$/)
+
     act(() => result.current.preview(3))
-    expect(nav.push).toHaveBeenLastCalledWith('/admin')
+    const admin = nav.push.mock.lastCall?.[0] as string
+    expect(admin).not.toBe('/admin')
+    expect(admin).toMatch(/^\/[^/]+\/panel\/admin$/)
   })
 
   it('starts on the first walk-me step with the guide closed', () => {

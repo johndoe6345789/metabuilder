@@ -52,7 +52,8 @@ export function useOverviewTools(dbalVersion: string | null) {
       if (tool.action === 'previewLevel') {
         const target = previewTarget(
           window.location.origin,
-          toolLevel(tool.params)
+          toolLevel(tool.params),
+          tenant
         )
         if (target !== null) {
           window.location.assign(target)
@@ -64,7 +65,8 @@ export function useOverviewTools(dbalVersion: string | null) {
         message: 'Tool action is not configured.',
       })
     },
-    [exportDatabase]
+    // `tenant` is read to aim the preview at this community's site.
+    [exportDatabase, tenant]
   )
 
   return { flash, setFlash, importRef, runTool, readImportFile }
