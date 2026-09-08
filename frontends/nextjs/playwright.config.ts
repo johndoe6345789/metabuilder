@@ -28,15 +28,32 @@ export default defineConfig({
   ],
   webServer: process.env.PLAYWRIGHT_BASE_URL !== undefined
     ? undefined
-    : {
-        command: 'next dev --turbopack --port 3004',
-        url: 'http://localhost:3004/app',   // basePath health-check
-        reuseExistingServer: true,
-        timeout: 120_000,
-        env: {
-          NEXT_PUBLIC_DBAL_API_URL: 'http://localhost:8080',
-          NEXT_PUBLIC_MEDIA_API_URL: 'http://localhost:8090',
-          NEXT_PUBLIC_S3_API_URL: 'http://localhost:9000',
+    : [
+        // A stand-in data layer for the server components that render a
+        // published page. They fetch from the Node process, which
+        // page.route cannot reach, so without this nothing about server
+        // rendering, page access or metadata is testable end to end.
+        {
+          command: 'node e2e/dbal-stub.mjs',
+          url: 'http://localhost:8099/system/core/User',
+          // Reused like the dev server below, so a second run in the same
+          // session does not collide with the stub the first left behind.
+          reuseExistingServer: true,
+          timeout: 30_000,
         },
-      },
+        {
+          command: 'next dev --turbopack --port 3004',
+          url: 'http://localhost:3004/app',   // basePath health-check
+          reuseExistingServer: true,
+          timeout: 120_000,
+          env: {
+            // Server side reads DBAL_ENDPOINT first and talks to the
+            // stub; the browser keeps 8080, where page.route still works.
+            DBAL_ENDPOINT: 'http://localhost:8099',
+            NEXT_PUBLIC_DBAL_API_URL: 'http://localhost:8080',
+            NEXT_PUBLIC_MEDIA_API_URL: 'http://localhost:8090',
+            NEXT_PUBLIC_S3_API_URL: 'http://localhost:9000',
+          },
+        },
+      ],
 })
