@@ -44,16 +44,17 @@ export function middleware(request: NextRequest) {
     const tenant = segments.at(0) ?? ''
     const pkg = segments.at(1) ?? ''
 
-    // Add tenant info to headers for downstream use
-    const response = NextResponse.next()
-    if (tenant.length > 0) {
-      response.headers.set('x-tenant-id', tenant)
-    }
-    if (pkg.length > 0) {
-      response.headers.set('x-package-id', pkg)
-    }
+    // On the *request*, which is what "downstream" means: these were set
+    // on NextResponse.next()'s own headers, so nothing in the app could
+    // read them -- a server component asking for x-tenant-id got null and
+    // fell back to "system" -- while both ids were echoed to the browser
+    // on every response. Forwarding needs the request headers handed to
+    // next() explicitly.
+    const forwarded = new Headers(request.headers)
+    if (tenant.length > 0) forwarded.set('x-tenant-id', tenant)
+    if (pkg.length > 0) forwarded.set('x-package-id', pkg)
 
-    return response
+    return NextResponse.next({ request: { headers: forwarded } })
   }
 
   return NextResponse.next()

@@ -327,3 +327,35 @@ describe('a publish the data layer refused', () => {
     expect(result.current.error).toBeNull()
   })
 })
+
+/**
+ * Creating a class runs the typed name through toClassName, so "Big red
+ * heading" becomes big-red-heading and "2col" becomes s-2col -- a founder
+ * should not have to learn that a class cannot hold a space or start with
+ * a digit. Renaming did not, and styleSheetText silently drops any name
+ * that fails its selector-safety test. So renaming a class to something
+ * with a space left it selectable in the builder, saved, published, and
+ * rendering nothing at all, with no warning anywhere.
+ */
+describe('renaming a class to something a selector cannot hold', () => {
+  const named = (name: string) => {
+    store.css = [cls('c1', 'lede')]
+    const { result } = renderHook(() => useCssClasses())
+    act(() => {
+      result.current.rename('c1', name)
+    })
+    return persisted().find(c => c.id === 'c1')
+  }
+
+  it('turns a spaced name into one that renders', () => {
+    expect(named('hero panel')?.name).toBe('hero-panel')
+  })
+
+  it('keeps a name that starts with a digit usable', () => {
+    expect(named('2col')?.name).toBe('s-2col')
+  })
+
+  it('leaves an already-valid name alone', () => {
+    expect(named('primary-cta')?.name).toBe('primary-cta')
+  })
+})

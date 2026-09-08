@@ -6,6 +6,7 @@ import { setCss, clearDirty, type GodState } from '@/store/slices/god-slice'
 import { loadStyleClasses, saveStyleClasses } from '@/lib/tenant/style-classes'
 import { useGodTenant } from '../use-god-tenant'
 import { SEED_CSS } from '@/store/slices/god-slice/seed-css'
+import { toClassName } from './style-controls/to-class-name'
 
 const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
@@ -73,7 +74,12 @@ export function useCssClasses() {
 
   const rename = useCallback(
     (id: string, name: string) => {
-      persist(classes.map(c => (c.id === id ? { ...c, name } : c)))
+      // Through the same sanitiser create() uses. Renaming stored whatever
+      // was typed, and styleSheetText silently drops any name a selector
+      // cannot hold -- so "hero panel" stayed selectable in the builder,
+      // saved, published, and rendered nothing at all.
+      const safe = toClassName(name)
+      persist(classes.map(c => (c.id === id ? { ...c, name: safe } : c)))
     },
     [classes, persist]
   )
