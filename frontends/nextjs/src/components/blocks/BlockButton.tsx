@@ -4,45 +4,22 @@
  * The Button block.
  *
  * Split out of defs-shared because it is the one block whose render() needs
- * a component of its own -- see BlockButton -- rather than a few lines of
- * JSX, and that component plus its workflow preview is a file's worth.
+ * a component of its own rather than a few lines of JSX. The draft-preview
+ * it can fire lives in fire-workflow.ts.
  */
 
 import { useCallback, useRef } from 'react'
+import { usePathname } from 'next/navigation'
 import { Button } from '@/m3'
 import type { ReactNode } from 'react'
 import type { BlockAttrs } from './common-attrs'
 import { propText } from './block-coerce'
-import { store } from '@/store/store'
-import { runWorkflow } from '@/lib/workflow/run-workflow'
-import type { GodState } from '@/store/slices/god-slice'
 import { useFormScope } from './form/form-context'
+import { tenantFromPathname } from './site-tenant'
+import { fireWorkflow } from './fire-workflow'
 import { effectRoot } from './form/page-effects'
 import { useRecordAction } from './form/use-record-action'
 import formStyles from './form/form.module.scss'
-
-/**
- * Run the God Panel's unsaved draft in this browser, and show what it did.
- *
- * A preview of the workflow currently open in the editor -- not the
- * published one, and not the one a block's click names. See
- * form/use-record-action.ts for the path that reaches a real workflow.
- */
-export function fireWorkflow(): void {
-  const god = store.getState().god as GodState
-  // Whichever workflow the panel has open, across every tenant held in
-  // this browser: a preview has no tenant of its own to consult.
-  // .at() is `T | undefined`; indexing is not, unless
-  // noUncheckedIndexedAccess is on -- and it is not in every tsconfig here.
-  const wf = Object.values(god.workflows ?? {}).flat().at(0)?.workflow
-  if (wf === undefined || wf.nodes.length === 0) {
-    window.alert('No workflow wired yet.')
-    return
-  }
-  const res = runWorkflow(wf)
-  const out = JSON.stringify(res.output)
-  window.alert(`Ran "${wf.name}"\n\n${res.logs.join('\n')}\n\n→ ${out}`)
-}
 
 export function renderButton(p: Record<string, unknown>): ReactNode {
   return <BlockButton p={p} />
@@ -64,6 +41,8 @@ function BlockButton({
   ...attrs
 }: { p: Record<string, unknown> } & BlockAttrs): ReactNode {
   const scope = useFormScope()
+  // Whose community's draft to preview -- the site this block is on.
+  const previewTenant = tenantFromPathname(usePathname())
   const href = propText(p.href)
   const variant = propText(p.variant, 'contained')
   const preview = p.runWorkflow === true
@@ -83,7 +62,7 @@ function BlockButton({
     : propText(p.label, 'Button')
 
   const onClick = (): void => {
-    if (preview) fireWorkflow()
+    if (preview) fireWorkflow(previewTenant)
     else if (action !== '') record.fire()
   }
   const buttonProps: Record<string, unknown> = {
