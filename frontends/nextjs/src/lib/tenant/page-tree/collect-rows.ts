@@ -44,7 +44,13 @@ export function collectRows(
     order: number
   ): void => {
     counter.value += 1
-    const own = node.id.length > 0 ? node.id : `n${counter.value}`
+    // Checked rather than trusted: the fallback below was written for an
+    // *empty* id, and a tree that reached here through a cast had none at
+    // all, so `node.id.length` threw a TypeError on the first child and
+    // took the whole publish with it. The declared type says this is
+    // always a string; that is exactly the claim a cast can break.
+    const declared = typeof node.id === 'string' ? node.id : ''
+    const own = declared.length > 0 ? declared : `n${counter.value}`
     const nodeId = `${treeId}__${own}`
 
     nodes.push({

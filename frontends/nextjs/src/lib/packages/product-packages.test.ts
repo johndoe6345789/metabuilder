@@ -57,10 +57,16 @@ describe('tierById', () => {
 })
 
 describe('defaultComponentTree', () => {
-  it('names the page in the first heading', () => {
-    const tree = defaultComponentTree('About Us') as {
-      children: { children: { props: { content: string } }[] }[]
-    }
-    expect(tree.children[0]?.children[0]?.props.content).toBe('About Us')
+  /**
+   * This used to read `children[0].children[0].props.content` through a
+   * cast, which is the shape the function returned and not one the block
+   * registry or the row writer would accept -- so the test agreed with the
+   * wrong shape and could not fail. See default-component-tree.test.ts for
+   * what the two sides actually require.
+   */
+  it('names the page in its heading', () => {
+    const tree = defaultComponentTree('About Us')
+    const heading = tree.children.find(c => c.type === 'heading')
+    expect(heading?.props.text).toBe('About Us')
   })
 })

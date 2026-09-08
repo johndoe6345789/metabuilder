@@ -1,10 +1,6 @@
 /** Provisioning the pages a freshly installed package ships with. */
 
-import {
-  deleteTree,
-  saveTree,
-  type TreeNodeShape,
-} from '@/lib/tenant/page-tree'
+import { deleteTree, saveTree } from '@/lib/tenant/page-tree'
 import {
   defaultComponentTree,
   type PRODUCT_PACKAGES,
@@ -48,7 +44,7 @@ async function createDefaultPage(
     tenant,
     treeId,
     route.title,
-    defaultComponentTree(route.title) as unknown as TreeNodeShape,
+    defaultComponentTree(route.title),
     `Starter layout for ${pkg.id}`
   )
   return fetch(`${DBAL}/${tenant}/core/PageConfig`, {

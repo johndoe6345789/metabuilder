@@ -2,14 +2,14 @@ import { useState } from 'react'
 import { usePageRoutes } from '@/hooks/usePageRoutes'
 import type { PageRoute, PageRouteInput } from '@/hooks/usePageRoutes'
 import { previewUrl, publishCounts } from './page-routes-logic'
-import { usePageRoutesTenant } from './use-page-routes-tenant'
+import { useTenantPicker } from './use-tenant-picker'
 
 /** All of PageRoutesTab's state and handlers, kept out of the component
  *  so it only owns layout. */
 export function usePageRoutesTab() {
   const {
     tenant, tenantInput, setTenantInput, applyTenant, canPickOtherTenant,
-  } = usePageRoutesTenant()
+  } = useTenantPicker()
   const [editPage, setEditPage] = useState<PageRoute | null>(null)
   const [deletePage, setDeletePage] = useState<PageRoute | null>(null)
   const [formOpen, setFormOpen] = useState(false)

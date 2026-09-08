@@ -3,23 +3,30 @@
 import { useState } from 'react'
 import { useInstalledPackages } from '@/hooks/useInstalledPackages'
 import { PRODUCT_PACKAGES } from '@/lib/packages/product-packages'
-import {
-  createDefaultPages,
-  normalizeTenant,
-  SYSTEM_TENANT,
-} from './packages-tab-data'
+import { createDefaultPages } from './packages-tab-data'
+import { useTenantPicker } from './use-tenant-picker'
 
-/** Installing and removing packages for the currently loaded tenant. */
+/**
+ * Installing and removing packages for the currently loaded tenant.
+ *
+ * The tenant came from a picker of this hook's own that started at
+ * 'system' and had no guard, so a founder opening this tab saw the shared
+ * tenant's installed list, and installing wrote PageConfig and PageTree
+ * rows into it while flashing "pages are live" -- about a community that
+ * was not theirs. useTenantPicker is the guarded one the Page Routes tab
+ * already used.
+ */
 export function usePackagesTab() {
-  const [tenant, setTenant] = useState(SYSTEM_TENANT)
-  const [tenantInput, setTenantInput] = useState(SYSTEM_TENANT)
+  const {
+    tenant,
+    tenantInput,
+    setTenantInput,
+    applyTenant,
+    canPickOtherTenant,
+  } = useTenantPicker()
   const registry = useInstalledPackages(tenant)
   const [busy, setBusy] = useState<string | null>(null)
   const [flash, setFlash] = useState<string | null>(null)
-
-  const applyTenant = (next?: string): void => {
-    setTenant(normalizeTenant(next ?? tenantInput))
-  }
 
   const install = async (pkgId: string): Promise<void> => {
     const pkg = PRODUCT_PACKAGES.find(p => p.id === pkgId)
@@ -55,6 +62,9 @@ export function usePackagesTab() {
     tenantInput,
     setTenantInput,
     applyTenant,
+    /** False for everyone but the instance owner, so the tab can stop
+     *  offering a box that will only ever be refused. */
+    canPickOtherTenant,
     registry,
     busy,
     flash,

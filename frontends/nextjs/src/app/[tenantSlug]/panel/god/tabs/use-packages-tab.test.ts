@@ -4,6 +4,9 @@ import { act, renderHook, waitFor } from '@testing-library/react'
 const registry = vi.hoisted(() => ({ useInstalledPackages: vi.fn() }))
 vi.mock('@/hooks/useInstalledPackages', () => registry)
 
+const scopeMod = vi.hoisted(() => ({ useCurrentTenantScope: vi.fn() }))
+vi.mock('./use-current-tenant-scope', () => scopeMod)
+
 const data = vi.hoisted(() => ({ createDefaultPages: vi.fn() }))
 vi.mock('./packages-tab-data', async importOriginal => {
   const actual = await importOriginal<Record<string, unknown>>()
@@ -26,40 +29,44 @@ beforeEach(() => {
   vi.clearAllMocks()
   registry.useInstalledPackages.mockReturnValue(registryValue())
   data.createDefaultPages.mockResolvedValue(undefined)
+  scopeMod.useCurrentTenantScope.mockReturnValue({
+    tenant: 'harbour_cycle_works',
+    canPickOtherTenant: false,
+  })
 })
 
 describe('usePackagesTab', () => {
-  it('starts on the system tenant', () => {
+  /**
+   * This tab kept its own tenant state that started at 'system' and had no
+   * guard, so a founder opening Packages saw the shared tenant's installed
+   * list -- and installing wrote PageConfig and PageTree rows into it while
+   * flashing "pages are live" about a community that was not theirs. Any
+   * god could also drive another community's packages by typing its name.
+   */
+  it('starts on the founder’s own community, not the shared one', () => {
     const { result } = renderHook(() => usePackagesTab())
-    expect(result.current.tenant).toBe('system')
+    expect(result.current.tenant).toBe('harbour_cycle_works')
   })
 
-  it('loads a real tenant name', () => {
+  it('will not be pointed elsewhere by an ordinary founder', () => {
     const { result } = renderHook(() => usePackagesTab())
     act(() => {
-      result.current.setTenantInput('acme')
+      result.current.applyTenant('acme')
     })
-    act(() => {
-      result.current.applyTenant()
-    })
-    expect(result.current.tenant).toBe('acme')
+    expect(result.current.tenant).toBe('harbour_cycle_works')
+    expect(result.current.canPickOtherTenant).toBe(false)
   })
 
-  it('accepts the tenant passed directly, without waiting on state', () => {
+  it('lets the instance owner point it elsewhere', () => {
+    scopeMod.useCurrentTenantScope.mockReturnValue({
+      tenant: 'system',
+      canPickOtherTenant: true,
+    })
     const { result } = renderHook(() => usePackagesTab())
     act(() => {
       result.current.applyTenant('acme')
     })
     expect(result.current.tenant).toBe('acme')
-  })
-
-  it('falls back to system for a blank tenant', () => {
-    const { result } = renderHook(() => usePackagesTab())
-    act(() => {
-      result.current.setTenantInput('   ')
-      result.current.applyTenant()
-    })
-    expect(result.current.tenant).toBe('system')
   })
 
   describe('install', () => {

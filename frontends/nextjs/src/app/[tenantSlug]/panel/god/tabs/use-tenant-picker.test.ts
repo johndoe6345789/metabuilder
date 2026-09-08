@@ -4,15 +4,15 @@ import { act, renderHook } from '@testing-library/react'
 const scopeMod = vi.hoisted(() => ({ useCurrentTenantScope: vi.fn() }))
 vi.mock('./use-current-tenant-scope', () => scopeMod)
 
-import { usePageRoutesTenant } from './use-page-routes-tenant'
+import { useTenantPicker } from './use-tenant-picker'
 
-describe('usePageRoutesTenant', () => {
+describe('useTenantPicker', () => {
   it('starts on the current tenant', () => {
     scopeMod.useCurrentTenantScope.mockReturnValue({
       tenant: 'acme',
       canPickOtherTenant: false,
     })
-    const { result } = renderHook(() => usePageRoutesTenant())
+    const { result } = renderHook(() => useTenantPicker())
     expect(result.current.tenant).toBe('acme')
     expect(result.current.tenantInput).toBe('acme')
   })
@@ -22,7 +22,7 @@ describe('usePageRoutesTenant', () => {
       tenant: 'acme',
       canPickOtherTenant: false,
     })
-    const { result } = renderHook(() => usePageRoutesTenant())
+    const { result } = renderHook(() => useTenantPicker())
     act(() => result.current.setTenantInput('widgets'))
     act(() => result.current.applyTenant())
     expect(result.current.tenant).toBe('acme')
@@ -33,7 +33,7 @@ describe('usePageRoutesTenant', () => {
       tenant: 'system',
       canPickOtherTenant: true,
     })
-    const { result } = renderHook(() => usePageRoutesTenant())
+    const { result } = renderHook(() => useTenantPicker())
     act(() => result.current.setTenantInput('  widgets  '))
     act(() => result.current.applyTenant())
     expect(result.current.tenant).toBe('widgets')
@@ -44,7 +44,7 @@ describe('usePageRoutesTenant', () => {
       tenant: 'system',
       canPickOtherTenant: true,
     })
-    const { result } = renderHook(() => usePageRoutesTenant())
+    const { result } = renderHook(() => useTenantPicker())
     act(() => result.current.setTenantInput('ignored'))
     act(() => result.current.applyTenant('widgets'))
     expect(result.current.tenant).toBe('widgets')
@@ -55,7 +55,7 @@ describe('usePageRoutesTenant', () => {
       tenant: 'system',
       canPickOtherTenant: true,
     })
-    const { result } = renderHook(() => usePageRoutesTenant())
+    const { result } = renderHook(() => useTenantPicker())
     act(() => result.current.setTenantInput('   '))
     act(() => result.current.applyTenant())
     expect(result.current.tenant).toBe('system')
@@ -66,7 +66,7 @@ describe('usePageRoutesTenant', () => {
       tenant: 'acme',
       canPickOtherTenant: true,
     })
-    const { result } = renderHook(() => usePageRoutesTenant())
+    const { result } = renderHook(() => useTenantPicker())
     expect(result.current.canPickOtherTenant).toBe(true)
   })
 })
