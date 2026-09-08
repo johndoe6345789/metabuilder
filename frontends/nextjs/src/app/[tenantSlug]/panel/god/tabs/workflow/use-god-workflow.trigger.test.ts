@@ -50,6 +50,12 @@ vi.mock('@/store/slices/god-slice', () => ({
   removeWorkflow: (p: unknown) => ({ type: 'removeWorkflow', payload: p }),
   selectWorkflow: (p: unknown) => ({ type: 'selectWorkflow', payload: p }),
   clearDirty: (p: unknown) => ({ type: 'clearDirty', payload: p }),
+  // Publishing clears only the workflow that was published; the shared
+  // dirty flag reported every other one as up to date too.
+  workflowPublished: (p: unknown) => ({
+    type: 'workflowPublished',
+    payload: p,
+  }),
 }))
 
 import { useGodWorkflow } from './use-god-workflow'

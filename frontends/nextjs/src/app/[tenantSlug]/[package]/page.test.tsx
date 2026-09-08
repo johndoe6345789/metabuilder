@@ -23,6 +23,9 @@ import PackagePage from './page'
 
 beforeEach(() => {
   vi.clearAllMocks()
+  // The founder's own page wins, so these cases -- which are about which
+  // component a built-in package offers -- need nothing published there.
+  tenantMod.fetchTenantPage.mockResolvedValue(null)
 })
 
 describe('PackagePage home component selection', () => {

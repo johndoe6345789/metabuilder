@@ -26,6 +26,7 @@ export const initialState: GodState = {
   },
   tests: SEED_TESTS,
   plan: SEED_PLAN,
+  dirtyWorkflows: [],
   dirty: {
     workflow: false,
     tree: false,

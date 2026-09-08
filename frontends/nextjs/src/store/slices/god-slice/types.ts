@@ -57,4 +57,14 @@ export interface GodState {
    */
   bql?: Record<string, BqlScript[]>
   dirty: Record<GodDomain, boolean>
+  /**
+   * Which workflows have edits that have not been published.
+   *
+   * `dirty.workflow` is one flag for all of them, so publishing any
+   * workflow cleared it: edit A, switch to B, publish B, and the bar read
+   * "Published -- up to date" while A's edits had never been written.
+   * Optional because a slice persisted before this existed has no such
+   * key -- read it as [] rather than assuming it is there.
+   */
+  dirtyWorkflows?: string[]
 }

@@ -10,7 +10,7 @@ import {
   patchWorkflow,
   removeWorkflow,
   selectWorkflow,
-  clearDirty,
+  workflowPublished,
   type GodState,
 } from '@/store/slices/god-slice'
 import {
@@ -45,11 +45,17 @@ export function useGodWorkflow(tenantOverride?: string) {
   const selectedId = useAppSelector(
     s => (s.god as GodState).workflowSelected?.[tenant]
   )
-  const dirty = useAppSelector(s => (s.god as GodState).dirty.workflow)
+  // Whether *this* workflow has unpublished edits. It used to read the
+  // single dirty.workflow flag covering all of them, so publishing any
+  // one reported every one as up to date.
+  const dirtyIds = useAppSelector(
+    s => (s.god as GodState).dirtyWorkflows ?? []
+  )
   const [publishing, setPublishing] = useState(false)
 
   const entries = stored ?? FIRST
   const current = pickEntry(entries, selectedId) ?? FIRST[0]
+  const dirty = dirtyIds.includes(current.workflow.id)
 
   // Seed once per tenant, so every later edit is a reducer applied to what
   // is stored rather than to a list captured during a render.
@@ -242,7 +248,9 @@ export function useGodWorkflow(tenantOverride?: string) {
         setError(why)
         return false
       }
-      dispatch(clearDirty('workflow'))
+      // Only this one. Clearing the shared flag reported every other
+      // workflow as published too, including ones never written.
+      dispatch(workflowPublished(current.workflow.id))
       return true
     } finally {
       setPublishing(false)

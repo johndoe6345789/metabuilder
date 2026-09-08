@@ -14,6 +14,26 @@ import type { GodDomain, GodState } from './god-slice/types'
 
 export type { GodDomain, GodState }
 
+/**
+ * Note that this workflow has unpublished edits.
+ *
+ * `dirty.workflow` is one flag covering every workflow, so publishing any
+ * of them cleared it: edit A, switch to B, publish B, and the bar read
+ * "Published -- up to date" while A's edits had never been written. The
+ * flag stays as the "anything unpublished?" indicator; the set says which.
+ */
+function markWorkflowDirty(s: GodState, id: string): void {
+  s.dirtyWorkflows ??= []
+  if (!s.dirtyWorkflows.includes(id)) s.dirtyWorkflows.push(id)
+  s.dirty.workflow = true
+}
+
+/** That workflow has been published; the flag follows the set. */
+function markWorkflowPublished(s: GodState, id: string): void {
+  s.dirtyWorkflows = (s.dirtyWorkflows ?? []).filter(w => w !== id)
+  s.dirty.workflow = s.dirtyWorkflows.length > 0
+}
+
 const godSlice = createSlice({
   name: 'god',
   initialState,
@@ -40,7 +60,7 @@ const godSlice = createSlice({
       s.workflows[a.payload.tenant] = [...list, a.payload.entry]
       s.workflowSelected ??= {}
       s.workflowSelected[a.payload.tenant] = a.payload.entry.workflow.id
-      s.dirty.workflow = true
+      markWorkflowDirty(s, a.payload.entry.workflow.id)
     },
     patchWorkflow: (
       s,
@@ -55,7 +75,7 @@ const godSlice = createSlice({
       s.workflows[a.payload.tenant] = list.map(e =>
         e.workflow.id === a.payload.id ? { ...e, ...a.payload.change } : e
       )
-      s.dirty.workflow = true
+      markWorkflowDirty(s, a.payload.id)
     },
     removeWorkflow: (
       s,
@@ -69,7 +89,7 @@ const godSlice = createSlice({
       s.workflows[a.payload.tenant] = list.filter(
         e => e.workflow.id !== a.payload.id
       )
-      s.dirty.workflow = true
+      markWorkflowDirty(s, a.payload.id)
     },
     selectWorkflow: (
       s,
@@ -119,6 +139,14 @@ const godSlice = createSlice({
       s.dirty.tree = false
       s.dirty.css = false
       s.dirty.smtp = false
+      // The comment above has always named workflow; the body did not
+      // clear it, so a tenant switch left the previous one's "unpublished
+      // changes" showing over a list that had already been swapped out.
+      s.dirtyWorkflows = []
+      s.dirty.workflow = false
+    },
+    workflowPublished: (s, a: PayloadAction<string>) => {
+      markWorkflowPublished(s, a.payload)
     },
     setDropdowns: (s, a: PayloadAction<DropdownConfig[]>) => {
       s.dropdowns = a.payload
@@ -197,6 +225,7 @@ export const {
   patchWorkflow,
   removeWorkflow,
   selectWorkflow,
+  workflowPublished,
   setTree,
   setPackages,
   setCss,
