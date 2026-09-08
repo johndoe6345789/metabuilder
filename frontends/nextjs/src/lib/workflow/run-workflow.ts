@@ -1,24 +1,48 @@
 'use client'
 
 import type { Workflow, WorkflowNode } from '@/workflow-editor'
+import {
+  newDryRunState,
+  type DryRunEffect,
+  type Row,
+} from './dry-run/dry-run-state'
+import { isRunnableStep, runStep } from './dry-run/run-step'
 
 export interface RunResult {
   logs: string[]
   output: Record<string, unknown>
   order: string[]
+  /** What the run asked the page to do, in the wire shape the daemon
+   *  sends back and page-effects.ts applies. */
+  effects: DryRunEffect[]
+  /** The rows it would have written, per entity. Nothing was written. */
+  rows: Record<string, Row[]>
+  /** Set when "Only carry on if" stopped the run before the end. */
+  stopped: { step: string; because: string } | null
 }
 
 /**
- * Minimal client-side workflow runner. Data flows along connections; each node
- * merges its incoming data with its own config and passes it on. Enough to make
- * route→tree→workflow wiring real and to drive the point-and-click test runner.
- * The full multi-runtime engine (TS/Python/Go) lives server-side.
+ * Client-side workflow runner: the order comes from the arrows drawn
+ * between the steps, and each step is actually run -- ids are made,
+ * conditions stop the run, `${name}` references resolve, page steps are
+ * recorded as effects and row steps go to an in-memory store, so a run
+ * writes nothing and touches no page. The full multi-runtime engine
+ * (TS/Python/Go) lives server-side; this is what the Tests tab checks a
+ * workflow with and what Preview shows.
+ *
+ * Every step used to be treated the same way -- merge its config into the
+ * data and move on -- so "Only carry on if" carried on and "Make an id"
+ * made nothing. A node type this does not know still behaves that way,
+ * which is what the editor's stock palette (Webhook, Code, Slack) needs;
+ * those are unrunnable by the daemon too. See runnable-steps.ts.
  */
 export function runWorkflow(
   wf: Workflow,
-  input: Record<string, unknown> = {}
+  input: Record<string, unknown> = {},
+  now: number = Date.now()
 ): RunResult {
-  const logs: string[] = []
+  const state = newDryRunState(input, now)
+  const logs = state.logs
   const order: string[] = []
   const outputs = new Map<string, Record<string, unknown>>()
 
@@ -56,9 +80,14 @@ export function runWorkflow(
       (acc, f) => ({ ...acc, ...f }),
       { ...input }
     )
-    const out = { ...inData, ...node.config }
-    outputs.set(node.id, out)
     logs.push(`▶ ${node.name} (${node.type})`)
+    // A known step runs; anything else keeps the old behaviour of merging
+    // its config into the data, which is all the stock palette can do.
+    const config = node.config as Row
+    const ran = isRunnableStep(node.type)
+    const out = ran ? inData : { ...inData, ...config }
+    outputs.set(node.id, out)
+    if (ran && !runStep(state, node.type, config, node.name)) break
 
     for (const c of wf.connections.filter(c => c.sourceNodeId === node.id)) {
       const d = (indegree.get(c.targetNodeId) ?? 1) - 1
@@ -75,5 +104,17 @@ export function runWorkflow(
     Record<string, unknown>
   >((acc, n) => ({ ...acc, ...(outputs.get(n.id) ?? {}) }), {})
 
-  return { logs, output, order }
+  // `event` is what came in, not what the run produced, so it stays out
+  // of the output a test matches against.
+  const { event: _event, ...named } = state.scope
+  return {
+    logs,
+    // The values steps named sit alongside the merged data, so a test can
+    // assert on `${new_id}` as easily as on what a stock node passed on.
+    output: { ...output, ...named },
+    order,
+    effects: state.effects,
+    rows: state.rows,
+    stopped: state.stopped,
+  }
 }

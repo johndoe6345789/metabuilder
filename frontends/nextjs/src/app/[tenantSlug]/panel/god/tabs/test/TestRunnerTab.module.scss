@@ -118,3 +118,22 @@
   font-size: 13px;
   overflow: auto;
 }
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stopped {
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--mat-sys-on-secondary-container, #1d192b);
+  background: var(--mat-sys-secondary-container, #e8def8);
+}
+
+.note {
+  font-size: 13px;
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+}

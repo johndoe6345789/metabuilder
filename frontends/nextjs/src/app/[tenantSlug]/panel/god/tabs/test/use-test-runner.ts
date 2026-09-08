@@ -17,6 +17,12 @@ export interface TestResult {
   actual?: Record<string, unknown>
   logs?: string[]
   message?: string
+  /** What the run asked the page to do. */
+  effects?: { do: string }[]
+  /** The rows it would have written, per entity. Nothing was written. */
+  rows?: Record<string, Record<string, unknown>[]>
+  /** Set when "Only carry on if" ended the run early. */
+  stopped?: { step: string; because: string } | null
 }
 
 function subsetMatch(
@@ -90,6 +96,9 @@ export function useTestRunner() {
         status: subsetMatch(expected, res.output) ? 'pass' : 'fail',
         actual: res.output,
         logs: res.logs,
+        effects: res.effects,
+        rows: res.rows,
+        stopped: res.stopped,
       }
     },
     [workflow]

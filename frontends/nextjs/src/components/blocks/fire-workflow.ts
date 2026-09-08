@@ -1,7 +1,7 @@
 'use client'
 
 import { store } from '@/store/store'
-import { runWorkflow } from '@/lib/workflow/run-workflow'
+import { runWorkflow, type RunResult } from '@/lib/workflow/run-workflow'
 import type { GodState } from '@/store/slices/god-slice'
 import { pickEntry } from '@/store/slices/god-slice/workflow-entry'
 
@@ -30,6 +30,36 @@ export function fireWorkflow(tenant: string): void {
     return
   }
   const res = runWorkflow(wf)
-  const out = JSON.stringify(res.output)
-  window.alert(`Ran "${wf.name}"\n\n${res.logs.join('\n')}\n\n→ ${out}`)
+  window.alert(`Ran "${wf.name}"\n\n${previewReport(res)}`)
+}
+
+/**
+ * What the run did, for the Preview alert.
+ *
+ * The steps are really run now (see lib/workflow/run-workflow.ts), so a
+ * preview can say which step stopped it and what it would have written --
+ * before it only ever showed a merged config object, which looked like a
+ * result whatever the workflow was.
+ */
+export function previewReport(res: RunResult): string {
+  const rows = Object.entries(res.rows).map(
+    ([entity, list]) => `${list.length} × ${entity}`
+  )
+  const lines = [
+    ...res.logs,
+    ...(res.stopped === null
+      ? []
+      : [
+          `\nStopped at "${res.stopped.step}" — ${res.stopped.because}.`,
+          'The steps after it did not run.',
+        ]),
+    ...(rows.length === 0
+      ? []
+      : [`\nWould write: ${rows.join(', ')} (nothing was written)`]),
+    ...(res.effects.length === 0
+      ? []
+      : [`\nWould ask the page to: ${res.effects.map(e => e.do).join(', ')}`]),
+    `\n→ ${JSON.stringify(res.output)}`,
+  ]
+  return lines.join('\n')
 }

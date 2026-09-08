@@ -3,6 +3,7 @@
 import { TextField } from '@/m3'
 import type { TestCase, TestResult } from './use-test-runner'
 import { badge } from './test-badge'
+import { TestResultDetail } from './TestResultDetail'
 import s from './TestRunnerTab.module.scss'
 
 export interface TestCaseRowProps {
@@ -67,9 +68,7 @@ export function TestCaseRow({
       {r?.message !== undefined && r.message.length > 0 && (
         <div className={s.msg}>{r.message}</div>
       )}
-      {r?.actual !== undefined && (
-        <pre className={s.actual}>actual → {JSON.stringify(r.actual)}</pre>
-      )}
+      {r !== undefined && <TestResultDetail result={r} />}
     </div>
   )
 }

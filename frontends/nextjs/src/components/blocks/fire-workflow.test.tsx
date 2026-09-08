@@ -19,7 +19,16 @@ const alerted = vi.fn()
 beforeEach(() => {
   vi.clearAllMocks()
   vi.stubGlobal('alert', alerted)
-  runner.runWorkflow.mockReturnValue({ logs: [], output: {} })
+  // The full RunResult shape: a mock missing `rows` or `effects` is the
+  // test disagreeing with the only caller, not the code being fragile.
+  runner.runWorkflow.mockReturnValue({
+    logs: [],
+    output: {},
+    order: [],
+    effects: [],
+    rows: {},
+    stopped: null,
+  })
 })
 
 /**

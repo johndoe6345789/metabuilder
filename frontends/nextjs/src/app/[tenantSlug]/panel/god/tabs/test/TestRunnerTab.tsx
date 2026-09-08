@@ -34,11 +34,12 @@ export function TestRunnerTab() {
       </div>
 
       <Typography variant="body2" color="text.secondary" className={s.hint}>
-        Each test merges its input with each step&rsquo;s configuration, in
-        order, and checks the result carries the expected fields. It does
-        not run the steps &mdash; no row is written, no page is changed, no
-        request is made. The data layer&rsquo;s engine does that once the
-        workflow is published, and only publishing exercises it.
+        Each test runs the workflow open in the Workflows tab, in the
+        order the arrows give: ids are made, conditions stop the run and
+        <code> ${'{'}name{'}'} </code> references resolve. Rows go to a
+        scratch store and page steps are recorded rather than applied, so
+        running a test writes nothing to your data and changes no page.
+        Expected is matched as a subset of the values the steps named.
       </Typography>
 
       <div className={s.list}>
