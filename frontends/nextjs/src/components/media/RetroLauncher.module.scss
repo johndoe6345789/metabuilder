@@ -88,6 +88,10 @@
   text-transform: uppercase;
   cursor: pointer;
   user-select: none;
+  /* Without this a thumb on the d-pad scrolls and zooms the page
+     instead of playing, and the browser withholds the press for
+     300ms deciding which it was. */
+  touch-action: none;
   transition: background 0.1s;
 
   &:active {
@@ -112,4 +116,10 @@
   &:hover {
     background: color-mix(in srgb, #c62828 10%, transparent);
   }
+}
+
+.controller {
+  margin: 8px 0 0;
+  font-size: 0.8rem;
+  color: var(--mat-sys-primary, #6750a4);
 }

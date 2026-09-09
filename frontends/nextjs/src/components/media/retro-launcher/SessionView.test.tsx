@@ -31,3 +31,34 @@ describe('SessionView', () => {
     expect(onStop).toHaveBeenCalledOnce()
   })
 })
+
+/**
+ * The launcher offered a keyboard and an on-screen pad and nothing for
+ * the controller most people would plug in; saying which one it found
+ * is how a player knows it worked.
+ */
+describe('a real controller', () => {
+  it('names the one being played on', () => {
+    render(
+      <SessionView
+        session={session}
+        controller="Xbox Wireless Controller"
+        onPress={vi.fn()}
+        onStop={vi.fn()}
+      />
+    )
+    expect(screen.getByText(/Xbox Wireless Controller/)).toBeTruthy()
+  })
+
+  it.each([null, undefined, ''])('says nothing for %p', controller => {
+    render(
+      <SessionView
+        session={session}
+        controller={controller}
+        onPress={vi.fn()}
+        onStop={vi.fn()}
+      />
+    )
+    expect(screen.queryByText(/Playing on/)).toBeNull()
+  })
+})

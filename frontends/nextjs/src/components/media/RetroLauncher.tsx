@@ -4,6 +4,7 @@ import { useState } from 'react'
 import type { RetroSystem } from '@/hooks/useRetroSession'
 import { useRetroSession } from '@/hooks/useRetroSession'
 import { useKeyboardInput } from './retro-launcher/use-keyboard-input'
+import { usePhysicalGamepad } from './retro-launcher/use-physical-gamepad'
 import { LaunchForm } from './retro-launcher/LaunchForm'
 import { SessionView } from './retro-launcher/SessionView'
 import s from './RetroLauncher.module.scss'
@@ -14,6 +15,9 @@ export function RetroLauncher() {
   const { session, loading, error, start, stop, sendInput } = useRetroSession()
 
   useKeyboardInput(session !== null, sendInput)
+  // A real controller, if one is plugged in -- the launcher offered the
+  // keyboard and the on-screen pad and nothing else.
+  const { controller } = usePhysicalGamepad(session !== null, sendInput)
 
   const handleLaunch = async () => {
     if (system === null || romUrl.trim().length === 0) return
@@ -37,6 +41,7 @@ export function RetroLauncher() {
       ) : (
         <SessionView
           session={session}
+          controller={controller}
           onPress={(button, pressed) => {
             void sendInput(button, pressed)
           }}
