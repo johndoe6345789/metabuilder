@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 interface Args {
   listen: (channelId: string) => Promise<string>
@@ -16,6 +16,9 @@ export function useRadioPlayback({ listen, stop }: Args) {
   } | null>(null)
   const [busyId, setBusyId] = useState<string | null>(null)
   const [listenError, setListenError] = useState<string | null>(null)
+  // What this client last told the daemon it was listening to. A ref
+  // because handleListen reads it before its own setState has landed.
+  const playingRef = useRef<string | null>(null)
 
   /**
    * `listen()` throws when the daemon refuses or answers without a
@@ -25,8 +28,20 @@ export function useRadioPlayback({ listen, stop }: Args) {
    */
   const handleListen = async (channelId: string, title: string) => {
     setBusyId(channelId)
+    // Starting told the daemon this client is listening; changing
+    // station without saying it had stopped left the first one running
+    // with a listener that had gone.
+    const leaving = playingRef.current
+    if (leaving !== null && leaving !== channelId) {
+      try {
+        await stop(leaving)
+      } catch {
+        /* the old station keeps running; nothing here can fix that */
+      }
+    }
     try {
       const url = await listen(channelId)
+      playingRef.current = channelId
       setNowPlaying({ id: channelId, url, title })
       setListenError(null)
     } catch (cause) {
@@ -40,6 +55,7 @@ export function useRadioPlayback({ listen, stop }: Args) {
   const handleStop = async () => {
     if (nowPlaying === null) return
     const id = nowPlaying.id
+    playingRef.current = null
     setNowPlaying(null)
     // Best effort: the bar is already gone, and a daemon that cannot be
     // told is not a reason to leave a dead one on screen.

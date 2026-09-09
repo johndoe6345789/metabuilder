@@ -94,3 +94,30 @@ describe('when the station will not start', () => {
     expect(result.current.nowPlaying).toBeNull()
   })
 })
+
+/** Same as live TV: a start says "this client is listening", so a change
+ *  of station has to say it has left the last one. */
+describe('switching station while one is playing', () => {
+  it('stops the one it was listening to first', async () => {
+    const stop = vi.fn().mockResolvedValue(undefined)
+    const listen = vi.fn().mockResolvedValue('https://stream')
+    const { result } = renderHook(() => useRadioPlayback({ listen, stop }))
+    await act(() => result.current.handleListen('r1', 'Jazz FM'))
+    stop.mockClear()
+
+    await act(() => result.current.handleListen('r2', 'Talk'))
+
+    expect(stop).toHaveBeenCalledWith('r1')
+    expect(result.current.nowPlaying?.id).toBe('r2')
+  })
+
+  it('stops nothing when nothing was playing', async () => {
+    const stop = vi.fn()
+    const listen = vi.fn().mockResolvedValue('https://stream')
+    const { result } = renderHook(() => useRadioPlayback({ listen, stop }))
+
+    await act(() => result.current.handleListen('r1', 'Jazz FM'))
+
+    expect(stop).not.toHaveBeenCalled()
+  })
+})

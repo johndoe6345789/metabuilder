@@ -23,6 +23,9 @@ export function useLiveTv(externalWatchTrigger?: WatchTrigger | null) {
   const [busyId, setBusyId] = useState<string | null>(null)
   const [watchError, setWatchError] = useState<string | null>(null)
   const lastTriggerNonce = useRef<number | null>(null)
+  // What this client last told the daemon it was watching. A ref because
+  // handleWatch reads it before its own setState has landed.
+  const watchingRef = useRef<string | null>(null)
 
   /**
    * `watch()` throws when the daemon refuses or answers without a stream
@@ -32,8 +35,21 @@ export function useLiveTv(externalWatchTrigger?: WatchTrigger | null) {
    */
   const handleWatch = async (channelId: string, title: string) => {
     setBusyId(channelId)
+    // Starting told the daemon this client is watching; changing channel
+    // without saying it had stopped left the first one running with a
+    // viewer that had gone. Best effort -- a daemon that will not take
+    // the message is no reason to refuse the new channel.
+    const leaving = watchingRef.current
+    if (leaving !== null && leaving !== channelId) {
+      try {
+        await stop(leaving)
+      } catch {
+        /* the old channel keeps running; nothing here can fix that */
+      }
+    }
     try {
       const url = await watch(channelId)
+      watchingRef.current = channelId
       setNowWatching({ id: channelId, url, title })
       setWatchError(null)
     } catch (cause) {
@@ -62,6 +78,7 @@ export function useLiveTv(externalWatchTrigger?: WatchTrigger | null) {
   const handleStopWatching = async () => {
     if (nowWatching === null) return
     const id = nowWatching.id
+    watchingRef.current = null
     setNowWatching(null)
     // Stopping is best effort: the player is already gone, and a daemon
     // that cannot be told is not a reason to leave a dead frame up.

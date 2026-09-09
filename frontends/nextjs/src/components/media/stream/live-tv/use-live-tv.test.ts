@@ -1,5 +1,7 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { act, renderHook, waitFor } from '@testing-library/react'
+
+const DEFAULT_CHANNELS = [{ id: 'a', name: 'News' }]
 
 const tv = vi.hoisted(() => ({
   channels: [{ id: 'a', name: 'News' }] as { id: string; name: string }[],
@@ -14,6 +16,13 @@ vi.mock('../useTvChannels', () => ({
 }))
 
 import { useLiveTv } from './use-live-tv'
+
+// The mock is module-level, so a test that changes the channel list has
+// to put it back -- otherwise whatever runs next inherits it, and which
+// tests those are depends on the order they happen to run in.
+afterEach(() => {
+  tv.channels = [...DEFAULT_CHANNELS]
+})
 
 describe('useLiveTv', () => {
   beforeEach(() => {
@@ -136,7 +145,7 @@ describe('a watch asked for before the channels have loaded', () => {
   })
 
   it('starts once the channel appears', async () => {
-    const missing = tv.channels
+    const missing = [...tv.channels]
     tv.channels = []
     const trigger = { channelId: 'a', nonce: 7 }
     const { rerender } = renderHook(
@@ -151,5 +160,51 @@ describe('a watch asked for before the channels have loaded', () => {
     await waitFor(() => {
       expect(tv.watch).toHaveBeenCalledWith('a')
     })
+  })
+})
+
+/**
+ * Starting a channel tells the daemon this client is watching it. Doing
+ * that again for a different channel without ever saying it had stopped
+ * left the first one running with a viewer that had gone -- and this app
+ * already treats "I have left" as a reason to stop, which is what the
+ * Back button does.
+ */
+describe('switching channel while one is playing', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('stops the one it was watching first', async () => {
+    tv.channels = [
+      { id: 'a', name: 'News' },
+      { id: 'b', name: 'Films' },
+    ]
+    const { result } = renderHook(() => useLiveTv())
+    await act(() => result.current.handleWatch('a', 'News'))
+    tv.stop.mockClear()
+
+    await act(() => result.current.handleWatch('b', 'Films'))
+
+    expect(tv.stop).toHaveBeenCalledWith('a')
+    expect(result.current.nowWatching?.id).toBe('b')
+  })
+
+  it('starts the new one even if the old refuses to stop', async () => {
+    const { result } = renderHook(() => useLiveTv())
+    await act(() => result.current.handleWatch('a', 'News'))
+    tv.stop.mockRejectedValueOnce(new Error('gone'))
+
+    await act(() => result.current.handleWatch('a', 'News'))
+
+    expect(result.current.nowWatching).not.toBeNull()
+  })
+
+  it('stops nothing when nothing was playing', async () => {
+    const { result } = renderHook(() => useLiveTv())
+
+    await act(() => result.current.handleWatch('a', 'News'))
+
+    expect(tv.stop).not.toHaveBeenCalled()
   })
 })
