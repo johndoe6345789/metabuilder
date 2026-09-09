@@ -82,3 +82,74 @@ describe('useLiveTv', () => {
     expect(tv.watch).toHaveBeenCalledTimes(1)
   })
 })
+
+/**
+ * `watch()` throws when the daemon refuses or answers without a stream
+ * URL, and nothing caught it: the spinner cleared, no player appeared,
+ * and the rejection went unhandled. From the viewer's side that is a
+ * "Watch" button that works sometimes and does nothing other times.
+ */
+describe('when the channel will not start', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    tv.watch.mockRejectedValueOnce(new Error('HTTP 503'))
+  })
+
+  it('says so instead of failing silently', async () => {
+    const { result } = renderHook(() => useLiveTv())
+
+    await act(() => result.current.handleWatch('a', 'News'))
+
+    expect(result.current.watchError).toContain('News')
+    expect(result.current.nowWatching).toBeNull()
+  })
+
+  it('clears the spinner', async () => {
+    const { result } = renderHook(() => useLiveTv())
+
+    await act(() => result.current.handleWatch('a', 'News'))
+
+    expect(result.current.busyId).toBeNull()
+  })
+
+  it('forgets the complaint once a channel does start', async () => {
+    const { result } = renderHook(() => useLiveTv())
+    await act(() => result.current.handleWatch('a', 'News'))
+    expect(result.current.watchError).not.toBeNull()
+
+    await act(() => result.current.handleWatch('a', 'News'))
+
+    expect(result.current.watchError).toBeNull()
+    expect(result.current.nowWatching).not.toBeNull()
+  })
+})
+
+/**
+ * The trigger's nonce was marked as used before the channel was looked
+ * up, so a "Watch now" pressed while the channel list was still loading
+ * consumed the trigger and started nothing -- and the guard then blocked
+ * it for ever.
+ */
+describe('a watch asked for before the channels have loaded', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('starts once the channel appears', async () => {
+    const missing = tv.channels
+    tv.channels = []
+    const trigger = { channelId: 'a', nonce: 7 }
+    const { rerender } = renderHook(
+      (props: { trigger: typeof trigger }) => useLiveTv(props.trigger),
+      { initialProps: { trigger } }
+    )
+    expect(tv.watch).not.toHaveBeenCalled()
+
+    tv.channels = missing
+    rerender({ trigger })
+
+    await waitFor(() => {
+      expect(tv.watch).toHaveBeenCalledWith('a')
+    })
+  })
+})

@@ -20,6 +20,7 @@ export function LiveTvSection({ externalWatchTrigger }: Props) {
     error,
     nowWatching,
     busyId,
+    watchError,
     handleWatch,
     handleStopWatching,
   } = useLiveTv(externalWatchTrigger)
@@ -42,12 +43,21 @@ export function LiveTvSection({ externalWatchTrigger }: Props) {
   if (channels.length === 0) return <EmptyChannelsNotice />
 
   return (
-    <EpgGrid
-      channels={channels}
-      busyId={busyId}
-      onWatch={(id, title) => {
-        void handleWatch(id, title)
-      }}
-    />
+    <>
+      {/* A channel that would not start used to clear the spinner and
+          leave the guide exactly as it was. */}
+      {watchError !== null && (
+        <div className={s.statusError} role="alert">
+          {watchError}
+        </div>
+      )}
+      <EpgGrid
+        channels={channels}
+        busyId={busyId}
+        onWatch={(id, title) => {
+          void handleWatch(id, title)
+        }}
+      />
+    </>
   )
 }

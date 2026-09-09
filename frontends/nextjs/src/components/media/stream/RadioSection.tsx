@@ -9,10 +9,8 @@ import s from './RadioSection.module.scss'
 
 export function RadioSection() {
   const { channels, loading, error, listen, stop } = useRadioChannels()
-  const { nowPlaying, busyId, handleListen, handleStop } = useRadioPlayback({
-    listen,
-    stop,
-  })
+  const { nowPlaying, busyId, listenError, handleListen, handleStop } =
+    useRadioPlayback({ listen, stop })
 
   if (loading) return <div className={s.status}>Loading stations…</div>
   if (error !== null) return <div className={s.statusError}>{error}</div>
@@ -29,6 +27,14 @@ export function RadioSection() {
             void handleStop()
           }}
         />
+      )}
+
+      {/* A station that would not start used to clear the spinner and
+          leave the grid exactly as it was. */}
+      {listenError !== null && (
+        <div className={s.statusError} role="alert">
+          {listenError}
+        </div>
       )}
 
       <StationsGrid

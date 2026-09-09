@@ -26,7 +26,9 @@ export function NowWatchingPanel(props: NowWatchingPanelProps) {
         </button>
       </div>
       <div className={s.playerFrame}>
-        <VideoPlayer src={url} title={title} />
+        {/* Pressing "Watch" is a request to watch: the player used to
+            come up paused, waiting to be pressed again. */}
+        <VideoPlayer src={url} title={title} autoPlay />
       </div>
     </div>
   )

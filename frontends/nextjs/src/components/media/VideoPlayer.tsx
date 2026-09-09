@@ -1,8 +1,8 @@
 'use client'
 
-import { useRef, useEffect } from 'react'
-import type HlsType from 'hls.js'
+import { useState } from 'react'
 import { isSafeMediaSrc } from './mediaUrl'
+import { useHlsVideo } from './player/use-hls-video'
 import s from './VideoPlayer.module.scss'
 
 export interface VideoPlayerProps {
@@ -13,6 +13,8 @@ export interface VideoPlayerProps {
   className?: string
 }
 
+const isHls = (src: string): boolean => src.includes('.m3u8')
+
 export function VideoPlayer({
   src,
   poster,
@@ -20,44 +22,11 @@ export function VideoPlayer({
   autoPlay,
   className,
 }: VideoPlayerProps) {
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const hlsRef = useRef<HlsType | null>(null)
-
-  useEffect(() => {
-    const video = videoRef.current
-    if (video === null || src.length === 0 || !isSafeMediaSrc(src)) {
-      return undefined
-    }
-
-    hlsRef.current?.destroy()
-    hlsRef.current = null
-
-    const isHls = src.includes('.m3u8')
-    if (!isHls) {
-      video.src = src
-      return undefined
-    }
-    let active = true
-
-    void import('hls.js').then(mod => {
-      if (!active || videoRef.current === null) return
-      const Hls = mod.default
-      if (Hls.isSupported()) {
-        const hls = new Hls({ enableWorker: true })
-        hls.loadSource(src)
-        hls.attachMedia(videoRef.current)
-        hlsRef.current = hls
-      } else if (video.canPlayType('application/vnd.apple.mpegurl') !== '') {
-        video.src = src
-      }
-    })
-
-    return () => {
-      active = false
-      hlsRef.current?.destroy()
-      hlsRef.current = null
-    }
-  }, [src])
+  // State, not a ref: the hook has to run again when the element appears,
+  // and a ref assignment does not re-render.
+  const [video, setVideo] = useState<HTMLVideoElement | null>(null)
+  const safe = isSafeMediaSrc(src) ? src : ''
+  const { error } = useHlsVideo(video, isHls(safe) ? safe : '', { autoPlay })
 
   return (
     <div className={`${s.root} ${className ?? ''}`}>
@@ -67,12 +36,21 @@ export function VideoPlayer({
           <span>{title}</span>
         </div>
       )}
+      {error !== null && (
+        <div className={s.error} role="alert">
+          {error}
+        </div>
+      )}
       <video
-        ref={videoRef}
+        ref={setVideo}
         controls
         poster={poster}
         autoPlay={autoPlay}
         playsInline
+        // An HLS source is handed to hls.js, which feeds the element
+        // through MediaSource; setting it here as well would make the
+        // browser fetch the playlist a second time and fail on it.
+        src={safe === '' || isHls(safe) ? undefined : safe}
         className={s.video}
       />
     </div>

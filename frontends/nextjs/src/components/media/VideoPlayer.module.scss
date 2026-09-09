@@ -30,3 +30,10 @@
   background: #000;
   max-height: 480px;
 }
+
+.error {
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-error-container, #410e0b);
+  background: var(--mat-sys-error-container, #f9dedc);
+}

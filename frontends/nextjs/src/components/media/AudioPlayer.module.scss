@@ -113,3 +113,12 @@
   cursor: pointer;
   height: 4px;
 }
+
+.error {
+  flex: 1;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: var(--mat-sys-on-error-container, #410e0b);
+  background: var(--mat-sys-error-container, #f9dedc);
+}
