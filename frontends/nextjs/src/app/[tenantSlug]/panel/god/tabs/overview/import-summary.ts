@@ -14,16 +14,25 @@ export interface Flash {
  * so that was a dead end: an instruction to finish a job nothing in the
  * panel can do.
  */
-export function summariseImport(raw: string): Flash {
+export function summariseImport(raw: string, tenant?: string): Flash {
   try {
     const parsed = JSON.parse(raw) as Record<string, unknown>
     const data = parsed.data
     const collections =
       data !== null && typeof data === 'object' ? Object.keys(data).length : 0
+    // The export records whose data it is, precisely so a restore cannot
+    // put one community's rows into another -- and the reader ignored it,
+    // so a founder validating someone else's backup was told only that it
+    // was fine.
+    const from = typeof parsed.tenant === 'string' ? parsed.tenant : ''
+    const foreign =
+      from !== '' && tenant !== undefined && from !== tenant
+        ? ` It holds "${from}" data, not "${tenant}".`
+        : ''
     return {
-      severity: 'info',
+      severity: foreign === '' ? 'info' : 'warning',
       message:
-        `Import file validated (${collections} collections). ` +
+        `Import file validated (${collections} collections).${foreign} ` +
         'Nothing in the panel writes it back yet — restoring a database ' +
         'export is a data-layer operation.',
     }

@@ -46,3 +46,41 @@ describe('summariseImport', () => {
     })
   })
 })
+
+/**
+ * The export records whose data it is, so a restore cannot put one
+ * community's rows into another -- and the reader ignored it, so a
+ * founder validating somebody else's backup was told only that the file
+ * was fine.
+ */
+describe('whose export it is', () => {
+  const file = (tenant: string) =>
+    JSON.stringify({ tenant, data: { users: [], pages: [] } })
+
+  it('says nothing extra about this community’s own', () => {
+    const flash = summariseImport(file('harbour'), 'harbour')
+    expect(flash.severity).toBe('info')
+    expect(flash.message).not.toContain('not "harbour"')
+  })
+
+  it('warns when the file belongs to another community', () => {
+    const flash = summariseImport(file('kestrel'), 'harbour')
+    expect(flash.severity).toBe('warning')
+    expect(flash.message).toContain('"kestrel"')
+    expect(flash.message).toContain('"harbour"')
+  })
+
+  it('says nothing when the file records no community', () => {
+    const flash = summariseImport(
+      JSON.stringify({ data: { users: [] } }),
+      'harbour'
+    )
+    expect(flash.severity).toBe('info')
+  })
+
+  it('still counts the collections', () => {
+    expect(summariseImport(file('kestrel'), 'harbour').message).toContain(
+      '2 collections'
+    )
+  })
+})

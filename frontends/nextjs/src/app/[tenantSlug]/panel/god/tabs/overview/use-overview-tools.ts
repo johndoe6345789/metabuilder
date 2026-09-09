@@ -34,9 +34,12 @@ export function useOverviewTools(dbalVersion: string | null) {
     }
   }, [dbalVersion, tenant])
 
-  const readImportFile = useCallback(async (file: File) => {
-    setFlash(summariseImport(await file.text()))
-  }, [])
+  const readImportFile = useCallback(
+    async (file: File) => {
+      setFlash(summariseImport(await file.text(), tenant))
+    },
+    [tenant]
+  )
 
   const runTool = useCallback(
     (tool: QuickTool) => {
