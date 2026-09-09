@@ -17,7 +17,9 @@ export function DeployTab() {
       <Typography variant="body2" color="text.secondary" className={s.hint}>
         A backup of this browser&rsquo;s editor — your drafts, staged
         changes and version history. Export it to move your work to
-        another machine, or import one to restore it here.
+        another machine, or import one to restore it here — a project
+        belongs to the community that exported it, and will not import
+        into another.
       </Typography>
       <Typography variant="body2" color="text.secondary" className={s.hint}>
         It does not include what you have published. Live routes, page

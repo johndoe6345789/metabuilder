@@ -11,6 +11,12 @@ const persist = vi.hoisted(() => ({
 }))
 
 vi.mock('@/lib/persist/idb-kv', () => persist)
+vi.mock('../use-current-tenant-scope', () => ({
+  useCurrentTenantScope: () => ({
+    tenant: 'harbour',
+    canPickOtherTenant: false,
+  }),
+}))
 vi.mock('@/store/hooks', () => ({
   useAppDispatch: () => (action: { type: string; payload?: unknown }) => {
     if (action.type === 'rehydrate') store.rehydrated = action.payload
@@ -77,7 +83,9 @@ describe('useDeploy', () => {
     const text = await created[0]?.text()
     expect(JSON.parse(text ?? '{}')).toMatchObject({
       kind: 'metabuilder-project',
-      version: 2,
+      // The file records whose editor it came from: a bundle used to
+      // become the drafts, styles and mail settings of whoever opened it.
+      tenant: 'harbour',
       god: store.god,
       idb: { 'versions:1': { at: 1 } },
     })
@@ -90,7 +98,7 @@ describe('useDeploy', () => {
       await result.current.exportProject()
     })
     expect(anchor.download).toMatch(
-      /^metabuilder-project-\d{4}-\d{2}-\d{2}\.json$/
+      /^metabuilder-harbour-\d{4}-\d{2}-\d{2}\.json$/
     )
     expect(anchor.click).toHaveBeenCalledOnce()
   })
@@ -110,7 +118,13 @@ describe('useDeploy', () => {
     await act(async () => {
       await result.current.importProject(
         projectFile(
-          JSON.stringify({ god: { plan: ['x'] }, idb: { k: 'v' } })
+          JSON.stringify({
+            kind: 'metabuilder-project',
+            version: 3,
+            tenant: 'harbour',
+            god: { plan: ['x'] },
+            idb: { k: 'v' },
+          })
         )
       )
     })
@@ -123,7 +137,14 @@ describe('useDeploy', () => {
     const { result } = renderHook(() => useDeploy())
     await act(async () => {
       await result.current.importProject(
-        projectFile(JSON.stringify({ god: { plan: [] } }))
+        projectFile(
+          JSON.stringify({
+            kind: 'metabuilder-project',
+            version: 3,
+            tenant: 'harbour',
+            god: { plan: [] },
+          })
+        )
       )
     })
     expect(persist.idbRestore).not.toHaveBeenCalled()
@@ -136,9 +157,7 @@ describe('useDeploy', () => {
     await act(async () => {
       await result.current.importProject(projectFile('not a project'))
     })
-    expect(result.current.flash).toBe(
-      'Import failed — not a valid project file.'
-    )
+    expect(result.current.flash).toBe('That file is not JSON.')
     expect(store.rehydrated).toBeNull()
   })
 
