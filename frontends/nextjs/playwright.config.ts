@@ -50,6 +50,11 @@ export default defineConfig({
             // Server side reads DBAL_ENDPOINT first and talks to the
             // stub; the browser keeps 8080, where page.route still works.
             DBAL_ENDPOINT: 'http://localhost:8099',
+            // Server Components call this app's own /api/v1 over the
+            // network, and the default is port 3000 -- so under these
+            // tests every entity view reached nothing. Nobody noticed
+            // while they all answered "Authentication required" anyway.
+            METABUILDER_INTERNAL_URL: 'http://127.0.0.1:3004/app',
             NEXT_PUBLIC_DBAL_API_URL: 'http://localhost:8080',
             NEXT_PUBLIC_MEDIA_API_URL: 'http://localhost:8090',
             NEXT_PUBLIC_S3_API_URL: 'http://localhost:9000',
