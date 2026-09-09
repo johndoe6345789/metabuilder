@@ -1,15 +1,19 @@
 'use client'
 
 import { useAuthContext } from '@/app/_components/auth-provider/auth-provider-component'
-import { Typography, Button } from '@/m3'
+import { Typography } from '@/m3'
 import { usePowerTransferUsers } from './use-power-transfer-users'
 import { PowerTransferUserRow } from './PowerTransferUserRow'
+import { PowerTransferConfirm } from './PowerTransferConfirm'
+import { usePowerTransfer } from './use-power-transfer'
 import s from './PowerTransferTab.module.scss'
 
 export function PowerTransferTab() {
   const auth = useAuthContext()
   const { allUsers, selectedUserId, setSelectedUserId } =
     usePowerTransferUsers(auth.user?.id)
+  const transfer = usePowerTransfer(auth.user?.id, selectedUserId)
+  const chosen = allUsers.find(user => user.id === selectedUserId)
 
   return (
     <div>
@@ -51,14 +55,11 @@ export function PowerTransferTab() {
         )}
       </div>
 
-      <Button
-        variant="contained"
-        fullWidth
-        disabled={selectedUserId == null}
-        className={s.transferBtn}
-      >
-        Initiate Power Transfer
-      </Button>
+      <PowerTransferConfirm
+        transfer={transfer}
+        toName={chosen?.username ?? 'them'}
+        canTransfer={selectedUserId != null}
+      />
     </div>
   )
 }

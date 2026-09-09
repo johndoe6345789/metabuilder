@@ -23,10 +23,15 @@ describe('PreviewLevelsTab', () => {
     expect(screen.getByText('Level 4: God Panel')).toBeTruthy()
   })
 
-  it('navigates to a plain path for a non-god-panel level', () => {
+  /**
+   * '/dashboard' resolves to /app/dashboard under this app's basePath,
+   * which Next reads as a tenant called "dashboard" and 404s. Three of
+   * this tab's four cards went nowhere for exactly that reason.
+   */
+  it('keeps a preview inside the community', () => {
     render(<PreviewLevelsTab />)
     screen.getByText('Level 2: User Area').closest('div')?.click()
-    expect(push).toHaveBeenCalledWith('/dashboard')
+    expect(push).toHaveBeenCalledWith('/acme/panel/profile')
   })
 
   it('navigates to the tenant-scoped god panel path for the God Panel level', () => {

@@ -41,3 +41,19 @@
   background: linear-gradient(135deg, #e65100, #ffc107);
   width: 100%;
 }
+
+.confirmRow {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.done {
+  margin-bottom: 8px;
+  color: var(--mat-sys-primary, #1976d2);
+}
+
+.failed {
+  margin-bottom: 8px;
+  color: var(--mat-sys-error, #c62828);
+}
