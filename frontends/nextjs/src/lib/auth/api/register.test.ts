@@ -111,11 +111,14 @@ describe('register', () => {
   })
 
   it('returns the created user on success', async () => {
-    stubDbal()
+    const calls = stubDbal()
     const result = await register('alice', 'alice@example.com', 'pw')
     expect(result.success).toBe(true)
+    const written = JSON.parse(userCall(calls)?.body ?? '{}') as {
+      id?: string
+    }
     expect(result.user).toMatchObject({
-      id: 'new-id',
+      id: written.id,
       username: 'alice',
       role: 'god',
       isInstanceOwner: false,
@@ -403,8 +406,15 @@ describe('a registration that fails after writing the user', () => {
     const result = await register('alice', 'a@b.c', 'pw', 'harbour')
 
     expect(result.success).toBe(false)
+    // The id the row was written under -- not the one the create echoed,
+    // which a real DBAL may not repeat back at all.
+    const written = JSON.parse(userCall(calls)?.body ?? '{}') as {
+      id?: string
+    }
     const removal = calls.find(
-      c => c.method === 'DELETE' && c.url.endsWith('/harbour/core/User/new-id')
+      c =>
+        c.method === 'DELETE' &&
+        c.url.endsWith(`/harbour/core/User/${String(written.id)}`)
     )
     expect(removal).toBeDefined()
     // As the operator: the row was written that way and nothing else may
@@ -422,5 +432,93 @@ describe('a registration that fails after writing the user', () => {
     const calls = stubDbal()
     await register('alice', 'a@b.c', 'pw', 'harbour')
     expect(calls.some(c => c.method === 'DELETE')).toBe(false)
+  })
+})
+
+/**
+ * The stub above answers a create with the whole row. A real DBAL echoes
+ * `{data: {id}}` and nothing else -- confirmed against the daemon: a
+ * signup came back `{"user":{"id":"stub","tenantId":null,...}}` with no
+ * username, no email, no role. Everything here was read off that echo,
+ * so the API described an account it had just written as though it knew
+ * nothing about it, `createdAt` was NaN, and the rollback below aimed at
+ * whatever id the echo happened to carry.
+ */
+describe('when the data layer echoes only an id', () => {
+  const thinEcho = ({ credentialOk = true } = {}): Call[] => {
+    const calls: Call[] = []
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string, init?: RequestInit) => {
+        calls.push({
+          url: String(url),
+          method: init?.method,
+          auth: (init?.headers as Record<string, string>)?.Authorization,
+          body: init?.body as string | undefined,
+        })
+        const isCredential = String(url).includes('/admin/credentials')
+        const ok = isCredential ? credentialOk : true
+        return {
+          ok,
+          status: ok ? 200 : 403,
+          json: async () => ({ success: true, data: { id: 'echoed' } }),
+          text: async () => 'refused',
+        } as Response
+      })
+    )
+    return calls
+  }
+
+  it('describes the account it just wrote', async () => {
+    thinEcho()
+
+    const result = await register('alice', 'alice@example.com', 'pw', 'acme')
+
+    expect(result.success).toBe(true)
+    expect(result.user).toMatchObject({
+      username: 'alice',
+      email: 'alice@example.com',
+      role: 'god',
+      tenantId: 'acme',
+      isInstanceOwner: false,
+    })
+  })
+
+  it('gives the account a real creation time, not NaN', async () => {
+    thinEcho()
+
+    const result = await register('alice', 'alice@example.com', 'pw', 'acme')
+
+    expect(Number.isFinite(result.user?.createdAt)).toBe(true)
+  })
+
+  it('reports the id it wrote the row under', async () => {
+    const calls = thinEcho()
+
+    const result = await register('alice', 'alice@example.com', 'pw', 'acme')
+
+    const written = JSON.parse(userCall(calls)?.body ?? '{}') as {
+      id?: string
+    }
+    expect(result.user?.id).toBe(written.id)
+  })
+
+  /**
+   * The undo for a failed credential has to name the row that was
+   * actually written. Aimed at the echo, it deleted nothing -- and the
+   * orphan it left is what burns the community name for good.
+   */
+  it('rolls back the row it wrote, not whatever the echo named', async () => {
+    const calls = thinEcho({ credentialOk: false })
+
+    await register('alice', 'alice@example.com', 'pw', 'harbour')
+
+    const written = JSON.parse(userCall(calls)?.body ?? '{}') as {
+      id?: string
+    }
+    const deleted = calls.find(c => c.method === 'DELETE')
+    expect(deleted?.url).toContain(`/harbour/core/User/${String(written.id)}`)
+    expect(deleted?.url).not.toContain('/echoed')
+    expect(deleted?.url).not.toContain('undefined')
   })
 })

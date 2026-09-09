@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { readRow } from '@/lib/db/read-list'
 
 const DBAL_URL =
   typeof process !== 'undefined'
@@ -37,18 +38,35 @@ export function usePackageMetadata(packageId: string) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    let live = true
+    /**
+     * Any answer that is not a row gets the placeholder.
+     *
+     * Only the `catch` used to reach it, so a 404 -- which is exactly
+     * the "DBAL has no record for it yet" case the comment above names,
+     * and far likelier than the daemon being unreachable -- left the
+     * metadata null and the page rendered "Package Not Found" for a
+     * package the founder had installed and could see in their sidebar.
+     */
+    const settle = (found: PackageMetadata | null) => {
+      if (!live) return
+      setMetadata(found ?? fallbackMetadata(packageId))
+      setLoading(false)
+    }
+
     fetch(`${DBAL_URL}/system/core/package/${packageId}`, {
       signal: AbortSignal.timeout(5000),
     })
-      .then(res => (res.ok ? res.json() : null))
-      .then((json: { data?: PackageMetadata } | null) => {
-        if (json?.data != null) setMetadata(json.data)
-        setLoading(false)
-      })
+      .then(async res =>
+        res.ok ? readRow<PackageMetadata>(await res.json()) : null
+      )
+      .then(settle)
       .catch(() => {
-        setMetadata(fallbackMetadata(packageId))
-        setLoading(false)
+        settle(null)
       })
+    return () => {
+      live = false
+    }
   }, [packageId])
 
   return { metadata, loading }

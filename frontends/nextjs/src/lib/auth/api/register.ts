@@ -187,8 +187,9 @@ export async function register(
 
     // Create user
     const userId = crypto.randomUUID()
+    const createdAt = Date.now()
 
-    const newUser = await createDbalUser(tenantId, {
+    await createDbalUser(tenantId, {
       id: userId,
       username,
       email,
@@ -197,7 +198,7 @@ export async function register(
       // 'supergod' (level 5) is reserved for the instance owner and is
       // never assigned here.
       role: 'god',
-      createdAt: Date.now(),
+      createdAt,
       // Never sent: isInstanceOwner is privileged, and DBAL rejects any
       // anonymous write that sets it at all -- even to its own default of
       // false (see the sibling dbal repo's write-authorization check). The
@@ -223,20 +224,33 @@ export async function register(
       // The User row is already written. Left there, the retry reads the
       // community as taken and the founder can neither sign in nor start
       // again; the rest of the catch below returns the real reason.
-      await discardDbalUser(tenantId, newUser.id)
+      // The id this row was written under, not whatever the create
+      // echoed back: DBAL answers `{data: {id}}` and some builds echo
+      // nothing useful at all, so aiming the undo at the echo deleted
+      // nothing and left the orphan that burns the community name.
+      await discardDbalUser(tenantId, userId)
       throw cause
     }
 
+    /**
+     * Described from what was written, not from what came back.
+     *
+     * A create answers `{data: {id}}` -- confirmed against the daemon --
+     * so reading the account off that echo returned a user with no
+     * username, no email, no role, a null tenantId and a NaN createdAt,
+     * about an account this function had just created and knew
+     * everything about.
+     */
     const user: User = {
-      id: newUser.id,
-      username: newUser.username,
-      email: newUser.email,
-      role: newUser.role,
-      createdAt: Number(newUser.createdAt),
-      isInstanceOwner: newUser.isInstanceOwner ?? false,
-      tenantId: newUser.tenantId ?? null,
-      profilePicture: newUser.profilePicture ?? null,
-      bio: newUser.bio ?? null,
+      id: userId,
+      username,
+      email,
+      role: 'god',
+      createdAt,
+      isInstanceOwner: false,
+      tenantId,
+      profilePicture: null,
+      bio: null,
     }
 
     return {

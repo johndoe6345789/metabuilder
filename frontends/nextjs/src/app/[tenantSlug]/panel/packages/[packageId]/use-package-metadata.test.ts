@@ -58,20 +58,43 @@ describe('usePackageMetadata', () => {
     })
   })
 
-  it('stops loading with no metadata when the response is ok but empty', async () => {
-    mockFetch(async () => ({ ok: true, json: async () => ({}) }) as Response)
-    const { result } = renderHook(() => usePackageMetadata('blog'))
-
-    await waitFor(() => expect(result.current.loading).toBe(false))
-    expect(result.current.metadata).toBeNull()
-  })
-
-  it('stops loading with no metadata when the response is not ok', async () => {
+  /**
+   * The hook's own comment says the placeholder covers "offline, or DBAL
+   * has no record for it yet" -- and only the throw reached it. A 404,
+   * which is exactly "no record for it yet" and by far the likelier of
+   * the two, left metadata null and the page rendered "Package Not
+   * Found" for a package the founder had installed and could see in
+   * their own sidebar. These two asserted that, so the tests agreed with
+   * the bug rather than with the comment above the code.
+   */
+  it('falls back when the row is simply not there', async () => {
     mockFetch(async () => ({ ok: false, status: 404 }) as Response)
     const { result } = renderHook(() => usePackageMetadata('blog'))
 
     await waitFor(() => expect(result.current.loading).toBe(false))
-    expect(result.current.metadata).toBeNull()
+    expect(result.current.metadata).toMatchObject({
+      packageId: 'blog',
+      name: 'Blog',
+    })
+  })
+
+  it('falls back when the answer carries no row', async () => {
+    mockFetch(async () => ({ ok: true, json: async () => ({}) }) as Response)
+    const { result } = renderHook(() => usePackageMetadata('blog'))
+
+    await waitFor(() => expect(result.current.loading).toBe(false))
+    expect(result.current.metadata).toMatchObject({ packageId: 'blog' })
+  })
+
+  it('reads a row out of the two-level envelope', async () => {
+    mockFetch(
+      async () =>
+        ({ ok: true, json: async () => ({ data: { data: META } }) }) as Response
+    )
+    const { result } = renderHook(() => usePackageMetadata('blog'))
+
+    await waitFor(() => expect(result.current.loading).toBe(false))
+    expect(result.current.metadata).toEqual(META)
   })
 
   it('refetches when packageId changes', async () => {

@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { EntityTableHead } from './EntityTableHead'
+import { cellText, columnsFor } from './entity-columns'
 import type { EntitySchema } from '@/lib/entities/load-entity-schema'
 
 export function EntityTable({
@@ -17,25 +18,19 @@ export function EntityTable({
   pkg: string
   entity: string
 }) {
+  // Without a schema the rows say what they carry; see entity-columns.ts.
+  const columns = columnsFor(schema, rows)
   return (
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <EntityTableHead schema={schema} />
+            <EntityTableHead columns={columns} />
         <tbody>
           {rows.length > 0 ? (
             rows.map(
               (item, idx) => (
                 <tr key={idx} style={{ borderBottom: '1px solid #e0e0e0' }}>
-                  {schema?.fields.map(field => (
-                    <td key={field.name} style={{ padding: '0.75rem' }}>
-                      {(() => {
-                        const value = item[field.name]
-                        if (value === null || value === undefined)
-                          return '-'
-                        if (typeof value === 'object')
-                          return JSON.stringify(value)
-                        // eslint-disable-next-line @typescript-eslint/no-base-to-string
-                        return String(value)
-                      })()}
+                  {columns.map(name => (
+                    <td key={name} style={{ padding: '0.75rem' }}>
+                      {cellText(item[name])}
                     </td>
                   ))}
                   <td style={{ padding: '0.75rem' }}>
@@ -52,7 +47,7 @@ export function EntityTable({
           ) : (
             <tr>
               <td
-                colSpan={(schema?.fields.length ?? 0) + 1}
+                colSpan={columns.length + 1}
                 style={{
                   padding: '2rem',
                   textAlign: 'center',

@@ -104,3 +104,50 @@ describe('getSessionUser', () => {
     })
   })
 })
+
+/**
+ * This route family is reached two ways, and only one of them was
+ * understood. `entityApiFetch` forwards the incoming session cookie
+ * precisely so a Server Component can call the app's own API as the
+ * visitor -- its comment says so -- and this read the Authorization
+ * header alone, so every entity list, detail and edit page rendered
+ * "Error loading data: Authentication required" for a signed-in founder.
+ * Confirmed in a browser at /{tenant}/core/User.
+ */
+describe('the session cookie the rest of the app uses', () => {
+  const withCookie = (cookie: string) =>
+    new Request('http://localhost/x', { headers: { cookie } })
+
+  it('verifies the token from the mb_session cookie', async () => {
+    await getSessionUser(withCookie('mb_session=abc123'))
+    expect(fetchSession).toHaveBeenCalledWith('abc123')
+  })
+
+  it('finds it among other cookies, whatever the spacing', async () => {
+    await getSessionUser(withCookie('theme=dark;mb_session=abc123; a=b'))
+    expect(fetchSession).toHaveBeenCalledWith('abc123')
+  })
+
+  it('prefers an explicit bearer token over the cookie', async () => {
+    const req = new Request('http://localhost/x', {
+      headers: { authorization: 'Bearer header-token', cookie: 'mb_session=c' },
+    })
+    await getSessionUser(req)
+    expect(fetchSession).toHaveBeenCalledWith('header-token')
+  })
+
+  it.each([
+    ['no cookie header', ''],
+    ['other cookies only', 'theme=dark; a=b'],
+    ['an empty session cookie', 'mb_session=; a=b'],
+    ['a lookalike name', 'not_mb_session=abc'],
+  ])('passes null for %s', async (_case, cookie) => {
+    await getSessionUser(withCookie(cookie))
+    expect(fetchSession).toHaveBeenCalledWith(null)
+  })
+
+  it('decodes a percent-encoded value', async () => {
+    await getSessionUser(withCookie('mb_session=a%2Bb'))
+    expect(fetchSession).toHaveBeenCalledWith('a+b')
+  })
+})
