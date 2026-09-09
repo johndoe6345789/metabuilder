@@ -1,8 +1,8 @@
 /** EntityEditView. */
 
-import { EntityEditActions } from './EntityEditActions'
 import { EntityLoadError } from './EntityLoadError'
-import { EntityEditFields } from './EntityEditFields'
+import { EntityForm } from './EntityForm'
+import { formFields } from './entity-form-fields'
 import { SOFT_RADIUS } from './radii'
 import { fetchEntity } from '@/lib/entities/api-client'
 import type { EntitySchema } from '@/lib/entities/load-entity-schema'
@@ -24,6 +24,7 @@ export async function EntityEditView({
 
   // Fetch entity data
   const response = await fetchEntity(tenant, pkg, entity, id)
+  const record = (response.data ?? {}) as Record<string, unknown>
 
   return (
     <div className="entity-edit">
@@ -45,20 +46,11 @@ export async function EntityEditView({
             padding: '1.5rem',
           }}
         >
-          <p style={{ color: '#666', marginBottom: '1rem' }}>
-            Form fields based on schema with current values:
-          </p>
-          <EntityEditFields
-            schema={schema ?? null}
-            record={
-              (response.data ?? {}) as Record<string, unknown>
-            }
-          />
-          <EntityEditActions
-            tenant={tenant}
-            pkg={pkg}
-            entity={entity}
-            id={id}
+          <EntityForm
+            fields={formFields(schema ?? null, record)}
+            record={record}
+            target={{ tenant, pkg, entity, id }}
+            submitLabel="Save Changes"
           />
         </div>
       )}

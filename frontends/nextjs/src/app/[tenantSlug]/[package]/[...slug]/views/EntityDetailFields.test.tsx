@@ -37,9 +37,22 @@ describe('EntityDetailFields', () => {
     expect(screen.getByText('{"a":1}')).toBeTruthy()
   })
 
-  it('renders nothing with a null schema', () => {
+  /**
+   * The schema is loaded from a package directory, so most entities have
+   * none -- and this rendered a detail page with no detail on it at all.
+   * The record says what it carries.
+   */
+  it('shows what the record carries when no schema declares it', () => {
     const { container } = render(
       <EntityDetailFields schema={null} record={{ title: 'Hello' }} />
+    )
+    expect(container.textContent).toContain('title')
+    expect(container.textContent).toContain('Hello')
+  })
+
+  it('shows nothing for a record with nothing in it', () => {
+    const { container } = render(
+      <EntityDetailFields schema={null} record={{}} />
     )
     expect(container.textContent).toBe('')
   })

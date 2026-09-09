@@ -1,6 +1,7 @@
 /** One record's field values, read-only. */
 
 import type { EntitySchema } from '@/lib/entities/load-entity-schema'
+import { cellText, columnsFor } from './entity-columns'
 
 export function EntityDetailFields({
   schema,
@@ -9,10 +10,13 @@ export function EntityDetailFields({
   schema: EntitySchema | null
   record: Record<string, unknown>
 }) {
+  // Without a package schema this showed nothing at all; the record
+  // says what it carries. See entity-columns.ts.
+  const columns = columnsFor(schema, [record])
   return (
     <>
-      {schema?.fields.map(field => (
-        <div key={field.name} style={{ marginBottom: '1rem' }}>
+      {columns.map(name => (
+        <div key={name} style={{ marginBottom: '1rem' }}>
           <strong
             style={{
               display: 'block',
@@ -20,19 +24,9 @@ export function EntityDetailFields({
               color: '#424242',
             }}
           >
-            {field.name}:
+            {name}:
           </strong>
-          <div style={{ color: '#616161' }}>
-            {(() => {
-              const value = record[
-                field.name
-              ]
-              if (value === null || value === undefined) return '-'
-              if (typeof value === 'object') return JSON.stringify(value)
-              // eslint-disable-next-line @typescript-eslint/no-base-to-string
-              return String(value)
-            })()}
-          </div>
+          <div style={{ color: '#616161' }}>{cellText(record[name])}</div>
         </div>
       ))}
     </>

@@ -3,6 +3,10 @@ import { render, screen } from '@testing-library/react'
 
 const apiClient = vi.hoisted(() => ({ fetchEntity: vi.fn() }))
 vi.mock('@/lib/entities/api-client', () => apiClient)
+// The form writes now, so it is a client component with a router.
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
+}))
 
 import { EntityEditView } from './EntityEditView'
 import type { EntitySchema } from '@/lib/entities/load-entity-schema'
