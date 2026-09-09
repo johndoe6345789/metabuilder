@@ -2,6 +2,7 @@
 
 import type { RetroSystem } from '@/hooks/useRetroSession'
 import { SystemPicker } from '../SystemPicker'
+import { romUrlProblem } from './rom-url'
 import s from '../RetroLauncher.module.scss'
 
 export interface LaunchFormProps {
@@ -16,7 +17,11 @@ export interface LaunchFormProps {
 
 export function LaunchForm(props: LaunchFormProps) {
   const { system, romUrl, loading, error, onLaunch } = props
-  const disabled = system === null || romUrl.trim().length === 0 || loading
+  // Only complain about something typed: an empty box is where everyone
+  // starts, and being told off for it is not help.
+  const problem = romUrl.trim() === '' ? null : romUrlProblem(romUrl)
+  const disabled =
+    system === null || romUrl.trim() === '' || problem !== null || loading
 
   return (
     <>
@@ -36,13 +41,15 @@ export function LaunchForm(props: LaunchFormProps) {
         />
       </label>
 
+      {problem !== null && <p className={s.error}>{problem}</p>}
       {error !== null && <p className={s.error}>{error}</p>}
 
       <button className={s.launch} disabled={disabled} onClick={onLaunch}>
         {loading ? 'Launching…' : `Launch ${system?.toUpperCase() ?? ''} game`}
       </button>
       <p className={s.keyHint}>
-        Keyboard: Arrows=D-Pad · Z=A · X=B · Enter=Start · Shift=Select
+        Keyboard: Arrows=D-Pad · Z=A · X=B · Enter=Start · Shift=Select.
+        A game controller works too — plug one in and press a button.
       </p>
     </>
   )
