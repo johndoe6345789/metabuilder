@@ -8,13 +8,21 @@ import {
   retryDelayMs,
   type Attempts,
 } from './hls-recovery'
-import { LIVE_CONFIG, type HlsLike, type HlsLoader } from './hls-types'
+import {
+  DRIFT_TOLERANCE_S,
+  HLS_CONFIG,
+  type HlsLike,
+  type HlsLoader,
+  type StreamKind,
+} from './hls-types'
 
 const defaultLoader: HlsLoader = () =>
   import('hls.js') as unknown as ReturnType<HlsLoader>
 
 export interface UseHlsVideoOptions {
   autoPlay?: boolean
+  /** Watching or playing: see hls-types.ts. Defaults to broadcast. */
+  kind?: StreamKind
   /** Injectable for tests; the real one dynamically imports hls.js. */
   loader?: HlsLoader
 }
@@ -38,7 +46,8 @@ export function useHlsVideo(
     src: string
     message: string
   } | null>(null)
-  const { autoPlay = false, loader = defaultLoader } = options
+  const { autoPlay = false, kind = 'broadcast', loader = defaultLoader } =
+    options
   const tried = useRef<Attempts>({ network: 0, media: 0 })
 
   useEffect(() => {
@@ -53,7 +62,11 @@ export function useHlsVideo(
     const catchUp = (): void => {
       if (live === null) return
       const target = live.liveSyncPosition
-      if (target !== null && isBehindLive(video.currentTime, target)) {
+      const tolerance = DRIFT_TOLERANCE_S[kind]
+      if (
+        target !== null &&
+        isBehindLive(video.currentTime, target, tolerance)
+      ) {
         video.currentTime = target
       }
     }
@@ -69,7 +82,7 @@ export function useHlsVideo(
         }
         return
       }
-      const hls = new Hls(LIVE_CONFIG)
+      const hls = new Hls(HLS_CONFIG[kind])
       live = hls
       hls.on(Hls.Events.ERROR, (_name, data) => {
         const action = recoveryFor(data, tried.current)
@@ -113,7 +126,7 @@ export function useHlsVideo(
       live?.destroy()
       live = null
     }
-  }, [video, src, autoPlay, loader])
+  }, [video, src, autoPlay, kind, loader])
 
   return { error: failure?.src === src ? failure.message : null }
 }

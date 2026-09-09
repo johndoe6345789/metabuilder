@@ -1,14 +1,24 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useState } from 'react'
+import type { RadioChannel } from '../useRadioChannels'
 
 interface Args {
+  channels: RadioChannel[]
   listen: (channelId: string) => Promise<string>
-  stop: (channelId: string) => Promise<void>
+  streamUrl: (path: string) => string
 }
 
-/** Which station (if any) is playing, and the listen/stop flow. */
-export function useRadioPlayback({ listen, stop }: Args) {
+/**
+ * Which station (if any) is playing, and the listen/stop flow.
+ *
+ * A station broadcasts whether or not anyone has it on, the same as live
+ * television: tuning in joins whatever is playing now, and tuning out
+ * leaves it playing. Listening used to call `start`, which puts the
+ * station on air and so restarted it for everyone already listening,
+ * and stopping called `stop`, which took it off air.
+ */
+export function useRadioPlayback({ channels, listen, streamUrl }: Args) {
   const [nowPlaying, setNowPlaying] = useState<{
     id: string
     url: string
@@ -16,32 +26,21 @@ export function useRadioPlayback({ listen, stop }: Args) {
   } | null>(null)
   const [busyId, setBusyId] = useState<string | null>(null)
   const [listenError, setListenError] = useState<string | null>(null)
-  // What this client last told the daemon it was listening to. A ref
-  // because handleListen reads it before its own setState has landed.
-  const playingRef = useRef<string | null>(null)
 
   /**
    * `listen()` throws when the daemon refuses or answers without a
    * stream URL, and nothing caught it -- the spinner cleared, no player
-   * appeared, and the rejection went unhandled. Tuning in worked
-   * sometimes and did nothing other times.
+   * appeared, and the rejection went unhandled.
    */
   const handleListen = async (channelId: string, title: string) => {
     setBusyId(channelId)
-    // Starting told the daemon this client is listening; changing
-    // station without saying it had stopped left the first one running
-    // with a listener that had gone.
-    const leaving = playingRef.current
-    if (leaving !== null && leaving !== channelId) {
-      try {
-        await stop(leaving)
-      } catch {
-        /* the old station keeps running; nothing here can fix that */
-      }
-    }
     try {
-      const url = await listen(channelId)
-      playingRef.current = channelId
+      const station = channels.find(c => c.id === channelId)
+      const joinable =
+        station !== undefined && station.is_live && station.stream_url !== ''
+          ? streamUrl(station.stream_url)
+          : null
+      const url = joinable ?? (await listen(channelId))
       setNowPlaying({ id: channelId, url, title })
       setListenError(null)
     } catch (cause) {
@@ -52,18 +51,9 @@ export function useRadioPlayback({ listen, stop }: Args) {
     }
   }
 
-  const handleStop = async () => {
-    if (nowPlaying === null) return
-    const id = nowPlaying.id
-    playingRef.current = null
+  /** Tuning out. The station carries on without us. */
+  const handleStop = () => {
     setNowPlaying(null)
-    // Best effort: the bar is already gone, and a daemon that cannot be
-    // told is not a reason to leave a dead one on screen.
-    try {
-      await stop(id)
-    } catch {
-      /* the station keeps running server-side; nothing here can fix it */
-    }
   }
 
   return { nowPlaying, busyId, listenError, handleListen, handleStop }

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { isSafeMediaSrc } from './mediaUrl'
 import { useHlsVideo } from './player/use-hls-video'
+import type { StreamKind } from './player/hls-types'
 import s from './VideoPlayer.module.scss'
 
 export interface VideoPlayerProps {
@@ -10,6 +11,13 @@ export interface VideoPlayerProps {
   poster?: string
   title?: string
   autoPlay?: boolean
+  /**
+   * Watching or playing. A game is a control loop -- the picture is
+   * feedback for what your thumb just did -- so it is kept as close to
+   * the edge as the playlist allows, where television is kept a few
+   * segments back so a slow segment does not show.
+   */
+  kind?: StreamKind
   className?: string
 }
 
@@ -20,13 +28,17 @@ export function VideoPlayer({
   poster,
   title,
   autoPlay,
+  kind = 'broadcast',
   className,
 }: VideoPlayerProps) {
   // State, not a ref: the hook has to run again when the element appears,
   // and a ref assignment does not re-render.
   const [video, setVideo] = useState<HTMLVideoElement | null>(null)
   const safe = isSafeMediaSrc(src) ? src : ''
-  const { error } = useHlsVideo(video, isHls(safe) ? safe : '', { autoPlay })
+  const { error } = useHlsVideo(video, isHls(safe) ? safe : '', {
+    autoPlay,
+    kind,
+  })
 
   return (
     <div className={`${s.root} ${className ?? ''}`}>

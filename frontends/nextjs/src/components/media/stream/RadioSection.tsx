@@ -8,9 +8,9 @@ import { StationsGrid } from './radio/StationsGrid'
 import s from './RadioSection.module.scss'
 
 export function RadioSection() {
-  const { channels, loading, error, listen, stop } = useRadioChannels()
+  const { channels, loading, error, listen, streamUrl } = useRadioChannels()
   const { nowPlaying, busyId, listenError, handleListen, handleStop } =
-    useRadioPlayback({ listen, stop })
+    useRadioPlayback({ channels, listen, streamUrl })
 
   if (loading) return <div className={s.status}>Loading stations…</div>
   if (error !== null) return <div className={s.statusError}>{error}</div>
@@ -23,9 +23,7 @@ export function RadioSection() {
           id={nowPlaying.id}
           url={nowPlaying.url}
           title={nowPlaying.title}
-          onStop={() => {
-            void handleStop()
-          }}
+          onStop={handleStop}
         />
       )}
 

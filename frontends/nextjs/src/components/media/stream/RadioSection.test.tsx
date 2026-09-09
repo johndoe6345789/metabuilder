@@ -13,6 +13,7 @@ const radio = vi.hoisted(() => ({
   error: null as string | null,
   listen: vi.fn(async () => 'https://stream'),
   stop: vi.fn(async () => {}),
+  streamUrl: (path: string) => `https://audio.test${path}`,
 }))
 
 vi.mock('./useRadioChannels', () => ({
@@ -46,9 +47,34 @@ describe('RadioSection', () => {
     expect(screen.getByText(/No stations yet/)).toBeTruthy()
   })
 
-  it('tunes in to a station end to end', () => {
+  /**
+   * A station already on air is joined where it is; asking the daemon to
+   * start it again restarts it for everyone already listening.
+   */
+  it('joins a station that is already on air', () => {
     radio.channels = [
-      { id: 'a', name: 'Jazz FM', is_live: true, listeners: 1, stream_url: 'x' },
+      {
+        id: 'a',
+        name: 'Jazz FM',
+        is_live: true,
+        listeners: 1,
+        stream_url: '/jazz.mp3',
+      },
+    ]
+    render(<RadioSection />)
+    fireEvent.click(screen.getByText('▶ Listen'))
+    expect(radio.listen).not.toHaveBeenCalled()
+  })
+
+  it('puts a station on air when it is not running', () => {
+    radio.channels = [
+      {
+        id: 'a',
+        name: 'Jazz FM',
+        is_live: false,
+        listeners: 0,
+        stream_url: '',
+      },
     ]
     render(<RadioSection />)
     fireEvent.click(screen.getByText('▶ Listen'))

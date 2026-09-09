@@ -14,42 +14,42 @@ interface NowWatching {
   title: string
 }
 
-/** Which channel (if any) is playing, and the watch/stop flow that gets
- *  it there -- including reacting to an external "watch this one" signal
- *  from the hero's own "Watch now" button. */
+/**
+ * Which channel (if any) is playing, and the watch/stop flow that gets
+ * it there -- including reacting to an external "watch this one" signal
+ * from the hero's own "Watch now" button.
+ *
+ * Live television keeps broadcasting whether or not anyone is watching:
+ * go to bed for an hour and it is an hour further on, like real TV. Both
+ * halves of this used to work against that. Watching always called
+ * `start`, which puts a channel on air, so joining one that was already
+ * running restarted its broadcast from the top; and leaving always
+ * called `stop`, which takes it off air, so it could not run while
+ * nobody watched. A viewer arriving joins; a viewer leaving just leaves.
+ */
 export function useLiveTv(externalWatchTrigger?: WatchTrigger | null) {
-  const { channels, loading, error, watch, stop } = useTvChannels()
+  const { channels, loading, error, watch, streamUrl } = useTvChannels()
   const [nowWatching, setNowWatching] = useState<NowWatching | null>(null)
   const [busyId, setBusyId] = useState<string | null>(null)
   const [watchError, setWatchError] = useState<string | null>(null)
   const lastTriggerNonce = useRef<number | null>(null)
-  // What this client last told the daemon it was watching. A ref because
-  // handleWatch reads it before its own setState has landed.
-  const watchingRef = useRef<string | null>(null)
 
   /**
    * `watch()` throws when the daemon refuses or answers without a stream
    * URL, and nothing caught it -- the spinner cleared, no player
-   * appeared, and the rejection went unhandled. From the viewer's side
-   * that is a button that works sometimes and does nothing other times.
+   * appeared, and the rejection went unhandled.
    */
   const handleWatch = async (channelId: string, title: string) => {
     setBusyId(channelId)
-    // Starting told the daemon this client is watching; changing channel
-    // without saying it had stopped left the first one running with a
-    // viewer that had gone. Best effort -- a daemon that will not take
-    // the message is no reason to refuse the new channel.
-    const leaving = watchingRef.current
-    if (leaving !== null && leaving !== channelId) {
-      try {
-        await stop(leaving)
-      } catch {
-        /* the old channel keeps running; nothing here can fix that */
-      }
-    }
     try {
-      const url = await watch(channelId)
-      watchingRef.current = channelId
+      const channel = channels.find(c => c.id === channelId)
+      // Already broadcasting: join it where it is. Asking the daemon to
+      // start it again is what used to rewind everyone to the top.
+      const joinable =
+        channel !== undefined && channel.is_live && channel.hls_url !== ''
+          ? streamUrl(channel.hls_url)
+          : null
+      const url = joinable ?? (await watch(channelId))
       setNowWatching({ id: channelId, url, title })
       setWatchError(null)
     } catch (cause) {
@@ -75,18 +75,13 @@ export function useLiveTv(externalWatchTrigger?: WatchTrigger | null) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [externalWatchTrigger, channels])
 
-  const handleStopWatching = async () => {
-    if (nowWatching === null) return
-    const id = nowWatching.id
-    watchingRef.current = null
+  /**
+   * Stops watching. The channel carries on without us: that is what
+   * makes it live, and it is why coming back an hour later shows an hour
+   * later rather than the top of the programme you left.
+   */
+  const handleStopWatching = () => {
     setNowWatching(null)
-    // Stopping is best effort: the player is already gone, and a daemon
-    // that cannot be told is not a reason to leave a dead frame up.
-    try {
-      await stop(id)
-    } catch {
-      /* the channel keeps running server-side; nothing here can fix it */
-    }
   }
 
   return {

@@ -1,10 +1,23 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { act, renderHook, waitFor } from '@testing-library/react'
 
-const DEFAULT_CHANNELS = [{ id: 'a', name: 'News' }]
+interface FakeChannel {
+  id: string
+  name: string
+  is_live?: boolean
+  hls_url?: string
+}
+
+const DEFAULT_CHANNELS: FakeChannel[] = [{ id: 'a', name: 'News' }]
 
 const tv = vi.hoisted(() => ({
-  channels: [{ id: 'a', name: 'News' }] as { id: string; name: string }[],
+  channels: [{ id: 'a', name: 'News' }] as {
+    id: string
+    name: string
+    is_live?: boolean
+    hls_url?: string
+  }[],
+  streamUrl: (path: string) => `https://hls.test${path}`,
   loading: false,
   error: null as string | null,
   watch: vi.fn(async () => 'https://stream'),
@@ -50,13 +63,15 @@ describe('useLiveTv', () => {
     expect(result.current.busyId).toBeNull()
   })
 
-  it('stops the current channel and clears nowWatching', async () => {
+  // Leaving is leaving: the channel carries on without us, which is
+  // what makes it live. See "live television keeps running" below.
+  it('clears nowWatching without taking the channel off air', async () => {
     const { result } = renderHook(() => useLiveTv())
 
     await act(async () => result.current.handleWatch('a', 'News'))
     await act(async () => result.current.handleStopWatching())
 
-    expect(tv.stop).toHaveBeenCalledWith('a')
+    expect(tv.stop).not.toHaveBeenCalled()
     expect(result.current.nowWatching).toBeNull()
   })
 
@@ -164,47 +179,60 @@ describe('a watch asked for before the channels have loaded', () => {
 })
 
 /**
- * Starting a channel tells the daemon this client is watching it. Doing
- * that again for a different channel without ever saying it had stopped
- * left the first one running with a viewer that had gone -- and this app
- * already treats "I have left" as a reason to stop, which is what the
- * Back button does.
+ * Live television keeps broadcasting whether or not anyone is watching:
+ * go to bed for an hour and it is an hour further on, like real TV.
+ *
+ * Both halves of this were backwards. Watching always called `start`,
+ * which puts the channel on air -- so joining a channel that was already
+ * running restarted its broadcast from the top. And leaving always
+ * called `stop`, which takes it off air, so it could not possibly run
+ * while nobody was watching.
  */
-describe('switching channel while one is playing', () => {
+describe('live television keeps running', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    tv.channels = [{ id: 'a', name: 'News', is_live: true, hls_url: '/a.m3u8' }]
   })
 
-  it('stops the one it was watching first', async () => {
+  it('joins a channel that is already on air rather than restarting it', async () => {
+    const { result } = renderHook(() => useLiveTv())
+
+    await act(() => result.current.handleWatch('a', 'News'))
+
+    expect(tv.watch).not.toHaveBeenCalled()
+    expect(result.current.nowWatching?.url).toBe('https://hls.test/a.m3u8')
+  })
+
+  it('puts a channel on air when it is not running yet', async () => {
+    tv.channels = [{ id: 'a', name: 'News', is_live: false, hls_url: '' }]
+    const { result } = renderHook(() => useLiveTv())
+
+    await act(() => result.current.handleWatch('a', 'News'))
+
+    expect(tv.watch).toHaveBeenCalledWith('a')
+  })
+
+  it('leaves the channel on air when the viewer stops watching', async () => {
+    const { result } = renderHook(() => useLiveTv())
+    await act(() => result.current.handleWatch('a', 'News'))
+
+    await act(() => result.current.handleStopWatching())
+
+    expect(tv.stop).not.toHaveBeenCalled()
+    expect(result.current.nowWatching).toBeNull()
+  })
+
+  it('leaves the old channel on air when switching to another', async () => {
     tv.channels = [
-      { id: 'a', name: 'News' },
-      { id: 'b', name: 'Films' },
+      { id: 'a', name: 'News', is_live: true, hls_url: '/a.m3u8' },
+      { id: 'b', name: 'Films', is_live: true, hls_url: '/b.m3u8' },
     ]
     const { result } = renderHook(() => useLiveTv())
     await act(() => result.current.handleWatch('a', 'News'))
-    tv.stop.mockClear()
 
     await act(() => result.current.handleWatch('b', 'Films'))
 
-    expect(tv.stop).toHaveBeenCalledWith('a')
-    expect(result.current.nowWatching?.id).toBe('b')
-  })
-
-  it('starts the new one even if the old refuses to stop', async () => {
-    const { result } = renderHook(() => useLiveTv())
-    await act(() => result.current.handleWatch('a', 'News'))
-    tv.stop.mockRejectedValueOnce(new Error('gone'))
-
-    await act(() => result.current.handleWatch('a', 'News'))
-
-    expect(result.current.nowWatching).not.toBeNull()
-  })
-
-  it('stops nothing when nothing was playing', async () => {
-    const { result } = renderHook(() => useLiveTv())
-
-    await act(() => result.current.handleWatch('a', 'News'))
-
     expect(tv.stop).not.toHaveBeenCalled()
+    expect(result.current.nowWatching?.id).toBe('b')
   })
 })

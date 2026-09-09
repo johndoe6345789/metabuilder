@@ -75,7 +75,8 @@ export function giveUpMessage(type: string | undefined): string {
  * hls.js only seeks forward when the gap passes `liveMaxLatencyDuration`,
  * and that is unset by default -- so after any stall, pause, or spell in
  * a background tab, playback carries on from wherever it was, minutes
- * behind, for ever. This is "live TV was not live".
+ * behind, for ever. This is "live TV was not live". Per-kind tolerances
+ * live in hls-types.ts.
  */
 export const LIVE_DRIFT_TOLERANCE_S = 12
 

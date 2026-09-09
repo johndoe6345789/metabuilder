@@ -195,3 +195,66 @@ describe('leaving', () => {
     expect(video.currentTime).toBe(10)
   })
 })
+
+/**
+ * Watching and playing want opposite things. Television sits a few
+ * segments back so a slow segment does not show; a game is a control
+ * loop, and every second of buffer is a second between the thumb and
+ * the picture.
+ */
+describe('a stream being played rather than watched', () => {
+  const mountKind = (kind: 'broadcast' | 'interactive') =>
+    renderHook(() => useHlsVideo(video, SRC, { kind, loader }))
+
+  it('is configured for the shortest latency the playlist allows', async () => {
+    mountKind('interactive')
+    await waitFor(() => {
+      expect(hls.instances).toHaveLength(1)
+    })
+
+    expect(hls.instances[0].config).toMatchObject({
+      lowLatencyMode: true,
+      liveSyncDurationCount: 1,
+    })
+  })
+
+  it('keeps television a few segments back instead', async () => {
+    mountKind('broadcast')
+    await waitFor(() => {
+      expect(hls.instances).toHaveLength(1)
+    })
+
+    expect(hls.instances[0].config.liveSyncDurationCount).toBe(3)
+  })
+
+  it('snaps a game forward on a much smaller gap', async () => {
+    const view = mountKind('interactive')
+    await waitFor(() => {
+      expect(hls.instances).toHaveLength(1)
+    })
+    hls.instances[0].liveSyncPosition = 102
+    video.currentTime = 100
+
+    act(() => {
+      video.dispatchEvent(new Event('waiting'))
+    })
+    view.unmount()
+
+    expect(video.currentTime).toBe(102)
+  })
+
+  it('leaves television alone at that distance', async () => {
+    mountKind('broadcast')
+    await waitFor(() => {
+      expect(hls.instances).toHaveLength(1)
+    })
+    hls.instances[0].liveSyncPosition = 102
+    video.currentTime = 100
+
+    act(() => {
+      video.dispatchEvent(new Event('waiting'))
+    })
+
+    expect(video.currentTime).toBe(100)
+  })
+})

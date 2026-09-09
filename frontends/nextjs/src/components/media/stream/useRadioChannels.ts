@@ -22,7 +22,7 @@ export interface RadioChannel {
 }
 
 export function useRadioChannels() {
-  const { channels, loading, error, refresh, start, stop } =
+  const { channels, loading, error, refresh, start, stop, streamUrl } =
     useMediaChannels<RadioChannel>({
       api: MEDIA_API,
       service: 'radio',
@@ -30,5 +30,5 @@ export function useRadioChannels() {
       loadError: 'Failed to load stations',
     })
 
-  return { channels, loading, error, refresh, listen: start, stop }
+  return { channels, loading, error, refresh, listen: start, stop, streamUrl }
 }

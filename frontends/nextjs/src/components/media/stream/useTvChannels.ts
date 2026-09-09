@@ -87,7 +87,7 @@ async function withGuide(raw: unknown[]): Promise<ScheduledChannel[]> {
 export function useTvChannels() {
   // withGuide is a module-level function, so it is already stable -- no
   // useCallback needed, and useMediaChannels does not depend on it.
-  const { channels, loading, error, refresh, start, stop } =
+  const { channels, loading, error, refresh, start, stop, streamUrl } =
     useMediaChannels<ScheduledChannel>(
       {
         api: MEDIA_API,
@@ -99,5 +99,5 @@ export function useTvChannels() {
       withGuide
     )
 
-  return { channels, loading, error, refresh, watch: start, stop }
+  return { channels, loading, error, refresh, watch: start, stop, streamUrl }
 }

@@ -36,8 +36,14 @@ export interface MediaChannels<T> {
   loading: boolean
   error: string | null
   refresh: () => Promise<void>
+  /** Puts a channel on air and answers where to play it from. */
   start: (channelId: string) => Promise<string>
+  /** Takes a channel off air. Not what a viewer leaving should do -- see
+   *  use-live-tv.ts -- but the daemon's own API has it. */
   stop: (channelId: string) => Promise<void>
+  /** Where to play a channel already on air, from the path it reports.
+   *  Joining one this way is what keeps a broadcast continuous. */
+  streamUrl: (path: string) => string
 }
 
 /**
@@ -56,6 +62,17 @@ export function useMediaChannels<T>(
   const [error, setError] = useState<string | null>(null)
 
   const base = `${api}/api/${service}/channels`
+
+  const streamUrl = useCallback(
+    (path: string): string => {
+      // The stream host differs from the API host, so a relative path
+      // would be fetched from the wrong origin -- but a daemon that
+      // answers with an absolute URL already knows where it lives.
+      if (/^https?:\/\//i.test(path)) return path
+      return `${streamHost}${path}`
+    },
+    [streamHost]
+  )
 
   const refresh = useCallback(async (): Promise<void> => {
     try {
@@ -103,11 +120,9 @@ export function useMediaChannels<T>(
         throw new Error(`Start response carried no ${urlField}`)
       }
       await refresh()
-      // The stream host differs from the API host, so a relative path would
-      // be fetched from the wrong origin.
-      return `${streamHost}${url}`
+      return streamUrl(url)
     },
-    [base, urlField, streamHost, refresh]
+    [base, urlField, streamUrl, refresh]
   )
 
   const stop = useCallback(
@@ -118,5 +133,5 @@ export function useMediaChannels<T>(
     [base, refresh]
   )
 
-  return { channels, loading, error, refresh, start, stop }
+  return { channels, loading, error, refresh, start, stop, streamUrl }
 }

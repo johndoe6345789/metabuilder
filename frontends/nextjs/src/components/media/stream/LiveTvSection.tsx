@@ -33,9 +33,7 @@ export function LiveTvSection({ externalWatchTrigger }: Props) {
       <NowWatchingPanel
         title={nowWatching.title}
         url={nowWatching.url}
-        onBack={() => {
-          void handleStopWatching()
-        }}
+        onBack={handleStopWatching}
       />
     )
   }

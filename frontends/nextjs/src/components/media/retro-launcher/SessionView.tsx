@@ -25,6 +25,7 @@ export function SessionView({
         src={session.streamUrl}
         title={`${session.system.toUpperCase()} — session ${session.id.slice(0, 8)}`}
         autoPlay
+        kind="interactive"
       />
       {controller != null && controller !== '' && (
         <p className={s.controller}>Playing on {controller}</p>
