@@ -5,6 +5,7 @@ import { Typography, Paper, Button, Chip, Alert } from '@/m3'
 import { DB_BACKENDS, DEFAULT_BACKEND } from './db-backends'
 import { useDbalHealth } from './use-dbal-health'
 import { DbBackendCard } from './DbBackendCard'
+import { TenantDataCard } from './database/TenantDataCard'
 import s from './DatabaseTab.module.scss'
 
 export function DatabaseTab() {
@@ -13,15 +14,14 @@ export function DatabaseTab() {
 
   return (
     <div className={s.root}>
-      {/* "Data backends", not "Database Management": nothing here
-          manages anything. It lists what DBAL can run on and what each
-          needs, which is what the line below already says. */}
+      {/* Your own rows first: the backend list below is what DBAL can
+          run on, which a founder can neither choose nor change, and for
+          a long time it was all this tab had to say. */}
       <Typography variant="h6" gutterBottom>
-        Data backends
+        Your data
       </Typography>
       <Typography variant="body2" color="text.secondary">
-        {DB_BACKENDS.length} backend adapters. Select one to inspect the
-        required runtime configuration.
+        Everything this community holds, and what it runs on.
       </Typography>
       <div className={s.statusBar}>
         <Chip
@@ -35,6 +35,16 @@ export function DatabaseTab() {
         </Button>
       </div>
       {message !== null && <Alert severity="warning">{message}</Alert>}
+
+      <TenantDataCard />
+
+      <Typography variant="subtitle2" className={s.backendsHead}>
+        Data backends
+      </Typography>
+      <Typography variant="body2" color="text.secondary">
+        {DB_BACKENDS.length} backend adapters DBAL can run on. Which one
+        is in use is set by whoever runs the instance, not here.
+      </Typography>
       <div className={s.grid}>
         {DB_BACKENDS.map(db => (
           <DbBackendCard

@@ -61,3 +61,28 @@
     background: var(--mat-sys-surface-container-low, #0d1117);
   }
 }
+
+.counts {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 16px;
+  margin: 12px 0 0;
+}
+
+.countRow {
+  display: contents;
+}
+
+.countRow dt {
+  color: var(--mat-sys-on-surface-variant, #8b949e);
+}
+
+.countRow dd {
+  margin: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.backendsHead {
+  margin-top: 8px;
+}

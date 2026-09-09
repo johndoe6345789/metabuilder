@@ -64,7 +64,7 @@
       "id": "database",
       "label": "Database",
       "icon": "storage",
-      "description": "The data backends DBAL can run on, and what each needs"
+      "description": "What your community holds, and the backends DBAL can run on"
     },
     {
       "id": "credentials",
