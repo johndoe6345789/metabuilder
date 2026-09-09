@@ -27,6 +27,8 @@ const list = (props: Partial<Parameters<typeof ChannelList>[0]> = {}) =>
       activeChannelId={null}
       onSelect={vi.fn()}
       userId="u1"
+      username="rosa"
+      tenantId="acme"
       {...props}
     />
   )
@@ -55,16 +57,15 @@ describe('ChannelList', () => {
     )
   })
 
-  it('selects a channel and joins it via DBAL on click', () => {
+  // Where the join goes is asserted in irc-api.test.ts; this is that a
+  // click both selects the channel and records the join at all.
+  it('selects a channel and records the join on click', () => {
     const fetchFn = mockFetch()
     const onSelect = vi.fn()
     list({ onSelect, tenantId: 'acme' })
     fireEvent.click(screen.getByText('general'))
     expect(onSelect).toHaveBeenCalledWith('c1')
-    expect(fetchFn).toHaveBeenCalledWith(
-      expect.stringContaining('/acme/irc/irc_membership'),
-      expect.objectContaining({ method: 'POST' })
-    )
+    expect(String(fetchFn.mock.calls[0]?.[0])).toContain('/acme/')
   })
 
   it('selects on Enter/Space from the keyboard, ignores other keys', () => {

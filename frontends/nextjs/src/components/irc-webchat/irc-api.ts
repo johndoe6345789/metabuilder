@@ -64,6 +64,43 @@ export function messageId(): string {
   return `msg_${Date.now().toString(36)}_${rand}`
 }
 
+/**
+ * Records that this person is in the channel.
+ *
+ * Best effort on purpose -- reading a channel does not depend on it --
+ * but it was best effort at the wrong address: `/v1/default/irc/
+ * irc_membership`, wrong in the same four ways the calls above were,
+ * inside a `catch {}` that said nothing. It could never have worked, and
+ * nothing would ever have said so.
+ */
+export async function joinChannel(
+  tenant: string,
+  channelId: string,
+  userId: string,
+  username: string
+): Promise<boolean> {
+  try {
+    const res = await fetch(url(tenant, 'IRCMembership'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        id: `mem_${channelId}_${userId}`,
+        tenantId: tenant,
+        channelId,
+        userId,
+        username,
+        role: 'member',
+        joinedAt: new Date().toISOString(),
+      }),
+      signal: AbortSignal.timeout(4000),
+    })
+    return res.ok
+  } catch {
+    return false
+  }
+}
+
 export async function postMessage(
   tenant: string,
   channelId: string,

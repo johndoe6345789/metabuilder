@@ -1,6 +1,10 @@
 'use client'
 
 import { useState, useCallback } from 'react'
+import {
+  neverConnected,
+  unreachableMessage,
+} from '@/lib/net/never-connected'
 import type { RetroSession, RetroSessionState, RetroSystem } from './retro-session-types'
 
 export type { RetroSession, RetroSystem } from './retro-session-types'
@@ -31,7 +35,14 @@ export function useRetroSession() {
         setState({
           session: null,
           loading: false,
-          error: e instanceof Error ? e.message : 'Failed to start session',
+          // A media service that is not running throws a TypeError whose
+          // message is the bare "Failed to fetch", which is what the
+          // launcher used to put on screen.
+          error: neverConnected(e)
+            ? unreachableMessage('the media service', MEDIA_API)
+            : e instanceof Error
+              ? e.message
+              : 'Failed to start session',
         })
       }
     },

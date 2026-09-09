@@ -183,3 +183,23 @@ describe('useRetroSession', () => {
     await waitFor(() => expect(result.current.session).not.toBeNull())
   })
 })
+
+/**
+ * A media service that is not running throws a TypeError reading
+ * "Failed to fetch", and the launcher printed that. Same shape as the
+ * Stream page and the Files tab.
+ */
+describe('when the media service is not running', () => {
+  it('names the service and where it looked', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => Promise.reject(new TypeError('Failed to fetch')))
+    )
+    const { result } = renderHook(() => useRetroSession())
+
+    await act(() => result.current.start('nes', 'rom.nes'))
+
+    expect(result.current.error).toContain('Could not reach the media service')
+    expect(result.current.error).not.toBe('Failed to fetch')
+  })
+})

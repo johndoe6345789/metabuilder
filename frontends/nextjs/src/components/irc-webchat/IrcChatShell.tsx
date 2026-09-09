@@ -74,6 +74,8 @@ export function IrcChatShell() {
               setLocalMsgs([])
             }}
             userId={userId}
+            username={username}
+            tenantId={tenant}
           />
           <ChatPanel
             channel={activeChannel}

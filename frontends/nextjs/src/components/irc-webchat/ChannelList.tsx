@@ -4,34 +4,20 @@
 'use client'
 
 import { Typography, Chip } from '@/m3'
+import { joinChannel } from './irc-api'
 import type { IrcChannel } from './types'
 import styles from './ChannelList.module.scss'
-
-const DBAL = process.env.NEXT_PUBLIC_DBAL_API_URL ?? 'http://localhost:8080'
 
 interface Props {
   channels: IrcChannel[]
   activeChannelId: string | null
   onSelect: (id: string) => void
   userId: string
-  tenantId?: string
-}
-
-async function joinChannel(
-  channelId: string,
-  userId: string,
+  username: string
+  /** The community this chat belongs to. It defaulted to the constant
+   *  'default', so joining a channel -- when it could have worked at all
+   *  -- would have been recorded against a tenant nobody owns. */
   tenantId: string
-): Promise<void> {
-  try {
-    await fetch(`${DBAL}/v1/${tenantId}/irc/irc_membership`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ channelId, userId, tenantId }),
-      signal: AbortSignal.timeout(4000),
-    })
-  } catch {
-    /* offline */
-  }
 }
 
 export function ChannelList({
@@ -39,11 +25,15 @@ export function ChannelList({
   activeChannelId,
   onSelect,
   userId,
-  tenantId = 'default',
+  username,
+  tenantId,
 }: Props) {
   function pick(ch: IrcChannel) {
     onSelect(ch.id)
-    void joinChannel(ch.id, userId, tenantId)
+    // Membership is incidental to reading the channel, so a refusal is
+    // not worth interrupting anyone over -- but it goes to the right
+    // address now, and irc-api reports whether it landed.
+    void joinChannel(tenantId, ch.id, userId, username)
   }
 
   return (

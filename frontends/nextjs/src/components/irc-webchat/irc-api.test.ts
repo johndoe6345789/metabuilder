@@ -1,6 +1,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { fetchChannels, fetchMessages, messageId, postMessage } from './irc-api'
+import {
+  fetchChannels,
+  fetchMessages,
+  joinChannel,
+  messageId,
+  postMessage,
+} from './irc-api'
 
 function mockFetch(
   impl: (url: string, init?: RequestInit) => Promise<unknown>
@@ -127,5 +133,44 @@ describe('sending a message', () => {
 describe('messageId', () => {
   it('is different every time', () => {
     expect(messageId()).not.toBe(messageId())
+  })
+})
+
+/**
+ * The fourth IRC call, in a different file, wrong the same four ways --
+ * and inside a `catch {}` that reported nothing, so joining a channel had
+ * never once worked and never once said so. Fixing irc-api.ts and
+ * stopping there would have left it exactly as it was.
+ */
+describe('joining a channel', () => {
+  it('records it where DBAL keeps memberships', async () => {
+    const fn = mockFetch(async () => ({ ok: true }))
+
+    expect(await joinChannel('acme', 'c1', 'u1', 'rosa')).toBe(true)
+
+    const [url, init] = fn.mock.calls[0] as [string, RequestInit]
+    expect(url).toContain('/acme/irc_webchat/IRCMembership')
+    expect(url).not.toContain('/v1/')
+    const body = JSON.parse(String(init.body)) as Record<string, unknown>
+    expect(body).toMatchObject({
+      tenantId: 'acme',
+      channelId: 'c1',
+      userId: 'u1',
+      username: 'rosa',
+    })
+    expect(String(body.id)).not.toBe('')
+  })
+
+  it('says it did not land rather than swallowing the refusal', async () => {
+    mockFetch(async () => ({ ok: false, status: 403 }))
+    expect(await joinChannel('acme', 'c1', 'u1', 'rosa')).toBe(false)
+  })
+
+  it('says so when the server cannot be reached', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => Promise.reject(new TypeError('Failed to fetch')))
+    )
+    expect(await joinChannel('acme', 'c1', 'u1', 'rosa')).toBe(false)
   })
 })
