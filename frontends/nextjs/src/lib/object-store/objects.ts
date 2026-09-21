@@ -2,7 +2,7 @@
 
 import 'server-only'
 
-import { authHeader, storeUrl } from './store-config'
+import { storeFetch } from './request'
 
 export async function putObject(
   bucket: string,
@@ -10,15 +10,14 @@ export async function putObject(
   body: BodyInit,
   contentType = 'application/octet-stream'
 ): Promise<{ etag: string }> {
-  const res = await fetch(
-    storeUrl(`${encodeURIComponent(bucket)}/${encodeURI(key)}`),
-    {
-      method: 'PUT',
-      headers: { ...authHeader(), 'Content-Type': contentType },
-      body,
-      signal: AbortSignal.timeout(30000),
-    }
-  )
+  const res = await storeFetch({
+    method: 'PUT',
+    bucket,
+    key,
+    body,
+    contentType,
+    timeoutMs: 30000,
+  })
   if (!res.ok) {
     throw new Error(`putObject(${bucket}/${key}) failed: HTTP ${res.status}`)
   }
@@ -33,10 +32,7 @@ export async function getObject(
   bucket: string,
   key: string
 ): Promise<{ body: ArrayBuffer; contentType: string; etag: string } | null> {
-  const res = await fetch(
-    storeUrl(`${encodeURIComponent(bucket)}/${encodeURI(key)}`),
-    { headers: authHeader(), signal: AbortSignal.timeout(30000) }
-  )
+  const res = await storeFetch({ method: 'GET', bucket, key, timeoutMs: 30000 })
   if (res.status === 404) return null
   if (!res.ok) {
     throw new Error(`getObject(${bucket}/${key}) failed: HTTP ${res.status}`)
@@ -49,14 +45,12 @@ export async function getObject(
 }
 
 export async function deleteObject(bucket: string, key: string): Promise<void> {
-  const res = await fetch(
-    storeUrl(`${encodeURIComponent(bucket)}/${encodeURI(key)}`),
-    {
-      method: 'DELETE',
-      headers: authHeader(),
-      signal: AbortSignal.timeout(10000),
-    }
-  )
+  const res = await storeFetch({
+    method: 'DELETE',
+    bucket,
+    key,
+    timeoutMs: 10000,
+  })
   if (!res.ok && res.status !== 404) {
     throw new Error(`deleteObject(${bucket}/${key}) failed: HTTP ${res.status}`)
   }

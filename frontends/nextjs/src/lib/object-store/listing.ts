@@ -2,7 +2,7 @@
 
 import 'server-only'
 
-import { authHeader, storeUrl } from './store-config'
+import { storeFetch } from './request'
 
 export interface StoredObject {
   key: string
@@ -24,29 +24,52 @@ export async function listObjects(
   bucket: string,
   prefix = ''
 ): Promise<StoredObject[]> {
-  const query = prefix === '' ? '' : `?prefix=${encodeURIComponent(prefix)}`
-  const res = await fetch(storeUrl(`${encodeURIComponent(bucket)}${query}`), {
-    headers: authHeader(),
-    signal: AbortSignal.timeout(15000),
-  })
-  if (res.status === 404) return []
-  if (!res.ok) {
-    throw new Error(`listObjects(${bucket}) failed: HTTP ${res.status}`)
+  const objects: StoredObject[] = []
+  let token = ''
+  // ListObjectsV2 returns at most 1000 keys a page; follow the token.
+  for (let page = 0; page < 1000; page++) {
+    const query: Record<string, string> = { 'list-type': '2' }
+    if (prefix !== '') query.prefix = prefix
+    if (token !== '') query['continuation-token'] = token
+    const res = await storeFetch({
+      method: 'GET',
+      bucket,
+      query,
+      timeoutMs: 15000,
+    })
+    if (res.status === 404) return []
+    if (!res.ok) {
+      throw new Error(`listObjects(${bucket}) failed: HTTP ${res.status}`)
+    }
+    const xml = await res.text()
+    objects.push(...parseContents(xml))
+    token = nextToken(xml)
+    if (token === '') break
   }
+  return objects
+}
 
-  const xml = await res.text()
-  const unescape = (value: string): string =>
-    value
-      .replaceAll('&lt;', '<')
-      .replaceAll('&gt;', '>')
-      .replaceAll('&quot;', '"')
-      .replaceAll('&apos;', "'")
-      .replaceAll('&amp;', '&')
-  const pick = (block: string, tag: string): string => {
-    const match = new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`).exec(block)
-    return match?.[1] === undefined ? '' : unescape(match[1])
-  }
+const unescape = (value: string): string =>
+  value
+    .replaceAll('&lt;', '<')
+    .replaceAll('&gt;', '>')
+    .replaceAll('&quot;', '"')
+    .replaceAll('&apos;', "'")
+    .replaceAll('&amp;', '&')
 
+const pick = (block: string, tag: string): string => {
+  const match = new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`).exec(block)
+  return match?.[1] === undefined ? '' : unescape(match[1])
+}
+
+/** The continuation token when the listing is truncated, else ''. */
+function nextToken(xml: string): string {
+  return pick(xml, 'IsTruncated') === 'true'
+    ? pick(xml, 'NextContinuationToken')
+    : ''
+}
+
+function parseContents(xml: string): StoredObject[] {
   return [...xml.matchAll(/<Contents>([\s\S]*?)<\/Contents>/g)].map(match => {
     const block = match.at(1) ?? ''
     const size = Number(pick(block, 'Size'))

@@ -36,6 +36,28 @@ describe('listObjects', () => {
     expect(objects[1]?.size).toBe(91024)
   })
 
+  it('asks for ListObjectsV2 with the prefix and follows the token', async () => {
+    const page = (more: boolean): string =>
+      `<ListBucketResult><IsTruncated>${more}</IsTruncated>` +
+      (more ? '<NextContinuationToken>tok/1=</NextContinuationToken>' : '') +
+      `<Contents><Key>${more ? 'a' : 'b'}</Key><Size>1</Size></Contents>` +
+      '</ListBucketResult>'
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(new Response(page(true)))
+      .mockResolvedValueOnce(new Response(page(false)))
+    vi.stubGlobal('fetch', fetchMock)
+
+    const objects = await listObjects('assets', 'photos/')
+
+    expect(objects.map(o => o.key)).toEqual(['a', 'b'])
+    const first = String(fetchMock.mock.calls[0]?.[0])
+    expect(first).toContain('/assets?list-type=2&prefix=photos%2F')
+    expect(String(fetchMock.mock.calls[1]?.[0])).toContain(
+      'continuation-token=tok%2F1%3D'
+    )
+  })
+
   it('lists a bucket nobody has written to as empty, not an error', async () => {
     vi.stubGlobal('fetch', () =>
       Promise.resolve(new Response('NoSuchBucket', { status: 404 }))
