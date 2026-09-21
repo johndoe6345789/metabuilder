@@ -11,10 +11,14 @@ describe('ensureBucket', () => {
     await ensureBucket('my-bucket')
 
     expect(fetchMock).toHaveBeenCalledTimes(1)
-    const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit]
-    expect(url).toContain('/my-bucket')
+    const [url, init] = fetchMock.mock.calls[0] as [URL, RequestInit]
+    expect(String(url)).toContain('/my-bucket')
     expect(init.method).toBe('PUT')
-    expect(init.headers).toHaveProperty('Authorization')
+    // SigV4 only: the store refuses the legacy `AWS <key>:<secret>` header.
+    expect(init.headers).toHaveProperty(
+      'Authorization',
+      expect.stringMatching(/^AWS4-HMAC-SHA256 /)
+    )
 
     vi.unstubAllGlobals()
   })
@@ -27,8 +31,8 @@ describe('ensureBucket', () => {
 
     await ensureBucket('my bucket/weird')
 
-    const [url] = fetchMock.mock.calls[0] as [string]
-    expect(url).toContain(encodeURIComponent('my bucket/weird'))
+    const [url] = fetchMock.mock.calls[0] as [URL]
+    expect(String(url)).toContain('my%20bucket%2Fweird')
 
     vi.unstubAllGlobals()
   })

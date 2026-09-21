@@ -55,14 +55,19 @@ services:
       # The app's server components call its own API over HTTP, and Node's
       # fetch rejects relative URLs (src/lib/entities/api-client.ts).
       METABUILDER_INTERNAL_URL: http://127.0.0.1:3000/app
-      # Blob storage (src/lib/object-store/client.ts). AuthFilter there
-      # checks "Authorization: AWS <key>:<secret>" against an api_keys DB
-      # row, not an env var on that service -- these must match whatever's
-      # actually seeded (migrations/002_seed_data.sql), not be invented
-      # here. Default is that seed's dev key.
+      # Blob storage (src/lib/object-store/). The store speaks AWS Signature
+      # V4 only (path-style, region us-east-1; the old "Authorization: AWS
+      # <key>:<secret>" header is refused with 403). Keys live in the
+      # store's api_keys table, not in an env var on that service: mint one
+      # with an INSERT (see the object-store README, "Using standard S3
+      # clients") and put its pair in OBJECTSTORE_ACCESS_KEY/SECRET_KEY.
+      # Never use the seeded key. There is no default: the app is built for
+      # production, so without both set the first asset request fails with
+      # "Object store credentials are not configured" (the stack still boots).
       OBJECT_STORE_URL: http://object-store:9000
-      OBJECT_STORE_ACCESS_KEY: ${OBJECTSTORE_ACCESS_KEY:-minioadmin}
-      OBJECT_STORE_SECRET_KEY: ${OBJECTSTORE_SECRET_KEY:-minioadmin}
+      OBJECT_STORE_REGION: ${OBJECTSTORE_REGION:-us-east-1}
+      OBJECT_STORE_ACCESS_KEY: ${OBJECTSTORE_ACCESS_KEY:-}
+      OBJECT_STORE_SECRET_KEY: ${OBJECTSTORE_SECRET_KEY:-}
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "-O", "/dev/null",
              "http://127.0.0.1:3000/app/api/health"]
@@ -268,13 +273,11 @@ services:
       PGDATABASE: ${OBJECTSTORE_POSTGRES_DB:-objectstore}
       S3_DB_CONN: "host=objectstore-postgres port=5432 dbname=${OBJECTSTORE_POSTGRES_DB:-objectstore} user=${OBJECTSTORE_POSTGRES_USER:-objectstore} password=${OBJECTSTORE_POSTGRES_PASSWORD:-objectstore}"
       S3_PORT: "9000"
-      # AuthFilter expects "Authorization: AWS <key>:<secret>" checked
-      # against an api_keys DB table, not an env var -- there is no
-      # S3_ACCESS_KEY/S3_SECRET_KEY the binary reads. Credentials come from
-      # migrations/002_seed_data.sql's seeded row (access_key=secret_key=
-      # 'minioadmin', permissions='read,write,admin'). The Next.js client
-      # (OBJECT_STORE_ACCESS_KEY/SECRET_KEY on nextjs-app, below) must match
-      # this seed, not the other way around.
+      # Authentication is AWS Signature V4 only, checked against the
+      # api_keys DB table -- there is no S3_ACCESS_KEY/S3_SECRET_KEY the
+      # binary reads. Mint a key for the Next.js app with an INSERT (see the
+      # object-store README) and set OBJECTSTORE_ACCESS_KEY/SECRET_KEY on
+      # nextjs-app to match; do not use the seeded minioadmin row.
     volumes:
       - objectstore-data:/data/s3
     healthcheck:
